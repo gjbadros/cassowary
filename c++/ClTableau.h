@@ -12,16 +12,10 @@
 #ifndef ClTableau_H
 #define ClTableau_H
 
-#include "ClMap.h"
-#include "ClSet.h"
 #include "Cassowary.h"
 #include "ClLinearExpression.h"
 #include "ClVariable.h"
-
-typedef ClSet<const ClAbstractVariable *> ClTableauVarSet;
-typedef ClSet<const ClVariable *> ClExternalVarSet;
-typedef ClMap<const ClAbstractVariable *, ClTableauVarSet > ClTableauColumnsMap;
-typedef ClMap<const ClAbstractVariable *, ClLinearExpression *> ClTableauRowsMap;
+#include "ClTypedefs.h"
 
 class ClTableau {
 
@@ -73,8 +67,6 @@ class ClTableau {
 
 #ifndef CL_NO_IO
   ostream &printOn(ostream &xo) const;
-
-  virtual void gdb_print() const { printOn(cerr); }
 
   ostream &printInternalInfo(ostream &xo) const;
 #endif

@@ -64,6 +64,7 @@ public:
 
   friend ostream& operator<<(ostream &xos, const ClConstraint &constraint)
     { constraint.printOn(xos); return xos; }
+
 #endif
 
 
@@ -74,10 +75,6 @@ public:
     { return _pv; }
 
   virtual bool FIsSatisfied() const { return false; }
-
-#ifndef CL_NO_IO
-  virtual void gdb_print() const { printOn(cerr); };
-#endif
 
 private:
 

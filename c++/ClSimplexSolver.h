@@ -12,6 +12,7 @@
 #ifndef ClSimplexSolver_H
 #define ClSimplexSolver_H
 
+#include <stack>
 #include "Cassowary.h"
 #include "ClTableau.h"
 #include "ClLinearInequality.h"
@@ -21,7 +22,7 @@
 #include "ClSlackVariable.h"
 #include "ClObjectiveVariable.h"
 #include "ClErrors.h"
-#include <stack>
+#include "ClTypedefs.h"
 
 class ClVariable;
 class ClPoint;
@@ -62,13 +63,6 @@ private:
   Number _prevEditConstant;
   int _index;
 };
-
-// Give a bunch of simpler names to the various useful maps
-typedef ClMap<const ClConstraint *, ClTableauVarSet > ClConstraintToVarSetMap;
-typedef ClMap<const ClConstraint *, const ClAbstractVariable *> ClConstraintToVarMap;
-typedef ClMap<const ClVariable *, ClEditInfo *> ClVarToEditInfoMap;
-typedef ClMap<const ClAbstractVariable *, const ClConstraint *> ClVarToConstraintMap;
-typedef vector<const ClAbstractVariable *> ClVarVector;
 
 
 // ClSimplexSolver encapsulates the solving behaviour
@@ -347,8 +341,9 @@ class ClSimplexSolver : public ClTableau {
   
   ostream &printInternalInfo(ostream &xo) const;
 
-  ostream &printDebugInfo(ostream &xo) const 
+  ostream &printOnVerbose(ostream &xo) const 
     { printOn(xo); printInternalInfo(xo); xo << endl; return xo; }
+
 #endif
 
   const ClConstraintToVarMap &ConstraintMap() const

@@ -21,6 +21,7 @@
 #include <algorithm>
 #include <float.h>
 #include <strstream>
+#include <queue>
 
 // Need to delete all expressions
 // and all slack and dummy variables
@@ -183,11 +184,11 @@ ClSimplexSolver::addPointStay(const ClPoint &clp, double weight)
 ClSimplexSolver &
 ClSimplexSolver::removeEditVarsTo(int n)
 {
-  while (true)
+  queue<const ClVariable *> qpclv;
+  for ( ClVarToEditInfoMap::const_iterator it = _editVarMap.begin();
+        (it != _editVarMap.end() && _editVarMap.size() != static_cast<unsigned int>(n));
+        ++it ) 
     {
-    ClVarToEditInfoMap::const_iterator it = _editVarMap.begin();
-    if (it == _editVarMap.end() || _editVarMap.size() == static_cast<unsigned int>(n))
-      break;
     const ClEditInfo *pcei = (*it).second;
     assert(pcei);
     if (pcei->_index >= n)
@@ -196,9 +197,15 @@ ClSimplexSolver::removeEditVarsTo(int n)
 #ifndef CL_NO_TRACE
       cerr << __FUNCTION__ << ": Removing " << pcnEdit->variable() << endl;
 #endif
-      removeEditVar(pcnEdit->variable());
+      qpclv.push(&pcnEdit->variable());
       }
     }
+  while (!qpclv.empty()) 
+    {
+    removeEditVar(*qpclv.front());
+    qpclv.pop();
+    }
+
   return *this;
 }
 
@@ -246,9 +253,12 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
 
   // remove any error variables from the objective function
   ClLinearExpression *pzRow = rowExpression(_objective);
+
+  ClConstraintToVarSetMap errorVarsCopy(_errorVars);
+
   ClConstraintToVarSetMap::iterator 
-    it_eVars = _errorVars.find(&cn);
-  if (it_eVars != _errorVars.end())
+    it_eVars = errorVarsCopy.find(&cn);
+  if (it_eVars != errorVarsCopy.end())
     {
     ClTableauVarSet &eVars = (*it_eVars).second;
     ClTableauVarSet::iterator it = eVars.begin();
@@ -384,7 +394,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
   // Delete any error variables.  If cn is an inequality, it also
   // contains a slack variable; but we use that as the marker variable
   // and so it has been deleted when we removed its row.
-  if (it_eVars != _errorVars.end())
+  if (it_eVars != errorVarsCopy.end())
     {
     ClTableauVarSet &eVars = (*it_eVars).second;
     ClTableauVarSet::iterator it = eVars.begin();
@@ -394,7 +404,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
       if (*pv != marker)
 	{
 	removeColumn(*pv);
-	delete pv;
+        //	delete pv;  // FIXNOWGJB: leak?  This delete causes segfault when -O2
 	}
       }
     }
@@ -403,7 +413,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
     {
     // iterate over the stay{Plus,Minus}ErrorVars and remove those
     // variables v in those vectors that are also in set eVars
-    if (it_eVars != _errorVars.end())
+    if (it_eVars != errorVarsCopy.end())
       {
       ClTableauVarSet &eVars = (*it_eVars).second;
       _stayPlusErrorVars
@@ -422,13 +432,13 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
     const ClVariable *pclv = &pcnEdit->variable();
     ClEditInfo *pcei = _editVarMap[pclv];
     ClSlackVariable *pclvEditMinus = pcei->_pclvEditMinus;
-    removeColumn(*pclvEditMinus);  // FIXGJB: just added this
+    removeColumn(*pclvEditMinus);  // FIXNOWGJB: just added this
     // because the Java version did it --02/16/99 gjb
     delete pcei;
     _editVarMap.erase(pclv);
     }
 
-  if (it_eVars != _errorVars.end())
+  if (it_eVars != errorVarsCopy.end())
     {
     // FIXGJB
     // This code is not needed since the variables are deleted
@@ -441,7 +451,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
     //      {
     //      delete *it_set;
     //      }
-    _errorVars.erase(it_eVars);
+    _errorVars.erase((*it_eVars).first);
     }
   delete &marker;
 
@@ -453,7 +463,6 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
 
   return *this;
 }
-
 
   // Same as above, but returns false if the constraint dne
   // The above function "removeConstraint" throws an exception in that case
@@ -1418,11 +1427,8 @@ printTo(ostream &xo, const ClVarVector &varlist)
   return xo;
 }
 
-
 ostream &operator<<(ostream &xo, const ClVarVector &varlist)
-{
-  return printTo(xo,varlist);
-}
+{  return printTo(xo,varlist); }
 
 
 ostream &

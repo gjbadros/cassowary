@@ -25,11 +25,11 @@ class ClSymbolicWeight {
   ClSymbolicWeight() 
     { }
 
-  ClSymbolicWeight(int cLevels, double value = 0.0);
+  ClSymbolicWeight(int cLevels, Number value = 0.0);
 
-  ClSymbolicWeight(double w1, double w2 = 0.0, double w3 = 0.0);
+  ClSymbolicWeight(Number w1, Number w2 = 0.0, Number w3 = 0.0);
 
-  ClSymbolicWeight(const vector<double> &weights);
+  ClSymbolicWeight(const vector<Number> &weights);
 
   static ClSymbolicWeight &zero();
 
@@ -102,10 +102,10 @@ class ClSymbolicWeight {
 
   double asDouble() const
     {
-    vector<double>::const_reverse_iterator i = _values.rbegin();
-    double sum  = 0;
-    double factor = 1;
-    double multiplier = 1000;
+    vector<Number>::const_reverse_iterator i = _values.rbegin();
+    Number sum  = 0;
+    Number factor = 1;
+    Number multiplier = 1000;
     for ( ; i != _values.rend(); ++i) 
       {
       sum += *i * factor;
@@ -117,7 +117,7 @@ class ClSymbolicWeight {
 #ifndef CL_NO_IO
   ostream &printOn(ostream &xo) const
     { 
-    vector<double>::const_iterator i = _values.begin();
+    vector<Number>::const_iterator i = _values.begin();
     if (i == _values.end())
       return xo;
 
@@ -143,7 +143,7 @@ class ClSymbolicWeight {
  private:
   vector<Number> _values;
 
-  void push_back(double d) 
+  void push_back(Number d) 
     { _values.push_back(d); }
 
 };
