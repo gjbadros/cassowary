@@ -198,9 +198,16 @@ class ClSimplexSolver : public ClTableau {
   // called by client code; if setAutosolve is put to false,
   // then solve() needs to be invoked explicitly before using
   // variables' values
+  // (Turning off autosolve while adding lots and lots of
+  // constraints [ala the addDel test in ClTests] saved
+  // about 20% in runtime, from 68sec to 54sec for 900 constraints,
+  // with 126 failed adds)
   ClSimplexSolver &setAutosolve(bool f)
     { _fOptimizeAutomatically = f; return *this; }
 
+  // Tell whether we're autosolving
+  bool FIsAutosolving() const
+    { return _fOptimizeAutomatically; }
 
   // If autosolving has been turned off, client code needs
   // to explicitly call solve() before accessing variables
