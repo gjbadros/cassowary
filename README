@@ -18,6 +18,9 @@ See NEWS for a history of user-visible changes.
 See COPYRIGHT for legalese regarding use of this distribution.
 
 Please send bug reports to cassowary@cs.washington.edu
+Also, send mail to cassowary@cs.washington.edu if you would like to be
+informed about bug fixes, feature enhancements, etc.  Let us know what
+implementation(s) you are using, too.
 
 ------------------------------------------------------------------
 
@@ -67,6 +70,9 @@ for a version of make that you can build first to then build Cassowary.
 Example applications exist in subdirectories of the top-level
 implementation subdirectories (e.g., c++/qdemos contains demos for C++
 that use the Qt Widget toolkit.
+
+Please send mail to cassowary@cs.washington.edu if you are using this
+toolkit so we know how to reach you for bug fixes, updates, etc.
 
 ------------------------------------------------------------------
 

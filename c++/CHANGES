@@ -1,4 +1,4 @@
-List of changes in C++ implementation
+List of changes in C++ implementation, from Smalltalk implementation
 
 * Expressions don't convert themselves into constraints via cnEqual,
 etc., instead constraints can be constructed from expressions
