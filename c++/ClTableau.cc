@@ -18,7 +18,7 @@ ClTableau::addRow(const ClAbstractVariable &var, const ClLinearExpression &expr)
 {
 #ifndef NO_TRACE
   Tracer TRACER(__FUNCTION__);
-  cerr << "(" << var << ")" << endl;
+  cerr << "(" << var << ", " << expr << ")" << endl;
 #endif
   // FIXGJB: gotta delete this somewhere
   ClLinearExpression *pexpr = new ClLinearExpression(expr);
@@ -29,8 +29,11 @@ ClTableau::addRow(const ClAbstractVariable &var, const ClLinearExpression &expr)
   for (; it != pexpr->terms().end(); ++it)
     {
     const ClAbstractVariable *pv = (*it).first;
-    my_columns[pv].insert(pv);
+    my_columns[pv].insert(&var);
     }
+#ifndef NO_TRACE
+  cerr << *this << endl;
+#endif
 }
 
 // Remove var from the tableau -- remove the column cross indices for var
@@ -149,7 +152,7 @@ printTo(ostream &xo, const set<const ClAbstractVariable *> & varset)
     {
     xo << ", " << *(*it);
     }
-  xo << " }" << endl;
+  xo << " }";
   return xo;
 }  
 

@@ -13,23 +13,23 @@ main( char **argv, int argc )
   ClVariable a("a",0.0);
   ClVariable b("b",0.0);
 
-  ClLinearExpression b_minus_a = b - a;
-  ClLinearEquation a_equals_b(b_minus_a);
-  ClStayConstraint stay_a(a);
-  ClStayConstraint stay_b(b);
+  ClLinearExpression b_minus_a = 0- a /* = */ + 2 * b + 1;
+  cerr << b_minus_a << endl;
+  ClLinearEquation a_equals_2b(b_minus_a);
   ClEditConstraint edit_a(a);
+  ClEditConstraint edit_b(b);
   
   ClSimplexSolver solver;
 
   cerr << "Starting addConstraint-s" << endl;
-  solver.addConstraint(a_equals_b);
-  solver.addConstraint(stay_a);
-  solver.addConstraint(stay_b);
+  solver.addConstraint(a_equals_2b);
+  solver.addStay(a);
+  solver.addStay(b);
   solver.addConstraint(edit_a);
   
   
   vector<double> rgedits;
-  rgedits.push_back(1.0);
+  rgedits.push_back(6.0);
   try 
     {
     solver.resolve(rgedits);

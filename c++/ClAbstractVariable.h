@@ -20,6 +20,7 @@ public:
   ClAbstractVariable(String name = "") :
     my_name(name)
     { 
+    iVariableNumber++;
     if (name.length() == 0)
       {
       char sz[16];
@@ -30,6 +31,7 @@ public:
 
   ClAbstractVariable(long varnumber, char *prefix)
     { 
+    iVariableNumber++;
     char sz[16+strlen(prefix)];
     sprintf(sz,"%s%ld",prefix,varnumber);
     my_name = String(sz);

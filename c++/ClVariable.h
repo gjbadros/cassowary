@@ -42,7 +42,7 @@ public:
 
   // Return true if we can pivot on this variable.
   virtual bool isPivotable() const
-    { return true; }
+    { return false; }
 
   // Return true if this is a restricted (or slack) variable.  Such
   // variables are constrained to be non-negative and occur only

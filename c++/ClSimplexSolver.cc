@@ -324,11 +324,13 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
   ClSlackVariable av(++my_artificialCounter,"a");
   ClObjectiveVariable az("az");
   ClLinearExpression azRow(expr);
-  // FIXGJB: Why is azRow a duplicate of expr?
+  // the artificial objective is av, which we know is equal to expr
+  // (which contains only parametric variables)
 
 #ifndef NO_TRACE
   cerr << __FUNCTION__ << " before addRow-s:" << endl;
   cerr << (*this) << endl;
+  // FIXGJB  cerr << "COMPARE: " << &(azRow.terms()) << " vs. " << &(expr.terms()) <<endl;
 #endif
 
   // the artificial objective is av, which we know is equal to expr
@@ -343,6 +345,10 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
 
   // try to optimize az to 0
   optimize(az);
+
+#ifndef NO_TRACE
+  cerr << "azRow.constant() == " << azRow.constant() << endl;
+#endif
 
   // Check that we were able to make the objective value 0
   // If not, the original constraint was not satisfiable
@@ -705,7 +711,7 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
       expr.addVariable(eminus,1.0);
       // add emnius to the objective function with the appropriate weight
       ClLinearExpression *pzRow = rowExpression(my_objective);
-      // FIXGJB: zRow.addVariable(eminus,cn.strength().symbolicWeight() * cn.weight());
+      // FIXGJB: pzRow->addVariable(eminus,cn.strength().symbolicWeight() * cn.weight());
       ClSymbolicWeight sw = cn.strength().symbolicWeight().times(cn.weight());
       pzRow->addVariable(eminus,sw.asDouble());
       my_errorVars[&cn].insert(&eminus);
@@ -738,12 +744,21 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
       // index the constraint under one of the error variables
       my_markerVars[&cn] = &eplus;
       ClLinearExpression *pzRow = rowExpression(my_objective);
-      // FIXGJB: zRow.addVariable(eplus,cn.strength().symbolicWeight() * cn.weight());
+      // FIXGJB: pzRow->addVariable(eplus,cn.strength().symbolicWeight() * cn.weight());
       ClSymbolicWeight sw = cn.strength().symbolicWeight().times(cn.weight());
       double swCoeff = sw.asDouble();
+#ifndef NO_TRACE
+      if (swCoeff == 0) 
+	{
+	cerr << "sw == " << sw << endl
+	     << "cn == " << cn << endl;
+	cerr << "adding " << eplus << " and " << eminus 
+	     << " with swCoeff == " << swCoeff << endl;
+	}
+#endif      
       pzRow->addVariable(eplus,swCoeff);
       noteAddedVariable(eplus,my_objective);
-      // FIXGJB: zRow.addVariable(eminus,cn.strength().symbolicWeight() * cn.weight());
+      // FIXGJB: pzRow->addVariable(eminus,cn.strength().symbolicWeight() * cn.weight());
       pzRow->addVariable(eminus,swCoeff);
       noteAddedVariable(eminus,my_objective);
       if (cn.isStayConstraint()) 
@@ -753,8 +768,8 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
 	}
       if (cn.isEditConstraint())
 	{
-	my_stayPlusErrorVars.push_back(&eplus);
-	my_stayMinusErrorVars.push_back(&eminus);
+	my_editPlusErrorVars.push_back(&eplus);
+	my_editMinusErrorVars.push_back(&eminus);
 	my_prevEditConstants.push_back(cnExpr.constant());
 	}
       }
@@ -781,14 +796,15 @@ ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
 #ifndef NO_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << zVar << ")" << endl;
+  cerr << *this << endl;
 #endif
   ClLinearExpression *pzRow = rowExpression(zVar);
   assert(pzRow != NULL);
-  Number objectiveCoeff = -MAXDOUBLE;
   const ClAbstractVariable *pentryVar = NULL;
   const ClAbstractVariable *pexitVar = NULL;
   while (true)
     {
+    Number objectiveCoeff = 0;
     // Find the most negative coefficient in the objective function
     // (ignoring dummy variables).  If all coefficients are positive
     // we're done
@@ -798,8 +814,7 @@ ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
       {
       const ClAbstractVariable *pv = (*it).first;
       Number c = (*it).second;
-      if (pv->isPivotable() && objectiveCoeff == -MAXDOUBLE ||
-	  ( c < objectiveCoeff))
+      if (pv->isPivotable() && c < objectiveCoeff)
 	{
 	objectiveCoeff = c;
 	pentryVar = pv;
@@ -808,10 +823,14 @@ ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
     // if all coefficients were positive (or if the objective
     // function has no pivotable variables)
     // we are at an optimum
-    if (objectiveCoeff == -MAXDOUBLE)
+    if (objectiveCoeff == 0)
       return;
-    if (!(objectiveCoeff < 0.0))
-      return;
+#ifndef NO_TRACE
+    cerr << "*pentryVar == " << *pentryVar << ", "
+	 << "objectiveCoeff == " << objectiveCoeff
+	 << endl;
+#endif
+
     // choose which variable to move out of the basis
     // Only consider pivotable basic variables
     // (i.e. restricted, non-dummy variables)
@@ -822,16 +841,25 @@ ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
     for (; it_rowvars != columnVars.end(); ++it_rowvars)
       {
       const ClAbstractVariable *pv = *it_rowvars;
-      const ClLinearExpression *pexpr = rowExpression(*pv);
-      Number coeff = pexpr->coefficientFor(*pentryVar);
-      // only consider negative coefficients
-      if (coeff < 0.0)
+#ifndef NO_TRACE
+      cerr << "Checking " << *pv << endl;
+#endif
+      if (pv->isPivotable()) 
 	{
-	r = - pexpr->constant() / coeff;
-	if (r < minRatio)
+	const ClLinearExpression *pexpr = rowExpression(*pv);
+	Number coeff = pexpr->coefficientFor(*pentryVar);
+	// only consider negative coefficients
+	if (coeff < 0.0)
 	  {
-	  minRatio = r;
-	  pexitVar = pv;
+	  r = - pexpr->constant() / coeff;
+	  if (r < minRatio)
+	    {
+#ifndef NO_TRACE
+	    cerr << "New minRatio == " << r << endl;
+#endif
+	    minRatio = r;
+	    pexitVar = pv;
+	    }
 	  }
 	}
       }
@@ -841,10 +869,14 @@ ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
     // application.
     if (minRatio == MAXDOUBLE)
       {
+      cerr << "objective function is unbounded!" << endl;
       EXCEPTION_ABORT;
       throw ExCLInternalError();
       }
     pivot(*pentryVar, *pexitVar);
+#ifndef NO_TRACE
+    cerr << *this << endl;
+#endif
     }
 }
 
@@ -894,9 +926,9 @@ ClSimplexSolver::resetEditConstants(const vector<Number> &newEditConstants)
 #endif
   if (newEditConstants.size() != my_editPlusErrorVars.size())
     { // number of edit constants doesn't match the number of edit error variables
-    cerr << "newEditConstants == " << newEditConstants << endl;
-    cerr << "my_editPlusErrorVars == " << my_editPlusErrorVars << endl;
-    cerr << "Sizes don't match!" << endl;
+    cerr << "newEditConstants == " << newEditConstants << endl
+	 << "my_editPlusErrorVars == " << my_editPlusErrorVars << endl
+	 << "Sizes don't match!" << endl;
     EXCEPTION_ABORT;
     throw ExCLInternalError();
     }
@@ -972,6 +1004,7 @@ ClSimplexSolver::setExternalVariables()
 #ifndef NO_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "()" << endl;
+  cerr << *this << endl;
 #endif
   map<const ClAbstractVariable *, ClLinearExpression *>::iterator itRowVars;
   map<const ClAbstractVariable *, set<const ClAbstractVariable *> >::iterator itColumnVars;
@@ -1009,12 +1042,12 @@ printTo(ostream &xo, const vector<const ClAbstractVariable *> &varlist)
   xo << varlist.size() << ":" << "[ ";
   if (it != varlist.end())
     {
-    xo << (*it);
+    xo << *(*it);
     ++it;
     }
   for (; it != varlist.end(); ++it) 
     {
-    xo << ", " << (*it);
+    xo << ", " << *(*it);
     }
   xo << " ]" << endl;
   return xo;
@@ -1028,8 +1061,26 @@ ostream &operator<<(ostream &xo, const vector<const ClAbstractVariable *> &varli
 ostream &
 printTo(ostream &xo, const ClSimplexSolver &tableau)
 {
-  operator<<(xo,static_cast<ClTableau>(tableau));
-  xo << "my_editPlusErrorVars: " << tableau.my_editPlusErrorVars <<endl;
+  // FIXGJB duplicated from tableau printer
+  xo << "Tableau:\n" 
+     << tableau.my_rows << endl;
+  xo << "Columns:\n" 
+     << tableau.my_columns << endl;
+  xo << "Infeasible rows:" << tableau.my_infeasibleRows << endl;
+
+  xo << "my_editPlusErrorVars: "
+     << tableau.my_editPlusErrorVars << endl;
+  xo << "my_editMinusErrorVars: "
+     << tableau.my_editMinusErrorVars << endl;
+
+  xo << "my_stayPlusErrorVars: "
+     << tableau.my_stayPlusErrorVars << endl;
+  xo << "my_stayMinusErrorVars: "
+     << tableau.my_stayMinusErrorVars << endl;
+
+  xo << "my_prevEditConstants: " 
+     << tableau.my_prevEditConstants << endl;
+
   return xo;
 }
 

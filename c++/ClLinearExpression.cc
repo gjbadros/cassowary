@@ -314,7 +314,8 @@ ClLinearExpression::substituteOut(const ClAbstractVariable &var,
   cerr << "*this == " << *this << endl;
 #endif
   map<const ClAbstractVariable *,Number>::iterator pv = my_terms.find(&var);
-  assert(pv != my_terms.end() && !clApprox((*pv).second,0.0));
+  assert(pv != my_terms.end());
+  assert(!clApprox((*pv).second,0.0));
 
   Number multiplier = (*pv).second;
   my_terms.erase(pv);
@@ -328,7 +329,7 @@ ClLinearExpression::substituteOut(const ClAbstractVariable &var,
     if (poc != my_terms.end())
       { // if oldCoeff is not nil
 #ifndef NO_TRACE
-      cerr << "Considering (*poc) == " << (*poc).second << "*" << (*poc).first << endl;
+      cerr << "Considering (*poc) == " << (*poc).second << "*" << *(*poc).first << endl;
 #endif
       // found it, so new coefficient is old one plus what is in *i
       Number newCoeff = (*poc).second + (multiplier*c);
@@ -345,7 +346,7 @@ ClLinearExpression::substituteOut(const ClAbstractVariable &var,
     else
       { // did not have that variable already (oldCoeff == nil)
 #ifndef NO_TRACE
-      cerr << "Adding (*i) == " << (*i).second << "*" << (*i).first << endl;
+      cerr << "Adding (*i) == " << (*i).second << "*" << *(*i).first << endl;
 #endif
       my_terms[pv] = multiplier * c;
       solver.noteAddedVariable(*pv,subject);

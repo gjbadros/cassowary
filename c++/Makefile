@@ -93,38 +93,49 @@ depend: $(TEST_SRCS) $(HEADERS)
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
 
+ClAbstractVariable.o: ClAbstractVariable.h /usr/include/stdio.h
+ClAbstractVariable.o: /usr/include/libio.h /usr/include/_G_config.h
+ClAbstractVariable.o: /usr/include/sys/cdefs.h Cassowary.h
+ClAbstractVariable.o: /usr/include/math.h /usr/include/features.h
+ClAbstractVariable.o: /usr/include/huge_val.h /usr/include/endian.h
+ClAbstractVariable.o: /usr/include/bytesex.h /usr/include/nan.h
+ClAbstractVariable.o: /usr/lib/gcc-lib/i386-linux/2.7.2.1/include/float.h
+ClAbstractVariable.o: /usr/include/values.h /usr/include/ieee754.h
+ClAbstractVariable.o: /usr/include/ieee854.h /usr/include/assert.h
 ClConstraint.o: ClConstraint.h Cassowary.h /usr/include/math.h
 ClConstraint.o: /usr/include/features.h /usr/include/sys/cdefs.h
 ClConstraint.o: /usr/include/huge_val.h /usr/include/endian.h
 ClConstraint.o: /usr/include/bytesex.h /usr/include/nan.h
 ClConstraint.o: /usr/lib/gcc-lib/i386-linux/2.7.2.1/include/float.h
 ClConstraint.o: /usr/include/values.h /usr/include/ieee754.h
-ClConstraint.o: /usr/include/ieee854.h ClLinearExpression.h ClVariable.h
-ClConstraint.o: /usr/include/stdio.h /usr/include/libio.h
-ClConstraint.o: /usr/include/_G_config.h /usr/include/assert.h ClStrength.h
+ClConstraint.o: /usr/include/ieee854.h ClLinearExpression.h debug.h
+ClConstraint.o: ClAbstractVariable.h /usr/include/stdio.h
+ClConstraint.o: /usr/include/libio.h /usr/include/_G_config.h ClStrength.h
 ClConstraint.o: ClSymbolicWeight.h
 ClLinearExpression.o: /usr/include/assert.h /usr/include/features.h
-ClLinearExpression.o: /usr/include/sys/cdefs.h ClLinearExpression.h
-ClLinearExpression.o: ClVariable.h /usr/include/stdio.h /usr/include/libio.h
-ClLinearExpression.o: /usr/include/_G_config.h Cassowary.h
-ClLinearExpression.o: /usr/include/math.h /usr/include/huge_val.h
+ClLinearExpression.o: /usr/include/sys/cdefs.h ClLinearExpression.h debug.h
+ClLinearExpression.o: ClAbstractVariable.h /usr/include/stdio.h
+ClLinearExpression.o: /usr/include/libio.h /usr/include/_G_config.h
+ClLinearExpression.o: Cassowary.h /usr/include/math.h /usr/include/huge_val.h
 ClLinearExpression.o: /usr/include/endian.h /usr/include/bytesex.h
 ClLinearExpression.o: /usr/include/nan.h
 ClLinearExpression.o: /usr/lib/gcc-lib/i386-linux/2.7.2.1/include/float.h
 ClLinearExpression.o: /usr/include/values.h /usr/include/ieee754.h
 ClLinearExpression.o: /usr/include/ieee854.h ClTableau.h ClErrors.h
-ClSimplexSolver.o: ClSimplexSolver.h Cassowary.h /usr/include/math.h
+ClSimplexSolver.o: debug.h ClSimplexSolver.h Cassowary.h /usr/include/math.h
 ClSimplexSolver.o: /usr/include/features.h /usr/include/sys/cdefs.h
 ClSimplexSolver.o: /usr/include/huge_val.h /usr/include/endian.h
 ClSimplexSolver.o: /usr/include/bytesex.h /usr/include/nan.h
 ClSimplexSolver.o: /usr/lib/gcc-lib/i386-linux/2.7.2.1/include/float.h
 ClSimplexSolver.o: /usr/include/values.h /usr/include/ieee754.h
 ClSimplexSolver.o: /usr/include/ieee854.h ClTableau.h ClLinearExpression.h
-ClSimplexSolver.o: ClVariable.h /usr/include/stdio.h /usr/include/libio.h
-ClSimplexSolver.o: /usr/include/_G_config.h /usr/include/assert.h
+ClSimplexSolver.o: ClAbstractVariable.h /usr/include/stdio.h
+ClSimplexSolver.o: /usr/include/libio.h /usr/include/_G_config.h
 ClSimplexSolver.o: ClLinearInequality.h ClLinearConstraint.h ClConstraint.h
 ClSimplexSolver.o: ClStrength.h ClSymbolicWeight.h ClStayConstraint.h
-ClSimplexSolver.o: ClEditOrStayConstraint.h debug.h ClErrors.h
+ClSimplexSolver.o: ClEditOrStayConstraint.h ClObjectiveVariable.h ClErrors.h
+ClSimplexSolver.o: ClVariable.h /usr/include/assert.h ClSlackVariable.h
+ClSimplexSolver.o: ClDummyVariable.h
 ClStrength.o: ClStrength.h Cassowary.h /usr/include/math.h
 ClStrength.o: /usr/include/features.h /usr/include/sys/cdefs.h
 ClStrength.o: /usr/include/huge_val.h /usr/include/endian.h
@@ -146,29 +157,29 @@ ClTableau.o: /usr/include/huge_val.h /usr/include/endian.h
 ClTableau.o: /usr/include/bytesex.h /usr/include/nan.h
 ClTableau.o: /usr/lib/gcc-lib/i386-linux/2.7.2.1/include/float.h
 ClTableau.o: /usr/include/values.h /usr/include/ieee754.h
-ClTableau.o: /usr/include/ieee854.h ClLinearExpression.h ClVariable.h
-ClTableau.o: /usr/include/stdio.h /usr/include/libio.h
-ClTableau.o: /usr/include/_G_config.h /usr/include/assert.h debug.h
+ClTableau.o: /usr/include/ieee854.h ClLinearExpression.h debug.h
+ClTableau.o: ClAbstractVariable.h /usr/include/stdio.h /usr/include/libio.h
+ClTableau.o: /usr/include/_G_config.h
 ClVariable.o: ClVariable.h /usr/include/stdio.h /usr/include/libio.h
-ClVariable.o: /usr/include/_G_config.h /usr/include/assert.h
-ClVariable.o: /usr/include/features.h /usr/include/sys/cdefs.h Cassowary.h
+ClVariable.o: /usr/include/_G_config.h /usr/include/sys/cdefs.h
+ClVariable.o: /usr/include/assert.h /usr/include/features.h Cassowary.h
 ClVariable.o: /usr/include/math.h /usr/include/huge_val.h
 ClVariable.o: /usr/include/endian.h /usr/include/bytesex.h /usr/include/nan.h
 ClVariable.o: /usr/lib/gcc-lib/i386-linux/2.7.2.1/include/float.h
 ClVariable.o: /usr/include/values.h /usr/include/ieee754.h
-ClVariable.o: /usr/include/ieee854.h
-debug.o: debug.h
+ClVariable.o: /usr/include/ieee854.h ClAbstractVariable.h
 test-ClConstraint.o: Cassowary.h /usr/include/math.h /usr/include/features.h
 test-ClConstraint.o: /usr/include/sys/cdefs.h /usr/include/huge_val.h
 test-ClConstraint.o: /usr/include/endian.h /usr/include/bytesex.h
 test-ClConstraint.o: /usr/include/nan.h
 test-ClConstraint.o: /usr/lib/gcc-lib/i386-linux/2.7.2.1/include/float.h
 test-ClConstraint.o: /usr/include/values.h /usr/include/ieee754.h
-test-ClConstraint.o: /usr/include/ieee854.h ClLinearEquation.h
-test-ClConstraint.o: ClLinearConstraint.h ClConstraint.h ClLinearExpression.h
-test-ClConstraint.o: ClVariable.h /usr/include/stdio.h /usr/include/libio.h
-test-ClConstraint.o: /usr/include/_G_config.h /usr/include/assert.h
-test-ClConstraint.o: ClStrength.h ClSymbolicWeight.h ClLinearInequality.h
+test-ClConstraint.o: /usr/include/ieee854.h ClVariable.h /usr/include/stdio.h
+test-ClConstraint.o: /usr/include/libio.h /usr/include/_G_config.h
+test-ClConstraint.o: /usr/include/assert.h ClAbstractVariable.h
+test-ClConstraint.o: ClLinearEquation.h ClLinearConstraint.h ClConstraint.h
+test-ClConstraint.o: ClLinearExpression.h debug.h ClStrength.h
+test-ClConstraint.o: ClSymbolicWeight.h ClLinearInequality.h
 test-ClConstraint.o: ClStayConstraint.h ClEditOrStayConstraint.h
 test-ClLinearExpression.o: Cassowary.h /usr/include/math.h
 test-ClLinearExpression.o: /usr/include/features.h /usr/include/sys/cdefs.h
@@ -179,23 +190,27 @@ test-ClLinearExpression.o: /usr/include/values.h /usr/include/ieee754.h
 test-ClLinearExpression.o: /usr/include/ieee854.h ClVariable.h
 test-ClLinearExpression.o: /usr/include/stdio.h /usr/include/libio.h
 test-ClLinearExpression.o: /usr/include/_G_config.h /usr/include/assert.h
-test-ClLinearExpression.o: ClLinearExpression.h ClSimplexSolver.h ClTableau.h
-test-ClLinearExpression.o: ClLinearInequality.h ClLinearConstraint.h
-test-ClLinearExpression.o: ClConstraint.h ClStrength.h ClSymbolicWeight.h
-test-ClLinearExpression.o: ClStayConstraint.h ClEditOrStayConstraint.h
-test-ClSimplexSolver.o: ClLinearEquation.h Cassowary.h /usr/include/math.h
+test-ClLinearExpression.o: ClAbstractVariable.h ClLinearExpression.h debug.h
+test-ClLinearExpression.o: ClSimplexSolver.h ClTableau.h ClLinearInequality.h
+test-ClLinearExpression.o: ClLinearConstraint.h ClConstraint.h ClStrength.h
+test-ClLinearExpression.o: ClSymbolicWeight.h ClStayConstraint.h
+test-ClLinearExpression.o: ClEditOrStayConstraint.h ClObjectiveVariable.h
+test-ClSimplexSolver.o: ClErrors.h Cassowary.h /usr/include/math.h
 test-ClSimplexSolver.o: /usr/include/features.h /usr/include/sys/cdefs.h
 test-ClSimplexSolver.o: /usr/include/huge_val.h /usr/include/endian.h
 test-ClSimplexSolver.o: /usr/include/bytesex.h /usr/include/nan.h
 test-ClSimplexSolver.o: /usr/lib/gcc-lib/i386-linux/2.7.2.1/include/float.h
 test-ClSimplexSolver.o: /usr/include/values.h /usr/include/ieee754.h
-test-ClSimplexSolver.o: /usr/include/ieee854.h ClLinearConstraint.h
-test-ClSimplexSolver.o: ClConstraint.h ClLinearExpression.h ClVariable.h
+test-ClSimplexSolver.o: /usr/include/ieee854.h ClLinearEquation.h
+test-ClSimplexSolver.o: ClLinearConstraint.h ClConstraint.h
+test-ClSimplexSolver.o: ClLinearExpression.h debug.h ClAbstractVariable.h
 test-ClSimplexSolver.o: /usr/include/stdio.h /usr/include/libio.h
-test-ClSimplexSolver.o: /usr/include/_G_config.h /usr/include/assert.h
-test-ClSimplexSolver.o: ClStrength.h ClSymbolicWeight.h ClLinearInequality.h
+test-ClSimplexSolver.o: /usr/include/_G_config.h ClStrength.h
+test-ClSimplexSolver.o: ClSymbolicWeight.h ClLinearInequality.h
 test-ClSimplexSolver.o: ClEditConstraint.h ClEditOrStayConstraint.h
 test-ClSimplexSolver.o: ClStayConstraint.h ClSimplexSolver.h ClTableau.h
+test-ClSimplexSolver.o: ClObjectiveVariable.h ClVariable.h
+test-ClSimplexSolver.o: /usr/include/assert.h
 test-ClStrength.o: Cassowary.h /usr/include/math.h /usr/include/features.h
 test-ClStrength.o: /usr/include/sys/cdefs.h /usr/include/huge_val.h
 test-ClStrength.o: /usr/include/endian.h /usr/include/bytesex.h
@@ -204,11 +219,11 @@ test-ClStrength.o: /usr/lib/gcc-lib/i386-linux/2.7.2.1/include/float.h
 test-ClStrength.o: /usr/include/values.h /usr/include/ieee754.h
 test-ClStrength.o: /usr/include/ieee854.h ClStrength.h ClSymbolicWeight.h
 test-ClVariable.o: ClVariable.h /usr/include/stdio.h /usr/include/libio.h
-test-ClVariable.o: /usr/include/_G_config.h /usr/include/assert.h
-test-ClVariable.o: /usr/include/features.h /usr/include/sys/cdefs.h
-test-ClVariable.o: Cassowary.h /usr/include/math.h /usr/include/huge_val.h
+test-ClVariable.o: /usr/include/_G_config.h /usr/include/sys/cdefs.h
+test-ClVariable.o: /usr/include/assert.h /usr/include/features.h Cassowary.h
+test-ClVariable.o: /usr/include/math.h /usr/include/huge_val.h
 test-ClVariable.o: /usr/include/endian.h /usr/include/bytesex.h
 test-ClVariable.o: /usr/include/nan.h
 test-ClVariable.o: /usr/lib/gcc-lib/i386-linux/2.7.2.1/include/float.h
 test-ClVariable.o: /usr/include/values.h /usr/include/ieee754.h
-test-ClVariable.o: /usr/include/ieee854.h
+test-ClVariable.o: /usr/include/ieee854.h ClAbstractVariable.h
