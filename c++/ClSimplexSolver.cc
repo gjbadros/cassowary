@@ -9,8 +9,6 @@
 //
 // ClSimplexSolver.cc
 
-char *szCassowaryVersion = "0.31";
-
 #include "debug.h"
 #include "ClSimplexSolver.h"
 #include "ClErrors.h"
@@ -24,6 +22,9 @@ char *szCassowaryVersion = "0.31";
 #include <float.h>
 #include <strstream>
 #include <queue>
+
+char *szCassowaryVersion = VERSION;
+
 
 // Need to delete all expressions
 // and all slack and dummy variables
