@@ -1,3 +1,14 @@
+Sun May  2 10:42:00 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClReader.l: Permit "_" in identifiers (needed for env
+	variable precondition variables).
+
+	* c++/ClLinearInequality.h: Honour _fStrictInequality flag when
+	testing FIsSatisfied().
+
+	* c++/ClLinearConstraint.h: Added missing "void" return type for
+	ChangeConstant.
+
 Fri Apr 30 09:45:51 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* c++/ClFDConnectorVariable.cc, c++/ClFDConnectorVariable.h:
