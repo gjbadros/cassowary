@@ -19,8 +19,8 @@ BISON = bison
 SWIG = swig
 PYTHON_INCLUDE = /uns/include/python1.5
 
-FLEX_FLAGS = -d
-#FLEX_FLAGS = 
+#FLEX_FLAGS = -d
+FLEX_FLAGS = 
 
 
 ## NOTE: the egcs-1.1b release's g++ will get a parse error
@@ -59,7 +59,8 @@ OBJS = 	ClAbstractVariable.o \
 	ClSimplexSolver.o \
 	ClStrength.o \
 	ClSymbolicWeight.o \
-	ClTableau.o
+	ClTableau.o \
+	ClVariable.o
 
 
 TEST_OBJS = test-ClConstraint.o    \
