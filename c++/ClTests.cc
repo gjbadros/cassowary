@@ -135,7 +135,7 @@ addDelete1()
    ClVariable x("x");
    ClSimplexSolver solver;
 
-   solver.addConstraint( *(new ClLinearEquation( x, 100, clsWeak() )) );
+   solver.addConstraint(new ClLinearEquation( x, 100, clsWeak() ));
     
    ClLinearInequality c10(x,cnLEQ,10.0);
    ClLinearInequality c20(x,cnLEQ,20.0);
@@ -201,8 +201,8 @@ addDelete2()
    ClSimplexSolver solver;
 
    solver
-     .addConstraint( *(new ClLinearEquation(x, 100.0, clsWeak())))
-     .addConstraint( *(new ClLinearEquation(y, 120.0, clsStrong())));
+     .addConstraint(new ClLinearEquation(x, 100.0, clsWeak()))
+     .addConstraint(new ClLinearEquation(y, 120.0, clsStrong()));
 
    ClLinearInequality c10(x,cnLEQ,10.0);
    ClLinearInequality c20(x,cnLEQ,20.0);
@@ -256,10 +256,10 @@ casso1()
    ClSimplexSolver solver;
 
    solver
-     .addConstraint( *(new ClLinearInequality(x,cnLEQ,y)) )
-     .addConstraint( *(new ClLinearEquation(y, x+3.0)) )
-     .addConstraint( *(new ClLinearEquation(x,10.0,clsWeak())) )
-     .addConstraint( *(new ClLinearEquation(y,10.0,clsWeak())) )
+     .addConstraint(new ClLinearInequality(x,cnLEQ,y))
+     .addConstraint(new ClLinearEquation(y, x+3.0))
+     .addConstraint(new ClLinearEquation(x,10.0,clsWeak()))
+     .addConstraint(new ClLinearEquation(y,10.0,clsWeak()))
      ;
    
    fOkResult = fOkResult && 
@@ -327,8 +327,8 @@ inconsistent2()
    ClSimplexSolver solver;
 
    solver
-     .addConstraint( *(new ClLinearInequality(x,cnGEQ,10.0)) )
-     .addConstraint( *(new ClLinearInequality(x,cnLEQ, 5.0)) );
+     .addConstraint(new ClLinearInequality(x,cnGEQ,10.0))
+     .addConstraint(new ClLinearInequality(x,cnLEQ, 5.0));
 
    // no exception, we failed!
    return(false);
@@ -364,12 +364,12 @@ inconsistent3()
    ClSimplexSolver solver;
 
    solver
-     .addConstraint( *(new ClLinearInequality(w,cnGEQ,10.0)) )
-     .addConstraint( *(new ClLinearInequality(x,cnGEQ,w)) )
-     .addConstraint( *(new ClLinearInequality(y,cnGEQ,x)) )
-     .addConstraint( *(new ClLinearInequality(z,cnGEQ,y)) )
-     .addConstraint( *(new ClLinearInequality(z,cnGEQ,8.0)) )
-     .addConstraint( *(new ClLinearInequality(z,cnLEQ,4.0)) );
+     .addConstraint(new ClLinearInequality(w,cnGEQ,10.0))
+     .addConstraint(new ClLinearInequality(x,cnGEQ,w))
+     .addConstraint(new ClLinearInequality(y,cnGEQ,x))
+     .addConstraint(new ClLinearInequality(z,cnGEQ,y))
+     .addConstraint(new ClLinearInequality(z,cnGEQ,8.0))
+     .addConstraint(new ClLinearInequality(z,cnLEQ,4.0));
 
    // no exception, we failed!
    return(false);
@@ -531,14 +531,14 @@ blackboxsat()
       if (strcasecmp(szCmd,"add") == 0)
         {
         cin >> i;
-        cout << "eq" << i << ": " << solver.addConstraintNoException(*(rgpcn[i])) 
+        cout << "eq" << i << ": " << solver.addConstraintNoException(rgpcn[i])
              << "\t" << *(rgpcn[i]) << endl;
         cout << r1 << " = " << r1.value() << endl;
         }
       else if (strcasecmp(szCmd,"del") == 0)
         {
         cin >> i;
-        cout << "REMeq" << i << ": " << solver.removeConstraintNoException(*(rgpcn[i])) 
+        cout << "REMeq" << i << ": " << solver.removeConstraintNoException(rgpcn[i])
              << "\t" << *(rgpcn[i]) << endl;
         cout << r1 << " = " << r1.value() << endl;
         }

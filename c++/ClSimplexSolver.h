@@ -69,39 +69,42 @@ class ClSimplexSolver : public ClTableau {
   ClSimplexSolver &addLowerBound(ClVariable v, Number lower)
     { 
     ClLinearInequality *pcn = new ClLinearInequality(ClLinearExpression(v - lower));
-    return addConstraint(*pcn);
+    return addConstraint(pcn);
     }
   ClSimplexSolver &addUpperBound(ClVariable v, Number upper)
     {
     ClLinearInequality *pcn = new ClLinearInequality(ClLinearExpression(upper - v));
-    return addConstraint(*pcn);
+    return addConstraint(pcn);
     }
   ClSimplexSolver &addBounds(ClVariable v, Number lower, Number upper)
     { addLowerBound(v,lower); addUpperBound(v,upper); return *this; }
 
   // Add the constraint cn to the tableau
-  ClSimplexSolver &addConstraint(const ClConstraint &cn);
+  ClSimplexSolver &addConstraint(const ClConstraint *const pcn);
 
+  // Deprecated! --02/19/99 gjb
+  ClSimplexSolver &addConstraint(const ClConstraint &cn) 
+    { return addConstraint(&cn); }
 
   // Same as above, but returns false if the constraint cannot be solved
   // (i.e., the resulting system would be unsatisfiable)
   // The above function "addConstraint" throws an exception in that case
   // which may be inconvenient
-  bool addConstraintNoException(const ClConstraint &cn);
+  bool addConstraintNoException(const ClConstraint *const pcn);
 
   // Add an edit constraint for "v" with given strength
   ClSimplexSolver &addEditVar(const ClVariable &v, const ClStrength &strength = clsStrong(),
                               double weight = 1.0 )
     { 
       ClEditConstraint *pedit = new ClEditConstraint(v, strength, weight);
-      return addConstraint(*pedit);
+      return addConstraint(pedit);
     }
 
   ClSimplexSolver &removeEditVar(ClVariable v)
     {
       const ClEditInfo *pcei = _editVarMap[v];
       const ClConstraint *pcnEdit = pcei->_pconstraint;
-      removeConstraint(*pcnEdit);
+      removeConstraint(pcnEdit);
       delete pcnEdit;
       return *this;
     }
@@ -157,17 +160,22 @@ class ClSimplexSolver : public ClTableau {
 			   const ClStrength &strength = clsWeak(), double weight = 1.0 )
     {
     ClStayConstraint *pcn = new ClStayConstraint(v,strength,weight); 
-    return addConstraint(*pcn); 
+    return addConstraint(pcn); 
     }
 
   // Remove the constraint cn from the tableau
   // Also remove any error variable associated with cn
-  ClSimplexSolver &removeConstraint(const ClConstraint &cn);
+  ClSimplexSolver &removeConstraint(const ClConstraint *const pcn);
+
+  // Deprecated! --02/19/99 gjb
+  ClSimplexSolver &removeConstraint(const ClConstraint &cn) 
+    { return removeConstraint(&cn); }
+
 
   // Same as above, but returns false if the constraint dne
   // The above function "removeConstraint" throws an exception in that case
   // which may be inconvenient
-  bool removeConstraintNoException(const ClConstraint &cn);
+  bool removeConstraintNoException(const ClConstraint *const pcn);
 
 
   // Re-initialize this solver from the original constraints, thus
@@ -318,7 +326,7 @@ class ClSimplexSolver : public ClTableau {
   const ClVarToConstraintMap &MarkerMap() const
     { return _constraintsMarked; }
 
-  bool FIsConstraintSatisfied(const ClConstraint &cn) const;
+  bool FIsConstraintSatisfied(const ClConstraint *const pcn) const;
 
   void setPv(void *pv)
     { _pv = pv; }

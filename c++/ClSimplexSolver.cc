@@ -43,8 +43,9 @@ ClSimplexSolver::~ClSimplexSolver()
 
 // Add the constraint cn to the tableau
 ClSimplexSolver &
-ClSimplexSolver::addConstraint(const ClConstraint &cn)
+ClSimplexSolver::addConstraint(const ClConstraint *const pcn)
 {
+  const ClConstraint &cn = *pcn;
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << cn << ")" << endl;
@@ -85,7 +86,7 @@ ClSimplexSolver::addConstraint(const ClConstraint &cn)
 #ifdef CL_TRACE
     cerr << "could not add directly -- caught ExCLRequiredFailure error" << endl;
 #endif
-    removeConstraint(cn);
+    removeConstraint(pcn);
     throw;
     }
 
@@ -98,7 +99,7 @@ ClSimplexSolver::addConstraint(const ClConstraint &cn)
       cerr << "Failed solve! Could not add constraint.\n"
            << *this << endl;
 #endif
-      removeConstraint(cn);
+      removeConstraint(pcn);
       if (FIsExplaining())
         throw e;
       else
@@ -131,15 +132,15 @@ ClSimplexSolver::addConstraint(const ClConstraint &cn)
 // The above function "addConstraint" throws an exception in that case
 // which may be inconvenient
 bool
-ClSimplexSolver::addConstraintNoException(const ClConstraint &cn)
+ClSimplexSolver::addConstraintNoException(const ClConstraint *const pcn)
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
-  cerr << "(" << cn << ")" << endl;
+  cerr << "(" << *pcn << ")" << endl;
 #endif
   try 
     {
-    addConstraint(cn);
+    addConstraint(pcn);
     return true;
     }
   catch (const ExCLRequiredFailure &e)
@@ -230,8 +231,9 @@ private:
 // Remove the constraint cn from the tableau
 // Also remove any error variable associated with cn
 ClSimplexSolver &
-ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
+ClSimplexSolver::removeConstraint(const ClConstraint *const pcnconst)
 {
+  const ClConstraint &cnconst = *pcnconst;
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << cnconst << ")" << endl;
@@ -472,15 +474,15 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
   // The above function "removeConstraint" throws an exception in that case
   // which may be inconvenient
 bool
-ClSimplexSolver::removeConstraintNoException(const ClConstraint &cn)
+ClSimplexSolver::removeConstraintNoException(const ClConstraint *const pcn)
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
-  cerr << "(" << cn << ")" << endl;
+  cerr << "(" << *pcn << ")" << endl;
 #endif
   try 
     {
-    removeConstraint(cn);
+    removeConstraint(pcn);
     return true;
     }
   catch (const ExCLConstraintNotFound &e)
@@ -1477,8 +1479,10 @@ ostream &operator<<(ostream &xo, const ClSimplexSolver &clss)
 #endif
 
 bool 
-ClSimplexSolver::FIsConstraintSatisfied(const ClConstraint &cn) const
+ClSimplexSolver::FIsConstraintSatisfied(const ClConstraint *const pcn) const
 {
+  const ClConstraint &cn = *pcn;
+
   ClConstraintToVarMap::const_iterator it_marker = _markerVars.find(&cn);
   if (it_marker == _markerVars.end())
     { // could not find the constraint
