@@ -85,6 +85,8 @@ public:
 
   virtual bool FIsSatisfied() const { return false; }
 
+  virtual bool FIsInSolver() const { return _times_added != 0; }
+
   void ChangeStrength( const ClStrength &strength) 
     { 
       if (_times_added == 0) {
