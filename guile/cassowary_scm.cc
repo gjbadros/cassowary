@@ -216,7 +216,7 @@ The value is a double.  Use `cl-int-value' to return an integer. */
   }
 
   ClVariable *pclv = PclvFromScm(clv);
-  return gh_double2scm(pclv->value());
+  return gh_double2scm(pclv->Value());
 }
 #undef FUNC_NAME
 
