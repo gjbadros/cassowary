@@ -315,7 +315,7 @@ class ClSimplexSolver : public ClTableau {
         }
       return *this; }
 
-  typedef void (*PfnChangeClvCallback)(ClVariable clv, ClSimplexSolver *psolver);
+  typedef void (*PfnChangeClvCallback)(ClVariable *pclv, ClSimplexSolver *psolver);
 
   void SetChangeClvCallback(PfnChangeClvCallback pfn)
     { _pfnChangeClvCallback = pfn; }
@@ -536,7 +536,7 @@ class ClSimplexSolver : public ClTableau {
   void ChangeClv(ClVariable clv, Number n) {
     clv.change_value(n); 
     if (_pfnChangeClvCallback) 
-      _pfnChangeClvCallback(clv,this);
+      _pfnChangeClvCallback(&clv,this);
   }
 
   /// instance variables

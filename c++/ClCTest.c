@@ -39,7 +39,12 @@ int main(int argc, char *argv[] )
   printf("x = %g, y = %g\n",CL_ClvValue(x),CL_ClvValue(y));
 
   printf("\"x\" has value %g\n", CL_ClvValue(CL_ClvLookup("x")));
-  
+
+  CL_SimplexSolverSetEditedValue(solver,x,9);
+  printf("x = %g, y = %g\n",CL_ClvValue(x),CL_ClvValue(y));
+
+  CL_SimplexSolverPrint(solver,stderr);
+
   CL_Shutdown();
   return 0;
 }

@@ -41,12 +41,43 @@ CLV CL_ClvNew(const char *szName, double value, CL_SimplexSolver solver)
   return pclv;
 }
 
+void CL_VariableSetPv(CLV var, void *pv)
+{ var->setPv(pv); }
+
+void *CL_VariablePv(CLV var)
+{ return var->Pv(); }
+
+
 /* Return a new ClSimplexSolver object */
 CL_SimplexSolver CL_SimplexSolverNew()
 {
   ClSimplexSolver *psolver = new ClSimplexSolver();
   return psolver;
 }
+
+
+/* Print the ClSimplexSolver object out to the given FILE * */
+void 
+CL_SimplexSolverPrint(CL_SimplexSolver solver, FILE *out)
+{
+  strstream xo;
+  xo << *solver << endl;
+  fprintf(out,"%s",xo.str());
+}
+
+void 
+CL_SimplexSolverSetChangeClvCallback(CL_SimplexSolver solver, PfnChangeClvCallback pfn)
+{
+  solver->SetChangeClvCallback(pfn);
+}
+
+void 
+CL_SimplexSolverAddStrongStay(CL_SimplexSolver solver, CLV var, double weight)
+{
+  solver->addStay(*var,clsStrong(),weight);
+}
+
+
 
 /* Return a clvariable with the given name, or NULL if not found */
 CLV CL_ClvLookup(const char *szName)
@@ -60,6 +91,13 @@ double CL_ClvValue(const CLV var)
 {
   return var->value();
 }
+
+int
+CL_ClvIsNil(const CLV var)
+{
+  return var->isNil();
+}
+
 
 /* Return a new constraint from parsing the strings */
 CL_Constraint CL_ParseConstraint(const char *szConstraintRule, const char *szConstraintStrength)
@@ -79,7 +117,11 @@ CL_Constraint CL_ParseConstraint(const char *szConstraintRule, const char *szCon
 /* Add a constraint to the solver; return 1 on success, 0 on failure */
 int CL_AddConstraint(CL_SimplexSolver solver, CL_Constraint cn)
 {
-  return (solver->addConstraintNoException(cn)?1:0);
+  try {
+    return (solver->addConstraintNoException(cn)?1:0);
+  } catch (...) {
+    return 0;
+  }
 }
 
 void CL_Solve(CL_SimplexSolver solver)
@@ -90,5 +132,11 @@ void CL_Solve(CL_SimplexSolver solver)
 void CL_Resolve(CL_SimplexSolver solver)
 {
   solver->resolve();
+}
+
+
+void CL_SimplexSolverSetEditedValue(CL_SimplexSolver solver, CLV var, double n)
+{
+  solver->setEditedValue(*var,n);
 }
 

@@ -19,6 +19,14 @@ FLEX = flex
 BISON = bison
 SWIG = swig
 PYTHON_INCLUDE = /uns/include/python1.5
+DYNLINK = no
+#DYNLINK = yes
+
+EXTRA_LD_ARGS_FOR_DYNLINK=
+
+ifeq ($(DYNLINK),yes)
+	EXTRA_LD_ARGS_FOR_DYNLINK=$(LDLIBS)
+endif
 
 #FLEX_FLAGS = -d
 FLEX_FLAGS = 
@@ -187,7 +195,7 @@ TAGS: $(SOURCES) $(HEADERS)
 cassowary-tests: $(TESTS)
 
 %: %.o $(CL_LIBRARY) $(OTHER_LIBS)
-	$(CPP) $(LDFLAGS) -o $@ $^ # $(LDLIBS) # uncomment if want dynlink
+	$(CPP) $(LDFLAGS) -o $@ $^ $(EXTRA_LD_ARGS_FOR_DYNLINK)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c -o $@ $<

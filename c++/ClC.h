@@ -17,6 +17,9 @@
 extern "C" {
 #endif
 
+#include <stdio.h>
+
+#define boolean int
 
 struct ClVariable;
 
@@ -41,14 +44,30 @@ void CL_Shutdown();
    solver is non null */
 CLV CL_ClvNew(const char *szName, double value, CL_SimplexSolver solver);
 
+void CL_VariableSetPv(CLV var, void *pv);
+
+void *CL_VariablePv(CLV var);
+
 /* Return a new ClSimplexSolver object */
 CL_SimplexSolver CL_SimplexSolverNew();
+
+/* Print the ClSimplexSolver object out to the given FILE * */
+void CL_SimplexSolverPrint(CL_SimplexSolver solver, FILE *out);
+
+  /* FIXGJB: do not use ClVariable -- use ClAbstractVariable, perhaps? */
+typedef void (*PfnChangeClvCallback)(CLV clv, CL_SimplexSolver solver);
+
+void CL_SimplexSolverSetChangeClvCallback(CL_SimplexSolver solver, PfnChangeClvCallback pfn);
+
+void CL_SimplexSolverAddStrongStay(CL_SimplexSolver solver, CLV var, double weight);
 
 /* Return a clvariable with the given name, or NULL if not found */
 CLV CL_ClvLookup(const char *szName);
 
 /* Return the value of clv */
 double CL_ClvValue(const CLV clv);
+
+boolean CL_ClvIsNil(const CLV clv);
 
 /* Return a new constraint from parsing the strings */
 CL_Constraint CL_ParseConstraint(const char *szConstraintRule, const char *szConstraintStrength);
@@ -60,6 +79,9 @@ void CL_Solve(CL_SimplexSolver solver);
 
 void CL_Resolve(CL_SimplexSolver solver);
 
+void CL_SimplexSolverSetEditedValue(CL_SimplexSolver solver, CLV var, double n);
+
+#undef boolean
 
 #ifdef __cplusplus
 }
