@@ -1,3 +1,26 @@
+Sun Aug  2 16:49:34 1998  Greg Badros  <gjb@cs.washington.edu>
+
+	* ClSimplexSolver.h: Added ConstraintMap() accessor to
+	_markerVars, for cl-constraint-list guile primitive
+
+	* ClConstraint.h: Added setPv(), Pv(), and _pv field to a
+	constraint, for attaching extra information.
+
+Thu Jul 30 19:15:40 1998  Greg Badros  <gjb@cs.washington.edu>
+
+	* ClTests.cc: Added simple2, to test new EditMisuse exception on
+	editing a variable that is nowhere in the solver.
+
+	* ClTableau.h, ClTableau.cc:  Be more careful about inserting into
+	_externalParametricVars; add FIsBasicVar to assist that care.
+
+	* ClSimplexSolver.cc, ClSimplexSolver.h: Added pfnCnSatCallback -- 
+	does nothing for now;  throw an ExCLEditMisuse exception if an
+	edit constraint is added on a variable that is not in the tableau
+	(needs at least a stay constraint in the solver); replace some
+	calls to rowExpression with FIsBasicVar when the latter is the
+	intent.
+
 Fri Jul 17 19:24:54 1998  Greg Badros  <gjb@cs.washington.edu>
 
 	* ClVariable.h, .java: Added change_value memfn, and make it virtual
