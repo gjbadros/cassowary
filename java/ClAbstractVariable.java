@@ -56,6 +56,9 @@ abstract class ClAbstractVariable
 
   public abstract String toString();
 
+  public static int numCreated() 
+    { return iVariableNumber; }
+
   // for debugging
   //  public final int hashCode() { return hash_code; }
 
