@@ -1,7 +1,7 @@
 Cassowary Copyright and Licensing Information 
 (Applies to everything *except* the Smalltalk implementation in
  smalltalk/ sub-directory -- see smalltalk/REAMDE for its license)
-26-June-1998
+26-June-1998, Revised with Scwm Exception 23-October-1999
 
 The University of Washington is making the Cassowary Constraint Solving
 Toolkit (Software) available to you (the End User) without charge and
@@ -21,6 +21,10 @@ only on terms consistent with this license in the underlying Software and
 if the End User follows the conditions set forth below in Notices. All
 rights not expressly granted to End User are reserved by the University of
 Washington.
+
+As a special exception, a binary version of this library can be used
+for any purposes under the conditions of the GNU Public License if it is 
+linked against the Scheme Constraints Window Manager by Greg J. Badros.
 
 
 Notices
