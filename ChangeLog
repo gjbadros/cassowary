@@ -1,3 +1,20 @@
+Tue Apr 20 10:18:32 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* smalltalk/README: Note that smalltalk implementation is now in
+	the public domain.
+
+	* README: Update to version 0.43, note about smalltalk
+	implementation being in public domain.
+
+	* LICENSE: Note about not applying to smalltalk implementation
+
+	* ANNOUNCE: Update date to today.
+
+	* *: Changed copyright to be "Greg J. Badros and Alan Borning"
+	instead of "Alan Borning and Greg J. Badros".  Okayed by Alan --
+	to hopefully encourage more people to write me with their
+	questions/problems rather than Alan.
+
 Mon Apr 19 13:45:35 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* cassowary.spec: Added --with-guile-prefix
