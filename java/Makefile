@@ -19,7 +19,11 @@ JAVAC = javac
 TESTS = test-ClStrength test-ClVariable test-ClLinearExpression test-ClConstraint \
 	test-ClSimplexSolver ClTests
 
+# For java, keep ClErrors.java first, since it defines multiple
+# classes that are used by the others (javac does not get
+# dependences right if multiple classes are in one file)
 JAVAFILES = \
+	ClErrors.java \
 	ClAbstractVariable.java \
 	ClDummyVariable.java \
 	ClObjectiveVariable.java \
@@ -27,7 +31,6 @@ JAVAFILES = \
 	ClConstraint.java \
 	ClEditConstraint.java \
 	ClEditOrStayConstraint.java \
-	ClErrors.java \
 	ClLinearConstraint.java \
 	ClLinearEquation.java \
 	ClLinearExpression.java \
