@@ -54,8 +54,8 @@ class MyCanvas: public wxCanvas
 {
 public:
   MyCanvas(wxWindow *window, int x = -1, int y = -1, int width = -1, int height = -1,
-	   long style = wxRETAINED, char *name = "mycanvas") :
-    wxCanvas(window,x,y,width,height,style,name)
+	   long style = wxRETAINED, char *Name = "mycanvas") :
+    wxCanvas(window,x,y,width,height,style,Name)
     { }
   
   void OnEvent(wxMouseEvent &event)
@@ -65,7 +65,7 @@ public:
       event.Position(&x,&y); // get the position
       v.push_back(x);
       v.push_back(y);
-      solver.resolve(v);
+      solver.Resolve(v);
       Clear();
       OnPaint(); // repaint
     }
@@ -101,7 +101,7 @@ public:
 	upd ++ ;
 	}
 #endif
-      IntDrawLine(xStart.value(),yStart.value(),xEnd.value(),yEnd.value());
+      IntDrawLine(xStart.Value(),yStart.Value(),xEnd.Value(),yEnd.Value());
       GetDC()->EndDrawing();
     }
 };
@@ -133,20 +133,20 @@ wxFrame *MyApp::OnInit(void)
   // Show the frame
   frame->Show(TRUE);
 
-  xEnd.set_value(100.0);
-  yEnd.set_value(100.0);
+  xEnd.SetValue(100.0);
+  yEnd.SetValue(100.0);
 
   solver
-    .addStay(xStart)
-    .addStay(yStart)
-    .addStay(xEnd)
-    .addStay(yEnd);
+    .AddStay(xStart)
+    .AddStay(yStart)
+    .AddStay(xEnd)
+    .AddStay(yEnd);
 
   solver
-    .addConstraint(ClLinearEquation(xEnd,xStart+200.0))
-    .addConstraint(ClLinearEquation(yEnd,xStart*2.0))
-    .addConstraint(ClEditConstraint(xStart))
-    .addConstraint(ClEditConstraint(yStart));
+    .AddConstraint(ClLinearEquation(xEnd,xStart+200.0))
+    .AddConstraint(ClLinearEquation(yEnd,xStart*2.0))
+    .AddConstraint(ClEditConstraint(xStart))
+    .AddConstraint(ClEditConstraint(yStart));
 
   // Return the main frame window
   return frame;
