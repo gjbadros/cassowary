@@ -41,6 +41,7 @@ libcassowary_a_SOURCES = \
 	ClSymbolicWeight.cc \
 	ClTableau.cc \
 	ClVariable.cc \
+	ClFDVariable.cc \
 	ClFloatVariable.cc \
 	ClSlackVariable.cc \
 	ClDummyVariable.cc \
@@ -87,6 +88,7 @@ pkginclude_HEADERS = \
 	ClStrength.h \
 	ClSymbolicWeight.h \
 	ClTableau.h \
+	ClFDVariable.h \
 	ClFloatVariable.h \
 	ClVariable.h \
 	ClReader.h \
