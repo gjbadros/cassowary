@@ -103,16 +103,40 @@ class ClSimplexSolver : public ClTableau {
     {
       const ClConstraintAndIndex *pcai = my_editVarMap[&v];
       const ClConstraint *pcnEdit = pcai->pconstraint;
-      return removeConstraint(*pcnEdit);
+      removeConstraint(*pcnEdit);
+      delete pcnEdit;
+      return *this;
     }
 
+  // beginEdit() should be called before sending
+  // resolve() messages, after adding the appropriate edit variables
+  // 
+  // it is basically a no-op for now,
+  // but it is specified in the API just in case
+  // we need it later
   ClSimplexSolver &beginEdit()
     {
       assert(my_editVarMap.size() != 0);
+      // may later want to do more in here
       return *this;
     }
-    
+
+  // endEdit should be called after editing has finished
+  // for now, it just removes all edit variables
+  ClSimplexSolver &endEdit()
+    {
+      assert(my_editVarMap.size() != 0);
+      removeAllEditVars();
+      // may later want to do more in here
+      return *this;
+    }
+
+  // removeAllEditVars() just eliminates all the edit constraints
+  // that were added
   ClSimplexSolver &removeAllEditVars();
+
+  int numEditVars() const
+  { return my_editVarMap.size(); }
 
   // Add weak stays to the x and y parts of each point. These have
   // increasing weights so that the solver will try to satisfy the x
@@ -148,6 +172,11 @@ class ClSimplexSolver : public ClTableau {
   // the constants of the edit variables.
   void resolve(const vector<Number> &newEditConstants);
 
+  // Re-solve the cuurent collection of constraints, given the new
+  // values for the edit variables that have already been
+  // suggested (see suggestValue() method)
+  void resolve();
+
   // Convenience function for resolve-s of two variables
   void resolve(Number x, Number y)
     {
@@ -156,6 +185,14 @@ class ClSimplexSolver : public ClTableau {
     vals.push_back(y);
     resolve(vals);
     }
+
+  // Suggest a new value for an edit variable
+  // the variable needs to be added as an edit variable
+  // and beginEdit() needs to be called before this is called.
+  // The tableau will not be solved completely until
+  // after resolve() has been called
+  ClSimplexSolver &suggestValue(ClVariable &v, Number x);
+
 
   friend ostream &operator<<(ostream &xo, const ClSimplexSolver &tableau);
   ostream &printOn(ostream &xo) const;
