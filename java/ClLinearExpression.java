@@ -26,6 +26,13 @@ class ClLinearExpression
       my_terms = new Hashtable();
     }
 
+  public ClLinearExpression()
+    {
+      my_constant = new Double(0);
+      my_terms = new Hashtable();
+    }
+
+
   public ClLinearExpression(ClAbstractVariable clv, double value, double constant)
     {
       my_constant = new Double(constant);
@@ -235,7 +242,7 @@ class ClLinearExpression
        return this;
      }
   
-  public ClAbstractVariable  anyVariable() throws ExCLInternalError
+  public ClAbstractVariable anyVariable() throws ExCLInternalError
     {
       if (isConstant())
 	{
