@@ -1,3 +1,42 @@
+Mon Mar  1 13:46:48 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* README: Updated for version 0.31.
+
+	* c++/Makefile: Added QocaBench.o to TEST_OBJS, comment out
+	CL_USE_HASH_MAP_AND_SET by default.
+
+	* c++/ClTestColumns.cc: Allocate constraint objects on heap, not
+	as temporaries on local stack
+
+	* c++/ClStayConstraint.h, c++/ClSimplexSolver.h,
+	c++/ClSimplexSolver.cc, c++/ClPoint.h, c++/ClLinearInequality.h,
+	c++/ClEditOrStayConstraint.h, c++/ClEditConstraint.h: Pass and
+	return ClVariable-s by value, not by reference. (Fixes bug in
+	QocaBench from re-use of a ClVariable object with the underlying
+	pointer different.
+
+	* c++/Cl.h: include creader.h
+	
+	* c++/README:  Fix spelling of deprecated, URL for WxWindows.
+
+	* c++/test-ClConstraint.cc: Comment out unused variables
+
+Mon Mar  1 12:53:02 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/qdemos/QuadDemoWindow.cc:  Allocate constraint objects on
+	heap, not as temporaries on local stack.
+
+Fri Feb 26 09:16:31 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* wrappers/cassowary.i: Use .c_str() off of exception descriptions 
+	to get the char * (description() now returns a string)
+
+Fri Feb 26 09:11:17 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClConstraint.h: Added FIsInSolver()
+
+	* guile/cassowary_scm.cc: Wrap cl-constraint-is-in-solver?
+
 Thu Feb 25 18:58:55 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* guile/cltests.scm: Added (use-modules..) invocation to get the

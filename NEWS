@@ -11,12 +11,21 @@ Seattle, WA 98195-2350
 
 with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
 
-23-Feb-1999: Changes since Cassowary v0.3 (for release v0.31)
+26-Feb-1999: Changes since Cassowary v0.3 (for release v0.31)
 * Changes to C++
-** Permit auto-creation of variables in PcnParseConstraint as an option
+** Use a function-object for controlling lookup/creation of variables in PcnParseConstraint
 ** Fix bugs in creader.y parser (did not accept parens or division
 before).  Introduced "==" as a a synonym for "="
 ** Added szCassowaryVersion id string as a public char *.
+** Added ChangeStrength, ChangeWeight to ClConstraint's public
+interface, and have it valid only when the constraint is not in a solver 
+** Added ClConstraint::FIsInSolver()
+
+* Changes to Guile wrapper
+** Fix bugs
+** Wrap parsing functionality, including a lambda for lookup/creation of 
+variables
+** Build a dynamically-loadable guile module, update cltests.scm to use it
 
 23-Feb-1999: Version 0.3 released.
 
