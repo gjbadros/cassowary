@@ -8,6 +8,7 @@ Smalltalk declareVariable: 'ExCLNotEnoughStays' poolName: 'ClConstants'.
 Smalltalk declareVariable: 'ExCLRequiredFailure' poolName: 'ClConstants'.
 Smalltalk declareVariable: 'ExCLTooDifficult' poolName: 'ClConstants'.
 Smalltalk declareVariable: 'ExCLNonlinearExpression' poolName: 'ClConstants'.
+Smalltalk declareVariable: 'ClEpsilon' poolName: 'ClConstants'.
 "$COMPATIBLE-DECLARATIONS-END$"!
 
 Application create: #ClKernel with:
@@ -95,7 +96,7 @@ Object subclass: #ClLinearExpression
 
 ClKernel becomeDefault!
 Object subclass: #ClSimplexSolver
-    instanceVariableNames: 'rows columns objective infeasibleRows prevEditConstants stayPlusErrorVars stayMinusErrorVars editPlusErrorVars editMinusErrorVars markerVars errorVars slackCounter artificialCounter dummyCounter '
+    instanceVariableNames: 'rows columns objective infeasibleRows stayPlusErrorVars stayMinusErrorVars editVars editConstraints editPlusErrorVars editMinusErrorVars prevEditConstants newEditConstants markerVars errorVars slackCounter artificialCounter dummyCounter '
     classVariableNames: ''
     poolDictionaries: 'ClConstants '!
 
@@ -109,7 +110,7 @@ ClKernel becomeDefault!
 Object variableSubclass: #ClSymbolicWeight
     instanceVariableNames: ''
     classVariableNames: 'Zero '
-    poolDictionaries: ''!
+    poolDictionaries: 'ClConstants '!
 
 ClKernel becomeDefault!
 Application subclass: #ClKernel
@@ -212,7 +213,6 @@ printOn: aStream
 		aStream <WriteStream on <String>>
 	"
 
-# FIXGJB: what is nextPutAll: message?  Comma symbol's use?
 	self name isNil
 		ifTrue: [aStream nextPutAll: 'CV#' , self basicHash printString]
 		ifFalse: [aStream nextPutAll: self name].
@@ -344,8 +344,6 @@ isRestricted
 	^true
 ! !
 
-
-#### FIXGJB: What is this?
 !ClEditConstraint class publicMethods !
 
 variable: aVariable value: aValue strength: aStrength
@@ -408,6 +406,7 @@ _PRAGMA_ClConstants
 		(name: ExCLRequiredFailure pool: ClConstants)
 		(name: ExCLTooDifficult pool: ClConstants)
 		(name: ExCLNonlinearExpression pool: ClConstants)
+		(name: ClEpsilon pool: ClConstants)
 	"!
 
 initializeExceptions
@@ -460,6 +459,18 @@ loaded
 	"
 	super loaded.
 	self initializeExceptions.
+	self setEpsilon.
+
+!
+
+setEpsilon
+	"ACTION
+		Set the shared fudge factor for use in testing floats for equality, symbolic weights for
+		non-negativity, etc.  This could be changed if an application uses numbers with a very
+		different scale.
+	"
+	ClEpsilon := 1.0e-8.
+
 
 ! !
 
@@ -496,7 +507,14 @@ new
 
 	^super new
 		initialize;
-		yourself! !
+		yourself!
+
+newWithSymbolicWeight
+		| x |
+	x := self new.
+	x constant: ClSymbolicWeight zero.
+	^x
+! !
 
 !ClLinearExpression publicMethods !
 
@@ -1075,6 +1093,13 @@ isRestricted
 	^false
 ! !
 
+!ClSimplexSolver class publicMethods !
+
+epsilon
+	"this is declared as  a method for the benefit of Float, which otherwise doesn't have
+		access to this constant.  (Maybe I'm doing something wrong ...)"
+	^ClEpsilon! !
+
 !ClSimplexSolver class privateMethods !
 
 new
@@ -1099,7 +1124,6 @@ addConstraint: cn
 	"ACTION
 		Add the constraint cn to the tableau.
 	PARAMETERS
-#FIXGJB: cn is really just a ClConstraint, methinks
 		cn <ClLinearConstraint>
 	"
 		| expr |
@@ -1113,6 +1137,16 @@ addConstraint: cn
 	(self tryAddingDirectly: expr) ifFalse: [self addWithArtificialVariable: expr].
 	self optimize: self objective.
 	self setExternalVariables.
+!
+
+addEditVar: v strength: s
+	"ACTION
+		Add v to the collection of variables being edited.
+	PARAMETERS
+		v <ClVariable>
+		s <ClStrength>
+	"
+	self addConstraint: (ClEditConstraint variable: v strength: s)
 !
 
 addPointStays: points
@@ -1150,6 +1184,34 @@ addStay: v strength: s
 	self addConstraint: (ClStayConstraint variable: v strength: s).
 !
 
+beginEdit
+	"ACTION
+		Do any needed setup to begin editing.  The sequence of calls should be:
+					solver addEditVar: v1; addEditVar: v2;  ... etc.
+					solver beginEdit.
+	Then repeat each time new values are provided for the editted variables:
+					solver suggestValue: v1 newvalue: nv1.
+					solver suggestValue: v2 newvalue: nv2.
+					solver resolve.
+		Then to terminate editing:
+					solver endEdit.
+
+	"
+
+	self newEditConstants: (Array new: self editVars size).
+
+!
+
+endEdit
+	"ACTION
+		Do any needed cleanup after editing.  (See beginEdit for the sequence of calls.)
+	"
+
+	self editConstraints do: [:cn | self removeConstraint: cn].
+	self editVars: #( ).
+	self editConstraints: #( ).
+!
+
 removeConstraint: cn
 	"ACTION
 		Remove the constraint cn to the tableau.  Also remove any error variables associated with cn.
@@ -1166,13 +1228,11 @@ removeConstraint: cn
 
 	"remove any error variables from the objective function"
 	eVars := self errorVars removeKey: cn ifAbsent: [#( )].
-#FIXGJB: elsewhere, zRow is the expression row, not the objective variable
 	zRow := self objective.
 	obj := self rows at: zRow.
 	eVars do: [:v | 
 		expr := self rows at: v ifAbsent: [nil].
 		expr isNil
-#FIXGJB: how does ( -1.0*cn strength symbolicWeight ) turn into a coefficient?
 			ifTrue: [obj addVariable: v coefficient: -1.0*cn strength symbolicWeight subject: zRow solver: self]
 			ifFalse: [obj addExpression: expr times: -1.0*cn strength symbolicWeight subject: zRow solver: self]].
 
@@ -1230,7 +1290,6 @@ removeConstraint: cn
 		1 to: index-1 do: [:i | self editMinusErrorVars at: i put: (oldEditMinusErrorVars at: i)].
 		index+1 to: oldSize do: [:i | self editMinusErrorVars at: i-1 put: (oldEditMinusErrorVars at: i)].
 		"remove the constants from prevEditConstants"
-#FIXGJB: do we need the oldPrevEditConstants variable?
 		oldPrevEditConstants := self prevEditConstants.
 		self prevEditConstants: (Array new: oldSize-1).
 		1 to: index-1 do: [:i | self prevEditConstants at: i put: (oldPrevEditConstants at: i)].
@@ -1267,18 +1326,28 @@ reset
 	others do: [:cn | self addConstraint: cn]
 !
 
-resolve: newEditConstants
+resolve
 	"ACTION
-		Re-solve the current collection of constraints for new values for the constants of the edit variables.
-	PARAMETERS
-		newEditConstants <Array of Float>
+		Re-solve the current collection of constraints for the new values in newEditConstants.
 	"
 
 	self infeasibleRows: OrderedCollection new.
 	self resetStayConstants.
-	self resetEditConstants: newEditConstants.
+	self resetEditConstants.
 	self dualOptimize.
 	self setExternalVariables.
+!
+
+suggestValue: var newValue: val
+	"ACTION
+		We should be editting var.  Suggest a new value for it.
+	PARAMETERS
+		var <ClVariable>
+		val <Float>
+	"
+	1 to: self editVars size do: [:i | 
+		(editVars at: i) == var ifTrue: [self newEditConstants at: i put: val.  ^self]].
+	ExCLInternalError signal: 'variable not currently being edited'
 ! !
 
 !ClSimplexSolver privateMethods !
@@ -1313,7 +1382,6 @@ addWithArtificialVariable: expr
 	expr terms keysAndValuesDo: [:v :c | azRow terms at: v put: c].
 	self addRow: az expr: azRow.
 	self addRow: av expr: expr.
-#FIXGJB: comment doesn't match code...
 	"try to optimize av to 0"
 	self optimize: az.
 	"Check that we were able to make the objective value 0.  If not, the original constraint was unsatisfiable."
@@ -1464,15 +1532,24 @@ dualOptimize
 				expr variablesAndCoefficientsDo: [:v :c |
 					(c>0.0 and: [v isPivotable]) ifTrue: [
 						zc := zRow terms at: v ifAbsent: [nil].
-#FIXGJB: here ClSymbolicWeight is being used as a coefficient, too
 						r := zc isNil ifTrue: [ClSymbolicWeight zero] ifFalse: [zc/c].
 						(ratio isNil or: [r < ratio]) ifTrue: [entryVar := v.  ratio := r]]].
 				ratio isNil ifTrue: [ExCLInternalError signal].
 				self pivot: entryVar exitVar: exitVar]]]!
 
+editConstraints
+	"An array of ClEditConstraints for the variables being edited.  These must be in the 
+		same order as editVars, editPlusErrorVars, and editMinusErrorVars."
+	^editConstraints
+!
+
+editConstraints: cns
+	editConstraints := cns
+!
+
 editMinusErrorVars
 	"The array of negative error vars for the edit constraints.  These must be in the same order
-		as editPlusErrorVars"
+		as editPlusErrorVars, editVars, and editConstraints."
 	^editMinusErrorVars
 !
 
@@ -1482,13 +1559,26 @@ editMinusErrorVars: s
 
 editPlusErrorVars
 	"The array of positive error vars for the edit constraints.  These must be in the same order
-		as the editMinusErrorVars"
+		as editMinusErrorVars, editVars, and editConstraints."
 	^editPlusErrorVars
 
 !
 
 editPlusErrorVars: s
 	editPlusErrorVars := s
+!
+
+editVars
+	"The array of variables being edited.  These must be in the same order as editConstraints,
+		editPlusErrorVars, and editMinusErrorVars."
+	^editVars
+!
+
+editVars: evars
+	"ACTION
+		See editVars
+	"
+	editVars := evars
 !
 
 errorVars
@@ -1537,7 +1627,7 @@ infeasibleRows: r
 
 initialize
 		| zRow |
-	zRow := ClLinearExpression new.
+	zRow := ClLinearExpression newWithSymbolicWeight.
 	self rows: LookupTable new;
 		columns: LookupTable new;
 		objective: (ClObjectiveVariable newNamed: 'z');
@@ -1545,6 +1635,8 @@ initialize
 		prevEditConstants: Array new;
 		stayPlusErrorVars: Array new;
 		stayMinusErrorVars: Array new;
+		editVars: Array new;
+		editConstraints: Array new;
 		editPlusErrorVars: Array new;
 		editMinusErrorVars: Array new;
 		markerVars: LookupTable new;
@@ -1619,6 +1711,8 @@ makeExpression: cn
 						self stayPlusErrorVars: (self stayPlusErrorVars copyWith: eplus).
 						self stayMinusErrorVars: (self stayMinusErrorVars copyWith: eminus)].
 					cn isEditConstraint ifTrue: [
+						self editVars: (self editVars copyWith: cn variable).
+						self editConstraints: (self editConstraints copyWith: cn).
 						self editPlusErrorVars: (self editPlusErrorVars copyWith: eplus).
 						self editMinusErrorVars: (self editMinusErrorVars copyWith: eminus).
 						self prevEditConstants: (self prevEditConstants copyWith: cnExpr constant)]]].
@@ -1646,6 +1740,16 @@ markerVars: m
 		m <LookupTable keys: <ClConstraint> values: <ClAbstractVariable>
 	"
 	markerVars := m
+!
+
+newEditConstants
+	"The array of constants for the edit constraints for the next iteration.  These must be in the same order
+		as editPlusErrorVars and editMinusErrorVars"
+	^newEditConstants
+!
+
+newEditConstants: n
+	newEditConstants := n
 !
 
 noteAddedVariable: var subject: subject
@@ -1704,7 +1808,7 @@ optimize: zVar
 			(v isPivotable and: [objectiveCoeff isNil or: [c < objectiveCoeff]]) ifTrue: [objectiveCoeff := c.  entryVar := v]].
 		"if all coefficients were positive (or if the objective function has no pivotable variables) we are at optimum"
 		objectiveCoeff isNil ifTrue: [^nil].
-		objectiveCoeff negative ifFalse: [^nil].
+		objectiveCoeff approxNonNegative ifTrue: [^nil].
 		"Choose which variable to move out of the basis.  Only consider pivotable basic variables (that is,
 			restricted, non-dummy variables)."
 		minRatio := nil.
@@ -1773,7 +1877,7 @@ removeRow: var
 	^expr
 !
 
-resetEditConstants: newEditConstants
+resetEditConstants
 	"ACTION
 		Each of the non-required edits will be represented by an equation of the form
 			v = c + eplus - eminus
@@ -1785,13 +1889,25 @@ resetEditConstants: newEditConstants
 		this expression.  Otherwise they are both nonbasic.  Find all of the expressions in which
 		they occur, and fix the constants in those.  See the UIST paper for details.
 	"
-		| delta |
-	newEditConstants size = self editPlusErrorVars size ifFalse: [
+		| delta nn pp |
+	self newEditConstants size = self editPlusErrorVars size ifFalse: [
 		"number of edit constants doesn't match the number of edit error variables"
 		ExCLInternalError signal].
-	1 to: newEditConstants size do: [:i |
-		delta := (newEditConstants at: i) - (self prevEditConstants at: i).
-		self prevEditConstants at: i put: (newEditConstants at: i).
+	1 to: self newEditConstants size do: [:i |
+
+
+nn := self newEditConstants.
+pp := self prevEditConstants.
+nn isNil ifTrue: [self halt].
+self prevEditConstants isNil ifTrue: [self halt].
+ (self newEditConstants at: i)  isNil ifTrue: 
+[Transcript cr; show: self newEditConstants printString.
+self halt].
+ (self prevEditConstants at: i) isNil ifTrue: [self halt].
+
+
+		delta := (self newEditConstants at: i) - (self prevEditConstants at: i).
+		self prevEditConstants at: i put: (self newEditConstants at: i).
 		self 
 			deltaEditConstant: delta
 			plusErrorVar: (self editPlusErrorVars at: i)
@@ -1816,6 +1932,16 @@ resetStayConstants
 				self rows at: (self stayMinusErrorVars at: i) ifAbsent: [nil]].
 		expr notNil ifTrue: [expr constant: 0.0]]
 !
+
+resolve: cs
+	"ACTION
+		Re-solve the current collection of constraints for new values for the constants of the edit variables.
+	PARAMETERS
+		cs <Array of Float>
+	"
+
+	self newEditConstants: cs.
+	self resolve.!
 
 rows
 	"ACTION
@@ -2037,8 +2163,6 @@ symbolicWeight: w
 	symbolicWeight := w
 ! !
 
-
-#FIXGJB: what is basicNew: message?
 !ClSymbolicWeight class publicMethods !
 
 new
@@ -2066,6 +2190,7 @@ initializeAfterLoad
 * n
 	"Multiply this symbolic weight by n (n should be a number)"
 		| result |
+	n isNumber ifFalse: [ExCLInternalError signal].
 	result := self class new.
 	1 to: self size do: [:i | result at: i put: n*(self at: i)].
 	^result
@@ -2074,6 +2199,7 @@ initializeAfterLoad
 + n
 	"Add this symbolic weight to n (which must also be a symbolic weight)"
 		| result |
+	n isSymbolicWeight  ifFalse: [ExCLInternalError signal].
 	result := self class new.
 	1 to: self size do: [:i | result at: i put: (self at: i) + (n at: i)].
 	^result
@@ -2082,6 +2208,7 @@ initializeAfterLoad
 - n
 	"Subtract n from this symbolic weight (n must also be a symbolic weight)"
 		| result |
+	n isSymbolicWeight  ifFalse: [ExCLInternalError signal].
 	result := self class new.
 	1 to: self size do: [:i | result at: i put: (self at: i) - (n at: i)].
 	^result
@@ -2090,6 +2217,7 @@ initializeAfterLoad
 / n
 	"Divide this symbolic weight by n (n should be a number)"
 		| result |
+	n isNumber ifFalse: [ExCLInternalError signal].
 	result := self class new.
 	1 to: self size do: [:i | result at: i put: (self at: i)/n].
 	^result
@@ -2097,6 +2225,7 @@ initializeAfterLoad
 
 < n
 		| a b |
+	n isSymbolicWeight  ifFalse: [ExCLInternalError signal].
 	1 to: self size do: [:i | 
 		a := self at: i.  
 		b := n at: i.
@@ -2108,6 +2237,7 @@ initializeAfterLoad
 
 <= n
 		| a b |
+	n isSymbolicWeight  ifFalse: [ExCLInternalError signal].
 	1 to: self size do: [:i | 
 		a := self at: i.  
 		b := n at: i.
@@ -2119,6 +2249,7 @@ initializeAfterLoad
 !
 
 = n
+	n isSymbolicWeight  ifFalse: [^false].
 	1 to: self size do: [:i | 
 		(self at: i) = (n at: i) ifFalse: [^false]].
 	"all elements were equal"
@@ -2127,6 +2258,7 @@ initializeAfterLoad
 
 > n
 		| a b |
+	n isSymbolicWeight  ifFalse: [ExCLInternalError signal].
 	1 to: self size do: [:i | 
 		a := self at: i.  
 		b := n at: i.
@@ -2138,6 +2270,7 @@ initializeAfterLoad
 
 >= n
 		| a b |
+	n isSymbolicWeight  ifFalse: [ExCLInternalError signal].
 	1 to: self size do: [:i | 
 		a := self at: i.  
 		b := n at: i.
@@ -2148,13 +2281,20 @@ initializeAfterLoad
 	^true
 !
 
-negative
-		| a |
+approxNonNegative
+	"return true if this symbolic weight is non-negative.  Allow coefficients that are within epsilon of
+		0 to count as 0"
+		| a nepsilon |
+	nepsilon := 0.0 - ClEpsilon.
 	1 to: self size do: [:i | 
 		a := self at: i.  
-		a<0.0 ifTrue: [^true].
-		a>0.0 ifTrue: [^false]].
-	^false
+		a<nepsilon ifTrue: [^false].
+		a>ClEpsilon ifTrue: [^true]].
+	^true
+!
+
+isSymbolicWeight
+	^true
 !
 
 printOn: strm
@@ -2474,6 +2614,10 @@ value: v
 
 !Float publicMethods !
 
+approxNonNegative
+	^self > (0.0 - ClSimplexSolver epsilon)
+!
+
 clApprox: x
 	"ACTION
 		Test whether I am approximately equal to the argument.
@@ -2487,7 +2631,7 @@ clApprox: x
 
 	| epsilon |
 
-	epsilon := 1.0e-8.
+	epsilon := ClSimplexSolver epsilon.
 	self = 0.0 ifTrue: [^x abs < epsilon].
 	x = 0.0 ifTrue: [^self abs < epsilon].
 	^(self - x) abs < (self abs * epsilon)! !
@@ -2661,7 +2805,11 @@ clApprox: x
 	NOTES
 		The default is just an equality test."
 
-	^self = x! !
+	^self = x!
+
+isSymbolicWeight
+	^false
+! !
 
 ClKernel toBeLoadedCode: '"$COMPATIBLE-DECLARATIONS-START$"
 Smalltalk declarePoolDictionary: ''ClConstants''.
@@ -2671,6 +2819,7 @@ Smalltalk declareVariable: ''ExCLNotEnoughStays'' poolName: ''ClConstants''.
 Smalltalk declareVariable: ''ExCLRequiredFailure'' poolName: ''ClConstants''.
 Smalltalk declareVariable: ''ExCLTooDifficult'' poolName: ''ClConstants''.
 Smalltalk declareVariable: ''ExCLNonlinearExpression'' poolName: ''ClConstants''.
+Smalltalk declareVariable: ''ClEpsilon'' poolName: ''ClConstants''.
 "$COMPATIBLE-DECLARATIONS-END$"'!
 
 ClKernel wasRemovedCode: '"$COMPATIBLE-DECLARATIONS-START$"
