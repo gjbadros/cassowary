@@ -1,3 +1,12 @@
+Fri Sep 24 18:51:42 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* configure.in: Remove first of redundant checks for HAVE_SCM_MAKE_SMOB_TYPE_MFPE.
+
+Mon Sep 20 13:36:45 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* guile/cassowary_scm.cc: Fix `cl-int-value' to use gh_int2scm
+	instead of gh_double2scm
+
 Sun Sep 19 14:45:59 1999  Greg J. Badros  <gjb@cs.washington.edu>
 
 	* c++/ClSimplexSolver.h, c++/ClSimplexSolver.cc: Replace
