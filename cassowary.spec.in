@@ -1,6 +1,6 @@
 # Note that this is NOT a relocatable package
 %define ver @VERSION@
-%define rel 7
+%define rel 8
 %define prefix /usr
 
 Name: cassowary

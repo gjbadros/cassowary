@@ -1,6 +1,6 @@
 # Note that this is NOT a relocatable package
 %define ver @VERSION@
-%define rel 1
+%define rel 2
 %define prefix /usr
 
 Name: cassowary-nofd
