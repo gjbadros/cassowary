@@ -1,4 +1,5 @@
 QuadDemo
+gmon.out
 hello
 moc_QuadDemoWindow.cc
 moc_hello.cc
