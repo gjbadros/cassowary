@@ -1,12 +1,16 @@
- java_cup.runtime.*;
+package edu.washington.grad.will;
+
+import java_cup.runtime.*;
 
 import EDU.Washington.grad.gjb.cassowary.*;
 
 parser code
 {:
-	public static void main(String args[]) throws Exception
+	public java.util.Hashtable m_variable_name_object_hash;
+
+	public void setVariableNameObjectHash(java.util.Hashtable variable_name_object_hash)
 	{
-		new parser(new Yylex(System.in)).parse();
+		m_variable_name_object_hash = variable_name_object_hash;
 	}
 :}
 
@@ -20,20 +24,49 @@ precedence left TIMES, DIVIDE;
 precedence left PLUS, MINUS;
 precedence left UMINUS;
 
-constraint	::=	  equation:a			{: RESULT = a;													:}
-			| inequality:a			{: RESULT = a;													:};
+constraint	::=	  equation:a			{: RESULT = a;												:}
+			| inequality:a			{: RESULT = a;												:};
 
-equation	::=	  expr:a EQ expr:b		{: RESULT = (Object)(new ClLinearEquation	((ClLinearExpression) a, (ClLinearExpression) b));		:};
+equation	::=	  expr:a EQ expr:b		{: RESULT = (new ClLinearEquation	((ClLinearExpression) a, (ClLinearExpression) b));		:};
 
-inequality	::=	  expr:a GEQ expr:b		{: RESULT = (Object)(new ClLinearInequality	((ClLinearExpression) a, CL.GEQ, (ClLinearExpression) b)); 	:}
-			| expr:a LEQ expr:b		{: RESULT = (Object)(new ClLinearInequality	((ClLinearExpression) a, CL.LEQ, (ClLinearExpression) b)); 	:};
+inequality	::=	  expr:a GEQ expr:b		{: RESULT = (new ClLinearInequality	((ClLinearExpression) a, CL.GEQ, (ClLinearExpression) b)); 	:}
+			| expr:a LEQ expr:b		{: RESULT = (new ClLinearInequality	((ClLinearExpression) a, CL.LEQ, (ClLinearExpression) b)); 	:};
 
-expr		::=	  NUMBER:a			{: RESULT = (Object)(a);											:}
-			| VARIABLE:a			{: RESULT = (Object)(new ClVariable(a));									:}
-			| expr:a PLUS expr:b		{: RESULT = (Object)(CL.Plus	((ClLinearExpression) a	, (ClLinearExpression) b));				:}
-			| expr:a MINUS expr:b		{: RESULT = (Object)(CL.Minus	((ClLinearExpression) a	, (ClLinearExpression) b));				:}
-			| expr:a TIMES expr:b		{: RESULT = (Object)(CL.Times	((ClLinearExpression) a	, (ClLinearExpression) b));				:}
-			| expr:a DIVIDE expr:b		{: RESULT = (Object)(CL.Divide	((ClLinearExpression) a	, (ClLinearExpression) b));				:}
-			| MINUS expr:a			{: RESULT = (Object)(CL.Times	(-1			, (ClLinearExpression) a));				:}
+expr		::=	  NUMBER:a			{: RESULT = (new ClLinearExpression(a.doubleValue()));								:}
+			| VARIABLE:a			{:
+								// look up variable first
+
+								System.out.println("Grammar found variable: <" + a + ">");
+
+								if (parser.m_variable_name_object_hash == null)
+								{
+									System.out.println("	Don't have hash.");
+								}
+
+								if (! parser.m_variable_name_object_hash.containsKey(a))
+								{
+									System.out.println("	Unrecognized variable parsed: <" + a + ">");
+								}
+								else
+								{
+									System.out.println("	Found variable: <" + a + "> in hash.");
+								}
+
+								ClVariable variable_object = (ClVariable) parser.m_variable_name_object_hash.get(a);
+
+								if (variable_object == null)
+								{
+									System.out.println("	Could not get hashed variable.");
+								}
+								
+								RESULT = (new ClLinearExpression(variable_object));
+							:}
+
+
+			| expr:a PLUS expr:b		{: RESULT = (CL.Plus	((ClLinearExpression) a	, (ClLinearExpression) b));				:}
+			| expr:a MINUS expr:b		{: RESULT = (CL.Minus	((ClLinearExpression) a	, (ClLinearExpression) b));				:}
+			| expr:a TIMES expr:b		{: RESULT = (CL.Times	((ClLinearExpression) a	, (ClLinearExpression) b));				:}
+			| expr:a DIVIDE expr:b		{: RESULT = (CL.Divide	((ClLinearExpression) a	, (ClLinearExpression) b));				:}
+			| MINUS expr:a			{: RESULT = (CL.Times	(-1			, (ClLinearExpression) a));				:}
 			%prec UMINUS
-			| LPAREN expr:a RPAREN		{: RESULT = a;													:};
+			| LPAREN expr:a RPAREN		{: RESULT = a;												:};
