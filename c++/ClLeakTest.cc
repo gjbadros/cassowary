@@ -69,7 +69,7 @@ leakTest2()
 {
   for (int i=0; i<100; ++i)
     {
-    ClVariable *pclv = new ClVariable();
+    new ClVariable();
     }
 #ifdef USE_GC
   GC_gcollect();
