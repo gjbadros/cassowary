@@ -87,13 +87,13 @@ class ClSimplexSolver : public ClTableau {
   // artificial variable.  To do this, create an artificial variable
   // av and add av=expr to the inequality tableau, then make av be 0.
   // (Raise an exception if we can't attain av=0.)
-  void addWithArtificialVariable(ClLinearExpression expr);
+  void addWithArtificialVariable(ClLinearExpression &expr);
 
   // We are trying to add the constraint expr=0 to the appropriate
   // tableau.  Try to add expr directly to the tableax without
   // creating an artificial variable.  Return true if successful and
   // false if not.
-  bool tryAddingDirectly(ClLinearExpression expr);
+  bool tryAddingDirectly(ClLinearExpression &expr);
 
   // We are trying to add the constraint expr=0 to the tableaux.  Try
   // to choose a subject (a variable to become basic) from among the
@@ -112,7 +112,7 @@ class ClSimplexSolver : public ClTableau {
   // Note: in checking for variables that are new to the solver, we
   // ignore whether a variable occurs in the objective function, since
   // new slack variables are added to the objective function by
-  // 'makeExpression:', which is called before this method.
+  // 'newExpression:', which is called before this method.
   const ClVariable &chooseSubject(ClLinearExpression &expr);
   
   void deltaEditConstant(Number delta, const ClVariable &v1, const ClVariable &v2);
@@ -126,7 +126,7 @@ class ClSimplexSolver : public ClTableau {
   // Normalize if necessary so that the constant is non-negative.  If
   // the constraint is non-required give its error variables an
   // appropriate weight in the objective function.
-  ClLinearExpression makeExpression(ClConstraint &cn);
+  ClLinearExpression *newExpression(ClConstraint &cn);
 
   // Minimize the value of the objective.  (The tableau should already
   // be feasible.)

@@ -14,17 +14,19 @@
 // Add v, update column cross indices
 // v becomes a basic variable
 void 
-ClTableau::addRow(const ClVariable &var, ClLinearExpression expr)
+ClTableau::addRow(const ClVariable &var, const ClLinearExpression &expr)
 {
 #ifndef NO_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << var << ")" << endl;
 #endif
-  my_rows[var] = expr;
-  map<ClVariable,Number>::const_iterator it = expr.terms().begin();
-  // for each variable in expr, add var to the set of rows which have that variable
+  // FIXGJB: gotta delete this somewhere
+  ClLinearExpression *pexpr = new ClLinearExpression(expr);
+  my_rows[var] = *pexpr;
+  map<ClVariable,Number>::const_iterator it = pexpr->terms().begin();
+  // for each variable in *pexpr, add var to the set of rows which have that variable
   // in their expression
-  for (; it != expr.terms().end(); ++it)
+  for (; it != pexpr->terms().end(); ++it)
     {
     const ClVariable &v = (*it).first;
     my_columns[v].insert(var);

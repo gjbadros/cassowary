@@ -11,25 +11,20 @@ main( char **argv, int argc )
 {
   ClVariable a("a");
   ClVariable b("b");
-  ClVariable c("c");
-  ClVariable w("w");
-  ClVariable x("x");
-  ClVariable y("y");
 
-  ClLinearExpression cle = a * 3 + b * 2 + c + 5;
-  ClLinearEquation constraint(cle);
-  ClLinearExpression cle2 = cle / 2 + 1;
-  ClLinearInequality constraint2(cle2);
-  ClStayConstraint cn(w);
-  ClEditConstraint cnEdit(a);
+  ClLinearExpression b_minus_a = b - a;
+  ClLinearEquation a_equals_b(b_minus_a);
+  ClStayConstraint stay_a(a);
+  ClStayConstraint stay_b(b);
+  ClEditConstraint edit_a(a);
   
   ClSimplexSolver solver;
-  
 
   cerr << "Starting addConstraint-s" << endl;
-  solver.addConstraint(cn);
-  solver.addConstraint(cnEdit);
-  solver.addConstraint(constraint2);
+  solver.addConstraint(a_equals_b);
+  solver.addConstraint(stay_a);
+  solver.addConstraint(stay_b);
+  solver.addConstraint(edit_a);
   
   
   vector<double> rgedits;
@@ -37,10 +32,12 @@ main( char **argv, int argc )
   try 
     {
     solver.resolve(rgedits);
+    cerr << "a = " << a << endl;
+    cerr << "b = " << b << endl;
     }
   catch (const ExCLError &error) 
     {
-    //    cerr << "Exception " << error.description() << endl;
+    cerr << "Exception " << error.description() << endl;
     exit(0);
     }
 }

@@ -55,7 +55,7 @@ class ClTableau {
   
   // Add v=expr to the tableau, update column cross indices
   // v becomes a basic variable
-  void addRow(const ClVariable &v, ClLinearExpression expr);
+  void addRow(const ClVariable &v, const ClLinearExpression &expr);
 
   // Remove v from the tableau -- remove the column cross indices for v
   // and remove v from every expression in rows in which v occurs

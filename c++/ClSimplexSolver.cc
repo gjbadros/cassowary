@@ -21,15 +21,15 @@ ClSimplexSolver::addConstraint(ClConstraint &cn)
   cerr << "(" << cn << ")" << endl;
 #endif
     
-  ClLinearExpression expr = makeExpression(cn);
+  ClLinearExpression *pexpr = newExpression(cn);
 
   // If possible add expr directly to the appropriate tableau by
   // choosing a subject for expr (a variable to become basic) from
   // among the current variables in expr.  If this doesn't work use an
   // artificial variable.  After adding expr re-optimize.
-  if (!tryAddingDirectly(expr))
+  if (!tryAddingDirectly(*pexpr))
     { // could not add directly
-    addWithArtificialVariable(expr);
+    addWithArtificialVariable(*pexpr);
     }
   optimize(my_objective);
   setExternalVariables();
@@ -310,7 +310,7 @@ ClSimplexSolver::resolve(const vector<double> &newEditConstants)
 // av and add av=expr to the inequality tableau, then make av be 0.
 // (Raise an exception if we can't attain av=0.)
 void 
-ClSimplexSolver::addWithArtificialVariable(ClLinearExpression expr)
+ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
 {
 #ifndef NO_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -337,7 +337,7 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression expr)
   cerr << (*this) << endl;
 #endif
 
-  // try to optimize av to 0
+  // try to optimize az to 0
   optimize(az);
 
   // Check that we were able to make the objective value 0
@@ -375,7 +375,7 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression expr)
 // creating an artificial variable.  Return true if successful and
 // false if not.
 bool 
-ClSimplexSolver::tryAddingDirectly(ClLinearExpression expr)
+ClSimplexSolver::tryAddingDirectly(ClLinearExpression &expr)
 {
 #ifndef NO_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -419,7 +419,7 @@ ClSimplexSolver::tryAddingDirectly(ClLinearExpression expr)
 // Note: in checking for variables that are new to the solver, we
 // ignore whether a variable occurs in the objective function, since
 // new slack variables are added to the objective function by
-// 'makeExpression:', which is called before this method.
+// 'newExpression:', which is called before this method.
 const ClVariable &
 ClSimplexSolver::chooseSubject(ClLinearExpression &expr)
 {
@@ -652,8 +652,8 @@ ClSimplexSolver::dualOptimize()
 // Normalize if necessary so that the constant is non-negative.  If
 // the constraint is non-required give its error variables an
 // appropriate weight in the objective function.
-ClLinearExpression 
-ClSimplexSolver::makeExpression(ClConstraint &cn)
+ClLinearExpression *
+ClSimplexSolver::newExpression(ClConstraint &cn)
 {
 #ifndef NO_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -766,7 +766,7 @@ ClSimplexSolver::makeExpression(ClConstraint &cn)
 #ifndef NO_TRACE
   cerr << "- returning " << expr << endl;
 #endif
-  return expr;
+  return new ClLinearExpression(expr);
 }
 
 // Minimize the value of the objective.  (The tableau should already
