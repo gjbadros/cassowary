@@ -5,7 +5,6 @@ lib_LIBRARIES = libcassowary.a
 lib_LTLIBRARIES = libcassowary.la
 
 LDADD = libcassowary.a
-AM_CPPFLAGS = $(CPPEXTRAFLAGS)
 
 benchdir=$(libdir)/cassowary/bench
 bugsdir=$(libdir)/cassowary/bugs
@@ -93,6 +92,8 @@ pkginclude_HEADERS = \
 	ClSolver.h \
 	ClSimplexSolver.h \
 	ClFDSolver.h \
+	ClFDBinaryOneWayConstraint.h \
+	ClFDConstraint.h \
 	ClStayConstraint.h \
 	ClStrength.h \
 	ClSymbolicWeight.h \

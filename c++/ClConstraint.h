@@ -36,8 +36,8 @@ public:
   ClConstraint(const ClStrength &strength = ClsRequired(), double weight = 1.0 ) :
     _strength(strength),
     _readOnlyVars(),
-    _pv(0),
     _weight(weight),
+    _pv(0),
     _times_added(0)
     { 
       CtrTracer(__FUNCTION__,this);

@@ -162,7 +162,8 @@ ClSimplexSolver::AddConstraintNoException(ClConstraint *const pcn)
 // and y stays on the same point, rather than the x stay on one and
 // the y stay on another.
 ClSimplexSolver &
-ClSimplexSolver::AddPointStays(const vector<const ClPoint *> &listOfPoints)
+ClSimplexSolver::AddPointStays(const vector<const ClPoint *> &listOfPoints,
+                               const ClStrength &strength)
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -173,17 +174,16 @@ ClSimplexSolver::AddPointStays(const vector<const ClPoint *> &listOfPoints)
   static const double multiplier = 2.0;
   for ( ; it != listOfPoints.end(); ++it )
     {
-    AddPointStay((*it)->X(),(*it)->Y(),weight);
+    AddPointStay((*it)->X(),(*it)->Y(),strength,weight);
     weight *= multiplier;
     }
   return *this;
 }
 
 ClSimplexSolver &
-ClSimplexSolver::AddPointStay(const ClPoint &clp, double weight)
+ClSimplexSolver::AddPointStay(const ClPoint &clp, const ClStrength &strength, double weight)
 { 
-  AddStay(clp.X(),ClsWeak(),weight);
-  AddStay(clp.Y(),ClsWeak(),weight);
+  AddPointStay(clp.X(),clp.Y(),strength,weight);
   return *this;
 }
 

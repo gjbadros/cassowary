@@ -54,6 +54,8 @@ CL_VarMap CL_VarMapNew();
 
 #endif
 
+/* return true iff the variable did exist
+   in the current global varmap, else return false */
 boolean CL_VarMapDelete(const char *sz);
 
 /* Must call this before any others */

@@ -42,7 +42,8 @@ public:
     _desired_value(Value),
     _plfdnInitialDomain(NULL),
     _pv(NULL)
-    { // copy initial_domain into _plfdnInitialDomain
+    {
+      *_plfdnInitialDomain = initial_domain;
     }
 
   virtual bool IsFDVariable() const

@@ -32,7 +32,7 @@ class ClFDBinaryOneWayConstraint : public ClFDConstraint {
 
 #ifndef CL_NO_IO
   virtual ostream &PrintOn(ostream &xo) const
-    { xo << "FDCn: " << _vRW << " <- " << _vRO << endl; }
+    { xo << "FDCn: " << _vRW << " <- " << _vRO << endl; return xo; }
 
   friend ostream& operator<<(ostream &xos, const ClConstraint &constraint)
     { constraint.PrintOn(xos); return xos; }

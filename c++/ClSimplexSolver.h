@@ -167,12 +167,17 @@ class ClSimplexSolver : public ClSolver, public ClTableau {
   // increasing weights so that the solver will try to satisfy the x
   // and y stays on the same point, rather than the x stay on one and
   // the y stay on another.
-  ClSimplexSolver &AddPointStays(const vector<const ClPoint *> &listOfPoints);
+  ClSimplexSolver &AddPointStays(const vector<const ClPoint *> &listOfPoints,
+                                 const ClStrength &strength = ClsWeak());
 
-  ClSimplexSolver &AddPointStay(const ClVariable vx, const ClVariable vy, double weight)
-    { AddStay(vx,ClsWeak(),weight); AddStay(vy,ClsWeak(),weight); return *this; }
+  ClSimplexSolver &AddPointStay(const ClVariable vx, const ClVariable vy, 
+                                const ClStrength &strength = ClsWeak(),
+                                double weight = 1.0)
+    { AddStay(vx,strength,weight); AddStay(vy,strength,weight); return *this; }
 
-  ClSimplexSolver &AddPointStay(const ClPoint &clp, double weight);
+  ClSimplexSolver &AddPointStay(const ClPoint &clp,
+                                const ClStrength &strength = ClsWeak(),
+                                double weight = 1.0);
 
 
   // Add a stay of the given strength (default to weak) of v to the tableau

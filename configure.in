@@ -213,6 +213,36 @@ else
   HAVE_JAVA=no
 fi
 
+AC_ARG_ENABLE(cflags,
+[  --enable-cflags=FLAGS   Set CFLAGS to FLAGS [-g -O2]],
+[case "$enableval" in
+   yes|no) echo "Please specify a parameter for --enable-cflags"
+	   exit;;
+ esac
+ CFLAGS="$enableval"
+])
+
+
+AC_ARG_ENABLE(cxxflags,
+[  --enable-cxxflags=FLAGS   Set CXXFLAGS to FLAGS [-g -O2]],
+[case "$enableval" in
+   yes|no) echo "Please specify a parameter for --enable-cxxflags"
+	   exit;;
+ esac
+ CXXFLAGS="$enableval"
+])
+
+AC_ARG_ENABLE(cppextraflags,
+[  --enable-cppextraflags=FLAGS   Set CPPEXTRAFLAGS to FLAGS [-g -O2]],
+[case "$enableval" in
+   yes|no) echo "Please specify a parameter for --enable-cppextraflags"
+	   exit;;
+ esac
+ CPPEXTRAFLAGS="$enableval"
+])
+
+AC_SUBST(CPPEXTRAFLAGS)
+
 
 JAVACFLAGS="-g -O"
 AC_ARG_ENABLE(javac-flags,

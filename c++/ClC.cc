@@ -63,12 +63,18 @@ CL_VarMap CL_GetVarMap()
   return varmap;
 }
 
+/* return true iff the variable did exist
+   in the current global varmap, else return false */
 boolean
 CL_VarMapDelete(const char *sz)
 {
   const string s(sz);
   StringToVarMap::iterator it = varmap->find(s);
-  varmap->erase(it);
+  if (it != varmap->end()) {
+    varmap->erase(it);
+    return true;
+  }
+  return false;
 }
 
 
