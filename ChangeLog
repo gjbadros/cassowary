@@ -1,3 +1,26 @@
+Fri Jul 17 19:24:54 1998  Greg Badros  <gjb@cs.washington.edu>
+
+	* ClVariable.h, .java: Added change_value memfn, and make it virtual
+ 	instead of setValue -- thus subclasses can specialize behaviour
+ 	when the variable gets set by the solver.
+
+	* ClSimplexSolver.h, .java: Use change_value for setEditedValue if
+	the variable is not in the tableau;  call resolve() before
+	removeAllEditVars in endEdit
+
+	* ClSimplexSolver.cc, .java (setExternalVariables): Use change_value
+	instead of set_value when so subclasses can override and notice a
+	changed variable
+
+Thu Jul 16 19:49:45 1998  Greg Badros  <gjb@cs.washington.edu>
+
+	* Added setEditedValue(), FContainsVariable(), and addVar() to c++ 
+	and Java implementations
+
+	* Fixed bug in C++ and Java in solvers lacking stay constraints
+ 	that was due to not-updating the external parametric variables
+ 	set.
+
 Fri Jul 10 09:00:15 1998  Greg Badros  <gjb@cs.washington.edu>
 
 	* Fixed bug whereby a dummy variable was being pivoted into the
