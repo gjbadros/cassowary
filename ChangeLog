@@ -1,3 +1,9 @@
+Tue Aug 31 22:16:04 1999    <gjb@cs.washington.edu>
+
+	* java/demos/Makefile.am, java/cda/Makefile.am, java/Makefile.am
+ 	(install-javaJAVA): Do not try to install .class files if no
+ 	HAVE_JAVA
+
 Tue Aug 31 21:30:24 1999    <gjb@cs.washington.edu>
 
 	* cassowary.spec.in: Do not use --disable-java-build, since that
