@@ -16,8 +16,6 @@ URL: http://www.cs.washington.edu/research/constraints/cassowary
 Requires: guile >= 1.3
 Requires: gtl >= 0.3.1
 
-Docdir: %{prefix}/doc
-
 %description
 
 Cassowary is an advanced incremental constraint solving toolkit that
@@ -57,11 +55,11 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-, root, root)
 
-%{prefix}/share/cassowary/*
-%{prefix}/bin/*
+%{prefix}/lib/*
 %{prefix}/include/*
+%{prefix}/doc/*
 
 %doc ANNOUNCE AUTHORS COPYING IMPORTANT INSTALL LICENSE NEWS README THANKS
-%doc c++/ChangeLog docs/cassowary-tr.pdf docs/cassowary-tr.ps.gz
+%doc ChangeLog docs/cassowary-tr.pdf docs/cassowary-tr.ps.gz
 %doc guile/cassowary_scm-procedures.txt guile/cassowary_scm-variables.txt
 %doc guile/cassowary_scm.sgml
