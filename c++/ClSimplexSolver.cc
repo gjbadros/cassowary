@@ -113,10 +113,8 @@ ClSimplexSolver::addConstraint(const ClConstraint &cn)
     const ClEditConstraint *pcnEdit = dynamic_cast<const ClEditConstraint *>(&cn);
     int ccnEdit = _editVarMap.size();
     _editVarMap[&pcnEdit->variable()] = new ClEditInfo(pcnEdit,
-                                                       pclvEplus,
-                                                       pclvEminus,
-                                                       prevEConstant,
-                                                       ccnEdit);
+                                                       pclvEplus, pclvEminus,
+                                                       prevEConstant, ccnEdit);
     }
 
   if (_fOptimizeAutomatically)

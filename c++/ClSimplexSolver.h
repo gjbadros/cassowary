@@ -28,47 +28,13 @@ class ClVariable;
 class ClPoint;
 class ExCLRequiredFailureWithExplanation;
 
-// ClEditInfo is a privately-used class
-// that just wraps a constraint, its positive and negative
-// error variables, and its prior edit constant.
-// It is used as values in _editVarMap, and replaces
-// the parallel vectors of error variables and previous edit
-// constants from the smalltalk version of the code.
-class ClEditInfo {
-  friend ClSimplexSolver;
-public:
-
-  // These instances own none of the pointers;
-  // the tableau row (the expression) owns the peplus, peminus,
-  // and addEditVar/removeEditVar pair or the client code owns
-  // the constraint object
-  ClEditInfo(const ClEditConstraint *pconstraint, 
-             ClSlackVariable *peplus, ClSlackVariable *peminus,
-             Number prevEditConstant,
-             int index)
-      :_pconstraint(pconstraint),
-       _pclvEditPlus(peplus), _pclvEditMinus(peminus),
-       _prevEditConstant(prevEditConstant),
-       _index(index)
-    { }
-
-  ~ClEditInfo() 
-    { 
-    }
-
-private:
-  const ClConstraint *_pconstraint;
-  ClSlackVariable *_pclvEditPlus;
-  ClSlackVariable *_pclvEditMinus;
-  Number _prevEditConstant;
-  int _index;
-};
-
 
 // ClSimplexSolver encapsulates the solving behaviour
 // of the cassowary algorithm
 class ClSimplexSolver : public ClTableau {
  protected: typedef ClTableau super;
+  class ClEditInfo;
+  typedef ClMap<const ClVariable *, ClEditInfo *> ClVarToEditInfoMap;
 
  public:
 
@@ -361,6 +327,43 @@ class ClSimplexSolver : public ClTableau {
     { return _pv; }
 
  protected:
+  
+  // ClEditInfo is a privately-used class
+  // that just wraps a constraint, its positive and negative
+  // error variables, and its prior edit constant.
+  // It is used as values in _editVarMap, and replaces
+  // the parallel vectors of error variables and previous edit
+  // constants from the smalltalk version of the code.
+  class ClEditInfo {
+    friend ClSimplexSolver;
+  public:
+    
+    // These instances own none of the pointers;
+    // the tableau row (the expression) owns the peplus, peminus,
+    // and addEditVar/removeEditVar pair or the client code owns
+    // the constraint object
+    ClEditInfo(const ClEditConstraint *pconstraint, 
+               ClSlackVariable *peplus, ClSlackVariable *peminus,
+               Number prevEditConstant,
+               int index)
+        :_pconstraint(pconstraint),
+         _pclvEditPlus(peplus), _pclvEditMinus(peminus),
+         _prevEditConstant(prevEditConstant),
+         _index(index)
+      { }
+    
+    ~ClEditInfo() 
+      { }
+  private:
+    const ClConstraint *_pconstraint;
+    ClSlackVariable *_pclvEditPlus;
+    ClSlackVariable *_pclvEditMinus;
+    Number _prevEditConstant;
+    int _index;
+  };
+  
+
+
   // Add the constraint expr=0 to the inequality tableau using an
   // artificial variable.  To do this, create an artificial variable
   // av and add av=expr to the inequality tableau, then make av be 0.

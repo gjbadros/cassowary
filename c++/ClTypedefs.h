@@ -35,7 +35,6 @@ typedef ClMap<const ClAbstractVariable *, ClLinearExpression *> ClTableauRowsMap
 // For Solver
 typedef ClMap<const ClConstraint *, ClTableauVarSet > ClConstraintToVarSetMap;
 typedef ClMap<const ClConstraint *, const ClAbstractVariable *> ClConstraintToVarMap;
-typedef ClMap<const ClVariable *, ClEditInfo *> ClVarToEditInfoMap;
 typedef ClMap<const ClAbstractVariable *, const ClConstraint *> ClVarToConstraintMap;
 typedef vector<const ClAbstractVariable *> ClVarVector;
 
