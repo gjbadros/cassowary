@@ -37,6 +37,15 @@
 
 #include <vector>
 
+// C++ version of this macro -- uses true and false, not True and False
+#define COPY_BOOL_OR_ERROR_DEFAULT_FALSE(var,flag,pos,func) \
+  do { \
+  if (flag == SCM_BOOL_T) var = true; \
+  else if (flag == SCM_BOOL_F || flag == SCM_UNDEFINED) var = false; \
+  else scm_wrong_type_arg(func,pos,flag); \
+  } while (0)
+
+
 #define MAKE_SMOBFUNS(T) \
 static scm_smobfuns T ## _smobfuns = { \
   &mark_ ## T, \
@@ -69,7 +78,7 @@ inline bool FIsClVariableScm(SCM scm)
 inline ClVariable *PclvFromScm(SCM scm)
 { return (ClVariable *)(SCM_CDR(scm)); }
 
-inline SCM ScmMakeClVariable(ClVariable *pclv) {
+inline SCM ScmMakeClVariable(const ClVariable *pclv) {
   SCM answer;
   
   SCM_DEFER_INTS;
@@ -319,7 +328,7 @@ SCWM_PROC(cl_strength_p, "cl-strength?", 1, 0, 0,
 #undef FUNC_NAME
 
 static SCM
-ScmMakeClStrength(ClStrength *pcls)
+ScmMakeClStrength(const ClStrength *pcls)
 {
   SCM answer;
 
@@ -661,6 +670,18 @@ inline bool FIsClLinearEquationScm(SCM scm)
 inline ClLinearEquation *PeqFromScm(SCM scm)
 { return (ClLinearEquation *)(SCM_CDR(scm)); }
 
+inline SCM ScmMakeClLinearEquation(const ClLinearEquation *peq) {
+  SCM answer;
+  
+  SCM_DEFER_INTS;
+  SCM_NEWCELL(answer);
+  SCM_SETCAR(answer, (SCM) SCMTYPEID);
+  SCM_SETCDR(answer, (SCM) peq);
+  SCM_ALLOW_INTS;
+
+  return answer;
+}
+
 SCM
 mark_cl_equation(SCM scm)
 {
@@ -729,14 +750,8 @@ number.  STRENGTH defaults to cls-required, FACTOR defaults to 1. */
 
   ClLinearEquation *peq = new ClLinearEquation(*pexpr,*pcls,nWeight);
 
-  SCM answer;
-
-  SCM_DEFER_INTS;
-  SCM_NEWCELL(answer);
-  SCM_SETCAR(answer, (SCM) SCMTYPEID);
-  SCM_SETCDR(answer, (SCM) peq);
-  SCM_ALLOW_INTS;
-
+  SCM answer = ScmMakeClLinearEquation(peq);
+  peq->setPv(reinterpret_cast<void *>(answer));
   return answer;
 }
 #undef FUNC_NAME
@@ -813,6 +828,19 @@ inline bool FIsClLinearInequalityScm(SCM scm)
 
 inline ClLinearInequality *PineqFromScm(SCM scm)
 { return (ClLinearInequality *)(SCM_CDR(scm)); }
+
+inline SCM ScmMakeClLinearInequality(const ClLinearInequality *pineq) {
+  SCM answer;
+  
+  SCM_DEFER_INTS;
+  SCM_NEWCELL(answer);
+  SCM_SETCAR(answer, (SCM) SCMTYPEID);
+  SCM_SETCDR(answer, (SCM) pineq);
+  SCM_ALLOW_INTS;
+
+  return answer;
+}
+
 
 SCM
 mark_cl_inequality(SCM scm)
@@ -902,14 +930,8 @@ arbitrary constraints. */
     pineq = new ClLinearInequality(*pexprA,cnGEQ,*pexprB,*pcls,nWeight);
   }
 
-  SCM answer;
-
-  SCM_DEFER_INTS;
-  SCM_NEWCELL(answer);
-  SCM_SETCAR(answer, (SCM) SCMTYPEID);
-  SCM_SETCDR(answer, (SCM) pineq);
-  SCM_ALLOW_INTS;
-
+  SCM answer = ScmMakeClLinearInequality(pineq);
+  pineq->setPv(reinterpret_cast<void *>(answer));
   return answer;
 }
 #undef FUNC_NAME
@@ -1144,6 +1166,8 @@ been added. */
       }
       ClConstraint *pconstraint = PcnFromScm(constraint);
       psolver->addConstraint(*pconstraint);
+      scm_protect_object(constraint);
+      pconstraint->setPv(reinterpret_cast<void *>(constraint));
     }
   } catch (const ExCLRequiredFailure &e) {
     // scm_misc_error(FUNC_NAME,e.description, SCM_EOL);
@@ -1182,6 +1206,8 @@ object, the preceding arguments will have already been removed. */
       }
       ClConstraint *pconstraint = PcnFromScm(constraint);
       psolver->removeConstraint(*pconstraint);
+      pconstraint->setPv(0);
+      scm_unprotect_object(constraint);  
     }
   } catch (const ExCLConstraintNotFound &e) {
     // scm_misc_error(FUNC_NAME,e.description(),SCM_EOL);
@@ -1408,6 +1434,57 @@ variables from the solver after you are done changing their values. */
 }
 #undef FUNC_NAME
 
+
+SCWM_PROC (cl_constraint_list, "cl-constraint-list", 1, 1, 0,
+           (SCM solver, SCM internal_also_p))
+     /** Return the list of constraints in SOLVER.
+Each object in the returned list is a cl-constraint object (i.e.,
+it is either a cl-linear-equation or a cl-inequality). If
+INTERNAL-ALSO? is #f or not given, then only the constraints added via 
+the guile interface will be listed.  If INTERNAL-ALSO? is #t, then all 
+constraints added to the solver (even those added by primitive code
+directly) will be listed. */
+#define FUNC_NAME s_cl_constraint_list
+{
+  SCM list = SCM_EOL;
+  int iarg = 1;
+  if (!FIsClSimplexSolverScm(solver)) {
+    scm_wrong_type_arg(FUNC_NAME,iarg++,solver);
+  }
+  bool fInternalAlso;
+  COPY_BOOL_OR_ERROR_DEFAULT_FALSE(fInternalAlso,internal_also_p,iarg++,FUNC_NAME);
+    
+  ClSimplexSolver *psolver = PsolverFromScm(solver);
+
+  const ClConstraintToVarMap mapCns = psolver->ConstraintMap();
+
+  map<const ClConstraint *, const ClAbstractVariable *>::const_iterator 
+    it_marker = mapCns.begin();
+
+  for ( ; it_marker != mapCns.end() ; ++it_marker) {
+    const ClConstraint *pcn = (*it_marker).first;
+    SCM cn = SCM_UNDEFINED;
+    void *pv = pcn->Pv();
+    if (pv) cn = reinterpret_cast<SCM>(pv);
+    else if (fInternalAlso) {
+      const ClLinearEquation *peq = 
+        dynamic_cast<const ClLinearEquation *>(pcn);
+      if (peq) {
+        cn = ScmMakeClLinearEquation(peq);
+      } else {
+        const ClLinearInequality *pineq = 
+          dynamic_cast<const ClLinearInequality *>(pcn);
+        if (pineq)
+          cn = ScmMakeClLinearInequality(pineq);
+      }
+    }
+    if (cn != SCM_UNDEFINED)
+      list = gh_cons(cn,list);
+  }
+
+  return list;
+}
+#undef FUNC_NAME
 
 
 
