@@ -1,3 +1,23 @@
+Mon Feb 22 12:18:53 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClTests.cc (inconsistent3): Drop extra redundant
+	inconsistency for pedagogical reasons.  Use simpler pointer-based
+	addConstraint in benchmark test
+
+	* c++/ClSimplexSolver.h: Added addConstraintNoException,
+	removeConstraintNoException taking ClConstraint &'s -- deprecated.
+	Added CL_NO_DEPRECATED guard for turning off availability of
+	deprecated functions.
+
+Mon Feb 22 11:12:35 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSimplexSolver.h: Added deprecated
+	FIsConstraintSatisfied(Constraint &)
+
+	* guile/cassowary_scm.cc: Use ClConstraintToVarMap for return
+	value of ConstraintMap().  Pass Constraint *'s instead of &'s.
+	Use new name printOnVerbose instead of printDebugInfo.
+
 Fri Feb 19 18:00:49 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* c++/ClTests.cc: Updated to fix below interface.
