@@ -46,12 +46,21 @@ JAVAFILES = \
 
 #	ClTests.java \
 
+TESTFILES = \
+	testClStrength.java \
+	testClLinearExpression.java \
+#	ClTests.java
+
 CLASSFILES = $(JAVAFILES:.java=.class)
+
+TESTCLASSFILES = $(TESTFILES:.java=.class)
 
 %.class: %.java
 	$(JAVAC) $<
 
 all:	$(CLASSFILES)
+
+test:	$(TESTCLASSFILES)
 
 clean:	
 	rm -f *.class
