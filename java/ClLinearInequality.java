@@ -36,6 +36,105 @@ class ClLinearInequality extends ClLinearConstraint
     super(cle);
   }
 
+  public ClLinearInequality(ClVariable clv1,
+			    byte op_enum,
+			    ClVariable clv2,
+			    ClStrength strength,
+			    double weight)
+       throws ExCLInternalError
+  {
+    super(new ClLinearExpression(clv2),strength,weight);
+    if (op_enum == CN.GEQ) {
+      my_expression.multiplyMe(-1.0);
+      my_expression.addVariable(clv1);
+    } else if (op_enum == CN.LEQ) {
+      my_expression.addVariable(clv1,-1.0);
+    } else // the operator was invalid
+      throw new ExCLInternalError();
+  }
+
+  public ClLinearInequality(ClVariable clv1,
+			    byte op_enum,
+			    ClVariable clv2,
+			    ClStrength strength)
+       throws ExCLInternalError
+  {
+    super(new ClLinearExpression(clv2),strength);
+    if (op_enum == CN.GEQ) {
+      my_expression.multiplyMe(-1.0);
+      my_expression.addVariable(clv1);
+    } else if (op_enum == CN.LEQ) {
+      my_expression.addVariable(clv1,-1.0);
+    } else // the operator was invalid
+      throw new ExCLInternalError();
+  }
+
+  public ClLinearInequality(ClVariable clv1,
+			    byte op_enum,
+			    ClVariable clv2)
+       throws ExCLInternalError
+  {
+    super(new ClLinearExpression(clv2));
+    if (op_enum == CN.GEQ) {
+      my_expression.multiplyMe(-1.0);
+      my_expression.addVariable(clv1);
+    } else if (op_enum == CN.LEQ) {
+      my_expression.addVariable(clv1,-1.0);
+    } else // the operator was invalid
+      throw new ExCLInternalError();
+  }
+
+
+  public ClLinearInequality(ClVariable clv,
+			    byte op_enum,
+			    double val,
+			    ClStrength strength,
+			    double weight)
+       throws ExCLInternalError
+  {
+    super(new ClLinearExpression(val),strength,weight);
+    if (op_enum == CN.GEQ) {
+      my_expression.multiplyMe(-1.0);
+      my_expression.addVariable(clv);
+    } else if (op_enum == CN.LEQ) {
+      my_expression.addVariable(clv,-1.0);
+    } else // the operator was invalid
+      throw new ExCLInternalError();
+  }
+
+  public ClLinearInequality(ClVariable clv,
+			    byte op_enum,
+			    double val,
+			    ClStrength strength)
+       throws ExCLInternalError
+  {
+    super(new ClLinearExpression(val),strength);
+    if (op_enum == CN.GEQ) {
+      my_expression.multiplyMe(-1.0);
+      my_expression.addVariable(clv);
+    } else if (op_enum == CN.LEQ) {
+      my_expression.addVariable(clv,-1.0);
+    } else // the operator was invalid
+      throw new ExCLInternalError();
+  }
+
+  public ClLinearInequality(ClVariable clv,
+			    byte op_enum,
+			    double val)
+       throws ExCLInternalError
+  {
+    super(new ClLinearExpression(val));
+    if (op_enum == CN.GEQ) {
+      my_expression.multiplyMe(-1.0);
+      my_expression.addVariable(clv);
+    } else if (op_enum == CN.LEQ) {
+      my_expression.addVariable(clv,-1.0);
+    } else // the operator was invalid
+      throw new ExCLInternalError();
+  }
+
+
+
 
   public ClLinearInequality(ClLinearExpression cle1,
 			    byte op_enum,
@@ -45,7 +144,7 @@ class ClLinearInequality extends ClLinearConstraint
        throws ExCLInternalError
   {
     super(cle2,strength,weight);
-    if (op_enum == cn.GEQ) {
+    if (op_enum == CN.GEQ) {
       my_expression.multiplyMe(-1.0);
       my_expression.addExpression(cle1);
     } else if (op_enum == CN.LEQ) {
@@ -61,7 +160,7 @@ class ClLinearInequality extends ClLinearConstraint
        throws ExCLInternalError
   {
     super(cle2,strength);
-    if (op_enum == cn.GEQ) {
+    if (op_enum == CN.GEQ) {
       my_expression.multiplyMe(-1.0);
       my_expression.addExpression(cle1);
     } else if (op_enum == CN.LEQ) {
@@ -76,7 +175,7 @@ class ClLinearInequality extends ClLinearConstraint
        throws ExCLInternalError
   {
     super(cle2);
-    if (op_enum == cn.GEQ) {
+    if (op_enum == CN.GEQ) {
       my_expression.multiplyMe(-1.0);
       my_expression.addExpression(cle1);
     } else if (op_enum == CN.LEQ) {
@@ -94,7 +193,7 @@ class ClLinearInequality extends ClLinearConstraint
        throws ExCLInternalError
   {
     super(cle,strength,weight);
-    if (op_enum == cn.GEQ) {
+    if (op_enum == CN.GEQ) {
       my_expression.multiplyMe(-1.0);
       my_expression.addVariable(clv);
     } else if (op_enum == CN.LEQ) {
@@ -110,7 +209,7 @@ class ClLinearInequality extends ClLinearConstraint
        throws ExCLInternalError
   {
     super(cle,strength);
-    if (op_enum == cn.GEQ) {
+    if (op_enum == CN.GEQ) {
       my_expression.multiplyMe(-1.0);
       my_expression.addVariable(clv);
     } else if (op_enum == CN.LEQ) {
@@ -125,7 +224,7 @@ class ClLinearInequality extends ClLinearConstraint
        throws ExCLInternalError
   {
     super(cle);
-    if (op_enum == cn.GEQ) {
+    if (op_enum == CN.GEQ) {
       my_expression.multiplyMe(-1.0);
       my_expression.addVariable(clv);
     } else if (op_enum == CN.LEQ) {
@@ -146,7 +245,7 @@ class ClLinearInequality extends ClLinearConstraint
     if (op_enum == CN.LEQ) {
       my_expression.multiplyMe(-1.0);
       my_expression.addVariable(clv);
-    } else if (op_enum == cn.GEQ) {
+    } else if (op_enum == CN.GEQ) {
       my_expression.addVariable(clv,-1.0);
     } else // the operator was invalid
       throw new ExCLInternalError();
@@ -163,7 +262,7 @@ class ClLinearInequality extends ClLinearConstraint
     if (op_enum == CN.LEQ) {
       my_expression.multiplyMe(-1.0);
       my_expression.addVariable(clv);
-    } else if (op_enum == cn.GEQ) {
+    } else if (op_enum == CN.GEQ) {
       my_expression.addVariable(clv,-1.0);
     } else // the operator was invalid
       throw new ExCLInternalError();
@@ -178,7 +277,7 @@ class ClLinearInequality extends ClLinearConstraint
     if (op_enum == CN.LEQ) {
       my_expression.multiplyMe(-1.0);
       my_expression.addVariable(clv);
-    } else if (op_enum == cn.GEQ) {
+    } else if (op_enum == CN.GEQ) {
       my_expression.addVariable(clv,-1.0);
     } else // the operator was invalid
       throw new ExCLInternalError();

@@ -99,6 +99,10 @@ class ClLinearExpression
       return times(expr.my_constant.doubleValue());
     }
 
+  public ClLinearExpression times(ClVariable var) 
+       throws ExCLNonlinearExpression
+  { return times(new ClLinearExpression(var)); }
+
   public ClLinearExpression plus(ClLinearExpression expr)
     {
       ClLinearExpression result =  this;
@@ -106,12 +110,21 @@ class ClLinearExpression
       return result;
     }
 
+  public ClLinearExpression plus(ClVariable var) 
+       throws ExCLNonlinearExpression
+  { return plus(new ClLinearExpression(var)); }
+
   public ClLinearExpression minus(ClLinearExpression expr)
     {
       ClLinearExpression result =  this;
       result.addExpression(expr,-1.0);
       return result;
     }
+
+  public ClLinearExpression minus(ClVariable var) 
+       throws ExCLNonlinearExpression
+  { return minus(new ClLinearExpression(var)); }
+
 
   public ClLinearExpression divide(double x) throws ExCLNonlinearExpression
     {

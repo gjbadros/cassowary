@@ -50,7 +50,7 @@ abstract class ClConstraint
   public double weight()
     { return my_weight; }
 
-  public String printString()
+  public String toString()
     { return " {" + weight() + "} (" + expression().toString(); }
 
   private void setStrength(ClStrength strength)

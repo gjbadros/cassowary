@@ -28,7 +28,7 @@ class ClStrength
   public boolean isRequired()
     { return (my_symbolicWeight == clsRequired.symbolicWeight()); }
 
-  public String printString()
+  public String toString()
     { return name () + (!isRequired()? (":" + symbolicWeight()) : ""); }
 
   public ClSymbolicWeight symbolicWeight()

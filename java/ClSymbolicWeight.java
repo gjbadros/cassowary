@@ -16,7 +16,7 @@
 
 import java.util.*;
 
-class ClSymbolicWeight
+class ClSymbolicWeight 
 {
 
   public ClSymbolicWeight(int cLevels)
@@ -158,9 +158,11 @@ class ClSymbolicWeight
   public String toString()
     { 
       StringBuffer bstr = new StringBuffer("[");
-      for (int i = 0; i < my_values.length; i++) {
+      for (int i = 0; i < my_values.length-1; i++) {
 	bstr.append(my_values[i]);
+	bstr.append(",");
       }
+      bstr.append(my_values[my_values.length-1]);
       bstr.append("]");
       return bstr.toString();
     }

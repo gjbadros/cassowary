@@ -40,6 +40,32 @@ class ClLinearEquation extends ClLinearConstraint
   }
 
   public ClLinearEquation(ClAbstractVariable clv,
+			  double val,
+			  ClStrength strength,
+			  double weight)
+  { 
+    super(new ClLinearExpression(val), strength, weight); 
+    my_expression.addVariable(clv,-1.0);
+  }
+
+
+  public ClLinearEquation(ClAbstractVariable clv,
+			  double val,
+			  ClStrength strength)
+  { 
+    super(new ClLinearExpression(val), strength); 
+    my_expression.addVariable(clv,-1.0);
+  }
+
+  public ClLinearEquation(ClAbstractVariable clv,
+			  double val)
+  { 
+    super(new ClLinearExpression(val)); 
+    my_expression.addVariable(clv,-1.0);
+  }
+
+
+  public ClLinearEquation(ClAbstractVariable clv,
 			  ClLinearExpression cle,
 			  ClStrength strength)
   { 
