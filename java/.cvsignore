@@ -1,10 +1,16 @@
 ClAbstractVariable.class
 ClConstraint.class
 ClDummyVariable.class
+ClEditConstraint.class
+ClEditOrStayConstraint.class
+ClLinearConstraint.class
+ClLinearEquation.class
 ClLinearExpression.class
+ClLinearInequality.class
 ClObjectiveVariable.class
 ClPoint.class
 ClSlackVariable.class
+ClStayConstraint.class
 ClStrength.class
 ClSymbolicWeight.class
 ClVariable.class
