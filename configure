@@ -57,11 +57,11 @@ ac_help="$ac_help
   --enable-warnings          Turn on most compiler warnings
 "
 ac_help="$ac_help
-  --with-guile-prefix=DIR    Expect guile to be installed in DIR [optional]"
+  --with-guile-prefix=DIR Expect guile to be installed in DIR [optional]"
 ac_help="$ac_help
   --with-guile-exec-prefix=DIR 
-                             Expect guile binaries to be installed in DIR 
-                             [optional]"
+                          Expect guile binaries to be installed in DIR 
+                          [optional]"
 ac_help="$ac_help
   --with-python-headers=DIR    Expect Python headers to be installed in DIR [optional]"
 ac_help="$ac_help
@@ -2194,7 +2194,25 @@ fi
 
 
 
-guile_prefix=${prefix}
+GUILE_BIN_DIR=""
+GUILE_INCLUDES=""
+
+guile_lib_path=""
+
+if test "NONE" = "$exec_prefix"; then
+	if test "NONE" = "$prefix"; then
+		guile_lib_path="$ac_default_prefix/lib"
+	else
+		guile_lib_path="$prefix/lib"
+	fi
+else
+        guile_lib_path="$exec_prefix/lib"
+fi
+if test "NONE" = "$prefix"; then
+        GUILE_INCLUDES="-I$ac_default_prefix/include"
+else
+        GUILE_INCLUDES="-I$prefix/include"
+fi
 
 
   # Check whether --with-guile-prefix or --without-guile-prefix was given.
@@ -2208,8 +2226,11 @@ if test "${with_guile_prefix+set}" = set; then
     else
       
 	echo $ac_n "checking where to expect to find guile""... $ac_c" 1>&6
-echo "configure:2212: checking where to expect to find guile" >&5
+echo "configure:2230: checking where to expect to find guile" >&5
 	guile_prefix="${withval}"
+	GUILE_BIN_DIR="${guile_prefix}/bin"
+	GUILE_INCLUDES="-I${guile_prefix}/include"
+	guile_lib_path="${guile_prefix}/lib"
 	
 	echo "$ac_t"""${guile_prefix}"" 1>&6
 
@@ -2217,13 +2238,6 @@ echo "configure:2212: checking where to expect to find guile" >&5
 fi
 
 
-
-GUILE_BIN_DIR="${guile_prefix}/bin"
-GUILE_INCLUDES="-I${guile_prefix}/include"
-GUILE_LIB_DIR="${guile_prefix}/lib"
-
-
-guile_exec_prefix=${exec_prefix}
 
 
   # Check whether --with-guile-exec-prefix or --without-guile-exec-prefix was given.
@@ -2237,8 +2251,9 @@ if test "${with_guile_exec_prefix+set}" = set; then
     else
       
 	echo $ac_n "checking where to expect to find guile binaries""... $ac_c" 1>&6
-echo "configure:2241: checking where to expect to find guile binaries" >&5
+echo "configure:2255: checking where to expect to find guile binaries" >&5
 	guile_exec_prefix="${withval}"
+	GUILE_BIN_DIR="${guile_exec_prefix}"
 	
 	echo "$ac_t"""${guile_exec_prefix}"" 1>&6
 
@@ -2246,7 +2261,6 @@ echo "configure:2241: checking where to expect to find guile binaries" >&5
 fi
 
 
-GUILE_BIN_DIR="${guile_exec_prefix}"
 
 if test -z "${GUILE_BIN_DIR}"; then
 	for ac_prog in guile-config build-guile
@@ -2254,7 +2268,7 @@ do
 # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:2258: checking for $ac_word" >&5
+echo "configure:2272: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_GUILE_CONFIG'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -2296,7 +2310,7 @@ do
 # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:2300: checking for $ac_word" >&5
+echo "configure:2314: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_GUILE_CONFIG'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -2337,7 +2351,7 @@ fi
 
 if test "no" != "$GUILE_CONFIG"; then
   echo $ac_n "checking whether guile-config or build-guile works""... $ac_c" 1>&6
-echo "configure:2341: checking whether guile-config or build-guile works" >&5
+echo "configure:2355: checking whether guile-config or build-guile works" >&5
   if (${GUILE_CONFIG} link) >/dev/null 2>&1; then
     GUILE_CONFIG_works=yes
   else
@@ -2348,11 +2362,12 @@ else
   GUILE_CONFIG_works=no
 fi
 
+
 if test -z "${GUILE_BIN_DIR}"; then
 	# Extract the first word of "guile", so it can be a program name with args.
 set dummy guile; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:2356: checking for $ac_word" >&5
+echo "configure:2371: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_GUILE'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -2389,7 +2404,7 @@ else
 	# Extract the first word of "guile", so it can be a program name with args.
 set dummy guile; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:2393: checking for $ac_word" >&5
+echo "configure:2408: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_GUILE'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -2425,7 +2440,7 @@ fi
 fi
 
 echo $ac_n "checking what the guile pkgdatadir is""... $ac_c" 1>&6
-echo "configure:2429: checking what the guile pkgdatadir is" >&5
+echo "configure:2444: checking what the guile pkgdatadir is" >&5
 GUILE_PKGDATA_DIR=`guile-config info pkgdatadir`
 echo "$ac_t""$GUILE_PKGDATA_DIR" 1>&6
 
@@ -2436,7 +2451,7 @@ echo "$ac_t""$GUILE_PKGDATA_DIR" 1>&6
 
 
 
-if test "yes" = "$GUILE_CONFIG_works" -a -d "$GUILE_INCLUDES"; then
+if test "yes" = "$GUILE_CONFIG_works"; then
   HAVE_GUILE_TRUE=
   HAVE_GUILE_FALSE='#'
 else
@@ -2459,7 +2474,7 @@ if test "${with_python_headers+set}" = set; then
     else
       
 	echo $ac_n "checking where to find python headers""... $ac_c" 1>&6
-echo "configure:2463: checking where to find python headers" >&5
+echo "configure:2478: checking where to find python headers" >&5
 	PYTHON_HEADER_DIR="${withval}"
 	
 	echo "$ac_t"""${python_headers}"" 1>&6
@@ -2501,7 +2516,7 @@ if test "${with_java_class_path+set}" = set; then
     else
       
 	echo $ac_n "checking where to install java .class files""... $ac_c" 1>&6
-echo "configure:2505: checking where to install java .class files" >&5
+echo "configure:2520: checking where to install java .class files" >&5
 	JAVA_CLASS_PATH=$withval
 	echo "$ac_t"""$JAVA_CLASS_PATH"" 1>&6
 
