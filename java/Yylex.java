@@ -14,13 +14,13 @@ public class Yylex implements java_cup.runtime.Scanner {
 	private final int YY_BOL = 128;
 	private final int YY_EOF = 129;
 
-	// added code to lexer class
-	private java.util.Hashtable m_variable_name_object_hash;
-	public boolean m_debug_lex = false;
-	public void setVariableNameObjectHash(java.util.Hashtable variable_name_object_hash)
-	{
-		m_variable_name_object_hash = variable_name_object_hash;
-	}
+  // added code to lexer class
+  private java.util.Hashtable m_variable_name_object_hash;
+  public boolean m_debug_lex = false;
+  public void setVariableNameObjectHash(java.util.Hashtable variable_name_object_hash)
+  {
+    m_variable_name_object_hash = variable_name_object_hash;
+  }
 	private java.io.BufferedReader yy_reader;
 	private int yy_buffer_index;
 	private int yy_buffer_read;
@@ -55,7 +55,7 @@ public class Yylex implements java_cup.runtime.Scanner {
 		yy_at_bol = true;
 		yy_lexical_state = YYINITIAL;
 
-	// code to go into constructor
+  // code to go into constructor
 	}
 
 	private boolean yy_eof_done = false;
@@ -318,39 +318,40 @@ public class Yylex implements java_cup.runtime.Scanner {
 					case -11:
 						break;
 					case 11:
-						{ return new Symbol(sym.NUMBER, new Double(yytext()));	}
+						{ return new Symbol(sym.NUMBER, new Double(yytext()));  }
 					case -12:
 						break;
 					case 12:
 						{
-					String variable_name = new String(yytext());
-					if (m_debug_lex) {
-						System.out.println("Lexical analysis found <" + variable_name + ">");
-					}
-					if (! m_variable_name_object_hash.containsKey(variable_name)) {
-						if (m_debug_lex) {
-							System.out.println("	Putting it in hash for the first time.");
-						}
-						ClVariable variable = new ClVariable();
-						Object return_value = m_variable_name_object_hash.put(variable_name, variable);
-						if (return_value != null) {
-							System.err.println("Variable was already in hash!!!!!");
-						}
-						if (m_debug_lex) {
-							if (m_variable_name_object_hash.containsKey(variable_name)) {
-								System.out.println("	Hash table now contains object.");
-							} else { 
-								System.out.println("	Hash table does not contain object.");
-							}
-						}
-						if (m_variable_name_object_hash.isEmpty()) {
-							System.err.println("	How can the hashtable be empty after inserting something?");
-						}	
-					} else {
-						System.err.println("	Already in Hash.");
-					}
-					return new Symbol(sym.VARIABLE, variable_name);
-					}
+          String variable_name = new String(yytext());
+          if (m_debug_lex) {
+            System.out.println("Lexical analysis found <" + variable_name + ">");
+          }
+          if (! m_variable_name_object_hash.containsKey(variable_name)) {
+            if (m_debug_lex) {
+              System.out.println("  Putting it in hash for the first time.");
+            }
+            ClVariable variable = new ClVariable();
+            Object return_value = m_variable_name_object_hash.put(variable_name, variable);
+            if (return_value != null) {
+              System.err.println("Variable was already in hash!!!!!");
+            }
+            if (m_debug_lex) {
+              if (m_variable_name_object_hash.containsKey(variable_name)) {
+                System.out.println("  Hash table now contains object.");
+              } else { 
+                System.out.println("  Hash table does not contain object.");
+              }
+            }
+            if (m_variable_name_object_hash.isEmpty()) {
+              System.err.println("  How can the hashtable be empty after inserting something?");
+            } 
+          } else {
+            if (m_debug_lex)
+              System.err.println("  Already in Hash.");
+          }
+          return new Symbol(sym.VARIABLE, variable_name);
+          }
 					case -13:
 						break;
 					case 13:
@@ -366,7 +367,7 @@ public class Yylex implements java_cup.runtime.Scanner {
 					case -16:
 						break;
 					case 16:
-						{ return new Symbol(sym.NUMBER, new Double(yytext()));	}
+						{ return new Symbol(sym.NUMBER, new Double(yytext()));  }
 					case -17:
 						break;
 					case 17:
