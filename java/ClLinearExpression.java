@@ -192,7 +192,7 @@ class ClLinearExpression extends CL
 
   public final ClLinearExpression addVariable(ClAbstractVariable v, double c)
     { // body largely duplicated below
-      fnenterprint("addVariable:" + v + ", " + c);
+      if (fTraceOn) fnenterprint("addVariable:" + v + ", " + c);
 
       ClDouble coeff = (ClDouble) my_terms.get(v);
       if (coeff != null) {
@@ -229,7 +229,7 @@ class ClLinearExpression extends CL
   public final ClLinearExpression addVariable(ClAbstractVariable v, double c,
  					ClAbstractVariable subject, ClTableau solver)
      { // body largely duplicated above
-       fnenterprint("addVariable:" + v + ", " + c + ", " + subject + ", ...");
+       if (fTraceOn) fnenterprint("addVariable:" + v + ", " + c + ", " + subject + ", ...");
 
        ClDouble coeff = (ClDouble) my_terms.get(v);
        if (coeff != null) {
@@ -261,8 +261,8 @@ class ClLinearExpression extends CL
   public final void substituteOut(ClAbstractVariable var, ClLinearExpression expr, 
  			    ClAbstractVariable subject, ClTableau solver)
   {
-    fnenterprint("CLE:substituteOut: " + var + ", " + expr + ", " + subject + ", ...");
-    traceprint("this = " + this);
+    if (fTraceOn) fnenterprint("CLE:substituteOut: " + var + ", " + expr + ", " + subject + ", ...");
+    if (fTraceOn) traceprint("this = " + this);
 
     double multiplier = ((ClDouble) my_terms.remove(var)).doubleValue();
     incrementConstant(multiplier * expr.constant());
@@ -286,7 +286,7 @@ class ClLinearExpression extends CL
 	solver.noteAddedVariable(clv,subject);
       }
     }
-    traceprint("Now this is " + this);
+    if (fTraceOn) traceprint("Now this is " + this);
   }
   
   public final void changeSubject(ClAbstractVariable old_subject, ClAbstractVariable new_subject)
@@ -300,7 +300,7 @@ class ClLinearExpression extends CL
   
   public final double newSubject(ClAbstractVariable subject)
     {
-      fnenterprint("newSubject:" + subject);
+      if (fTraceOn) fnenterprint("newSubject:" + subject);
       ClDouble coeff = (ClDouble) my_terms.remove(subject);
       double reciprocal = 1.0 / coeff.doubleValue();
       multiplyMe(-reciprocal);

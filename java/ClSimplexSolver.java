@@ -29,13 +29,17 @@ class ClSimplexSolver extends ClTableau
     my_errorVars = new Hashtable();
     my_markerVars = new Hashtable();
 
+    my_resolve_pair = new Vector(2);
+    my_resolve_pair.addElement(new ClDouble(0));
+    my_resolve_pair.addElement(new ClDouble(0));
+
     my_objective = new ClObjectiveVariable("Z");
     my_slackCounter = 0;
     my_artificialCounter = 0;
     my_dummyCounter = 0;
     ClLinearExpression e = new ClLinearExpression();
     my_rows.put(my_objective,e);
-    traceprint("objective expr == " + rowExpression(my_objective));
+    if (fTraceOn) traceprint("objective expr == " + rowExpression(my_objective));
   }
 
   public final ClSimplexSolver addLowerBound(ClAbstractVariable v, double lower)
@@ -71,7 +75,7 @@ class ClSimplexSolver extends ClTableau
   public final ClSimplexSolver addConstraint(ClConstraint cn)
        throws ExCLRequiredFailure, ExCLInternalError
   {
-    fnenterprint("addConstraint: " + cn);
+    if (fTraceOn) fnenterprint("addConstraint: " + cn);
     
     ClLinearExpression expr = newExpression(cn);
   
@@ -87,7 +91,7 @@ class ClSimplexSolver extends ClTableau
   public final ClSimplexSolver addPointStays(Vector listOfPoints)
        throws ExCLRequiredFailure, ExCLInternalError
   {
-    fnenterprint("addPointStays" + listOfPoints);
+    if (fTraceOn) fnenterprint("addPointStays" + listOfPoints);
     double weight = 1.0;
     final double multiplier = 2.0;
     for (int i = 0; i < listOfPoints.size(); i++) {
@@ -153,15 +157,15 @@ class ClSimplexSolver extends ClTableau
   public final ClSimplexSolver removeConstraint(ClConstraint cn)
        throws ExCLConstraintNotFound, ExCLInternalError
   {
-    fnenterprint("removeConstraint: " + cn);
-    traceprint(this.toString());
+    if (fTraceOn) fnenterprint("removeConstraint: " + cn);
+    if (fTraceOn) traceprint(this.toString());
 
     resetStayConstants();
     
     ClLinearExpression zRow = rowExpression(my_objective);
     
     Set eVars = (Set) my_errorVars.get(cn);
-    traceprint("eVars == " + eVars);
+    if (fTraceOn) traceprint("eVars == " + eVars);
 
     if (eVars != null) {
       for (Enumeration e = eVars.elements(); e.hasMoreElements() ; ) {
@@ -184,13 +188,13 @@ class ClSimplexSolver extends ClTableau
       throw new ExCLConstraintNotFound();
     }
 
-    traceprint("Looking to remove var " + marker);
+    if (fTraceOn) traceprint("Looking to remove var " + marker);
 
     if (rowExpression(marker) == null ) {
       // not in the basis, so need to do some work
       Set col = (Set) my_columns.get(marker);
 
-      traceprint("Must pivot -- columns are " + col);
+      if (fTraceOn) traceprint("Must pivot -- columns are " + col);
 
       ClAbstractVariable exitVar = null;
       double minRatio = 0.0;
@@ -199,7 +203,7 @@ class ClSimplexSolver extends ClTableau
 	if (v.isRestricted() ) {
 	  final ClLinearExpression expr = rowExpression( v);
 	  double coeff = expr.coefficientFor(marker);
-	  traceprint("Marker " + marker + "'s coefficient in " + expr + " is " + coeff);
+	  if (fTraceOn) traceprint("Marker " + marker + "'s coefficient in " + expr + " is " + coeff);
 	  if (coeff < 0.0) {
 	    double r = -expr.constant() / coeff;
 	    if (exitVar == null || r < minRatio) {
@@ -210,7 +214,7 @@ class ClSimplexSolver extends ClTableau
 	}
       }
       if (exitVar == null ) {
-	traceprint("exitVar is still null");
+	if (fTraceOn) traceprint("exitVar is still null");
 	for (Enumeration e = col.elements(); e.hasMoreElements() ; ) {
 	  final ClAbstractVariable v = (ClAbstractVariable) e.nextElement();
 	  if (v.isRestricted() ) {
@@ -293,14 +297,14 @@ class ClSimplexSolver extends ClTableau
   public final void reset()
        throws ExCLInternalError
   {
-    fnenterprint("reset");
+    if (fTraceOn) fnenterprint("reset");
     throw new ExCLInternalError();
   }
   
   public final void resolve(Vector newEditConstants)
        throws ExCLInternalError
   { // CODE DUPLICATED BELOW
-    fnenterprint("resolve" + newEditConstants);
+    if (fTraceOn) fnenterprint("resolve" + newEditConstants);
     my_infeasibleRows.clear();
     resetStayConstants();
     resetEditConstants(newEditConstants);
@@ -311,10 +315,9 @@ class ClSimplexSolver extends ClTableau
   public final void resolve(double x, double y)
        throws ExCLInternalError
   {
-    Vector vals = new Vector(2);
-    vals.addElement(new ClDouble(x));
-    vals.addElement(new ClDouble(y));
-    resolve(vals);
+    ((ClDouble) my_resolve_pair.elementAt(0)).setValue(x);
+    ((ClDouble) my_resolve_pair.elementAt(1)).setValue(y);
+    resolve(my_resolve_pair);
   }
 
   public final String toString()
@@ -340,23 +343,23 @@ class ClSimplexSolver extends ClTableau
   protected final void addWithArtificialVariable(ClLinearExpression expr)
        throws ExCLRequiredFailure, ExCLInternalError
   {
-    fnenterprint("addWithArtificialVariable: " + expr);
+    if (fTraceOn) fnenterprint("addWithArtificialVariable: " + expr);
   
     ClSlackVariable av = new ClSlackVariable(++my_artificialCounter,"a");
     ClObjectiveVariable az = new ClObjectiveVariable("az");
     ClLinearExpression azRow = (ClLinearExpression) expr.clone();
 
-    traceprint("before addRows:\n" + this);
+    if (fTraceOn) traceprint("before addRows:\n" + this);
 
     addRow( az, azRow);
     addRow( av, expr);
 
-    traceprint("after addRows:\n" + this);
+    if (fTraceOn) traceprint("after addRows:\n" + this);
     optimize(az);
     
     ClLinearExpression azTableauRow = rowExpression(az);
 
-    traceprint("azTableauRow.constant() == " + azTableauRow.constant());
+    if (fTraceOn) traceprint("azTableauRow.constant() == " + azTableauRow.constant());
     
     if (!CL.approx(azTableauRow.constant(),0.0)) {
       throw new ExCLRequiredFailure();
@@ -380,10 +383,10 @@ class ClSimplexSolver extends ClTableau
   protected final boolean tryAddingDirectly(ClLinearExpression expr)
        throws ExCLRequiredFailure
   {
-    fnenterprint("tryAddingDirectly: " + expr );
+    if (fTraceOn) fnenterprint("tryAddingDirectly: " + expr );
     final ClAbstractVariable subject = chooseSubject(expr);
     if (subject == null ) {
-      fnexitprint("returning false");
+      if (fTraceOn) fnexitprint("returning false");
       return false;
     }
     expr.newSubject( subject);
@@ -391,14 +394,14 @@ class ClSimplexSolver extends ClTableau
       substituteOut( subject,expr);
     }
     addRow( subject,expr);
-    fnexitprint("returning true");
+    if (fTraceOn) fnexitprint("returning true");
     return true; // successfully added directly
   }
 
   protected final ClAbstractVariable chooseSubject(ClLinearExpression expr)
        throws ExCLRequiredFailure
   {
-    fnenterprint("chooseSubject: " + expr);
+    if (fTraceOn) fnenterprint("chooseSubject: " + expr);
     ClAbstractVariable subject = null; // the current best subject, if any
     
     boolean foundUnrestricted = false; 
@@ -462,7 +465,7 @@ class ClSimplexSolver extends ClTableau
 				   ClAbstractVariable plusErrorVar, 
 				   ClAbstractVariable minusErrorVar)
   {
-    fnenterprint("deltaEditConstant :" + delta + ", " + plusErrorVar + ", " + minusErrorVar);
+    if (fTraceOn) fnenterprint("deltaEditConstant :" + delta + ", " + plusErrorVar + ", " + minusErrorVar);
     ClLinearExpression exprPlus = rowExpression(plusErrorVar);
     if (exprPlus != null ) {
       exprPlus.incrementConstant(delta);
@@ -499,7 +502,7 @@ class ClSimplexSolver extends ClTableau
   protected final void dualOptimize()
        throws ExCLInternalError
   {
-    fnenterprint("dualOptimize:");
+    if (fTraceOn) fnenterprint("dualOptimize:");
     final ClLinearExpression zRow = rowExpression(my_objective);
     while (!my_infeasibleRows.isEmpty()) {
       ClAbstractVariable exitVar = 
@@ -536,9 +539,9 @@ class ClSimplexSolver extends ClTableau
 
   protected final ClLinearExpression newExpression(ClConstraint cn)
   {
-    fnenterprint("newExpression: " + cn);
-    traceprint("cn.isInequality() == " + cn.isInequality());
-    traceprint("cn.isRequired() == " + cn.isRequired());
+    if (fTraceOn) fnenterprint("newExpression: " + cn);
+    if (fTraceOn) traceprint("cn.isInequality() == " + cn.isInequality());
+    if (fTraceOn) traceprint("cn.isRequired() == " + cn.isRequired());
 
     final ClLinearExpression cnExpr = cn.expression();
     ClLinearExpression expr = new ClLinearExpression(cnExpr.constant());
@@ -580,7 +583,7 @@ class ClSimplexSolver extends ClTableau
 	dummyVar = new ClDummyVariable(my_dummyCounter, "d");
 	expr.setVariable(dummyVar,1.0);
 	my_markerVars.put(cn,dummyVar);
-	traceprint("Adding dummyVar == d" + my_dummyCounter);
+	if (fTraceOn) traceprint("Adding dummyVar == d" + my_dummyCounter);
       } else {
 	++my_slackCounter;
 	eplus = new ClSlackVariable (my_slackCounter, "ep");
@@ -593,9 +596,9 @@ class ClSimplexSolver extends ClTableau
 	ClSymbolicWeight sw = cn.strength().symbolicWeight().times(cn.weight());
 	double swCoeff = sw.asDouble();
 	if (swCoeff == 0) {
-	  traceprint("sw == " + sw);
-	  traceprint("cn == " + cn);
-	  traceprint("adding " + eplus + " and " + eminus + " with swCoeff == " + swCoeff);
+	  if (fTraceOn) traceprint("sw == " + sw);
+	  if (fTraceOn) traceprint("cn == " + cn);
+	  if (fTraceOn) traceprint("adding " + eplus + " and " + eminus + " with swCoeff == " + swCoeff);
 	}
 	zRow.setVariable(eplus,swCoeff);
 	noteAddedVariable(eplus,my_objective);
@@ -618,15 +621,15 @@ class ClSimplexSolver extends ClTableau
     if (expr.constant() < 0)
       expr.multiplyMe(-1);
 
-    fnexitprint("returning " + expr);
+    if (fTraceOn) fnexitprint("returning " + expr);
     return expr;
   }
 
   protected final void optimize(ClObjectiveVariable zVar)
        throws ExCLInternalError
   {
-    fnenterprint("optimize: " + zVar);
-    traceprint(this.toString());
+    if (fTraceOn) fnenterprint("optimize: " + zVar);
+    if (fTraceOn) traceprint(this.toString());
 
     ClLinearExpression zRow = rowExpression(zVar);
     assert(zRow != null);
@@ -645,22 +648,22 @@ class ClSimplexSolver extends ClTableau
       }
       if (objectiveCoeff == 0)
 	return;
-      traceprint("entryVar == " + entryVar + ", objectiveCoeff == " + objectiveCoeff);
+      if (fTraceOn) traceprint("entryVar == " + entryVar + ", objectiveCoeff == " + objectiveCoeff);
 
       double minRatio = Double.MAX_VALUE;
       Set columnVars = (Set) my_columns.get(entryVar);
       double r = 0.0;
       for (Enumeration e = columnVars.elements(); e.hasMoreElements() ; ) {
 	ClAbstractVariable v = (ClAbstractVariable) e.nextElement();
-	traceprint("Checking " + v);
+	if (fTraceOn) traceprint("Checking " + v);
 	if (v.isPivotable()) {
 	  final ClLinearExpression expr = rowExpression(v);
 	  double coeff = expr.coefficientFor(entryVar);
-	  traceprint("pivotable, coeff = " + coeff);
+	  if (fTraceOn) traceprint("pivotable, coeff = " + coeff);
 	  if (coeff < 0.0) {
 	    r = - expr.constant() / coeff;
 	    if (r < minRatio) {
-	      traceprint("New minratio == " + r);
+	      if (fTraceOn) traceprint("New minratio == " + r);
 	      minRatio = r;
 	      exitVar = v;
 	    }
@@ -672,7 +675,7 @@ class ClSimplexSolver extends ClTableau
 	throw new ExCLInternalError();
       }
       pivot(entryVar, exitVar);
-      traceprint(this.toString());
+      if (fTraceOn) traceprint(this.toString());
     }
   }
 
@@ -680,7 +683,7 @@ class ClSimplexSolver extends ClTableau
 		       ClAbstractVariable exitVar)
        throws ExCLInternalError
   {
-    fnenterprint("pivot: " + entryVar + ", " + exitVar);
+    if (fTraceOn) fnenterprint("pivot: " + entryVar + ", " + exitVar);
 
     ClLinearExpression  pexpr = removeRow(exitVar);
 
@@ -692,7 +695,7 @@ class ClSimplexSolver extends ClTableau
   protected final void resetEditConstants(Vector newEditConstants)
        throws ExCLInternalError
   {
-    fnenterprint("resetEditConstants:" + newEditConstants);
+    if (fTraceOn) fnenterprint("resetEditConstants:" + newEditConstants);
 
     if (newEditConstants.size() != my_editPlusErrorVars.size()) {
       // number of edit constants doesn't match the number of edit error variables
@@ -705,7 +708,7 @@ class ClSimplexSolver extends ClTableau
     for (int i = 0 ; i < newEditConstants.size(); i++) {
       double delta = (((ClDouble)newEditConstants.elementAt(i)).doubleValue() - 
 		      ((ClDouble)my_prevEditConstants.elementAt(i)).doubleValue());
-      my_prevEditConstants.setElementAt(newEditConstants.elementAt(i),i);
+      my_prevEditConstants.setElementAt(((ClDouble)newEditConstants.elementAt(i)).clone(),i);
       deltaEditConstant(delta, 
 			(ClAbstractVariable) my_editPlusErrorVars.elementAt(i),
 			(ClAbstractVariable) my_editMinusErrorVars.elementAt(i));
@@ -714,7 +717,7 @@ class ClSimplexSolver extends ClTableau
   
   protected final void resetStayConstants()
   {
-    fnenterprint("resetStayConstants");
+    if (fTraceOn) fnenterprint("resetStayConstants");
 
     for (int i = 0; i < my_stayPlusErrorVars.size(); i++) {
       ClLinearExpression expr = 
@@ -728,8 +731,8 @@ class ClSimplexSolver extends ClTableau
 
   protected final void setExternalVariables()
   {
-    fnenterprint("setExternalVariables:");
-    traceprint(this.toString());
+    if (fTraceOn) fnenterprint("setExternalVariables:");
+    if (fTraceOn) traceprint(this.toString());
     
     for (Enumeration e = my_externalParametricVars.elements(); 
 	 e.hasMoreElements() ; ) {
@@ -740,15 +743,15 @@ class ClSimplexSolver extends ClTableau
     for (Enumeration e = my_externalRows.elements(); e.hasMoreElements(); ) {
       ClVariable v = (ClVariable) e.nextElement();
       ClLinearExpression expr = rowExpression(v);
-      debugprint("v == " + v);
-      debugprint("expr == " + expr);
+      if (fTraceOn) debugprint("v == " + v);
+      if (fTraceOn) debugprint("expr == " + expr);
       v.set_value(expr.constant());
     }
   }
 
   protected final void insertErrorVar(ClConstraint cn, ClAbstractVariable var)
   { 
-    fnenterprint("insertErrorVar:" + cn + ", " + var);
+    if (fTraceOn) fnenterprint("insertErrorVar:" + cn + ", " + var);
 
     Set cnset = (Set) my_errorVars.get(var);
     if (cnset == null)
@@ -769,5 +772,7 @@ class ClSimplexSolver extends ClTableau
   private long my_slackCounter;
   private long my_artificialCounter;
   private long my_dummyCounter;
+
+  private Vector my_resolve_pair;
   
 }

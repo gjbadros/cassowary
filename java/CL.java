@@ -21,17 +21,17 @@ class CL {
   protected final static boolean fTraceOn = false;
   protected final static boolean fGC = false;
 
-  protected void debugprint(String s)
-  { if (fDebugOn) System.err.println(s); }
+  protected static void debugprint(String s)
+  { System.err.println(s); }
 
   protected static void traceprint(String s)
-  { if (fTraceOn) System.err.println(s); }
+  { System.err.println(s); }
 
   protected static void fnenterprint(String s)
-  { if (fTraceOn) System.err.println("* " + s); }
+  { System.err.println("* " + s); }
 
   protected static void fnexitprint(String s)
-  { if (fTraceOn) System.err.println("- " + s); }
+  { System.err.println("- " + s); }
 
   protected void assert(boolean f) throws ExCLInternalError
   { 

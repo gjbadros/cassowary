@@ -233,7 +233,7 @@ class ClTests extends CL {
       } else {  
         rgpcns[j] = new ClLinearEquation(expr);
       }
-      traceprint("Constraint " + j + " is " + rgpcns[j]);
+      if (fTraceOn) traceprint("Constraint " + j + " is " + rgpcns[j]);
     }
 
     System.out.println("done building data structures");
@@ -251,7 +251,7 @@ class ClTests extends CL {
       catch (ExCLRequiredFailure err)
 	{
 	  cExceptions++;
-	  traceprint("got exception adding " + rgpcns[j]);
+	  if (fTraceOn) traceprint("got exception adding " + rgpcns[j]);
 	  rgpcns[j] = null;
 	}
     }
@@ -350,9 +350,9 @@ class ClTests extends CL {
       if (CL.fGC) System.out.println("Num vars = " + ClAbstractVariable.numCreated() );
       
       System.out.println("addDel:");
-      // fResult = addDel(900,900,10000);
+      fResult = addDel(900,900,10000);
       // fResult = addDel(300,300,1000);
-      fResult = addDel(30,30,100);
+      // fResult = addDel(30,30,100);
       // fResult = addDel(10,10,30);
       // fResult = addDel(5,5,10);
       fAllOkResult &= fResult;
