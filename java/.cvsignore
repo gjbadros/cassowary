@@ -5,3 +5,5 @@ Makefile
 Makefile.in
 classjava.stamp
 java.prof
+parser.java
+sym.java

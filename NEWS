@@ -11,11 +11,11 @@ Seattle, WA 98195-2350
 
 with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
 
-28-November-1999: Version 0.54 released.
+15-Dec-1999: Version 0.54 released.
 * Bug fixes
 * auto-configuration improvements
 * Build guile wrapper as long as guile-config works, use new --disable-guile-build to force off
-* Alpha-version of Java constraint parser by Will Portnoy
+* Alpha-version of Java constraint parser contributed by Will Portnoy
 
 24-October-1999: Version 0.53 released.
 * Bug fixes
