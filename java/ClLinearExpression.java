@@ -411,7 +411,7 @@ class ClLinearExpression extends CL
   public final static boolean FEquals(ClLinearExpression e1, ClLinearExpression e2)
     { return e1 == e2; }
 
-  public final boolean safe = true;
+  public final boolean safe = false;
   private ClDouble my_constant;
   private Hashtable my_terms; // from ClVariable to ClDouble
 
