@@ -1,0 +1,30 @@
+#!/uns/bin/perl -wi.bak
+use strict;
+
+my %converts;
+BEGIN {
+
+  open(IDS,"</home/gjb/cassowary/scripts/ids-to-upper") || die "Cannot open ids-to-upper: $!";
+  
+  %converts = ();
+  
+  while (<IDS>) {
+    chomp;
+    my ($from, $to) = split /\s+/;
+    if (!defined($to)) {
+      $to = $from;
+      $to =~ s/^(.)/\U$1/;
+    }
+#DBG    print STDERR "Will convert '$from' to '$to'\n";
+    $converts{$from} = $to;
+  }
+  close(IDS);
+}
+
+while (<>) {
+  while ( my ($from, $to) = each %converts ) {
+#DBG    print STDERR "Read: $_";
+    s/\b\Q$from\E\b/$to/g;
+  }
+  print;
+}
