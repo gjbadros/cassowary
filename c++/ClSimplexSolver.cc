@@ -178,7 +178,9 @@ ClSimplexSolver::removeEditVarsTo(int n)
     if (pcai->index >= n)
       {
       const ClEditConstraint *pcnEdit = dynamic_cast<const ClEditConstraint *>(pcai->pconstraint);
-      cerr << "Removing " << pcnEdit->variable() << endl;
+#ifndef CL_NO_TRACE
+      cerr << __FUNCTION__ << ": Removing " << pcnEdit->variable() << endl;
+#endif
       removeEditVar(pcnEdit->variable());
       }
     }
