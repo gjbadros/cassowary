@@ -43,7 +43,7 @@ class ClTableau {
 
   // Remove v from the tableau -- remove the column cross indices for v
   // and remove v from every expression in rows in which v occurs
-  void removeParametricVar(const ClVariable &v);
+  void removeColumn(const ClVariable &v);
 
   // Remove the basic variable v from the tableau row v=expr
   // Then update column cross indices

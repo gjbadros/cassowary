@@ -29,9 +29,9 @@ ClTableau::addRow(const ClVariable &var, const ClLinearExpression &expr)
 // Remove var from the tableau -- remove the column cross indices for var
 // and remove var from every expression in rows in which v occurs
 // Remove the parametric variable var, updating the appropriate column and row entries.
-// (FIXGJB: is this called removeColumn in the TR?)
+// (Renamed from Smalltalk implementation's `removeParametricVar')
 void 
-ClTableau::removeParametricVar(const ClVariable &var)
+ClTableau::removeColumn(const ClVariable &var)
 {
   map<ClVariable, set<ClVariable> >::iterator it_var = my_columns.find(var);
   set<ClVariable> &varset = (*it_var).second;

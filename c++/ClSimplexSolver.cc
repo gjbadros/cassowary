@@ -152,7 +152,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cn)
       // unrestricted variables whose equation involves the marker var
       if (col.size() == 0)
 	{
-	removeParametricVar(marker);
+	removeColumn(marker);
 	}
       else
 	{
@@ -183,7 +183,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cn)
       ClVariable &v = (*it);
       if (v != marker)
 	{
-	removeParametricVar(v);
+	removeColumn(v);
 	}
       }
     }
@@ -322,7 +322,7 @@ ClSimplexSolver::addWithArtificialVariable(const ClLinearExpression &expr)
     }
   // now av should be parametric
   assert(rowExpression(av) == cleNil() );
-  removeParametricVar(av);
+  removeColumn(av);
   // remove the temporary objective function
   removeRow(az);
 }
@@ -375,10 +375,53 @@ ClSimplexSolver::chooseSubject(const ClLinearConstraint &expr)
 }
   
 void 
-ClSimplexSolver::deltaEditConstant(Number delta, const ClVariable &v1, const ClVariable &v2)
+ClSimplexSolver::deltaEditConstant(Number delta,
+				   const ClVariable &plusErrorVar,
+				   const ClVariable &minusErrorVar)
 {
-  // FIXGJB
-  assert(false);
+  // first check if the plusErrorVar is basic
+  const ClLinearExpression &exprPlus = rowExpression(plusErrorVar);
+  if (exprPlus != cleNil() )
+    {
+    exprPlus.incrementConstant(delta);
+    // error variables are always restricted
+    // so the row is infeasible if the constant is negative
+    if (exprPlus.constant() < 0.0)
+      {
+      my_infeasibleRows.insert(plusErrorVar);
+      }
+    return;
+    }
+  // check if minusErrorVar is basic
+  const ClLinearExpression &exprMinus = rowExpression(minusErrorVar);
+  if (exprMinus != cleNil() )
+    {
+    exprMinus.incrementConstant(-delta);
+    if (exprMinus.constant() < 0.0)
+      {
+      my_infeasibleRows.insert(minusErrorVar);
+      }
+    return;
+    }
+  // Neither is basic.  So they must both be nonbasic, and will both
+  // occur in exactly the same expressions.  Find all the expressions
+  // in which they occur by finding the column for the minusErrorVar
+  // (it doesn't matter whether we look for that one or for
+  // plusErrorVar).  Fix the constants in these expressions.
+  set<ClVariable> &columnVars = my_columns[minusErrorVar];
+  set<ClVariable>::iterator it = columnVars.begin();
+  for (; it != columnVars.end(); ++it)
+    {
+    const ClVariable &basicVar = *it;
+    ClLinearExpression &expr = rowExpression(basicVar);
+    assert(expr != cleNil() );
+    double c = expr.coefficientFor(minusErrorVar);
+    expr.incrementConstant(c*delta);
+    if (basicVar.isRestricted() && expr.constant() < 0.0)
+      {
+      my_infeasibleRows.insert(basicVar);
+      }
+    }
 }
   
 // We have set new values for the constants in the edit constraints.
@@ -386,8 +429,58 @@ ClSimplexSolver::deltaEditConstant(Number delta, const ClVariable &v1, const ClV
 void 
 ClSimplexSolver::dualOptimize()
 {
-  // FIXGJB
-  assert(false);
+  const ClLinearExpression &zRow = rowExpression(my_objective);
+  // need to handle infeasible rows
+  while (!my_infeasibleRows.empty())
+    {
+    // need to erase it_exitVar at end
+    set<ClVariable>::iterator it_exitVar = my_infeasibleRows.begin();
+    const ClVariable &exitVar = *it_exitVar;
+    const ClVariable &entryVar = clvNil();
+    // exitVar might have become basic after some other pivoting
+    // so allow for the case of its not being there any longer
+    ClLinearExpression &expr = rowExpression(exitVar);
+    if (expr != cleNil() )
+      {
+      // make sure the row is still not feasible
+      if (expr.constant() < 0.0)
+	{
+	double ratio = MAXDOUBLE;
+	double r;
+	map<ClVariable,Number> &terms = expr.terms();
+	map<ClVariable,Number>::iterator it = terms.begin();
+	for ( ; it != terms.end(); ++it )
+	  {
+	  ClVariable &v = (*it).first;
+	  Number c = (*it).second;
+	  if (c > 0.0 && v.isPivotable())
+	    {
+	    map<ClVariable,Number>::iterator it_zc = zRow.terms().find(v);
+	    if (it_zc != zRow.terms().end())
+	      {
+	      Number zc = (*it_zc).second;
+	      r = zc/c;
+	      }
+	    else
+	      {
+	      // r := [ClSymbolicWeight zero]
+	      }
+	    if (ratio == MAXDOUBLE || r < ratio)
+	      {
+	      entryVar = v;
+	      ratio = r;
+	      }
+	    }
+	  }
+	if (ratio == MAXDOUBLE)
+	  {
+	  throw new ExCLInternalError;
+	  }
+	pivot(entryVar,exitVar);
+	}
+      }
+    my_infeasibleRows.erase(it_exitVar);
+    }
 }
 
 // Make a new linear expression representing the constraint cn,
