@@ -589,6 +589,8 @@ blackboxsat()
    }
 }
 
+typedef ClVariable *PClVariable;
+
 bool
 addDel(const int nCns = 900, const int nVars = 900, const int nResolves = 10000)
 //addDel(int nCns = 300, int nVars = 300, int nResolves = 1000)

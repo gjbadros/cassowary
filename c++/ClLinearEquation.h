@@ -33,7 +33,7 @@ class ClLinearEquation : public ClLinearConstraint {
    { }
 
  // ClLinearEquation(var,expr,...)  is   var == expr
- ClLinearEquation(const ClAbstractVariable &clv,
+ ClLinearEquation(ClVariable clv,
 		  const ClLinearExpression &cle,
 		  const ClStrength &strength = clsRequired(),
 		  double weight = 1.0) :
@@ -42,7 +42,7 @@ class ClLinearEquation : public ClLinearConstraint {
 
  // ClLinearEquation(expr,var,...) is   var == expr
  ClLinearEquation(const ClLinearExpression &cle,
-		  const ClAbstractVariable &clv,
+		  ClVariable clv,
 		  const ClStrength &strength = clsRequired(),
 		  double weight = 1.0) :
    ClLinearConstraint(cle,strength,weight)

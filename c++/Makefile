@@ -45,8 +45,8 @@ CPPFLAGS += -g
 
 #CPPFLAGS += -DCL_NO_IO
 
-#OTHER_LIBS = 
-OTHER_LIBS = ../../gc/gc.a
+OTHER_LIBS = 
+#OTHER_LIBS = ../../gc/gc.a
 
 #LIB=cassowary-optimized
 LIB=cassowary-notrace

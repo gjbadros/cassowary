@@ -48,28 +48,28 @@ ClTableau::printInternalInfo(ostream &xo) const
 // and ClTableauis responsible for deleting it
 // (also, expr better be allocated on the heap!)
 void 
-ClTableau::addRow(const ClAbstractVariable &var, const ClLinearExpression &expr)
+ClTableau::addRow(ClVariable var, const ClLinearExpression &expr)
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << var << ", " << expr << ")" << endl;
 #endif
-  _rows[&var] = const_cast<ClLinearExpression *>(&expr);
+  _rows[var] = const_cast<ClLinearExpression *>(&expr);
   ClVarToNumberMap::const_iterator it = expr.terms().begin();
   // for each variable in expr, add var to the set of rows which have that variable
   // in their expression
   for (; it != expr.terms().end(); ++it)
     {
-    const ClAbstractVariable *pv = (*it).first;
-    _columns[pv].insert(&var);
-    if (pv->isExternal() && !FIsBasicVar(*pv))
+    ClVariable v = (*it).first;
+    _columns[v].insert(var);
+    if (v.isExternal() && !FIsBasicVar(v))
       {
-      _externalParametricVars.insert(static_cast<const ClVariable *>(pv));
+      _externalParametricVars.insert(v);
       }
     }
   if (var.isExternal())
     {
-    _externalRows.insert(static_cast<const ClVariable *>(&var));
+    _externalRows.insert(var);
     }
 #ifdef CL_TRACE
   cerr << *this << endl;
@@ -80,67 +80,66 @@ ClTableau::addRow(const ClAbstractVariable &var, const ClLinearExpression &expr)
 // and remove var from every expression in rows in which v occurs
 // Remove the parametric variable var, updating the appropriate column and row entries.
 // (Renamed from Smalltalk implementation's `removeParametricVar')
-const ClAbstractVariable *
-ClTableau::removeColumn(const ClAbstractVariable &var)
+ClVariable
+ClTableau::removeColumn(ClVariable var)
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << var << ")" << endl;
 #endif
-  ClTableauColumnsMap::iterator it_var = _columns.find(&var);
+  ClTableauColumnsMap::iterator it_var = _columns.find(var);
   if (it_var == _columns.end())
-    return &var;  // nothing to do
+    return var;  // nothing to do
 
-  ClTableauVarSet &varset = (*it_var).second;
+  ClVarSet &varset = (*it_var).second;
   // remove the rows with the variables in varset
-  ClTableauVarSet::iterator it = varset.begin();
+  ClVarSet::iterator it = varset.begin();
   for (; it != varset.end(); ++it)
     {
-    const ClAbstractVariable *pv = (*it);
-    ClVarToNumberMap &terms = _rows[pv]->terms();
-    terms.erase(terms.find(&var));
+    ClVariable v = (*it);
+    ClVarToNumberMap &terms = _rows[v]->terms();
+    terms.erase(terms.find(var));
     }
-  const ClVariable *pclv = static_cast<const ClVariable *>(&var);
   if (var.isExternal())
     {
-    _externalRows.erase(pclv);
-    _externalParametricVars.erase(pclv);
+    _externalRows.erase(var);
+    _externalParametricVars.erase(var);
     }
   _columns.erase(it_var);
-  return &var;
+  return var;
 }
 
 // Remove the basic variable v from the tableau row v=expr
 // Then update column cross indices
 ClLinearExpression *
-ClTableau::removeRow(const ClAbstractVariable &var)
+ClTableau::removeRow(ClVariable var)
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << var << ")" << endl;
 #endif
-  ClTableauRowsMap::iterator it = _rows.find(&var);
+  ClTableauRowsMap::iterator it = _rows.find(var);
   assert(it != _rows.end());
   ClLinearExpression *pexpr = (*it).second;
   ClVarToNumberMap &terms = pexpr->terms();
   ClVarToNumberMap::iterator it_term = terms.begin();
   for (; it_term != terms.end(); ++it_term)
     {
-    const ClAbstractVariable *pv = (*it_term).first;
-    _columns[pv].erase(&var);
-    if (_columns[pv].size() == 0)
+    ClVariable v = (*it_term).first;
+    _columns[v].erase(var);
+    if (_columns[v].size() == 0)
       {
-      _columns.erase(pv);
-      _externalParametricVars.erase(static_cast<const ClVariable *>(pv));
+      _columns.erase(v);
+      _externalParametricVars.erase(v);
       }
     }
 
-  _infeasibleRows.erase(&var);
+  _infeasibleRows.erase(var);
 
   if (var.isExternal())
     {
-    _externalRows.erase(static_cast<const ClVariable *>(&var));
-    _externalParametricVars.erase(static_cast<const ClVariable *>(&var));
+    _externalRows.erase(var);
+    _externalParametricVars.erase(var);
     }
 
   _rows.erase(it);
@@ -156,7 +155,7 @@ ClTableau::removeRow(const ClAbstractVariable &var)
 // row that has oldVar in it
 // oldVar is leaving the basis, and becoming parametric
 void 
-ClTableau::substituteOut(const ClAbstractVariable &oldVar, const ClLinearExpression &expr)
+ClTableau::substituteOut(ClVariable oldVar, const ClLinearExpression &expr)
 {
 #ifdef CL_TRACE
   cerr << "* ClTableau::";
@@ -165,30 +164,30 @@ ClTableau::substituteOut(const ClAbstractVariable &oldVar, const ClLinearExpress
   cerr << (*this) << endl;
 #endif
 
-  ClTableauColumnsMap::iterator it_oldVar = _columns.find(&oldVar);
+  ClTableauColumnsMap::iterator it_oldVar = _columns.find(oldVar);
   if (it_oldVar == _columns.end())
     return;
 
-  ClTableauVarSet &varset = (*it_oldVar).second;
-  ClTableauVarSet::iterator it = varset.begin();
+  ClVarSet &varset = (*it_oldVar).second;
+  ClVarSet::iterator it = varset.begin();
   for (; it != varset.end(); ++it)
     {
-    const ClAbstractVariable *pv = (*it);
-    ClLinearExpression *prow = _rows[pv];
-    prow->substituteOut(oldVar,expr,*pv,*this);
-    if (pv->isRestricted() && prow->constant() < 0.0)
+    ClVariable v = (*it);
+    ClLinearExpression *prow = _rows[v];
+    prow->substituteOut(oldVar,expr,v,*this);
+    if (v.isRestricted() && prow->constant() < 0.0)
       {
-      _infeasibleRows.insert(pv);
+      _infeasibleRows.insert(v);
       }
     }
   _columns.erase(it_oldVar);
   if (oldVar.isExternal())
     {
-    if (_columns[static_cast<const ClVariable *>(&oldVar)].size() > 0) 
+    if (_columns[oldVar].size() > 0) 
       {
-      _externalRows.insert(static_cast<const ClVariable *>(&oldVar));
+      _externalRows.insert(oldVar);
       }
-    _externalParametricVars.erase(static_cast<const ClVariable *>(&oldVar));
+    _externalParametricVars.erase(oldVar);
     }
 }
 
@@ -196,47 +195,25 @@ ClTableau::substituteOut(const ClAbstractVariable &oldVar, const ClLinearExpress
 #ifndef CL_NO_IO
 
 ostream &
-printTo(ostream &xo, const ClTableauVarSet & varset)
+printTo(ostream &xo, const ClVarSet & varset)
 {
-  ClTableauVarSet::const_iterator it = varset.begin();
+  ClVarSet::const_iterator it = varset.begin();
   xo << "{ ";
   if (it != varset.end())
     {
-    xo << *(*it);
+    xo << *it;
     ++it;
     }
   for (; it != varset.end(); ++it) 
     {
-    xo << ", " << *(*it);
+    xo << ", " << *it;
     }
   xo << " }";
   return xo;
 }  
 
-ostream &operator<<(ostream &xo, const ClTableauVarSet & varset)
+ostream &operator<<(ostream &xo, const ClVarSet & varset)
 { return printTo(xo,varset); }
-
-ostream &
-printTo(ostream &xo, const ClExternalVarSet & varset)
-{
-  ClExternalVarSet::const_iterator it = varset.begin();
-  xo << "{ ";
-  if (it != varset.end())
-    {
-    xo << *(*it);
-    ++it;
-    }
-  for (; it != varset.end(); ++it) 
-    {
-    xo << ", " << *(*it);
-    }
-  xo << " }";
-  return xo;
-}  
-
-ostream &operator<<(ostream &xo, const ClExternalVarSet & varset)
-{ return printTo(xo,varset); }
-
 
 ostream &
 printTo(ostream &xo, const ClTableauColumnsMap & varmap)
@@ -244,7 +221,7 @@ printTo(ostream &xo, const ClTableauColumnsMap & varmap)
   ClTableauColumnsMap::const_iterator it = varmap.begin();
   for (; it != varmap.end(); ++it) 
     {
-    xo << *((*it).first) << " -> " << (*it).second << endl;
+    xo << (*it).first << " -> " << (*it).second << endl;
     }
   return xo;
 }
@@ -258,10 +235,9 @@ printTo(ostream &xo, const ClTableauRowsMap & rows)
   ClTableauRowsMap::const_iterator it = rows.begin();
   for (; it != rows.end(); ++it) 
     {
-    const ClAbstractVariable *pv = it->first;
+    ClVariable v = it->first;
     const ClLinearExpression *pe = it->second;
-    if (pv) xo << *pv; else xo << "NilVar";
-    xo << " <-=-> ";
+    xo << v << " <-=-> ";
     if (pe) xo << *pe; else xo << "NilExpr";
     xo << endl;
     }

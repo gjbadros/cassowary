@@ -18,27 +18,26 @@
 #include "Cassowary.h"
 #include "ClAbstractVariable.h"
 
-class ClVariable;
+class ClVariableRep;
 
-typedef map<string,const ClVariable *> StringToVarMap;
 
-class ClVariable : public ClAbstractVariable {
+class ClVariableRep : public ClAbstractVariable {
 public:
   typedef ClAbstractVariable super;
 
-  ClVariable(string name = "", Number value = 0.0) :
+  ClVariableRep(string name, Number value = 0.0) :
     ClAbstractVariable(name),
     _value(value),
     _pv(NULL)
-    { if (pmapSzPclv) { (*pmapSzPclv)[name] = this; } }
+    { }
 
-  ClVariable(Number value) :
+  ClVariableRep(Number value = 0.0) :
     ClAbstractVariable(""),
     _value(value),
     _pv(NULL)
     { }
 
-  ClVariable(long number, char *prefix, Number value = 0.0) :
+  ClVariableRep(long number, char *prefix, Number value = 0.0) :
     ClAbstractVariable(number,prefix),
     _value(value),
     _pv(NULL)
@@ -118,12 +117,7 @@ public:
 #endif
     }
 
-  static void SetVarMap(StringToVarMap *pmap) { pmapSzPclv = pmap; }
-  static StringToVarMap *VarMap() { return pmapSzPclv; }
-  
 private:
-
-  static StringToVarMap *pmapSzPclv;
 
   // similar to set_value -- see caveat above -- made private for now
   // since it's probably the wrong thing and is too easy to invoke
@@ -133,7 +127,7 @@ private:
   // Copy constructor left undefined since we want to
   // outlaw passing by value!  Will get a link error if you
   // try to use within ClVariable.c, compile-time error everywhere else
-  ClVariable(const ClVariable &);
+  ClVariableRep(const ClVariableRep &);
 
   Number _value;
 
@@ -142,7 +136,57 @@ private:
   void *_pv;
 };
 
-typedef ClVariable *PClVariable;
+class ClVariable;
+typedef map<string,ClVariable> StringToVarMap;
+
+class ClVariable {
+  ClAbstractVariable *pclv;
+public:
+  ClVariable(ClAbstractVariable *pclv_) : pclv(pclv_) { }
+  ClVariable(ClAbstractVariable &clv_) : pclv(&clv_) { }
+  ClVariable(string name, Number value = 0.0) 
+      : pclv(new ClVariableRep(name,value)) 
+    { if (pmapSzPclv) { (*pmapSzPclv)[name] = *this; }  }
+  ClVariable(Number value = 0.0) 
+      : pclv(new ClVariableRep(value)) { }
+  ClVariable(long number, char *prefix, Number value = 0.0)
+      : pclv(new ClVariableRep(number,prefix,value)) { }
+  ClAbstractVariable *operator->() { return pclv; }
+  bool isExternal() const { return pclv->isExternal(); }
+  bool isDummy() const { return pclv->isDummy(); }
+  bool isPivotable() const { return pclv->isPivotable(); }
+  bool isRestricted() const { return pclv->isRestricted(); }
+  Number value() const { return pclv->value(); }
+  void set_value(Number value) { 
+    ClVariableRep *p = dynamic_cast<ClVariableRep *>(pclv); assert(p);
+    p->set_value(value); 
+  }
+  void change_value(Number value) { 
+    ClVariableRep *p = dynamic_cast<ClVariableRep *>(pclv); assert(p);
+    p->change_value(value); 
+  }
+  ClAbstractVariable *get_pclv() const { return pclv; } 
+
+  static void SetVarMap(StringToVarMap *pmap) { pmapSzPclv = pmap; }
+  static StringToVarMap *VarMap() { return pmapSzPclv; }
+  static StringToVarMap *pmapSzPclv;
+  ostream &printOn(ostream &xo) const
+    { return pclv->printOn(xo); }
+
+  friend bool operator<(ClVariable cl1, ClVariable cl2)
+    { return *cl1.pclv < *cl2.pclv; }
+
+  friend bool operator==(ClVariable cl1, ClVariable cl2)
+    { return *cl1.pclv == *cl2.pclv; }
+
+  friend bool operator!=(ClVariable cl1, ClVariable cl2)
+    { return !(*cl1.pclv == *cl2.pclv); }
+
+};
+
+inline ostream &operator<<(ostream &xo, const ClVariable &clv)
+{ return clv.printOn(xo); }
+
 
 #include <math.h>
 
@@ -159,14 +203,14 @@ inline bool clApprox(double a, double b)
 
 // Can remove these if I decide to 
 // autoconvert from ClVariable-s to double-s
-inline bool clApprox(const ClVariable &clv, double b)
+inline bool clApprox(ClVariable clv, double b)
 {
-  return clApprox(clv.value(),b);
+  return clApprox(clv->value(),b);
 }
 
-inline bool clApprox(double a, const ClVariable &clv)
+inline bool clApprox(double a, ClVariable clv)
 {
-  return clApprox(a,clv.value());
+  return clApprox(a,clv->value());
 }
 
 #endif

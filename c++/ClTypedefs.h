@@ -27,16 +27,15 @@ class ClEditInfo;
 // ClTableauVarSet is not a ClSet, for performance reasons 
 // (Steve Wolfman discovered this, and seems to be true --02/17/99 gjb)
 // I have not observed any big performance gains from using the hashtable based containers 
-typedef set<const ClAbstractVariable *> ClTableauVarSet;  
-typedef ClSet<const ClVariable *> ClExternalVarSet;
-typedef ClMap<const ClAbstractVariable *, ClTableauVarSet > ClTableauColumnsMap;
-typedef ClMap<const ClAbstractVariable *, ClLinearExpression *> ClTableauRowsMap;
+typedef set<ClVariable> ClVarSet;  
+typedef ClMap<ClVariable, ClVarSet > ClTableauColumnsMap;
+typedef ClMap<ClVariable, ClLinearExpression *> ClTableauRowsMap;
 
 // For Solver
-typedef ClMap<const ClConstraint *, ClTableauVarSet > ClConstraintToVarSetMap;
-typedef ClMap<const ClConstraint *, const ClAbstractVariable *> ClConstraintToVarMap;
-typedef ClMap<const ClAbstractVariable *, const ClConstraint *> ClVarToConstraintMap;
-typedef vector<const ClAbstractVariable *> ClVarVector;
+typedef ClMap<const ClConstraint *, ClVarSet > ClConstraintToVarSetMap;
+typedef ClMap<const ClConstraint *, ClVariable> ClConstraintToVarMap;
+typedef ClMap<ClVariable, const ClConstraint *> ClVarToConstraintMap;
+typedef vector<ClVariable> ClVarVector;
 
 
 #endif

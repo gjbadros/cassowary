@@ -20,7 +20,7 @@ class ClAbstractVariable;
 
 #ifndef CL_NO_IO
 
-ostream &operator<<(ostream &xo, const ClTableauVarSet &varset);
+ostream &operator<<(ostream &xo, const ClVarSet &varset);
 
 ostream &operator<<(ostream &xo, const ClTableauColumnsMap &varmap);
 
