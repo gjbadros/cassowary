@@ -13,7 +13,7 @@ package EDU.Washington.grad.gjb.cassowary;
 
 public class Timer
 {
-  public void Timer() {
+  public Timer() {
     TimerIsRunning = false;         // Start not yet called.
     ElapsedMs   = 0;             // No time on timer object yet.
   }
