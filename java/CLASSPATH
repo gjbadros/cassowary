@@ -1,0 +1,2 @@
+export CLASSPATH=$HOME/java-jar/java_cup-10k-b2.jar:$HOME/cassowary/java/classes:.
+
