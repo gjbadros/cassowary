@@ -11,7 +11,6 @@
 
 
 #include "Cl.h"
-#include "creader.h"
 #include <strstream>
 
 int main()

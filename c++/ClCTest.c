@@ -15,6 +15,8 @@
 int main(int argc, char *argv[] )
 {
   CL_SimplexSolver solver;
+  CLV frameWidth;
+  CLV frameHeight;
   CLV x;
   CLV y;
   CL_Constraint cn;
@@ -22,29 +24,40 @@ int main(int argc, char *argv[] )
   CL_Init();
 
   solver = CL_SimplexSolverNew();
-  x = CL_ClvNew("x",5,solver);
-  y = CL_ClvNew("y",-2,solver);
+  frameWidth = CL_ClvNew("frameWidth",577,solver);
+  frameHeight = CL_ClvNew("frameHeight",651,solver);
+  CL_SimplexSolverAddStrongStay(solver,frameWidth,10);
+  CL_SimplexSolverAddStrongStay(solver,frameHeight,10);
+  x = CL_ClvNew("x",0,solver);
 
   printf("\"x\" has value %g\n", CL_ClvValue(CL_ClvLookup("x")));
  
-  printf("x = %g, y = %g\n",CL_ClvValue(x),CL_ClvValue(y));
+  printf("x = %g, frameWidth = %g\n",CL_ClvValue(x),CL_ClvValue(frameWidth));
 
-  cn = CL_ParseConstraint("x = y", "required");
-  printf("x = %g, y = %g\n",CL_ClvValue(x),CL_ClvValue(y));
+  cn = CL_ParseConstraint("x = frameWidth/3", "strong");
+  printf("x = %g, frameWidth = %g\n",CL_ClvValue(x),CL_ClvValue(frameWidth));
 
   CL_AddConstraint(solver,cn);
-  printf("x = %g, y = %g\n",CL_ClvValue(x),CL_ClvValue(y));
+  printf("x = %g, frameWidth = %g\n",CL_ClvValue(x),CL_ClvValue(frameWidth));
 
   CL_Solve(solver);
-  printf("x = %g, y = %g\n",CL_ClvValue(x),CL_ClvValue(y));
+  printf("x = %g, frameWidth = %g\n",CL_ClvValue(x),CL_ClvValue(frameWidth));
 
   printf("\"x\" has value %g\n", CL_ClvValue(CL_ClvLookup("x")));
 
-  CL_SimplexSolverSetEditedValue(solver,x,9);
-  printf("x = %g, y = %g\n",CL_ClvValue(x),CL_ClvValue(y));
+  CL_SimplexSolverPrint(solver,stderr);
+
+  CL_SimplexSolverSetEditedValue(solver,frameWidth,620);
+  printf("x = %g, frameWidth = %g\n",CL_ClvValue(x),CL_ClvValue(frameWidth));
 
   CL_SimplexSolverPrint(solver,stderr);
 
+  printf("x = %g, frameWidth = %g\n",CL_ClvValue(x),CL_ClvValue(frameWidth));
+
+  CL_SimplexSolverSetEditedValue(solver,frameWidth,700);
+  printf("x = %g, frameWidth = %g\n",CL_ClvValue(x),CL_ClvValue(frameWidth));
+
+  CL_TableauPrintExternalVariables(solver,stderr);
   CL_Shutdown();
   return 0;
 }

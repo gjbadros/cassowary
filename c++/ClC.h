@@ -30,6 +30,9 @@ typedef CL_Variable CLV; /* synonym, for brevity */
 struct ClSimplexSolver;
 typedef struct ClSimplexSolver *CL_SimplexSolver;
 
+struct ClTableau;
+typedef struct ClSimplexSolver *CL_Tableau;
+
 struct ClConstraint;
 typedef struct ClConstraint *CL_Constraint;
 
@@ -60,6 +63,8 @@ typedef void (*PfnChangeClvCallback)(CLV clv, CL_SimplexSolver solver);
 void CL_SimplexSolverSetChangeClvCallback(CL_SimplexSolver solver, PfnChangeClvCallback pfn);
 
 void CL_SimplexSolverAddStrongStay(CL_SimplexSolver solver, CLV var, double weight);
+
+void CL_TableauPrintExternalVariables(CL_Tableau tableau, FILE *out);
 
 /* Return a clvariable with the given name, or NULL if not found */
 CLV CL_ClvLookup(const char *szName);

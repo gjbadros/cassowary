@@ -83,6 +83,9 @@ class ClTableau {
   ostream &printOn(ostream &xo) const;
 
   ostream &printInternalInfo(ostream &xo) const;
+
+  ostream &printExternalVariablesTo(ostream &xo) const;
+
 #endif
 
   // Check integrity of the tableau

@@ -1464,14 +1464,16 @@ ClSimplexSolver::printOn(ostream &xo) const
   return xo;
 }
 
+
 ostream &
 ClSimplexSolver::printInternalInfo(ostream &xo) const
 {
   super::printInternalInfo(xo);
   xo << "; edvars: " << _editVarMap.size();
+  xo << endl;
+  printExternalVariablesTo(xo);
   return xo;
 }
-
 
 ostream &operator<<(ostream &xo, const ClSimplexSolver &clss)
 {

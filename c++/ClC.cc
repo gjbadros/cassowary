@@ -19,6 +19,8 @@
 
 static StringToVarMap mapVars;
 
+
+/* Functions unique to the C interface */
 void
 CL_Init()
 {
@@ -61,9 +63,19 @@ void
 CL_SimplexSolverPrint(CL_SimplexSolver solver, FILE *out)
 {
   strstream xo;
-  xo << *solver << endl;
+  xo << *solver << ends;
   fprintf(out,"%s",xo.str());
 }
+
+void 
+CL_TableauPrintExternalVariables(CL_Tableau tableau, FILE *out)
+{
+  strstream xo;
+  tableau->printExternalVariablesTo(xo);
+  xo << ends;
+  fprintf(out,"%s",xo.str());
+}
+
 
 void 
 CL_SimplexSolverSetChangeClvCallback(CL_SimplexSolver solver, PfnChangeClvCallback pfn)
@@ -74,7 +86,7 @@ CL_SimplexSolverSetChangeClvCallback(CL_SimplexSolver solver, PfnChangeClvCallba
 void 
 CL_SimplexSolverAddStrongStay(CL_SimplexSolver solver, CLV var, double weight)
 {
-  solver->addStay(*var,clsStrong(),weight);
+  solver->addStay(*var,clsMedium(),weight);
 }
 
 
@@ -103,15 +115,9 @@ CL_ClvIsNil(const CLV var)
 CL_Constraint CL_ParseConstraint(const char *szConstraintRule, const char *szConstraintStrength)
 {
   istrstream xiLine(szConstraintRule);
-  const ClStrength *pcls = &clsRequired();
-  if (strcmp("required",szConstraintStrength) == 0)
-    ; /* initialized to clsRequired, above */
-  else if (strcmp("strong",szConstraintStrength) == 0) { pcls = &clsStrong(); }
-  else if (strcmp("medium",szConstraintStrength) == 0) { pcls = &clsMedium(); }
-  else if (strcmp("weak",szConstraintStrength) == 0) { pcls = &clsWeak(); }
-  else fprintf(stderr,"Error parsing strength '%s'\n",szConstraintStrength);
-
-  return PcnParseConstraint(xiLine,ClVarLookupInMap(&mapVars,false));
+  ClConstraint *pcn = PcnParseConstraint(xiLine,ClVarLookupInMap(&mapVars,false),
+                                         ClsFromSz(szConstraintStrength));
+  return pcn;
 }
 
 /* Add a constraint to the solver; return 1 on success, 0 on failure */

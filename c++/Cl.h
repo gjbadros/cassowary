@@ -27,7 +27,7 @@
 #include "ClErrors.h"
 #include "ClEditConstraint.h"
 #include "ClStayConstraint.h"
-#include "creader.h"
+#include "ClReader.h"
 
 extern char *szCassowaryVersion;
 

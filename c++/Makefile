@@ -87,8 +87,8 @@ OBJS = 	ClAbstractVariable.o \
 	ClFloatVariable.o \
 	ClSlackVariable.o \
 	ClDummyVariable.o \
-	creader-lex.o \
-	creader.o
+	ClReader-lex.o \
+	ClReader.o
 
 
 TEST_OBJS = test-ClConstraint.o    \
@@ -154,12 +154,12 @@ HEADERS = Cassowary.h \
 	auto_ptr.h \
 	debug.h \
 	timer.h \
-	creader.h
+	ClReader.h
 
 C_HEADERS = ClC.h
 
 #Default rule is to just build the static library
-lib:    $(CL_LIBRARY)
+lib:    $(CL_LIBRARY) libc$(LIB).a
 
 all-notests: lib shared_lib
 
@@ -169,7 +169,7 @@ bugtests: ClBug0 ClBug1
 
 all: all-notests all-tests
 
-shared_lib:	$(CL_SHARED_LIBRARY)
+shared_lib:	$(CL_SHARED_LIBRARY) libc$(LIB).so
 
 $(CL_LIBRARY): $(OBJS)
 	rm -f $@
@@ -182,11 +182,15 @@ $(CL_SHARED_LIBRARY): $(OBJS)
 libccassowary.so: $(OBJS) ClC.o
 	$(CPP_SO_LINK) -o $@ $(OBJS) ClC.o
 
-ClCTest: ClC.o ClCTest.o libccassowary.so
-	$(CC) -o $@ $^
+libccassowary.a: $(OBJS) ClC.o
+	ar ruv $@ $(OBJS) ClC.o
+
+
+ClCTest: ClC.o ClCTest.o libc$(LIB).a
+	$(CPP) -o $@ $^
 
 clean:	
-	rm -f $(TESTS) $(CTESTS) $(CL_LIBRARY) $(CL_SHARED_LIBRARY) *.o creader.cc creader-lex.cc
+	rm -f $(TESTS) $(CTESTS) $(CL_LIBRARY) $(CL_SHARED_LIBRARY) *.o ClReader.cc ClReader-lex.cc
 	@echo "Consider doing a \`make depend'"
 
 TAGS: $(SOURCES) $(HEADERS)
@@ -202,19 +206,19 @@ cassowary-tests: $(TESTS)
 
 cassowary-test:	$(TEST_OBJS)
 
-creader.cc: creader.y creader.h
+ClReader.cc: ClReader.y ClReader.h
 	$(BISON) -d -pcl --output-file $@ $<
 
-creader.cc.h: creader.cc
+ClReader.cc.h: ClReader.cc
 
-creader-lex.cc: creader.cc.h
+ClReader-lex.cc: ClReader.cc.h
 
-creader-lex.cc: creader.l creader.h
+ClReader-lex.cc: ClReader.l ClReader.h
 	$(FLEX) $(FLEX_FLAGS) -Pcl -o$@ $<
 
-creader.o: creader.h
+ClReader.o: ClReader.h
 
-creader-lex.o: creader.h
+ClReader-lex.o: ClReader.h
 
 tags: TAGS
 
