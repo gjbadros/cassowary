@@ -45,6 +45,7 @@ protected:
 
   virtual bool isRestricted() const
     { return true; }
+
 };
 
 

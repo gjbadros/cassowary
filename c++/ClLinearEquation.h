@@ -16,6 +16,9 @@
 #include "ClLinearConstraint.h"
 #include "ClLinearExpression.h"
 
+class ClStrength;
+class ClVariable;
+
 class ClLinearEquation : public ClLinearConstraint {
  private: typedef ClLinearConstraint super;
 
@@ -27,19 +30,19 @@ class ClLinearEquation : public ClLinearConstraint {
    ClLinearConstraint(cle,strength, weight)
    { }
 
- ClLinearEquation(const ClVariable &clv,
+ ClLinearEquation(const ClAbstractVariable &clv,
 		  const ClLinearExpression &cle,
 		  const ClStrength strength = clsRequired(),
 		  double weight = 1.0) :
-   ClLinearConstraint(cle-clv,strength,weight)
-   { }
+   ClLinearConstraint(cle,strength,weight)
+   { my_expression.addVariable(clv,-1.0); }
 
  ClLinearEquation(const ClLinearExpression &cle,
-		  const ClVariable &clv,
+		  const ClAbstractVariable &clv,
 		  const ClStrength strength = clsRequired(),
 		  double weight = 1.0) :
-   ClLinearConstraint(cle-clv,strength,weight)
-   { }
+   ClLinearConstraint(cle,strength,weight)
+   { my_expression.addVariable(clv,-1.0); }
 
  
  virtual ostream &printOn(ostream &xo) const

@@ -56,6 +56,7 @@ protected:
   // internally to the simplex solver.
   virtual bool isRestricted() const
     { return true; }
+
 };
 
 #endif

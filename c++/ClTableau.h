@@ -19,6 +19,9 @@
 class ClTableau {
 
  public:
+  // No public constructor, since this does nothing but support
+  // an ADT for the ClSimplexSolver
+
   // Variable v has been removed from an expression.  If the
   // expression is in a tableau the corresponding basic variable is
   // subject (or if subject is nil then it's in the objective function).
@@ -51,9 +54,14 @@ class ClTableau {
   // Constructor -- want to start with empty objects so not much to do
   ClTableau()
     { }
+
+  ~ClTableau();
   
   // Add v=expr to the tableau, update column cross indices
   // v becomes a basic variable
+  // expr is now owned by ClTableau class, 
+  // and ClTableauis responsible for deleting it
+  // (also, expr better be allocated on the heap!)
   void addRow(const ClAbstractVariable &v, const ClLinearExpression &expr);
 
   // Remove v from the tableau -- remove the column cross indices for v
@@ -62,6 +70,9 @@ class ClTableau {
 
   // Remove the basic variable v from the tableau row v=expr
   // Then update column cross indices
+  // Probably want to call delete on the ClLinearExpression * returned
+  // unless you're adding that same expression back into the 
+  // tableau
   ClLinearExpression *removeRow(const ClAbstractVariable &v);
 
   // Replace all occurrences of oldVar with expr, and update column cross indices

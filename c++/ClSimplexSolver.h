@@ -27,15 +27,18 @@ class ClSimplexSolver : public ClTableau {
 
   // Constructor
   ClSimplexSolver() :
-    my_objective("z"),
+    my_objective(*(new ClObjectiveVariable("z"))),
     my_slackCounter(0),
     my_artificialCounter(0),
     my_dummyCounter(0)
-    { my_rows[&my_objective] = new ClLinearExpression(); }
-
-  ~ClSimplexSolver()
-    { // FIXGJB need to delete my_rows[my_objective]
+    { 
+    my_rows[&my_objective] = new ClLinearExpression(); 
+#ifndef NO_TRACE
+    cerr << "objective row new@ " << my_rows[&my_objective] << endl;
+#endif
     }
+
+  ~ClSimplexSolver();
   
   // Add constraints so that lower<=var<=upper.  (nil means no  bound.)
   ClSimplexSolver &addLowerBound(const ClAbstractVariable &v, Number lower)
@@ -208,7 +211,7 @@ class ClSimplexSolver : public ClTableau {
   // constraint (used when deleting a constraint).
   map<const ClConstraint *, const ClAbstractVariable *> my_markerVars;
 
-  ClObjectiveVariable my_objective;
+  ClObjectiveVariable &my_objective;
 
 
   int my_slackCounter;

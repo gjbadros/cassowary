@@ -15,6 +15,19 @@
 #include "ClSlackVariable.h"
 #include "ClObjectiveVariable.h"
 #include "ClDummyVariable.h"
+#include "auto_ptr.h"
+
+// Need to delete all expressions
+// and all slack and dummy variables
+// See newExpression -- all allocation is done in there
+ClSimplexSolver::~ClSimplexSolver()
+{
+#ifndef NO_TRACE
+     cerr << "my_slackCounter == " << my_slackCounter
+	  << "\nmy_artificialCounter == " << my_artificialCounter
+	  << "\nmy_dummyCounter == " << my_dummyCounter << endl;
+#endif
+}
 
 // Add the constraint cn to the tableau
 ClSimplexSolver &
@@ -208,7 +221,11 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
   
   if (rowExpression(marker) != NULL )
     {
-    removeRow(marker);
+    ClLinearExpression *pexpr = removeRow(marker);
+#ifndef NO_TRACE
+    cerr << "delete@ " << pexpr << endl;
+#endif
+    delete pexpr;
     }
 
   // Delete any error variables.  If cn is an inequality, it also
@@ -342,22 +359,25 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
   cerr << "(" << expr << ")" << endl;
 #endif
   
-  ClSlackVariable av(++my_artificialCounter,"a");
-  ClObjectiveVariable az("az");
-  ClLinearExpression azRow(expr);
+  // Allocate the objects on the heap because the objects
+  // will remain in the tableau if we throw an exception,
+  // and that will result in the destructor cleaning up
+  // after us
+  ClSlackVariable *pav = new ClSlackVariable(++my_artificialCounter,"a");
+  ClObjectiveVariable *paz = new ClObjectiveVariable("az");
+  ClLinearExpression *pazRow = new ClLinearExpression(expr);
   // the artificial objective is av, which we know is equal to expr
   // (which contains only parametric variables)
 
 #ifndef NO_TRACE
   cerr << __FUNCTION__ << " before addRow-s:" << endl;
   cerr << (*this) << endl;
-  // FIXGJB  cerr << "COMPARE: " << &(azRow.terms()) << " vs. " << &(expr.terms()) <<endl;
 #endif
 
   // the artificial objective is av, which we know is equal to expr
   // (which contains only parametric variables)
-  addRow(az,azRow);
-  addRow(av,expr);
+  addRow(*paz,*pazRow);
+  addRow(*pav,expr);
 
 #ifndef NO_TRACE
   cerr << __FUNCTION__ << " after addRow-s:" << endl;
@@ -365,18 +385,18 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
 #endif
 
   // try to optimize az to 0
-  optimize(az);
+  optimize(*paz);
 
   // Careful, we want to get the expression that is in
   // the tableau, not the one we initialized it with!
-  ClLinearExpression *pazRow = rowExpression(az);
+  ClLinearExpression *pazTableauRow = rowExpression(*paz);
 #ifndef NO_TRACE
-  cerr << "pazRow->constant() == " << pazRow->constant() << endl;
+  cerr << "pazTableauRow->constant() == " << pazTableauRow->constant() << endl;
 #endif
 
   // Check that we were able to make the objective value 0
   // If not, the original constraint was not satisfiable
-  if (!clApprox(pazRow->constant(),0.0))
+  if (!clApprox(pazTableauRow->constant(),0.0))
     {
     cerr << "Original constraint is not satisfiable" << endl;
     EXCEPTION_ABORT;
@@ -384,7 +404,7 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
     }
 
   // see if av is a basic variable
-  const ClLinearExpression *pe = rowExpression(av);
+  const ClLinearExpression *pe = rowExpression(*pav);
   if (pe != NULL )
     {
     // Find another variable in this row and pivot, so that av becomes parametric
@@ -392,17 +412,17 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
     // the tableau contains the equation av = 0  -- just delete av's row
     if (pe->isConstant())
       {
-      removeRow(av);
+      delete removeRow(*pav);
       return;
       }
     const ClAbstractVariable *pentryVar = pe->anyVariable();
-    pivot(*pentryVar, av);
+    pivot(*pentryVar, *pav);
     }
   // now av should be parametric
-  assert(rowExpression(av) == NULL);
-  removeColumn(av);
+  assert(rowExpression(*pav) == NULL);
+  removeColumn(*pav);
   // remove the temporary objective function
-  removeRow(az);
+  delete removeRow(*paz);
 }
 
 // We are trying to add the constraint expr=0 to the appropriate
@@ -691,7 +711,11 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
   cerr << "cn.isRequired() == " << cn.isRequired() << endl;
 #endif
   const ClLinearExpression &cnExpr = cn.expression();
-  ClLinearExpression &expr = *(new ClLinearExpression(cnExpr.constant()));
+  auto_ptr<ClLinearExpression> pexpr ( new ClLinearExpression(cnExpr.constant()) );
+  auto_ptr<ClSlackVariable> pslackVar;
+  auto_ptr<ClDummyVariable> pdummyVar;
+  auto_ptr<ClSlackVariable> peminus;
+  auto_ptr<ClSlackVariable> peplus;
   const map<const ClAbstractVariable *, Number> &cnTerms = cnExpr.terms();
   map<const ClAbstractVariable *,Number>::const_iterator it = cnTerms.begin();
   for ( ; it != cnTerms.end(); ++it)
@@ -701,11 +725,11 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
     const ClLinearExpression *pe = rowExpression(*pv);
     if (pe == NULL)
       {
-      expr.addVariable(*pv,c);
+      pexpr->addVariable(*pv,c);
       }
     else
       {
-      expr.addExpression(*pe,c);
+      pexpr->addExpression(*pe,c);
       }
     }
 
@@ -721,22 +745,22 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
     // Since both of these variables are newly created we can just add
     // them to the expression (they can't be basic).
     ++my_slackCounter;
-    ClSlackVariable &slackVar = *(new ClSlackVariable(my_slackCounter,"s"));
-    expr.setVariable(slackVar,-1);
+    pslackVar.reset(new ClSlackVariable(my_slackCounter,"s"));
+    pexpr->setVariable(*pslackVar,-1);
     // index the constraint under its slack variable
-    my_markerVars[&cn] = &slackVar;
+    my_markerVars[&cn] = pslackVar.get();
     if (!cn.isRequired())
       {
       ++my_slackCounter;
-      ClSlackVariable &eminus = *(new ClSlackVariable(my_slackCounter,"em"));
-      expr.setVariable(eminus,1.0);
+      peminus.reset(new ClSlackVariable(my_slackCounter,"em"));
+      pexpr->setVariable(*peminus,1.0);
       // add emnius to the objective function with the appropriate weight
       ClLinearExpression *pzRow = rowExpression(my_objective);
       // FIXGJB: pzRow->addVariable(eminus,cn.strength().symbolicWeight() * cn.weight());
       ClSymbolicWeight sw = cn.strength().symbolicWeight().times(cn.weight());
-      pzRow->setVariable(eminus,sw.asDouble());
-      my_errorVars[&cn].insert(&eminus);
-      noteAddedVariable(eminus,my_objective);
+      pzRow->setVariable(*peminus,sw.asDouble());
+      my_errorVars[&cn].insert(peminus.get());
+      noteAddedVariable(*peminus,my_objective);
       }
     }
   else
@@ -747,9 +771,9 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
       // for this constraint.  The dummy variable is never allowed to
       // enter the basis when pivoting.
       ++my_dummyCounter;
-      ClDummyVariable &dummyVar = *(new ClDummyVariable(my_dummyCounter,"d"));
-      expr.setVariable(dummyVar,1.0);
-      my_markerVars[&cn] = &dummyVar;
+      pdummyVar.reset(new ClDummyVariable(my_dummyCounter,"d"));
+      pexpr->setVariable(*pdummyVar,1.0);
+      my_markerVars[&cn] = pdummyVar.get();
 #ifndef NO_TRACE
       cerr << "Adding dummyVar == d" << my_dummyCounter << endl;
 #endif
@@ -761,12 +785,12 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
       //       expr = eplus - eminus, 
       // in other words:  expr-eplus+eminus=0
       ++my_slackCounter;
-      ClSlackVariable &eplus = *(new ClSlackVariable(my_slackCounter,"ep"));
-      ClSlackVariable &eminus = *(new ClSlackVariable(my_slackCounter,"em"));
-      expr.setVariable(eplus,-1.0);
-      expr.setVariable(eminus,1.0);
+      peplus.reset(new ClSlackVariable(my_slackCounter,"ep"));
+      peminus.reset(new ClSlackVariable(my_slackCounter,"em"));
+      pexpr->setVariable(*peplus,-1.0);
+      pexpr->setVariable(*peminus,1.0);
       // index the constraint under one of the error variables
-      my_markerVars[&cn] = &eplus;
+      my_markerVars[&cn] = peplus.get();
       ClLinearExpression *pzRow = rowExpression(my_objective);
       // FIXGJB: pzRow->addVariable(eplus,cn.strength().symbolicWeight() * cn.weight());
       ClSymbolicWeight sw = cn.strength().symbolicWeight().times(cn.weight());
@@ -776,24 +800,24 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
 	{
 	cerr << "sw == " << sw << endl
 	     << "cn == " << cn << endl;
-	cerr << "adding " << eplus << " and " << eminus 
+	cerr << "adding " << *peplus << " and " << *peminus 
 	     << " with swCoeff == " << swCoeff << endl;
 	}
 #endif      
-      pzRow->setVariable(eplus,swCoeff);
-      noteAddedVariable(eplus,my_objective);
+      pzRow->setVariable(*peplus,swCoeff);
+      noteAddedVariable(*peplus,my_objective);
       // FIXGJB: pzRow->addVariable(eminus,cn.strength().symbolicWeight() * cn.weight());
-      pzRow->setVariable(eminus,swCoeff);
-      noteAddedVariable(eminus,my_objective);
+      pzRow->setVariable(*peminus,swCoeff);
+      noteAddedVariable(*peminus,my_objective);
       if (cn.isStayConstraint()) 
 	{
-	my_stayPlusErrorVars.push_back(&eplus);
-	my_stayMinusErrorVars.push_back(&eminus);
+	my_stayPlusErrorVars.push_back(peplus.get());
+	my_stayMinusErrorVars.push_back(peminus.get());
 	}
       if (cn.isEditConstraint())
 	{
-	my_editPlusErrorVars.push_back(&eplus);
-	my_editMinusErrorVars.push_back(&eminus);
+	my_editPlusErrorVars.push_back(peplus.get());
+	my_editMinusErrorVars.push_back(peminus.get());
 	my_prevEditConstants.push_back(cnExpr.constant());
 	}
       }
@@ -801,14 +825,21 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
 
   // the constant in the expression should be non-negative.
   // If necessary normalize the expression by multiplying by -1
-  if (expr.constant() < 0)
+  if (pexpr->constant() < 0)
     {
-    expr.multiplyMe(-1);
+    pexpr->multiplyMe(-1);
     }
 #ifndef NO_TRACE
-  cerr << "- returning " << expr << endl;
+  cerr << "- returning " << *pexpr << " new@ " << pexpr.get() << endl;
 #endif
-  return &expr;
+  // Terrible name -- release() does *not* delete the object,
+  // only makes sure that the destructor won't delete the object
+  // (it releases the auto_ptr from the responsibility of deleting the object)
+  pslackVar.release();
+  pdummyVar.release();
+  peminus.release();
+  peplus.release();
+  return pexpr.release();
 }
 
 // Minimize the value of the objective.  (The tableau should already

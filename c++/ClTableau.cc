@@ -11,8 +11,30 @@
 #include "ClTableau.h"
 #include "debug.h"
 
+// delete the linear expressions
+// let ClSimplexSolver worry about deleting the variables
+ClTableau::~ClTableau()
+{
+#ifndef NO_TRACE
+  cerr << *this << endl;
+#endif
+  map<const ClAbstractVariable *, ClLinearExpression *>::iterator it = my_rows.begin();
+  for (; it != my_rows.end(); ++it)
+    {
+    // free the ClLinearExpression that we new-ed 
+#ifndef NO_TRACE
+    cerr << "Deleting row  delete@ " << ((*it).second) << endl;
+#endif
+    delete (*it).second;
+    }
+  
+}
+
 // Add v, update column cross indices
 // v becomes a basic variable
+// expr is now owned by ClTableau class, 
+// and ClTableauis responsible for deleting it
+// (also, expr better be allocated on the heap!)
 void 
 ClTableau::addRow(const ClAbstractVariable &var, const ClLinearExpression &expr)
 {
@@ -20,13 +42,11 @@ ClTableau::addRow(const ClAbstractVariable &var, const ClLinearExpression &expr)
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << var << ", " << expr << ")" << endl;
 #endif
-  // FIXGJB: gotta delete this somewhere
-  ClLinearExpression *pexpr = new ClLinearExpression(expr);
-  my_rows[&var] = pexpr;
-  map<const ClAbstractVariable *,Number>::const_iterator it = pexpr->terms().begin();
-  // for each variable in *pexpr, add var to the set of rows which have that variable
+  my_rows[&var] = const_cast<ClLinearExpression *>(&expr);
+  map<const ClAbstractVariable *,Number>::const_iterator it = expr.terms().begin();
+  // for each variable in expr, add var to the set of rows which have that variable
   // in their expression
-  for (; it != pexpr->terms().end(); ++it)
+  for (; it != expr.terms().end(); ++it)
     {
     const ClAbstractVariable *pv = (*it).first;
     my_columns[pv].insert(&var);
