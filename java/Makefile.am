@@ -35,6 +35,8 @@ JAVAFILES = \
 
 SUBDIRS=demos cda
 
+EXTRA_DIST=$(JAVAFILES)
+
 if HAVE_JAVA
 java_JAVA = $(JAVAFILES)
 endif
