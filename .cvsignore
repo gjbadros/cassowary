@@ -2,6 +2,9 @@ Makefile
 Makefile.in
 aclocal.m4
 config.cache
+config.h
 config.log
 config.status
+stamp-h
+stamp-h.in
 test
