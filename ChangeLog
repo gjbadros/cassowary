@@ -1,3 +1,14 @@
+Sun Oct  3 16:50:43 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSimplexSolver.cc: Use clvNil some places instead of NULL.
+  	This is important for newer, pickier gcc-2.95.x. Thanks Alexandre
+ 	Duret-Lutz for the patch!
+
+Thu Sep 30 08:17:16 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/ClFDSolver.cc: Added missing #include <stdarg.h> -- Thanks
+	Harry Hochheiser for bug report.
+
 Sun Sep 26 13:43:12 1999  Greg J. Badros  <gjb@cs.washington.edu>
 
 	* c++/Makefile.am (libcassowary_la_LDFLAGS): Added -version-info
