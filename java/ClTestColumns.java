@@ -67,6 +67,29 @@ class ClTestColumns extends CL {
     return(fOkResult);
   } 
 
+  public final static boolean reqFail1()
+       throws ExCLInternalError, ExCLRequiredFailure, ExCLConstraintNotFound
+  {
+    boolean fOkResult = true; 
+    ClVariable x = new ClVariable("x");
+    ClSimplexSolver solver = new ClSimplexSolver();
+
+    for (int i = 100; i < 900; i += 100) {
+        try {
+            solver.addConstraint( new ClLinearEquation( x, i, ClStrength.required ) );
+        } catch (Exception e) {
+            // do nothing
+        }
+    }
+      
+    System.out.println("x == " + x.value());
+
+    System.err.println("Solver == " + solver);
+
+    return(fOkResult);
+  } 
+
+
   public final static void main( String[] args )
        throws ExCLInternalError, ExCLNonlinearExpression,
 	 ExCLRequiredFailure, ExCLConstraintNotFound
@@ -78,6 +101,7 @@ class ClTestColumns extends CL {
       
       System.out.println("addDelete1:");
       fResult = addDelete1(); fAllOkResult &= fResult;
+      fResult = reqFail1(); fAllOkResult &= fResult;
       if (!fResult) System.out.println("Failed!");
       if (CL.fGC) System.out.println("Num vars = " + ClAbstractVariable.numCreated() );
     
