@@ -25,7 +25,7 @@
    may be a reasonable value, or just use 1 */
 #undef CL_PTR_HASH_DIVISOR
 
-/* Do not use any input/output functionality (for embedded systems)
+/* Do not use any input/output functionality (for embedded systems) */
 #undef CL_NO_IO
 
 /* Output some solver statistics to STDERR while executing */

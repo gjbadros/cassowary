@@ -12,7 +12,7 @@ AC_PREREQ(2.4)
 dnl ## Initialize automake ##
 AM_INIT_AUTOMAKE(cassowary, 0.32)
 AM_MAINTAINER_MODE
-AM_CONFIG_HEADER(c++/config.h)
+AM_CONFIG_HEADER(config.h)
 
 dnl ## Checks for programs ##
 AC_PROG_CC
@@ -69,12 +69,14 @@ AC_ARG_ENABLE(stats-display,
   fi
 ])
 
+CPPEXTRAFLAGS=""
 AC_ARG_ENABLE(warnings,
 [  --enable-warnings          Turn on all compiler warnings]
 ,[if test "yes" = "$enableval"; then
-   dnl fix CPPFLAGS
+   CPPEXTRAFLAGS="-Wall -W -pedantic"
   fi
 ])
+AC_SUBST(CPPEXTRAFLAGS)
 
 AC_OUTPUT(
 	Makefile \

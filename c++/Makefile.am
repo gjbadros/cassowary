@@ -3,6 +3,7 @@
 
 lib_LIBRARIES = libcassowary.a
 LDADD = libcassowary.a
+AM_CPPFLAGS = $(CPPEXTRAFLAGS)
 
 benchdir=$(libdir)/bench
 bugsdir=$(libdir)/bench
