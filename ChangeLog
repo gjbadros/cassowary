@@ -1,3 +1,13 @@
+Mon Mar  8 16:40:17 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* Added autoconf and partial automake support.  Added numerous
+	Makefile.am's, renamed old Makefiles to Makefile.linux (and copied 
+	to Makefile.in when I did not write a Makefile.am).  Added
+	configure.in.
+
+	* guile/cassowary_scm.cc: Use ClReader.h, not creader.h (I renamed 
+	the file)
+
 Fri Mar  5 16:24:05 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* c++/Makefile, c++/Cl.h: Fix for renaming of creader.* ->
