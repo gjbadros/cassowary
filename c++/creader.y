@@ -21,7 +21,9 @@
 #include <string>
 #include <map>
 
+#ifdef USE_CRUMMY_LEXER
 string current;  /* Global to help in debugging/error messages */
+#endif
 
 /* Get yyparse, yylex to have an extra argument (type void *) */
 #define YYPARSE_PARAM cl_parse_data
@@ -137,7 +139,7 @@ int yylex(YYSTYPE *lvalp, void *YYLEX_PARAM)
 void clerror(const char *sz)
 {
 #ifndef CL_NO_IO
-  cerr << sz << ": " << current << endl;
+  cerr << sz << endl;
 #endif
   throw sz;
 }
