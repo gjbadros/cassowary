@@ -62,15 +62,15 @@ class ClLinearExpression  {
   // Add a term c*v to this expression.  If the expression already
   // contains a term involving v, add c to the existing coefficient.
   // If the new coefficient is approximately 0, delete v.
-  void addVariable(const ClVariable &v, Number c);
+  ClLinearExpression &addVariable(const ClVariable &v, Number c);
 
   // Add a term c*v to this expression.  If the expression already
   // contains a term involving v, add c to the existing coefficient.
   // If the new coefficient is approximately 0, delete v.  Notify the
   // solver if v appears or disappears from this expression.
-  void addVariable(const ClVariable &v, Number c,
-		   const ClAbstractVariable &subject,
-		   const ClSimplexSolver &solver);
+  ClLinearExpression &addVariable(const ClVariable &v, Number c,
+				  const ClAbstractVariable &subject,
+				  const ClSimplexSolver &solver);
 
   // Replace var with a symbolic expression expr that is equal to it.
   // If a variable has been added to this expression that wasn't there
@@ -198,7 +198,7 @@ class ClLinearExpression  {
   // void initialize();
 
   Number my_constant;
-  map< ClVariable,Number,less<ClVariable> > my_terms;
+  map<ClVariable,Number> my_terms;
 
 };
 

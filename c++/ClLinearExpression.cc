@@ -31,10 +31,10 @@ ostream &
 ClLinearExpression::printOn(ostream &xo) const
 {
   xo << my_constant;
-  map< ClVariable,Number,less<ClVariable> >::const_iterator i = my_terms.begin();
+  map<ClVariable,Number>::const_iterator i = my_terms.begin();
   for ( ; i != my_terms.end(); ++i)
     {
-    xo << "+" << (*i).first << "*" << (*i).second;
+    xo << " + " << (*i).first << "*" << (*i).second;
     }
   return xo;
 }
@@ -48,7 +48,7 @@ ClLinearExpression::times(Number x) const
   ClLinearExpression result;
   result.my_constant = my_constant * x;
 
-  map< ClVariable,Number,less<ClVariable> >::const_iterator i = my_terms.begin();
+  map<ClVariable,Number>::const_iterator i = my_terms.begin();
   for ( ; i != my_terms.end(); ++i)
     {
     result.my_terms[(*i).first] = (*i).second * x;
@@ -117,10 +117,10 @@ ClLinearExpression::addExpression(const ClLinearExpression &expr, Number n,
 // Add a term c*v to this expression.  If the expression already
 // contains a term involving v, add c to the existing coefficient.
 // If the new coefficient is approximately 0, delete v.
-void 
+ClLinearExpression &
 ClLinearExpression::addVariable(const ClVariable &v, Number c)
 {
-  map< ClVariable,Number,less<ClVariable> >::iterator i = my_terms.find(v);
+  map<ClVariable,Number>::iterator i = my_terms.find(v);
   if (i != my_terms.end())
     {
     // expression already contains that variable, so add to it
@@ -143,13 +143,14 @@ ClLinearExpression::addVariable(const ClVariable &v, Number c)
       my_terms[v] = c;
       }
     }
+  return *this;
 }
 
 // Add a term c*v to this expression.  If the expression already
 // contains a term involving v, add c to the existing coefficient.
 // If the new coefficient is approximately 0, delete v.  Notify the
 // solver if v appears or disappears from this expression.
-void 
+ClLinearExpression &
 ClLinearExpression::addVariable(const ClVariable &v, Number c,
 				const ClAbstractVariable &subject,
 				const ClSimplexSolver &solver)
@@ -157,6 +158,7 @@ ClLinearExpression::addVariable(const ClVariable &v, Number c,
   addVariable(v,c);
   // FIXGJB: still need to handle subject, solver params
   assert(false);
+  return *this;
 }
 
 // Replace var with a symbolic expression expr that is equal to it.

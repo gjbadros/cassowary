@@ -12,4 +12,5 @@ main( char **argv, int argc )
   cle.addVariable(b,2);
   cout << cle << endl;
   cout << cle.times(2) << endl;
+  cout << (cle.times(2).addVariable(ClVariable("c"),3)).times(-1) << endl;
 }
