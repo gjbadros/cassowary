@@ -1,0 +1,21 @@
+#!/bin/zsh
+#echo "C++ version of Cassowary"
+date
+uname -a
+echo "nCns,nSolvers,nResolves,testNo,totalAddTime,totalEditAddTime,totalResolveTime,totalEditDeleteTime,addTime,editAddTime,resolveTime,editDeleteTime"
+
+setopt extended_glob
+
+run_test() {
+    num_run=$1; shift
+    for i in {1..$num_run}; do
+	./ClTests $i "$@" 2>/dev/null
+    done
+}
+
+runs=10
+
+for i in 300 310 320 330 340 350 360 370 380 390 400 410 420 430 440 450 460 470 480 490 500; do
+ run_test $runs $i 10 100
+done
+
