@@ -96,7 +96,7 @@ JFLAGS = -g -d $(CLASSES) -classpath $(CLASSES):$(CASSOWARY_CLASSES):$(JAVA_CLAS
 
 default:  all
 
-all: $(ALL_CLASSES) $(ICON_GIFS)
+all: $(ALL_JAVA_FILES) $(ICON_GIFS)
 	javac $(JFLAGS) $(ALL_JAVA_FILES)
 
 .java.class:  
@@ -122,7 +122,7 @@ clean:
 	rm -rf $(ICON_GIFS)
 
 run: all
-	appletviewer $(CLASSES)/run.html
+	CLASSPATH=$(CLASSPATH):.. appletviewer $(CLASSES)/run.html
 
 tar:
 	rm -f cda.tar
@@ -133,3 +133,4 @@ icons: $(ICON_GIFS)
 demo: all
 	tar -cf cdademo.tar $(ALL_CLASSES) $(ICON_GIFS) classes/*.htm*
 
+.PHONY: all run tar clean icons demo
