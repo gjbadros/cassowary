@@ -1,0 +1,49 @@
+Cassowary NEWS -- history of user-visible changes. -*- text -*-
+
+Cassowary Constraint Solving Toolkit was
+Implemented by:
+
+Greg J. Badros <gjb@cs.washington.edu> and
+Alan Borning <borning@cs.washington.edu>
+University of Washington
+Computer Science and Engineering
+Seattle, WA 98195-2350
+
+with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
+
+
+6-Aug-98, Changes since Cassowary v0.1:
+
+* Changes to the distribution
+
+** added guile/scheme wrapper of C++ version
+
+** mention SCWM in README
+
+* Changes to the C++ and Java implementations
+
+** Fixed several bugs -- dummy variables were wrongly being pivoted into
+   the basis, and constraints that threw required failure exceptions
+   were mistakenly remaining in the tableau (now trying to remove an
+   exception that was not added because of a required-failure exception
+   will correctly throw a ConstraintNotFound exception); more -- see ChangeLog
+
+** Added a virtual change_value function to permit applications to watch 
+   for changes made to external variables.
+
+* Changes to only the C++ version (Java version will catch up in 0.3)
+
+** Added new test cases to ClTests, fixed bugs in ClTestColumns
+
+** Added _pv (void *) field hanging off of ClConstraint and ClVariable
+   for associating arbitrary structs with those (needed by SCWM)
+
+** Permit nested beginEdit()s, and do the right thing upon calling
+   endEdit() -- i.e., not all the edit variables are removed, only the
+   nested ones
+
+** Permit access to ClSimplexSolver::ConstraintMap() (used by
+   guile-wrapper to efficiently get at a list of constraints in the
+   solver)
+
+** Added ExCLEditMisuse exception
