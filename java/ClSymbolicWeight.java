@@ -21,20 +21,27 @@ class ClSymbolicWeight
 
   public ClSymbolicWeight(int cLevels)
     { 
-      my_values = new Vector(cLevels);
+      my_values = new double[cLevels];
+      for (int i = 0; i < cLevels; i++) {
+	my_values[i] = 0;
+      }
     }
 
   public ClSymbolicWeight(double w1, double w2, double w3)
     { 
-      my_values = new Vector(3);
-      my_values.addElement( new Double(w1));
-      my_values.addElement( new Double(w2));
-      my_values.addElement( new Double(w3));
+      my_values = new double[3];
+      my_values[0] = w1;
+      my_values[1] = w2;
+      my_values[2] = w3;
     }
 
-  public ClSymbolicWeight(Vector weights)
+  public ClSymbolicWeight(double[] weights)
     { 
-      my_values = (Vector) weights.clone();
+      final int cLevels = weights.length;
+      my_values = new double[cLevels];
+      for (int i = 0; i < cLevels; i++) {
+	my_values[i] = weights[i];
+      }
     }
 
   public static final ClSymbolicWeight clsZero = new ClSymbolicWeight(0.0, 0.0, 0.0);
@@ -47,9 +54,8 @@ class ClSymbolicWeight
   public ClSymbolicWeight times(double n)
     {
       ClSymbolicWeight clsw = (ClSymbolicWeight) clone();
-      for (int i = 0; i < my_values.size(); i++) {
-        clsw.my_values.setElementAt( new Double(
-	  ((Double) my_values.elementAt(i)).doubleValue() * n),i);
+      for (int i = 0; i < my_values.length; i++) {
+        clsw.my_values[i] *= n;
       }
       return clsw;
     }
@@ -58,9 +64,8 @@ class ClSymbolicWeight
     {
       // assert(n != 0);
       ClSymbolicWeight clsw = (ClSymbolicWeight) clone();
-      for (int i = 0; i < my_values.size(); i++) {
-        clsw.my_values.setElementAt(new Double(
-	   ((Double) my_values.elementAt(i)).doubleValue() / n),i);
+      for (int i = 0; i < my_values.length; i++) {
+        clsw.my_values[i] /= n;
       }
       return clsw;
     }
@@ -70,9 +75,8 @@ class ClSymbolicWeight
       // assert(cl.cLevels() == cLevels());
       
       ClSymbolicWeight clsw = (ClSymbolicWeight) clone();
-      for (int i = 0; i < my_values.size(); i++) {
-        clsw.my_values.setElementAt((Double) clsw.my_values.elementAt(i) 
-				    + (Double) cl.my_values.elementAt(i), i);
+      for (int i = 0; i < my_values.length; i++) {
+        clsw.my_values[i] += cl.my_values[i];
       }
       return clsw;
     }
@@ -82,64 +86,88 @@ class ClSymbolicWeight
       // assert(cl.cLevels() == cLevels());
 
       ClSymbolicWeight clsw = (ClSymbolicWeight) clone();
-      for (int i = 0; i < my_values.size(); i++) {
-        clsw.my_values.setElementAt((Double) clsw.my_values.elementAt(i)
-				    - (Double) cl.my_values.elementAt(i),i);
+      for (int i = 0; i < my_values.length; i++) {
+        clsw.my_values[i] -= cl.my_values[i];
       }
       return clsw;
     }
 
   public boolean lessThan(ClSymbolicWeight cl)
     {
-      return my_values < cl.my_values;
+      // assert cl.cLevels() == cLevels()
+      for (int i = 0; i < my_values.length; i++) {
+	if (my_values[i] < cl.my_values[i])
+	  return true;
+	else if (my_values[i] > cl.my_values[i])
+	  return false;
+      }
+      return false; // they are equal
     }
   
   public boolean lessThanOrEqual(ClSymbolicWeight cl)
     {
-      return my_values <= cl.my_values;
+      // assert cl.cLevels() == cLevels()
+      for (int i = 0; i < my_values.length; i++) {
+	if (my_values[i] < cl.my_values[i])
+	  return true;
+	else if (my_values[i] > cl.my_values[i])
+	  return false;
+      }
+      return true; // they are equal
     }
   
   public
     boolean equal(ClSymbolicWeight cl)
     {
-      return my_values == cl.my_values;
+      for (int i = 0; i < my_values.length; i++) {
+	if (my_values[i] != cl.my_values[i])
+	  return false;
+      }
+      return true; // they are equal
     }
 
   public boolean greaterThan(ClSymbolicWeight cl)
     {
-      return my_values > cl.my_values;
+      return !this.lessThanOrEqual(cl);
     }
 
   public boolean greaterThanOrEqual(ClSymbolicWeight cl)
     {
-      return my_values >= cl.my_values;
+      return !this.lessThan(cl);
     }
   
   public boolean isNegative()
     {
-      return my_values < zero().my_values;
+      return this.lessThan(clsZero);
     }
 
   public double asDouble()
     {
-      ClSymbolicWeight clsw = clone();
-      double sum  =  i;
+      ClSymbolicWeight clsw = (ClSymbolicWeight) clone();
+      double sum  =  0;
       double factor = 1;
       double multiplier = 1000;
-      for (int i = my_values.size(); i >= 0; i--) 
+      for (int i = my_values.length - 1; i >= 0; i--) 
         {
-	sum += i *  factor;
+	sum += my_values[i] * factor;
 	factor *= multiplier;
 	}
       return sum;
     }
   
   public String toString()
-    { return my_values.toString(); }
+    { 
+      StringBuffer bstr = new StringBuffer("[");
+      for (int i = 0; i < my_values.length; i++) {
+	bstr.append(my_values[i]);
+      }
+      bstr.append("]");
+      return bstr.toString();
+    }
 
   public int cLevels()
-    { return my_values.size(); }
+    { return my_values.length; }
 
-  private Vector my_values;
+  private double[] my_values;
 
 }
