@@ -7,6 +7,7 @@ ClTests-good
 ClTests-setExtOpt
 ClTests-trace
 Makefile.dependencies
+creader.cc
 gmon.out
 gmon.out-setExtOpt
 output
