@@ -1,3 +1,78 @@
+Fri Apr 30 09:45:51 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClFDConnectorVariable.cc, c++/ClFDConnectorVariable.h:
+	Added -- support connecting the FD solver to the simplex solver
+	via a variable in the FD region that gets its value "copied" to a
+	analogous variable in the Simplex region.
+
+	* Makefile.am: Added ClFDConnectorVariable.[ch] files.
+
+	* c++/ClLinearConstraint.h: Added ChangeConstant()
+
+	* c++/ClFloatVariable.h, c++/ClFDVariable.h,
+ 	c++/ClFloatVariable.cc, c++/ClFDVariable.cc,
+ 	c++/ClAbstractVariable.h: Move _pv, SetPv(), Pv() from
+ 	ClFloatVariable, ClFDVariable, into common parent
+ 	ClAbstractVariable.  Drop ClFloatVariable::SetName().
+
+	* c++/ClFDTests.cc: Added connect1 test to test
+	ClFDConnectorVariable
+
+	* c++/ClFDSolver.cc: Use 1 + value-rhs for errors to ensure that
+	strict inequalities behave reasonably.
+
+Thu Apr 29 19:29:34 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClVariable.h: Register variable in the dictionary when
+	initialized from a ClFDVariable*.  Added const ClAbstractVariable
+	*operator() const.
+
+	* c++/ClSolver.h, c++/ClSimplexSolver.h: Added _fAutosolve,
+ 	_pfnChangeClvCallback; added default ctr to initialize.  Added
+ 	SolveNoException(); Moved SetAutosolve(), FIsAutosolving(),
+ 	SetChangeClvCallback() from ClSimplexSolver up to here.
+
+	* c++/ClSolver.cc: Added PrintTo for list<FDNumber>, operator<<
+	for same.
+
+	* c++/ClSimplexSolver.cc: Test constraint with
+	FIsOkayForSimplexSolver() before trying to add it (avoids adding
+	FD constraints to the simplex solver).
+	s/_fOptimizeAutomatically/_fAutosolve/g
+
+	* c++/ClParseTest.cc: Use FCanConvertCn() before trying to.
+
+	* c++/ClFDVariable.h: Make PlfdnDomain() const and return const.
+
+	* c++/ClFDVariable.cc: PrintOn now displays value (duh!)
+
+	* c++/ClFDTests.cc: Use new ListPushOnto() instead of a bunch of
+	push_back.  Added simple2, simple3.
+
+	* c++/ClFDSolver.h, c++/ClFDSolver.cc: Added ChangeClv(),
+ 	AddConstraintInternal(), RemoveConstraintInternal(),
+ 	ListPushOnto(), fDebugFDSolve var, more debugging code.
+
+	* c++/ClConstraint.h, c++/ClFDConstraint.h: Added
+ 	FIsOkayForSimplexSolver() returning false for FDCns, true in the
+	base class.
+
+	* c++/ClFDBinaryOneWayConstraint.h,
+ 	c++/ClFDBinaryOneWayConstraint.cc: Make ctr take ClConstraint
+ 	instead of ClLinearConstraint.  Added EnsurePreconditionsForCn(),
+ 	FCanConvertCn().  Throw better exceptions instead of
+	ExCLEditMisue-- use new ExCLTooDifficultSpecial.
+
+	* c++/ClCTest.c: Use CL_ClvPrint instead of coding by hand.
+	Added CL_CldvNew() call.
+
+	* c++/ClC.cc, c++/ClC.h: Added FDN_EOL defn, typedefs for Number,
+	FDNumber, CL_CldvNew(), CL_FDCanConvertCn(), CL_FDCnFromCn(),
+	CL_ClvPrint(). Use CL_Solver for PfnChangeClvCallback, not CL_SimplexSolver.
+
+	* c++/ClAbstractVariable.h: Throw instead of assert(false) in base 
+	class IsPivotable(), IsRestricted().
+
 Wed Apr 28 19:38:46 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* c++/ClC.cc: Added CL_FDSolverNew()
