@@ -23,16 +23,19 @@ CXX = $(CPP)
 #CPPFLAGS = -O6 -DCL_NO_TRACE -DNO_SOLVER_STATS -DNDEBUG -Wall -pedantic -W
 #CPPFLAGS = -O6 -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W
 #CPPFLAGS = -O6 -pg -DCL_NO_TRACE -Wall -pedantic -W
-CPPFLAGS = -g -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W
-#CPPFLAGS = -g -Wall -pedantic -W
+#CPPFLAGS = -g -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W
+CPPFLAGS = -g -Wall -pedantic -W
+
+#LIB=cassowary-optimized
+#LIB=cassowary-notrace
+#LIB=cassowary-trace
+LIB=cassowary
+
+LDLIBS = -l$(LIB)
 
 #LDFLAGS = -L. -pg
 LDFLAGS = -L.
 
-#LIBS = -lcassowary-optimized
-#LIBS = -lcassowary-notrace
-#LIBS = -lcassowary-trace
-LIBS = -lcassowary
 
 
 CL_LIBRARY = libcassowary.a
@@ -104,26 +107,26 @@ TAGS: $(SOURCES)
 
 cassowary-tests: $(TESTS)
 
-ClTests: ClTests.o $(LIBS)
-	$(CPP) $(LDFLAGS) -o $@ $^
+ClTests: ClTests.o
+	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 test-ClStrength: test-ClStrength.o ClStrength.o ClSymbolicWeight.o
-	$(CPP) $(LDFLAGS) -o $@ $^
+	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-test-ClLinearExpression: test-ClLinearExpression.o $(LIBS)
-	$(CPP) $(LDFLAGS) -o $@ $^
+test-ClLinearExpression: test-ClLinearExpression.o
+	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-test-ClVariable: test-ClVariable.o $(LIBS)
-	$(CPP) $(LDFLAGS) -o $@ $^
+test-ClVariable: test-ClVariable.o
+	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-test-ClConstraint: test-ClConstraint.o $(LIBS)
-	$(CPP) $(LDFLAGS) -o $@ $^
+test-ClConstraint: test-ClConstraint.o
+	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-test-ClBounds: test-ClBounds.o $(LIBS)
-	$(CPP) $(LDFLAGS) -o $@ $^
+test-ClBounds: test-ClBounds.o
+	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-test-ClSimplexSolver: test-ClSimplexSolver.o $(LIBS)
-	$(CPP) $(LDFLAGS) -o $@ $^
+test-ClSimplexSolver: test-ClSimplexSolver.o
+	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 cassowary-test:	$(TEST_OBJS)
 
