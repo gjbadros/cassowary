@@ -394,7 +394,16 @@ public class ClSimplexSolver extends ClTableau
 	if (col.size() == 0) {
 	  removeColumn(marker);
 	} else {
-	  exitVar = (ClAbstractVariable) col.elements().nextElement();
+          // exitVar = (ClAbstractVariable) col.elements().nextElement();
+          // was the above; instead, let's be sure we do not
+          // pick the objective --01/07/01 gjb
+          for (Enumeration e = col.elements(); e.hasMoreElements(); ) {
+            ClAbstractVariable v = (ClAbstractVariable) e.nextElement();
+            if (v != _objective) {
+              exitVar = v;
+              break;
+            }
+          }
 	}
       }
       
@@ -1009,9 +1018,10 @@ public class ClSimplexSolver extends ClTableau
 	if (v.isPivotable() && c < objectiveCoeff) {
 	  objectiveCoeff = c;
 	  entryVar = v;
+          break;
 	}
       }
-      if (objectiveCoeff >= -_epsilon || entryVar == null)
+      if (objectiveCoeff >= -_epsilon) // || entryVar == null)
 	return;
       if (fTraceOn) traceprint("entryVar == " + entryVar + ", objectiveCoeff == " + objectiveCoeff);
 
