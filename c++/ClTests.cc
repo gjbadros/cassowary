@@ -952,7 +952,9 @@ addDelSolvers(const int nCns = 900, const int nResolves = 10000,
     // Add the constraint -- if it's incompatible, just ignore it
     try {
       if (rgpcns[j]) {
+        //        cout << "Adding #" << j << endl;
         rgpsolver[is]->AddConstraint(rgpcns[j]);
+        cout << "Success adding #" << j << endl;
         // count the constraint as having been added
         cCns++;
       }
@@ -971,7 +973,9 @@ addDelSolvers(const int nCns = 900, const int nResolves = 10000,
       // Add the constraint -- if it's incompatible, just ignore it
       try {
         if (rgpcns[j]) {
+          //          cout << "Adding #" << j << endl;
           rgpsolver[is]->AddConstraint(rgpcns[j]);
+          //          cout << "Success adding #" << j << endl;
           // count the constraint as having been added
           cCns++;
         }
