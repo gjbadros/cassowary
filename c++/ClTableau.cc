@@ -30,8 +30,22 @@ ClTableau::~ClTableau()
 #endif
     delete (*it).second;
     }
-  
 }
+
+
+ostream &
+ClTableau::printInternalInfo(ostream &xo) const
+{
+  xo << "Tableau Information:" << endl
+     << "Rows: " << my_rows.size()
+     << " (= " << my_rows.size() - 1 << " constraints)" << endl
+     << "Columns: " << my_columns.size() << endl
+     << "Infeasible Rows: " << my_infeasibleRows.size() << endl
+     << "External basic variables: " << my_externalRows.size() << endl
+     << "External parameteric variables: " << my_externalParametricVars.size() << endl;
+  return xo;
+}
+
 
 // Add v, update column cross indices
 // v becomes a basic variable
@@ -75,6 +89,7 @@ ClTableau::removeColumn(const ClAbstractVariable &var)
   cerr << "(" << var << ")" << endl;
 #endif
   ClTableauColumnsMap::iterator it_var = my_columns.find(&var);
+  assert(it_var != my_columns.end());
   ClTableauVarSet &varset = (*it_var).second;
   // remove the rows with the variables in varset
   ClTableauVarSet::iterator it = varset.begin();
