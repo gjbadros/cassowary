@@ -1,0 +1,54 @@
+-g, NO_TRACE:
+
+addDel:
+starting timing test. nCns = 300, nVars = 300, nResolves = 1000
+done adding constraints [31 exceptions]
+time = 6.99
+
+done creating edit constraints -- about to start resolves
+time = 7.06
+
+done resolves -- now removing constraints
+time = 11.76
+
+done addDel timing test
+time = 15.13
+
+
+
+--------------
+
+-O6, NO_TRACE:
+
+addDel:
+starting timing test. nCns = 300, nVars = 300, nResolves = 1000
+done adding constraints [31 exceptions]
+time = 1.95
+
+done creating edit constraints -- about to start resolves
+time = 1.98
+
+done resolves -- now removing constraints
+time = 2.96
+
+done addDel timing test
+time = 3.6
+
+----------------
+-O6, NO_TRACE, 900 constraints
+(DELTAS, not total time!)
+
+addDel:
+starting timing test. nCns = 900, nVars = 900, nResolves = 10000
+done adding constraints [120 exceptions]
+time = 35.82
+
+done creating edit constraints -- about to start resolves
+time = 0.12
+
+done resolves -- now removing constraints
+time = 42.9
+
+done removing constraints and addDel timing test
+time = 8.07
+
