@@ -27,7 +27,7 @@ class ClSymbolicWeight : public gc {
 class ClSymbolicWeight {
 #endif
  public:
-  ClSymbolicWeight(unsigned CLevels = 3, Number value = 0.0);
+  ClSymbolicWeight(int CLevels = 3, Number value = 0.0);
 
   ClSymbolicWeight(Number w1, Number w2, Number w3);
 

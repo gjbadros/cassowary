@@ -20,7 +20,7 @@
 // Help g++ out, tell it to instantiate this
 //template vector<double> &vector<double>::operator =(const vector<double> &);
 
-ClSymbolicWeight::ClSymbolicWeight(unsigned CLevels, double value) :
+ClSymbolicWeight::ClSymbolicWeight(int CLevels, double value) :
   _values(CLevels, value)
 { 
   assert(_values.size() == CLevels);

@@ -1,6 +1,6 @@
 # Note that this is NOT a relocatable package
 %define ver 0.3.1
-%define rel 1
+%define rel 2
 %define prefix /usr
 
 Name: GTL
@@ -50,7 +50,7 @@ algorithms are under work.
 
 %build
 %ifarch alpha
-./configure --host=alpha-linux prefix=%prefix --enable-fsstd
+./configure --host=alpha-linux --prefix=%prefix --enable-fsstd
 %else
 ./configure --prefix=%prefix --enable-fsstd
 %endif

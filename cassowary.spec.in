@@ -1,6 +1,6 @@
 # Note that this is NOT a relocatable package
 %define ver @VERSION@
-%define rel 5
+%define rel 6
 %define prefix /usr
 
 Name: cassowary
@@ -42,7 +42,13 @@ constrained variables to have values that satisfy the constraints.
 
 %build
 ln -sf . ./c++/cassowary
+
+%ifarch alpha
+./configure --host=alpha-linux --prefix=%prefix --enable-guile-build --with-gtl=%prefix --enable-fd-solver --enable-fsstd --enable-permissive
+%else
 ./configure --prefix=%prefix --enable-guile-build --with-gtl=%prefix --enable-fd-solver --enable-fsstd --enable-permissive
+%endif
+
 make
 
 %install
