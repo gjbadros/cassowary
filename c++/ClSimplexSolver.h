@@ -129,6 +129,7 @@ class ClSimplexSolver : public ClTableau {
   ClSimplexSolver &endEdit()
     {
       assert(_editVarMap.size() != 0);
+      resolve();
       removeAllEditVars();
       // may later want to do more in here
       return *this;
@@ -238,7 +239,7 @@ class ClSimplexSolver : public ClTableau {
     {
     if (!FContainsVariable(v))
       {
-      v.set_value(n);
+      v.change_value(n);
       return *this;
       }
 
