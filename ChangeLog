@@ -1,8 +1,19 @@
+Tue Dec  7 08:42:34 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* smalltalk/A991206.dat: New image from Alan. Include correct
+	version of code for "ClSimplexSolver removeConstraint:" to fix bug
+	when deleting constraints with weights other than 1.  Also
+	disallow invalid comparisons between symbolic weights and floats.
+	Replace expressions "x clApprox: 0.0" with "x clApproxZero", which
+	works correctly for both symbolic weights and floats.
+
+	* smalltalk/*.st:  Added from Alan.
+
 Mon Nov 29 16:23:06 1999    <gjb@cs.washington.edu>
 
 	* configure.in: Bump to version 0.54, added -lGTL to GTL_LIB even
-	when no --with-gtl option is given.  No longer create README from
-	README.in.  Added --enable-static-library option, off by default.
+ 	when no --with-gtl option is given.  No longer create README from
+ 	README.in.  Added --enable-static-library option, off by default.
 
 	* c++/Makefile.am (sources): Added ClReader.cc
 
