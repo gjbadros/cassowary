@@ -138,6 +138,8 @@ double CL_ClvValue(const CLV clv);
 
 boolean CL_ClvIsNil(const CLV clv);
 
+boolean CL_ClvIsFD(const CLV clv);
+
 /* Return a new constraint from parsing the strings */
 CL_Constraint CL_ParseConstraint(const char *szConstraintRule, const char *szConstraintStrength);
 

@@ -78,11 +78,12 @@ private:
   // try to use within ClFDConnectorVariable.c, compile-time error everywhere else
   ClFDConnectorVariable(const ClFDConnectorVariable &);
 
+  ClSimplexSolver &_solver;
+
   ClVariable _clvFloat;
 
   ClLinearEquation *_pcnRequiredLink;
   
-  ClSimplexSolver &_solver;
 };
 
 #endif

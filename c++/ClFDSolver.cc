@@ -31,6 +31,7 @@ ClFDSolver::AddConstraint(ClConstraint *const pcn)
 {
   AddConstraintInternal(pcn);
   if (_fAutosolve) Solve();
+  return *this;
 }
 
 ClFDSolver &
@@ -38,6 +39,7 @@ ClFDSolver::RemoveConstraint(ClConstraint *const pcn)
 {
   RemoveConstraintInternal(pcn);
   if (_fAutosolve) Solve();
+  return *this;
 }
 
 ClFDSolver &
@@ -254,6 +256,7 @@ ClFDSolver::ErrorForClvAtValSubjectToCn(ClFDVariable *pcldv,FDNumber value,const
     else e = 1; /* GJB:FIXME:: what makes sense here? */
     break;
   default:
+    e = 0; /* quiet warning */
     assert(false);
   }
 

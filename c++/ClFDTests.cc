@@ -168,7 +168,7 @@ simple3()
    }
 }
 
-
+bool
 connect1()
 {
  try

@@ -199,26 +199,22 @@ CL_SimplexSolverAddStay(CL_SimplexSolver solver, CLV var, double weight)
 }
 
 /* Return a clvariable with the given name, or NULL if not found;
-   be forgiving about leading/trailing whitespace in szNameConst */
+   be forgiving about leading/trailing whitespace in szNameConst,
+   and also stopping once a non-id character is seen.*/
 CLV CL_ClvLookupTrim(const char *szNameConst)
 {
   char *szName = const_cast<char *>(szNameConst);
   // skip leading ws
   while (szName && *szName && *szName == ' ' || *szName == '\t')
     ++szName;
-  char *pchSpace = index(szName,' ');
-  char *pchTab = index(szName,'\t');
-  char *pch = NULL;
+  char *pchEnd = szName + strcspn(szName," \t\n;:<>,./?~!@#$%^&*()+=|\\{}[]\"`'");
   char ch = '\0';
-  if (pchSpace || pchTab) {
-    pch = pchSpace;
-    if (!pch || (pchTab && pchTab < pch))
-      pch = pchTab;
-    ch = *pch;        // save the character
-    *pch = '\0';      // and terminate the string
+  if (pchEnd) {
+    ch = *pchEnd;        // save the character
+    *pchEnd = '\0';      // and terminate the string
   }
   CLV answer = CL_ClvLookup(szName);
-  if (pch) *pch = ch; // restore the character
+  if (pchEnd) *pchEnd = ch; // restore the character
   return answer;
 }
 
@@ -244,6 +240,12 @@ CL_ClvIsNil(const CLV var)
 {
   return var->IsNil();
 }
+
+boolean CL_ClvIsFD(const CLV var)
+{
+  return var->IsFDVariable();
+}
+
 
 
 /* Return a new constraint (or NULL) from parsing the strings */
