@@ -120,10 +120,14 @@ class ClTableau extends CL
 
       Set rows = (Set) my_columns.remove(var);
 
-      for (Enumeration e = rows.elements() ; e.hasMoreElements(); ) {
-        ClAbstractVariable clv = (ClAbstractVariable) e.nextElement();
-	ClLinearExpression expr = (ClLinearExpression) my_rows.get(clv);
-	expr.terms().remove(var);
+      if (rows != null) {
+        for (Enumeration e = rows.elements() ; e.hasMoreElements(); ) {
+          ClAbstractVariable clv = (ClAbstractVariable) e.nextElement();
+          ClLinearExpression expr = (ClLinearExpression) my_rows.get(clv);
+          expr.terms().remove(var);
+        }
+      } else {
+        if (fTraceOn) debugprint("Could not find var " + var + " in my_columns");
       }
       
       if (var.isExternal()) {
@@ -146,8 +150,10 @@ class ClTableau extends CL
       for (Enumeration e = expr.terms().keys() ; e.hasMoreElements(); ) {
         ClAbstractVariable clv = (ClAbstractVariable) e.nextElement();
 	Set varset = (Set) my_columns.get(clv);
-	if (varset != null)
+	if (varset != null) {
+          if (fTraceOn) debugprint("removing from varset " + var);
 	  varset.remove(var);
+        }
       }
       
       my_infeasibleRows.remove(var);
