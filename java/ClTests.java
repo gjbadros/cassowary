@@ -201,8 +201,7 @@ class ClTests extends CL {
     // FIXGJB: from where did .12 come?
     final double ineqProb = 0.12;
     final int maxVars = 3;
-    //    Random RND = new Random(123456789);
-    Random RND = new Random(123456);
+    Random RND = new Random(123456789);
 
     System.out.println("starting timing test. nCns = " + nCns +
         ", nVars = " + nVars + ", nResolves = " + nResolves);
@@ -261,11 +260,15 @@ class ClTests extends CL {
    System.out.println("time = " + timer.ElapsedTime() + "\n");
    timer.Start();
 
-   int e1Index = (int) RND.nextDouble()*nVars;
-   int e2Index = (int) RND.nextDouble()*nVars;
+   int e1Index = (int) (RND.nextDouble()*nVars);
+   int e2Index = (int) (RND.nextDouble()*nVars);
+
+   System.out.println("indices " + e1Index + ", " + e2Index);
    
    ClEditConstraint edit1 = new ClEditConstraint(rgpclv[e1Index],ClStrength.strong);
    ClEditConstraint edit2 = new ClEditConstraint(rgpclv[e2Index],ClStrength.strong);
+
+   //   CL.fDebugOn = CL.fTraceOn = true;
 
    solver
      .addConstraint(edit1)
@@ -312,33 +315,33 @@ class ClTests extends CL {
 	 ExCLRequiredFailure, ExCLConstraintNotFound
   {
     //    try 
-      {
+    {
       boolean fAllOkResult = true;
       boolean fResult;
       
-//       System.out.println("justStay1:");
-//       fResult = justStay1(); fAllOkResult &= fResult;
-//       if (!fResult) System.out.println("Failed!");
-      
-//       System.out.println("addDelete1:");
-//       fResult = addDelete1(); fAllOkResult &= fResult;
-//       if (!fResult) System.out.println("Failed!");
-      
-//       System.out.println("addDelete2:");
-//       fResult = addDelete2(); fAllOkResult &= fResult;
-//       if (!fResult) System.out.println("Failed!");
-      
-//       System.out.println("casso1:");
-//       fResult = casso1(); fAllOkResult &= fResult;
-//       if (!fResult) System.out.println("Failed!");
-      
-//       System.out.println("inconsistent1:");
-//       fResult = inconsistent1(); fAllOkResult &= fResult;
-//       if (!fResult) System.out.println("Failed!");
-      
-//       System.out.println("inconsistent2:");
-//       fResult = inconsistent2(); fAllOkResult &= fResult;
-//       if (!fResult) System.out.println("Failed!");
+      System.out.println("justStay1:");
+      fResult = justStay1(); fAllOkResult &= fResult;
+      if (!fResult) System.out.println("Failed!");
+	
+      System.out.println("addDelete1:");
+      fResult = addDelete1(); fAllOkResult &= fResult;
+      if (!fResult) System.out.println("Failed!");
+    
+      System.out.println("addDelete2:");
+      fResult = addDelete2(); fAllOkResult &= fResult;
+      if (!fResult) System.out.println("Failed!");
+    
+      System.out.println("casso1:");
+      fResult = casso1(); fAllOkResult &= fResult;
+      if (!fResult) System.out.println("Failed!");
+    
+      System.out.println("inconsistent1:");
+      fResult = inconsistent1(); fAllOkResult &= fResult;
+      if (!fResult) System.out.println("Failed!");
+    
+      System.out.println("inconsistent2:");
+      fResult = inconsistent2(); fAllOkResult &= fResult;
+      if (!fResult) System.out.println("Failed!");
       
       System.out.println("addDel:");
       //fResult = addDel(900,900,10000);
