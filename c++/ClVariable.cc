@@ -16,6 +16,6 @@ long ClVariable::iVariableNumber = 0;
 ClVariable &
 clvNil()
 {
-  static ClVariable nil_variable("Nil", CLDummyVar);
+  static ClVariable nil_variable("Nil", CLVar);
   return nil_variable;
 }

@@ -103,6 +103,7 @@ ClLinearExpression::times(const ClLinearExpression &expr) const
   else
     {
     // neither are constants, so we'd introduce non-linearity
+    EXCEPTION_ABORT;
     throw ExCLNonlinearExpression();
     }
 }
@@ -133,6 +134,7 @@ ClLinearExpression::divide(Number x) const
 {
   if (clApprox(x,0.0))
     {
+    EXCEPTION_ABORT;
     throw ExCLNonlinearExpression();
     }
   else
@@ -148,6 +150,7 @@ ClLinearExpression::divide(const ClLinearExpression &expr) const
 {
   if (!expr.isConstant())
     {
+    EXCEPTION_ABORT;
     throw ExCLNonlinearExpression();
     }
   else
@@ -164,6 +167,7 @@ ClLinearExpression::divFrom(const ClLinearExpression &expr) const
 {
   if (!isConstant() || clApprox(my_constant,0.0))
     {
+    EXCEPTION_ABORT;
     throw ExCLNonlinearExpression();
     }
   else
@@ -280,6 +284,7 @@ ClLinearExpression::anyVariable() const
 {
   if (isConstant())
     {
+    EXCEPTION_ABORT;
     throw ExCLInternalError();
     }
   return (*my_terms.begin()).first;

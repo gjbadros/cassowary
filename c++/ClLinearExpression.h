@@ -12,6 +12,7 @@
 #define ClLinearExpression_H
 
 #include <map.h>
+#include "debug.h"
 #include "ClVariable.h"
 
 class ClSimplexSolver;

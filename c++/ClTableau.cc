@@ -14,7 +14,7 @@
 // Add v, update column cross indices
 // v becomes a basic variable
 void 
-ClTableau::addRow(const ClVariable &var, const ClLinearExpression &expr)
+ClTableau::addRow(const ClVariable &var, ClLinearExpression expr)
 {
 #ifndef NO_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -116,10 +116,12 @@ ClTableau::substituteOut(const ClVariable &oldVar, const ClLinearExpression &exp
 
 ostream &operator<<(ostream &xo, const ClTableau &clt)
 {
-  xo << "Tableau:" << endl;
-  xo << clt.my_rows << endl;
-  xo << "Columns:" << endl;
-  xo << clt.my_columns << endl;
+  xo << "Tableau:\n" 
+     << clt.my_rows << endl;
+  xo << "Columns:\n" 
+     << clt.my_columns << endl;
+  xo << "Infeasible rows:\n" 
+     << clt.my_infeasibleRows << endl;
   return xo;
 }
 

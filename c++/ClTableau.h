@@ -25,7 +25,15 @@ class ClTableau {
   // subject (or if subject is nil then it's in the objective function).
   // Update the column cross-indices.
   void noteRemovedVariable(const ClVariable &v, const ClVariable &subject)
-    {  my_columns[v].erase(subject); }
+    { 
+#ifndef NO_TRACE
+    Tracer TRACER(__FUNCTION__);
+    cerr << "(" << v << ", " << subject << ")" << endl;
+#endif
+    set<ClVariable>::iterator it = my_columns[v].find(subject);
+    assert(it != my_columns[v].end());
+    my_columns[v].erase(it); 
+    }
 
   // v has been added to the linear expression for subject
   // update column cross indices
@@ -41,7 +49,7 @@ class ClTableau {
   
   // Add v=expr to the tableau, update column cross indices
   // v becomes a basic variable
-  void addRow(const ClVariable &v, const ClLinearExpression &expr);
+  void addRow(const ClVariable &v, ClLinearExpression expr);
 
   // Remove v from the tableau -- remove the column cross indices for v
   // and remove v from every expression in rows in which v occurs

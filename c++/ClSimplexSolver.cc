@@ -14,14 +14,14 @@
 
 // Add the constraint cn to the tableau
 void 
-ClSimplexSolver::addConstraint(const ClConstraint &cn)
+ClSimplexSolver::addConstraint(ClConstraint &cn)
 {
 #ifndef NO_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << cn << ")" << endl;
 #endif
     
-  ClLinearExpression expr = cn.expression();
+  ClLinearExpression expr = makeExpression(cn);
 
   // If possible add expr directly to the appropriate tableau by
   // choosing a subject for expr (a variable to become basic) from
@@ -310,7 +310,7 @@ ClSimplexSolver::resolve(const vector<double> &newEditConstants)
 // av and add av=expr to the inequality tableau, then make av be 0.
 // (Raise an exception if we can't attain av=0.)
 void 
-ClSimplexSolver::addWithArtificialVariable(const ClLinearExpression &expr)
+ClSimplexSolver::addWithArtificialVariable(ClLinearExpression expr)
 {
 #ifndef NO_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -344,6 +344,7 @@ ClSimplexSolver::addWithArtificialVariable(const ClLinearExpression &expr)
   // If not, the original constraint was not satisfiable
   if (!clApprox(azRow.constant(),0.0))
     {
+    EXCEPTION_ABORT;
     throw ExCLRequiredFailure();
     }
 
@@ -374,7 +375,7 @@ ClSimplexSolver::addWithArtificialVariable(const ClLinearExpression &expr)
 // creating an artificial variable.  Return true if successful and
 // false if not.
 bool 
-ClSimplexSolver::tryAddingDirectly(ClLinearExpression &expr)
+ClSimplexSolver::tryAddingDirectly(ClLinearExpression expr)
 {
 #ifndef NO_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -519,6 +520,7 @@ ClSimplexSolver::chooseSubject(ClLinearExpression &expr)
   // the subject negative."
   if (!clApprox(expr.constant(),0.0))
     {
+    EXCEPTION_ABORT;
     throw ExCLRequiredFailure();
     }
   if (coeff > 0.0)
@@ -635,6 +637,7 @@ ClSimplexSolver::dualOptimize()
 	  }
 	if (ratio == MAXDOUBLE)
 	  {
+	  EXCEPTION_ABORT;
 	  throw ExCLInternalError();
 	  }
 	pivot(*pentryVar,exitVar);
@@ -650,7 +653,7 @@ ClSimplexSolver::dualOptimize()
 // the constraint is non-required give its error variables an
 // appropriate weight in the objective function.
 ClLinearExpression 
-ClSimplexSolver::makeExpression(ClLinearConstraint &cn)
+ClSimplexSolver::makeExpression(ClConstraint &cn)
 {
 #ifndef NO_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -727,7 +730,7 @@ ClSimplexSolver::makeExpression(ClLinearConstraint &cn)
       ClVariable &eplus = *(new ClVariable("ep",CLSlackVar));
       ClVariable &eminus = *(new ClVariable("em",CLSlackVar));
       expr.addVariable(eplus,-1.0);
-      expr.addVariable(eminus,-1.0);
+      expr.addVariable(eminus,1.0);
       // index the constraint under one of the error variables
       my_markerVars[&cn] = eplus;
       ClLinearExpression &zRow = rowExpression(my_objective);
@@ -779,8 +782,8 @@ ClSimplexSolver::optimize(const ClVariable &zVar)
   ClLinearExpression &zRow = rowExpression(zVar);
   assert(zRow != cleNil());
   Number objectiveCoeff = -MAXDOUBLE;
-  ClVariable &entryVar = clvNil();
-  ClVariable &exitVar = clvNil();
+  ClVariable entryVar = clvNil();
+  ClVariable exitVar = clvNil();
   while (true)
     {
     // Find the most negative coefficient in the objective function
@@ -835,6 +838,7 @@ ClSimplexSolver::optimize(const ClVariable &zVar)
     // application.
     if (minRatio == MAXDOUBLE)
       {
+      EXCEPTION_ABORT;
       throw ExCLInternalError();
       }
     pivot(entryVar, exitVar);
@@ -887,6 +891,10 @@ ClSimplexSolver::resetEditConstants(const vector<Number> &newEditConstants)
 #endif
   if (newEditConstants.size() != my_editPlusErrorVars.size())
     { // number of edit constants doesn't match the number of edit error variables
+    cerr << "newEditConstants == " << newEditConstants << endl;
+    cerr << "my_editPlusErrorVars == " << my_editPlusErrorVars << endl;
+    cerr << "Sizes don't match!" << endl;
+    EXCEPTION_ABORT;
     throw ExCLInternalError();
     }
   vector<Number>::const_iterator itNew = newEditConstants.begin();
@@ -985,4 +993,30 @@ ClSimplexSolver::setExternalVariables()
       var.set_value(0.0);
       }
     }
+}
+
+
+ostream &operator<<(ostream &xo, const vector<ClVariable> &varlist)
+{
+  vector<ClVariable>::const_iterator it = varlist.begin();
+  xo << varlist.size() << ":" << "[ ";
+  if (it != varlist.end())
+    {
+    xo << (*it);
+    ++it;
+    }
+  for (; it != varlist.end(); ++it) 
+    {
+    xo << ", " << (*it);
+    }
+  xo << " ]" << endl;
+  return xo;
+}
+
+
+ostream &operator<<(ostream &xo, const ClSimplexSolver &tableau)
+{
+  operator<<(xo,static_cast<ClTableau>(tableau));
+  xo << "my_editPlusErrorVars: " << tableau.my_editPlusErrorVars <<endl;
+  return xo;
 }
