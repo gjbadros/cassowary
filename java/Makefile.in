@@ -13,7 +13,8 @@ JAVAC = javac
 JAVAC_FLAGS = @JAVACFLAGS@
 
 
-CLASSES = ./classes
+CLASSES = @JAVA_CLASS_PATH@
+top_srcdir = @top_srcdir@
 
 TESTS = test-ClStrength test-ClVariable test-ClLinearExpression test-ClConstraint \
 	test-ClSimplexSolver ClTests ClTestColumns
@@ -59,20 +60,22 @@ TESTFILES = \
 	ClTests.java \
 	ClTestColumns.java
 
-JAVAFILES_INPARENT = $(JAVAFILES:%.java=../%.java)
 TESTFILES_INPARENT = $(TESTFILES:%.java=../%.java)
 
 all:	.built-package .built-test .built-cda .built-demos
 
-install:
-	echo "*****Copy class files to appropriate place"
+install: .built-package
+	echo "Class files are installed as the build proceeds"
+	echo "Use configure --with-java-class-path=DIR to pick where"
 
 .built-package: $(JAVAFILES)
-	cd $(CLASSES); $(JAVAC) -d . $(JAVAC_FLAGS) $(JAVAFILES_INPARENT)
+	$(JAVAC) -d $(CLASSES) $(JAVAC_FLAGS) $(JAVAFILES)
 	touch $@
 
+# we need to be sure to not be in the same directory as the *.java
+# files in case $CLASSPATH contains "."
 .built-test: .built-package $(TESTFILES)
-	cd $(CLASSES); $(JAVAC) -d . $(JAVAC_FLAGS) $(TESTFILES_INPARENT)
+	cd classes && $(JAVAC) -d $(CLASSES) $(JAVAC_FLAGS) $(TESTFILES_INPARENT)
 	touch $@
 
 .built-cda: 
