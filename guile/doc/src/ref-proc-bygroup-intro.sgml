@@ -1,0 +1,6 @@
+<!-- $Id$ -->
+<!-- Procedures-by-group Chapter Introduction -->
+<para>
+  This chapter lists the procedures supplied by Cassowary/Guile
+  grouped and ordered by the source file that they are defined in.
+</para>

@@ -1,0 +1,25 @@
+<!-- $Id$ -->
+<!-- "-//OASIS//DTD DocBook V3.1//EN" -->
+<!DOCTYPE Book PUBLIC "-//Davenport//DTD DocBook V3.0//EN">
+<book>
+  <bookinfo>
+    <title>Cassowary Constraint Solving Toolkit Guile Reference Manual</title>
+    <authorgroup>
+      <author>
+  	<firstname>Greg</firstname>
+  	<othername>J.</othername>
+  	<surname>Badros</surname>
+  	<affiliation>
+  	  <address>
+  	    <email>gjb@cs.washington.edu</email>
+  	  </address>
+  	</affiliation>
+      </author>
+    </authorgroup>
+    <releaseinfo>Release @VERSION@</releaseinfo>
+    <pubdate>@DATE@</pubdate>
+    <copyright>
+      <year>1997-@YEAR@</year>
+      <holder>Greg J. Badros</holder>
+    </copyright>
+  </bookinfo>
