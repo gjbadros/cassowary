@@ -1,3 +1,77 @@
+Thu Feb 25 18:58:55 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* guile/cltests.scm: Added (use-modules..) invocation to get the
+	dynamically-loaded module so that it can be tested outside of
+	scwm.  Updated to reflect changed behaviour in cl-add-stay.  Added 
+	some test code for make-cl-constraint-from-string.
+
+	* guile/cassowary_scm.hpp:  Added ScmMakeClConstraint(..) to
+	abstract out setting "answer" for the (now) two ClConstraint ctrs.
+
+	* guile/cassowary_scm.cc: Added make-cl-constraint-from-string for
+ 	interfacing to the parser.  Wrap
+	cl-constraint-change-{strength,weight}!. Make dynamically loadable 
+	module! Fix BUG: was returning SCM_UNDEFINED instead of
+	SCM_UNSPECIFIED.
+
+	* guile/Makefile: Build libconstraints.so, and necessary directory 
+	structure if neeeded.
+
+
+Thu Feb 25 18:41:34 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSimplexSolver.h, c++/ClSimplexSolver.cc:  Make constraints 
+	get told when they're added/removed from a solver.  This means
+	that constraints are no longer const params to add/remove
+	Constraint functions, and also that removeConstraint needs an
+	internal version that doesn't do the counting (since
+	removeConstraint can get called from addConstraint to clean up
+	after a failed addition).
+
+	* c++/ClSimplexSolver.cc: Clean up uses of ClConstraint &cn --
+	prefer ClConstraint *pcn even internally.
+
+	* c++/ClConstraint.h: Added ChangeStrength(..), ChangeWeight(..)
+	and _times_added memvar along w/ private (for friend
+	ClSimplexSolver) addedTo(..) and removedFrom(..) functions.  Only
+	permit strength/weight changing if constraint is in no solvers
+	presently. 
+
+	* c++/ClConstraint.cc: Output _times_added memvar in printOn(...)
+
+Thu Feb 25 15:58:27 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClErrors.h: Added parse error classes, and have description
+	return a "string" instead of a "char *"
+
+	* c++/creader.y: Use exception ExCLParseErrorMisc in clerror, Use
+	ClVarLookupFunction instead of mapVars and fAutoCreate
+
+	* c++/creader.l: Use ClVarLookupFunction instead of doing it
+	inline with mapVars and fAutoCreate;  throw exceptions on errors.
+
+	* c++/creader.h: Added ClVarLookupFunction and ClVarLookupInMap
+	and use them when parsing.
+
+	* c++/Makefile:  Added some dependencies for proper building of
+	.l,.y files
+
+	* c++/ClSimplexSolver.cc: Descend VarInVarSet from
+	unary_function<..,..>
+
+	* c++/ClParseTest.cc: Catch parse errors and display the message.
+	Use ClVarLookupInMap class
+
+Thu Feb 25 12:09:48 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSimplexSolver.cc: Simplify removeConstraint to not use
+	references. 
+
+	* c++/ClSimplexSolver.h: Updated a comment
+
+	* c++/ClTests.cc: Use addEditVar, beginEdit, and endEdit, instead
+	of building EditConstraints directly.
+
 Tue Feb 23 18:48:21 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* c++/creader.y, c++/creader.h: Remove old crummy lexer.  Added
