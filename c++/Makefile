@@ -16,9 +16,10 @@ CXX = $(CPP)
 LDFLAGS = -L/uns/lib/egcs
 
 TEST_OBJS = ClStrength.o ClSymbolicWeight.o ClLinearExpression.o \
-		 ClVariable.o ClConstraint.o ClTableau.o
+		 ClVariable.o ClConstraint.o ClTableau.o ClSimplexSolver.o
 TEST_SRCS = $(OBJS:.o=.cc)
-TESTS = test-ClStrength test-ClVariable test-ClLinearExpression test-ClConstraint
+TESTS = test-ClStrength test-ClVariable test-ClLinearExpression test-ClConstraint \
+	test-ClSimplexSolver
 
 SOURCES = $(wildcard *.cc)
 
@@ -58,6 +59,9 @@ test-ClVariable: test-ClVariable.o $(TEST_OBJS)
 	$(CPP) $(LDFLAGS) -o $@ $^
 
 test-ClConstraint: test-ClConstraint.o $(TEST_OBJS)
+	$(CPP) $(LDFLAGS) -o $@ $^
+
+test-ClSimplexSolver: test-ClSimplexSolver.o $(TEST_OBJS)
 	$(CPP) $(LDFLAGS) -o $@ $^
 
 cassowary-test:	$(TEST_OBJS)

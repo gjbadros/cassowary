@@ -13,10 +13,13 @@
 
 #include "Cassowary.h"
 #include "ClTableau.h"
-#include "ClLinearConstraint.h"
+#include "ClLinearInequality.h"
 #include "ClStrength.h"
+#include "ClStayConstraint.h"
 
 class ClVariable;
+
+typedef pair<ClVariable,ClVariable> ClPoint;
 
 class ClSimplexSolver : public ClTableau {
  public:
@@ -29,23 +32,33 @@ class ClSimplexSolver : public ClTableau {
     { }
   
   // Add constraints so that lower<=var<=upper.  (nil means no  bound.)
-  void addBounds(const ClVariable &v, Number lower, Number upper);
-  void addBounds(const ClVariable &v, const Number *const plower, const Number *const pupper);
-  void addLowerBound(const ClVariable &v, Number lower);
-  void addUpperBound(const ClVariable &v, Number upper);
+  void addLowerBound(const ClVariable &v, Number lower)
+    { 
+    ClLinearInequality cn(ClLinearExpression(lower - v));
+    addConstraint(cn);
+    }
+  void addUpperBound(const ClVariable &v, Number upper)
+    {
+    ClLinearInequality cn(ClLinearExpression(v - upper));
+    addConstraint(cn);
+    }
+  void addBounds(const ClVariable &v, Number lower, Number upper)
+    { addLowerBound(v,lower); addUpperBound(v,upper); }
 
   // Add the constraint cn to the tableau
-  void addConstraint(const ClLinearConstraint &cn);
+  void addConstraint(const ClConstraint &cn);
 
   // Add weak stays to the x and y parts of each point. These have
   // increasing weights so that the solver will try to satisfy the x
   // and y stays on the same point, rather than the x stay on one and
   // the y stay on another.
-  // FIXGJB:  void addPointStays(const vector<ClPoint> &listOfPoints);
-  void addPointStay(const ClVariable &vx, const ClVariable &vy, double weight);
+  void addPointStays(const vector<ClPoint> &listOfPoints);
+  void addPointStay(const ClVariable &vx, const ClVariable &vy, double weight)
+    { addStay(vx,clsWeak(),weight); addStay(vy,clsWeak(),weight); }
 
   // Add a stay of the given strength (default to weak) of v to the tableau
-  void addStay(const ClVariable &v, const ClStrength &strength = clsWeak(), double weight = 1.0 );
+  void addStay(const ClVariable &v, const ClStrength &strength = clsWeak(), double weight = 1.0 )
+    { ClStayConstraint cn(v,strength,weight); addConstraint(cn); }
 
   // Remove the constraint cn from the tableau
   // Also remove any error variable associated with cn
@@ -66,13 +79,13 @@ class ClSimplexSolver : public ClTableau {
   // artificial variable.  To do this, create an artificial variable
   // av and add av=expr to the inequality tableau, then make av be 0.
   // (Raise an exception if we can't attain av=0.)
-  void addWithArtificialVariable(const ClLinearConstraint &expr);
+  void addWithArtificialVariable(const ClLinearExpression &expr);
 
   // We are trying to add the constraint expr=0 to the appropriate
   // tableau.  Try to add expr directly to the tableax without
   // creating an artificial variable.  Return true if successful and
   // false if not.
-  bool tryAddingDirectly(const ClLinearExpression &expr);
+  bool tryAddingDirectly(ClLinearExpression &expr);
 
   // We are trying to add the constraint expr=0 to the tableaux.  Try
   // to choose a subject (a variable to become basic) from among the
@@ -185,7 +198,7 @@ class ClSimplexSolver : public ClTableau {
   // constraint (used when deleting a constraint).
   map<ClConstraint &, ClVariable> my_markerVars;
 
-  ClLinearExpression my_objective;
+  ClVariable my_objective;
 
 
   int slackCounter;

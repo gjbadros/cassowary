@@ -75,7 +75,7 @@ class ClTableau {
       return cleNil();
     }
 
- private:
+  // private: FIXGJB: can I improve the encapsulation?
 
   // my_columns is a mapping from variables which occur in expressions to the
   // set of basic variables whose expressions contain them

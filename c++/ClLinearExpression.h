@@ -191,6 +191,10 @@ class ClLinearExpression  {
 				      const ClLinearExpression &e2)
     { return e1.divide(e2); }
 
+  friend bool operator==(const ClLinearExpression &e1,
+			 const ClLinearExpression &e2)
+    { return &e1 == &e2; }
+
 
 #ifdef FIXGJB_OLD_SMALLTALK_WAY
   /// Below cnFoo functions are virtually duplicated in ClVariable, also

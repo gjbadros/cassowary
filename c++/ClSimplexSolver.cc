@@ -9,10 +9,11 @@
 // ClSimplexSolver.cc
 
 #include "ClSimplexSolver.h"
+#include "ClErrors.h"
 
 // Add the constraint cn to the tableau
 void 
-ClSimplexSolver::addConstraint(const ClLinearConstraint &cn)
+ClSimplexSolver::addConstraint(const ClConstraint &cn)
 {
   ClLinearExpression expr = cn.expression();
 
@@ -24,7 +25,7 @@ ClSimplexSolver::addConstraint(const ClLinearConstraint &cn)
     { // could not add directly
     addWithArtificialVariable(expr);
     }
-  optimize(objective);
+  optimize(my_objective);
   setExternalVariables();
 }
 
@@ -35,21 +36,14 @@ ClSimplexSolver::addConstraint(const ClLinearConstraint &cn)
 void 
 ClSimplexSolver::addPointStays(const vector<ClPoint> &listOfPoints)
 {
-  
-  
-}
-
-void 
-ClSimplexSolver::addPointStay(const ClVariable &vx, const ClVariable &vy, double weight)
-{
-  
-}
-
-// Add a stay of the given strength (default to weak) of v to the tableau
-void 
-ClSimplexSolver::addStay(const ClVariable &v, const ClStrength &strength ), double weight )
-{
-
+  vector<ClPoint>::const_iterator it = listOfPoints.begin();
+  double weight = 1.0;
+  static const double multiplier = 2.0;
+  for ( ; it != listOfPoints.end(); it++ )
+    {
+    addPointStay((*it).first,(*it).second,weight);
+    weight *= multiplier;
+    }
 }
 
 // Remove the constraint cn from the tableau
@@ -57,7 +51,8 @@ ClSimplexSolver::addStay(const ClVariable &v, const ClStrength &strength ), doub
 void 
 ClSimplexSolver::removeConstraint(const ClConstraint &cn)
 {
-  
+  // FIXGJB
+  assert(false);
 }
 
 // Re-initialize this solver from the original constraints, thus
@@ -67,7 +62,8 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cn)
 void 
 ClSimplexSolver::reset()
 {
-  
+  // FIXGJB
+  assert(false);
 }
 
 // Re-solve the current collection of constraints for new values for
@@ -75,7 +71,11 @@ ClSimplexSolver::reset()
 void 
 ClSimplexSolver::resolve(const vector<double> &newEditConstants)
 {
-  
+  my_infeasibleRows.empty();
+  resetStayConstants();
+  resetEditConstants(newEditConstants);
+  dualOptimize();
+  setExternalVariables();
 }
 
 //// protected
@@ -85,7 +85,7 @@ ClSimplexSolver::resolve(const vector<double> &newEditConstants)
 // av and add av=expr to the inequality tableau, then make av be 0.
 // (Raise an exception if we can't attain av=0.)
 void 
-ClSimplexSolver::addWithArtificialVariable(const ClLinearConstraint &expr)
+ClSimplexSolver::addWithArtificialVariable(const ClLinearExpression &expr)
 {
   ClVariable &av = *(new ClVariable(++artificialCounter,"a",CLSlackVar));
   ClVariable &az = *(new ClVariable("az",CLObjectiveVar));
@@ -104,12 +104,12 @@ ClSimplexSolver::addWithArtificialVariable(const ClLinearConstraint &expr)
   // If not, the original constraint was not satisfiable
   if (!clApprox(azRow.constant(),0.0))
     {
-    throw ExCLRequiredFailure();
+    throw new ExCLRequiredFailure;
     }
 
   // see if av is a basic variable
   const ClLinearExpression &e = rowExpression(av);
-  if (e != cleNil)
+  if (e != cleNil() )
     {
     // Find another variable in this row and pivot, so that av becomes parametric
     // If there isn't another variabel in the row then 
@@ -119,11 +119,11 @@ ClSimplexSolver::addWithArtificialVariable(const ClLinearConstraint &expr)
       removeRow(av);
       return;
       }
-    ClVariable &entryVar = e.anyVariable();
+    const ClVariable &entryVar = e.anyVariable();
     pivot(entryVar, av);
     }
   // now av should be parametric
-  assert(rowExpression(av) == cleNil);
+  assert(rowExpression(av) == cleNil() );
   removeParametricVar(av);
   // remove teh temporary objective function
   removeRow(az);
@@ -141,7 +141,7 @@ bool
 ClSimplexSolver::tryAddingDirectly(ClLinearExpression &expr)
 {
   ClVariable &subject = chooseSubject(expr);
-  if (subject == clvNil)
+  if (subject == clvNil() )
     {
     return false;
     }
@@ -176,13 +176,15 @@ ClSimplexSolver::tryAddingDirectly(ClLinearExpression &expr)
 ClVariable &
 ClSimplexSolver::chooseSubject(const ClLinearConstraint &expr)
 {
+  // FIXGJB
   assert(false);
 }
   
 void 
 ClSimplexSolver::deltaEditConstant(Number delta, const ClVariable &v1, const ClVariable &v2)
 {
-  
+  // FIXGJB
+  assert(false);
 }
   
 // We have set new values for the constants in the edit constraints.
@@ -190,14 +192,16 @@ ClSimplexSolver::deltaEditConstant(Number delta, const ClVariable &v1, const ClV
 void 
 ClSimplexSolver::dualOptimize()
 {
-  
+  // FIXGJB
+  assert(false);
 }
 
 // find the index in editPlusErrorVars of one of the variables in eVars
 int 
 ClSimplexSolver::findEditErrorIndex(const vector<ClVariable> &rgvar)
 {
-  
+  // FIXGJB
+  assert(false);
 }
 
 // Make a new linear expression representing the constraint cn,
@@ -208,7 +212,8 @@ ClSimplexSolver::findEditErrorIndex(const vector<ClVariable> &rgvar)
 ClLinearExpression 
 ClSimplexSolver::makeExpression(const ClLinearConstraint &cn)
 {
-  
+  // FIXGJB
+  assert(false);
 }
 
 // Minimize the value of the objective.  (The tableau should already
@@ -216,7 +221,8 @@ ClSimplexSolver::makeExpression(const ClLinearConstraint &cn)
 void 
 ClSimplexSolver::optimize(const ClVariable &zVar)
 {
-  
+  // FIXGJB
+  assert(false);
 }
 
 // Do a pivot.  Move entryVar into the basis (i.e. make it a basic variable),
@@ -224,16 +230,10 @@ ClSimplexSolver::optimize(const ClVariable &zVar)
 void 
 ClSimplexSolver::pivot(const ClVariable &entryVar, const ClVariable &exitVar)
 {
-  
+  // FIXGJB
+  assert(false);
 }
 
-// Remove the parametric variable var, updating the appropriate
-// column and row entries.
-void 
-ClSimplexSolver::removeParametricVar(const ClVariable &v)
-{
-  
-}
 
 // Each of the non-required edits will be represented by an equation
 // of the form
@@ -251,7 +251,24 @@ ClSimplexSolver::removeParametricVar(const ClVariable &v)
 void 
 ClSimplexSolver::resetEditConstants(const vector<Number> &newEditConstants)
 {
-  
+  if (newEditConstants.size() != my_editPlusErrorVars.size())
+    { // number of edit constants doesn't match the number of edit error variables
+    throw new ExCLInternalError;
+    }
+  vector<Number>::const_iterator itNew = newEditConstants.begin();
+  vector<Number>::iterator itPrev = my_prevEditConstants.begin();
+  vector<ClVariable>::const_iterator 
+    itEditPlusErrorVars = my_editPlusErrorVars.begin();
+  vector<ClVariable>::const_iterator
+    itEditMinusErrorVars = my_editMinusErrorVars.begin();
+
+  for ( ; itNew != newEditConstants.end(); 
+	++itNew, ++itPrev, ++itEditPlusErrorVars, ++itEditMinusErrorVars )
+    {
+    Number delta = (*itNew) - (*itPrev);
+    (*itPrev) = (*itNew);
+    deltaEditConstant(delta,(*itEditPlusErrorVars),(*itEditMinusErrorVars));
+    }
 }
 
 // Each of the non-required stays will be represented by an equation
@@ -270,7 +287,24 @@ ClSimplexSolver::resetEditConstants(const vector<Number> &newEditConstants)
 void 
 ClSimplexSolver::resetStayConstants()
 {
-  
+  vector<ClVariable>::const_iterator 
+    itStayPlusErrorVars = my_stayPlusErrorVars.begin();
+  vector<ClVariable>::const_iterator 
+    itStayMinusErrorVars = my_stayMinusErrorVars.begin();
+
+  for ( ; itStayPlusErrorVars != my_stayPlusErrorVars.end();
+	++itStayPlusErrorVars, ++itStayMinusErrorVars )
+    {
+    ClLinearExpression &expr = rowExpression(*itStayPlusErrorVars);
+    if (expr == cleNil() )
+      {
+      expr = rowExpression(*itStayMinusErrorVars);
+      }
+    if (expr != cleNil() )
+      {
+      expr.set_constant(0.0);
+      }
+    }
 }
 
 // Set the external variables known to this solver to their appropriate values.
@@ -286,5 +320,27 @@ ClSimplexSolver::resetStayConstants()
 void 
 ClSimplexSolver::setExternalVariables()
 {
-  
+  map<ClVariable, ClLinearExpression>::iterator itRowVars;
+  map<ClVariable, set<ClVariable> >::iterator itColumnVars;
+
+  itRowVars = my_rows.begin();
+  for ( ; itRowVars != my_rows.end() ; ++itRowVars )
+    {
+    ClVariable &var = (*itRowVars).first;
+    ClLinearExpression &expr = (*itRowVars).second;
+    if (var.isExternal())
+      {
+      var.set_value(expr.constant());
+      }
+    }
+
+  itColumnVars = my_columns.begin();
+  for ( ; itColumnVars != my_columns.end(); ++itColumnVars )
+    {
+    ClVariable &var = (*itColumnVars).first;
+    if (var.isExternal())
+      {
+      var.set_value(0.0);
+      }
+    }
 }
