@@ -245,7 +245,7 @@ boolean CL_RemoveConstraint(CL_SimplexSolver solver, CL_Constraint cn)
 
 void CL_Solve(CL_SimplexSolver solver)
 {
-  solver->solve();
+  solver->Solve();
 }
 
 void CL_Resolve(CL_SimplexSolver solver)

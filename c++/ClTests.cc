@@ -550,7 +550,7 @@ blackboxsat()
         }
       else if (strcasecmp(szCmd,"solve") == 0)
         {
-        cout << solver.solve() << endl;
+        cout << solver.Solve() << endl;
         }
       else if (strcasecmp(szCmd,"autosolve") == 0)
         {
@@ -665,7 +665,7 @@ addDel(const int nCns = 900, const int nVars = 900, const int nResolves = 10000)
 #ifdef CL_SHOW_CNS_IN_BENCHMARK
   cout << "\n" << endl;
 #endif
-  solver.solve();
+  solver.Solve();
   cout << "done adding constraints [" << cExceptions << " exceptions]" << endl;
   cout << "time = " << timer.ElapsedTime() << "\n" << endl;
   cout << "time per cn = " << timer.ElapsedTime()/nCns << "\n" << endl;

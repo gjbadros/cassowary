@@ -40,7 +40,10 @@ typedef ClMap<const ClConstraint *, ClVarSet> ClConstraintToVarSetMap;
 typedef ClMap<const ClConstraint *, ClVariable> ClConstraintToVarMap;
 typedef ClMap<ClVariable, const ClConstraint *> ClVarToConstraintMap;
 typedef vector<ClVariable> ClVarVector;
+
 typedef ClSet<const ClConstraint *> ClConstraintSet;
 
+// For FDSolver
+typedef ClMap<ClVariable, ClConstraintSet> ClVarToConstraintSetMap;
 
 #endif

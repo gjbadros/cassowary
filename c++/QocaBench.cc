@@ -62,7 +62,7 @@ main( int argc, char **argv )
       string strArgs = strLine.substr(ichSpace+1);
       if ("qoca_solve" == strCmd) {
         cerr << "solve" << endl;
-        solver.solve();
+        solver.Solve();
       } else if ("qoca_resolve" == strCmd) {
         cerr << "Resolve" << endl;
         solver.Resolve();

@@ -28,19 +28,23 @@ class ClFDVariable : public ClAbstractVariable {
 public:
   typedef ClAbstractVariable super;
 
+#if 0 /* GJB:FIXME:: */
   ClFDVariable(string name, FDNumber Value) :
     ClAbstractVariable(name),
     _value(Value),
+    _fSet(true),
     _desired_value(Value),
     _plfdnInitialDomain(NULL),
     _pv(NULL)
     { }
+#endif
 
   ClFDVariable(string name, FDNumber Value, const list<FDNumber> &initial_domain) :
     ClAbstractVariable(name),
     _value(Value),
+    _fSet(true),
     _desired_value(Value),
-    _plfdnInitialDomain(NULL),
+    _plfdnInitialDomain(new list<FDNumber>()),
     _pv(NULL)
     {
       *_plfdnInitialDomain = initial_domain;
@@ -83,6 +87,12 @@ public:
   virtual void ChangeValue(FDNumber Value)
     { _value = Value; }
 
+  virtual bool FIsSet()
+    { return _fSet; }
+
+  virtual void SetFIsSet(bool f)
+    { _fSet = f; }
+
   void SetPv(void *pv)
     { _pv = pv; }
 
@@ -91,6 +101,12 @@ public:
 
   // Set the name of the variable
   virtual void SetName(string const &name);
+
+  virtual FDNumber DesiredValue() const
+    { return _desired_value; }
+
+  virtual list<FDNumber> *PlfdnDomain()
+    { return _plfdnInitialDomain; }
 
 private:
 
@@ -105,6 +121,9 @@ private:
   ClFDVariable(const ClFDVariable &);
 
   FDNumber _value;
+
+  // has the _value been set?  Used during solves.
+  bool _fSet;
 
   FDNumber _desired_value;
 

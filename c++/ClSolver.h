@@ -29,6 +29,53 @@ class ClSolver {
   virtual ~ClSolver()
     { } 
 
+  // Add the constraint cn to the solver
+  virtual ClSolver &AddConstraint(ClConstraint *const pcn) = 0;
+
+  // Remove the constraint cn from the solver
+  virtual ClSolver &RemoveConstraint(ClConstraint *const pcn) = 0;
+
+  // Same as above, but returns false if the constraint cannot be solved
+  // (i.e., the resulting system would be unsatisfiable)
+  // The above function "AddConstraint" throws an exception in that case
+  // which may be inconvenient
+  virtual bool AddConstraintNoException(ClConstraint *const pcn)
+    {
+      try {
+          AddConstraint(pcn);
+          return true;
+      }
+      catch (const ExCLRequiredFailure &e)
+        { return false; }
+      catch (const ExCLTooDifficult &e)
+        { return false; }
+    }
+
+#ifndef CL_NO_DEPRECATED
+  // Deprecated --02/22/99 gjb
+  bool AddConstraintNoException(ClConstraint &cn)
+    { return AddConstraintNoException(&cn); }
+#endif
+
+  virtual bool RemoveConstraintNoException(ClConstraint *const pcn)
+    {
+      try {
+        RemoveConstraint(pcn);
+        return true;
+      }
+      catch (const ExCLConstraintNotFound &e)
+        { return false; }
+    }
+
+#ifndef CL_NO_DEPRECATED
+  // Deprecated --02/22/99 gjb
+  bool RemoveConstraintNoException(ClConstraint &cn)
+    { return RemoveConstraintNoException(&cn); }
+#endif
+
+  virtual ClSolver &Solve()
+    { assert(false); return *this; }
+
   void SetPv(void *pv)
     { _pv = pv; }
 
@@ -42,5 +89,18 @@ class ClSolver {
   void *_pv;
 
 };
+
+
+#ifndef CL_NO_IO
+ostream &PrintTo(ostream &xo, const ClVarVector &varlist);
+ostream &operator<<(ostream &xo, const ClVarVector &varlist);
+
+ostream &PrintTo(ostream &xo, const ClConstraintToVarSetMap &mapCnToVarSet);
+ostream &operator<<(ostream &xo, const ClConstraintToVarSetMap &mapCnToVarSet);
+
+ostream &PrintTo(ostream &xo, const ClConstraintSet &setCn);
+ostream &operator<<(ostream &xo, const ClConstraintSet &setCn);
+
+#endif
 
 #endif

@@ -90,12 +90,21 @@ public:
   ClAbstractVariable *get_pclv() const { return pclv; } 
   bool IsNil() const { return pclv == NULL; }
 
+  virtual FDNumber DesiredValue() const
+    { assert(false); }
+
+  virtual list<FDNumber> *PlfdnDomain()
+    { assert(false); return NULL; }
+
   static void SetVarMap(StringToVarMap *pmap) { pmapStrPclv = pmap; }
   static StringToVarMap *VarMap() { return pmapStrPclv; }
   static StringToVarMap *pmapStrPclv;
 #ifndef CL_NO_IO
   ostream &PrintOn(ostream &xo) const
-    { return pclv->PrintOn(xo); /* return xo << "@" << pclv << endl; */}
+    { 
+      if (pclv) return pclv->PrintOn(xo); /* return xo << "@" << pclv << endl; */
+      return xo << "clvNil";
+    }
 #endif
 
   friend bool operator<(ClVariable cl1, ClVariable cl2)

@@ -94,19 +94,6 @@ class ClSimplexSolver : public ClSolver, public ClTableau {
     { return AddConstraint(&cn); }
 #endif
 
-  // Same as above, but returns false if the constraint cannot be solved
-  // (i.e., the resulting system would be unsatisfiable)
-  // The above function "AddConstraint" throws an exception in that case
-  // which may be inconvenient
-  bool AddConstraintNoException(ClConstraint *const pcn);
-
-#ifndef CL_NO_DEPRECATED
-  // Deprecated --02/22/99 gjb
-  bool AddConstraintNoException(ClConstraint &cn)
-    { return AddConstraintNoException(&cn); }
-#endif
-
-
   // Add an edit constraint for "v" with given strength
   ClSimplexSolver &AddEditVar(const ClVariable v, const ClStrength &strength = ClsStrong(),
                               double weight = 1.0 )
@@ -200,24 +187,12 @@ class ClSimplexSolver : public ClSolver, public ClTableau {
 #endif
 
 
-  // Same as above, but returns false if the constraint dne
-  // The above function "RemoveConstraint" throws an exception in that case
-  // which may be inconvenient
-  bool RemoveConstraintNoException(ClConstraint *const pcn);
-
-#ifndef CL_NO_DEPRECATED
-  // Deprecated --02/22/99 gjb
-  bool RemoveConstraintNoException(ClConstraint &cn)
-    { return RemoveConstraintNoException(&cn); }
-#endif
-
-
   // Re-initialize this solver from the original constraints, thus
   // getting rid of any accumulated numerical problems.  (Actually, we
   // haven't definitely observed any such problems yet)
   void Reset();
 
-  // Re-solve the cuurent collection of constraints, given the new
+  // Re-solve the current collection of constraints, given the new
   // values for the edit variables that have already been
   // suggested (see SuggestValue() method)
   // This is not guaranteed to work if you remove an edit constraint
@@ -259,7 +234,7 @@ class ClSimplexSolver : public ClSolver, public ClTableau {
   // about 20% in runtime, from 68sec to 54sec for 900 constraints,
   // with 126 failed adds)
   ClSimplexSolver &SetAutosolve(bool f)
-    { _fOptimizeAutomatically = f; if (f) solve(); return *this; }
+    { _fOptimizeAutomatically = f; if (f) Solve(); return *this; }
 
   // Tell whether we are autosolving
   bool FIsAutosolving() const
@@ -277,7 +252,7 @@ class ClSimplexSolver : public ClSolver, public ClTableau {
   // If autosolving has been turned off, client code needs
   // to explicitly call solve() before accessing variables
   // values
-  ClSimplexSolver &solve()
+  ClSimplexSolver &Solve()
     {
 #ifdef CL_SOLVER_CHECK_INTEGRITY
     AssertValid();
@@ -599,11 +574,6 @@ class ClSimplexSolver : public ClSolver, public ClTableau {
 };
 
 #ifndef CL_NO_IO
-ostream &PrintTo(ostream &xo, const ClVarVector &varlist);
-ostream &operator<<(ostream &xo, const ClVarVector &varlist);
-
-ostream &PrintTo(ostream &xo, const ClConstraintToVarSetMap &mapCnToVarSet);
-ostream &operator<<(ostream &xo, const ClConstraintToVarSetMap &mapCnToVarSet);
 
 ostream &PrintTo(ostream &xo, const ClSimplexSolver::ClVarToEditInfoMap &mapVarToEditInfo);
 ostream &operator<<(ostream &xo, const ClSimplexSolver::ClVarToEditInfoMap &mapVarToEditInfo);

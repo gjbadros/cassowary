@@ -98,7 +98,7 @@ class ExCLNonlinearExpression : public ExCLError {
 class ExCLConstraintNotFound : public ExCLError {
  public:
   virtual string description() const
-    { return "(ExCLConstraintNotFound) Tried to remove a constraint never added to the tableua"; }
+    { return "(ExCLConstraintNotFound) Tried to remove a constraint that was never added"; }
 };
 
 class ExCLParseError : public ExCLError {

@@ -23,8 +23,27 @@
 #include "ClLinearExpression.h"
 #include "ClStrength.h"
 #include <set>
+#include <string>
 
 class ClSimplexSolver;
+
+
+enum ClCnRelation {cnEQ, cnNEQ, cnLEQ, cnGEQ, cnLT, cnGT };
+
+inline string
+StrCnRelation(ClCnRelation rel) {
+  switch (rel) {
+  case cnEQ: return "=";
+  case cnNEQ: return "=/=";
+  case cnLEQ: return "<=";
+  case cnGEQ: return ">=";
+  case cnLT: return "<";
+  case cnGT: return ">";
+  default: assert(false);
+  }
+}
+
+
 
 #ifdef USE_GC_CONSTRAINT
 class ClConstraint : public gc {

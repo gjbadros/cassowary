@@ -4,7 +4,7 @@
 lib_LIBRARIES = libcassowary.a
 lib_LTLIBRARIES = libcassowary.la
 
-LDADD = libcassowary.a
+LDADD = libcassowary.a -L@prefix@/lib -lGTL
 
 benchdir=$(libdir)/cassowary/bench
 bugsdir=$(libdir)/cassowary/bugs
@@ -41,6 +41,7 @@ libcassowary_a_SOURCES = \
 	ClAbstractVariable.cc \
 	ClConstraint.cc \
 	ClLinearExpression.cc \
+	ClSolver.cc \
 	ClSimplexSolver.cc \
 	ClFDSolver.cc \
 	ClStrength.cc \
@@ -59,17 +60,20 @@ libcassowary_la_SOURCES = \
 	ClAbstractVariable.cc \
 	ClConstraint.cc \
 	ClLinearExpression.cc \
+	ClSolver.cc \
 	ClSimplexSolver.cc \
+	ClFDSolver.cc \
 	ClStrength.cc \
 	ClSymbolicWeight.cc \
 	ClTableau.cc \
 	ClVariable.cc \
+	ClFDVariable.cc \
 	ClFloatVariable.cc \
 	ClSlackVariable.cc \
 	ClDummyVariable.cc \
 	ClReader-lex.cc \
-	ClReader.cc
-
+	ClReader.cc \
+	ClC.cc
 
 include_HEADERS = Cl.h ClC.h
 

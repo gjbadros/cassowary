@@ -26,11 +26,52 @@ simple1()
  try
    {
    bool fOkResult = true;
-   ClVariable x(new ClFDVariable("x",0));
-   ClVariable y(new ClFDVariable("y",5));
+   list<FDNumber> l;
+   /* GJB:FIXME:: varargs inteface, with sentinel as first arg? */
+   l.push_back(9);
+   l.push_back(10);
+   l.push_back(12);
+   l.push_back(14);
+   l.push_back(20);
+   ClVariable x(new ClFDVariable("x",10,l));
+   ClVariable y(new ClFDVariable("y",14,l));
    cout << x << ", " << y << endl;
-   ClFDBinaryOneWayConstraint cn(x,y);
-   cout << cn << endl;
+   ClFDBinaryOneWayConstraint cn1(x,cnLT,y,2,4);
+   ClFDBinaryOneWayConstraint cn2(x,cnGEQ,y);
+   ClFDBinaryOneWayConstraint cn3(y,cnGEQ,x);
+   ClFDBinaryOneWayConstraint cn4(y,cnGEQ,18);
+   cout << cn1 << endl;
+   cout << cn2 << endl;
+   cout << cn3 << endl;
+   cout << cn4 << endl;
+
+   ClFDSolver fdsolver;
+
+   cerr << (fdsolver.AddConstraintNoException(&cn1)? "Added cn1" : "Failed adding cn1") << endl;
+   cerr << fdsolver;
+   cerr << (fdsolver.AddConstraintNoException(&cn2)? "Added cn2" : "Failed adding cn2") << endl;
+   cerr << fdsolver;
+   cerr << (fdsolver.AddConstraintNoException(&cn3)? "Added cn3" : "Failed adding cn3") << endl;
+   cerr << fdsolver;
+   cerr << (fdsolver.AddConstraintNoException(&cn4)? "Added cn4" : "Failed adding cn4") << endl;
+   cerr << fdsolver;
+
+   fdsolver.ShowSolve();
+   fdsolver.Solve();
+   
+   cerr << (fdsolver.RemoveConstraintNoException(&cn1) ? "Removed cn1" : "Failed removing cn1")
+        << endl;
+   cerr << fdsolver;
+   cerr << (fdsolver.RemoveConstraintNoException(&cn2) ? "Removed cn2" : "Failed removing cn2")
+        << endl;
+   cerr << fdsolver;
+   cerr << (fdsolver.RemoveConstraintNoException(&cn3) ? "Removed cn3" : "Failed removing cn3") 
+        << endl;
+   cerr << fdsolver;
+   cerr << (fdsolver.RemoveConstraintNoException(&cn4) ? "Removed cn4" : "Failed removing cn4") 
+        << endl;
+   cerr << fdsolver;
+
    return fOkResult;
    } 
  catch (ExCLError &error) 
@@ -48,7 +89,7 @@ simple1()
 
 
 int
-main( int argc, char **argv )
+main( int /* argc */, char ** /* argv */ )
 {
   try 
     {

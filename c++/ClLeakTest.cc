@@ -48,7 +48,7 @@ leakTest()
      cerr << "---------------------------" << "\n\n" << endl;
 #endif
    }
-   solver.solve();
+   solver.Solve();
    fOkResult = (x.Value() == y.Value());
    return fOkResult;
    } 

@@ -153,9 +153,9 @@ addDelSubpart(int csolver = 1, int nCns = 900, int nVars = 900, int nResolves = 
 
   cout << "done adding constraints [" << cExceptions << " exceptions]" << endl;
   cout << "time = " << timer.ElapsedTime() << "\n" << endl;
-  psolverA->solve();
+  psolverA->Solve();
   if (psolverA != psolverB)
-    psolverB->solve();
+    psolverB->Solve();
   cout << "done initial solve" << endl;
   cout << "time = " << timer.ElapsedTime() << "\n" << endl;
   cout << "time per cn = " << timer.ElapsedTime()/nCns << "\n" << endl;

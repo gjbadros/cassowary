@@ -135,28 +135,6 @@ ClSimplexSolver::AddConstraint(ClConstraint *const pcn)
   return *this;
 }
 
-// Same as above, but returns false if the constraint cannot be solved
-// (i.e., the resulting system would be unsatisfiable)
-// The above function "AddConstraint" throws an exception in that case
-// which may be inconvenient
-bool
-ClSimplexSolver::AddConstraintNoException(ClConstraint *const pcn)
-{
-#ifdef CL_TRACE
-  Tracer TRACER(__FUNCTION__);
-  cerr << "(" << *pcn << ")" << endl;
-#endif
-  try 
-    {
-    AddConstraint(pcn);
-    return true;
-    }
-  catch (const ExCLRequiredFailure &e)
-    {
-    return false;
-    }
-}
-
 // Add weak stays to the x and y parts of each point. These have
 // increasing weights so that the solver will try to satisfy the x
 // and y stays on the same point, rather than the x stay on one and
@@ -470,27 +448,6 @@ ClSimplexSolver::RemoveConstraintInternal(const ClConstraint *const pcn)
     }
 
   return *this;
-}
-
-  // Same as above, but returns false if the constraint dne
-  // The above function "RemoveConstraint" throws an exception in that case
-  // which may be inconvenient
-bool
-ClSimplexSolver::RemoveConstraintNoException(ClConstraint *const pcn)
-{
-#ifdef CL_TRACE
-  Tracer TRACER(__FUNCTION__);
-  cerr << "(" << *pcn << ")" << endl;
-#endif
-  try 
-    {
-    RemoveConstraint(pcn);
-    return true;
-    }
-  catch (const ExCLConstraintNotFound &e)
-    {
-    return false;
-    }
 }
 
 

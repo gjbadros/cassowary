@@ -19,8 +19,6 @@
 
 #include "ClLinearConstraint.h"
 
-enum ClInequalityOperator { cnLEQ, cnGEQ };
-
 class ClVariable;
 
 class ClLinearInequality : public ClLinearConstraint {
@@ -37,7 +35,7 @@ class ClLinearInequality : public ClLinearConstraint {
 
  // ClLinearInequality(var,OP,expr) is  var >= expr
  ClLinearInequality(const ClVariable clv,
-		    ClInequalityOperator op,
+		    ClCnRelation op,
 		    const ClLinearExpression &cle,
 		    const ClStrength &strength = ClsRequired(),
 		    double weight = 1.0) :
@@ -57,7 +55,7 @@ class ClLinearInequality : public ClLinearConstraint {
 #ifdef FIXGJB_AMBIGUOUS
  // ClLinearInequality(expr,OP,var) is  var ?<>? expr
  ClLinearInequality(const ClLinearExpression &cle,
-		    ClInequalityOperator op,
+		    ClCnRelation op,
 		    const ClVariable clv,
 		    const ClStrength &strength = ClsRequired(),
 		    double weight = 1.0) :
@@ -77,7 +75,7 @@ class ClLinearInequality : public ClLinearConstraint {
 
  // ClLinearInequality(expr,OP,expr) is  expr >= expr
  ClLinearInequality(const ClLinearExpression &cle1,
-		    ClInequalityOperator op,
+		    ClCnRelation op,
 		    const ClLinearExpression &cle2,
 		    const ClStrength &strength = ClsRequired(),
 		    double weight = 1.0) :
@@ -97,7 +95,7 @@ class ClLinearInequality : public ClLinearConstraint {
 #ifdef FIXGJB_AMBIGUOUS
  // ClLinearInequality(var,OP,var) is  var ?<>? var
  ClLinearInequality(const ClVariable clv1,
-		    ClInequalityOperator op,
+		    ClCnRelation op,
 		    const ClVariable clv2,
 		    const ClStrength &strength = ClsRequired(),
 		    double weight = 1.0) :

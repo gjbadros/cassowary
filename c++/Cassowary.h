@@ -22,6 +22,7 @@
 #endif
 
 #include "ClConstraintHash.h"
+#include <values.h>
 
 #ifdef USE_GC
 #include "../../gc/gc_cpp.h"
@@ -46,6 +47,8 @@ using namespace std;
 typedef double Number;
 
 typedef long FDNumber;
+
+enum { FDN_NOTSET = MINLONG };
 
 #define NEWVAR(x) do { cerr << "line " << __LINE__ << ": new " << x << endl; } while (0)
 #define DELVAR(x) do { cerr << "line " << __LINE__ << ": del " << x << endl; } while (0)
