@@ -472,7 +472,8 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
   // If not, the original constraint was not satisfiable
   if (!clApprox(pazTableauRow->constant(),0.0))
     {
-    delete removeRow(*pav);
+    delete removeRow(*paz);
+    removeColumn(*pav);
     delete pav;
     return false;
     }
@@ -487,6 +488,7 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
     if (pe->isConstant())
       {
       delete removeRow(*pav);
+      removeRow(*paz);
       delete pav;
       return true;
       }
@@ -1190,14 +1192,14 @@ ClSimplexSolver::printOn(ostream &xo) const
   super::printOn(xo);
 
   xo << "my_editPlusErrorVars: "
-     << my_editPlusErrorVars;
+     << my_editPlusErrorVars << endl;
   xo << "my_editMinusErrorVars: "
-     << my_editMinusErrorVars;
+     << my_editMinusErrorVars << endl;
 
   xo << "my_stayPlusErrorVars: "
-     << my_stayPlusErrorVars;
+     << my_stayPlusErrorVars << endl;
   xo << "my_stayMinusErrorVars: "
-     << my_stayMinusErrorVars;
+     << my_stayMinusErrorVars << endl;
 
   xo << "my_prevEditConstants: " 
      << my_prevEditConstants << endl;
