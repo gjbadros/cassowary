@@ -1,5 +1,5 @@
-Cassowary Constraint Solver for Smalltalk, C++, and Java
-Version 0.43
+Cassowary Constraint Solving Toolkit for C++, Java, and Smalltalk
+Version 0.50-cvs
 
 Web Page: http://www.cs.washington.edu/research/constraints/cassowary
 Contact: cassowary@cs.washington.edu
@@ -9,7 +9,7 @@ Alan Borning <borning@cs.washington.edu>
 University of Washington
 Computer Science and Engineering
 Seattle, WA 98195-2350
-20-April-1999
+12-July-1999
 
 with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
 
@@ -21,6 +21,7 @@ See LICENSE for legalese regarding use of this distribution.
 The Smalltalk implementation is in the public domain -- see smalltalk/README.
 
 Please send bug reports to cassowary@cs.washington.edu
+
 Also, send mail to cassowary@cs.washington.edu if you would like to be
 informed about bug fixes, feature enhancements, etc.  Let us know what
 implementation(s) you are using, too.
@@ -40,6 +41,8 @@ and everything will work.  A more complex, but realistic example is:
 ./configure --with-prefix=/usr/contrib \
             --with-guile-prefix=/usr/contrib \
             --with-python-headers=/usr/include/python1.5 \
+ 	    --enable-java-build \
+            --with-gtl=/usr/contrib \
             --with-java-class-path=/usr/contrib/share/java/site \
             --enable-warnings
 make -k
@@ -55,8 +58,7 @@ build.  E.g., if you do not have the JDK installed, the Java version of
 Cassowary might not compile; if you still want the guile version, just
 "cd guile; make -k".
 
-Note that the generated Makefiles may depend upon features of GNU Make
-(please let me know if they do).  See:
+Note that the generated Makefiles depend upon features of GNU Make.  See:
 
 ftp://ftp.gnu.org/pub/gnu/
 
@@ -74,7 +76,7 @@ toolkit so we know how to reach you for bug fixes, updates, etc.
 WHAT THE DISTRIBUTION CONTAINS
 
 This distribution contains 3 implementations of the Cassowary constraint
-solver:
+solving toolkit:
 
 o C++
 o Java
@@ -103,7 +105,7 @@ own project(s).
 
 See also the Scwm (Scheme Constraints Window Manager) web page:
 
-http://vicarious-existence.mit.edu/scwm/
+http://scwm.mit.edu/scwm/
 
 Scwm, also by Greg Badros (and Maciej Stachowiak), is the most
 substantial application using this toolkit that we are aware of.
@@ -125,6 +127,15 @@ In particular, Cassowary will *not* build with gcc-2.7.x.x!
 
 See c++/README for more details about building the C++ version.
 
+The C++ implementation of the toolkit also has an optional finite domain
+subsolver.  You need to build and install the GTL -- the Graph Template
+Library -- and use the "--with-gtl=DIR" configure option for the finite
+domain subsolver to be built.  GTL is available from:
+
+http://www.fmi.uni-passau.de/Graphlet/GTL/
+
+Cassowary was tested against GTL-0.2.6;  it may work with later
+versions, but I have not tried it.
 
 Cassowary/Java was developed using Sun's JDK-1.1.x, ported to Linux
 More recent versions should work fine.

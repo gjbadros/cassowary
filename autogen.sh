@@ -1,5 +1,7 @@
 ## autogen.sh - generate all the twisty little files.
 
+rm -f libtool ltconfig ltmain.sh
+
 # Generate aclocal.m4 from configure.in
 aclocal
 
