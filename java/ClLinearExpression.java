@@ -15,6 +15,8 @@
 // ClLinearExpression
 //
 
+import java.util.*;
+
 class ClLinearExpression
 {
 
@@ -28,9 +30,32 @@ class ClLinearExpression
     {
       my_constant = new Double(constant);
       my_terms = new Hashtable();
-      my_terms.put(clv,value);
+      my_terms.put(clv,new Double(value));
     }
 
+  public ClLinearExpression(Double constant, Hashtable terms)
+    {
+      my_constant = constant;
+      my_terms = terms;
+    }
+
+
+  public ClLinearExpression multiplyMe(double x)
+    {
+      my_constant = new Double(my_constant.doubleValue() * x);
+      
+      for (Enumeration e = my_terms.keys() ; e.hasMoreElements(); ) {
+        ClVariable clv = (ClVariable) e.nextElement();
+	double coeff = ((Double) my_terms.get(clv)).doubleValue();
+	my_terms.put( clv, new Double((coeff * x)));
+      } 
+      return  this;
+    }
+
+  public Object clone()
+    {
+      return new ClLinearExpression(my_constant,my_terms);
+    }
 
   public ClLinearExpression times(double x)
     {
@@ -38,17 +63,17 @@ class ClLinearExpression
       return result.multiplyMe(x);
     }
 
-  public ClLinearExpression times(ClLinearExpression expr)
+  public ClLinearExpression times(ClLinearExpression expr) throws ExCLNonlinearExpression
     {
       if (isConstant())
 	{
-	return expr.times(my_constant);
+	return expr.times(my_constant.doubleValue());
 	}
       else if (!expr.isConstant())
 	{
-	throw ExCLNonlinearExpression();
+	throw new ExCLNonlinearExpression();
 	}	
-      return times(expr.my_constant);
+      return times(expr.my_constant.doubleValue());
     }
 
   public ClLinearExpression plus(ClLinearExpression expr)
@@ -65,129 +90,129 @@ class ClLinearExpression
       return result;
     }
 
-  public ClLinearExpression divide(Number x)
+  public ClLinearExpression divide(double x) throws ExCLNonlinearExpression
     {
-      if (clApprox(x,0.0))
+      if (ClVariable.clApprox(x,0.0))
 	{
-	throw ExCLNonlinearExpression();
+	throw new ExCLNonlinearExpression();
 	}
       return times(1.0/x);
     }
 
-  public ClLinearExpression divide(ClLinearExpression expr)
+  public ClLinearExpression divide(ClLinearExpression expr) throws ExCLNonlinearExpression
     {
       if (!expr.isConstant())
 	{
-	throw ExCLNonlinearExpression();
+	throw new ExCLNonlinearExpression();
 	}
-      return divide(expr.my_constant);
+      return divide(expr.my_constant.doubleValue());
     }
 
-  public ClLinearExpression divFrom(ClLinearExpression expr)
+  public ClLinearExpression divFrom(ClLinearExpression expr) throws ExCLNonlinearExpression
     {
-      if (!isConstant() || clApprox(my_constant,0.0))
+      if (!isConstant() || ClVariable.clApprox(my_constant.doubleValue(),0.0))
 	{
-	throw ExCLNonlinearExpression();
+	throw new ExCLNonlinearExpression();
 	}
-      return expr.divide(my_constant);
+      return expr.divide(my_constant.doubleValue());
     }
 
   public ClLinearExpression subtractFrom(ClLinearExpression expr)
-  /* @c2j++: "{ return expr.minus(*this); }" replacement: * to " " */
     { return expr.minus( this); }
 
-  public ClLinearExpression addExpression(ClLinearExpression expr, Number n,
+  public ClLinearExpression addExpression(ClLinearExpression expr, double n,
 					  ClAbstractVariable subject, 
 					  ClTableau solver)
     {
-      incrementConstant(n expr.constant());
+      incrementConstant(n * expr.constant());
       
-      ClVarToNumberMap::const_iterator i = expr.my_terms.begin();
-      for ( ; i != expr.my_terms.end(); ++i)
-	{
-	addVariable( (( i).first), n   ( i).second, subject, solver);
-	}
-      return  this;
+      for (Enumeration e = expr.terms().keys() ; e.hasMoreElements(); ) {
+        ClVariable clv = (ClVariable) e.nextElement();
+	Double coeff = (Double) expr.terms().get(clv).doubleValue();
+	addVariable(clv,coeff*n, subject, solver);
+      }
+      return this;
     }
 
-  public ClLinearExpression addVariable(ClAbstractVariable v, Number c)
+  public ClLinearExpression addExpression(ClLinearExpression expr, double n)
+    {
+      incrementConstant(n * expr.constant());
+      
+      for (Enumeration e = expr.terms().keys() ; e.hasMoreElements(); ) {
+        ClVariable clv = (ClVariable) e.nextElement();
+	Double coeff = (Double) expr.terms().get(clv).doubleValue();
+	addVariable(clv,coeff*n);
+      }
+      return this;
+    }
+
+
+  public ClLinearExpression addVariable(ClAbstractVariable v, double c)
     { // body largely duplicated below
-#ifndef CL_NO_TRACE
-      Tracer TRACER(__FUNCTION__);
-      System.err.println("(" + String.valueOf(v) + ", " + String.valueOf(c) + ")");
-#endif
-      ClVarToNumberMap::iterator i = my_terms.find(v);
-      if (i != my_terms.end())
+      //#ifndef CL_NO_TRACE
+      //Tracer TRACER(__FUNCTION__);
+      //System.err.println("(" + String.valueOf(v) + ", " + String.valueOf(c) + ")");
+      //#endif
+
+      Double coeff = (ClVariable) my_terms.get(v);
+      if (coeff != null) 
 	{
-	Number new_coefficient = 0;
-	/* @c2j++: "new_coefficient = (*i).second + c;" replacement: * to " " */
-	new_coefficient = ( i).second + c;
-	if (clApprox(new_coefficient,0.0))
+	double new_coefficient = coeff.doubleValue() + c;
+	if (clApprox(new_coefficient,0))
 	  {
-	  my_terms.erase(i);
+	  my_terms.remove(v);
 	  }
-	else
+	else 
 	  {
-	  ( i).second = new_coefficient;
+	  my_terms.put(v,(Double) new_coefficient);
 	  }
 	}
-      else // expression did not contain that variable
+      else
 	{
 	if (!clApprox(c,0.0))
 	  {
-	  my_terms[v] = c;
+	  my_terms.put(v,(Double) c);
 	  }
 	}
-      return  this;
+      return this;
     }
 
-  public ClLinearExpression setVariable(ClAbstractVariable v, Number c)
+  public ClLinearExpression setVariable(ClAbstractVariable v, double c)
     { 
       //assert(c != 0.0);  
-      my_terms[v] = c; return  this; 
+      my_terms.put(v,c); return this;
     }
   
-  public ClLinearExpression addVariable(ClAbstractVariable v, Number c,
+  public ClLinearExpression addVariable(ClAbstractVariable v, double c,
 					ClAbstractVariable subject, ClTableau solver)
     { // body largely duplicated above
-#ifndef CL_NO_TRACE
-      Tracer TRACER(__FUNCTION__);
-      /** @c2j++ Replacement from cerr << "(" << v << ", " << c << ", " << subject << ", ...)" << endl; */
-      System.err.println("(" + String.valueOf(v) + ", " + String.valueOf(c) + ", " + String.valueOf(subject) + ", ...)");
-#endif
-      ClVarToNumberMap::iterator i = my_terms.find(&v);
-      if (i != my_terms.end())
+      //#ifndef CL_NO_TRACE
+      // Tracer TRACER(__FUNCTION__);
+      // System.err.println("(" + String.valueOf(v) + ", " + String.valueOf(c) + ", " + String.valueOf(subject) + ", ...)");
+      // #endif
+      Double coeff = (ClVariable) my_terms.get(v);
+      if (coeff != null) 
 	{
-	Number new_coefficient = 0;
-	/* @c2j++: "new_coefficient = (*i).second + c;" replacement: * to " " */
-	new_coefficient = ( i).second + c;
-	if (clApprox(new_coefficient,0.0))
+	double new_coefficient = coeff.doubleValue() + c;
+	if (clApprox(new_coefficient,0))
 	  {
-	  /* @c2j++: "solver.noteRemovedVariable(*((*i).first),subject);" replacement: * to " " */
-	  /* @c2j++: "solver.noteRemovedVariable( ((*i).first),subject);" replacement: * to " " */
-	  solver.noteRemovedVariable( (( i).first),subject);
-	  my_terms.erase(i);
+	  solver.noteRemovedVariable(v,subject);
+	  my_terms.remove(v);
 	  }
-	else
+	else 
 	  {
-	  /* @c2j++: "(*i).second = new_coefficient;" replacement: * to " " */
-	  ( i).second = new_coefficient;
+	  my_terms.put(v,(Double) new_coefficient);
 	  }
 	}
-      else // expression did not contain that variable
+      else
 	{
 	if (!clApprox(c,0.0))
 	  {
-	  my_terms[&v] = c;
+	  my_terms.put(v,(Double) c);
 	  solver.noteAddedVariable(v,subject);
 	  }
 	}
-#ifndef CL_NO_TRACE
-      /** @c2j++ Replacement from cerr << "Now *this == " << *this << endl; */
-      System.err.println("Now *this == " + String.valueOf(*this));
-#endif
-      /* @c2j++: "return *this;" replacement: * to " " */
-      return  this;
+      return this;
     }
   
   public ClAbstractVariable  anyVariable()
@@ -202,112 +227,54 @@ class ClLinearExpression
   public void substituteOut(ClAbstractVariable var, ClLinearExpression expr, 
 			    ClAbstractVariable subject, ClTableau solver)
     {
-#ifndef CL_NO_TRACE
-      System.err.print("* ClLinearExpression::");
-      Tracer TRACER(__FUNCTION__);
-      System.err.print("(" + String.valueOf(var) + ", " + String.valueOf(expr) + ", " + String.valueOf(subject) + ", ");
-      System.err.println("*this == " + String.valueOf(*this));
-#endif
-      ClVarToNumberMap::iterator pv = my_terms.find(&var);
-      // assert(pv != my_terms.end());
+      //#ifndef CL_NO_TRACE
+      //System.err.print("* ClLinearExpression::");
+      //Tracer TRACER(__FUNCTION__);
+      //System.err.print("(" + String.valueOf(var) + ", " + String.valueOf(expr) + ", " + String.valueOf(subject) + ", ");
+      //System.err.println("*this == " + String.valueOf(*this));
+      //#endif
 
-      Number multiplier = ( pv).second;
-      my_terms.erase(pv);
-      /* @c2j++: "incrementConstant(multiplier * expr.my_constant);" replacement: * to " " */
-      incrementConstant(multiplier   expr.my_constant);
-      ClVarToNumberMap::const_iterator i = expr.my_terms.begin();
-      for ( ; i != expr.my_terms.end(); ++i)
-	{
-	/* @c2j++: "const ClAbstractVariable *pv = (*i).first;" replacement: * to " " */
-	/* @c2j++: "const ClAbstractVariable  pv = (*i).first;" replacement: * to " " */
-	/* @c2j++: "const ClAbstractVariable  pv = ( i).first;" replacement: const  to static final  */
-	static final ClAbstractVariable  pv = ( i).first;
-/* @c2j++: "Number c = (*i).second;" replacement: * to " " */
-	Number c = ( i).second;
-	ClVarToNumberMap::iterator poc = my_terms.find(pv);
-	if (poc != my_terms.end())
-	  { // if oldCoeff is not nil
-#ifndef CL_NO_TRACE
-	  /** @c2j++ Replacement from cerr << "Considering (*poc) == " << (*poc).second << "*" << *(*poc).first << endl; */
-	  System.err.println("Considering (*poc) == " + String.valueOf((*poc).second) + "*" + String.valueOf(*(*poc).first));
-#endif
-	  /* @c2j++: "Number newCoeff = (*poc).second + (multiplier*c);" replacement: * to " " */
-	  /* @c2j++: "Number newCoeff = ( poc).second + (multiplier*c);" replacement: * to " " */
-	  Number newCoeff = ( poc).second + (multiplier c);
-	  if (clApprox(newCoeff,0.0))
-	    {
-	    /* @c2j++: "solver.noteRemovedVariable(*((*poc).first),subject);" replacement: * to " " */
-	    /* @c2j++: "solver.noteRemovedVariable( ((*poc).first),subject);" replacement: * to " " */
-	    solver.noteRemovedVariable( (( poc).first),subject);
-	    my_terms.erase(poc);
-	    }
-	  else
-	    {
-	    /* @c2j++: "(*poc).second = newCoeff;" replacement: * to " " */
-	    ( poc).second = newCoeff;
-	    }
-	  }
-	else
-	  { // did not have that variable already (oldCoeff == nil)
-#ifndef CL_NO_TRACE
-	  /** @c2j++ Replacement from cerr << "Adding (*i) == " << (*i).second << "*" << *(*i).first << endl; */
-	  System.err.println("Adding (*i) == " + String.valueOf((*i).second) + "*" + String.valueOf(*(*i).first));
-#endif
-	  /* @c2j++: "my_terms[pv] = multiplier * c;" replacement: * to " " */
-	  my_terms[pv] = multiplier   c;
-	  /* @c2j++: "solver.noteAddedVariable(*pv,subject);" replacement: * to " " */
-	  solver.noteAddedVariable( pv,subject);
-	  }
-	}
-#ifndef CL_NO_TRACE
-      /** @c2j++ Replacement from cerr << "Now (*this) is " << *this << endl; */
-      System.err.println("Now (*this) is " + String.valueOf(*this));
-#endif
+
+      // FIXGJB write this
     }
   
   public void changeSubject(ClAbstractVariable old_subject, ClAbstractVariable new_subject)
     {
-      my_terms[&old_subject] = newSubject(new_subject);
+      my_terms.put(old_subject,newSubject(new_subject));
     }
   
-  public Number newSubject(ClAbstractVariable subject)
+  public double newSubject(ClAbstractVariable subject)
     {
-#ifndef CL_NO_TRACE
-      Tracer TRACER(__FUNCTION__);
-      System.err.println("(" + String.valueOf(subject) + ")");
-#endif
-      ClVarToNumberMap::iterator pnewSubject = my_terms.find(&subject);
-      // assert(pnewSubject != my_terms.end());
-      Number reciprocal = 1.0 / ( pnewSubject).second;
-      my_terms.erase(pnewSubject);
+      //#ifndef CL_NO_TRACE
+      //Tracer TRACER(__FUNCTION__);
+      //System.err.println("(" + String.valueOf(subject) + ")");
+      //#endif
+      Double coeff = (Double) my_terms.remove(subject);
+      // assert(coeff != null);
+      double reciprocal = 1.0 / coeff.doubleValue();
       multiplyMe(-reciprocal);
       return reciprocal;
     }
 
-  public Number coefficientFor(ClAbstractVariable var)
+  public double coefficientFor(ClAbstractVariable var)
     { 
-      /* @c2j++: "map<const ClAbstractVariable *, Number>::const_iterator it = my_terms.find(&var);" replacement: * to " " */
-      /* @c2j++: "map<const ClAbstractVariable  , Number>::const_iterator it = my_terms.find(&var);" replacement: const  to static final  */
-      map<static final ClAbstractVariable  , Number>::const_iterator it = my_terms.find(&var);
-      if (it != my_terms.end())
-	/* @c2j++: "return (*it).second;" replacement: * to " " */
-	return ( it).second;
-      return 0.0;
+      Double coeff = (Double) my_terms.get(var);
+      if (coeff != null)
+	return coeff.doubleValue();
+      else
+	return 0.0;
     }
 
-  public Number constant()
+  public double constant()
     { return my_constant; }
 
-  public void set_constant(Number c)
+  public void set_constant(double c)
     { my_constant = c; }
 
   public ClVarToNumberMap terms()
     { return my_terms; }
 
-  public ClVarToNumberMap terms()
-    { return my_terms; }
-
-  public void incrementConstant(Number c)
+  public void incrementConstant(double c)
     { my_constant += c; }
 
   public boolean isConstant()
@@ -315,32 +282,8 @@ class ClLinearExpression
 
   public String toString()
     {
-      ClVarToNumberMap::const_iterator i = my_terms.begin();
-      
-      if (!clApprox(my_constant,0.0) || i == my_terms.end())
-	{
-	xo << my_constant;
-	}
-      else
-	{
-	if (i == my_terms.end())
-	  return xo;
-	/* @c2j++: "xo << (*i).second << "*" << *((*i).first);" replacement: * to " " */
-	/* @c2j++: "xo << ( i).second << "*" << *((*i).first);" replacement: * to " " */
-	/* @c2j++: "xo << ( i).second << " " << *((*i).first);" replacement: * to " " */
-	/* @c2j++: "xo << ( i).second << " " <<  ((*i).first);" replacement: * to " " */
-	xo << ( i).second << " " <<  (( i).first);
-	++i;
-	}
-      for ( ; i != my_terms.end(); ++i)
-	{
-	/* @c2j++: "xo << " + " << (*i).second << "*" << *((*i).first);" replacement: * to " " */
-	/* @c2j++: "xo << " + " << ( i).second << "*" << *((*i).first);" replacement: * to " " */
-	/* @c2j++: "xo << " + " << ( i).second << " " << *((*i).first);" replacement: * to " " */
-	/* @c2j++: "xo << " + " << ( i).second << " " <<  ((*i).first);" replacement: * to " " */
-	xo << " + " << ( i).second << " " <<  (( i).first);
-	}
-      return xo;
+      // FIXGJB: write this
+
     }
 
   public ClLinearExpression Plus(ClLinearExpression e1, ClLinearExpression e2)
@@ -356,26 +299,9 @@ class ClLinearExpression
     { return e1.divide(e2); }
 
   public boolean FEquals(ClLinearExpression e1, ClLinearExpression e2)
-    { return &e1 == &e2; }
+    { return e1 == e2; }
 
-  public ClLinearExpression multiplyMe(Number x)
-    {
-      /* @c2j++: "my_constant *= x;" replacement: * to " " */
-      my_constant  = x;
-      
-      ClVarToNumberMap::const_iterator i = my_terms.begin();
-      for ( ; i != my_terms.end(); ++i)
-	{
-	/* @c2j++: "my_terms[(*i).first] = (*i).second * x;" replacement: * to " " */
-	/* @c2j++: "my_terms[( i).first] = (*i).second * x;" replacement: * to " " */
-	/* @c2j++: "my_terms[( i).first] = ( i).second * x;" replacement: * to " " */
-	my_terms[( i).first] = ( i).second   x;
-	}
-      /* @c2j++: "return *this;" replacement: * to " " */
-      return  this;
-    }
-
-  private Number my_constant;
-  private ClVarToNumberMap my_terms;
+  private Double my_constant;
+  private Hashtable my_terms;
   
 }
