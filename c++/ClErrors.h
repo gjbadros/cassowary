@@ -44,10 +44,10 @@ class ExCLRequiredFailure : public ExCLError {
     { return "(ExCLRequiredFailure) A required constraint cannot be satisfied"; }
 };
 
-class ExCLNotEnoughtStays : public ExCLError {
+class ExCLNotEnoughStays : public ExCLError {
  public:
   virtual char *description() const
-    { return "(ExCLNotEnoughtStays) There are not enough stays to give specific values to every variable"; }
+    { return "(ExCLNotEnoughStays) There are not enough stays to give specific values to every variable"; }
 };
 
 class ExCLNonlinearExpression : public ExCLError {
