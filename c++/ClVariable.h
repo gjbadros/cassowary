@@ -69,6 +69,8 @@ public:
   void set_value(Number value)
     { my_value = value; }
 
+  Number operator=(Number value)
+    { my_value = value; return value; }
 
 private:
   Number my_value;
