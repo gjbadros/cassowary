@@ -41,7 +41,7 @@
       </author>
     </authorgroup>
     <releaseinfo>Release post-0.8</releaseinfo>
-    <pubdate>11 February 1999</pubdate>
+    <pubdate>25 February 1999</pubdate>
     <copyright>
       <year>1997&ndash;1999</year>
       <holder>Maciej Stachowiak and Greg J. Badros</holder>
@@ -79,7 +79,7 @@ been added.
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 1185 </para> </refsect1>
+  at line 1294 </para> </refsect1>
 </refentry>
 
 <refentry id="cl-add-editvar">
@@ -113,7 +113,7 @@ values.
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 1264 </para> </refsect1>
+  at line 1373 </para> </refsect1>
 </refentry>
 
 <refentry id="cl-add-stay">
@@ -148,7 +148,7 @@ you intend to use with the given <parameter>solver</parameter>.
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 1324 </para> </refsect1>
+  at line 1433 </para> </refsect1>
 </refentry>
 
 <refentry id="cl-begin-edit">
@@ -176,7 +176,59 @@ have a matching <link linkend="cl-end-edit"><function>cl-end-edit</function></li
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 1389 </para> </refsect1>
+  at line 1498 </para> </refsect1>
+</refentry>
+
+<refentry id="cl-constraint-change-strength-x">
+  <refnamediv>
+    <refname>cl-constraint-change-strength!</refname>
+    <refpurpose>Set CONSTRAINT's strength to STRENGTH.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-constraint-change-strength! constraint strength)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Set <parameter>constraint</parameter>'s strength to <parameter>strength</parameter>.
+This is only allowed if the constraint is not in any solver.
+Returns <literal>#t</literal> if successful, <literal>#f</literal> otherwise.
+  </para>
+  </refsect1>
+  <refsect1>
+  <title>Module</title>
+  <para>Built-in Primitive</para>
+  </refsect1>
+  <refsect1>
+  <title>Implementation Notes</title>
+  <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
+  at line 1023 </para> </refsect1>
+</refentry>
+
+<refentry id="cl-constraint-change-weight-x">
+  <refnamediv>
+    <refname>cl-constraint-change-weight!</refname>
+    <refpurpose>Set CONSTRAINT's weighting factor to WEIGHT (a number).</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(cl-constraint-change-weight! constraint weight)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Set <parameter>constraint</parameter>'s weighting factor to <parameter>weight</parameter> (a number).
+This is only allowed if the constraint is not in any solver.
+Returns <literal>#t</literal> if successful, <literal>#f</literal> otherwise.
+  </para>
+  </refsect1>
+  <refsect1>
+  <title>Module</title>
+  <para>Built-in Primitive</para>
+  </refsect1>
+  <refsect1>
+  <title>Implementation Notes</title>
+  <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
+  at line 1048 </para> </refsect1>
 </refentry>
 
 <refentry id="cl-constraint-list">
@@ -206,7 +258,7 @@ directly) will be listed.
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 1541 </para> </refsect1>
+  at line 1650 </para> </refsect1>
 </refentry>
 
 <refentry id="cl-constraint-strength">
@@ -230,7 +282,7 @@ directly) will be listed.
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 994 </para> </refsect1>
+  at line 996 </para> </refsect1>
 </refentry>
 
 <refentry id="cl-constraint-weight">
@@ -254,7 +306,7 @@ directly) will be listed.
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 1008 </para> </refsect1>
+  at line 1010 </para> </refsect1>
 </refentry>
 
 <refentry id="cl-constraint-p">
@@ -283,7 +335,7 @@ test.
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 980 </para> </refsect1>
+  at line 982 </para> </refsect1>
 </refentry>
 
 <refentry id="cl-divide">
@@ -311,7 +363,7 @@ cl-variable), an error will result.
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 619 </para> </refsect1>
+  at line 620 </para> </refsect1>
 </refentry>
 
 <refentry id="cl-end-edit">
@@ -338,7 +390,7 @@ any edit variables that have been added via <link linkend="cl-add-editvar"><func
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 1409 </para> </refsect1>
+  at line 1518 </para> </refsect1>
 </refentry>
 
 <refentry id="cl-equation-p">
@@ -364,7 +416,7 @@ since they are also constraint objects.
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 692 </para> </refsect1>
+  at line 694 </para> </refsect1>
 </refentry>
 
 <refentry id="cl-expression-p">
@@ -388,7 +440,7 @@ since they are also constraint objects.
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 462 </para> </refsect1>
+  at line 463 </para> </refsect1>
 </refentry>
 
 <refentry id="cl-inequality-p">
@@ -414,7 +466,7 @@ since they are also constraint objects.
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 831 </para> </refsect1>
+  at line 833 </para> </refsect1>
 </refentry>
 
 <refentry id="cl-int-value">
@@ -440,7 +492,7 @@ an integer before returning the value.
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 222 </para> </refsect1>
+  at line 223 </para> </refsect1>
 </refentry>
 
 <refentry id="cl-is-constraint-satisfied-p">
@@ -464,7 +516,7 @@ an integer before returning the value.
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 1429 </para> </refsect1>
+  at line 1538 </para> </refsect1>
 </refentry>
 
 <refentry id="cl-minus">
@@ -490,7 +542,7 @@ objects.
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 544 </para> </refsect1>
+  at line 545 </para> </refsect1>
 </refentry>
 
 <refentry id="cl-plus">
@@ -516,7 +568,7 @@ objects.
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 511 </para> </refsect1>
+  at line 512 </para> </refsect1>
 </refentry>
 
 <refentry id="cl-remove-constraint">
@@ -547,7 +599,7 @@ object, the preceding arguments will have already been removed.
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 1225 </para> </refsect1>
+  at line 1334 </para> </refsect1>
 </refentry>
 
 <refentry id="cl-resolve">
@@ -584,7 +636,7 @@ variables from the solver after you are done changing their values.
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 1486 </para> </refsect1>
+  at line 1595 </para> </refsect1>
 </refentry>
 
 <refentry id="cl-solver-debug-print">
@@ -612,7 +664,7 @@ brief summary of the contents of the solver.
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 1126 </para> </refsect1>
+  at line 1235 </para> </refsect1>
 </refentry>
 
 <refentry id="cl-solver-p">
@@ -636,7 +688,7 @@ brief summary of the contents of the solver.
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 1152 </para> </refsect1>
+  at line 1261 </para> </refsect1>
 </refentry>
 
 <refentry id="cl-stay-constraint-p">
@@ -662,7 +714,7 @@ since they are also constraint objects.
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 930 </para> </refsect1>
+  at line 932 </para> </refsect1>
 </refentry>
 
 <refentry id="cl-strength-p">
@@ -686,7 +738,7 @@ since they are also constraint objects.
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 344 </para> </refsect1>
+  at line 345 </para> </refsect1>
 </refentry>
 
 <refentry id="cl-suggest-value">
@@ -719,7 +771,7 @@ possibly changed values can be retrieved via <link linkend="cl-value"><function>
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 1448 </para> </refsect1>
+  at line 1557 </para> </refsect1>
 </refentry>
 
 <refentry id="cl-times">
@@ -747,7 +799,7 @@ cl-variable), an error will result.
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 577 </para> </refsect1>
+  at line 578 </para> </refsect1>
 </refentry>
 
 <refentry id="cl-value">
@@ -772,7 +824,7 @@ The value is a double.  Use <link linkend="cl-int-value"><function>cl-int-value<
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 207 </para> </refsect1>
+  at line 208 </para> </refsect1>
 </refentry>
 
 <refentry id="cl-variable-p">
@@ -796,7 +848,7 @@ The value is a double.  Use <link linkend="cl-int-value"><function>cl-int-value<
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 117 </para> </refsect1>
+  at line 118 </para> </refsect1>
 </refentry>
 
 <refentry id="cl-weight-p">
@@ -820,7 +872,7 @@ The value is a double.  Use <link linkend="cl-int-value"><function>cl-int-value<
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 271 </para> </refsect1>
+  at line 272 </para> </refsect1>
 </refentry>
 
 <refentry id="clv-attach-x">
@@ -846,7 +898,7 @@ Consider instead using <link linkend="set-object-property"><function>set-object-
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 169 </para> </refsect1>
+  at line 170 </para> </refsect1>
 </refentry>
 
 <refentry id="clv-attached-object">
@@ -872,7 +924,7 @@ Consider instead using <link linkend="set-object-property"><function>set-object-
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 188 </para> </refsect1>
+  at line 189 </para> </refsect1>
 </refentry>
 
 <refentry id="make-cl-constraint">
@@ -904,7 +956,38 @@ cls-required, <parameter>factor</parameter> defaults to 1.
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 1023 </para> </refsect1>
+  at line 1140 </para> </refsect1>
+</refentry>
+
+<refentry id="make-cl-constraint-from-string">
+  <refnamediv>
+    <refname>make-cl-constraint-from-string</refname>
+    <refpurpose>Return a newly-constructed constraint object or <literal>#f</literal> if parse fails.</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <synopsis>(make-cl-constraint-from-string str lookup-proc #&amp;optional strength factor)</synopsis>
+  </refsynopsisdiv>
+  <refsect1>
+  <title>Description</title>
+  <para>
+  Return a newly-constructed constraint object or <literal>#f</literal> if parse fails.
+<parameter>str</parameter> is a string specifying the desired constraint.  The
+created constraint is given strength <parameter>strength</parameter>, a cl-strength, and has
+a weight factor of <parameter>factor</parameter>, a real number.  <parameter>strength</parameter> defaults to
+cls-required, <parameter>factor</parameter> defaults to 1.  <parameter>lookup-proc</parameter> must be a procedure
+that takes a single string argument and returns either a <link linkend="cl-variable"><function>cl-variable</function></link> object
+or <literal>#f</literal> if there is no such variable with that name.  (It may choose to
+create a return a new <link linkend="cl-variable"><function>cl-variable</function></link> object.
+  </para>
+  </refsect1>
+  <refsect1>
+  <title>Module</title>
+  <para>Built-in Primitive</para>
+  </refsect1>
+  <refsect1>
+  <title>Implementation Notes</title>
+  <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
+  at line 1090 </para> </refsect1>
 </refentry>
 
 <refentry id="make-cl-equality">
@@ -938,7 +1021,7 @@ error will be signalled.
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 740 </para> </refsect1>
+  at line 742 </para> </refsect1>
 </refentry>
 
 <refentry id="make-cl-equation">
@@ -966,7 +1049,7 @@ number.  <parameter>strength</parameter> defaults to cls-required, <parameter>fa
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 703 </para> </refsect1>
+  at line 705 </para> </refsect1>
 </refentry>
 
 <refentry id="make-cl-expression">
@@ -993,7 +1076,7 @@ this procedure can be used to force building a simple expression.
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 471 </para> </refsect1>
+  at line 472 </para> </refsect1>
 </refentry>
 
 <refentry id="make-cl-inequality">
@@ -1026,7 +1109,7 @@ arbitrary constraints.
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 842 </para> </refsect1>
+  at line 844 </para> </refsect1>
 </refentry>
 
 <refentry id="make-cl-solver">
@@ -1053,7 +1136,7 @@ share constraint variable objects.
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 1161 </para> </refsect1>
+  at line 1270 </para> </refsect1>
 </refentry>
 
 <refentry id="make-cl-stay-constraint">
@@ -1080,7 +1163,7 @@ or use the <link linkend="cl-add-stay"><function>cl-add-stay</function></link> c
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 942 </para> </refsect1>
+  at line 944 </para> </refsect1>
 </refentry>
 
 <refentry id="make-cl-strength">
@@ -1111,7 +1194,7 @@ but new strengths can be introduced if necessary.
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 369 </para> </refsect1>
+  at line 370 </para> </refsect1>
 </refentry>
 
 <refentry id="make-cl-strength-3">
@@ -1140,7 +1223,7 @@ object.
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 399 </para> </refsect1>
+  at line 400 </para> </refsect1>
 </refentry>
 
 <refentry id="make-cl-variable">
@@ -1167,7 +1250,7 @@ variable if you want its value to not change.
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 126 </para> </refsect1>
+  at line 127 </para> </refsect1>
 </refentry>
 
 <refentry id="make-cl-weight">
@@ -1198,7 +1281,7 @@ cl-strength object given the sequence of numbers directly.
   <refsect1>
   <title>Implementation Notes</title>
   <para> Defined in <ulink url="file:///home/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 280 </para> </refsect1>
+  at line 281 </para> </refsect1>
 </refentry>
 
   </chapter>
@@ -1232,6 +1315,9 @@ cl-strength object given the sequence of numbers directly.
       <listitem><para><link linkend="cl-constraint-p"><function>cl-constraint?</function></link> &mdash; Return <literal>#t</literal> if OBJ is some kind of constraint object, <literal>#f</literal> otherwise.</para></listitem>
       <listitem><para><link linkend="cl-constraint-strength"><function>cl-constraint-strength</function></link> &mdash; Return the cl-strength object for constraint CONSTRAINT.</para></listitem>
       <listitem><para><link linkend="cl-constraint-weight"><function>cl-constraint-weight</function></link> &mdash; Return the weighting factor (a number) for constraint CONSTRAINT.</para></listitem>
+      <listitem><para><link linkend="cl-constraint-change-strength-x"><function>cl-constraint-change-strength!</function></link> &mdash; Set CONSTRAINT's strength to STRENGTH.</para></listitem>
+      <listitem><para><link linkend="cl-constraint-change-weight-x"><function>cl-constraint-change-weight!</function></link> &mdash; Set CONSTRAINT's weighting factor to WEIGHT (a number).</para></listitem>
+      <listitem><para><link linkend="make-cl-constraint-from-string"><function>make-cl-constraint-from-string</function></link> &mdash; Return a newly-constructed constraint object or <literal>#f</literal> if parse fails.</para></listitem>
       <listitem><para><link linkend="make-cl-constraint"><function>make-cl-constraint</function></link> &mdash; Return a newly-constructed constraint object.</para></listitem>
       <listitem><para><link linkend="cl-solver-debug-print"><function>cl-solver-debug-print</function></link> &mdash; Output a complete dump of SOLVER onto output port PORT.</para></listitem>
       <listitem><para><link linkend="cl-solver-p"><function>cl-solver?</function></link> &mdash; Return <literal>#t</literal> if OBJ is a constraint solver object, <literal>#f</literal> otherwise.</para></listitem>

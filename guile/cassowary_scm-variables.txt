@@ -1,24 +1,24 @@
 cls-medium
 - 
 The "medium" predefined cl-strength object. 
-[From cassowary_scm.cc:1627]
+[From cassowary_scm.cc:1735]
 
 
 cls-required
 - 
 The "required" predefined cl-strength object. 
-[From cassowary_scm.cc:1633]
+[From cassowary_scm.cc:1741]
 
 
 cls-strong
 - 
 The "strong" predefined cl-strength object. 
-[From cassowary_scm.cc:1630]
+[From cassowary_scm.cc:1738]
 
 
 cls-weak
 - 
 The "weak" predefined cl-strength object. 
-[From cassowary_scm.cc:1624]
+[From cassowary_scm.cc:1732]
 
 
