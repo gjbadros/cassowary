@@ -17,45 +17,181 @@
 
 class ClLinearInequality extends ClLinearConstraint
 {
-ClLinearConstraint super;
+  
+  public ClLinearInequality(ClLinearExpression cle,
+			    ClStrength strength,
+			    double weight)
+  {
+    super(cle,strength,weight);
+  }
 
-/**
-* ClLinearInequality
-*/
-public
-ClLinearInequality()
-{ }
+  public ClLinearInequality(ClLinearExpression cle,
+			    ClStrength strength)
+  {
+    super(cle,strength);
+  }
 
-/**
-* ClLinearInequality
-*/
-public
-ClLinearInequality()
-{ }
+  public ClLinearInequality(ClLinearExpression cle)
+  {
+    super(cle);
+  }
 
-/**
-* ClLinearInequality
-*/
-public
-ClLinearInequality()
-{ }
 
-/**
-* isInequality
-* @return boolean
-*/
-public
-boolean isInequality()
-{ return true; }
+  public ClLinearInequality(ClLinearExpression cle1,
+			    byte op_enum,
+			    ClLinearExpression cle2,
+			    ClStrength strength,
+			    double weight)
+       throws ExCLInternalError
+  {
+    super(cle2,strength,weight);
+    if (op_enum == cnGEQ) {
+      my_expression.multiplyMe(-1.0);
+      my_expression.addExpression(cle1);
+    } else if (op_enum == cnLEQ) {
+      my_expression.addExpression(cle1,-1.0);
+    } else // the operator was invalid
+      throw new ExCLInternalError();
+  }
 
-/**
-* printOn
-* @param xo
-* @return ostream &
-*/
-public
-/* @c2j++: "ostream & printOn(ostream& xo)" replacement:  &  to " " */
-ostream printOn(ostream& xo)
-{  super::printOn(xo); xo << " >= 0 )"; return xo; }
+  public ClLinearInequality(ClLinearExpression cle1,
+			    byte op_enum,
+			    ClLinearExpression cle2,
+			    ClStrength strength)
+       throws ExCLInternalError
+  {
+    super(cle2,strength);
+    if (op_enum == cnGEQ) {
+      my_expression.multiplyMe(-1.0);
+      my_expression.addExpression(cle1);
+    } else if (op_enum == cnLEQ) {
+      my_expression.addExpression(cle1,-1.0);
+    } else // the operator was invalid
+      throw new ExCLInternalError();
+  }
 
+  public ClLinearInequality(ClLinearExpression cle1,
+			    byte op_enum,
+			    ClLinearExpression cle2)
+       throws ExCLInternalError
+  {
+    super(cle2);
+    if (op_enum == cnGEQ) {
+      my_expression.multiplyMe(-1.0);
+      my_expression.addExpression(cle1);
+    } else if (op_enum == cnLEQ) {
+      my_expression.addExpression(cle1,-1.0);
+    } else // the operator was invalid
+      throw new ExCLInternalError();
+  }
+
+
+  public ClLinearInequality(ClAbstractVariable clv,
+			    byte op_enum,
+			    ClLinearExpression cle,
+			    ClStrength strength,
+			    double weight)
+       throws ExCLInternalError
+  {
+    super(cle,strength,weight);
+    if (op_enum == cnGEQ) {
+      my_expression.multiplyMe(-1.0);
+      my_expression.addVariable(clv);
+    } else if (op_enum == cnLEQ) {
+      my_expression.addVariable(clv,-1.0);
+    } else // the operator was invalid
+      throw new ExCLInternalError();
+  }
+
+  public ClLinearInequality(ClAbstractVariable clv,
+			    byte op_enum,
+			    ClLinearExpression cle,
+			    ClStrength strength)
+       throws ExCLInternalError
+  {
+    super(cle,strength);
+    if (op_enum == cnGEQ) {
+      my_expression.multiplyMe(-1.0);
+      my_expression.addVariable(clv);
+    } else if (op_enum == cnLEQ) {
+      my_expression.addVariable(clv,-1.0);
+    } else // the operator was invalid
+      throw new ExCLInternalError();
+  }
+
+  public ClLinearInequality(ClAbstractVariable clv,
+			    byte op_enum,
+			    ClLinearExpression cle)
+       throws ExCLInternalError
+  {
+    super(cle);
+    if (op_enum == cnGEQ) {
+      my_expression.multiplyMe(-1.0);
+      my_expression.addVariable(clv);
+    } else if (op_enum == cnLEQ) {
+      my_expression.addVariable(clv,-1.0);
+    } else // the operator was invalid
+      throw new ExCLInternalError();
+  }
+
+
+  public ClLinearInequality(ClLinearExpression cle,
+			    ClAbstractVariable clv,
+			    byte op_enum,
+			    ClStrength strength,
+			    double weight)
+       throws ExCLInternalError
+  {
+    super(cle,strength,weight);
+    if (op_enum == cnLEQ) {
+      my_expression.multiplyMe(-1.0);
+      my_expression.addVariable(clv);
+    } else if (op_enum == cnGEQ) {
+      my_expression.addVariable(clv,-1.0);
+    } else // the operator was invalid
+      throw new ExCLInternalError();
+  }
+
+
+  public ClLinearInequality(ClLinearExpression cle,
+			    ClAbstractVariable clv,
+			    byte op_enum,
+			    ClStrength strength)
+       throws ExCLInternalError
+  {
+    super(cle,strength);
+    if (op_enum == cnLEQ) {
+      my_expression.multiplyMe(-1.0);
+      my_expression.addVariable(clv);
+    } else if (op_enum == cnGEQ) {
+      my_expression.addVariable(clv,-1.0);
+    } else // the operator was invalid
+      throw new ExCLInternalError();
+  }
+
+  public ClLinearInequality(ClLinearExpression cle,
+			    ClAbstractVariable clv,
+			    byte op_enum)
+       throws ExCLInternalError
+  {
+    super(cle);
+    if (op_enum == cnLEQ) {
+      my_expression.multiplyMe(-1.0);
+      my_expression.addVariable(clv);
+    } else if (op_enum == cnGEQ) {
+      my_expression.addVariable(clv,-1.0);
+    } else // the operator was invalid
+      throw new ExCLInternalError();
+  }
+
+
+  public  boolean isInequality()
+  { return true; }
+
+  // FIXGJB : revisit these numbers
+  public static final byte cnGEQ = 97;
+  public static final byte cnLEQ = 103;
+
+  public String toString()
+  { return super.toString() + " >= 0 )"; }
 }

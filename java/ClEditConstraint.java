@@ -17,30 +17,14 @@
 
 class ClEditConstraint extends ClEditOrStayConstraint
 {
+  
+  public ClEditConstraint()
+  { }
 
-/**
-* ClEditConstraint
-*/
-public
-ClEditConstraint()
-{ }
+  public boolean isEditConstraint()
+  { return true; }
 
-/**
-* isEditConstraint
-* @return boolean
-*/
-public
-boolean isEditConstraint()
-{ return true; }
-
-/**
-* printOn
-* @param xo
-* @return ostream &
-*/
-public
-/* @c2j++: "ostream & printOn(ostream& xo)" replacement:  &  to " " */
-ostream printOn(ostream& xo)
-{ xo << "edit" << variable(); return xo; }
+  public String toString()
+  { return "edit" + variable().toString(); }
 
 }

@@ -162,6 +162,10 @@ class ClLinearExpression
       return this;
     }
 
+  public ClLinearExpression addExpression(ClLinearExpression expr)
+    {
+      return addExpression(expr,1.0);
+    }
 
   public ClLinearExpression addVariable(ClAbstractVariable v, double c)
     { // body largely duplicated below
@@ -188,6 +192,10 @@ class ClLinearExpression
       }
       return this;
     }
+
+  public ClLinearExpression addVariable(ClAbstractVariable v)
+  { return addVariable(v,1.0); }
+
 
   public ClLinearExpression setVariable(ClAbstractVariable v, double c)
     { 

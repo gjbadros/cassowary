@@ -32,15 +32,16 @@ JAVAFILES = \
 	ClLinearEquation.java \
 	ClLinearExpression.java \
 	ClLinearInequality.java \
-	ClSimplexSolver.java \
 	ClStayConstraint.java \
 	ClStrength.java \
 	ClSymbolicWeight.java \
-	ClTableau.java \
 	ClVariable.java \
 	ClPoint.java \
-	ClTests.java \
 	Set.java
+
+#	ClTests.java \
+#	ClTableau.java \
+#	ClSimplexSolver.java \
 
 CLASSFILES = $(JAVAFILES:.java=.class)
 

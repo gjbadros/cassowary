@@ -25,12 +25,12 @@ class ClStayConstraint extends ClEditOrStayConstraint
     { super(var,strength,1.0); }
 
   public ClStayConstraint(ClVariable var)
-    { super(var,clsWeak,1.0); }
+    { super(var,ClStrength.clsWeak,1.0); }
 
   public boolean isStayConstraint()
     { return true; }
 
-  public toString()
-    { return "stay" + variable().toString() }
+  public String toString()
+    { return "stay" + variable().toString(); }
 
 }
