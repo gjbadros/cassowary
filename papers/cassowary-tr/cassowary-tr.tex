@@ -20,7 +20,7 @@
 \input{abb1.tex}
 
 
-\title{The Cassowary Lineary Arithmetic Constraint Solving Algorithm:
+\title{The Cassowary Linear Arithmetic Constraint Solving Algorithm:
   Interface and Implementation}
 
 \author{Greg J. Badros \and Alan Borning}
@@ -30,7 +30,8 @@ Department of Computer Science and Engineering \\
 University of Washington \\
 Box 352350, Seattle, WA  98195-2350  USA \\
 {\small \{{\tt gjb},{\tt borning}\}{\tt @cs.washington.edu}} \\
-26 June 1998}  
+\vspace{2mm}
+28 June 1998}
 
 \begin{document}
 \maketitle
@@ -42,19 +43,15 @@ the left of another, requiring that a pane occupy the leftmost 1/3 of a
 window, or preferring that an object be contained within a rectangle if
 possible.  Current constraint solvers designed for UI applications cannot
 efficiently handle simultaneous linear equations and inequalities.  This is
-a major limitation.  We describe incremental algorithms based on the dual
-simplex and active set methods that can solve such systems of constraints
-efficiently.  Both algorithms have been implemented and tested.
+a major limitation.  We describe Cassowary---an incremental algorithm based on the dual
+simplex method that can solve such systems of constraints
+efficiently.
 
 This informal technical report is details the latest version of the
-Cassowary algorithm.  An earlier version of this technical report also
+Cassowary algorithm.  An earlier technical report also
 discussed QOCA and the similarities between Cassowary and that
-algorithm~cite{borning-simplex-tr}.
+algorithm~\cite{borning-simplex-tr}.
 \end{abstract}
-
-% suppress the page number on this first page
-%\thispagestyle{empty}
-%\setcounter{page}{0}
 
 \bigskip
 
@@ -76,7 +73,7 @@ there is some reason for them to move.  A second use is to process
 potentially invalid user inputs in a graceful way.  For example, if the
 user tries to move a figure outside of its bounding window, it is
 reasonable for the figure just to bump up against the side of the window
-and stop, rather than given an error.  A
+and stop, rather than giving an error.  A
 third use is to balance conflicting desires, for example in laying out a
 graph.
 
@@ -84,7 +81,7 @@ Efficient techniques are available for solving such constraints if the
 constraint network is acyclic.  However, in trying to apply constraint
 solvers to real-world problems, we found that the collection of constraints
 was often cyclic.  This sometimes arose when the programmer
-added redundant constraints --- the cycles {\em could} have been avoided by
+added redundant constraints --- the cycles \emph{could} have been avoided by
 careful analysis.  However, this is an added burden on the programmer.
 Further, it is clearly contrary to the spirit of the whole enterprise to
 require programmers to be constantly on guard to avoid cycles and redundant
@@ -96,39 +93,39 @@ conflicting goals,  cycles seem unavoidable.
 
 \subsection{Constraint Hierarchies and Comparators}
 
-Since we want to be able to express preferences as well as requirements in
-the constraint system, we need a specification for how conflicting
-preferences are to be traded off.  {\em Constraint hierarchies}
-\cite{borning-lisp-symbolic-computation-92} provide a general theory for
-this.  In a constraint hierarchy each constraint has a strength.  The
-{\strength required} strength is special, in that {\strength required}
-constraints must be satisfied.  The other strengths all label non-required
-constraints.  A constraint of a given strength completely dominates any
-constraint with a weaker strength.  In the theory, a {\em comparator} is
-used to compare different possible solutions to the constraints and select
-among them.
+Since we want to be able to express preferences as well as requirements
+in the constraint system, we need a specification for how conflicting
+preferences are to be traded off.  \emph{Constraint
+  hierarchies}~\cite{borning-lisp-symbolic-computation-92} provide a
+general theory for this.  In a constraint hierarchy each constraint has
+a strength.  The {\strength required} strength is special, in that
+{\strength required} constraints must be satisfied.  The other strengths
+all label non-required constraints.  A constraint of a given strength
+completely dominates any constraint with a weaker strength.  In the
+theory, a \emph{comparator} is used to compare different possible
+solutions to the constraints and select among them.
 
 Within this framework a number of variations are possible.  One decision is
 whether we only compare solutions on a constraint-by-constraint basis (a
-{\em local} comparator), or whether we take some aggregate measure of the
-unsatisfied constraints of a given strength (a {\em global} comparator).  A
+\emph{local} comparator), or whether we take some aggregate measure of the
+unsatisfied constraints of a given strength (a \emph{global} comparator).  A
 second choice is whether we are concerned only whether a constraint is
-satisfied or not (a {\em predicate} comparator), or whether we also want to
-know how nearly satisfied it is (a {\em metric} comparator.  (Constraints
+satisfied or not (a \emph{predicate} comparator), or whether we also want to
+know how nearly satisfied it is (a \emph{metric} comparator.  (Constraints
 whose domain is a metric space, for example the reals, can have an
-associated error function.  The error in satisfying a constraint {\em cn}
-is 0 iff the constraint is satisfied, and becomes larger the less nearly
+associated error function.  The error in satisfying a constraint \emph{cn}
+is 0 if and only if the constraint is satisfied, and becomes larger the less nearly
 satisfied is the constraint.)
 
 As recognized for the Indigo solver~\cite{borning-uist-96},
 for inequality constraints it is important to use a metric rather than a
 predicate comparator.  Thus, plausible comparators for use with linear
-equality and inequality constraints are {\em locally-error-better}, 
-{\em weighted-sum-better}, and {\em least-squares-better}.  
+equality and inequality constraints are \emph{locally-error-better}, 
+\emph{weighted-sum-better}, and \emph{least-squares-better}.  
 For a given
 collection of constraints, Cassowary finds a locally-error-better or a
-weighted-sum-better solution
-(In constrast, QOCA finds a least-squares-better solution.
+weighted-sum-better solution.
+(In contrast, QOCA finds a least-squares-better solution.
 The least-squares-better comparator strongly
 penalizes outlying values when trading off constraints of the same
 strength.  It is particularly suited to tasks such as laying out a tree, a
@@ -140,10 +137,8 @@ any least-squares-better or weighted-sum-better solution is also a
 locally-error-better solution \cite{borning-lisp-symbolic-computation-92}.)
 It is thus easier to implement algorithms to find a locally-error-better
 solution, and in particular to design hybrid algorithms that include
-subsolvers for simultaneous equations and inequalities and also subsolvers
-for nonnumeric constraints \cite{borning-cp-95}.
-Since each of these different comparators is preferable in certain
-situations we  give algorithms for each.
+sub-solvers for simultaneous equations and inequalities and also sub-solvers
+for non-numeric constraints \cite{borning-cp-95}.
 
 \subsection{Adapting the Simplex Algorithm}
 
@@ -158,19 +153,19 @@ linear equality or inequality constraints over the $x_i$, each of the form:
 \hspace*{5mm}\mbox{$a_1 x_1 + \ldots + a_n x_n \geq b$}.
 
 Given these constraints, we wish to find values for the $x_i$ that minimizes 
-(or maximizes) the value of the {\em objective function} \\
-\vspace*{2mm}
+(or maximizes) the value of the \emph{objective function}
+
 \hspace*{5mm}$c + d_1 x_1 + \ldots + d_n x_n$.
 
 This problem has been heavily studied for the past 50 years.  The most
 commonly used algorithm for solving it is the simplex algorithm, developed
 by Dantzig in the 1940s, and there are now numerous variations of it. 
-Unfortunately, however, existing implementations of the simplex
+Unfortunately, existing implementations of the simplex
 are not really suitable for UI applications.
 
 The principal issue is incrementality.  For interactive graphical
 applications, we need to solve similar problems repeatedly, rather than
-solving a single problem once, and to achieve interactive response times,
+solving a single problem once. To achieve interactive response times,
 very fast incremental algorithms are needed.  There are two cases.  First, when
 moving an object with a mouse or other input device, we typically represent
 this interaction as a one-way constraint relating the mouse position to the
@@ -183,7 +178,7 @@ as possible.  The performance requirements are considerably more stringent
 for the first case than for the second.  
 \ignore{In Sections \ref{resolving} and
 \ref{quadratic} we describe how to update an existing solution rapidly
-given new inputs (e.g.\ a new mouse position), while in Sections
+given new inputs (e.g., a new mouse position), while in Sections
 \ref{adding-constraints} and \ref{removing-constraints} we describe how to
 add or delete a constraint incrementally.}
 
@@ -213,9 +208,9 @@ We present algorithms for incrementally solving linear equality and
 inequality constraints for the three different comparators described
 above. In Section~\ref{augmented-simplex-form} we give algorithms for
 incrementally adding and deleting required constraints with restricted and
-unrestricted variables from a system of constraints kept in {\em augmented
-simplex form}, a type of solved form.  In Section \ref{resolving} we give
-an algorithm, Cassowary, based on the dual simplex, for incrementally
+unrestricted variables from a system of constraints kept in \emph{augmented
+simplex form}, a type of solved form.  In Section \ref{resolving} we
+explain the Cassowary algorithm, based on the dual simplex method, for incrementally
 solving hierarchies of constraints using the locally-error-better or
 weighted-sum-better comparators when a constraint is added or an object is
 moved.
@@ -223,7 +218,7 @@ moved.
 Cassowary has been implemented in Smalltalk, C++, and Java. It performs
 surprisingly well, and a summary of our results is given in Section
 \ref{empirical-evaluation}.  The algorithm is straightforward, and a
-reimplementation based on this paper is more reasonable, given a
+re-implementation based on this paper is more reasonable, given a
 knowledge of the simplex algorithm.  The various implementations with
 example applications are available from the authors.
 
@@ -232,19 +227,19 @@ example applications are available from the authors.
 There is a long history of using constraints in user interfaces and
 interactive systems, beginning with Ivan Sutherland's pioneering Sketchpad
 system \cite{sutherland-ifips-63}.  Most of the current systems use one-way
-constraints (e.g.\ \cite{hudson-subarctic-manual,myers-chi-96}), or local
+constraints (e.g., \cite{hudson-subarctic-manual,myers-chi-96}), or local
 propagation algorithms for acyclic collections of multi-way constraints
-(e.g.\ \cite{sannella-spe-93,vander-zanden-toplas-96}).
+(e.g., \cite{sannella-spe-93,vander-zanden-toplas-96}).
 Indigo \cite{borning-uist-96} handles acyclic collections of inequality
 constraints, but not cycles (simultaneous equations and inequalities).  UI
 systems that handle simultaneous linear equations include \mbox{DETAIL}
 \cite{hosobe-cp-96} and Ultraviolet \cite{borning-cp-95}.  A number of
-researchers (including the first author) have experimented with a
+researchers (including the second author) have experimented with a
 straightforward use of a simplex package in a UI constraint solver,
 but the speed was not satisfactory for interactive use.
 
 Baraff \cite{baraff-siggraph-94} describes a quadratic optimization
-algorithm for solving linear constraints that arise in modelling physical
+algorithm for solving linear constraints that arise in modeling physical
 systems.  Finally, much of the work on constraint solvers
 has been in the logic programming and constraint logic programming
 communities.  Current constraint logic programming languages such as
@@ -275,7 +270,7 @@ algorithm is described in \cite{huynh-marriott-96}.
   notational and terminological thickets.  Both of these thorny defenses
   are lovingly cultivated by a coterie of stern acolytes who have
   devoted themselves to the field.  Actually, the basic ideas of linear
-  programming are quite simple.  -- {\em Numerical Recipes}, \cite[page
+  programming are quite simple.  -- \emph{Numerical Recipes}, \cite[page
   424]{press-89}
 \end{quotation}
 
@@ -320,13 +315,13 @@ $C$ has the form $C_U \wedge C_S \wedge C_I$ where $C_U$ and $C_S$ are
 conjunctions of linear arithmetic equations and $C_I$ is $\bigwedge \{ x
 \geq 0 \mid x \in vars(C_S)\}$ and the objective function $f$ is a linear
 expression over variables in $C_S$\@.  The simplex algorithm does not itself
-handle variables that may take negative values (so-called {\em
-unrestricted variables}), and imposes a constraint $x \geq 0$ on all
+handle variables that may take negative values (so-called
+\emph{unrestricted variables}), and imposes a constraint $x \geq 0$ on all
 variables occurring in its equations.  Augmented simplex form allows us to
 handle unrestricted variables efficiently and simply; it was developed for
 implementing constraint logic programming languages
 \cite{marriott-stuckey-book}, and we have adopted it here.  Essentially it
-uses {\em two} tableaux rather than one.  All of the unrestricted
+uses \emph{two} tableaux rather than one.  All of the unrestricted
 variables will be placed in $C_U$, the unrestricted variable tableau.
 $C_S$, the simplex tableau, contains only variables constrained to be
 non-negative.  The simplex algorithm is used to determine an optimal
@@ -354,8 +349,9 @@ replaced with $e + s = r \wedge s \geq 0$ where $s$ is a new non-negative
 For example, the constraints for Figure~\ref{fig:pict} can be written as
 \begin{quote}\vspace*{-1ex}
 minimize $x_m - x_l$ 
-subject to 
-$$\begin{array}{rcl}
+~ subject to 
+$$
+\begin{array}{rcl}
 2 x_m & = & x_l + x_r \\
 x_l + 10 + s_1& = &x_r \\
 x_r + s_2 &= &100 \\
@@ -378,6 +374,7 @@ substitute $100 - s_2$ for $x_r$
 obtaining
 \begin{quote}\vspace*{-1ex}
 minimize $x_m - x_l$ 
+~ subject to
 $$
 \begin{array}{rcl}
 x_r &= & 100 - s_2 \\ \hline
@@ -393,7 +390,7 @@ substitute $50 + \frac{1}{2}x_l - \frac{1}{2} s_2$
 for $x_m$, giving 
 \begin{quote}\vspace*{-1ex}
 minimize $50 - \frac{1}{2}x_l - \frac{1}{2} s_2$ 
-subject to 
+~ subject to 
 $$
 \begin{array}{rcl}
 x_m & = & 50 + \frac{1}{2} x_l - \frac{1}{2} s_2 \\ 
@@ -452,7 +449,7 @@ is in basic feasible solved form and is equivalent to the
 problem above.
 \begin{quote}\vspace*{-1ex}
 minimize $50 - \frac{1}{2} x_l + \frac{1}{2} s_2 $ 
-subject to 
+~ subject to 
 $$
 \begin{array}{rlrrr} 
 x_m & = &50 & + \frac{1}{2} x_l & - \frac{1}{2} s_2 \\
@@ -479,7 +476,7 @@ The simplex algorithm finds the optimum by repeatedly looking for an
 ``adjacent'' basic feasible solved form whose basic feasible solution
 decreases the value of the objective function.  When no such adjacent basic
 feasible solved form can be found, the optimum has been found.  The
-underlying operation is called {\em pivoting}, and involves exchanging a
+underlying operation is called \emph{pivoting}, and involves exchanging a
 basic and a parametric variable using matrix operations.  Thus by
 ``adjacent'' we mean the new basic feasible solved form can be reached by
 performing a single pivot.
@@ -500,7 +497,7 @@ the subject we obtain $x_l = 90 - s_1 - s_2$.  We replace $x_l$ everywhere
 by $90 - s_1 - s_2$ and obtain
 \begin{quote}\vspace*{-1ex}
 minimize $5 + \frac{1}{2} s_1 + s_2$ 
-subject to 
+~ subject to 
 $$
 \begin{array}{rlrrr} 
 x_m & = &95 & - \frac{1}{2} s_1 & - s_2 \\
@@ -522,7 +519,7 @@ solution.  Hence we are at an optimal solution.
 (If we were to have an unrestricted variable in the objective function, the
 optimization would be unbounded.  This is not an issue for our algorithm 
 since the objective function in those cases always only contains
-restricted variables, i.e.\ variables implicitly constrained to be
+restricted variables, i.e., variables implicitly constrained to be
 non-negative.)
 
 In general, the simplex algorithm applied to $C_S$ 
@@ -532,7 +529,7 @@ the variables $x_1, \ldots ,x_n$ are basic and the variables
 $y_1, \ldots ,y_m$ are parameters.
 \begin{quote}\vspace*{-1ex}
 minimize $e + \sum_{j=1}^{m} d_j y_j$
-subject to 
+~ subject to 
 $$
 \begin{array}{rcr}
         \bigwedge_{i=1}^{n} x_i & = & c_i + \sum_{j=1}^{m} a_{ij} y_j ~\wedge\\
@@ -542,7 +539,7 @@ $$
 $$
 \end{quote}\vspace{-0.9ex}
 Select an entry variable $y_J$ such that $d_J < 0$.  (An entry variable is
-one that will enter the basis, i.e.\ it is currently parametric and we want
+one that will enter the basis, i.e., it is currently parametric and we want
 to make it basic.)
 Pivoting on such a variable can only decrease the value of the objective
 function.
@@ -628,7 +625,7 @@ feasible solved form for the original simplex problem, by starting from an
 empty constraint set and adding the constraints one at a time.
 
 As an example, suppose we wish to ensure that the midpoint
-sits in the centre of the screen.  
+sits in the center of the screen.  
 This is represented by the constraint
 $x_m = 50$.  If we substitute for each of the basic variables
 (only $x_m$) in this constraint we obtain the equation
@@ -665,9 +662,9 @@ all the basic variables.  This gives an equation $e = c$ where $e$ is a
 linear expression.  If $c$ is negative, we multiply both sides by $-1$ so
 that the constant becomes non-negative.  If $e$ contains an unrestricted
 variable we use it to substitute for that variable and add the equation to
-the tableau above the line (i.e.\ to $C_U$).  Otherwise we create a
+the tableau above the line (i.e., to $C_U$).  Otherwise we create a
 restricted artificial variable $a$ and add the equation $a = c - e$ to the
-tableau below the line (i.e.\ to $C_S$), and minimize $c - e$. If the
+tableau below the line (i.e., to $C_S$), and minimize $c - e$. If the
 resulting minimum is not zero then the constraints are unsatisfiable.
 Otherwise $a$ is either parametric or basic.  If $a$ is parametric, the
 column for it can be simply removed from the tableau.  If it is basic, the
@@ -692,10 +689,10 @@ represented by the constraint may not be contained in a single row, so we
 need a way to identify the constraint's influence in the tableaux.  To do
 this, we use a ``marker'' variable that is originally present only in the
 equation representing the constraint.  We can then identify the
-constraint's influence in the tableaux by looking for occurrences of that
+constraint's effect on the tableaux by looking for occurrences of that
 marker variable.  For inequality constraints, the slack variable $s$ added
 to make it an equality serves as the marker, since $s$ will originally
-occur only in that equation.  The equation representing a nonrequired
+occur only in that equation.  The equation representing a non-required
 equality constraint will have an error variable that can serve as a marker
 --- see Section \ref{non-requireds}.  For required equality constraints, we
 add a ``dummy'' restricted variable to the original equation to serve as a
@@ -731,7 +728,7 @@ $$
 \end{quote}\vspace{-0.9ex}
 
 If we wanted to remove this constraint
-from the tableau before adding $x_m = 50$ (i.e. the final tableau given in
+from the tableau before adding $x_m = 50$ (i.e., the final tableau given in
 Section \ref{simplex-optimization}), $s_1$ is a parameter.
 We make $s_1$ basic by treating it as an entry variable and
 (as usual) determining the most restrictive equation and using that 
@@ -867,7 +864,7 @@ more desirable behaviour for the solver than removing redundant constraints
 automatically, although if the latter were desired the solver could be
 modified to do this.)  Another consequence is that when adding a new
 constraint, we would never decide that it was redundant and not add it to
-the tableau.  (If there were no dummy marker variables, we {\em would} do this
+the tableau.  (If there were no dummy marker variables, we \emph{would} do this
 for redundant required equality constraints.)
 
 \subsection{Handling Non-Required Constraints}
@@ -875,7 +872,7 @@ for redundant required equality constraints.)
 
 Suppose the user wishes to edit $x_m$ in the diagram and have $x_l$ and
 $x_r$ weakly stay where they are.  This adds the non-required constraints
-$x_m$ {\em edit}, $x_l$ {\em stay}, and $x_r$ {\em stay}.  Suppose further
+\emph{edit} $x_m$, \emph{stay} $x_l$, and \emph{stay} $x_r$ .  Suppose further
 that we are trying to move $x_m$ to position 50, and that $x_l$ and $x_r$ are
 currently at 30 and 60 respectively.  We are thus imposing the constraints
 {\strength strong} $x_m = 50$, {\strength weak} $x_l = 30$, and 
@@ -902,9 +899,7 @@ weak ones (see Section \ref{cassowary-details}).
 
 Unfortunately neither of these objective functions is linear and hence the
 simplex method is not applicable directly.  We now show how we can 
-solve the problem using optimization algorithms
-based on the two alternate objective functions: \emph{quasi-linear
-optimization} and \emph{quadratic optimization}.
+solve the problem using \emph{quasi-linear optimization}.
 
 \section{Cassowary's Quasi-linear Optimization}
 \label{quasi-linear}
@@ -960,7 +955,7 @@ and results in a tableau
 \begin{trivlist}\item
 minimize $10 + 1002 \delta_{x_m}^+ + 998 \delta_{x_m}^-  + 2
 \delta_{x_l}^- + 2\delta_{x_r}^- $ 
-subject to 
+~ subject to 
 $$
 \begin{array}{rlrrrrrr} 
 x_m & = &50 &  + \delta_{x_m}^+ & - \delta_{x_m}^- \\
@@ -979,8 +974,8 @@ $$
 This corresponds to the solution
 $\{x_m \mapsto 50, x_l \mapsto 30, x_r \mapsto 70\}$
 illustrated in Figure~\ref{fig:pict}.
-Notice that the weak stay constraint on $x_r$ is not satisfied (read
-directly from last line of the above tableau).
+Notice that the weak stay constraint on $x_r$ is not satisfied
+($\delta_{x_r}^+$ is non-zero, read directly from last line of the above tableau).
 
 \subsection{Incrementality: Resolving the Optimization Problem}
 \label{resolving}
@@ -1001,7 +996,7 @@ constraints we wish to solve.  Second, we resolve the optimization problem
 for this modified tableau.
 
 Let us first examine how to modify the tableau to reflect the new values of
-the stay constraints.  This will not require reoptimizing the tableau,
+the stay constraints.  This will not require re-optimizing the tableau,
 since we know that the new stay constraints are satisfied exactly.
 Suppose the previous stay value for variable $v$ was $\alpha$, and in the
 current solution $v$ takes value $\beta$.  The current tableau contains the
@@ -1084,7 +1079,7 @@ The modified tableau, after the updates for both the stays and edits, is
 \begin{trivlist}\item
 minimize $20 + 1002 \delta_{x_m}^+ + 998 \delta_{x_m}^-  + 2
 \delta_{x_l}^- + 2\delta_{x_r}^- $ 
-subject to 
+~ subject to 
 $$
 \begin{array}{rlrrrrrr} 
 x_m & = &60 &  + \delta_{x_m}^+ & - \delta_{x_m}^- \\
@@ -1120,7 +1115,7 @@ The modified tableau is
 \begin{trivlist}\item
 minimize $60 + 1002 \delta_{x_m}^+ + 998 \delta_{x_m}^-  + 2
 \delta_{x_l}^- + 2\delta_{x_r}^- $ 
-subject to 
+~ subject to 
 $$
 \begin{array}{rlrrrrrr} 
 x_m & = &90 &  + \delta_{x_m}^+ & - \delta_{x_m}^- \\
@@ -1151,7 +1146,7 @@ solution.
 We need to find a feasible and optimal solution.  We could do so by adding
 artificial variables (as we did when adding a constraint), optimizing the
 sum of the artificial variables to find an initial feasible solution, and
-then reoptimizing the original problem.
+then re-optimizing the original problem.
 
 But we can do much better.  The process of moving from an optimal and
 infeasible solution to an optimal and feasible solution is exactly the dual
@@ -1163,8 +1158,10 @@ optimal.
 Solving the dual optimization problem starts from
 an infeasible optimal tableau of the form
 \begin{quote}\vspace*{-1ex}
-minimize $e + \Sigma_{j=1}^m d_j y_j$ subject to
-$$\begin{array}{rcl}
+minimize $e + \Sigma_{j=1}^m d_j y_j$ 
+~ subject to
+$$
+\begin{array}{rcl}
 \bigwedge_{i=1}^{n} x_i = c_i + \Sigma_{j=i}^m a_{ij} y_j
 \end{array}$$
 \end{quote}\vspace{-0.9ex}
@@ -1192,7 +1189,7 @@ The algorithm is shown in Figure~\ref{fig:simplex-dual}.
 \begin{tabbing}
 xx \= xx \= xx \= xx \= \kill
 %Boolean
-\textsf{re\_opt}($C_S$,$f$) \\
+\textsf{re\_optimize}($C_S$,$f$) \\
 \> \textbf{foreach} $stay:v \in C$ \\
 \> \> \textbf{if} $\delta_v^+$ or $\delta_v^-$ is basic in row $i$ \textbf{then} $c_i$ :=
 0 \textbf{endif} \\
@@ -1249,7 +1246,7 @@ we obtain the tableau
 \begin{trivlist}\item
 minimize $30060 + 1002 \delta_{x_m}^+ + 998 \delta_{x_m}^-  + 2
 \delta_{x_l}^- + 2\delta_{x_r}^- $ 
-subject to 
+~ subject to 
 $$
 \begin{array}{rlrrrrrr} 
 x_m & = &90 & & + \delta_{x_m}^+ & - \delta_{x_m}^- \\
@@ -1272,7 +1269,7 @@ The resulting diagram is shown at the bottom of Figure~\ref{fig:quasi}.
 To summarize, incrementally finding a new solution for new input variables
 involves updating the constants in the tableaux to reflect the updated stay
 constraints, then updating the constants to reflect the updated edit
-constraints, and finally reoptimizing if needed.  In an interactive
+constraints, and finally re-optimizing if needed.  In an interactive
 graphical application, when using the dual optimization method typically a
 pivot is only required when one part first hits a barrier, or first moves
 away from a barrier.  The intuition behind this is that
@@ -1330,7 +1327,7 @@ any error variables associated with {\sf cn} from the objective function.
       currently-edited variables.  The {\sf addEditVar} message should
       be used before calling {\sf beginEdit}, and {\sf suggestValue} and
       {\sf resolve} should be used only after {\sf beginEdit} has been
-      invoked (but before the matching {\sf endEdit}.
+      invoked, but before the required matching {\sf endEdit}.
       
 
 \item[{\sf suggestValue(ClVariable v, double n)}] \ \\
@@ -1353,11 +1350,11 @@ Calls to resolve should be sandwiched between a {\sf beginEdit()} and a
 are set using {\sf suggestValue}.
 
 \item[{\sf addPointStays(Vector points)}] \ \\
-This is kind of a kludge, and addresses the desire to satisfy the stays
+This is a bit of a kludge, and addresses the desire to satisfy the stays
 on both the {\sf x} and {\sf y} components of a given point rather than
 on the {\sf x} component of one point and the {\sf y} component of another.
 {\sf points} is an array of points, whose {\sf x} and {\sf y} components
-are constrainable variables.  Add a weak stay constraint to the {\sf x}
+are constrainable variables.  This method adds a weak stay constraint to the {\sf x}
 and {\sf y} variables of each point.  The weights for the {\sf x} and
 {\sf y} components of a given point are the same.  However, the weights
 for successive points are each smaller than those for the previous
@@ -1366,7 +1363,26 @@ solver to satisfy the stays on both the {\sf x} and {\sf y} of a given
 point rather than the {\sf x} stay on one point and the {\sf y} stay on
 another.  See Subsection \ref{comparator-details} for more on this issue.
 
-\item[{\sf reset}] \ \\
+\item[{\sf setAutoSolve(boolean f)}] \ \\
+Choose whether the solver should automatically optimize and set external variable values
+after each \textsf{addConstraint} or \textsf{removeConstraint}.  By
+default, auto-solving is on, but passing \textsf{false} to this method
+will turn it off (until later turned back on by passing \textsf{true} to 
+this method.  When auto-solving is off, \textsf{solve} (below) or
+\textsf{resolve} must be invoked to see changes to the
+\textsf{ClVariable}s contained in the tableaux.
+
+\item[{\sf FIsAutoSolving()} returns {\sf boolean}] \ \\
+Return {\sf true} if and only if the solver is auto-solving, {\sf false} 
+otherwise.
+
+\item[{\sf solve()}] \ \\
+Optimize the tableaux and set the external \textsf{ClVariable}s
+contained in the tableaux to their new values.  This method need only
+be invoked if auto-solving has been turned off.  It never needs to be
+called after a \textsf{resolve} method invocation.
+
+\item[{\sf reset()}] \ \\
 Re-initialize the solver from the original constraints,
 thus getting rid of any accumulated numerical problems.  (It is not clear
 how often such problems arise, but here is the method anyway.)
@@ -1387,9 +1403,10 @@ be in effect before any other constraints.
 
 \subsection{Principal Classes}
 
-Here is a listing of the principal classes.  (In the current implementation
+Here is a listing of the principal classes.  (In the current implementations
 all the classes start with ``{\sf Cl}''.)  All of the classes are of course
-direct or indirect sublclasses of {\sf Object}.
+direct or indirect subclasses of {\sf Object} for the Smalltalk and
+Java implementations.
 
 \begin{tabbing}
 XXX\=XXX\=XXX\=XXX\=XXX\=XXX\=   \kill
@@ -1414,7 +1431,7 @@ XXX\=XXX\=XXX\=XXX\=XXX\=XXX\=   \kill
 \end{tabbing}
 
 Following is a description of the classes.  Some of these classes make
-use of the Dictionary Abstract Data Type: Dictionaries have keys and
+use of the Dictionary abstract data type: dictionaries have keys and
 values and permit efficiently finding the value
 for a given key, and adding or deleting key/value pairs.  One can also
 iterate through all keys, all values, or all key/value pairs.
@@ -1428,7 +1445,7 @@ implementation of this class in Subsection
 
 {\sf ClAbstractVariable} and its subclasses represent various kinds of
 constrained variables.  {\sf ClAbstractVariable} is an abstract class, that
-is, it is just used as a superclass of other classes; one does't make
+is, it is just used as a superclass of other classes; one does not make
 instances of {\sf ClAbstractVariable} itself.  {\sf ClAbstractVariable}
 defines the message protocol for constrainable variables.  Its only
 instance variable is {\sf name}, which is a string name for the variable.
@@ -1461,11 +1478,11 @@ dictionary (with some additional cross-references).  Each row is
 represented as an entry in the dictionary; the key is a basic variable and
 the value is an expression.  So an instance of {\sf ClObjectiveVariable} is
 the key for the objective row.  The objective row is unique in that the
-coefficients of its expression are {\sf ClSymbolicWeight}s not just
+coefficients of its expression are {\sf ClSymbolicWeight}s, not just
 ordinary real numbers. (The current C++ and Java implementations convert {\sf
   ClSymbolicWeight}s to real numbers to avoid dealing with {\sf
   ClLinearExpression}s parameterized on the type of the coefficient.
-See section \ref{symweights} for more details.)
+See Section \ref{symweights} for more details.)
 
 All variables understand the following messages: {\sf isDummy}, {\sf
 isExternal}, {\sf isPivotable}, and {\sf isRestricted}.  They also
@@ -1485,7 +1502,7 @@ ClObjectiveVariable & False   & False      & False       & False \\\hline
 \end{figure}
 
 For {\sf isDummy}, instances of {\sf ClDummyVariable} return true and
-everone else returns false.  The solver uses this message to test for dummy
+everyone else returns false.  The solver uses this message to test for dummy
 variables.  It will not choose a dummy variable as the subject for a new
 equation, unless all the variables in the equation are dummy variables.
 (The solver also will not pivot on dummy variables, but this is handled by the
@@ -1524,15 +1541,17 @@ if a variable is not in this
 dictionary its coefficient is assumed to be zero.  The other instance
 variable is a constant.  So to represent the linear expression 
 $a_1 x_1 + \cdots + a_n x_n + c$, the dictionary would hold the key $x_1$
-with value $a_1$, etc., and the constant $c$.  This representation was
-convenient in Smalltalk given the built-in class dictionary, and allows one
-to find the coefficient for a given variable without searching.  It has
-some space overhead for the dictionary.  An alternative representation
-would be to use a linked list for the coefficients and variables --- with
-this representation one would need to search the list for a given variable,
-but the representation would be more compact.  If expressions typically had
-only a small number of non-zero coefficients this representation may be
-preferable.
+with value $a_1$, etc., and the constant $c$.  
+
+%This representation was
+%convenient in Smalltalk given the built-in class dictionary, and allows one
+%to find the coefficient for a given variable without searching.  It has
+%some space overhead for the dictionary.  An alternative representation
+%would be to use a linked list for the coefficients and variables --- with
+%this representation one would need to search the list for a given variable,
+%but the representation would be more compact.  If expressions typically had
+%only a small number of non-zero coefficients this representation may be
+%preferable.
 
 Linear expressions understand  a large number of messages.  Some of these
 are for constraint creation (see Section \ref{constraint-creation}).  The
@@ -1547,9 +1566,9 @@ for other concrete classes.  It defines two instance variables: {\sf
 strength} and {\sf weight}.  The variable {\sf strength} is the strength of
 this constraint in the constraint hierarchy (and should be an instance of
 {\sf ClStrength}), while {\sf weight} is a float indicating the weight of
-the constraint, or nil if it does not have a weight.  (Weights are only
-relevant for the weighted-sum-better comparator, not for
-locally-error-better.) 
+the constraint, or {\sf nil}/{\sf null} if it does not have a weight.  (Weights are only
+relevant for  weighted-sum-better comparators, not for
+locally-error-better ones.) 
 
 Constraints understand various message that return true or false regarding
 some aspect of the constraint, such as {\sf isRequired}, {\sf
@@ -1558,22 +1577,25 @@ isEditConstraint}, {\sf isStayConstraint}, and {\sf isInequality}.
 {\sf ClLinearConstraint} is an abstract subclass of {\sf ClConstraint}.  It
 adds an instance variable {\sf expression}, which holds an instance of
 {\sf ClLinearExpression}.  It has two concrete subclasses.  An instance of
-{\sf ClLinearEquation} represents the linear equality constraint  \\
-\hspace*{1cm} {\sf expression = 0}. \\
+{\sf ClLinearEquation} represents the linear equality constraint
+
+\hspace*{1cm} {\sf expression = 0}.
+
 An instance of {\sf  ClLinearInequality} represents
-the constraint \\
+the constraint
+
 \hspace*{1cm} {\sf expression} $\geq$ 0.
 
 The other part of the hierarchy is for edit and stay constraints (both of
 which are represented explicitly in the current implementation).  {\sf
-ClEditOrStayConstraint} has an instance variable {\sf variable}, which is
-the variable with the edit or stay.  Otherwise all they do is respond
+ClEditOrStayConstraint} has an instance field {\sf variable}, which is
+the \textsf{ClVariable} with the edit or stay.  Otherwise all they do is respond
 appropriately to the messages {\sf isEditConstraint} and {\sf
 isStayConstraint}. 
 
 This constraint hierarchy is also intended to allow extension to include
 local propagation constraints (which would be another subclass of {\sf
-  ClConstraint}) -- otherwise we could have made everything be a linear
+  ClConstraint}) --- otherwise we could have made everything be a linear
 constraint, and eliminated the abstract class {\sf ClConstraint}
 entirely.
 
@@ -1627,7 +1649,7 @@ constructors for {\sf ClLinearEquation} or {\sf ClLinearInequality}.  An
 enumeration defines the symbolic constants {\sf cnLEQ} and {\sf cnGEQ}
 to approximate the Smalltalk interface.  For example:
 
-\hspace*{1 cm}{\sf ClLinearInequality cn(3*x+5, cnLEQ,y); ~ ~ ~ // C++}
+\hspace*{1 cm}{\sf ClLinearInequality cn(3*x+5, cnLEQ, y); ~ ~ ~ // C++}
 
 build the constraint {\sf cn} representing $3 x + 5 \leq y$.
 
@@ -1692,19 +1714,19 @@ follows (in C++, these are implemented using operator overloading):
 
 \item[{\sf + w}]  \ \\
 {\sf w} is also a symbolic weight.
-Return the result of adding {\sf self} to {\sf w}.  
+Return the result of adding {\sf self}/{\sf this} to {\sf w}.  
 
 \item[{\sf -- w}] \ \\
 {\sf w} is also a symbolic weight.
-Return the result of subtracting {\sf w} from {\sf self}
+Return the result of subtracting {\sf w} from {\sf self}/{\sf this}.
 
 \item[{\sf * n}] \ \\
 {\sf n} is a number.
-Return the result of multiplying {\sf self} by {\sf n}.  
+Return the result of multiplying {\sf self}/{\sf this} by {\sf n}.  
 
 \item[{\sf / n}] \ \\
 {\sf n} is a number.
-Return the result of dividing {\sf self} by {\sf n}.  
+Return the result of dividing {\sf self}/{\sf this} by {\sf n}.  
 
 \item[$<=$ {\sf  n}, ~ $>=$ {\sf n}, ~ $<$ {\sf n}, ~ $>$ {\sf n}, ~ $=$ {\sf n}] \ \\
 {\sf w} is a symbolic weight.
@@ -1713,7 +1735,7 @@ queries.
 
 \item[{\sf negative}] \ \\
 Return true if this symbolic weight is negative
-(i.e.\ it does not consist of all zeros and the first non-zero number is
+(i.e., it does not consist of all zeros and the first non-zero number is
 negative). 
 
 \end{description}
@@ -1736,15 +1758,15 @@ In both C++ and Java, an additional message {\sf asDouble()} is understood
 by {\sf ClSymbolicWeight}s.  This converts the representation to a real
 number that approximates the total ordering suggested by the more
 general vector of real numbers.  It is these real numbers that are used
-as the coefficients in the objective row of the tableau (in lieu of {\sf
-  ClSymbolicWeight}s, which the coefficients conceptually are).  This
+as the coefficients in the objective row of the tableau instead of {\sf
+  ClSymbolicWeight}s (which the coefficients conceptually are).  This kludge
 avoids the obvious complexities such genericity introduces to the static
 type systems of C++ and Java. (An improved C++ implementation using
 templates is underway).
 
 Also, since Java lacks operator overloading, the above operations are
 invoked using suggestive alphabetic method names such as {\sf add}, {\sf
-  subtract}, {\sf times}, {\sf lessThan}, etc.
+  subtract}, {\sf times}, and {\sf lessThan}.
 
 
 \subsection{{\sf ClSimplexSolver} Implementation}
@@ -1760,7 +1782,7 @@ see section \ref{cl-tableau-implementation}).
 \item[{\sf rows}] \ \\
 A dictionary with keys {\sf ClAbstractVariable} and
 values {\sf ClLinearExpression}.  This holds the tableau.  Note that the
-keys can be either restricted or unrestricted variables, i.e.\ both $C_U$
+keys can be either restricted or unrestricted variables, i.e., both $C_U$
 and $C_S$ are actually merged into one tableau.  This simplified the code
 considerably, since many operations are applied to both restricted and
 unrestricted rows.
@@ -1830,7 +1852,7 @@ artificial variables.
 
 \item[{\sf dummyCounter}]  \ \\
 Similar to {\sf slackCounter} but for
-dummy variables (ie.\ marker variables for required equality constraints).
+dummy variables (i.e., marker variables for required equality constraints).
 
 \end{description}
 
@@ -1860,7 +1882,7 @@ non-zero coefficient
 
 \item remove a parametric variable
 
-\item substitute out a variable (i.e.\ replace all occurrences of a
+\item substitute out a variable (i.e., replace all occurrences of a
 variable with an expression, updating the tableau as appropriate).
 
 \end{itemize}
@@ -1903,7 +1925,7 @@ getting the two representations out of sync.
       
 
 \item[{\sf substituteOut(ClAbstractVariable var, ClLinearExpression expr)}] \ \\
-      Replace all occurences of {\sf var} with {\sf expr} and update the
+      Replace all occurrences of {\sf var} with {\sf expr} and update the
       column cross indices.
 
 \end{description}
@@ -1991,7 +2013,7 @@ Adding this should be straightforward.
 \label{comparator-details}  
 
 Our implementation of Cassowary favors solutions that satisfies some of the
-constraints completely, rather than ones that partially satisfy e.g.\ each
+constraints completely, rather than ones that, for example, partially satisfy each
 of two conflicting equalities.  These are still legitimate
 locally-error-better solutions.  Cassowary's behaviour is analogous to that
 of the simplex algorithm, which always finds solutions at a vertex of the
@@ -2026,7 +2048,7 @@ weights for the stay constraints for successive elements of {\sf points},
 which is a kludge but which seems to work well in practice.
 
 We had some trouble coming up with an example where it would give a bad
-answer --- here is a kind of contrived one.  Suppose we have a line with
+answer --- here is a contrived one.  Suppose we have a line with
 endpoints {\sf p1} and {\sf p2} and a midpoint {\sf m}.  Suppose also we
 have constraints {\sf p2.x = 2*p3.x} and {\sf p2.y = 2*p3.y}.  (This is a
 bit strange since here we are using {\sf p3} as a distance from the origin
@@ -2038,10 +2060,8 @@ will have weight 0.25.  Then, a one legitimate WSB solution would satisfy
 the stays on {\sf p1.x} and {\sf p1.y}, but another legitimate WSB solution
 would satisfy the stays on {\sf p1.x}, {\sf p2.y}, and {\sf p3.y}.
 
-%% ASKALAN: Better fix -- use another dimension of ClSymbolicWeight?
-
 Here is a cleaner way to handle this situation.  We first introduce a new
-comparator with the dubious name of {\em tilted-locally-error-better}.  The
+comparator with the dubious name of \emph{tilted-locally-error-better}.  The
 set of TLEB solutions can be defined by taking a given hierarchy, forming
 all possible hierarchies by breaking strength ties in all possible ways to
 form a totally ordered set of constraints, and taking the union of the sets
@@ -2068,8 +2088,8 @@ $\left\{ \left\{ x \mapsto 0 \right\} ,
 As an aside, we hypothesize that the only psychologically plausible
 solutions to the example are $\left\{ x \mapsto 0\right\}$, 
 $\left\{ x \mapsto 5\right\} $, and $\left\{ x \mapsto 10\right\}$, 
-but not e.g.\ $\left\{ x \mapsto 3.8\right\} $ --- although this hypothesis
-has not been tested.  Another relevant question is whether users prefer any
+but not, for example, $\left\{ x \mapsto 3.8\right\} $. (This hypothesis
+has not been tested.)  Another relevant question is whether users prefer any
 of these solutions over others (for a given application domain).
 
 Next, we introduce a notion of a \emph{compound constraint}, a conjunction
@@ -2081,7 +2101,7 @@ strength.  (We have been a bit imprecise in the use of the term
 ``constraint'' in this paper, sometimes using it to denote a primitive
 constraint and sometimes to denote a conjunction of primitive constraints.
 For the present definition, however, we need to distinguish compound
-constraints that have been specificially identified as such by the user
+constraints that have been specifically identified as such by the user
 from conjunctions of primitive constraints more generally, such as the
 constraints $C_S$ and $C_U$ discussed in Section \ref{augmented-simplex-form}.)
 
@@ -2092,8 +2112,8 @@ and a midpoint {\sf m}.  There are constraints {\sf (p1.x+p2.x)/2 = m.x}
 and {\sf (p1.y+p2.y)/2 = m.y}, and we are editing {\sf m}.  Then the stays
 on {\sf p1} and {\sf p2} will each be compound constraints:
 
-\hspace*{1cm} {\strength weak} ($p1.x$ {\em stay} \& $p1.y$ {\em stay}) \\
-\hspace*{1cm} {\strength weak} ($p2.x$ {\em stay} \& $p2.y$ {\em stay})
+\hspace*{1cm} {\strength weak} (\emph{stay} $p1.x$ \& \emph{stay} $p1.y$) \\
+\hspace*{1cm} {\strength weak} (\emph{stay} $p2.x$ \& \emph{stay} $p2.y$)
 
 In defining the set of tilted-locally-error-better solutions, the total
 orderings of these constraints that we will consider have the stays on
@@ -2107,7 +2127,7 @@ primitive constraints, which would allow us to trade off the errors
 arbitrarily and hence satisfy the stay on the $x$ component of one point
 and the $y$ component of another.
 
-Note also that all of this is not a problem for least-squares-better
+Note also that none of these difficulties is a problem for least-squares-better
 comparators such as the one that the QOCA algorithm uses --- that
 comparator distributes the error to the $x$ and $y$ components of all
 the points with stays of the same strength~\cite{borning-simplex-tr}.
@@ -2115,51 +2135,47 @@ the points with stays of the same strength~\cite{borning-simplex-tr}.
 \section{Empirical Evaluation}
 \label{empirical-evaluation}
 
-Cassowary has been implemented in Smalltalk, C++, and Java.
-Running the Smalltalk implementation of Cassowary on the same problems, 
-for the 300 constraint problem,
-adding a constraint takes on average $38$~msec (including the initial
-solve), deleting a constraint $46$~msec, and resolving as the point moves
-$15$~msec.  (Stay and edit constraints are represented explicitly in this
-implementation, so there were also stay constraints on each variable, plus
-two edit constraints, for a total of 602 constraints.)
-For the 900 constraint problem, adding a constraint takes on
-average $98$~msec (again including the initial solve), deleting a
-constraint $151$~msec, and resolving as the point moves $45$~msec.  These
-tests were run using an implementation in OTI Smalltalk Version 4.0 running
-on a IBM Thinkpad 760EL laptop computer.
+Cassowary has been implemented in Smalltalk, C++, and Java. We ran some
+simple benchmarks using test problems which tried to add 300
+randomly-generated constraints using 300 variables, and 900
+randomly-generated constraints using 900 variables.
 
-For the C++ implementation on the problem with 900
-constraints and variables, adding a constraint takes $40$~msec, deleting 
-a constraint $8$~msec, and resolving as the point moves $8$~msec.  By
-default for Cassowary the solver optimizes after each constraint
-addition or removal, so there is no timing for the initial ``solve''
-because it is implicit with each change to the tableau.  The Java
-implementation under the basic Sun JDK 1.1 (no JIT compiler) is about
-6 to 10 times slower than the C++ implementation.  These tests were run
-on a Pentium 200 running Linux 2.0.29.
+When running the Smalltalk implementation of Cassowary on the 300-constraint
+benchmark problem, adding a constraint takes on average $38$~msec
+(including the initial solve), deleting a constraint $46$~msec, and
+resolving as the point moves $15$~msec.  (Stay and edit constraints are
+represented explicitly in this implementation, so there were also stay
+constraints on each variable, plus two edit constraints, for a total of
+602 constraints minus the constraints that, if added, would have
+resulted in an unsatisfiable system.)  For the 900 constraint problem,
+adding a constraint takes on average $98$~msec, deleting a constraint
+$151$~msec, and resolving as the point moves $45$~msec.  These tests
+were run using an implementation in OTI Smalltalk Version 4.0 running on
+a IBM Thinkpad 760EL laptop computer.
 
-As these measurements are for implementations in different languages,
-running on different machines, they should not be viewed as any kind of
-head-to-head comparison.  Nevertheless, they indicate that both
-algorithms are eminently practical for use with interactive graphical
-applications.
+For the C++ implementation on the problem with 900 constraints and
+variables, adding a constraint takes $40$~msec, deleting a constraint
+$8$~msec, and resolving as the point moves $8$~msec.  The Java
+implementation under the basic Sun JDK 1.1.3 (no JIT compiler) is about 6
+to 10 times slower than the C++ implementation.  These tests were run on
+a Pentium 200 running Linux 2.0.29.
 
-The various implementations of Cassowary are being used actively.
-One author is currently embedding the C++ implementation in a X11 system
-window manager based on a Scheme configuration language. A demonstration
-Constraint Drawing Application using the Java implementation is
-available from the authors.  A third Cassowary application currently
-being developed using a different Java implementation is a web authoring
-tool \cite{borning-multimedia-97}, in which the appearance of a page is
+The various implementations of Cassowary are being used actively.  The
+first author is currently embedding the C++ implementation in a X11
+system window manager based on a Scheme configuration language. A
+demonstration Constraint Drawing Application using the Java
+implementation was written by Michael Noth and is available from the
+authors.  A third Cassowary application currently being developed using
+a different Java implementation is a web authoring tool
+\cite{borning-multimedia-97}, in which the appearance of a page is
 determined by the combination of constraints from both the web author
 and the viewer.
 
 \subsection*{Acknowledgments}
 
-Thanks to Kim Marriott, Peter Stuckey and Yi Xiao who were instrumental
-in devloping the incremental simplex-based algorithm on which Cassowary
-and QOCA~\cite{borning-simplex-tr} are based.
+Thanks to Kim Marriott, Peter Stuckey and Yi Xiao, co-developers of both
+Cassowary and the closely related QOCA algorithm, for their help in this
+work.
 
 This project has been funded in part by the National Science Foundation
 under Grants \mbox{IRI-9302249} and \mbox{CCR-9402551} and in part by Object
@@ -2167,7 +2183,7 @@ Technology International.  Alan Borning's visit to Monash University and
 the University of Melbourne was sponsored in part by the
 Australian-American Educational Foundation (Fulbright Commission).
 
-Additionally, Greg Badros is supported by a National Science Foundation
+Additionally, the first author is supported by a National Science Foundation
 Graduate Research Fellowship.  Parts of this material are based upon
 work supported under that fellowship.  Any opinions, findings,
 conclusions, or recommendations expressed in this publication are those
