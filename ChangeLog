@@ -1,3 +1,23 @@
+Tue Aug 31 17:07:31 1999    <gjb@cs.washington.edu>
+
+	* java/demos/Makefile.am, java/cda/Makefile.am, java/Makefile.am:
+ 	Added EXTRA_DIST.
+
+Tue Aug 31 16:27:41 1999    <gjb@cs.washington.edu>
+
+	* configure.in (HAVA_JAVA): AC_OUTPUT the java/*/Makefiles.
+
+	* cassowary.spec.in: Use --disable-java-build ./configure option.
+	Bump to release 3.
+
+	* Makefile.am: Do not conditionally do directories-- that is
+	really broken with automake/rpm building.
+
+Tue Aug 31 16:20:45 1999    <gjb@cs.washington.edu>
+
+	* java/demos/Makefile.am, java/cda/Makefile.am, java/Makefile.am
+ 	(java_JAVA): Guard with if HAVE_JAVE.
+
 Mon Aug 30 12:03:26 1999    <gjb@cs.washington.edu>
 
 	* cassowary.spec.in: Bump to release 2
