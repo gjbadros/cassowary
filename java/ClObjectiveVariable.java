@@ -17,65 +17,25 @@
 
 class ClObjectiveVariable extends ClAbstractVariable
 {
-friend ClTableau;
-friend ClSimplexSolver;
+  public ClObjectiveVariable(String name)
+    {
+      super(name);
+    }
+  public ClObjectiveVariable(long number, String prefix)
+    {
+      super(number,prefix);
+    }
+  
+  public String toString()
+    { return "[" + name() + ":obj]"; }
 
-/**
-* ClObjectiveVariable
-*/
-protected
-ClObjectiveVariable()
-{
- super(name);
-	 }
+  public boolean isExternal()
+    { return false; }
 
-/**
-* ClObjectiveVariable
-* @param number
-* @param prefix
-*/
-protected
-/* @c2j++: "ClObjectiveVariable(long number, char* prefix)" replacement: char*  to String  */
-ClObjectiveVariable(long number, String prefix)
-{
- super(number,prefix);
-	 }
+  public boolean isPivotable()
+    { return false; }
 
-/**
-* printOn
-* @param xo
-* @return ostream &
-*/
-protected
-/* @c2j++: "ostream & printOn(ostream& xo)" replacement:  &  to " " */
-ostream printOn(ostream& xo)
-{  
-    xo << "[" << name() << ":obj]";
-    return xo;
-  }
-
-/**
-* isExternal
-* @return boolean
-*/
-protected
-boolean isExternal()
-{ return false; }
-
-/**
-* isPivotable
-* @return boolean
-*/
-protected
-boolean isPivotable()
-{ return false; }
-
-/**
-* isRestricted
-* @return boolean
-*/
-protected
-boolean isRestricted()
-{ return false; }
+  public boolean isRestricted()
+    { return false; }
 
 }

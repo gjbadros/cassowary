@@ -30,7 +30,7 @@ class ClDummyVariable extends ClAbstractVariable
       super(number,prefix);
     }
 
-  public String printString()
+  public String toString()
     { return "[" + name() + ":dummy]"; }
 
   public boolean isDummy()

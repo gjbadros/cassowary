@@ -26,7 +26,7 @@ class ClSlackVariable extends ClAbstractVariable
   public ClSlackVariable(long number, String prefix)
     { super(number,prefix); }
   
-  public String printString()
+  public String toString()
     { return "[" + name() + ":slack]"; }
 
   public boolean isExternal()

@@ -50,7 +50,7 @@ abstract class ClAbstractVariable
 
   public abstract boolean isRestricted();
 
-  public abstract String printString();
+  public abstract String toString();
 
   private String my_name;
 

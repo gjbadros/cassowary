@@ -66,7 +66,7 @@ class ClVariable extends ClAbstractVariable
   public boolean isRestricted()
     { return false; }
 
-  public String printString()
+  public String toString()
     {  
       return "[" + name() + ":" + my_value + "]";
     }
