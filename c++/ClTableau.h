@@ -79,7 +79,9 @@ class ClTableau {
 
   // Remove v from the tableau -- remove the column cross indices for v
   // and remove v from every expression in rows in which v occurs
-  void removeColumn(const ClAbstractVariable &v);
+  // returns a pointer to the variable (since we often want to delete
+  // the variable)
+  const ClAbstractVariable *removeColumn(const ClAbstractVariable &v);
 
   // Remove the basic variable v from the tableau row v=expr
   // Then update column cross indices

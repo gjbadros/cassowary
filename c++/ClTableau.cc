@@ -76,7 +76,7 @@ ClTableau::addRow(const ClAbstractVariable &var, const ClLinearExpression &expr)
 // and remove var from every expression in rows in which v occurs
 // Remove the parametric variable var, updating the appropriate column and row entries.
 // (Renamed from Smalltalk implementation's `removeParametricVar')
-void 
+const ClAbstractVariable *
 ClTableau::removeColumn(const ClAbstractVariable &var)
 {
 #ifndef CL_NO_TRACE
@@ -100,6 +100,7 @@ ClTableau::removeColumn(const ClAbstractVariable &var)
     _externalParametricVars.erase(static_cast<const ClVariable *>(&var));
     }
   _columns.erase(it_var);
+  return &var;
 }
 
 // Remove the basic variable v from the tableau row v=expr
