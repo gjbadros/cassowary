@@ -1,3 +1,13 @@
+1999-02-11  Greg J Badros  <gjb@cs.washington.edu>
+
+	* guile/cassowary_scm.cc: Use cl-snarf.h, not scwm-snarf.h.  Use
+	CL_PROC to denote primitives, not SCWM_PROC.  Use
+	CL_VAR_INIT_PERMANENT macro for variables, and document them (the
+	strength objects only, for now).  Fix the default strength of
+	cl-add-editvar to Strong, not Weak, and update docs (was cut&paste
+	error from the cl-add-stay primitive).  Thanks Anthony Beurivé for
+	noticing this bug, too!
+
 Sat Jan 30 13:16:31 1999  Greg Badros  <gjb@cs.washington.edu>
 
 	* c++/ClSimplexSolver.cc: Fixed bug in removing a stay
