@@ -290,7 +290,7 @@ ClGenericLinearExpression<T>::anyPivotableVariable() const
 {
   if (isConstant())
     {
-    throw ExCLInternalError();
+    throw ExCLInternalError("(ExCLInternalError) No pivotable variables in constant expression");
     }
   ClVarToCoeffMap::const_iterator i = _terms.begin();
   for ( ; i != _terms.end(); ++i)
