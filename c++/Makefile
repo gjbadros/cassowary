@@ -17,6 +17,10 @@ CXX = $(CPP)
 SWIG = swig
 PYTHON_INCLUDE = /uns/include/python1.5
 
+## NOTE: the egcs-1.1b release's g++ will get a parse error
+## with -pedantic -- just remove that option for compilation
+## with egcs-1.1b, until they fix the problem (bug was reported --09/06/98 gjb)
+
 #CPPFLAGS = -O6 -DCL_NO_TRACE -DNO_SOLVER_STATS -DNDEBUG -Wall -pedantic -W
 #CPPFLAGS = -O6 -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W
 #CPPFLAGS = -O6 -DNO_REQUIRED_EXCEPTIONS -DCL_NO_TRACE -Wall -pedantic -W
