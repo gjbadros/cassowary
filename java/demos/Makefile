@@ -15,7 +15,7 @@
 # Makefile for cassowary, java version
 
 JAVAC = javac
-JAVAC_FLAGS = -g
+JAVAC_FLAGS = -g -d ../classes
 #JAVAC_FLAGS = -O
 
 TESTS = test-ClStrength test-ClVariable test-ClLinearExpression test-ClConstraint \
@@ -32,10 +32,10 @@ CLASSFILES = $(JAVAFILES:.java=.class)
 all:	$(CLASSFILES)
 
 %.class: $(JAVAFILES)
-	CLASSPATH=$(CLASSPATH):.. $(JAVAC) $(JAVAC_FLAGS) $(JAVAFILES)
+	$(JAVAC) $(JAVAC_FLAGS) $(JAVAFILES)
 
 run:
-	CLASSPATH=$(CLASSPATH):.. appletviewer quaddemo.htm
+	appletviewer quaddemo.htm
 
 
 test:	$(TESTCLASSFILES)
