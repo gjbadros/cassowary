@@ -172,7 +172,7 @@ $(CL_SHARED_LIBRARY): $(OBJS)
 	$(CPP_SO_LINK) -o $@ $(OBJS)
 
 libccassowary.so: $(OBJS) ClCTest.o
-	$(CPP_SO_LINK) -o $@ $(OBJS)
+	$(CPP_SO_LINK) -o $@ $(OBJS) ClCTest.o
 
 ClCTest: ClC.o ClCTest.o libccassowary.so
 	$(CC) -o $@ $^
