@@ -9,7 +9,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.applet.Applet;
 import MainPanel;
-import RedirectingMMListener;
 
 public class Main extends java.applet.Applet { 
 
@@ -47,6 +46,9 @@ public class Main extends java.applet.Applet {
 /*
  *
  * $Log$
+ * Revision 1.2  1998/05/09 00:30:37  gjb
+ * Remove cr-s
+ *
  * Revision 1.1  1998/05/09 00:11:18  gjb
  * Added
  *
