@@ -98,7 +98,7 @@ $(CL_LIBRARY): $(OBJS)
 	ar ruv $@ $(OBJS)
 
 clean:	
-	rm -f $(TESTS) *.o $(CL_LIBRARY)
+	rm -f $(TESTS) *.o
 	@echo "Consider doing a \`make depend'"
 
 TAGS: $(SOURCES) $(HEADERS)
