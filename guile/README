@@ -11,7 +11,13 @@ documentation (follows the DocBook DTD -- use Jade to convert to HTML).
 Also see cassowary_scm-variables.txt for a list of the scheme global
 variables that are defined.
 
-This wrapping was motivated by the desire to embed Cassowary in SCWM --
+cltests.scm is a test script.  *AFTER* installing the distribution, you
+can run it using "guile -s cltests.scm".  If you want to test before
+doing the install, try "make test" from this guile subdirectory.  (This
+may not be necessary with all versions of guile as "." may be implicit
+in the GUILE_LOAD_PATH already.)
+
+This wrapping was motivated by the desire to embed Cassowary in Scwm --
 the Scheme Constraints Window Managers.  See:
 
 http://vicarious-existence.mit.edu/scwm

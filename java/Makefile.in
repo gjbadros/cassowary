@@ -75,7 +75,7 @@ install: .built-package
 # we need to be sure to not be in the same directory as the *.java
 # files in case $CLASSPATH contains "."
 .built-test: .built-package $(TESTFILES)
-	cd classes && $(JAVAC) -d $(CLASSES) $(JAVAC_FLAGS) $(TESTFILES_INPARENT)
+	cd classes && $(JAVAC) -d . $(JAVAC_FLAGS) $(TESTFILES_INPARENT)
 	touch $@
 
 .built-cda: 

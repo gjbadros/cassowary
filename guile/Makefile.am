@@ -52,3 +52,6 @@ BUILT_SOURCES=$(guile_snarfs)
 %.x: %.cc
 	CC=$(CXX) \
 	guile-snarf $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS) $< > $@
+
+test:
+	env GUILE_LOAD_PATH=.:$$GUILE_LOAD_PATH guile -s cltests.scm

@@ -39,12 +39,18 @@ and everything will work.  A more complex, but realistic example is:
             --with-guile-prefix=/usr/contrib \
             --with-java-class-path=/usr/contrib/share/java/site \
             --enable-warnings
-make
+make -k
 
 See the file "INSTALL" for more details about
 autoconf support and the options that the "configure" takes.  You can
 also do "./configure --help" for the list of the options that configure
 accepts. 
+
+If the make in any of the subdirectories fails, you can turn on the "-k" 
+option to make, or just do make in the subdirectories that you want
+build.  E.g., if you do not have the JDK installed, the Java version of
+Cassowary might not compile; if you still want the guile version, just
+"cd guile; make -k".
 
 Note that the generated Makefiles may depend upon features of GNU Make
 (please let me know if they do).  See:
