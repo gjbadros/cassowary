@@ -31,13 +31,17 @@ main( char **argv, int argc )
   solver.addConstraint(edit_b);
   
   vector<double> rgedits;
+
+  cout << a_b << endl;
+  cout << a_c << endl;
+  
   rgedits.push_back(6.0);
   try 
     {
     solver.resolve(rgedits);
-    cerr << "a = " << a << endl;
-    cerr << "b = " << b << endl;
-    cerr << "c = " << c << endl;
+    cout << "a = " << a << endl;
+    cout << "b = " << b << endl;
+    cout << "c = " << c << endl;
     }
   catch (const ExCLError &error) 
     {
