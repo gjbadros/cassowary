@@ -54,12 +54,12 @@ class ClSimplexSolver : public ClTableau {
   // Add constraints so that lower<=var<=upper.  (nil means no  bound.)
   ClSimplexSolver &addLowerBound(const ClAbstractVariable &v, Number lower)
     { 
-    ClLinearInequality *pcn = new ClLinearInequality(ClLinearExpression(lower - v));
+    ClLinearInequality *pcn = new ClLinearInequality(ClLinearExpression(v - lower));
     return addConstraint(*pcn);
     }
   ClSimplexSolver &addUpperBound(const ClAbstractVariable &v, Number upper)
     {
-    ClLinearInequality *pcn = new ClLinearInequality(ClLinearExpression(v - upper));
+    ClLinearInequality *pcn = new ClLinearInequality(ClLinearExpression(upper - v));
     return addConstraint(*pcn);
     }
   ClSimplexSolver &addBounds(const ClAbstractVariable &v, Number lower, Number upper)
