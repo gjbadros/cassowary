@@ -1,3 +1,11 @@
+Tue Mar 16 12:44:33 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/**: Updated function names to always start with an uppercase 
+	letter (follows C++ conventions, and brings API of Cassowary and 
+	QOCA closer together).  Used scripts/convert-ids to do the
+	conversion, along with scripts/ids-to-upper as the list of
+	conversions to do.
+
 Wed Mar 10 15:28:33 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* Release v0.32.
