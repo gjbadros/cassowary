@@ -14,7 +14,11 @@ main( char **argv, int argc )
   cout << cle << endl;
   cout << cle.times(2) << endl;
   cout << (cle.times(2).addVariable(ClAbstractVariable(CLVar,"c"),3)).times(-1) << endl;
-  cout << cle + 3 << endl;
+  cle = cle + 8;
+  cout << cle << endl;
+  cle.changeSubject(a,b);
+  cout << cle << endl;
   cle.addExpression(cle,-1);
   cout << cle << endl;
+  cout << b << endl;
 }

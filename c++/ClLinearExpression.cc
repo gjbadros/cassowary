@@ -235,8 +235,8 @@ ClLinearExpression::addVariable(const ClAbstractVariable &v, Number c,
     if (clApprox(new_coefficient,0.0))
       {
       // new coefficient is zero, so erase it
+      //FIXGJB: solver.noteRemovedVariable((*i).first,subject);
       my_terms.erase(i);
-      //FIXGJB: solver.noteRemovedVariable(v,subject);
       }
     else
       {
@@ -281,7 +281,34 @@ ClLinearExpression::substituteOut(const ClAbstractVariable &v,
   map<ClAbstractVariable,Number>::iterator pv = my_terms.find(v);
   assert(pv != my_terms.end() && !clApprox((*pv).second,0.0));
 
-  assert(false);
+  Number multiplier = (*pv).second;
+  my_terms.erase(pv);
+  incrementConstant(multiplier * expr.my_constant);
+  map<ClAbstractVariable,Number>::const_iterator i = expr.my_terms.begin();
+  for ( ; i != expr.my_terms.end(); ++i)
+    {
+    map<ClAbstractVariable,Number>::iterator poc = my_terms[v];
+    if (poc != expr.my_terms.end())
+      {
+      // found it, so new coefficient is old one plus what is in *i
+      Number newCoeff = (*poc) + (multiplier*(*i).second);
+      if (clApprox(newCoeff,0.0))
+	{
+	ClAbstractVariable 
+	// FIXGJB: solver.noteRemovedVariable((*poc).first,subject)
+	my_terms.erase(poc);
+	}
+      else
+	{
+	(*poc).second = newCoeff;
+	}
+      }
+    else
+      { // did not have that variable already
+      my_terms[(*i).first] = multiplier * (*i).second;
+      // FIXGJB: solver.noteAddedVariable((*i).first,subject)
+      }
+    }
 }
 
 // This linear expression currently represents the equation
@@ -304,15 +331,10 @@ ClLinearExpression::substituteOut(const ClAbstractVariable &v,
 // equal to the expression, then resolve the equation for newSubject,
 // and destructively make the expression what newSubject is then equal to
 void 
-ClLinearExpression::changeSubject(const ClAbstractVariable &oldSubject,
-				  const ClAbstractVariable &newSubject)
+ClLinearExpression::changeSubject(const ClAbstractVariable &old_subject,
+				  const ClAbstractVariable &new_subject)
 {
-  map<ClAbstractVariable,Number>::iterator pnewSubject = my_terms.find(newSubject);
-  assert(pnewSubject != my_terms.end());
-  Number reciprocal = 1.0 / (*pnewSubject).second;
-  my_terms.erase(pnewSubject);
-  multiplyMe(-reciprocal);
-  my_terms[oldSubject] = reciprocal;
+  my_terms[old_subject] = newSubject(new_subject);
 }
 
 // This linear expression currently represents the equation self=0.  Destructively modify it so 
@@ -327,11 +349,16 @@ ClLinearExpression::changeSubject(const ClAbstractVariable &oldSubject,
 // The modified expression will be
 //    subject = -c/a - (a1/a)*v1 - ... - (an/a)*vn
 //   representing
-//    subject = -c/a - (a1/a)*v1 - ... - (an/a)*vn
+//    subject = -c/a - (a1/a)*v1 - ... - (an/a)*vn = 0
 //
 // Note that the term involving subject has been dropped.
-void 
+Number
 ClLinearExpression::newSubject(const ClAbstractVariable &subject)
 {
-  assert(false);
+  map<ClAbstractVariable,Number>::iterator pnewSubject = my_terms.find(subject);
+  assert(pnewSubject != my_terms.end() && !clApprox((*pnewSubject).second,0.0));
+  Number reciprocal = 1.0 / (*pnewSubject).second;
+  my_terms.erase(pnewSubject);
+  multiplyMe(-reciprocal);
+  return reciprocal;
 }

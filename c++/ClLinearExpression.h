@@ -117,8 +117,8 @@ class ClLinearExpression  {
   //   The new equation will be
   //        newSubject = -c/a + oldSubject/a - (a1/a)*v1 - ... - (an/a)*vn.
   //   Note that the term involving newSubject has been dropped.
-  void changeSubject(const ClAbstractVariable &oldSubject,
-		     const ClAbstractVariable &newSubject);
+  void changeSubject(const ClAbstractVariable &old_subject,
+		     const ClAbstractVariable &new_subject);
 
   // This linear expression currently represents the equation self=0.  Destructively modify it so 
   // that subject=self represents an equivalent equation.  
@@ -135,7 +135,8 @@ class ClLinearExpression  {
   //    subject = -c/a - (a1/a)*v1 - ... - (an/a)*vn
   //
   // Note that the term involving subject has been dropped.
-  void newSubject(const ClAbstractVariable &subject);
+  // Returns the reciprocal, so changeSubject can use it, too
+  Number newSubject(const ClAbstractVariable &subject);
 
   // Return the coefficient corresponding to variable var, i.e.,
   // the 'ci' corresponding to the 'vi' that var is:
