@@ -1,3 +1,5 @@
+* Use rationals instead of reals?  Anthony Beurivé suggested this --09/13/99 gjb
+
 * warning for two suggestValue-s on same variable in a row w/o intervening resolve.
 
 * use an addVariable hook to add implicit stays
