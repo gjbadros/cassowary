@@ -26,6 +26,7 @@ AC_OUTPUT(
 		c++/Makefile \
 		java/Makefile \
 		guile/Makefile \
+		wrappers/Makefile \
 		docs/Makefile \
 	)
 
