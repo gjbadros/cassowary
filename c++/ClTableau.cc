@@ -130,7 +130,7 @@ ClTableau::printOn(ostream &xo) const
      << my_rows << endl;
   xo << "Columns:\n" 
      << my_columns << endl;
-  xo << "Infeasible rows:\n" 
+  xo << "Infeasible rows: " 
      << my_infeasibleRows << endl;
   return xo;
 }
