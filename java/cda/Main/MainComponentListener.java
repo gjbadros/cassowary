@@ -26,6 +26,9 @@ public class MainComponentListener extends ComponentAdapter {
 
 /*
  * $Log$
+ * Revision 1.1  1998/05/09 00:11:18  gjb
+ * Added
+ *
  * Revision 1.2  1998/04/28 20:08:26  Michael
  * Removed debugging code
  *

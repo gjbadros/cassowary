@@ -1674,6 +1674,9 @@ class DrawPanel extends Panel {
 
 /*
  * $Log$
+ * Revision 1.1  1998/05/09 00:11:13  gjb
+ * Added
+ *
  * Revision 1.27  1998/05/05 21:42:58  Michael
  * Now require shift key to be held for constr. selection
  *

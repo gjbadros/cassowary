@@ -47,6 +47,9 @@ public class Main extends java.applet.Applet {
 /*
  *
  * $Log$
+ * Revision 1.1  1998/05/09 00:11:18  gjb
+ * Added
+ *
  * Revision 1.8  1998/04/28 20:08:14  Michael
  * Moved initialization code to init()
  *

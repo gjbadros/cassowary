@@ -31,6 +31,9 @@ public class ImageButtonImageObserver implements ImageObserver {
 
 /*
  * $Log$
+ * Revision 1.1  1998/05/09 00:11:15  gjb
+ * Added
+ *
  * Revision 1.1  1998/02/17 10:42:00  Michael
  * Split files with multiple classes
  *

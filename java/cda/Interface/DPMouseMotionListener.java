@@ -65,6 +65,9 @@ public final class DPMouseMotionListener extends MouseAdapter
 
 /*
  * $Log$
+ * Revision 1.1  1998/05/09 00:11:13  gjb
+ * Added
+ *
  * Revision 1.2  1998/04/08 05:38:27  Michael
  * Removed printing msgs and changed interface to mouse motion callback
  *

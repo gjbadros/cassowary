@@ -195,6 +195,9 @@ public class RectangleCC extends ConstrComponent {
   
 /* 
  * $Log$
+ * Revision 1.1  1998/05/09 00:10:57  gjb
+ * Added
+ *
  * Revision 1.5  1998/04/15 00:08:57  Michael
  * Changed drawing of rectangle so selection/highlighting is visible
  *

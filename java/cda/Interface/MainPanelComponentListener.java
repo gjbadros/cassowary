@@ -52,6 +52,9 @@ public class MainPanelComponentListener extends ComponentAdapter
 
 /*
  * $Log$
+ * Revision 1.1  1998/05/09 00:11:15  gjb
+ * Added
+ *
  * Revision 1.4  1998/04/28 20:09:11  Michael
  * Removed debugging code
  *

@@ -20,6 +20,9 @@ public class CDA_G {
 
 /*
  * $Log$
+ * Revision 1.1  1998/05/09 00:10:54  gjb
+ * Added
+ *
  * Revision 1.2  1998/03/27 06:27:46  Michael
  * Added dark red color
  *

@@ -63,6 +63,9 @@ public class PlaceBtns extends Panel {
 
 /*
  * $Log$
+ * Revision 1.1  1998/05/09 00:11:16  gjb
+ * Added
+ *
  * Revision 1.10  1998/04/26 06:15:49  Michael
  * Removed 4 blank btns
  *

@@ -115,6 +115,9 @@ public class EditConstantList {
 
 /*
  * $Log$
+ * Revision 1.1  1998/05/09 00:10:56  gjb
+ * Added
+ *
  * Revision 1.4  1998/04/02 07:01:43  Michael
  * Removed printing messages
  *

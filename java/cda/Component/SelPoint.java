@@ -405,6 +405,9 @@ public class SelPoint implements Cloneable {
 
 /*
  * $Log$
+ * Revision 1.1  1998/05/09 00:10:57  gjb
+ * Added
+ *
  * Revision 1.19  1998/04/23 09:00:32  Michael
  * Removed printing msg and changed clone behavior
  *

@@ -453,6 +453,9 @@ public abstract class ConstrComponent {
 
 /*
  * $Log$
+ * Revision 1.1  1998/05/09 00:10:55  gjb
+ * Added
+ *
  * Revision 1.17  1998/04/20 09:53:31  Michael
  * Removed debugging msg
  *

@@ -453,6 +453,9 @@ public class AlignmentConstraint extends Constraint {
 
 /*
  * $Log$
+ * Revision 1.1  1998/05/09 00:11:00  gjb
+ * Added
+ *
  * Revision 1.3  1998/04/26 06:19:29  Michael
  * Changed how highlighting is drawn
  *

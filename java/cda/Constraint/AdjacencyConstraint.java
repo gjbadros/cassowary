@@ -190,6 +190,9 @@ public abstract class AdjacencyConstraint extends Constraint {
 
 /*
  * $Log$
+ * Revision 1.1  1998/05/09 00:10:59  gjb
+ * Added
+ *
  * Revision 1.6  1998/04/23 08:59:29  Michael
  * Removed printing msgs
  *
