@@ -59,6 +59,6 @@ install:
 	echo "*****Copy cassowary.py and cassowarycmodule.so to appropriate places"
 
 clean: 
-	rm cassowary.py cassowary_wrap.c cassowary_wrap.doc cassowary_wrap.o cassowarycmodule.so
+	rm -f cassowary.py cassowary_wrap.c cassowary_wrap.doc cassowary_wrap.o cassowarycmodule.so
 
 .PHONY: all clean module swig-python install
