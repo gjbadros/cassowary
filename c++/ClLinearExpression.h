@@ -70,7 +70,8 @@ class ClLinearExpression  {
   { return expr.minus(*this); }
 
   // Add n*expr to this expression for another expression expr.
-  ClLinearExpression &addExpression(const ClLinearExpression &expr, Number n);
+  ClLinearExpression &addExpression(const ClLinearExpression &expr, 
+				    Number n = 1.0);
 
   // Add n*expr to this expression for another expression expr.
   // Notify the solver if a variable is added or deleted from this

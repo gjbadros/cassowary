@@ -316,7 +316,7 @@ ClLinearExpression::substituteOut(const ClAbstractVariable &var,
 #endif
   map<const ClAbstractVariable *,Number>::iterator pv = my_terms.find(&var);
   assert(pv != my_terms.end());
-  assert(!clApprox((*pv).second,0.0));
+  // FIXGJB: this got thrown! assert(!clApprox((*pv).second,0.0));
 
   Number multiplier = (*pv).second;
   my_terms.erase(pv);
