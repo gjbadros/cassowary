@@ -1,3 +1,12 @@
+Sat Jan 30 13:16:31 1999  Greg Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSimplexSolver.cc: Fixed bug in removing a stay
+	constraint.  Was editing a vector in place while iterating over
+	it.  Now I use remove_if and erase.  Thanks to Anthony Beurivé for 
+	noticing the bug.
+
+	* c++/ClBug1.cc: Added -- bug report from Anthony Beurivé.
+
 Sat Jan 23 16:46:27 1999  Greg Badros  <gjb@cs.washington.edu>
 
 	* guile/cassowary_scm.cc: Replace iarg uses with literal argument
