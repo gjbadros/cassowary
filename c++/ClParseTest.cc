@@ -19,13 +19,11 @@ int main()
   StringToVarMap mapVars;
   ClSimplexSolver solver;
 
+  ClVariable::SetVarMap(&mapVars);
+
   ClVariable x("x");
   ClVariable y("y");
   ClVariable z("z");
-
-  mapVars[x.name()] = &x;
-  mapVars[y.name()] = &y;
-  mapVars[z.name()] = &z;
 
   ClConstraint *pcn;
   string szLine;
