@@ -17,6 +17,8 @@ moretestdir=$(libdir)/cassowary/tests
 
 EXTRA_PROGRAMS = $(test_programs) $(bench_programs) $(bugs_programs)
 
+EXTRA_DIST = ClReader.l ClReader.y
+
 ## Only get built if --enable-cxx-tests is given
 bench_programs = QocaBench
 
@@ -71,7 +73,6 @@ libcassowary_a_SOURCES = \
 	ClSlackVariable.cc \
 	ClDummyVariable.cc \
 	ClReader-lex.cc \
-	ClReader.cc \
 	ClC.cc \
 ClFDSolver.cc ClFDVariable.cc ClFDConnectorVariable.cc ClFDBinaryOneWayConstraint.cc
 
@@ -89,7 +90,6 @@ libcassowary_la_SOURCES = \
 	ClSlackVariable.cc \
 	ClDummyVariable.cc \
 	ClReader-lex.cc \
-	ClReader.cc \
 	ClC.cc \
 ClFDSolver.cc ClFDVariable.cc ClFDConnectorVariable.cc ClFDBinaryOneWayConstraint.cc
 
@@ -131,7 +131,8 @@ pkginclude_HEADERS = \
 	ClPoint.h \
 	cl_auto_ptr.h \
 	config-inline.h \
-	debug.h
+	debug.h \
+	timer.h
 
 
 ClTests_SOURCES = ClTests.cc

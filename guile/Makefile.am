@@ -15,6 +15,8 @@ GUILE_INCLUDES = @GUILE_INCLUDES@
 
 INCLUDES = -I. -I$(top_srcdir)/c++ -I$(prefix)/include -I$(exec_prefix)/include $(GUILE_INCLUDES)
 
+EXTRA_DIST=cassowary_scm-procedures.txt cassowary_scm-variables.txt cassowary_scm.sgml
+
 libconstraints_a_SOURCES = cassowary_scm.cc
 
 libconstraints_la_SOURCES = cassowary_scm.cc
