@@ -29,90 +29,77 @@
 
 QuadDemoWindow::QuadDemoWindow( QWidget *parent, const char *name )
   : QWidget(parent,name),
-    db1(5,5), db2(5,200), db3(200,200), db4(200,5),
     peditX(NULL), peditY(NULL),
     idbDragging(-1)
 {
   resize( 450, 450 );
-  double weight = 1;
-  s
-    .addPointStay(db1.CenterPt(),weight)
-    .addPointStay(db2.CenterPt(),weight *= 2)
-    .addPointStay(db3.CenterPt(),weight *= 2)
-    .addPointStay(db4.CenterPt(),weight *= 2)
-    ;
-    
-  s
-    .addConstraint(ClLinearEquation(mp1.Xvar(),(db1.Xvar() + db2.Xvar())/2))
-    .addConstraint(ClLinearEquation(mp1.Yvar(),(db1.Yvar() + db2.Yvar())/2))
-    .addConstraint(ClLinearEquation(mp2.Xvar(),(db2.Xvar() + db3.Xvar())/2))
-    .addConstraint(ClLinearEquation(mp2.Yvar(),(db2.Yvar() + db3.Yvar())/2))
-    .addConstraint(ClLinearEquation(mp3.Xvar(),(db3.Xvar() + db4.Xvar())/2))
-    .addConstraint(ClLinearEquation(mp3.Yvar(),(db3.Yvar() + db4.Yvar())/2))
-    .addConstraint(ClLinearEquation(mp4.Xvar(),(db4.Xvar() + db1.Xvar())/2))
-    .addConstraint(ClLinearEquation(mp4.Yvar(),(db4.Yvar() + db1.Yvar())/2))
-    ;
-
   setBackgroundMode(NoBackground);
 
-  s
-    .addConstraint(ClLinearInequality(db1.Xvar() + 10, cnLEQ, db3.Xvar()))
-    .addConstraint(ClLinearInequality(db1.Xvar() + 10, cnLEQ, db4.Xvar()))
-    .addConstraint(ClLinearInequality(db2.Xvar() + 10, cnLEQ, db3.Xvar()))
-    .addConstraint(ClLinearInequality(db2.Xvar() + 10, cnLEQ, db4.Xvar()))
+  db[0].SetCenter(5,5);
+  db[1].SetCenter(5,200);
+  db[2].SetCenter(200,200);
+  db[3].SetCenter(200,5);
+       
+ double weight = .5 ;
+  solver
+    .addPointStay(db[0].CenterPt(),weight *= 2)
+    .addPointStay(db[1].CenterPt(),weight *= 2)
+    .addPointStay(db[2].CenterPt(),weight *= 2)
+    .addPointStay(db[3].CenterPt(),weight *= 2)
+    ;
+    
+  solver
+    .addConstraint(ClLinearEquation(mp[0].X(), (db[0].X() + db[1].X())/2))
+    .addConstraint(ClLinearEquation(mp[0].Y(), (db[0].Y() + db[1].Y())/2))
+    .addConstraint(ClLinearEquation(mp[1].X(), (db[1].X() + db[2].X())/2))
+    .addConstraint(ClLinearEquation(mp[1].Y(), (db[1].Y() + db[2].Y())/2))
+    .addConstraint(ClLinearEquation(mp[2].X(), (db[2].X() + db[3].X())/2))
+    .addConstraint(ClLinearEquation(mp[2].Y(), (db[2].Y() + db[3].Y())/2))
+    .addConstraint(ClLinearEquation(mp[3].X(), (db[3].X() + db[0].X())/2))
+    .addConstraint(ClLinearEquation(mp[3].Y(), (db[3].Y() + db[0].Y())/2))
+    ;
 
-    .addConstraint(ClLinearInequality(db1.Yvar() + 10, cnLEQ, db2.Yvar()))
-    .addConstraint(ClLinearInequality(db1.Yvar() + 10, cnLEQ, db3.Yvar()))
-    .addConstraint(ClLinearInequality(db4.Yvar() + 10, cnLEQ, db2.Yvar()))
-    .addConstraint(ClLinearInequality(db4.Yvar() + 10, cnLEQ, db3.Yvar()))
+
+  solver
+    .addConstraint(ClLinearInequality(db[0].X() + 10, cnLEQ, db[2].X()))
+    .addConstraint(ClLinearInequality(db[0].X() + 10, cnLEQ, db[3].X()))
+    .addConstraint(ClLinearInequality(db[1].X() + 10, cnLEQ, db[2].X()))
+    .addConstraint(ClLinearInequality(db[1].X() + 10, cnLEQ, db[3].X()))
+
+    .addConstraint(ClLinearInequality(db[0].Y() + 10, cnLEQ, db[1].Y()))
+    .addConstraint(ClLinearInequality(db[0].Y() + 10, cnLEQ, db[2].Y()))
+    .addConstraint(ClLinearInequality(db[3].Y() + 10, cnLEQ, db[1].Y()))
+    .addConstraint(ClLinearInequality(db[3].Y() + 10, cnLEQ, db[2].Y()))
     ;
     
 }
 
 QuadDemoWindow::~QuadDemoWindow()
 {
-  if (peditX)
-    delete peditX;
-  if (peditY)
-    delete peditY;
+  if (peditX) delete peditX;
+  if (peditY) delete peditY;
 }
 
 void QuadDemoWindow::mousePressEvent( QMouseEvent *e )
 {
   int x = e->x();
   int y = e->y();
-  ClVariable *pedit_x = NULL;
-  ClVariable *pedit_y = NULL;
-  if (db1.FContains(x,y))
+  for (int i = 0; i < cdb; i++)
     {
-    idbDragging = 1;
-    pedit_x = &db1.Xvar();
-    pedit_y = &db1.Yvar();
-    }
-  else if (db2.FContains(x,y))
-    {
-    idbDragging = 2;
-    pedit_x = &db2.Xvar();
-    pedit_y = &db2.Yvar();
-    }
-  else if (db3.FContains(x,y))
-    {
-    idbDragging = 3;
-    pedit_x = &db3.Xvar();
-    pedit_y = &db3.Yvar();
-    }
-  else if (db4.FContains(x,y))
-    {
-    idbDragging = 4;
-    pedit_x = &db4.Xvar();
-    pedit_y = &db4.Yvar();
+    if (db[i].FContains(x,y))
+      {
+      idbDragging = i;
+      break;
+      }
     }
   if (idbDragging != -1)
     {
-    peditX = new ClEditConstraint(*pedit_x,clsStrong());
-    peditY = new ClEditConstraint(*pedit_y,clsStrong());
-    s.addConstraint(*peditX);
-    s.addConstraint(*peditY);
+    peditX = new ClEditConstraint(db[idbDragging].X(),clsStrong());
+    peditY = new ClEditConstraint(db[idbDragging].Y(),clsStrong());
+    solver
+      .addConstraint(*peditX)
+      .addConstraint(*peditY)
+      ;
     }
 }
 
@@ -125,8 +112,10 @@ void QuadDemoWindow::mouseReleaseEvent( QMouseEvent * )
       assert(peditX != NULL);
       assert(peditY != NULL);
       idbDragging = -1;
-      s.removeConstraint(*peditX);
-      s.removeConstraint(*peditY);
+      solver
+	.removeConstraint(*peditX)
+	.removeConstraint(*peditY)
+	;
       delete peditX;
       delete peditY;
       peditX = peditY = NULL;
@@ -150,7 +139,7 @@ void QuadDemoWindow::mouseMoveEvent( QMouseEvent *e )
 {
   if (idbDragging != -1)
     {
-    s.resolve(e->x(),e->y());
+    solver.resolve(e->x(),e->y());
     repaint();
     }
 }
@@ -178,22 +167,20 @@ void QuadDemoWindow::paintEvent( QPaintEvent * )
   QPainter p;
   p.begin( &pm );
   // paint the outside rectangle
-  p.drawLine(db1.QCenterPt(),db2.QCenterPt());
-  p.drawLine(db2.QCenterPt(),db3.QCenterPt());
-  p.drawLine(db3.QCenterPt(),db4.QCenterPt());
-  p.drawLine(db4.QCenterPt(),db1.QCenterPt());
+  p.drawLine(db[0].QCenterPt(),db[1].QCenterPt());
+  p.drawLine(db[1].QCenterPt(),db[2].QCenterPt());
+  p.drawLine(db[2].QCenterPt(),db[3].QCenterPt());
+  p.drawLine(db[3].QCenterPt(),db[0].QCenterPt());
 
   // paint the inscribed parallelogram
-  p.drawLine(QPFromClP(mp1),QPFromClP(mp2));
-  p.drawLine(QPFromClP(mp2),QPFromClP(mp3));
-  p.drawLine(QPFromClP(mp3),QPFromClP(mp4));
-  p.drawLine(QPFromClP(mp4),QPFromClP(mp1));
+  p.drawLine(QPFromClP(mp[0]),QPFromClP(mp[1]));
+  p.drawLine(QPFromClP(mp[1]),QPFromClP(mp[2]));
+  p.drawLine(QPFromClP(mp[2]),QPFromClP(mp[3]));
+  p.drawLine(QPFromClP(mp[3]),QPFromClP(mp[0]));
 
   // paint the control points
-  db1.DrawMe(&p);
-  db2.DrawMe(&p);
-  db3.DrawMe(&p);
-  db4.DrawMe(&p);
+  for (int i=0; i < cdb; i++)
+    db[i].DrawMe(&p);
   
   p.end();
 

@@ -38,15 +38,16 @@ class QuadDemoWindow : public QWidget
   void paintEvent( QPaintEvent * );
   private slots:
  private:
-  DraggableBox db1, db2, db3, db4;
-  ClPoint mp1, mp2, mp3, mp4;
-  ClSimplexSolver s;
+  DraggableBox db[4];
+  enum {cdb = 4};
+  ClPoint mp[4];
+  ClSimplexSolver solver;
   ClEditConstraint *peditX;
   ClEditConstraint *peditY;
   int idbDragging;
 };
 
 inline QPoint QPFromClP(const ClPoint &clp)
-{ return QPoint(clp.X(), clp.Y()); }
+{ return QPoint(clp.Xvalue(), clp.Yvalue()); }
 
 #endif
