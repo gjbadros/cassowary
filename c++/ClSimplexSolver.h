@@ -361,6 +361,13 @@ class ClSimplexSolver : public ClTableau {
   void *Pv() const
     { return _pv; }
 
+  // re-set all the external variables to their current values
+  // most importantly, this re-calls all the ChangeClv callbacks
+  // (which might be used to copy the ClVariable's value to another
+  // variable)
+  void UpdateExternalVariables() 
+    { setExternalVariables(); }
+
  protected:
   
   // ClEditInfo is a privately-used class
