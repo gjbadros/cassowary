@@ -9,9 +9,11 @@
 //
 // ClAbstractVariable
 
+package EDU.Washington.grad.gjb.cassowary;
+
 import java.lang.*;
 
-abstract class ClAbstractVariable
+public abstract class ClAbstractVariable
 {
   public ClAbstractVariable(String name)
     {

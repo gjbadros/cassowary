@@ -10,7 +10,9 @@
 // ClStayConstraint
 // 
 
-class ClStayConstraint extends ClEditOrStayConstraint
+package EDU.Washington.grad.gjb.cassowary;
+
+public class ClStayConstraint extends ClEditOrStayConstraint
 {
 
   public ClStayConstraint(ClVariable var, ClStrength strength, double weight)

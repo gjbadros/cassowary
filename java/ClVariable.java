@@ -9,7 +9,9 @@
 //
 // ClVariable
 
-class ClVariable extends ClAbstractVariable
+package EDU.Washington.grad.gjb.cassowary;
+
+public class ClVariable extends ClAbstractVariable
 {
 
   public ClVariable(String name, double value)

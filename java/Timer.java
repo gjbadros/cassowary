@@ -9,8 +9,9 @@
 //
 // Timer, adapted from John P. Russo's C++ Timer class
 
+package EDU.Washington.grad.gjb.cassowary;
 
-class Timer
+public class Timer
 {
   public void Timer() {
     TimerIsRunning = false;         // Start not yet called.

@@ -9,9 +9,11 @@
 //
 // ClSymbolicWeight
 
+package EDU.Washington.grad.gjb.cassowary;
+
 import java.util.*;
 
-class ClSymbolicWeight 
+public class ClSymbolicWeight 
 {
 
   public ClSymbolicWeight(int cLevels)

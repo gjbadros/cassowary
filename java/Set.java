@@ -11,6 +11,8 @@
 // Encapsulate a mathematical "Set" ADT using java's
 // hash table.  Just a convenience wrapper of the java.util.Hashtable class.
 
+package EDU.Washington.grad.gjb.cassowary;
+
 import java.util.*;
 
 class Set {

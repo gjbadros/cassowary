@@ -10,7 +10,9 @@
 // ClLinearInequality
 //
 
-class ClLinearInequality extends ClLinearConstraint
+package EDU.Washington.grad.gjb.cassowary;
+
+public class ClLinearInequality extends ClLinearConstraint
 {
   
   public ClLinearInequality(ClLinearExpression cle,

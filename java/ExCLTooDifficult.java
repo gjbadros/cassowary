@@ -10,7 +10,9 @@
 // ExCLTooDifficult
 //
 
-class ExCLTooDifficult extends ExCLError
+package EDU.Washington.grad.gjb.cassowary;
+
+public class ExCLTooDifficult extends ExCLError
 {
   public String description()
     { return "(ExCLTooDifficult) The constraints are too difficult to solve"; }

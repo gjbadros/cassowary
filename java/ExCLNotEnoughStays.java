@@ -10,7 +10,9 @@
 // ExCLNotEnoughStays
 //
 
-class ExCLNotEnoughStays extends ExCLError
+package EDU.Washington.grad.gjb.cassowary;
+
+public class ExCLNotEnoughStays extends ExCLError
 {
   public String description()
     { return "(ExCLNotEnoughStays) There are not enough stays to give specific values to every variable"; }

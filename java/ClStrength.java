@@ -9,7 +9,9 @@
 //
 // ClStrength
 
-class ClStrength
+package EDU.Washington.grad.gjb.cassowary;
+
+public class ClStrength
 {
   public ClStrength(String name, ClSymbolicWeight symbolicWeight)
     {  _name = name;	_symbolicWeight = symbolicWeight; }

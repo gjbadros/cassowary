@@ -10,7 +10,9 @@
 // ClPoint
 //
 
-class ClPoint
+package EDU.Washington.grad.gjb.cassowary;
+
+public class ClPoint
 {
   public ClPoint(double x, double y)
     {

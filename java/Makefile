@@ -13,6 +13,10 @@ JAVAC = javac
 JAVAC_FLAGS = -g
 #JAVAC_FLAGS = -O
 
+
+CLASSES = ./classes
+CLASSES_TESTS = ./classes
+
 TESTS = test-ClStrength test-ClVariable test-ClLinearExpression test-ClConstraint \
 	test-ClSimplexSolver ClTests ClTestColumns
 
@@ -53,18 +57,27 @@ JAVAFILES = \
 TESTFILES = \
 	testClStrength.java \
 	testClLinearExpression.java \
-	ClTests.java ClTestColumns.java
+	ClTests.java \
+	ClTestColumns.java
 
-CLASSFILES = $(JAVAFILES:.java=.class)
+CLASSFILES = $(JAVAFILES:%.java=$(CLASSES)/%.class)
 
-TESTCLASSFILES = $(TESTFILES:.java=.class)
+TESTCLASSFILES = $(TESTFILES:%.java=$(CLASSES_TESTS)/%.class)
 
-%.class: $(JAVAFILES) $(TESTFILES)
-	$(JAVAC) $(JAVAC_FLAGS) $(JAVAFILES) $(TESTFILES)
+$(CLASSES)/%.class: $(JAVAFILES)
+	$(JAVAC) -d $(CLASSES) $(JAVAC_FLAGS) $(JAVAFILES)
 
-all:	$(CLASSFILES)
+$(CLASSES_TESTS)/%.class: $(TESTFILES)
+	$(JAVAC) -d $(CLASSES_TESTS) $(JAVAC_FLAGS) $(TESTFILES)
 
-test:	$(TESTCLASSFILES)
+all:	package test
+
+
+package:
+	$(JAVAC) -d $(CLASSES) $(JAVAC_FLAGS) $(JAVAFILES)
+
+test:
+	$(JAVAC) -d $(CLASSES_TESTS) $(JAVAC_FLAGS) $(TESTFILES)
 
 clean:	
 	rm -f *.class
@@ -74,4 +87,4 @@ TAGS: $(JAVAFILES)
 
 tags: TAGS
 
-.PHONY:	all cassowary-tests lib tags ntsources tests depend
+.PHONY:	all package test cassowary-tests lib tags ntsources

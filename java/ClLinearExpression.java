@@ -10,9 +10,11 @@
 // ClLinearExpression
 //
 
+package EDU.Washington.grad.gjb.cassowary;
+
 import java.util.*;
 
-class ClLinearExpression extends CL
+public class ClLinearExpression extends CL
 {
 
   public ClLinearExpression(ClAbstractVariable clv, double value, double constant)

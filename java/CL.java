@@ -11,7 +11,9 @@
 // The enumerations from ClLinearInequality,
 // and `global' functions that we want easy to access
 
-class CL {
+package EDU.Washington.grad.gjb.cassowary;
+
+public class CL {
   protected final static boolean fDebugOn = false;
   protected final static boolean fTraceOn = false;
   protected final static boolean fGC = false;

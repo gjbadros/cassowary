@@ -10,7 +10,9 @@
 // ClEditConstraint
 //
 
-class ClEditConstraint extends ClEditOrStayConstraint
+package EDU.Washington.grad.gjb.cassowary;
+
+public class ClEditConstraint extends ClEditOrStayConstraint
 {
   
   public ClEditConstraint(ClVariable clv,

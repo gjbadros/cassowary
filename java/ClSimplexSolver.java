@@ -10,9 +10,11 @@
 // ClSimplexSolver
 // 
 
+package EDU.Washington.grad.gjb.cassowary;
+
 import java.util.*;
 
-class ClSimplexSolver extends ClTableau
+public class ClSimplexSolver extends ClTableau
 {
   // Ctr initializes the fields, and creates the objective row
   public ClSimplexSolver()

@@ -10,7 +10,9 @@
 // ExCLConstraintNotFound
 //
 
-class ExCLConstraintNotFound extends ExCLError
+package EDU.Washington.grad.gjb.cassowary;
+
+public class ExCLConstraintNotFound extends ExCLError
 {
   public String description()
     { return "(ExCLConstraintNotFound) Tried to remove a constraint never added to the tableu"; }

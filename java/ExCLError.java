@@ -10,7 +10,9 @@
 // ExCLError
 //
 
-class ExCLError extends Exception
+package EDU.Washington.grad.gjb.cassowary;
+
+public class ExCLError extends Exception
 {
 
   public String description()

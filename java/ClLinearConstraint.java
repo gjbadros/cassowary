@@ -10,6 +10,8 @@
 // ClLinearConstraint
 //
 
+package EDU.Washington.grad.gjb.cassowary;
+
 class ClLinearConstraint extends ClConstraint
 {
 

@@ -10,10 +10,12 @@
 // ClConstraint
 //
 
+package EDU.Washington.grad.gjb.cassowary;
+
 import java.lang.*;
 
 
-abstract class ClConstraint
+public abstract class ClConstraint
 {
 
   public ClConstraint(ClStrength strength, double weight)

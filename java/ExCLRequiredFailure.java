@@ -10,7 +10,9 @@
 // ExCLRequiredFailure
 //
 
-class ExCLRequiredFailure extends ExCLError
+package EDU.Washington.grad.gjb.cassowary;
+
+public class ExCLRequiredFailure extends ExCLError
 {
   public String description()
     { return "(ExCLRequiredFailure) A required constraint cannot be satisfied"; }

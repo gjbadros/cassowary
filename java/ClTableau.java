@@ -9,6 +9,8 @@
 //
 // ClTableau
 
+package EDU.Washington.grad.gjb.cassowary;
+
 import java.util.*;
 
 class ClTableau extends CL

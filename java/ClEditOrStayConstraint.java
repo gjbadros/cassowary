@@ -10,6 +10,8 @@
 // ClEditOrStayConstraint
 //
 
+package EDU.Washington.grad.gjb.cassowary;
+
 abstract class ClEditOrStayConstraint extends ClConstraint
 {
 

@@ -10,6 +10,8 @@
 // ClObjectiveVariable
 //
 
+package EDU.Washington.grad.gjb.cassowary;
+
 class ClObjectiveVariable extends ClAbstractVariable
 {
   public ClObjectiveVariable(String name)

@@ -10,6 +10,8 @@
 // ClSlackVariable
 //
 
+package EDU.Washington.grad.gjb.cassowary;
+
 class ClSlackVariable extends ClAbstractVariable
 {
   // friend ClTableau;

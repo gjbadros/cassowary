@@ -9,6 +9,8 @@
 //
 // testClLinearExpression
 
+package EDU.Washington.grad.gjb.cassowary;
+
 public class testClLinearExpression {
   public final static void main(String[] args) {
     ClVariable a = new ClVariable("a");
@@ -27,14 +29,6 @@ public class testClLinearExpression {
     cle.addExpression(cle,-1);
     System.out.println(cle.toString());
     System.out.println(b.toString());
-
-//   ClSimplexSolver solver;
-//   cout << cle2 << endl;
-//   ClVariable c("c");
-//   ClLinearExpression cleNew = cle2 * 2 + 9;
-//   cout << cleNew << endl;
-//   cle2.substituteOut(a,cleNew,c,solver);
-//   cout << cle2 << endl;
 
   }
 }

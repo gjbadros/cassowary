@@ -9,6 +9,8 @@
 //
 // testClStrength
 
+package EDU.Washington.grad.gjb.cassowary;
+
 class testClStrength {
   public static void main(String[] args) {
     ClSymbolicWeight clsw = new ClSymbolicWeight(0.0,1.0,0.0);

@@ -10,7 +10,9 @@
 // ExCLInternalError
 //
 
-class ExCLInternalError extends ExCLError
+package EDU.Washington.grad.gjb.cassowary;
+
+public class ExCLInternalError extends ExCLError
 {
   public String description()
     { return "(ExCLInternalError) An internal error has occurred"; }

@@ -10,7 +10,9 @@
 // ClDouble
 //
 
-class ClDouble extends Number
+package EDU.Washington.grad.gjb.cassowary;
+
+public class ClDouble extends Number
 {
   public ClDouble(double val)
     { value = val; }

@@ -10,7 +10,9 @@
 // ClLinearEquation
 //
 
-class ClLinearEquation extends ClLinearConstraint
+package EDU.Washington.grad.gjb.cassowary;
+
+public class ClLinearEquation extends ClLinearConstraint
 {
   public ClLinearEquation(ClLinearExpression cle,
 			  ClStrength strength,

@@ -10,6 +10,8 @@
 // ClDummyVariable
 // 
 
+package EDU.Washington.grad.gjb.cassowary;
+
 class ClDummyVariable extends ClAbstractVariable
 {
   // friend ClTableau;
