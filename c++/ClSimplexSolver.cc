@@ -420,7 +420,11 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
     {
     const ClEditConstraint *pcnEdit = dynamic_cast<const ClEditConstraint *>(&cn);
     const ClVariable *pclv = &pcnEdit->variable();
-    delete _editVarMap[pclv];
+    ClEditInfo *pcei = _editVarMap[pclv];
+    ClSlackVariable *pclvEditMinus = pcei->_pclvEditMinus;
+    removeColumn(*pclvEditMinus);  // FIXGJB: just added this
+    // because the Java version did it --02/16/99 gjb
+    delete pcei;
     _editVarMap.erase(pclv);
     }
 
@@ -524,11 +528,11 @@ ClSimplexSolver::suggestValue(ClVariable &v, Number x)
 #endif
     }
   ClEditInfo *pcei = (*itEditVarMap).second;
-  const ClAbstractVariable *pvarErrorPlus = pcei->_pclvEditPlus;
-  const ClAbstractVariable *pvarErrorMinus = pcei->_pclvEditMinus;
+  const ClAbstractVariable *pclvEditPlus = pcei->_pclvEditPlus;
+  const ClAbstractVariable *pclvEditMinus = pcei->_pclvEditMinus;
   Number delta = x - pcei->_prevEditConstant;
   pcei->_prevEditConstant = x;
-  deltaEditConstant(delta,*pvarErrorPlus,*pvarErrorMinus);
+  deltaEditConstant(delta,*pclvEditPlus,*pclvEditMinus);
   return *this;
 }
 
@@ -553,6 +557,7 @@ ClSimplexSolver::resolve(const vector<Number> &newEditConstants)
       suggestValue(*pclv,newEditConstants[i]);
       }
     }
+  resolve();
 }
 
 
