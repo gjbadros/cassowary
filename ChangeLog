@@ -1,3 +1,40 @@
+Sat Sep 19 17:08:21 1998  Greg Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile (CPPFLAGS): Added USE_GC, commented out, and added
+	OTHER_LIBS variable for linking with the gc library
+
+Sat Sep 19 17:01:16 1998  Greg Badros  <gjb@cs.washington.edu>
+
+	* c++/ClTableau.h: Added AssertValid() for testing integrity of
+	Tableau
+
+	* c++/ClSymbolicWeight.h, c++/ClStrength.h, c++/ClSlackVariable.h,
+	c++/ClLinearExpression.h, c++/ClErrors.h, c++/ClDummyVariable.h,
+	c++/ClConstraint.h, c++/ClAbstractVariable.h:  Descend objects
+	from "gc" class conditioned on USE_GC* pp macros
+
+	* c++/Cassowary.h: Conditionally include gc_cpp.h ifdef USE_GC;
+	added NEWVAR and DELVAR macros for outputting debug information at 
+	new/delete sites
+
+	* c++/ClSimplexSolver.h: Call AssertValid before solving
+
+	* c++/ClSimplexSolver.cc: Remove memory leak of the artificial
+	objective variable
+
+	* c++/ClLinearExpression.h: Fix gdb_print to have a newline
+
+	* c++/ClLeakTest: Added leakTest2 which more obviously leaks, and
+	use GC_gcollect() to force a collect
+
+Tue Sep 15 16:36:20 1998  Greg Badros  <gjb@cs.washington.edu>
+
+	* c++/ClTableau.h, ClTableau.cc: Handle removing vars from _columns more
+	carefully, and add gdb_print(), virtual destructor
+
+	* c++/ClLinearExpression.h, c++/ClConstraint.h,
+ 	c++/ClAbstractVariable.h: Added gdb_print()
+
 Wed Sep  9 09:46:35 1998  Greg Badros  <gjb@cs.washington.edu>
 
 	* c++/ClLinearExpression.h, c++/ClLinearExpression.cc: added uses
