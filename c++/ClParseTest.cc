@@ -37,7 +37,7 @@ int main()
 
     istrstream xiLine(szLine.c_str());
     try {
-      if ((pcn = PcnParseConstraint(xiLine,mapVars)) != NULL) {
+      if ((pcn = PcnParseConstraint(xiLine,mapVars,true)) != NULL) {
         solver.addConstraint(*pcn);
       }
     }

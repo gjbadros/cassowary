@@ -747,6 +747,8 @@ main( int argc, char **argv )
     // seed the random number generator for reproducible results
     srand(123456789);
 
+    cout << "Cassowary version: " << szCassowaryVersion << endl;
+
 #define RUN_TEST(x) \
     cout << #x << ":" << endl; \
     fResult = x(); fAllOkResult &= fResult; \

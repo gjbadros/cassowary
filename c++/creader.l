@@ -46,7 +46,8 @@ ws [ \t\n]+
 \n|";"			{ return 0; }
 ">="			{ return GEQ; }
 "<=" 			{ return LEQ; }
-"="|"-"|"+"|"*" 	{ return yytext[0]; }
+"==" 			{ return '='; }
+"="|"-"|"+"|"*"|"/"|"("|")" 	{ return yytext[0]; }
 
 {DIGIT}+("."{DIGIT}*)? |
 "."{DIGIT}+		{ lvalp->num = strtod(yytext,0); return NUM; }
@@ -57,6 +58,13 @@ ws [ \t\n]+
       if (it != pclpd->_mapVars.end()) {
         lvalp->pclv = &it->second;
         return VAR;
+      } else if (pclpd->_fAutoCreate) {
+	/* the ctr could register the variable in a different symbol table */
+	ClVariable v(yytext);
+	/* this will definitely register the variable in the parser's symbol table */
+	pclpd->_mapVars[yytext] = v;
+	lvalp->pclv = &(pclpd->_mapVars[yytext]);
+	return VAR;
       } else {
         string szErr = "Unrecognized identifier: '";
         szErr += yytext;

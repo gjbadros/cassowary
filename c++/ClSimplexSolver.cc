@@ -9,6 +9,8 @@
 //
 // ClSimplexSolver.cc
 
+char *szCassowaryVersion = "0.31";
+
 #include "debug.h"
 #include "ClSimplexSolver.h"
 #include "ClErrors.h"

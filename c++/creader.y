@@ -87,55 +87,6 @@ expr:     NUM                { $$ = new ClLinearExpression($1);        }
 
 %%
 
-#ifdef USE_CRUMMY_LEXER
-/* Additional C Code */
-
-#include <stdiostream> 
-#include <ctype.h>   /* for testing tokens */
-#include <stdlib.h>  /* for strtod */
-
-/* Return 0 for EOF or a token number with a value on the stack */
-int yylex(YYSTYPE *lvalp, void *YYLEX_PARAM)
-{
-  ClParseData *pclpd = ((ClParseData *) YYLEX_PARAM);
-  istream &yylexIn = pclpd->_xi;
-  string token;
-  current = "";
-  if (yylexIn >> token) {
-    current += token + " ";
-    if (isdigit(token[0])) { /* NUM */
-      lvalp->num = strtod(token.c_str(), 0);
-      return NUM;
-    }
-    else if (token == ">=") {
-      return GEQ;
-    }
-    else if (token == "<=") {
-      return LEQ;
-    }
-    else if (isalpha(token[0])) { /* VAR */
-      // Lookup the variable name
-      StringToVarMap::iterator it = pclpd->_mapVars.find(token);
-      if (it != pclpd->_mapVars.end()) {
-        lvalp->pclv = &it->second;
-        return VAR;
-      } else {
-        string szErr = "Unrecognized identifier: '";
-        szErr += token;
-        szErr += "'";
-        yyerror(szErr.c_str());
-        return 0;
-      }
-    }
-    else { /* OP or error! */
-      return (int)token[0]; /* Code for one char OP is ASCII code */
-    }
-  }
-  else /* EOF */
-    return 0;
-}
-#endif
-
 void clerror(const char *sz)
 {
 #ifndef CL_NO_IO
@@ -149,9 +100,9 @@ extern istream *pxi_lexer;
 // xi is the stream from which to read the constraint.
 // aVars is an array of variables large enough to account for
 // each one that might be mentioned in a constraint
-ClConstraint *PcnParseConstraint(istream &xi, StringToVarMap &mapVars)
+ClConstraint *PcnParseConstraint(istream &xi, StringToVarMap &mapVars, bool fAutoCreate)
 {
-  ClParseData cl_parse_data(xi, mapVars);
+  ClParseData cl_parse_data(xi, mapVars, fAutoCreate);
   pxi_lexer = &xi;
   if (yyparse(&cl_parse_data) == 0) { // success
 #ifndef NO_DEBUG_PARSER

@@ -28,4 +28,6 @@
 #include "ClEditConstraint.h"
 #include "ClStayConstraint.h"
 
+extern char *szCassowaryVersion;
+
 #endif

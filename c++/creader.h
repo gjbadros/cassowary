@@ -25,20 +25,21 @@ class istream;
 // Attempts to read a constraint of input stream in
 // Returns constraint (freshly allocated, client responsibility to deallocate)
 // if succesful. Otherwise, returns 0.
-ClConstraint *PcnParseConstraint(istream &xi, StringToVarMap &mapVars);
+ClConstraint *PcnParseConstraint(istream &xi, StringToVarMap &mapVars, bool fAutoCreate = false);
 
 /* the "yyerror" function */
 void clerror(const char *sz);
 
 struct ClParseData {
-  ClParseData(istream &xi, StringToVarMap &mapVars)
-      : _xi(xi), _mapVars(mapVars) {};
+  ClParseData(istream &xi, StringToVarMap &mapVars, bool fAutoCreate)
+      : _xi(xi), _mapVars(mapVars), _fAutoCreate(fAutoCreate) {};
 
   ClConstraint *Pcn() { return _pcn; }
       
   istream & _xi;
   ClConstraint * _pcn;
   StringToVarMap &_mapVars;
+  bool _fAutoCreate;
 };
 
 
