@@ -37,3 +37,6 @@
 /* Define this if you have the GTL, graph template library, installed
    you need that for the FD solver */
 #undef CL_HAVE_GTL
+
+/* Does cc/gcc take -fpermissive? */
+#undef NO_CC_PERMISSIVE

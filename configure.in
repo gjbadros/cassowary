@@ -38,6 +38,59 @@ AC_DEFUN(ACE_ARG_PATH,
 ])
 
 
+AC_DEFUN(AC_PROG_CC_PERMISSIVE,
+[if test "x$CC" != xcc; then
+  AC_MSG_CHECKING(whether $CC and cc understand -fpermissive option)
+else
+  AC_MSG_CHECKING(whether cc understands -fpermissive option)
+fi
+set dummy $CC; ac_cc="`echo [$]2 |
+changequote(, )dnl
+                       sed -e 's/[^a-zA-Z0-9_]/_/g' -e 's/^[0-9]/_/'`"
+changequote([, ])dnl
+AC_CACHE_VAL(ac_cv_prog_cc_${ac_cc}_permissive,
+[echo 'foo(){}' > conftest.c
+# Make sure it works both with $CC and with simple cc.
+# We do the test twice because some compilers refuse to overwrite an
+# existing .o file with -o, though they will create one.
+ac_try='${CC-cc} -c conftest.c -fpermissive 1>&AC_FD_CC'
+if AC_TRY_EVAL(ac_try) &&
+   test -f conftest.o && AC_TRY_EVAL(ac_try);
+then
+  eval ac_cv_prog_cc_${ac_cc}_permissive=yes
+  if test "x$CC" != xcc; then
+    # Test first that cc exists at all.
+    if AC_TRY_COMMAND(cc -c conftest.c 1>&AC_FD_CC); then
+      ac_try='cc -c conftest.c -fpermissive 1>&AC_FD_CC'
+      if AC_TRY_EVAL(ac_try) &&
+         test -f conftest.o && AC_TRY_EVAL(ac_try);
+      then
+        # cc works too.
+        :
+      else
+        # cc exists but doesn't like -fpermissive
+        eval ac_cv_prog_cc_${ac_cc}_permissive=no
+      fi
+    fi
+  fi
+else
+  eval ac_cv_prog_cc_${ac_cc}_permissive=no
+fi
+rm -f conftest*
+])dnl
+if eval "test \"`echo '$ac_cv_prog_cc_'${ac_cc}_permissive`\" = yes"; then
+  AC_MSG_RESULT(yes)
+  PERMISSIVE_OPTION="-fpermissive"
+else
+  PERMISSIVE_OPTION=""
+  AC_MSG_RESULT(no)
+  AC_DEFINE(NO_CC_PERMISSIVE)
+fi
+])
+
+
+AC_PROG_CC_PERMISSIVE
+
 AC_ARG_ENABLE(check-integrity,
 [  --enable-check-integrity   Verify the integrity of solver data structures at runtime]
 ,[if test "yes" = "$enableval"; then
@@ -168,8 +221,15 @@ AC_ARG_ENABLE(warnings,
    CPPEXTRAFLAGS="-Wall -W"
   fi
 ])
-AC_SUBST(CPPEXTRAFLAGS)
 
+AC_ARG_ENABLE(permissive,
+[  --enable-permissive         Permit some errors to be warnings]
+,[if test "yes" = "$enableval"; then
+   CPPEXTRAFLAGS="$CPPEXTRAFLAGS $PERMISSIVE_OPTION"
+  fi
+])
+
+AC_SUBST(CPPEXTRAFLAGS)
 
 
 GUILE_BIN_DIR=""
@@ -192,9 +252,12 @@ else
         GUILE_INCLUDES="-I$prefix/include"
 fi
 
+GUILE_ENABLED="false"
+
 ACE_ARG_PATH(guile-prefix,
 [  --with-guile-prefix=DIR Expect guile to be installed in DIR [optional]],
 [
+	GUILE_ENABLED=true
 	AC_MSG_CHECKING(where to expect to find guile)
 	guile_prefix="${withval}"
 	GUILE_BIN_DIR="${guile_prefix}/bin"
@@ -209,6 +272,7 @@ ACE_ARG_PATH(guile-exec-prefix,
                           Expect guile binaries to be installed in DIR 
                           [optional]],
 [
+	GUILE_ENABLED=true
 	AC_MSG_CHECKING(where to expect to find guile binaries)
 	guile_exec_prefix="${withval}"
 	GUILE_BIN_DIR="${guile_exec_prefix}"
@@ -222,31 +286,33 @@ else
 	AC_PATH_PROGS(GUILE_CONFIG, guile-config build-guile, no, ${GUILE_BIN_DIR})
 fi
 
-
+GUILE_CONFIG_works=no
 if test "no" != "$GUILE_CONFIG"; then
   AC_MSG_CHECKING(whether guile-config or build-guile works)
   if (${GUILE_CONFIG} link) >/dev/null 2>&1; then
     GUILE_CONFIG_works=yes
-  else
-    GUILE_CONFIG_works=no
   fi
   AC_MSG_RESULT($GUILE_CONFIG_works)
-else
-  GUILE_CONFIG_works=no
+
+  if test -z "${GUILE_BIN_DIR}"; then
+    AC_PATH_PROG(GUILE, guile, no)
+  else
+    AC_PATH_PROG(GUILE, guile, no, ${GUILE_BIN_DIR})
+  fi
+
+  AC_MSG_CHECKING(what the guile pkgdatadir is)
+  GUILE_PKGDATA_DIR=`guile-config info pkgdatadir`
+  AC_MSG_RESULT($GUILE_PKGDATA_DIR)
+  GUILE_PKGDATA_DIR=\${prefix}/${GUILE_PKGDATA_DIR##$prefix}
+  cassoguiledir=$GUILE_PKGDATA_DIR/site/cassowary
 fi
 
 
-if test -z "${GUILE_BIN_DIR}"; then
-	AC_PATH_PROG(GUILE, guile, no)
-else
-	AC_PATH_PROG(GUILE, guile, no, ${GUILE_BIN_DIR})
+AC_ARG_ENABLE(guile_build, [ --enable-guile-build  Build Guile wrapper for Cassowary ],
+		enable_guile_build=yes, enable_guile_build=no)
+if test x"$enable_guile_build" = x"yes"; then
+    GUILE_ENABLED="true"
 fi
-
-AC_MSG_CHECKING(what the guile pkgdatadir is)
-GUILE_PKGDATA_DIR=`guile-config info pkgdatadir`
-AC_MSG_RESULT($GUILE_PKGDATA_DIR)
-GUILE_PKGDATA_DIR=\${prefix}/${GUILE_PKGDATA_DIR##$prefix}
-cassoguiledir=$GUILE_PKGDATA_DIR/site/cassowary
 
 AC_SUBST(cassoguiledir)
 AC_SUBST(GUILE)
@@ -254,7 +320,7 @@ AC_SUBST(GUILE_INCLUDES)
 AC_SUBST(GUILE_BIN_DIR)
 AC_SUBST(GUILE_LIB_DIR)
 AC_SUBST(GUILE_PKGDATA_DIR)
-AM_CONDITIONAL(HAVE_GUILE, test "yes" = "$GUILE_CONFIG_works")
+AM_CONDITIONAL(HAVE_GUILE, test "yes" = "$GUILE_CONFIG_works" -a "true" = "$GUILE_ENABLED")
 
 
 PYTHON_HEADER_DIR=${prefix}/python-1.5

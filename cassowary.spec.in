@@ -1,6 +1,6 @@
 # Note that this is NOT a relocatable package
 %define ver @VERSION@
-%define rel 3
+%define rel 5
 %define prefix /usr
 
 Name: cassowary
@@ -26,6 +26,9 @@ constrained variables to have values that satisfy the constraints.
 
 
 %changelog
+* Sat Sept 4 1999 Greg J. Badros <gjb@cs.washington.edu)
+- Use -fpermissive if it is available, fix --enable-warnings
+
 * Wed Aug 25 1999 Greg J. Badros <gjb@cs.washington.edu>
 - Rework spec file.
 
@@ -39,7 +42,7 @@ constrained variables to have values that satisfy the constraints.
 
 %build
 ln -sf . ./c++/cassowary
-./configure --prefix=%prefix --with-gtl=%prefix --enable-fd-solver --enable-fsstd
+./configure --prefix=%prefix --enable-guile-build --with-gtl=%prefix --enable-fd-solver --enable-fsstd --enable-permissive
 make
 
 %install

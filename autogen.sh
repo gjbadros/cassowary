@@ -1,3 +1,4 @@
+#!/bin/sh -
 ## autogen.sh - generate all the twisty little files.
 
 rm -f libtool ltconfig ltmain.sh
