@@ -27,6 +27,8 @@ main( char **, int  )
   ClSymbolicWeight clsw3(2.0,0.5,0.5);
   ClSymbolicWeight clsw4(2.0,0.4,0.5);
 
+  cout << clsw2.asDouble() << endl;
+
   ClStrength cls(string("cls"),clsw);
   cout << cls << endl;
 
