@@ -12,6 +12,7 @@
 #include "Cl.h"
 #include <stdlib.h>
 #include "timer.h"
+#include "ClDummyVariable.h"
 #include <iostream>
 #include <iomanip>
 
@@ -140,7 +141,6 @@ addDelete1()
     
    ClLinearInequality c10(x,cnLEQ,10.0);
    ClLinearInequality c20(x,cnLEQ,20.0);
-   cerr << "next" << endl;
    solver
      .addConstraint(c10)
      .addConstraint(c20);
@@ -768,8 +768,14 @@ main( int argc, char **argv )
       
 #undef RUN_TEST
 
-    ClAbstractVariable::leakageSummary(cout);
+#ifdef CL_FIND_LEAK
+    cout << "ClAbstractVariables: " << ClAbstractVariable::cAbstractVariables
+         << "\nClDummyVariables: " << ClDummyVariable::cDummyVariables
+         << "\nClSlackVariables: " << ClSlackVariable::cSlackVariables
+         << endl;
+#endif
 
+    
     return (fAllOkResult? 0 : 255);
     
     } 
