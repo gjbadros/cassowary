@@ -95,11 +95,11 @@ class ClGenericLinearExpression  {
   ClGenericLinearExpression<T> subtractFrom(const ClGenericLinearExpression<T> &expr) const
   { return expr.minus(*this); }
 
-  // Add n*expr to this expression for another expression expr.
+  // Add n*expr to this expression from another expression expr.
   ClGenericLinearExpression<T> &addExpression(const ClGenericLinearExpression<T> &expr, 
 				    Number n = 1.0);
 
-  // Add n*expr to this expression for another expression expr.
+  // Add n*expr to this expression from another expression expr.
   // Notify the solver if a variable is added or deleted from this
   // expression.
   ClGenericLinearExpression<T> &addExpression(const ClGenericLinearExpression<T> &expr, Number n,
