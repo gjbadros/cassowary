@@ -28,7 +28,7 @@ class ClEditOrStayConstraint : public ClConstraint {
     { return *my_pvariable; }
 
   ClLinearExpression expression() const
-    { return ClLinearExpression(*my_pvariable); }
+    { return ClLinearExpression(*my_pvariable,-1); }
 
  private:
 
