@@ -32,6 +32,8 @@ class ClTableau {
   void noteAddedVariable(const ClVariable &v, const ClVariable &subject)
     { my_columns[v].insert(subject); }
 
+  friend ostream &operator<<(ostream &xo, const ClTableau &clt);
+
  protected:
   // Constructor -- want to start with empty objects so not much to do
   ClTableau()

@@ -9,6 +9,7 @@
 // ClTableau.cc
 
 #include "ClTableau.h"
+#include "debug.h"
 
 // Add v, update column cross indices
 // v becomes a basic variable
@@ -61,7 +62,11 @@ ClTableau::removeRow(const ClVariable &var)
     ClVariable &v = (*it_term).first;
     my_columns[v].erase(var);
     }
-  my_infeasibleRows.erase(my_infeasibleRows.find(var));
+  set<ClVariable>::iterator itVar = my_infeasibleRows.find(var);
+  if (itVar != my_infeasibleRows.end())
+    {
+    my_infeasibleRows.erase(itVar);
+    }
   my_rows.erase(it);
   return expr;
 }
@@ -71,7 +76,11 @@ ClTableau::removeRow(const ClVariable &var)
 void 
 ClTableau::substituteOut(const ClVariable &oldVar, const ClLinearExpression &expr)
 {
+  cerr << __FUNCTION__ << "(" << oldVar << ", " << expr << ")" << endl;
+  cerr << (*this) << endl;
+
   map<ClVariable, set<ClVariable> >::iterator it_oldVar = my_columns.find(oldVar);
+  assert(it_oldVar != my_columns.end());
   set<ClVariable> &varset = (*it_oldVar).second;
   set<ClVariable>::iterator it = varset.begin();
   for (; it != varset.end(); ++it)
@@ -86,3 +95,13 @@ ClTableau::substituteOut(const ClVariable &oldVar, const ClLinearExpression &exp
     }
   my_columns.erase(it_oldVar);
 }
+
+ostream &operator<<(ostream &xo, const ClTableau &clt)
+{
+  xo << "Tableau:" << endl;
+  xo << clt.my_rows << endl;
+  xo << "Columns:" << endl;
+  xo << clt.my_columns << endl;
+  return xo;
+}
+
