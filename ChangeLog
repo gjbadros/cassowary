@@ -1,3 +1,25 @@
+Thu Aug 26 14:12:42 1999    <gjb@cs.washington.edu>
+
+	* c++/ClFDSolver.h, c++/ClCTest.c, c++/ClC.h, c++/ClC.cc,
+ 	c++/Cassowary.h, c++/ClConstraint.h: Use LONG_MIN, not MINLONG and
+ 	#include <limits.h> not <values.h> since the latter is deprecated
+ 	(and does not work in VC++).
+
+	* THANKS: Thank Pengling He for his VC++ bug report re: values.h
+	
+Thu Aug 26 14:08:46 1999    <gjb@cs.washington.edu>
+
+	* configure.in (GUILE_PKGDATA_DIR): Set cassoguiledir variable,
+	and use ${prefix} prefix of GUILE_PKGDATA_DIR to be sure that rpm
+	building succeeds (was failing because it was trying to write to
+	an absolute location that guile told it to use, instead of using
+	the prefix of $RPM_BUILD_ROOT).
+
+	* c++/Makefile.am: Fix lex/yacc building dependencies.
+
+	* guile/Makefile.am (cassoguile_LTLIBRARIES): Do not set
+	cassoguiledir here-- do it in configure.in instead.
+
 Thu Aug 26 11:02:36 1999    <gjb@cs.washington.edu>
 
 	* guile/Makefile.am (EXTRA_DIST), docs/Makefile.am: Added docs to
