@@ -1,4 +1,5 @@
 See ../README for general information and generic instructions.
+Also see ../COPYRIGHT for legalese regarding use of this distribution.
 Also see ../IMPORTANT for some important notes that you mustn't overlook.
 
 To build, just use GNU make, and "make all" within this directory.
