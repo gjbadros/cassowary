@@ -91,7 +91,7 @@ class ClLinearExpression  {
   // Add a term c*v to this expression.  If the expression already
   // contains a term involving v, add c to the existing coefficient.
   // If the new coefficient is approximately 0, delete v.
-  ClLinearExpression &addVariable(const ClAbstractVariable &v, Number c);
+  ClLinearExpression &addVariable(const ClAbstractVariable &v, Number c = 1.0);
 
   // Add a term c*v to this expression.  If the expression already
   // contains a term involving v, add c to the existing coefficient.
