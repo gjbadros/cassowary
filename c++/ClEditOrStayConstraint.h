@@ -15,10 +15,6 @@
 #include "ClLinearExpression.h"
 
 class ClEditOrStayConstraint : public ClConstraint {
- private:
-  /// instance variables
-  ClVariable my_variable;
-
  public:
 
   ClEditOrStayConstraint(const ClVariable &var,
@@ -37,6 +33,10 @@ class ClEditOrStayConstraint : public ClConstraint {
 
   void setVariable( const ClVariable &v)
     { my_variable = v; }
+
+  /// instance variables
+  ClVariable my_variable;
+
 
 };
 
