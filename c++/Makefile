@@ -10,23 +10,44 @@
 CC = gcc
 CPP = egcs-g++
 CFLAGS = -g -Wall
-# Below line is for egcs-1.0
-#CPPFLAGS = -g -Wall -L/uns/lib/egcs
-# Below line is for egcs-1.01 -- this makes exceptions work for me!
-CPPFLAGS = -g -DNO_TRACE -Wall -L/uns/egcs-1.01/lib -I/uns/egcs-1.01/include
+EGCSDIR = /uns/egcs
+CPPFLAGS = -O6 -DNO_TRACE -Wall -L$(EGCSDIR)/lib -I$(EGCSDIR)/include
 CXX = $(CPP)
 # -falt-external-templates
 LDFLAGS = -L/uns/lib/egcs
 
-TEST_OBJS = ClStrength.o ClSymbolicWeight.o ClLinearExpression.o \
-		 ClConstraint.o ClTableau.o ClSimplexSolver.o ClAbstractVariable.o
-TEST_SRCS = $(OBJS:.o=.cc)
+OBJS = 	ClAbstractVariable.o \
+	ClConstraint.o \
+	ClLinearExpression.o \
+	ClSimplexSolver.o \
+	ClStrength.o \
+	ClSymbolicWeight.o \
+	ClTableau.o
+
+
+TEST_OBJS = test-ClConstraint.o   \
+	test-ClLinearExpression.o  \
+	test-ClSimplexSolver.o     \
+	test-ClStrength.o          \
+	test-ClVariable.o	   \
+	ClTests.o
+
+
+
+SOURCES = $(OBJS:.o=.cc)
+
+TEST_SRCS = $(TEST_OBJS:.o=.cc)
+
 TESTS = test-ClStrength test-ClVariable test-ClLinearExpression test-ClConstraint \
 	test-ClSimplexSolver ClTests
 
-SOURCES = $(wildcard *.cc)
-
 HEADERS = Cassowary.h \
+	Cl.h \
+	ClAbstractVariable.h \
+	ClDummyVariable.h \
+	ClObjectiveVariable.h \
+	ClSlackVariable.h \
+	ClEditVariable.h \
 	ClConstraint.h \
 	ClEditConstraint.h \
 	ClEditOrStayConstraint.h \
@@ -44,30 +65,33 @@ HEADERS = Cassowary.h \
 
 all:	libcassowary.a cassowary-tests
 
+libCl.a: $(OBJS)
+	ar ruv $@ $(OBJS)
+
 clean:	
-	rm -f $(TESTS) *.o
+	rm -f $(TESTS) *.o libCl.a
 
 TAGS: $(SOURCES)
 	etags $^
 
 cassowary-tests: $(TESTS)
 
-ClTests: ClTests.o $(TEST_OBJS)
+ClTests: ClTests.o $(OBJS)
 	$(CPP) $(LDFLAGS) -o $@ $^
 
 test-ClStrength: test-ClStrength.o ClStrength.o ClSymbolicWeight.o
 	$(CPP) $(LDFLAGS) -o $@ $^
 
-test-ClLinearExpression: test-ClLinearExpression.o $(TEST_OBJS)
+test-ClLinearExpression: test-ClLinearExpression.o $(OBJS)
 	$(CPP) $(LDFLAGS) -o $@ $^
 
-test-ClVariable: test-ClVariable.o $(TEST_OBJS)
+test-ClVariable: test-ClVariable.o $(OBJS)
 	$(CPP) $(LDFLAGS) -o $@ $^
 
-test-ClConstraint: test-ClConstraint.o $(TEST_OBJS)
+test-ClConstraint: test-ClConstraint.o $(OBJS)
 	$(CPP) $(LDFLAGS) -o $@ $^
 
-test-ClSimplexSolver: test-ClSimplexSolver.o $(TEST_OBJS)
+test-ClSimplexSolver: test-ClSimplexSolver.o $(OBJS)
 	$(CPP) $(LDFLAGS) -o $@ $^
 
 cassowary-test:	$(TEST_OBJS)
