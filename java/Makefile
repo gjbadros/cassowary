@@ -41,10 +41,10 @@ JAVAFILES = \
 	ClVariable.java \
 	ClPoint.java \
 	ClTableau.java \
+	ClSimplexSolver.java \
 	Set.java
 
 #	ClTests.java \
-#	ClSimplexSolver.java \
 
 CLASSFILES = $(JAVAFILES:.java=.class)
 
