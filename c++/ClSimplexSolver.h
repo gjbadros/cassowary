@@ -38,9 +38,12 @@ class ExCLRequiredFailureWithExplanation;
 // ClSimplexSolver encapsulates the solving behaviour
 // of the cassowary algorithm
 class ClSimplexSolver : public ClSolver, public ClTableau {
- protected: typedef ClTableau super;
+  //GJB:FIXME:: I do not think these should need
+  // to be public, but they do with RH7's gcc-2.96-69
+ public:
   class ClEditInfo;
   typedef list<ClEditInfo *> ClEditInfoList;
+ protected: typedef ClTableau super;
 
   ClEditInfo *PEditInfoFromClv(ClVariable clv) {
     ClEditInfoList::iterator it = _editInfoList.begin();
