@@ -101,6 +101,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
 	pzRow->addExpression(*pexpr,-1.0,my_objective,*this);
 	}
       }
+    // FIXGJB: move to top?
     my_errorVars.erase(it_eVars);
     }
 
@@ -295,8 +296,9 @@ ClSimplexSolver::resolve(const vector<double> &newEditConstants)
 {
 #ifndef NO_TRACE
   Tracer TRACER(__FUNCTION__);
-  cerr << "(" << "newEditConstants" /* FIXGJB */ << ")" << endl;
+  cerr << "(" << "newEditConstants" << newEditConstants << ")" << endl;
 #endif
+  // FIXGJB is there a better way to empty it?
   while (!my_infeasibleRows.empty())
     {
     my_infeasibleRows.erase(my_infeasibleRows.begin());
@@ -610,7 +612,6 @@ ClSimplexSolver::dualOptimize()
   // need to handle infeasible rows
   while (!my_infeasibleRows.empty())
     {
-    // need to erase it_exitVar at end
     set<const ClAbstractVariable *>::iterator it_exitVar = my_infeasibleRows.begin();
     const ClAbstractVariable *pexitVar = *it_exitVar;
     my_infeasibleRows.erase(it_exitVar);
