@@ -36,8 +36,11 @@ class ExCLRequiredFailureWithExplanation;
 class ClEditInfo {
   friend ClSimplexSolver;
 public:
-  // This class owns the pointers passed in --
-  // they get deleted when the class is deleted
+
+  // These instances own none of the pointers;
+  // the tableau row (the expression) owns the peplus, peminus,
+  // and addEditVar/removeEditVar pair or the client code owns
+  // the constraint object
   ClEditInfo(const ClEditConstraint *pconstraint, 
              ClSlackVariable *peplus, ClSlackVariable *peminus,
              Number prevEditConstant,
@@ -50,9 +53,6 @@ public:
 
   ~ClEditInfo() 
     { 
-      /* FIXNOWGJB: Leak?     delete _pconstraint; 
-      delete _pclvEditPlus; 
-      delete _pclvEditMinus; */
     }
 
 private:
@@ -139,7 +139,7 @@ class ClSimplexSolver : public ClTableau {
       const ClEditInfo *pcei = _editVarMap[&v];
       const ClConstraint *pcnEdit = pcei->_pconstraint;
       removeConstraint(*pcnEdit);
-      /* FIXNOWGJB: should above do the delete?      delete pcei; */
+      delete pcnEdit;
       return *this;
     }
 
