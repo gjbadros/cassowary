@@ -1,3 +1,24 @@
+Sun Apr 25 18:55:26 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile.am: Added ClFDBinaryOneWayConstraint.h,
+	ClFDConstraint.h to pkginclude_HEADERS.
+
+	* c++/ClSimplexSolver.h, c++/ClSimplexSolver.cc: Added optional
+ 	strength argument to AddPointStays, AddPointStay fns.
+
+	* c++/ClFDVariable.h:  Set _plfdnInitialDomain to avoid a warning
+	for now.
+
+	* c++/ClFDBinaryOneWayConstraint.h: Added return xo to PrintOn.
+
+	* c++/ClConstraint.h: Fix order of initializers.
+
+	* c++/ClC.h, c++/ClC.cc: Document return value for
+ 	CL_VarMapDelete, and do proper return.
+
+	* configure.in:  Added --enable-cflags, --enable-cxxflags,
+	--enable-cppextraflags.  Not tested yet.
+
 Sun Apr 25 11:46:28 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* configure.in: Bump version to .50, for FD features.

@@ -39,3 +39,4 @@ test-ClLinearExpression
 test-ClSimplexSolver
 test-ClStrength
 test-ClVariable
+ClFDTests
