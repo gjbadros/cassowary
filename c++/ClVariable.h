@@ -82,7 +82,14 @@ public:
 
   // change the value held -- should *not* use this if the variable is
   // in a solver -- instead use addEditVar() and suggestValue() interface
-  virtual void set_value(Number value)
+  void set_value(Number value)
+    { _value = value; }
+
+  // permit overriding in subclasses in case something needs to be
+  // done when the value is changed by the solver
+  // may be called when the value hasn't actually changed -- just 
+  // means the solver is setting the external variable
+  virtual void change_value(Number value)
     { _value = value; }
 
 private:
