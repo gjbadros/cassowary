@@ -1,3 +1,23 @@
+Sat Jul 10 19:21:34 1999  Greg Badros  <gjb@cs.washington.edu>
+
+	* autogen.sh: rm libtool stuff just in case.
+
+	* README: Updated version number, notes about building it and
+	needing GTL for fd solver.
+
+	* configure.in: Added --enable-cxx-tests, --enable-fd-solver,
+	--with-gtl;  switch --disable-java-build to --enable-java-build
+
+	* acconfig.h, c++/config.h.in: Added HAVE_GTL, BUILD_FD_SOLVER options.
+
+	* c++/Makefile.am: Make only the library and ClTests get built by
+	default (other binary test programs are each big when build -g,
+	and aren't useful to the end user).  Use @SOURCES_FOR_FD_SOLVER@
+	to permit a version of the toolkit to be build without the finite
+	domain subsolver.
+
+	* c++/ClC.h, c++/ClC.cc, c++/Cl.h: Add #ifdefs for no fd subsolver.
+
 Fri May  7 17:02:09 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* c++/ClC.cc (CL_ClvLookup): Return NULL if varmap is NULL instead 
@@ -273,7 +293,7 @@ Sun Apr 25 11:37:52 1999  Greg J Badros  <gjb@cs.washington.edu>
 	* c++/Makefile.am: Comment out the Bug sources/builds, add the FD
 	sources.
 
-	* c++/ClSimplexSolver.h: Inherite from ClSolver, too.  Move SetPv, 
+	* c++/ClSimplexSolver.h: Inherit from ClSolver, too.  Move SetPv, 
 	Pv() out into ClSolver base class.
 
 	* c++/ClSimplexSolver.cc, c++/Cl.h: Make szCassowaryVersion a const char *.
