@@ -27,6 +27,7 @@
 
 class ClSimplexSolver;
 class ClFDSolver;
+class ClBlueSolver;
 
 // enum setup so additive inverse flips the direction of the inequality
 enum ClCnRelation {cnEQ = 0, cnNEQ = 100, cnLEQ = 2, cnGEQ = -2, cnLT = 3, cnGT = -3 };
@@ -164,6 +165,7 @@ public:
 
   friend ClSimplexSolver;
   friend ClFDSolver;
+  friend ClBlueSolver;
 private:
 
   ClSymbolicWeight symbolicWeight() const {

@@ -23,7 +23,7 @@ extern "C" {
 #endif
 
 #include <stdio.h>
-#include <values.h>
+#include <limits.h>
 
 
 #define boolean int
@@ -86,7 +86,7 @@ const char *CL_VariableName(CLV var);
 
 #if defined(CL_HAVE_GTL) && defined(CL_BUILD_FD_SOLVER)
 #ifndef FDN_EOL
-#define FDN_EOL MINLONG
+#define FDN_EOL LONG_MIN
 #endif
 typedef long FDNumber;
 

@@ -17,14 +17,14 @@
 #include "Cl.h"
 #include <strstream.h>
 #include <stdio.h>
-#include <values.h>
+#include <limits.h>
 
 #ifdef HAVE_CONFIG_H
 #include <cassowary/config.h>
 #define CONFIG_H_INCLUDED
 #endif
 
-#define FDN_EOL MINLONG
+#define FDN_EOL LONG_MIN
 
 #define boolean int
 

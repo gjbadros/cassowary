@@ -110,7 +110,7 @@ class ClFDSolver: public ClSolver {
   node_map<ClVariable> nodeToVar;
 };
 
-#define FDN_EOL MINLONG
+#define FDN_EOL LONG_MIN
 
 void ListPushOnto(list<FDNumber> *pl, ...);
 

@@ -11,7 +11,7 @@
 
 #include "ClC.h"
 #include <stdio.h>
-#include <values.h>
+#include <limits.h>
 
 int main(int argc, char *argv[] )
 {
