@@ -98,16 +98,23 @@ TEST_OBJS = test-ClConstraint.o    \
 	ClTestColumns.o            \
 	QocaBench.o
 
+CTEST_OBJS = ClCTest.o
 
 
 SOURCES = $(OBJS:.o=.cc)
 
 TEST_SRCS = $(TEST_OBJS:.o=.cc)
 
+CTEST_SRCS = $(CTEST_OBJS:.o=.c)
+
 NT_SOURCES = $(OBJS:.o=.cpp) $(TEST_OBJS:.o=.cpp)
 
 TESTS = test-ClStrength test-ClVariable test-ClLinearExpression test-ClConstraint \
 	test-ClSimplexSolver ClTests ClBug0 ClBug1 ClLeakTest ClSubgraphTest ClParseTest QocaBench
+
+CTESTS = ClCTest
+
+C_SOURCES = ClC.cc
 
 HEADERS = Cassowary.h \
 	Cl.h \
@@ -141,6 +148,8 @@ HEADERS = Cassowary.h \
 	timer.h \
 	creader.h
 
+C_HEADERS = ClC.h
+
 #Default rule is to just build the static library
 lib:    $(CL_LIBRARY)
 
@@ -156,14 +165,20 @@ shared_lib:	$(CL_SHARED_LIBRARY)
 
 $(CL_LIBRARY): $(OBJS)
 	rm -f $@
-	ar ruv $@ $(OBJS)
+	ar ruv $@ $^
 
 $(CL_SHARED_LIBRARY): $(OBJS)
 	rm -f $@
 	$(CPP_SO_LINK) -o $@ $(OBJS)
 
+libccassowary.so: $(OBJS) ClCTest.o
+	$(CPP_SO_LINK) -o $@ $(OBJS)
+
+ClCTest: ClC.o ClCTest.o libccassowary.so
+	$(CC) -o $@ $^
+
 clean:	
-	rm -f $(TESTS) *.o creader.cc creader-lex.cc
+	rm -f $(TESTS) $(CTESTS) $(CL_LIBRARY) $(CL_SHARED_LIBRARY) *.o creader.cc creader-lex.cc
 	@echo "Consider doing a \`make depend'"
 
 TAGS: $(SOURCES) $(HEADERS)
@@ -173,6 +188,9 @@ cassowary-tests: $(TESTS)
 
 %: %.o $(CL_LIBRARY) $(OTHER_LIBS)
 	$(CPP) $(LDFLAGS) -o $@ $^ # $(LDLIBS) # uncomment if want dynlink
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c -o $@ $<
 
 cassowary-test:	$(TEST_OBJS)
 
@@ -189,9 +207,6 @@ creader-lex.cc: creader.l creader.h
 creader.o: creader.h
 
 creader-lex.o: creader.h
-
-
-libcassowary.a:	
 
 tags: TAGS
 
@@ -217,8 +232,9 @@ ntsources: $(NT_SOURCES)
 # -------------------------
 # (Can add Makefile.dependencies to the left of below colon
 #  to auto-build dependencies)
-depend: $(TEST_SRCS) $(SOURCES) $(HEADERS)
+depend: $(TEST_SRCS) $(SOURCES) $(C_SOURCES) $(HEADERS) $(C_HEADERS)
 	rm -f Makefile.dependencies
-	$(CPP) -M $(TEST_SRCS) $(SOURCES) >> Makefile.dependencies
+	$(CPP) -M $(TEST_SRCS) $(SOURCES) $(C_SOURCES) >> Makefile.dependencies
+	$(CC) -M $(CTEST_SRCS) >> Makefile.dependencies
 
 -include Makefile.dependencies
