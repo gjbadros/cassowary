@@ -5,7 +5,7 @@
 // This Java Implementation by Greg J. Badros, <gjb@cs.washington.edu>
 // http://www.cs.washington.edu/homes/gjb
 // (C) 1998 Alan Borning and Greg Badros
-// See ../COPYRIGHT for legal details regarding this software
+// See ../LICENSE for legal details regarding this software
 //
 // ExCLConstraintNotFound
 //

@@ -1,5 +1,5 @@
 See ../README for general information and generic instructions.
-Also see ../COPYRIGHT for legalese regarding use of this distribution.
+Also see ../LICENSE for legalese regarding use of this distribution.
 Also see ../IMPORTANT for some important notes that you mustn't overlook.
 
 Cassowary/C++ needs to be compiled using a modern C++ compiler.
