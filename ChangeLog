@@ -1,3 +1,61 @@
+Sun Apr 25 11:46:28 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* configure.in: Bump version to .50, for FD features.
+
+Sun Apr 25 11:37:52 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile.am: Comment out the Bug sources/builds, add the FD
+	sources.
+
+	* c++/ClSimplexSolver.h: Inherite from ClSolver, too.  Move SetPv, 
+	Pv() out into ClSolver base class.
+
+	* c++/ClSimplexSolver.cc, c++/Cl.h: Make szCassowaryVersion a const char *.
+
+	* c++/ClReadery.y, c++/ClReader.l, c++/ClReader.h: Support "?"
+ 	read-only annotations, and use Constraint::AddROVars() to track
+ 	the ro vars of a constraint expression.
+
+	* c++/ClParseTest.cc: Show whether the constraint is added
+	successfully or if it is inconsistent.
+
+	* c++/ClLinearConstraint.h: Fix BUG-- super should be
+	ClConstraint, not ClLinearConstraint.
+
+	* c++/ClFDVariable.cc: Use <, > to delimit FD vars, not [, ].
+
+	* c++/ClConstraint.h, c++/ClConstraint.cc: Added AddROVars,
+ 	FIsReadOnlyVar, ReadOnlyVars.
+
+Thu Apr 22 20:18:31 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClVariable.h: Added ClVariable ctr that takes a
+	ClFDVariable*, this ambiguates returning NULL as a ClVariable, so
+	may not be a good idea, but it does make it less confusing than
+	having another overloaded version of ClVariable's ctr. Added
+	IsFloatVariable, IsFDVariable fwding fns.
+
+	* c++/ClSimplexSolver.cc: Disambiguate uses of NULL to be
+	(ClFloatVariable *)NULL.
+
+	* c++/ClFloatVariable.h: Added IsFloatVariable() to return true
+
+	* c++/ClC.h, c++/ClC.cc: Added CL_ClvLookupTrim for removing ws
+ 	around the var name.
+
+	* c++/ClAbstractVariable.h: Make IsPivotable, IsRestricted both
+	assert false instead of being pure virtual -- they only need to be 
+	overridden if we want to permit them to be called.  Added
+	IsFloatVariable(), IsFDVariable() both returning false in this
+	base class.
+
+	* c++/Cassowary.h: Added FDNumber typedef to be a long.
+
+	* c++/Makefile.am: Added ClFDVariable.{cc,h}
+
+	* c++/ClFDVariable.cc, c++/ClFDVariable.h: Added, copied from
+	ClFloatVariable and modified slightly.
+
 Tue Apr 20 10:18:32 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* smalltalk/README: Note that smalltalk implementation is now in
