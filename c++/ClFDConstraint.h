@@ -31,6 +31,8 @@ class ClFDConstraint : public ClConstraint {
 		     double weight = 1.0) 
       : ClConstraint(strength, weight) { }
 
+  virtual bool FIsOkayForSimplexSolver() const { return false; }
+
  protected:
 
 };

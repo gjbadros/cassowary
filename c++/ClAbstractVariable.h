@@ -19,6 +19,7 @@
 
 #include <stdio.h> /* for sprintf */
 #include "Cassowary.h"
+#include "ClErrors.h"
 #include "auto_ptr.h"
 
 #ifdef USE_GC
@@ -91,13 +92,13 @@ public:
 
   // Return true if we can Pivot on this variable.
   virtual bool IsPivotable() const
-    { assert(false); }
+    { throw ExCLTooDifficultSpecial("Variable not usable inside SimplexSolver"); return false; }
 
   // Return true if this is a restricted (or slack) variable.  Such
   // variables are constrained to be non-negative and occur only
   // internally to the simplex solver.
   virtual bool IsRestricted() const
-    {assert(false); }
+    { throw ExCLTooDifficultSpecial("Variable not usable inside SimplexSolver"); return false; }
 
 #ifndef CL_NO_IO
   // Prints a semi-descriptive representation to the stream, using the

@@ -27,12 +27,7 @@ simple1()
    {
    bool fOkResult = true;
    list<FDNumber> l;
-   /* GJB:FIXME:: varargs inteface, with sentinel as first arg? */
-   l.push_back(9);
-   l.push_back(10);
-   l.push_back(12);
-   l.push_back(14);
-   l.push_back(20);
+   ListPushOnto(&l,6,8,10,12,14,16,20,24,30,40,60,FDN_EOL);
    ClVariable x(new ClFDVariable("x",10,l));
    ClVariable y(new ClFDVariable("y",14,l));
    cout << x << ", " << y << endl;
@@ -89,6 +84,90 @@ simple1()
 }
 
 
+bool
+simple2()
+{
+ try
+   {
+   bool fOkResult = true;
+   list<FDNumber> l;
+   ListPushOnto(&l,6,8,10,12,14,16,20,24,30,40,60,FDN_EOL);
+   ClVariable x(new ClFDVariable("x",10,l));
+   cout << x << endl;
+   ClFDBinaryOneWayConstraint cn1(x,cnEQ,18,ClsStrong());
+   cout << cn1 << endl;
+
+   ClFDSolver fdsolver;
+
+   cerr << (fdsolver.AddConstraintNoException(&cn1)? "Added cn1" : "Failed adding cn1") << endl;
+   cerr << fdsolver;
+
+   fdsolver.ShowSolve();
+   fdsolver.Solve();
+
+   cout << "x = " << x.Value() << endl;
+   
+   cerr << (fdsolver.RemoveConstraintNoException(&cn1) ? "Removed cn1" : "Failed removing cn1")
+        << endl;
+   cerr << fdsolver;
+
+   return fOkResult;
+   } 
+ catch (ExCLError &error) 
+   {
+   cerr << "Exception! " << error.description() << endl;
+   return(false);
+   } 
+ catch (...) 
+   {
+   cerr << "Unknown exception" << endl;
+   return(false);
+   }
+}
+
+bool
+simple3()
+{
+ try
+   {
+   bool fOkResult = true;
+   list<FDNumber> l;
+   ListPushOnto(&l,6,8,10,12,14,16,20,24,30,40,60,FDN_EOL);
+   ClVariable x(new ClFDVariable("x",10,l));
+   cout << x << endl;
+   ClFDBinaryOneWayConstraint cn1(x,cnEQ,18,ClsRequired());
+   cout << cn1 << endl;
+
+   ClFDSolver fdsolver;
+
+   cerr << (fdsolver.AddConstraintNoException(&cn1)? "Added cn1" : "Failed adding cn1") << endl;
+   cerr << fdsolver;
+
+   fdsolver.ShowSolve();
+   if (fdsolver.SolveNoException())
+     cout << "Test failed... the solve should not have succeeded!" << endl;
+
+   cout << "x = " << x.Value() << endl;
+   
+   cerr << (fdsolver.RemoveConstraintNoException(&cn1) ? "Removed cn1" : "Failed removing cn1")
+        << endl;
+   cerr << fdsolver;
+
+   return fOkResult;
+   } 
+ catch (ExCLError &error) 
+   {
+   cerr << "Exception! " << error.description() << endl;
+   return(false);
+   } 
+ catch (...) 
+   {
+   cerr << "Unknown exception" << endl;
+   return(false);
+   }
+}
+
+
 
 int
 main( int /* argc */, char ** /* argv */ )
@@ -109,6 +188,8 @@ main( int /* argc */, char ** /* argv */ )
     if (!fResult) cout << "Failed!" << endl;
 
     RUN_TEST(simple1);
+    RUN_TEST(simple2);
+    RUN_TEST(simple3);
     
     return (fAllOkResult? 0 : 255);
     

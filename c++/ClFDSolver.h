@@ -48,6 +48,13 @@ class ClFDSolver: public ClSolver {
 
   virtual ClFDSolver &ShowSolve();
 
+  void ChangeClv(ClVariable clv, FDNumber n) {
+    clv.ChangeValue(n); 
+    if (_pfnChangeClvCallback) {
+      _pfnChangeClvCallback(&clv,this);
+    }
+  }
+
 
 #ifndef CL_NO_IO
   ostream &PrintOn(ostream &xo) const;
@@ -62,6 +69,10 @@ class ClFDSolver: public ClSolver {
 #endif
 
  protected:
+
+  virtual ClFDSolver &AddConstraintInternal(ClConstraint *const pcn);
+
+  virtual ClFDSolver &RemoveConstraintInternal(ClConstraint *const pcn);
 
   /* Create node for v in G, if necessary,
      otherwise return the node we already created. */
@@ -98,5 +109,9 @@ class ClFDSolver: public ClSolver {
 
   node_map<ClVariable> nodeToVar;
 };
+
+#define FDN_EOL MINLONG
+
+void ListPushOnto(list<FDNumber> *pl, ...);
 
 #endif

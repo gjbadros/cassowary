@@ -58,6 +58,10 @@ ClSimplexSolver::AddConstraint(ClConstraint *const pcn)
   cerr << "(" << *pcn << ")" << endl;
 #endif
   
+  if (!pcn->FIsOkayForSimplexSolver()) {
+    throw ExCLTooDifficultSpecial("SimplexSolver cannot handle this constraint object");
+  }
+
   if (pcn->IsStrictInequality()) {
     // cannot handle strict inequalities
     throw ExCLStrictInequalityNotAllowed();
@@ -135,7 +139,7 @@ ClSimplexSolver::AddConstraint(ClConstraint *const pcn)
                                                       prevEConstant, ccnEdit);
     }
 
-  if (_fOptimizeAutomatically)
+  if (_fAutosolve)
     {
     Optimize(_objective);
     SetExternalVariables();
@@ -451,7 +455,7 @@ ClSimplexSolver::RemoveConstraintInternal(const ClConstraint *const pcn)
     _errorVars.erase((*it_eVars).first);
     }
 
-  if (_fOptimizeAutomatically)
+  if (_fAutosolve)
     {
     Optimize(_objective);
     SetExternalVariables();

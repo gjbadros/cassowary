@@ -17,11 +17,14 @@
 #include "Cl.h"
 #include <strstream.h>
 #include <stdio.h>
+#include <values.h>
 
 #ifdef HAVE_CONFIG_H
 #include <cassowary/config.h>
 #define CONFIG_H_INCLUDED
 #endif
+
+#define FDN_EOL MINLONG
 
 #define boolean int
 
@@ -90,6 +93,30 @@ CLV CL_ClvNew(const char *szName, double Value, CL_SimplexSolver solver)
   return pclv;
 }
 
+
+#include <stdarg.h>
+
+/* Return a new ClVariable containing an FD variable with name and 
+   varargs domain_values as its initial domain, terminated with FDN_EOL */
+CLV CL_CldvNew(const char *szName, ...)
+{
+  va_list ap;
+  va_start(ap, szName);
+  list<FDNumber> l;
+  FDNumber n;
+  while ( (n = va_arg(ap, FDNumber)) != FDN_EOL) {
+    l.push_back(n);
+  }
+  va_end(ap);
+
+  ClVariable *pclv = new ClVariable(new ClFDVariable(szName,0.0,l));
+#if 0
+  fprintf(stderr,"Created fd var %s @ %p\n",szName,pclv->get_pclv());
+#endif
+  return pclv;
+}
+
+
 void CL_VariableSetPv(CLV var, void *pv)
 { var->SetPv(pv); }
 
@@ -114,6 +141,15 @@ CL_FDSolver CL_FDSolverNew()
   return psolver;
 }
 
+
+/* Print the ClVariable out to the given FILE * */
+void 
+CL_ClvPrint(CLV var, FILE *out)
+{
+  strstream xo;
+  xo << *var << ends;
+  fprintf(out,"%s",xo.str());
+}
 
 /* Print the ClSolver object out to the given FILE * */
 void 
@@ -145,7 +181,7 @@ CL_TableauPrintExternalVariables(CL_Tableau tableau, FILE *out)
 
 
 void 
-CL_SimplexSolverSetChangeClvCallback(CL_SimplexSolver solver, PfnChangeClvCallback pfn)
+CL_SolverSetChangeClvCallback(CL_Solver solver, PfnChangeClvCallback pfn)
 {
   solver->SetChangeClvCallback(pfn);
 }
@@ -266,4 +302,24 @@ void CL_SimplexSolverSetEditedValue(CL_SimplexSolver solver, CLV var, double n)
   solver->SetEditedValue(*var,n);
 }
 
+boolean CL_FDCanConvertCn(CL_Constraint cn)
+{
+  return ClFDBinaryOneWayConstraint::FCanConvertCn(*cn);
 }
+
+CL_Constraint CL_FDCnFromCn(CL_Constraint cn)
+{
+  try {
+    return new ClFDBinaryOneWayConstraint(*cn);
+  } catch (...) {
+    return NULL;
+  }
+}
+
+boolean CL_FCnOkayForSimplexSolver(CL_Constraint cn)
+{
+  return cn->FIsOkayForSimplexSolver();
+}
+
+
+} /* extern "C" */

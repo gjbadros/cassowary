@@ -10,6 +10,7 @@
 // ClFDVariable.cc
 
 #include "ClFDVariable.h"
+#include "ClSolver.h" // for list<FDNumber> printing
 
 #ifdef HAVE_CONFIG_H
 #include <cassowary/config.h>
@@ -20,7 +21,7 @@
 #ifndef CL_NO_IO
 ostream &ClFDVariable::PrintOn(ostream &xo) const
 {  
-  xo << "<" << Name() << ":" << _value << ">";
+  xo << "<" << Name() << "=" << Value() << ":" << *PlfdnDomain() << ">";
   return xo;
 }
 #endif

@@ -24,8 +24,24 @@
 #include <pair.h>
 #include <math.h>
 
+static int fDebugFDSolve;
+
 ClFDSolver &
 ClFDSolver::AddConstraint(ClConstraint *const pcn)
+{
+  AddConstraintInternal(pcn);
+  if (_fAutosolve) Solve();
+}
+
+ClFDSolver &
+ClFDSolver::RemoveConstraint(ClConstraint *const pcn)
+{
+  RemoveConstraintInternal(pcn);
+  if (_fAutosolve) Solve();
+}
+
+ClFDSolver &
+ClFDSolver::AddConstraintInternal(ClConstraint *const pcn)
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -69,7 +85,7 @@ ClFDSolver::AddConstraint(ClConstraint *const pcn)
 }
 
 ClFDSolver &
-ClFDSolver::RemoveConstraint(ClConstraint *const pcn)
+ClFDSolver::RemoveConstraintInternal(ClConstraint *const pcn)
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -133,18 +149,24 @@ ClFDSolver::Solve()
   for (; it != end; ++it) {
     ClVariable clv = nodeToVar[*it];
     ClFDVariable *pcldv = dynamic_cast<ClFDVariable*>(clv.get_pclv());
-    if (!clv.IsNil()) cout << (*it) << " is " << clv << endl;
-    cout << "Set from: " << endl;
-    for (ClConstraintSet::iterator itCns = _mapClvToCns[clv].begin();
-         itCns != _mapClvToCns[clv].end();
-         ++itCns) {
-      const ClConstraint *pcn = *itCns;
-      cout << *pcn << endl;
+#ifndef NO_FDSOLVE_DEBUG
+    if (fDebugFDSolve) {
+      if (!clv.IsNil()) cout << "node " << (*it) << " is " << clv << endl;
+      cerr << "Set from: " << endl;
+      for (ClConstraintSet::iterator itCns = _mapClvToCns[clv].begin();
+           itCns != _mapClvToCns[clv].end();
+           ++itCns) {
+        const ClConstraint *pcn = *itCns;
+        cerr << *pcn << endl;
+      }
+      cerr << endl;
     }
-    cout << endl;
+#endif
     pair<ClSymbolicWeight,FDNumber> p = ComputeBest(pcldv);
     ClSymbolicWeight e = p.first;
     FDNumber v = p.second;
+    if (v == FDN_NOTSET)
+      throw ExCLRequiredFailure();
     pcldv->ChangeValue(v);
     pcldv->SetFIsSet(true);
     errorTotal += e;
@@ -158,12 +180,12 @@ pair<ClSymbolicWeight,FDNumber>
 ClFDSolver::ComputeBest(ClFDVariable *pcldv)
 {
   assert(pcldv);
-  assert(!pcldv->FIsSet());
-  ClSymbolicWeight minError(MAXDOUBLE,MAXDOUBLE,MAXDOUBLE);
+  //  assert(!pcldv->FIsSet()); //GJB:FIXME::
+  ClSymbolicWeight minError = ClsRequired().symbolicWeight();
   FDNumber bestValue = FDN_NOTSET;
   //  ClVariable clv(pcldv);
   // for each domain value
-  for (list<FDNumber>::iterator itVal= pcldv->PlfdnDomain()->begin();
+  for (list<FDNumber>::const_iterator itVal= pcldv->PlfdnDomain()->begin();
        itVal != pcldv->PlfdnDomain()->end();
        ++itVal) {
     FDNumber value = *itVal;
@@ -185,7 +207,8 @@ ClFDSolver::ComputeBest(ClFDVariable *pcldv)
   }
   // now minError is the lowest error we can get for clv
   // and it occurs binding clv <- bestValue
-  assert(bestValue != FDN_NOTSET);
+  if  (bestValue == FDN_NOTSET)
+    throw ExCLRequiredFailure();
   return pair<ClSymbolicWeight,FDNumber>(minError,bestValue);
 }
 
@@ -233,10 +256,18 @@ ClFDSolver::ErrorForClvAtValSubjectToCn(ClFDVariable *pcldv,FDNumber value,const
   default:
     assert(false);
   }
+
+  ClSymbolicWeight err;
   if (cn.IsRequired() && e > 0)
-    return ClsRequired().symbolicWeight();
+    err = ClsRequired().symbolicWeight();
   else
-    return cn.symbolicWeight() * (e*cn._weight);
+    err = cn.symbolicWeight() * (e*cn._weight);
+#ifndef NO_FDSOLVE_DEBUG
+  if (fDebugFDSolve) {
+    cerr << "Error at " << value << " = " << err << endl;
+  }
+#endif
+  return err;
 }
 
 
@@ -249,7 +280,7 @@ ClFDSolver::ShowSolve()
   topsort::topsort_iterator end = t.top_order_end();
   for (; it != end; ++it) {
     ClVariable clv = nodeToVar[*it];
-    if (!clv.IsNil()) cout << (*it) << " is " << clv << endl;
+    if (!clv.IsNil()) cout << "Node " << (*it) << " is " << clv << endl;
     cout << "Set from: " << endl;
     for (ClConstraintSet::iterator itCns = _mapClvToCns[clv].begin();
          itCns != _mapClvToCns[clv].end();
@@ -313,4 +344,17 @@ ClFDSolver::GetVarNode(ClVariable v)
   } else {
     return (*it).second;
   }
+}
+
+
+void 
+ListPushOnto(list<FDNumber> *pl, ...)
+{
+  va_list ap;
+  va_start(ap, pl);
+  FDNumber n;
+  while ( (n = va_arg(ap, FDNumber)) != FDN_EOL) {
+    pl->push_back(n);
+  }
+  va_end(ap);
 }

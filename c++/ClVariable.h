@@ -50,10 +50,12 @@ public:
 
   // This one builds a ClFDVariable
   ClVariable(ClFDVariable *pcfv)
-      : pclv(pcfv) { }
+      : pclv(pcfv) 
+    { if (pmapStrPclv) { (*pmapStrPclv)[pcfv->Name()] = *this; } }
 
   /// permit ClVariables to be used as pointers to pclvs
   ClAbstractVariable *operator->() { return pclv; }
+  const ClAbstractVariable *operator->() const { return pclv; }
 
   /// and also forward the function calls along
 

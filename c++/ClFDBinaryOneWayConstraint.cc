@@ -21,20 +21,54 @@
 #include "ClLinearExpression.h"
 
 
-ClFDBinaryOneWayConstraint::ClFDBinaryOneWayConstraint(const ClLinearConstraint &cn)
-    :ClFDConstraint(cn.strength(), cn.weight())
+void 
+ClFDBinaryOneWayConstraint::EnsurePreconditionsForCn(const ClConstraint &cn)
 {
-   list<FDNumber> l;
-   /* GJB:FIXME:: varargs inteface, with sentinel as first arg? */
-   l.push_back(9);
-   l.push_back(10);
-   l.push_back(12);
-   l.push_back(14);
-   l.push_back(20);
-
   ClVarSet setRO = cn.ReadOnlyVars();
   if (setRO.size() > 1) 
-    throw ExCLEditMisuse("Only 0 or 1 read only variables are allowed");
+    throw ExCLTooDifficultSpecial("Only 0 or 1 read only variables are allowed");
+  const ClLinearExpression &expr = cn.Expression();
+  const ClVarToNumberMap &terms = expr.Terms();
+  if (terms.size() > 2)
+    throw ExCLTooDifficultSpecial("Cannot have more than 2 variables");
+  if (terms.size() == 0)
+    throw ExCLTooDifficultSpecial("Must have at least 1 variable");
+  if (terms.size() == 2 && setRO.size() == 0)
+    throw ExCLTooDifficultSpecial("Both variables cannot be read-write, one must be read-only");
+  if (terms.size() == 1 && setRO.size() == 1)
+    throw ExCLTooDifficultSpecial("Single read-only variable in LinearConstraint -- must not be read-only.");
+  ClVariable clv = (*terms.begin()).first;
+  /* GJB:FIXME:: iterate over all the variables */
+  if (!clv->IsFDVariable()) {
+    throw ExCLTooDifficultSpecial("FD constraint contains non-FD variables");
+  }
+}
+
+bool 
+ClFDBinaryOneWayConstraint::FCanConvertCn(const ClConstraint &cn)
+{
+  try {
+    EnsurePreconditionsForCn(cn);
+    return true;
+  } catch (...) {
+    return false;
+  }
+}
+
+
+ClFDBinaryOneWayConstraint::ClFDBinaryOneWayConstraint(const ClConstraint &cn)
+    :ClFDConstraint(cn.strength(), cn.weight())
+{
+  EnsurePreconditionsForCn(cn);
+  list<FDNumber> l;
+  /* GJB:FIXME:: varargs inteface, with sentinel as first arg? */
+  l.push_back(9);
+  l.push_back(10);
+  l.push_back(12);
+  l.push_back(14);
+  l.push_back(20);
+
+  ClVarSet setRO = cn.ReadOnlyVars();
 
   ClVariable clvRO = clvNil;
   ClVariable clvROLinear = clvNil;
@@ -45,19 +79,14 @@ ClFDBinaryOneWayConstraint::ClFDBinaryOneWayConstraint(const ClLinearConstraint 
 
   if (setRO.size() == 1) {
     const ClVariable &clv = *(setRO.begin());
-    clvRO = new ClFDVariable(clv.Name(),clv.IntValue(),l);
+    if (clv->IsFDVariable())
+      clvRO = clv;
+    else
+      clvRO = new ClFDVariable(clv.Name(),clv.IntValue(),l);
     clvROLinear = clv;
   }
   const ClLinearExpression &expr = cn.Expression();
   const ClVarToNumberMap &terms = expr.Terms();
-
-  if (terms.size() > 2)
-    throw ExCLEditMisuse("Cannot have more than 2 variables");
-  if (terms.size() == 0)
-    throw ExCLEditMisuse("Must have at least 1 variable");
-
-  if (terms.size() == 2 && setRO.size() == 0)
-    throw ExCLEditMisuse("Both variables cannot be read-write, one must be read-only");
 
   for (ClVarToNumberMap::const_iterator it = terms.begin();
        it != terms.end();
@@ -66,15 +95,16 @@ ClFDBinaryOneWayConstraint::ClFDBinaryOneWayConstraint(const ClLinearConstraint 
     if (clv == clvROLinear) {
       coeffRO = (*it).second;
     } else {
-      clvRW = new ClFDVariable(clv.Name(),clv.Value(),l);
+      if (clv->IsFDVariable())
+        clvRW = clv;
+      else
+        clvRW = new ClFDVariable(clv.Name(),clv.Value(),l);
       coeffRW = (*it).second;
     }
   }
-  if (clvRW.IsNil()) {
-    throw ExCLEditMisuse("Single read-only variable in LinearConstraint -- must not be read-only.");
-  }
+  assert(!clvRW.IsNil());
   if (coeffRW == 0) {
-    throw ExCLEditMisuse("RW variable's coefficient must be non-zero");
+    throw ExCLTooDifficultSpecial("RW variable's coefficient must be non-zero");
   }
 
   bool fInequality = cn.IsInequality();

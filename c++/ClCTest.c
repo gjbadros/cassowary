@@ -11,6 +11,7 @@
 
 #include "ClC.h"
 #include <stdio.h>
+#include <values.h>
 
 int main(int argc, char *argv[] )
 {
@@ -18,6 +19,7 @@ int main(int argc, char *argv[] )
   CLV frameWidth;
   CLV frameHeight;
   CLV x;
+  CLV y;
   CL_Constraint cn;
 
   CL_Init();
@@ -29,8 +31,12 @@ int main(int argc, char *argv[] )
   CL_SimplexSolverAddStrongStay(solver,frameWidth,10);
   CL_SimplexSolverAddStrongStay(solver,frameHeight,10);
   x = CL_ClvNew("x",0,solver);
+  y = CL_CldvNew("y",4,6,9,15,20,FDN_EOL);
 
-  printf("\"x\" has Value %g\n", CL_ClvValue(CL_ClvLookup("x")));
+  CL_ClvPrint(x,stdout);
+  printf("\n");
+  CL_ClvPrint(y,stdout);
+  printf("\n");
  
   printf("x = %g, frameWidth = %g\n",CL_ClvValue(x),CL_ClvValue(frameWidth));
 

@@ -126,6 +126,8 @@ public:
 
   virtual bool FIsInSolver() const { return _times_added != 0; }
 
+  virtual bool FIsOkayForSimplexSolver() const { return true; }
+
   void ChangeStrength( const ClStrength &strength) 
     { 
       if (_times_added == 0) {

@@ -50,8 +50,10 @@ int main()
         cerr << endl;
         try {
           ClLinearConstraint *pcnLin = dynamic_cast<ClLinearConstraint *>(pcn);
-          ClFDBinaryOneWayConstraint cnfd(*pcnLin);
-          cerr << "as an fd constraint: " << cnfd << endl;
+          if (ClFDBinaryOneWayConstraint::FCanConvertCn(*pcnLin)) {
+            ClFDBinaryOneWayConstraint cnfd(*pcnLin);
+            cerr << "as an fd constraint: " << cnfd << endl;
+          }
         } catch (const ExCLError &e) {
           cerr << e.description() << endl;
         }

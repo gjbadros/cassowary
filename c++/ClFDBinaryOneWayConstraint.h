@@ -43,7 +43,11 @@ class ClFDBinaryOneWayConstraint : public ClFDConstraint {
         _coefficient(0), _constant(constant)
     { }
   
-  ClFDBinaryOneWayConstraint(const ClLinearConstraint &cn);
+  ClFDBinaryOneWayConstraint(const ClConstraint &cn);
+
+  static void EnsurePreconditionsForCn(const ClConstraint &cn);
+
+  static bool FCanConvertCn(const ClConstraint &cn);
 
 #ifndef CL_NO_IO
   virtual ostream &PrintOn(ostream &xo) const

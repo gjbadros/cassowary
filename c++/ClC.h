@@ -23,8 +23,17 @@ extern "C" {
 #endif
 
 #include <stdio.h>
+#include <values.h>
+
+#ifndef FDN_EOL
+#define FDN_EOL MINLONG
+#endif
 
 #define boolean int
+
+typedef double Number;
+
+typedef long FDNumber;
 
 struct ClVariable;
 
@@ -75,6 +84,17 @@ void CL_Shutdown();
    solver is non null */
 CLV CL_ClvNew(const char *szName, double Value, CL_SimplexSolver solver);
 
+/* Create a FD variable */
+CLV CL_CldvNew(const char *szName, ...);
+
+/* return true iff cn can be added to the FD solver */
+boolean CL_FDCanConvertCn(CL_Constraint cn);
+
+boolean CL_FCnOkayForSimplexSolver(CL_Constraint cn);
+
+
+CL_Constraint CL_FDCnFromCn(CL_Constraint cn);
+
 void CL_VariableSetPv(CLV var, void *pv);
 
 void *CL_VariablePv(CLV var);
@@ -88,15 +108,18 @@ CL_FDSolver CL_FDSolverNew();
 /* Return a new ClSimplexSolver object */
 CL_SimplexSolver CL_SimplexSolverNew();
 
+/* Print the ClVariable out to the given FILE * */
+void CL_ClvPrint(CLV clv, FILE *out);
+
 /* Print the ClSolver object out to the given FILE * */
 void CL_SolverPrint(CL_Solver solver, FILE *out);
 
 void CL_ConstraintPrint(CL_Constraint pcn, FILE *out);
 
-  /* FIXGJB: do not use ClVariable -- use ClAbstractVariable, perhaps? */
-typedef void (*PfnChangeClvCallback)(CLV clv, CL_SimplexSolver solver);
+/* FIXGJB: do not use ClVariable -- use ClAbstractVariable, perhaps? */
+typedef void (*PfnChangeClvCallback)(CLV clv, CL_Solver solver);
 
-void CL_SimplexSolverSetChangeClvCallback(CL_SimplexSolver solver, PfnChangeClvCallback pfn);
+void CL_SolverSetChangeClvCallback(CL_Solver solver, PfnChangeClvCallback pfn);
 
 void CL_SimplexSolverAddStrongStay(CL_SimplexSolver solver, CLV var, double weight);
 

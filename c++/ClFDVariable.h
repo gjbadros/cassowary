@@ -105,7 +105,7 @@ public:
   virtual FDNumber DesiredValue() const
     { return _desired_value; }
 
-  virtual list<FDNumber> *PlfdnDomain()
+  virtual const list<FDNumber> *PlfdnDomain() const
     { return _plfdnInitialDomain; }
 
 private:

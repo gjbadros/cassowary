@@ -20,12 +20,16 @@
 #include "Cassowary.h"
 #include "ClErrors.h"
 #include "ClTypedefs.h"
+#include <list>
 
 class ClVariable;
 
 // ClSolver is an abstract base class
 class ClSolver {
  public:
+
+  ClSolver() : _pv(0), _fAutosolve(true), _pfnChangeClvCallback(0) { }
+
   virtual ~ClSolver()
     { } 
 
@@ -73,8 +77,22 @@ class ClSolver {
     { return RemoveConstraintNoException(&cn); }
 #endif
 
+
   virtual ClSolver &Solve()
     { assert(false); return *this; }
+
+  virtual bool SolveNoException()
+    {
+      try {
+        Solve();
+        return true;
+      }
+      catch (const ExCLTooDifficult &e)
+        { return false; }
+      catch (const ExCLRequiredFailure &e)
+        { return false; }
+    }
+
 
   virtual void Resolve()
     { assert(false); }
@@ -84,6 +102,29 @@ class ClSolver {
 
   void *Pv() const
     { return _pv; }
+
+  typedef void (*PfnChangeClvCallback)(ClVariable *pclv, ClSolver *psolver);
+
+  void SetChangeClvCallback(PfnChangeClvCallback pfn)
+    { _pfnChangeClvCallback = pfn; }
+
+  // Control whether optimization and setting of external variables
+  // is done automatically or not.  By default it is done
+  // automatically and solve() never needs to be explicitly
+  // called by client code; if SetAutosolve is put to false,
+  // then solve() needs to be invoked explicitly before using
+  // variables' values
+  // (Turning off autosolve while adding lots and lots of
+  // constraints [ala the addDel test in ClTests] saved
+  // about 20% in runtime, from 68sec to 54sec for 900 constraints,
+  // with 126 failed adds)
+  ClSolver &SetAutosolve(bool f)
+    { _fAutosolve = f; if (f) Solve(); return *this; }
+
+  // Tell whether we are autosolving
+  bool FIsAutosolving() const
+    { return _fAutosolve; }
+
 
 #ifndef CL_NO_IO
   friend ostream &operator<<(ostream &xo, const ClSolver &solver);
@@ -98,6 +139,9 @@ class ClSolver {
   // don't have to wrap ScwmClSolver separately
   void *_pv;
 
+  bool _fAutosolve;
+
+  PfnChangeClvCallback _pfnChangeClvCallback;
 };
 
 
@@ -110,6 +154,9 @@ ostream &operator<<(ostream &xo, const ClConstraintToVarSetMap &mapCnToVarSet);
 
 ostream &PrintTo(ostream &xo, const ClConstraintSet &setCn);
 ostream &operator<<(ostream &xo, const ClConstraintSet &setCn);
+
+ostream &PrintTo(ostream &xo, const list<FDNumber> &listFDN);
+ostream &operator<<(ostream &xo, const list<FDNumber> &listFDN);
 
 #endif
 

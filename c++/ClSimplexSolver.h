@@ -46,6 +46,7 @@ class ClSimplexSolver : public ClSolver, public ClTableau {
 
   // Constructor
   ClSimplexSolver() :
+    ClSolver(),
     _objective(ClVariable(new ClObjectiveVariable("Z"))),
     _slackCounter(0),
     _artificialCounter(0),
@@ -57,7 +58,6 @@ class ClSimplexSolver : public ClSolver, public ClTableau {
     _fOptimizeAutomatically(true),
     _fNeedsSolving(false),
     _fExplainFailure(false),
-    _pfnChangeClvCallback(NULL),
     _pfnResolveCallback(NULL),
     _pfnCnSatCallback(NULL)
     { 
@@ -223,23 +223,6 @@ class ClSimplexSolver : public ClSolver, public ClTableau {
   // after Resolve() has been called
   ClSimplexSolver &SuggestValue(ClVariable v, Number x);
 
-  // Control whether optimization and setting of external variables
-  // is done automatically or not.  By default it is done
-  // automatically and solve() never needs to be explicitly
-  // called by client code; if SetAutosolve is put to false,
-  // then solve() needs to be invoked explicitly before using
-  // variables' values
-  // (Turning off autosolve while adding lots and lots of
-  // constraints [ala the addDel test in ClTests] saved
-  // about 20% in runtime, from 68sec to 54sec for 900 constraints,
-  // with 126 failed adds)
-  ClSimplexSolver &SetAutosolve(bool f)
-    { _fOptimizeAutomatically = f; if (f) Solve(); return *this; }
-
-  // Tell whether we are autosolving
-  bool FIsAutosolving() const
-    { return _fOptimizeAutomatically; }
-
   // Set and check whether or not the solver will attempt to compile
   // an explanation of failure when a required constraint conflicts
   // with another required constraint
@@ -300,11 +283,6 @@ class ClSimplexSolver : public ClSolver, public ClTableau {
 #endif
         }
       return *this; }
-
-  typedef void (*PfnChangeClvCallback)(ClVariable *pclv, ClSimplexSolver *psolver);
-
-  void SetChangeClvCallback(PfnChangeClvCallback pfn)
-    { _pfnChangeClvCallback = pfn; }
 
   typedef void (*PfnResolveCallback)(ClSimplexSolver *psolver);
 
@@ -556,7 +534,6 @@ class ClSimplexSolver : public ClSolver, public ClTableau {
   bool _fNeedsSolving;
   bool _fExplainFailure;
 
-  PfnChangeClvCallback _pfnChangeClvCallback;
   PfnResolveCallback _pfnResolveCallback;
   PfnCnSatCallback _pfnCnSatCallback;
 
