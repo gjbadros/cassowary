@@ -107,7 +107,7 @@ class ClTableau {
     return (i != _columns.end());
     }
 
-  ClLinearExpression *rowExpression(const ClAbstractVariable &v)
+  const ClLinearExpression *rowExpression(const ClAbstractVariable &v) const
     {
     ClTableauRowsMap::const_iterator i = _rows.find(&v);
     if (i != _rows.end())
@@ -115,6 +115,13 @@ class ClTableau {
     else
       return NULL;
     }
+
+  ClLinearExpression *rowExpression(const ClAbstractVariable &v)
+    {
+      const ClTableau *pthis = const_cast<const ClTableau *>(this);
+      return const_cast<ClLinearExpression *>(pthis->rowExpression(v));
+    }
+
 
   bool FIsBasicVar(const ClAbstractVariable &v)
     { return rowExpression(v) != NULL; }

@@ -298,6 +298,8 @@ class ClSimplexSolver : public ClTableau {
   const ClConstraintToVarMap &ConstraintMap() const
   {  return _markerVars; }
 
+  bool FIsConstraintSatisfied(const ClConstraint &cn) const;
+
  protected:
   // Add the constraint expr=0 to the inequality tableau using an
   // artificial variable.  To do this, create an artificial variable

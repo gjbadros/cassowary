@@ -1373,3 +1373,29 @@ ostream &operator<<(ostream &xo, const ClSimplexSolver &clss)
 {
   return clss.printOn(xo);
 }
+
+bool 
+ClSimplexSolver::FIsConstraintSatisfied(const ClConstraint &cn) const
+{
+  ClConstraintToVarMap::const_iterator it_marker = _markerVars.find(&cn);
+  if (it_marker == _markerVars.end())
+    { // could not find the constraint
+    throw ExCLConstraintNotFound();
+    }
+  
+  ClConstraintToVarSetMap::const_iterator it_eVars = _errorVars.find(&cn);
+
+  if (it_eVars != _errorVars.end())
+    {
+    const ClTableauVarSet &eVars = (*it_eVars).second;
+    ClTableauVarSet::const_iterator it = eVars.begin();
+    for ( ; it != eVars.end(); ++it )
+      {
+      const ClLinearExpression *pexpr = rowExpression(*(*it));
+      if (pexpr != NULL && !clApprox(pexpr->constant(),0.0))
+        return false;
+      }
+    }
+
+  return true;
+}
