@@ -42,7 +42,7 @@ inline
 double UniformRandom()
 { 
   if (iRandom >= cRandom) {
-    throw new string("Out of random numbers");
+    throw string("Out of random numbers");
   }
   //  cerr << "returning value = " << vRandom[iRandom] << endl;
   return vRandom[iRandom++]; 
