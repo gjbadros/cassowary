@@ -15,6 +15,7 @@ CPPFLAGS = -O6 -DNO_TRACE -Wall -L$(EGCSDIR)/lib -I$(EGCSDIR)/include
 CXX = $(CPP)
 # -falt-external-templates
 LDFLAGS = -L/uns/lib/egcs
+CL_LIBRARY = libCl.a
 
 OBJS = 	ClAbstractVariable.o \
 	ClConstraint.o \
@@ -63,13 +64,13 @@ HEADERS = Cassowary.h \
 	ClTableau.h \
 	ClVariable.h
 
-all:	libcassowary.a cassowary-tests
+all:	libcassowary.a cassowary-tests $(CL_LIBRARY)
 
-libCl.a: $(OBJS)
+$(CL_LIBRARY): $(OBJS)
 	ar ruv $@ $(OBJS)
 
 clean:	
-	rm -f $(TESTS) *.o libCl.a
+	rm -f $(TESTS) *.o $(CL_LIBRARY)
 
 TAGS: $(SOURCES)
 	etags $^
