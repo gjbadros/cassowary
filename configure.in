@@ -427,8 +427,8 @@ AC_OUTPUT([
 	c++/Makefile \
 	guile/Makefile \
 	guile/doc/Makefile \
+	guile/doc/src/Makefile \
 	docs/Makefile \
-	docs/src/Makefile \
 	smalltalk/Makefile \
 	cassowary.spec \
 	cassowary-nofd.spec2 \
