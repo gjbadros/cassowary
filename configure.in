@@ -9,7 +9,7 @@ dnl ## Initialize autoconf ##
 AC_INIT(c++/ClSimplexSolver.cc)
 AC_PREREQ(2.4)
 
-CASSOWARY_VERSION=0.52
+CASSOWARY_VERSION=0.52post
 AC_SUBST(CASSOWARY_VERSION)
 
 dnl ## Initialize automake ##
@@ -442,6 +442,8 @@ AM_CONDITIONAL(HAVE_JAVA, test "true" = "$HAVE_JAVA")
 
 AC_OUTPUT([
 	Makefile \
+	README \
+	ANNOUNCE \
 	cassowary-config \
 	c++/Makefile \
 	guile/Makefile \
