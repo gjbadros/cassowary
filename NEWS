@@ -11,10 +11,11 @@ Seattle, WA 98195-2350
 
 with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
 
-16-Feb-1999, Changes since Cassowary v0.23 (for release v0.3)
+19-Feb-1999, Changes since Cassowary v0.23 (for release v0.3)
 * Miscellaneious changes
 ** Updated copyright to include 1999
 ** Reference Anthony Beurivé's STk wrapper
+** Fix Scwm URL
 
 * Changes to Java and C++
 ** Bug fix for Michael Kaufmann's report (see ChangeLog for details)
@@ -36,6 +37,8 @@ invocations
 hash_map class instead of the standard STL map (which is a sorted
 associative container whose performance for lookups is logarithmic
 rather than constant time).  Still does not work for me --02/16/99 gjb.
+** Use ClVariable as a handle class to a ClAbstractVariable-- old
+ClVariable is now a ClFloatVariable
 
 * Changes to just Java implementation (updated to match changes to C++
 version for .2)

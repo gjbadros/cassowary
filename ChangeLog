@@ -1,3 +1,39 @@
+Fri Feb 19 17:41:45 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClFloatVariable.cc, c++/ClFloatVariable.h: Added -- moved
+	here from ClVariable.h, and renamed from class ClVariableRep since 
+	they not what ClVariable wraps (ClVariable wraps
+	ClAbstractVariable)
+
+	* c++/ClAbstractVariable.h: Fatten interface to include set_value, 
+	change_value, setPv, and Pv.
+
+	* c++/ClVariable.h, c++/ClVariable.cc: Move ClVariableRep into
+	ClFloatVariable.{h,cc}, and use pclv-> for
+	set_value, change_value, SetPv, and Pv since ClAbstractVariable
+	now has a fat interface and we do not need to do the dynamic
+	down-casting. 
+
+	* c++/Makefile: Added new files to build rules.
+
+Fri Feb 19 17:08:29 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/debug.h, c++/ClTableau.h: Move operator<< out into ClTableau.h
+
+	* c++/ClVariable.h, c++/ClVariable.cc: Move some inline functions
+	into .cc so that the hash function can go in the .h file (some stl 
+	dependency issue, it seems).
+
+	* c++/ClErrors.h, c++/ClTypedefs.h: Move typedef for
+ 	ClConstraintSet from ClErrors.h into ClTypedefs.h, and have former 
+	include the latter.
+
+	* c++/Cassowary.h: #include ClConstraintHash.h
+
+	* c++/ClConstraintHash.h: Added.  The hash function needs to
+	appear before any typedef that uses a hash_map or hash_set, so
+	this file is included by Cassowary.h
+
 Fri Feb 19 08:45:24 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* c++/ClSubgraphTest.cc: Fix some bugs just from not testing
