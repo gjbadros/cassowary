@@ -9,7 +9,7 @@
 // 
 // ClTestColumns.java
 
-import EDU.Washington.grad.gjb.cassowary.*;
+package EDU.Washington.grad.gjb.cassowary;
 
 import java.lang.*;
 import java.util.Random;
