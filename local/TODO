@@ -28,6 +28,33 @@
 
 * callbacks for internal happenings
 ** pivoting
+** variables set, value changed
 
 * user-control of choosing alternate solutions
 ** direct control over, e.g., pivoting
+
+* Web page under CVS control
+
+* Parser for constraints
+
+* Meet with Michael re: CDA details
+
+* Implementation details
+
+** Use ClSymbolicWeights for coefficients on zRow (the objective)
+
+** compound constraints to avoid stay-constraints on x & y of decreasing weight hack
+
+** user-controllable selection of better solutions
+*** e.g., mouse button to control pivots
+
+** register variables... why (other than for parsing)
+*** Ask Kim
+
+** python wrapper, guile wrapper
+
+;;; Local Variables:
+;;; eval: (outline-mode)
+;;; eval: (require 'filladapt)
+;;; eval: (hide-sublevels 1)
+;;; End:
