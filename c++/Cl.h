@@ -13,3 +13,4 @@
 #include "ClLinearEquation.h"
 #include "ClLinearInequality.h"
 #include "ClErrors.h"
+#include "ClEditConstraint.h"
