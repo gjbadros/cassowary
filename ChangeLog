@@ -1,3 +1,10 @@
+Sun Mar 12 13:40:44 2000  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* guile/cassowary_scm.cc: Give docstrings as arguments
+
+	* guile/cl-snarf.h: Added docstring as an argument to CL_PROC to
+	be like the revised Scwm documentation extraction system.
+
 Sat Feb 12 20:34:55 2000  Greg J. Badros  <gjb@cs.washington.edu>
 
 	* Makefile.am: Added GTL.h.patch to EXTRA_DIST
