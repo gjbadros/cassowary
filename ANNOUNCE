@@ -4,6 +4,7 @@ Cassowary Constraint Solver for Smalltalk, C++, and Java
 Version 0.1
 
 Web Page: http://www.cs.washington.edu/research/constraints/cassowary
+Distribution: ftp://ftp.cs.washington.edu:/pub/constraints/code/cassowary/
 Contact: cassowary@cs.washington.edu
 
 Greg J. Badros <gjb@cs.washington.edu> and
