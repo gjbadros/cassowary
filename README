@@ -100,3 +100,20 @@ http://www.python.org/
 For more information about the Guile-Scheme language, see:
 
 http://www.fsf.org/software/guile/guile.html
+
+
+------------------------------------------------------------------
+
+DEMONSTRATION APPLICATION
+
+A standard demonstration application is included for each implementation 
+of the Cassowary solver.  The application builds a quadrilateral and
+connects the neighboring midpoints of each of the outer edges to form an 
+interior quadrilateral which is provably a parallelogram.  The
+constraint solver manages the constraints to keep the outer
+quadrilateral inside the window, keep the midpoints properly positioned, 
+and keep the outer quadrilateral from turning "inside out."  
+
+The user is able to select points (draggable boxes) and move them around 
+within the window (both midpoints and endpoints can be selected, of
+course).  The solver updates the figure, and redraws.
