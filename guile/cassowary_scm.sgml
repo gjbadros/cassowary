@@ -1,913 +1,323 @@
-<!DOCTYPE Book PUBLIC "-//Davenport//DTD DocBook V3.0//EN">
-<book>
-  <bookinfo>
-    <title>
-      <productname>SCWM Reference Manual</productname>
-    </title>
-    <authorgroup>
-      <author>
-  	<firstname>Maciej</firstname>
-  	<surname>Stachowiak</surname>
-  	<affiliation>
-  	  <shortaffil>MIT</shortaffil>
-  	  <jobtitle>M.S. Degree Recipient</jobtitle>
-  	  <orgname>Massachusetts Institute of Technology</orgname>
-  	  <orgdiv>Department of Computer Science</orgdiv>
-  	  <address>
-  	    <city>Cambridge</city>
-  	    <state>Massachusetts</state>
-  	    <postcode>12345</postcode>
-  	    <country>U.S.A.</country>
-  	    <email>mstachow@mit.edu</email>
-  	  </address>
-  	</affiliation>
-      </author>
-      <author>
-  	<firstname>Greg</firstname>
-  	<surname>Badros</surname>
-  	<affiliation>
-  	  <shortaffil>UWashington</shortaffil>
-  	  <jobtitle>Graduate Research Assistant</jobtitle>
-  	  <orgname>University of Washington</orgname>
-  	  <orgdiv>Department of Computer Science and Engineering</orgdiv>
-  	  <address>
-  	    <city>Seattle</city>
-  	    <state>Washington</state>
-  	    <postcode>98195</postcode>
-  	    <country>U.S.A.</country>
-  	    <email>gjb@cs.washington.edu</email>
-  	  </address>
-  	</affiliation>
-      </author>
-    </authorgroup>
-    <releaseinfo>Release pre-0.8</releaseinfo>
-    <pubdate>25 July 1998</pubdate>
-    <copyright>
-      <year>1997&ndash;1998</year>
-      <holder>Maciej Stachowiak and Greg J. Badros</holder>
-    </copyright>
-  </bookinfo>
-  <chapter>
-    <title>Primitives in Alphabetical Order</title>
-<refentry id="cl-add-constraint">
-  <refnamediv>
-    <refname>cl-add-constraint</refname>
-    <refpurpose>Add the constraints, ARGS, to the solver SOLVER.</refpurpose>
-  </refnamediv>
-  <refsynopsisdiv>
-    <synopsis>(cl-add-constraint solver . args)</synopsis>
-  </refsynopsisdiv>
-  <refsect1>
-  <title>Description</title>
-  <para>
-  Add the constraints, <parameter>args</parameter>, to the solver <parameter>solver</parameter>.
-Each constraint given after the <parameter>solver</parameter> argument is added to that
+(cl-add-constraint solver . args)
+Add the constraints, ARGS, to the solver SOLVER.
+Each constraint given after the SOLVER argument is added to that
 solver in turn.  Once one cannot be added (e.g., due to its addition
-causing an insoluble system), this procedure will return <literal>#f</literal> without
+causing an insoluble system), this procedure will return #f without
 trying to add the remaining constraints.  If all constraints are added
-successfully, this procedure will return <literal>#t</literal>.  (If none of the
+successfully, this procedure will return #t.  (If none of the
 constraints have strength "cls-required", then the system will remain
-soluble.)  If an error is signalled because one object in the list <parameter>args</parameter>
+soluble.)  If an error is signalled because one object in the list ARGS
 is not a constraint object, the preceding arguments will have already
 been added.
-  </para>
-  </refsect1>
-  <refsect1>
-  <title>Implemenation Notes</title>
-  <para> Defined in <ulink url="file:///scratch/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 1117 </para> </refsect1>
-</refentry>
+[From cassowary_scm.cc:1139]
 
-<refentry id="cl-add-editvar">
-  <refnamediv>
-    <refname>cl-add-editvar</refname>
-    <refpurpose>Add edit constraints on variables in ARGS to SOLVER.</refpurpose>
-  </refnamediv>
-  <refsynopsisdiv>
-    <synopsis>(cl-add-editvar solver . args)</synopsis>
-  </refsynopsisdiv>
-  <refsect1>
-  <title>Description</title>
-  <para>
-  Add edit constraints on variables in <parameter>args</parameter> to <parameter>solver</parameter>.
-<parameter>args</parameter> are cl-variable objects that you wish to permit to change under
+
+(cl-add-editvar solver . args)
+Add edit constraints on variables in ARGS to SOLVER.
+ARGS are cl-variable objects that you wish to permit to change under
 the solver's control.  An edit-constraint for each cl-variable object
-is added in turn.  If any of <parameter>args</parameter> is not a cl-variable, an error is
+is added in turn.  If any of ARGS is not a cl-variable, an error is
 thrown (after the preceding objects have been handled).  After
 selecting the edit variables with this procedure, you must call
-<link linkend="cl-begin-edit"><function>cl-begin-edit</function></link> before using <link linkend="cl-suggest-value"><function>cl-suggest-value</function></link>.  To remove the edit
-variables, use <link linkend="cl-end-edit"><function>cl-end-edit</function></link> when done changing the variables'
+`cl-begin-edit' before using `cl-suggest-value'.  To remove the edit
+variables, use `cl-end-edit' when done changing the variables'
 values.
-  </para>
-  </refsect1>
-  <refsect1>
-  <title>Implemenation Notes</title>
-  <para> Defined in <ulink url="file:///scratch/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 1197 </para> </refsect1>
-</refentry>
+[From cassowary_scm.cc:1223]
 
-<refentry id="cl-add-stay">
-  <refnamediv>
-    <refname>cl-add-stay</refname>
-    <refpurpose>Add stay constraints on variables in ARGS to SOLVER.</refpurpose>
-  </refnamediv>
-  <refsynopsisdiv>
-    <synopsis>(cl-add-stay solver . args)</synopsis>
-  </refsynopsisdiv>
-  <refsect1>
-  <title>Description</title>
-  <para>
-  Add stay constraints on variables in <parameter>args</parameter> to <parameter>solver</parameter>.
-<parameter>args</parameter> are cl-variable objects that you wish to remain (i.e., stay) at
+
+(cl-add-stay solver . args)
+Add stay constraints on variables in ARGS to SOLVER.
+ARGS are cl-variable objects that you wish to remain (i.e., stay) at
 their current values unless another constraint forces them to change.
 In normal uses of the solver, all variables should have stay
 constraints added on them before they are used in a constraint added
 to the solver.  Future versions of the solver may add the stay
 constraint implicitly upon a variable's first use.  Until then,
 though, be sure to add stay constraints on all the cl-variable objects
-you intend to use with the given <parameter>solver</parameter>.
-  </para>
-  </refsect1>
-  <refsect1>
-  <title>Implemenation Notes</title>
-  <para> Defined in <ulink url="file:///scratch/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 1235 </para> </refsect1>
-</refentry>
+you intend to use with the given SOLVER.
+[From cassowary_scm.cc:1261]
 
-<refentry id="cl-begin-edit">
-  <refnamediv>
-    <refname>cl-begin-edit</refname>
-    <refpurpose>Begin changing values of the edit variables of SOLVER.</refpurpose>
-  </refnamediv>
-  <refsynopsisdiv>
-    <synopsis>(cl-begin-edit solver)</synopsis>
-  </refsynopsisdiv>
-  <refsect1>
-  <title>Description</title>
-  <para>
-  Begin changing values of the edit variables of <parameter>solver</parameter>.
-This procedure must be invoked after adding edit variables to <parameter>solver</parameter>
-(via <link linkend="cl-add-editvar"><function>cl-add-editvar</function></link>) and before using <link linkend="cl-suggest-values"><function>cl-suggest-values</function></link> to change
-those edit variables' values.  Every <link linkend="cl-begin-edit"><function>cl-begin-edit</function></link> invocation should
-have a matching <link linkend="cl-end-edit"><function>cl-end-edit</function></link> call.
-  </para>
-  </refsect1>
-  <refsect1>
-  <title>Implemenation Notes</title>
-  <para> Defined in <ulink url="file:///scratch/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 1275 </para> </refsect1>
-</refentry>
+
+(cl-begin-edit solver)
+Begin changing values of the edit variables of SOLVER.
+This procedure must be invoked after adding edit variables to SOLVER
+(via `cl-add-editvar') and before using `cl-suggest-values' to change
+those edit variables' values.  Every `cl-begin-edit' invocation should
+have a matching `cl-end-edit' call.
+[From cassowary_scm.cc:1301]
 
-<refentry id="cl-constraint-p">
-  <refnamediv>
-    <refname>cl-constraint?</refname>
-    <refpurpose>Return #t if OBJ is some kind of constraint object, #f otherwise.</refpurpose>
-  </refnamediv>
-  <refsynopsisdiv>
-    <synopsis>(cl-constraint? obj)</synopsis>
-  </refsynopsisdiv>
-  <refsect1>
-  <title>Description</title>
-  <para>
-  Return <literal>#t</literal> if <parameter>obj</parameter> is some kind of constraint object, <literal>#f</literal> otherwise.
+
+(cl-constraint-list solver #&optional internal-also?)
+Return the list of constraints in SOLVER.
+Each object in the returned list is a cl-constraint object (i.e.,
+it is either a cl-linear-equation or a cl-inequality). If
+INTERNAL-ALSO? is #f or not given, then only the constraints added via
+the guile interface will be listed.  If INTERNAL-ALSO? is #t, then all
+constraints added to the solver (even those added by primitive code
+directly) will be listed.
+[From cassowary_scm.cc:1438]
+
+
+(cl-constraint? obj)
+Return #t if OBJ is some kind of constraint object, #f otherwise.
 There are at least two kinds of objects for which this procedure will
-return <literal>#t</literal>: "cl-inequality" and "cl-equation" objects.  Since it is
+return #t: "cl-inequality" and "cl-equation" objects.  Since it is
 often useful to treat either as a general constraint, this procedure
 exists to simplify that test.
-  </para>
-  </refsect1>
-  <refsect1>
-  <title>Implemenation Notes</title>
-  <para> Defined in <ulink url="file:///scratch/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 934 </para> </refsect1>
-</refentry>
+[From cassowary_scm.cc:956]
 
-<refentry id="cl-divide">
-  <refnamediv>
-    <refname>cl-divide</refname>
-    <refpurpose>Return the cl-expression that is the quotient of EXPRA and EXPRB.</refpurpose>
-  </refnamediv>
-  <refsynopsisdiv>
-    <synopsis>(cl-divide exprA exprB)</synopsis>
-  </refsynopsisdiv>
-  <refsect1>
-  <title>Description</title>
-  <para>
-  Return the cl-expression that is the quotient of <parameter>expra</parameter> and <parameter>exprb</parameter>.
-Both <parameter>expra</parameter> and <parameter>exprb</parameter> may be cl-expression objects or cl-variable
+
+(cl-divide exprA exprB)
+Return the cl-expression that is the quotient of EXPRA and EXPRB.
+Both EXPRA and EXPRB may be cl-expression objects or cl-variable
 objects. Note that the product may not introduce non-linear terms--
-if it does (e.g., if <parameter>expra</parameter> and <parameter>exprb</parameter> both contain the same
+if it does (e.g., if EXPRA and EXPRB both contain the same
 cl-variable), an error will result.
-  </para>
-  </refsect1>
-  <refsect1>
-  <title>Implemenation Notes</title>
-  <para> Defined in <ulink url="file:///scratch/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 609 </para> </refsect1>
-</refentry>
+[From cassowary_scm.cc:618]
 
-<refentry id="cl-end-edit">
-  <refnamediv>
-    <refname>cl-end-edit</refname>
-    <refpurpose>Finish changing the values of the edit variables in SOLVER.</refpurpose>
-  </refnamediv>
-  <refsynopsisdiv>
-    <synopsis>(cl-end-edit solver)</synopsis>
-  </refsynopsisdiv>
-  <refsect1>
-  <title>Description</title>
-  <para>
-  Finish changing the values of the edit variables in <parameter>solver</parameter>.
+
+(cl-end-edit solver)
+Finish changing the values of the edit variables in SOLVER.
 This procedure must be invoked once for every invocation of
-<link linkend="cl-begin-edit"><function>cl-begin-edit</function></link>.   It will force a final re-solve before removing
-any edit variables that have been added via <link linkend="cl-add-editvar"><function>cl-add-editvar</function></link>.
-  </para>
-  </refsect1>
-  <refsect1>
-  <title>Implemenation Notes</title>
-  <para> Defined in <ulink url="file:///scratch/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 1296 </para> </refsect1>
-</refentry>
+`cl-begin-edit'.   It will force a final re-solve before removing
+any edit variables that have been added via `cl-add-editvar'.
+[From cassowary_scm.cc:1322]
 
-<refentry id="cl-equation-p">
-  <refnamediv>
-    <refname>cl-equation?</refname>
-    <refpurpose>Return #t if OBJ is a constraint equation, #f otherwise.</refpurpose>
-  </refnamediv>
-  <refsynopsisdiv>
-    <synopsis>(cl-equation? obj)</synopsis>
-  </refsynopsisdiv>
-  <refsect1>
-  <title>Description</title>
-  <para>
-  Return <literal>#t</literal> if <parameter>obj</parameter> is a constraint equation, <literal>#f</literal> otherwise.
-Constraint equations also respond <literal>#t</literal> to <link linkend="cl-constraint-p"><function>cl-constraint?</function></link> queries,
+
+(cl-equation? obj)
+Return #t if OBJ is a constraint equation, #f otherwise.
+Constraint equations also respond #t to `cl-constraint?' queries,
 since they are also constraint objects.
-  </para>
-  </refsect1>
-  <refsect1>
-  <title>Implemenation Notes</title>
-  <para> Defined in <ulink url="file:///scratch/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 689 </para> </refsect1>
-</refentry>
+[From cassowary_scm.cc:710]
 
-<refentry id="cl-expression-p">
-  <refnamediv>
-    <refname>cl-expression?</refname>
-    <refpurpose>Return #t if OBJ is a constraint expression, #f otherwise.</refpurpose>
-  </refnamediv>
-  <refsynopsisdiv>
-    <synopsis>(cl-expression? obj)</synopsis>
-  </refsynopsisdiv>
-  <refsect1>
-  <title>Description</title>
-  <para>
-  Return <literal>#t</literal> if <parameter>obj</parameter> is a constraint expression, <literal>#f</literal> otherwise.
-  </para>
-  </refsect1>
-  <refsect1>
-  <title>Implemenation Notes</title>
-  <para> Defined in <ulink url="file:///scratch/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 441 </para> </refsect1>
-</refentry>
+
+(cl-expression? obj)
+Return #t if OBJ is a constraint expression, #f otherwise.
+[From cassowary_scm.cc:450]
 
-<refentry id="cl-inequality-p">
-  <refnamediv>
-    <refname>cl-inequality?</refname>
-    <refpurpose>Return #t if OBJ is a constraint inequality object, #t otherwise.</refpurpose>
-  </refnamediv>
-  <refsynopsisdiv>
-    <synopsis>(cl-inequality? obj)</synopsis>
-  </refsynopsisdiv>
-  <refsect1>
-  <title>Description</title>
-  <para>
-  Return <literal>#t</literal> if <parameter>obj</parameter> is a constraint inequality object, <literal>#t</literal> otherwise.
-Constraint inequalities also respond <literal>#t</literal> to <link linkend="cl-constraint-p"><function>cl-constraint?</function></link> queries,
+
+(cl-inequality? obj)
+Return #t if OBJ is a constraint inequality object, #t otherwise.
+Constraint inequalities also respond #t to `cl-constraint?' queries,
 since they are also constraint objects.
-  </para>
-  </refsect1>
-  <refsect1>
-  <title>Implemenation Notes</title>
-  <para> Defined in <ulink url="file:///scratch/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 842 </para> </refsect1>
-</refentry>
+[From cassowary_scm.cc:870]
 
-<refentry id="cl-int-value">
-  <refnamediv>
-    <refname>cl-int-value</refname>
-    <refpurpose>Return the value of the constraint variable CLV as an integer.</refpurpose>
-  </refnamediv>
-  <refsynopsisdiv>
-    <synopsis>(cl-int-value clv)</synopsis>
-  </refsynopsisdiv>
-  <refsect1>
-  <title>Description</title>
-  <para>
-  Return the value of the constraint variable <parameter>clv</parameter> as an integer.
+
+(cl-int-value clv)
+Return the value of the constraint variable CLV as an integer.
 Internally, the value is a double.  This rounds that real number to
 an integer before returning the value.
-  </para>
-  </refsect1>
-  <refsect1>
-  <title>Implemenation Notes</title>
-  <para> Defined in <ulink url="file:///scratch/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 175 </para> </refsect1>
-</refentry>
+[From cassowary_scm.cc:184]
 
-<refentry id="cl-minus">
-  <refnamediv>
-    <refname>cl-minus</refname>
-    <refpurpose>Return the cl-expression that is the difference of EXPRA and EXPRB.</refpurpose>
-  </refnamediv>
-  <refsynopsisdiv>
-    <synopsis>(cl-minus exprA exprB)</synopsis>
-  </refsynopsisdiv>
-  <refsect1>
-  <title>Description</title>
-  <para>
-  Return the cl-expression that is the difference of <parameter>expra</parameter> and <parameter>exprb</parameter>.
-Both <parameter>expra</parameter> and <parameter>exprb</parameter> may be cl-expression objects or cl-variable
+
+(cl-minus exprA exprB)
+Return the cl-expression that is the difference of EXPRA and EXPRB.
+Both EXPRA and EXPRB may be cl-expression objects or cl-variable
 objects.
-  </para>
-  </refsect1>
-  <refsect1>
-  <title>Implemenation Notes</title>
-  <para> Defined in <ulink url="file:///scratch/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 532 </para> </refsect1>
-</refentry>
+[From cassowary_scm.cc:541]
 
-<refentry id="cl-plus">
-  <refnamediv>
-    <refname>cl-plus</refname>
-    <refpurpose>Return the cl-expression that is the sum of EXPRA and EXPRB.</refpurpose>
-  </refnamediv>
-  <refsynopsisdiv>
-    <synopsis>(cl-plus exprA exprB)</synopsis>
-  </refsynopsisdiv>
-  <refsect1>
-  <title>Description</title>
-  <para>
-  Return the cl-expression that is the sum of <parameter>expra</parameter> and <parameter>exprb</parameter>.
-Both <parameter>expra</parameter> and <parameter>exprb</parameter> may be cl-expression objects or cl-variable
+
+(cl-plus exprA exprB)
+Return the cl-expression that is the sum of EXPRA and EXPRB.
+Both EXPRA and EXPRB may be cl-expression objects or cl-variable
 objects.
-  </para>
-  </refsect1>
-  <refsect1>
-  <title>Implemenation Notes</title>
-  <para> Defined in <ulink url="file:///scratch/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 498 </para> </refsect1>
-</refentry>
+[From cassowary_scm.cc:507]
 
-<refentry id="cl-remove-constraint">
-  <refnamediv>
-    <refname>cl-remove-constraint</refname>
-    <refpurpose>Remove the constraints, ARGS, from the solver SOLVER.</refpurpose>
-  </refnamediv>
-  <refsynopsisdiv>
-    <synopsis>(cl-remove-constraint solver . args)</synopsis>
-  </refsynopsisdiv>
-  <refsect1>
-  <title>Description</title>
-  <para>
-  Remove the constraints, <parameter>args</parameter>, from the solver <parameter>solver</parameter>.
-Each constraint given after the <parameter>solver</parameter> argument is removed from that
+
+(cl-remove-constraint solver . args)
+Remove the constraints, ARGS, from the solver SOLVER.
+Each constraint given after the SOLVER argument is removed from that
 solver in turn.  Once one cannot be removed (e.g., due to its never
-having been added to <parameter>solver</parameter>), this procedure will return <literal>#f</literal> without
+having been added to SOLVER), this procedure will return #f without
 trying to remove the remaining constraints.  If all constraints are
-removed successfully, this procedure will return <literal>#t</literal>.  If an error is
-signalled because one object in the list <parameter>args</parameter> is not a constraint
+removed successfully, this procedure will return #t.  If an error is
+signalled because one object in the list ARGS is not a constraint
 object, the preceding arguments will have already been removed.
-  </para>
-  </refsect1>
-  <refsect1>
-  <title>Implemenation Notes</title>
-  <para> Defined in <ulink url="file:///scratch/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 1157 </para> </refsect1>
-</refentry>
+[From cassowary_scm.cc:1181]
 
-<refentry id="cl-resolve">
-  <refnamediv>
-    <refname>cl-resolve</refname>
-    <refpurpose>Ask SOLVER to re-solve its system using the suggested values.</refpurpose>
-  </refnamediv>
-  <refsynopsisdiv>
-    <synopsis>(cl-resolve solver . args)</synopsis>
-  </refsynopsisdiv>
-  <refsect1>
-  <title>Description</title>
-  <para>
-  Ask <parameter>solver</parameter> to re-solve its system using the suggested values.
+
+(cl-resolve solver . args)
+Ask SOLVER to re-solve its system using the suggested values.
 You may only call this procedure between invocations of
-<link linkend="cl-begin-edit"><function>cl-begin-edit</function></link> and <link linkend="cl-end-edit"><function>cl-end-edit</function></link>.  After <link linkend="cl-begin-edit"><function>cl-begin-edit</function></link>, you may use
-<link linkend="cl-suggest-value"><function>cl-suggest-value</function></link> on <parameter>solver</parameter> to tell it the desired new values for the
-various edit variables you have added using <link linkend="cl-add-editvar"><function>cl-add-editvar</function></link>, and then
-call this procedure with only the first argument to have <parameter>solver</parameter> update
+`cl-begin-edit' and `cl-end-edit'.  After `cl-begin-edit', you may use
+`cl-suggest-value' on SOLVER to tell it the desired new values for the
+various edit variables you have added using `cl-add-editvar', and then
+call this procedure with only the first argument to have SOLVER update
 the values of all the variables in the system.
 Alternatively, after adding edit-variables in a particular order, you
-may call <link linkend="cl-begin-edit"><function>cl-begin-edit</function></link> then this procedure with <parameter>args</parameter> set as
+may call `cl-begin-edit' then this procedure with ARGS set as
 suggested values for the edit-variables.  The order of the values in
-the <link linkend="cl-resolve"><function>cl-resolve</function></link> invocation must match the order of the variables in
-the <link linkend="cl-add-editvar"><function>cl-add-editvar</function></link> invocation(s).
-In either case, you must invoke <link linkend="cl-end-edit"><function>cl-end-edit</function></link> to remove the edit
+the `cl-resolve' invocation must match the order of the variables in
+the `cl-add-editvar' invocation(s).
+In either case, you must invoke `cl-end-edit' to remove the edit
 variables from the solver after you are done changing their values.
-  </para>
-  </refsect1>
-  <refsect1>
-  <title>Implemenation Notes</title>
-  <para> Defined in <ulink url="file:///scratch/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 1356 </para> </refsect1>
-</refentry>
+[From cassowary_scm.cc:1382]
 
-<refentry id="cl-solver-debug-print">
-  <refnamediv>
-    <refname>cl-solver-debug-print</refname>
-    <refpurpose>Output a complete dump of SOLVER onto output port PORT.</refpurpose>
-  </refnamediv>
-  <refsynopsisdiv>
-    <synopsis>(cl-solver-debug-print solver #&amp;optional port)</synopsis>
-  </refsynopsisdiv>
-  <refsect1>
-  <title>Description</title>
-  <para>
-  Output a complete dump of <parameter>solver</parameter> onto output port <parameter>port</parameter>.
-The output contains the contents of the tableau contained in <parameter>solver</parameter>,
+
+(cl-solver-debug-print solver #&optional port)
+Output a complete dump of SOLVER onto output port PORT.
+The output contains the contents of the tableau contained in SOLVER,
 as well as the other internal state.  It can be useful for debugging,
 as the printable form of constraint solver objects contains only a
 brief summary of the contents of the solver.
-  </para>
-  </refsect1>
-  <refsect1>
-  <title>Implemenation Notes</title>
-  <para> Defined in <ulink url="file:///scratch/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 1059 </para> </refsect1>
-</refentry>
+[From cassowary_scm.cc:1081]
 
-<refentry id="cl-solver-p">
-  <refnamediv>
-    <refname>cl-solver?</refname>
-    <refpurpose>Return #t if OBJ is a constraint solver object, #f otherwise.</refpurpose>
-  </refnamediv>
-  <refsynopsisdiv>
-    <synopsis>(cl-solver? obj)</synopsis>
-  </refsynopsisdiv>
-  <refsect1>
-  <title>Description</title>
-  <para>
-  Return <literal>#t</literal> if <parameter>obj</parameter> is a constraint solver object, <literal>#f</literal> otherwise.
-  </para>
-  </refsect1>
-  <refsect1>
-  <title>Implemenation Notes</title>
-  <para> Defined in <ulink url="file:///scratch/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 1086 </para> </refsect1>
-</refentry>
+
+(cl-solver? obj)
+Return #t if OBJ is a constraint solver object, #f otherwise.
+[From cassowary_scm.cc:1108]
 
-<refentry id="cl-strength-p">
-  <refnamediv>
-    <refname>cl-strength?</refname>
-    <refpurpose>Return #t if OBJ is a constraint strength, #f otherwise.</refpurpose>
-  </refnamediv>
-  <refsynopsisdiv>
-    <synopsis>(cl-strength? obj)</synopsis>
-  </refsynopsisdiv>
-  <refsect1>
-  <title>Description</title>
-  <para>
-  Return <literal>#t</literal> if <parameter>obj</parameter> is a constraint strength, <literal>#f</literal> otherwise.
-  </para>
-  </refsect1>
-  <refsect1>
-  <title>Implemenation Notes</title>
-  <para> Defined in <ulink url="file:///scratch/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 312 </para> </refsect1>
-</refentry>
+
+(cl-strength? obj)
+Return #t if OBJ is a constraint strength, #f otherwise.
+[From cassowary_scm.cc:321]
 
-<refentry id="cl-suggest-value">
-  <refnamediv>
-    <refname>cl-suggest-value</refname>
-    <refpurpose>Try to change VAR's value to VALUE within SOLVER.</refpurpose>
-  </refnamediv>
-  <refsynopsisdiv>
-    <synopsis>(cl-suggest-value solver var value)</synopsis>
-  </refsynopsisdiv>
-  <refsect1>
-  <title>Description</title>
-  <para>
-  Try to change <parameter>var</parameter>'s value to <parameter>value</parameter> within <parameter>solver</parameter>.
-You may only call this procedure after using <link linkend="cl-add-editvar"><function>cl-add-editvar</function></link> to add
-<parameter>var</parameter> as an edit variable for <parameter>solver</parameter>, and after invoking <link linkend="cl-begin-edit"><function>cl-begin-edit</function></link>
-on <parameter>solver</parameter>.  After you call <link linkend="cl-begin-edit"><function>cl-begin-edit</function></link>, you may invoke this
+
+(cl-suggest-value solver var value)
+Try to change VAR's value to VALUE within SOLVER.
+You may only call this procedure after using `cl-add-editvar' to add
+VAR as an edit variable for SOLVER, and after invoking `cl-begin-edit'
+on SOLVER.  After you call `cl-begin-edit', you may invoke this
 procedure on all the edit variables.  The changing of the values of
-those variables (and the affect on other variables within <parameter>solver</parameter>) will
-not happen until after invoking <link linkend="cl-resolve"><function>cl-resolve</function></link> on <parameter>solver</parameter>.  Then the
-possibly changed values can be retrieved via <link linkend="cl-value"><function>cl-value</function></link> or
-<link linkend="cl-int-value"><function>cl-int-value</function></link>.  Note that the constraints that have been added to
-<parameter>solver</parameter> may not permit changing <parameter>var</parameter> to <parameter>value</parameter>.
-  </para>
-  </refsect1>
-  <refsect1>
-  <title>Implemenation Notes</title>
-  <para> Defined in <ulink url="file:///scratch/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 1317 </para> </refsect1>
-</refentry>
+those variables (and the affect on other variables within SOLVER) will
+not happen until after invoking `cl-resolve' on SOLVER.  Then the
+possibly changed values can be retrieved via `cl-value' or
+`cl-int-value'.  Note that the constraints that have been added to
+SOLVER may not permit changing VAR to VALUE.
+[From cassowary_scm.cc:1343]
 
-<refentry id="cl-times">
-  <refnamediv>
-    <refname>cl-times</refname>
-    <refpurpose>Return the cl-expression that is the product of EXPRA and EXPRB.</refpurpose>
-  </refnamediv>
-  <refsynopsisdiv>
-    <synopsis>(cl-times exprA exprB)</synopsis>
-  </refsynopsisdiv>
-  <refsect1>
-  <title>Description</title>
-  <para>
-  Return the cl-expression that is the product of <parameter>expra</parameter> and <parameter>exprb</parameter>.
-Both <parameter>expra</parameter> and <parameter>exprb</parameter> may be cl-expression objects or cl-variable
+
+(cl-times exprA exprB)
+Return the cl-expression that is the product of EXPRA and EXPRB.
+Both EXPRA and EXPRB may be cl-expression objects or cl-variable
 objects.  Note that the product may not introduce non-linear terms--
-if it does (e.g., if <parameter>expra</parameter> and <parameter>exprb</parameter> both contain the same
+if it does (e.g., if EXPRA and EXPRB both contain the same
 cl-variable), an error will result.
-  </para>
-  </refsect1>
-  <refsect1>
-  <title>Implemenation Notes</title>
-  <para> Defined in <ulink url="file:///scratch/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 566 </para> </refsect1>
-</refentry>
+[From cassowary_scm.cc:575]
 
-<refentry id="cl-value">
-  <refnamediv>
-    <refname>cl-value</refname>
-    <refpurpose>Return the current value of the constraint variable CLV.</refpurpose>
-  </refnamediv>
-  <refsynopsisdiv>
-    <synopsis>(cl-value clv)</synopsis>
-  </refsynopsisdiv>
-  <refsect1>
-  <title>Description</title>
-  <para>
-  Return the current value of the constraint variable <parameter>clv</parameter>.
-The value is a double.  Use <link linkend="cl-int-value"><function>cl-int-value</function></link> to return an integer.
-  </para>
-  </refsect1>
-  <refsect1>
-  <title>Implemenation Notes</title>
-  <para> Defined in <ulink url="file:///scratch/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 159 </para> </refsect1>
-</refentry>
+
+(cl-value clv)
+Return the current value of the constraint variable CLV.
+The value is a double.  Use `cl-int-value' to return an integer.
+[From cassowary_scm.cc:168]
 
-<refentry id="cl-variable-p">
-  <refnamediv>
-    <refname>cl-variable?</refname>
-    <refpurpose>Return #t if OBJ is a constraint variable, #f otherwise.</refpurpose>
-  </refnamediv>
-  <refsynopsisdiv>
-    <synopsis>(cl-variable? obj)</synopsis>
-  </refsynopsisdiv>
-  <refsect1>
-  <title>Description</title>
-  <para>
-  Return <literal>#t</literal> if <parameter>obj</parameter> is a constraint variable, <literal>#f</literal> otherwise.
-  </para>
-  </refsect1>
-  <refsect1>
-  <title>Implemenation Notes</title>
-  <para> Defined in <ulink url="file:///scratch/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 107 </para> </refsect1>
-</refentry>
+
+(cl-variable? obj)
+Return #t if OBJ is a constraint variable, #f otherwise.
+[From cassowary_scm.cc:116]
 
-<refentry id="cl-weight-p">
-  <refnamediv>
-    <refname>cl-weight?</refname>
-    <refpurpose>Return #t if OBJ is a constraint weight object, #f otherwise.</refpurpose>
-  </refnamediv>
-  <refsynopsisdiv>
-    <synopsis>(cl-weight? obj)</synopsis>
-  </refsynopsisdiv>
-  <refsect1>
-  <title>Description</title>
-  <para>
-  Return <literal>#t</literal> if <parameter>obj</parameter> is a constraint weight object, <literal>#f</literal> otherwise.
-  </para>
-  </refsect1>
-  <refsect1>
-  <title>Implemenation Notes</title>
-  <para> Defined in <ulink url="file:///scratch/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 231 </para> </refsect1>
-</refentry>
+
+(cl-weight? obj)
+Return #t if OBJ is a constraint weight object, #f otherwise.
+[From cassowary_scm.cc:240]
 
-<refentry id="make-cl-constraint">
-  <refnamediv>
-    <refname>make-cl-constraint</refname>
-    <refpurpose>Return a newly-constructed constraint object.</refpurpose>
-  </refnamediv>
-  <refsynopsisdiv>
-    <synopsis>(make-cl-constraint exprA op exprB #&amp;optional strength factor)</synopsis>
-  </refsynopsisdiv>
-  <refsect1>
-  <title>Description</title>
-  <para>
-  Return a newly-constructed constraint object.
-<parameter>expra</parameter> and <parameter>exprb</parameter> are cl-expression or cl-variable objects.  <parameter>op</parameter> is one
+
+(make-cl-constraint exprA op exprB #&optional strength factor)
+Return a newly-constructed constraint object.
+EXPRA and EXPRB are cl-expression or cl-variable objects.  OP is one
 of `=', `<=', or `>=', anything else will signal an error.  Note that
 the arithmetic comparison procedures are just used for their identity.
-The returned object is a cl-equation constraint object if <parameter>op</parameter> is `=';
-it is a cl-inequality constraint object if <parameter>op</parameter> is `<=' or `>='.  The
-created constraint is given strength <parameter>strength</parameter>, a cl-strength, and has
-a weight factor of <parameter>factor</parameter>, a real number.  <parameter>strength</parameter> defaults to
-cls-required, <parameter>factor</parameter> defaults to 1.
-  </para>
-  </refsect1>
-  <refsect1>
-  <title>Implemenation Notes</title>
-  <para> Defined in <ulink url="file:///scratch/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 948 </para> </refsect1>
-</refentry>
+The returned object is a cl-equation constraint object if OP is `=';
+it is a cl-inequality constraint object if OP is `<=' or `>='.  The
+created constraint is given strength STRENGTH, a cl-strength, and has
+a weight factor of FACTOR, a real number.  STRENGTH defaults to
+cls-required, FACTOR defaults to 1.
+[From cassowary_scm.cc:970]
 
-<refentry id="make-cl-equality">
-  <refnamediv>
-    <refname>make-cl-equality</refname>
-    <refpurpose>Return a newly-created constraint equation.</refpurpose>
-  </refnamediv>
-  <refsynopsisdiv>
-    <synopsis>(make-cl-equality exprA exprB #&amp;optional strength factor)</synopsis>
-  </refsynopsisdiv>
-  <refsect1>
-  <title>Description</title>
-  <para>
-  Return a newly-created constraint equation.
-The resulting constraint is that <parameter>expra</parameter> is equal to <parameter>exprb</parameter>.  <parameter>expra</parameter> and
-<parameter>exprb</parameter> are cl-expression or cl-variable objects.  The constraint is
-given strength <parameter>strength</parameter>, a cl-strength, and has a weight factor of
-<parameter>factor</parameter>, a real number.  <parameter>strength</parameter> defaults to cls-required, <parameter>factor</parameter>
-defaults to 1.  Consider <link linkend="make-cl-constraint"><function>make-cl-constraint</function></link> as a higher-level
+
+(make-cl-equality exprA exprB #&optional strength factor)
+Return a newly-created constraint equation.
+The resulting constraint is that EXPRA is equal to EXPRB.  EXPRA and
+EXPRB are cl-expression or cl-variable objects.  The constraint is
+given strength STRENGTH, a cl-strength, and has a weight factor of
+FACTOR, a real number.  STRENGTH defaults to cls-required, FACTOR
+defaults to 1.  Consider `make-cl-constraint' as a higher-level
 interface to building arbitrary constraints.
 This is a convenience procedure that has the same
-semantics as <link linkend="make-cl-equation"><function>make-cl-equation</function></link> with the difference of <parameter>expra</parameter> and
-<parameter>exprb</parameter>.  Note that if neither expression contains a variable, an
+semantics as `make-cl-equation' with the difference of EXPRA and
+EXPRB.  Note that if neither expression contains a variable, an
 error will be signalled.
-  </para>
-  </refsect1>
-  <refsect1>
-  <title>Implemenation Notes</title>
-  <para> Defined in <ulink url="file:///scratch/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 744 </para> </refsect1>
-</refentry>
+[From cassowary_scm.cc:759]
 
-<refentry id="make-cl-equation">
-  <refnamediv>
-    <refname>make-cl-equation</refname>
-    <refpurpose>Return a newly-created constraint equation.</refpurpose>
-  </refnamediv>
-  <refsynopsisdiv>
-    <synopsis>(make-cl-equation expr #&amp;optional strength factor)</synopsis>
-  </refsynopsisdiv>
-  <refsect1>
-  <title>Description</title>
-  <para>
-  Return a newly-created constraint equation.
-The resulting constraint is that <parameter>expr</parameter> is equal to 0.  <parameter>expr</parameter> is a
+
+(make-cl-equation expr #&optional strength factor)
+Return a newly-created constraint equation.
+The resulting constraint is that EXPR is equal to 0.  EXPR is a
 cl-expression or cl-variable object.  The constraint is given strength
-<parameter>strength</parameter>, a cl-strength, and has a weight factor of <parameter>factor</parameter>, a real
-number.  <parameter>strength</parameter> defaults to cls-required, <parameter>factor</parameter> defaults to 1.
-  </para>
-  </refsect1>
-  <refsect1>
-  <title>Implemenation Notes</title>
-  <para> Defined in <ulink url="file:///scratch/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 700 </para> </refsect1>
-</refentry>
+STRENGTH, a cl-strength, and has a weight factor of FACTOR, a real
+number.  STRENGTH defaults to cls-required, FACTOR defaults to 1.
+[From cassowary_scm.cc:721]
 
-<refentry id="make-cl-expression">
-  <refnamediv>
-    <refname>make-cl-expression</refname>
-    <refpurpose>Return a newly-create constraint expression object.</refpurpose>
-  </refnamediv>
-  <refsynopsisdiv>
-    <synopsis>(make-cl-expression clv)</synopsis>
-  </refsynopsisdiv>
-  <refsect1>
-  <title>Description</title>
-  <para>
-  Return a newly-create constraint expression object.
-The expression is contains just the value <parameter>clv</parameter>.  Often constraint
+
+(make-cl-expression clv)
+Return a newly-create constraint expression object.
+The expression is contains just the value CLV.  Often constraint
 variables can be used interchangeably with constraint expressions, but
 this procedure can be used to force building a simple expression.
-  </para>
-  </refsect1>
-  <refsect1>
-  <title>Implemenation Notes</title>
-  <para> Defined in <ulink url="file:///scratch/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 450 </para> </refsect1>
-</refentry>
+[From cassowary_scm.cc:459]
 
-<refentry id="make-cl-inequality">
-  <refnamediv>
-    <refname>make-cl-inequality</refname>
-    <refpurpose>Return a newly-constructed constraint inequality object.</refpurpose>
-  </refnamediv>
-  <refsynopsisdiv>
-    <synopsis>(make-cl-inequality exprA op exprB #&amp;optional strength factor)</synopsis>
-  </refsynopsisdiv>
-  <refsect1>
-  <title>Description</title>
-  <para>
-  Return a newly-constructed constraint inequality object.
-<parameter>expra</parameter> and <parameter>exprb</parameter> are cl-expression or cl-variable objects.  If <parameter>op</parameter> is
-`<=' then the constraint is that <parameter>expra</parameter> <= <parameter>exprb</parameter>; if <parameter>op</parameter> is `>=' then
-the constraint is that <parameter>expra</parameter> >= <parameter>exprb</parameter>.  Note that the arithmetic
-comparison procedure objects are just used for their identity. If <parameter>op</parameter>
+
+(make-cl-inequality exprA op exprB #&optional strength factor)
+Return a newly-constructed constraint inequality object.
+EXPRA and EXPRB are cl-expression or cl-variable objects.  If OP is
+`<=' then the constraint is that EXPRA <= EXPRB; if OP is `>=' then
+the constraint is that EXPRA >= EXPRB.  Note that the arithmetic
+comparison procedure objects are just used for their identity. If OP
 is any other object, an error is signalled. The constraint is given
-strength <parameter>strength</parameter>, a cl-strength, and has a weight factor of <parameter>factor</parameter>, a
-real number.  <parameter>strength</parameter> defaults to cls-required, <parameter>factor</parameter> defaults to 1.
-Consider <link linkend="make-cl-constraint"><function>make-cl-constraint</function></link> as a higher-level interface to building
+strength STRENGTH, a cl-strength, and has a weight factor of FACTOR, a
+real number.  STRENGTH defaults to cls-required, FACTOR defaults to 1.
+Consider `make-cl-constraint' as a higher-level interface to building
 arbitrary constraints.
-  </para>
-  </refsect1>
-  <refsect1>
-  <title>Implemenation Notes</title>
-  <para> Defined in <ulink url="file:///scratch/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 853 </para> </refsect1>
-</refentry>
+[From cassowary_scm.cc:881]
 
-<refentry id="make-cl-solver">
-  <refnamediv>
-    <refname>make-cl-solver</refname>
-    <refpurpose>Return a newly-created constraint solver object.</refpurpose>
-  </refnamediv>
-  <refsynopsisdiv>
-    <synopsis>(make-cl-solver)</synopsis>
-  </refsynopsisdiv>
-  <refsect1>
-  <title>Description</title>
-  <para>
-  Return a newly-created constraint solver object.
+
+(make-cl-solver)
+Return a newly-created constraint solver object.
 Often, an application will need only one of these objects,  but
 multiple independent solvers may exist as long as they do not
 share constraint variable objects.
-  </para>
-  </refsect1>
-  <refsect1>
-  <title>Implemenation Notes</title>
-  <para> Defined in <ulink url="file:///scratch/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 1095 </para> </refsect1>
-</refentry>
+[From cassowary_scm.cc:1117]
 
-<refentry id="make-cl-strength">
-  <refnamediv>
-    <refname>make-cl-strength</refname>
-    <refpurpose>Return a newly-created constraint strength object.</refpurpose>
-  </refnamediv>
-  <refsynopsisdiv>
-    <synopsis>(make-cl-strength name weight)</synopsis>
-  </refsynopsisdiv>
-  <refsect1>
-  <title>Description</title>
-  <para>
-  Return a newly-created constraint strength object.
-The object is given the name <parameter>name</parameter>, a string, and the symbolic
-strengh <parameter>weight</parameter>, a cl-weight.  Constraint strength objects
+
+(make-cl-strength name weight)
+Return a newly-created constraint strength object.
+The object is given the name NAME, a string, and the symbolic
+strengh WEIGHT, a cl-weight.  Constraint strength objects
 are used when specifying the strength of a constraint.  There are
 several predefined cl-strenght objects: "cls-required", "cls-strong",
 "cls-medium", and "cls-weak".  These four constraint strengths
 are often enough for a suitably expressive constraint-hierarchy,
 but new strengths can be introduced if necessary.
-  </para>
-  </refsect1>
-  <refsect1>
-  <title>Implemenation Notes</title>
-  <para> Defined in <ulink url="file:///scratch/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 335 </para> </refsect1>
-</refentry>
+[From cassowary_scm.cc:344]
 
-<refentry id="make-cl-strength-3">
-  <refnamediv>
-    <refname>make-cl-strength-3</refname>
-    <refpurpose>Return a newly-created constraint strength object.</refpurpose>
-  </refnamediv>
-  <refsynopsisdiv>
-    <synopsis>(make-cl-strength-3 name w1 w2 w3)</synopsis>
-  </refsynopsisdiv>
-  <refsect1>
-  <title>Description</title>
-  <para>
-  Return a newly-created constraint strength object.
-The object is given the name <parameter>name</parameter>, a string, and a symbolic weight of
-length three with the sequence of values: <parameter>w1</parameter>, <parameter>w2</parameter>, <parameter>w3</parameter>.  This is a
+
+(make-cl-strength-3 name w1 w2 w3)
+Return a newly-created constraint strength object.
+The object is given the name NAME, a string, and a symbolic weight of
+length three with the sequence of values: W1, W2, W3.  This is a
 convenience procedure that has the same semantics as building a
 cl-weight object with the values and using that to build a cl-strength
 object.
-  </para>
-  </refsect1>
-  <refsect1>
-  <title>Implemenation Notes</title>
-  <para> Defined in <ulink url="file:///scratch/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 365 </para> </refsect1>
-</refentry>
+[From cassowary_scm.cc:374]
 
-<refentry id="make-cl-variable">
-  <refnamediv>
-    <refname>make-cl-variable</refname>
-    <refpurpose>Return a newly-created constraint variable.</refpurpose>
-  </refnamediv>
-  <refsynopsisdiv>
-    <synopsis>(make-cl-variable  #&amp;optional name value)</synopsis>
-  </refsynopsisdiv>
-  <refsect1>
-  <title>Description</title>
-  <para>
-  Return a newly-created constraint variable.
-The created variable has the name <parameter>name</parameter>, and an initial
-value of <parameter>value</parameter>.  Be sure to add a stay constraint on the
+
+(make-cl-variable  #&optional name value)
+Return a newly-created constraint variable.
+The created variable has the name NAME, and an initial
+value of VALUE.  Be sure to add a stay constraint on the
 variable if you want its value to not change.
-  </para>
-  </refsect1>
-  <refsect1>
-  <title>Implemenation Notes</title>
-  <para> Defined in <ulink url="file:///scratch/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 116 </para> </refsect1>
-</refentry>
+[From cassowary_scm.cc:125]
 
-<refentry id="make-cl-weight">
-  <refnamediv>
-    <refname>make-cl-weight</refname>
-    <refpurpose>Return a newly-created constraint symbolic weight object.</refpurpose>
-  </refnamediv>
-  <refsynopsisdiv>
-    <synopsis>(make-cl-weight w1 w2 w3)</synopsis>
-  </refsynopsisdiv>
-  <refsect1>
-  <title>Description</title>
-  <para>
-  Return a newly-created constraint symbolic weight object.
+
+(make-cl-weight w1 w2 w3)
+Return a newly-created constraint symbolic weight object.
 Symbolic weights are sequences of real numbers that are sorted
-in lexicographical order (e.g., 1,0,0 &gt; 0,999,999).  cl-weight
+in lexicographical order (e.g., 1,0,0 > 0,999,999).  cl-weight
 objects are used when creating cl-strength objects.  By convention,
-the sequences are three elements long: <parameter>w1</parameter>, <parameter>w2</parameter>, and <parameter>w3</parameter>.  Longer
+the sequences are three elements long: W1, W2, and W3.  Longer
 cl-weight objects could be supported in the future.  See also
-<link linkend="make-cl-strength-3"><function>make-cl-strength-3</function></link> which is a convenience procedure for building a
+`make-cl-strength-3' which is a convenience procedure for building a
 cl-strength object given the sequence of numbers directly.
-  </para>
-  </refsect1>
-  <refsect1>
-  <title>Implemenation Notes</title>
-  <para> Defined in <ulink url="file:///scratch/gjb/scwm/cassowary_scm.cc"><filename>cassowary_scm.cc</filename></ulink>
-  at line 240 </para> </refsect1>
-</refentry>
+[From cassowary_scm.cc:249]
 
-  </chapter>
-  <chapter>
-    <title>Primitives By Defined-in File</title>
-    <sect1><title>cassowary_scm.cc</title> <itemizedlist>
-      <listitem><para><link linkend="cl-variable-p"><function>cl-variable?</function></link> &mdash; Return #t if OBJ is a constraint variable, #f otherwise.</para></listitem>
-      <listitem><para><link linkend="make-cl-variable"><function>make-cl-variable</function></link> &mdash; Return a newly-created constraint variable.</para></listitem>
-      <listitem><para><link linkend="cl-value"><function>cl-value</function></link> &mdash; Return the current value of the constraint variable CLV.</para></listitem>
-      <listitem><para><link linkend="cl-int-value"><function>cl-int-value</function></link> &mdash; Return the value of the constraint variable CLV as an integer.</para></listitem>
-      <listitem><para><link linkend="cl-weight-p"><function>cl-weight?</function></link> &mdash; Return #t if OBJ is a constraint weight object, #f otherwise.</para></listitem>
-      <listitem><para><link linkend="make-cl-weight"><function>make-cl-weight</function></link> &mdash; Return a newly-created constraint symbolic weight object.</para></listitem>
-      <listitem><para><link linkend="cl-strength-p"><function>cl-strength?</function></link> &mdash; Return #t if OBJ is a constraint strength, #f otherwise.</para></listitem>
-      <listitem><para><link linkend="make-cl-strength"><function>make-cl-strength</function></link> &mdash; Return a newly-created constraint strength object.</para></listitem>
-      <listitem><para><link linkend="make-cl-strength-3"><function>make-cl-strength-3</function></link> &mdash; Return a newly-created constraint strength object.</para></listitem>
-      <listitem><para><link linkend="cl-expression-p"><function>cl-expression?</function></link> &mdash; Return #t if OBJ is a constraint expression, #f otherwise.</para></listitem>
-      <listitem><para><link linkend="make-cl-expression"><function>make-cl-expression</function></link> &mdash; Return a newly-create constraint expression object.</para></listitem>
-      <listitem><para><link linkend="cl-plus"><function>cl-plus</function></link> &mdash; Return the cl-expression that is the sum of EXPRA and EXPRB.</para></listitem>
-      <listitem><para><link linkend="cl-minus"><function>cl-minus</function></link> &mdash; Return the cl-expression that is the difference of EXPRA and EXPRB.</para></listitem>
-      <listitem><para><link linkend="cl-times"><function>cl-times</function></link> &mdash; Return the cl-expression that is the product of EXPRA and EXPRB.</para></listitem>
-      <listitem><para><link linkend="cl-divide"><function>cl-divide</function></link> &mdash; Return the cl-expression that is the quotient of EXPRA and EXPRB.</para></listitem>
-      <listitem><para><link linkend="cl-equation-p"><function>cl-equation?</function></link> &mdash; Return #t if OBJ is a constraint equation, #f otherwise.</para></listitem>
-      <listitem><para><link linkend="make-cl-equation"><function>make-cl-equation</function></link> &mdash; Return a newly-created constraint equation.</para></listitem>
-      <listitem><para><link linkend="make-cl-equality"><function>make-cl-equality</function></link> &mdash; Return a newly-created constraint equation.</para></listitem>
-      <listitem><para><link linkend="cl-inequality-p"><function>cl-inequality?</function></link> &mdash; Return #t if OBJ is a constraint inequality object, #t otherwise.</para></listitem>
-      <listitem><para><link linkend="make-cl-inequality"><function>make-cl-inequality</function></link> &mdash; Return a newly-constructed constraint inequality object.</para></listitem>
-      <listitem><para><link linkend="cl-constraint-p"><function>cl-constraint?</function></link> &mdash; Return #t if OBJ is some kind of constraint object, #f otherwise.</para></listitem>
-      <listitem><para><link linkend="make-cl-constraint"><function>make-cl-constraint</function></link> &mdash; Return a newly-constructed constraint object.</para></listitem>
-      <listitem><para><link linkend="cl-solver-debug-print"><function>cl-solver-debug-print</function></link> &mdash; Output a complete dump of SOLVER onto output port PORT.</para></listitem>
-      <listitem><para><link linkend="cl-solver-p"><function>cl-solver?</function></link> &mdash; Return #t if OBJ is a constraint solver object, #f otherwise.</para></listitem>
-      <listitem><para><link linkend="make-cl-solver"><function>make-cl-solver</function></link> &mdash; Return a newly-created constraint solver object.</para></listitem>
-      <listitem><para><link linkend="cl-add-constraint"><function>cl-add-constraint</function></link> &mdash; Add the constraints, ARGS, to the solver SOLVER.</para></listitem>
-      <listitem><para><link linkend="cl-remove-constraint"><function>cl-remove-constraint</function></link> &mdash; Remove the constraints, ARGS, from the solver SOLVER.</para></listitem>
-      <listitem><para><link linkend="cl-add-editvar"><function>cl-add-editvar</function></link> &mdash; Add edit constraints on variables in ARGS to SOLVER.</para></listitem>
-      <listitem><para><link linkend="cl-add-stay"><function>cl-add-stay</function></link> &mdash; Add stay constraints on variables in ARGS to SOLVER.</para></listitem>
-      <listitem><para><link linkend="cl-begin-edit"><function>cl-begin-edit</function></link> &mdash; Begin changing values of the edit variables of SOLVER.</para></listitem>
-      <listitem><para><link linkend="cl-end-edit"><function>cl-end-edit</function></link> &mdash; Finish changing the values of the edit variables in SOLVER.</para></listitem>
-      <listitem><para><link linkend="cl-suggest-value"><function>cl-suggest-value</function></link> &mdash; Try to change VAR's value to VALUE within SOLVER.</para></listitem>
-      <listitem><para><link linkend="cl-resolve"><function>cl-resolve</function></link> &mdash; Ask SOLVER to re-solve its system using the suggested values.</para></listitem>
-    </itemizedlist> </sect1>
-  </chapter>
-  <chapter>
-    <title>Hooks</title>
-  </chapter>
-  <chapter>
-    <title>Concepts</title>
-  </chapter>
-</chapter>
-</book>
-<!-- Keep this comment at the end of the file
-Local variables:
-mode: sgml
-fill-column: 10000
-sgml-omittag:nil
-sgml-shorttag:t
-End:
--->
+
