@@ -1,6 +1,6 @@
 #include "Cl.h"
 
-void main()
+int main()
 {
   ClVariable *var = new ClVariable();
   ClSimplexSolver *solver = new ClSimplexSolver();
