@@ -16,6 +16,8 @@
 #define CL_PTR_HASH_DIVISOR 4
 #endif
 
+#include "../config.h"
+
 #include "ClConstraintHash.h"
 
 #ifdef USE_GC
