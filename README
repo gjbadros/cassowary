@@ -25,6 +25,43 @@ implementation(s) you are using, too.
 
 ------------------------------------------------------------------
 
+HOW TO GET STARTED
+
+The Cassowary library uses GNU autoconf to permit easy building on
+various platforms.  You should be able to do:
+
+./configure
+make
+
+and everything will work.  A more complex, but realistic example is:
+
+./configure --with-prefix=/usr/contrib \
+            --with-guile-prefix=/usr/contrib \
+            --with-java-class-path=/usr/contrib/share/java/site \
+            --enable-warnings
+make
+
+See the file "INSTALL" for more details about
+autoconf support and the options that the "configure" takes.  You can
+also do "./configure --help" for the list of the options that configure
+accepts. 
+
+Note that the generated Makefiles may depend upon features of GNU Make
+(please let me know if they do).  See:
+
+ftp://ftp.gnu.org/pub/gnu/
+
+for a version of make that you can build first to then build Cassowary.
+
+Example applications exist in subdirectories of the top-level
+implementation subdirectories (e.g., c++/qdemos contains demos for C++
+that use the Qt Widget toolkit).
+
+Please send mail to cassowary@cs.washington.edu if you are using this
+toolkit so we know how to reach you for bug fixes, updates, etc.
+
+------------------------------------------------------------------
+
 WHAT THE DISTRIBUTION CONTAINS
 
 This distribution contains 3 implementations of the Cassowary constraint
@@ -61,36 +98,6 @@ http://vicarious-existence.mit.edu/scwm/
 
 Scwm, also by Greg Badros (and Maciej Stachowiak), is the most
 substantial application using this toolkit that we are aware of.
-
-------------------------------------------------------------------
-
-HOW TO GET STARTED
-
-First, you should try to build the implementation that you're most
-interested in.  There is some partial autoconf/automake support which
-means that you may be able to just:
-
-./configure
-make
-
-and everything will work.  See the file "INSTALL" for more details about
-autoconf support and the options that the "configure" takes.  You can
-also do "./configure --help" for the list of the options that configure
-accepts. 
-
-Note that the generated Makefiles may depend upon features of GNU Make
-(please let me know if they do).  See:
-
-ftp://ftp.gnu.org/pub/gnu/
-
-for a version of make that you can build first to then build Cassowary.
-
-Example applications exist in subdirectories of the top-level
-implementation subdirectories (e.g., c++/qdemos contains demos for C++
-that use the Qt Widget toolkit).
-
-Please send mail to cassowary@cs.washington.edu if you are using this
-toolkit so we know how to reach you for bug fixes, updates, etc.
 
 ------------------------------------------------------------------
 
