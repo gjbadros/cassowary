@@ -49,20 +49,23 @@ ClSimplexSolver::addPointStays(const vector<ClPoint> &listOfPoints)
 // Remove the constraint cn from the tableau
 // Also remove any error variable associated with cn
 void 
-ClSimplexSolver::removeConstraint(const ClConstraint &cn)
+ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
 {
   // We are about to remove a constraint.  There may be some stay
   // constraints that were unsatisfied previously -- if we just
   // removed the constraint these could come into play.  Instead,
   // reset all of the stays so that things should stay where they are
   // at the moment.
-  
+
+  ClConstraint &cn = const_cast<ClConstraint &>(cnconst);
+
   resetStayConstants();
 
   // remove any error variables from the objective function
   const ClVariable &zRow = my_objective;
-  const ClLinearExpression &obj = rowExpression(zRow);
-  map<ClConstraint *, set<ClVariable> >::iterator it_eVars = my_errorVars.find(&cn);
+  ClLinearExpression &obj = rowExpression(zRow);
+  map<ClConstraint *, set<ClVariable> >::iterator 
+    it_eVars = my_errorVars.find(&cn);
   if (it_eVars != my_errorVars.end())
     {
     set<ClVariable> &eVars = (*it_eVars).second;
@@ -82,7 +85,8 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cn)
     my_errorVars.erase(it_eVars);
     }
 
-  map<ClConstraint *, ClVariable>::iterator it_marker = my_markerVars.find(&cn);
+  map<ClConstraint *, ClVariable>::iterator 
+    it_marker = my_markerVars.find(&cn);
   // try to make the marker variable basic if it isn't already
   assert( it_marker != my_markerVars.end() );
   const ClVariable &marker = (*it_marker).second;
@@ -97,7 +101,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cn)
     double minRatio = 0.0;
     for ( ; it_col != col.end(); ++it_col) 
       {
-      ClVariable &v = *it_col;
+      const ClVariable &v = *it_col;
       if (v.isRestricted() )
 	{
 	const ClLinearExpression &expr = rowExpression(v);
@@ -129,7 +133,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cn)
       it_col = col.begin();
       for ( ; it_col != col.end(); ++it_col) 
 	{
-	ClVariable &v = *it_col;
+	const ClVariable &v = *it_col;
 	if (v.isRestricted() )
 	  {
 	  const ClLinearExpression &expr = rowExpression(v);
@@ -180,7 +184,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cn)
     set<ClVariable>::iterator it = eVars.begin();
     for ( ; it != eVars.end(); ++it )
       {
-      ClVariable &v = (*it);
+      const ClVariable &v = (*it);
       if (v != marker)
 	{
 	removeColumn(v);
@@ -380,7 +384,7 @@ ClSimplexSolver::deltaEditConstant(Number delta,
 				   const ClVariable &minusErrorVar)
 {
   // first check if the plusErrorVar is basic
-  const ClLinearExpression &exprPlus = rowExpression(plusErrorVar);
+  ClLinearExpression &exprPlus = rowExpression(plusErrorVar);
   if (exprPlus != cleNil() )
     {
     exprPlus.incrementConstant(delta);
@@ -393,7 +397,7 @@ ClSimplexSolver::deltaEditConstant(Number delta,
     return;
     }
   // check if minusErrorVar is basic
-  const ClLinearExpression &exprMinus = rowExpression(minusErrorVar);
+  ClLinearExpression &exprMinus = rowExpression(minusErrorVar);
   if (exprMinus != cleNil() )
     {
     exprMinus.incrementConstant(-delta);
@@ -436,7 +440,7 @@ ClSimplexSolver::dualOptimize()
     // need to erase it_exitVar at end
     set<ClVariable>::iterator it_exitVar = my_infeasibleRows.begin();
     const ClVariable &exitVar = *it_exitVar;
-    const ClVariable &entryVar = clvNil();
+    ClVariable *pentryVar = NULL;
     // exitVar might have become basic after some other pivoting
     // so allow for the case of its not being there any longer
     ClLinearExpression &expr = rowExpression(exitVar);
@@ -455,19 +459,18 @@ ClSimplexSolver::dualOptimize()
 	  Number c = (*it).second;
 	  if (c > 0.0 && v.isPivotable())
 	    {
-	    map<ClVariable,Number>::iterator it_zc = zRow.terms().find(v);
-	    if (it_zc != zRow.terms().end())
+	    Number zc = zRow.coefficientFor(v);
+	    if (zc != 0)
 	      {
-	      Number zc = (*it_zc).second;
 	      r = zc/c;
 	      }
 	    else
 	      {
-	      // r := [ClSymbolicWeight zero]
+	      // FIXGJB r := [ClSymbolicWeight zero]
 	      }
 	    if (ratio == MAXDOUBLE || r < ratio)
 	      {
-	      entryVar = v;
+	      pentryVar = &v;
 	      ratio = r;
 	      }
 	    }
@@ -476,7 +479,7 @@ ClSimplexSolver::dualOptimize()
 	  {
 	  throw new ExCLInternalError;
 	  }
-	pivot(entryVar,exitVar);
+	pivot(*pentryVar,exitVar);
 	}
       }
     my_infeasibleRows.erase(it_exitVar);

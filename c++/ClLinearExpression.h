@@ -145,8 +145,13 @@ class ClLinearExpression  {
   // Return the coefficient corresponding to variable var, i.e.,
   // the 'ci' corresponding to the 'vi' that var is:
   //     v1*c1 + v2*c2 + .. + vn*cn + c
-  Number coefficientFor(const ClVariable &var)
-    { return my_terms[var]; }
+  Number coefficientFor(const ClVariable &var) const
+    { 
+    map<ClVariable, Number>::const_iterator it = my_terms.find(var);
+    if (it != my_terms.end())
+      return (*it).second;
+    return 0.0;
+    }
 
   Number constant() const
     { return my_constant; }
@@ -154,8 +159,11 @@ class ClLinearExpression  {
   void set_constant(Number c)
     { my_constant = c; }
 
-  map<ClVariable,Number> &terms() const
-    { return const_cast<map<ClVariable,Number> &>(my_terms); }
+  const map<ClVariable,Number> &terms() const
+    { return my_terms; }
+
+  map<ClVariable,Number> &terms() 
+    { return my_terms; }
 
   void incrementConstant(Number c)
     { my_constant += c; }
