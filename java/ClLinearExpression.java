@@ -156,6 +156,9 @@ public class ClLinearExpression extends CL
   public final ClLinearExpression subtractFrom(ClLinearExpression expr)
     { return expr.minus( this); }
 
+  // Add n*expr to this expression from another expression expr.
+  // Notify the solver if a variable is added or deleted from this
+  // expression.
   public final ClLinearExpression addExpression(ClLinearExpression expr, double n,
 						ClAbstractVariable subject, 
 						ClTableau solver)
@@ -170,6 +173,7 @@ public class ClLinearExpression extends CL
       return this;
     }
 
+  // Add n*expr to this expression from another expression expr.
   public final ClLinearExpression addExpression(ClLinearExpression expr, double n)
     {
       incrementConstant(n * expr.constant());
@@ -187,6 +191,9 @@ public class ClLinearExpression extends CL
       return addExpression(expr,1.0);
     }
 
+  // Add a term c*v to this expression.  If the expression already
+  // contains a term involving v, add c to the existing coefficient.
+  // If the new coefficient is approximately 0, delete v.
   public final ClLinearExpression addVariable(ClAbstractVariable v, double c)
     { // body largely duplicated below
       if (fTraceOn) fnenterprint("addVariable:" + v + ", " + c);
@@ -223,6 +230,10 @@ public class ClLinearExpression extends CL
       return this;
     }
 
+  // Add a term c*v to this expression.  If the expression already
+  // contains a term involving v, add c to the existing coefficient.
+  // If the new coefficient is approximately 0, delete v.  Notify the
+  // solver if v appears or disappears from this expression.
   public final ClLinearExpression addVariable(ClAbstractVariable v, double c,
  					ClAbstractVariable subject, ClTableau solver)
      { // body largely duplicated above
@@ -246,15 +257,33 @@ public class ClLinearExpression extends CL
        return this;
      }
   
-  public final ClAbstractVariable anyVariable() throws ExCLInternalError
+  // Return a pivotable variable in this expression.  (It is an error
+  // if this expression is constant -- signal ExCLInternalError in
+  // that case).  Return null if no pivotable variables
+  public final ClAbstractVariable anyPivotableVariable() throws ExCLInternalError
     {
       if (isConstant())
 	{
 	throw new ExCLInternalError();
 	}
-      return (ClAbstractVariable) _terms.keys().nextElement();
+
+      for (Enumeration e = _terms.keys() ; e.hasMoreElements(); ) {
+        ClAbstractVariable clv = (ClAbstractVariable) e.nextElement();
+        if (clv.isPivotable())
+          return clv;
+      } 
+
+      // No pivotable variables, so just return null, and let the caller
+      // error if needed
+      return null;
     }
 
+  // Replace var with a symbolic expression expr that is equal to it.
+  // If a variable has been added to this expression that wasn't there
+  // before, or if a variable has been dropped from this expression
+  // because it now has a coefficient of 0, inform the solver.
+  // PRECONDITIONS:
+  //   var occurs with a non-zero coefficient in this expression.
   public final void substituteOut(ClAbstractVariable var, ClLinearExpression expr, 
  			    ClAbstractVariable subject, ClTableau solver)
   {
@@ -286,6 +315,21 @@ public class ClLinearExpression extends CL
     if (fTraceOn) traceprint("Now this is " + this);
   }
   
+  // This linear expression currently represents the equation
+  // oldSubject=self.  Destructively modify it so that it represents
+  // the equation newSubject=self.
+  //
+  // Precondition: newSubject currently has a nonzero coefficient in
+  // this expression.
+  //
+  // NOTES
+  //   Suppose this expression is c + a*newSubject + a1*v1 + ... + an*vn.
+  //
+  //   Then the current equation is 
+  //       oldSubject = c + a*newSubject + a1*v1 + ... + an*vn.
+  //   The new equation will be
+  //        newSubject = -c/a + oldSubject/a - (a1/a)*v1 - ... - (an/a)*vn.
+  //   Note that the term involving newSubject has been dropped.
   public final void changeSubject(ClAbstractVariable old_subject, ClAbstractVariable new_subject)
     {
       ClDouble cld = (ClDouble) _terms.get(old_subject);
@@ -295,6 +339,22 @@ public class ClLinearExpression extends CL
 	_terms.put(old_subject,new ClDouble(newSubject(new_subject)));
     }
   
+  // This linear expression currently represents the equation self=0.  Destructively modify it so 
+  // that subject=self represents an equivalent equation.  
+  //
+  // Precondition: subject must be one of the variables in this expression.
+  // NOTES
+  //   Suppose this expression is
+  //     c + a*subject + a1*v1 + ... + an*vn
+  //   representing 
+  //     c + a*subject + a1*v1 + ... + an*vn = 0
+  // The modified expression will be
+  //    subject = -c/a - (a1/a)*v1 - ... - (an/a)*vn
+  //   representing
+  //    subject = -c/a - (a1/a)*v1 - ... - (an/a)*vn
+  //
+  // Note that the term involving subject has been dropped.
+  // Returns the reciprocal, so changeSubject can use it, too
   public final double newSubject(ClAbstractVariable subject)
     {
       if (fTraceOn) fnenterprint("newSubject:" + subject);
@@ -304,6 +364,9 @@ public class ClLinearExpression extends CL
       return reciprocal;
     }
 
+  // Return the coefficient corresponding to variable var, i.e.,
+  // the 'ci' corresponding to the 'vi' that var is:
+  //     v1*c1 + v2*c2 + .. + vn*cn + c
   public final double coefficientFor(ClAbstractVariable var)
     { 
       ClDouble coeff = (ClDouble) _terms.get(var);
