@@ -56,19 +56,45 @@ ClLinearExpression::times(Number x) const
   return result;
 }
 
-#ifdef FIXGJB_INCOMPLETE
+// Return a new linear expression formed by multiplying self by x.
+// (Note that this result must be linear.)
+// The above function optimizes the specific case of multiplying
+// by a constant, here is the more general case
+ClLinearExpression 
+ClLinearExpression::times(const ClLinearExpression &expr) const
+{
+  if (isConstant())
+    {
+    return expr.times(my_constant);
+    }
+  else if (expr.isConstant())
+    {
+    return times(expr.my_constant);
+    }
+  else
+    {
+    // neither are constants, so we'd introduce non-linearity
+    throw new ExCLNonlinearExpression;
+    }
+}
+
+
 // Return a new linear expression formed by adding x to self.
 ClLinearExpression 
-ClLinearExpression::plus(Number x) const
+ClLinearExpression::plus(const ClLinearExpression &expr) const
 {
-  
+  ClLinearExpression result = *this;
+  result.addExpression(expr,1.0);
+  return result;
 }
 
 // Return a new linear expression formed by subtracting x from self.
 ClLinearExpression 
-ClLinearExpression::minus(Number x) const
+ClLinearExpression::minus(const ClLinearExpression &expr) const
 {
-  
+  ClLinearExpression result = *this;
+  result.addExpression(expr,-1.0);
+  return result;
 }
 
 // Return a new linear expression formed by dividing self by x.
@@ -76,42 +102,77 @@ ClLinearExpression::minus(Number x) const
 ClLinearExpression 
 ClLinearExpression::divide(Number x) const
 {
-  
+  if (clApprox(x,0.0))
+    {
+    throw new ExCLNonlinearExpression;
+    }
+  else
+    {
+    return times(1.0/x);
+    }
 }
 
-// Return a new linear expression (aNumber/this).  Since the result
+// Return a new linear expression formed by dividing self by x.
+// (Note that this result must be linear.)
+ClLinearExpression 
+ClLinearExpression::divide(const ClLinearExpression &expr) const
+{
+  if (!expr.isConstant())
+    {
+    throw new ExCLNonlinearExpression;
+    }
+  else
+    {
+    return divide(expr.my_constant);
+    }
+}
+
+
+// Return a new linear expression (expr/this).  Since the result
 // must be linear, this is permissible only if 'this' is a constant.
 ClLinearExpression 
-ClLinearExpression::divFrom(const ClLinearExpression &aNumber) const
+ClLinearExpression::divFrom(const ClLinearExpression &expr) const
 {
-  
+  if (!isConstant() || clApprox(my_constant,0.0))
+    {
+    throw new ExCLNonlinearExpression;
+    }
+  else
+    {
+    return expr.divide(my_constant);
+    }
 }
-
-// Return a new linear expression (aNumber-this).
-ClLinearExpression 
-ClLinearExpression::subtractFrom(const ClLinearExpression &aNumber) const
-{
-  
-}
-
-#endif
 
 // Add n*expr to this expression for another expression expr.
-void 
+ClLinearExpression &
 ClLinearExpression::addExpression(const ClLinearExpression &expr, Number n)
 {
-  
+  incrementConstant(n*expr.constant());
+
+  map<ClVariable,Number>::const_iterator i = expr.my_terms.begin();
+  for ( ; i != expr.my_terms.end(); ++i)
+    {
+    addVariable((*i).first, n * (*i).second);
+    }
+  return *this;
 }
 
 // Add n*expr to this expression for another expression expr.
 // Notify the solver if a variable is added or deleted from this
 // expression.
-void 
+ClLinearExpression &
 ClLinearExpression::addExpression(const ClLinearExpression &expr, Number n,
 				  const ClAbstractVariable &subject,
 				  const ClSimplexSolver &solver)
 {
-  assert(false);
+  incrementConstant(n*expr.constant());
+
+  map<ClVariable,Number>::const_iterator i = expr.my_terms.begin();
+  for ( ; i != expr.my_terms.end(); ++i)
+    {
+    addVariable((*i).first, n * (*i).second, subject, solver);
+    }
+  return *this;
 }
 
 // Add a term c*v to this expression.  If the expression already
@@ -126,7 +187,7 @@ ClLinearExpression::addVariable(const ClVariable &v, Number c)
     // expression already contains that variable, so add to it
     Number new_coefficient = 0;
     new_coefficient = (*i).second + c;
-    if (clApprox(c,0.0))
+    if (clApprox(new_coefficient,0.0))
       {
       // new coefficient is zero, so erase it
       my_terms.erase(i);
@@ -188,12 +249,6 @@ ClLinearExpression::anyVariable() const
   return (*my_terms.begin()).first;
 }
 
-#ifdef FIXGJB_OLD_SMALLTALK_WAY
-  ClLinearExpression asLinearExpression() const 
-    { return this; }
-#endif
-
-
 // This linear expression currently represents the equation
 // oldSubject=self.  Destructively modify it so that it represents
 // the equation newSubject=self.
@@ -236,43 +291,3 @@ ClLinearExpression::newSubject(const ClAbstractVariable &subject)
 {
   assert(false);
 }
-
-
-#ifdef FIXGJB_OLD_SMALLTALK_WAY
-  /// Below cnFoo functions are virtually duplicated in ClVariable, also
-
-  // Return a linear constraint self=expr with given strength and weight
-  ClLinearEquation cnEqual(const ClLinearExpression &expr, 
-			   const ClStrength &strength,
-			   double weight = 1.0);
-  ClLinearEquation cnEqual(const ClVariable &expr,
-			   const ClStrength &strength,
-			   double weight = 1.0);
-  ClLinearEquation cnEqual(Number expr,
-			   const ClStrength &strength,
-			   double weight = 1.0);
-
-  // Return a linear constraint self>=expr with given strength and weight
-  ClLinearInequality cnGEQ(const ClLinearExpression &expr, 
-			   const ClStrength &strength,
-			   double weight = 1.0);
-  ClLinearInequality cnGEQ(const ClVariable &expr,
-			   const ClStrength &strength,
-			   double weight = 1.0);
-  ClLinearInequality cnGEQ(Number expr,
-			   const ClStrength &strength,
-			   double weight = 1.0);
-
-
-  // Return a linear constraint self<=expr with given strength and weight
-  ClLinearInequality cnLEQ(const ClLinearExpression &expr, 
-			   const ClStrength &strength,
-			   double weight = 1.0);
-  ClLinearInequality cnLEQ(const ClVariable &expr,
-			   const ClStrength &strength,
-			   double weight = 1.0);
-  ClLinearInequality cnLEQ(Number expr,
-			   const ClStrength &strength,
-			   double weight = 1.0);
-
-#endif

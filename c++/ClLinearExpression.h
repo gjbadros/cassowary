@@ -32,32 +32,41 @@ class ClLinearExpression  {
   // (Note that this result must be linear.)
   ClLinearExpression times(Number x) const;
 
+  // Return a new linear expression formed by multiplying self by x.
+  // (Note that this result must be linear.)
+  ClLinearExpression times(const ClLinearExpression &expr) const;
+
   // Return a new linear expression formed by adding x to self.
-  ClLinearExpression plus(Number x) const;
+  ClLinearExpression plus(const ClLinearExpression &expr) const;
 
   // Return a new linear expression formed by subtracting x from self.
-  ClLinearExpression minus(Number x) const;
+  ClLinearExpression minus(const ClLinearExpression &expr) const;
 
   // Return a new linear expression formed by dividing self by x.
   // (Note that this result must be linear.)
   ClLinearExpression divide(Number x) const;
 
+  // Return a new linear expression formed by dividing self by x.
+  // (Note that this result must be linear.)
+  ClLinearExpression divide(const ClLinearExpression &expr) const;
+
   // Return a new linear expression (aNumber/this).  Since the result
   // must be linear, this is permissible only if 'this' is a constant.
-  ClLinearExpression divFrom(const ClLinearExpression &aNumber) const;
+  ClLinearExpression divFrom(const ClLinearExpression &expr) const;
 
   // Return a new linear expression (aNumber-this).
-  ClLinearExpression subtractFrom(const ClLinearExpression &aNumber) const;
+  ClLinearExpression subtractFrom(const ClLinearExpression &expr) const
+  { return expr.minus(*this); }
 
   // Add n*expr to this expression for another expression expr.
-  void addExpression(const ClLinearExpression &expr, Number n);
+  ClLinearExpression &addExpression(const ClLinearExpression &expr, Number n);
 
   // Add n*expr to this expression for another expression expr.
   // Notify the solver if a variable is added or deleted from this
   // expression.
-  void addExpression(const ClLinearExpression &expr, Number n,
-		     const ClAbstractVariable &subject,
-		     const ClSimplexSolver &solver);
+  ClLinearExpression &addExpression(const ClLinearExpression &expr, Number n,
+				    const ClAbstractVariable &subject,
+				    const ClSimplexSolver &solver);
 
   // Add a term c*v to this expression.  If the expression already
   // contains a term involving v, add c to the existing coefficient.
@@ -134,7 +143,7 @@ class ClLinearExpression  {
   Number coefficientFor(const ClVariable &var)
     { return my_terms[var]; }
 
-  Number constant()
+  Number constant() const
     { return my_constant; }
 
   void set_constant(Number c)

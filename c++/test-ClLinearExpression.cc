@@ -13,4 +13,6 @@ main( char **argv, int argc )
   cout << cle << endl;
   cout << cle.times(2) << endl;
   cout << (cle.times(2).addVariable(ClVariable("c"),3)).times(-1) << endl;
+  cle.addExpression(cle,-1);
+  cout << cle << endl;
 }
