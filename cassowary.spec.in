@@ -1,6 +1,6 @@
 # Note that this is NOT a relocatable package
 %define ver @VERSION@
-%define rel 2
+%define rel 3
 %define prefix /usr
 
 Name: cassowary
@@ -39,7 +39,7 @@ constrained variables to have values that satisfy the constraints.
 
 %build
 ln -sf . ./c++/cassowary
-./configure --prefix=%prefix --with-gtl=%prefix --enable-fd-solver --enable-fsstd
+./configure --prefix=%prefix --with-gtl=%prefix --enable-fd-solver --enable-fsstd --disable-java-build
 make
 
 %install
