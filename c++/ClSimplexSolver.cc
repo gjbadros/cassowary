@@ -19,6 +19,7 @@
 #include "ClDummyVariable.h"
 #include "auto_ptr.h"
 #include <float.h>
+#include <strstream>
 
 // Need to delete all expressions
 // and all slack and dummy variables
@@ -514,8 +515,9 @@ ClSimplexSolver::suggestValue(ClVariable &v, Number x)
   ClVarToConstraintAndIndexMap::const_iterator itEditVarMap = _editVarMap.find(&v);
   if (itEditVarMap == _editVarMap.end())
     {
-    cerr << "suggestValue for variable " << v << ", but var is not an edit variable" << endl;
-    throw ExCLError();
+    strstream ss;
+    ss << "suggestValue for variable " << v << ", but var is not an edit variable" << ends;
+    throw ExCLEditMisuse(ss.str());
     }
   const ClConstraintAndIndex *pcai = (*itEditVarMap).second;
   int i = pcai->index;
@@ -872,8 +874,9 @@ ClSimplexSolver::dualOptimize()
 	  }
 	if (ratio == DBL_MAX)
 	  {
-	  cerr << "ratio == nil (DBL_MAX)" << endl;
-	  throw ExCLInternalError();
+          strstream ss;
+	  ss << "ratio == nil (DBL_MAX)" << ends;
+	  throw ExCLInternalError(ss.str());
 	  }
 	pivot(*pentryVar,*pexitVar);
 	}
@@ -1114,8 +1117,9 @@ ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
     // application.
     if (minRatio == DBL_MAX)
       {
-      cerr << "objective function is unbounded!" << endl;
-      throw ExCLInternalError();
+      strstream ss;
+      ss << "objective function is unbounded!" << ends;
+      throw ExCLInternalError(ss.str());
       }
     pivot(*pentryVar, *pexitVar);
 #ifndef CL_NO_TRACE
@@ -1181,10 +1185,11 @@ ClSimplexSolver::resetEditConstants(const vector<Number> &newEditConstants)
 #endif
   if (newEditConstants.size() != _editPlusErrorVars.size())
     { // number of edit constants doesn't match the number of edit error variables
-    cerr << "newEditConstants == " << newEditConstants << endl
-	 << "_editPlusErrorVars == " << _editPlusErrorVars << endl
-	 << "Sizes don't match!" << endl;
-    throw ExCLBadResolve();
+    strstream ss;
+    ss << "newEditConstants == " << newEditConstants
+       << "; _editPlusErrorVars == " << _editPlusErrorVars
+       << ": Sizes don't match!" << ends;
+    throw ExCLBadResolve(ss.str());
     }
   vector<Number>::const_iterator itNew = newEditConstants.begin();
   vector<Number>::iterator itPrev = _prevEditConstants.begin();
@@ -1273,6 +1278,7 @@ ClSimplexSolver::setExternalVariables()
     // so don't want to call it twice
     if (rowExpression(*pv)) 
       {
+      // WARNING
       cerr << __FUNCTION__ << "Error: variable " << *pv 
            << " in _externalParametricVars is basic" << endl;
       continue;
