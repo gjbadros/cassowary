@@ -64,6 +64,22 @@ build.  E.g., if you do not have the JDK installed, the Java version of
 Cassowary might not compile; if you still want the guile version, just
 "cd guile; make -k".
 
+You may need to use the "-fpermissive" flag of more recent g++/egcs
+compilers to work around some const-discrepancies between the
+const-challenged guile header files and Cassowary's more const-correct
+usage.   Also, you may need to change libguile/gsubr.h from:
+
+     extern SCM scm_make_gsubr SCM_P ((char *name, int req, int opt, 
+                                       int rst, SCM (*fcn)()));
+   to
+
+     extern SCM scm_make_gsubr SCM_P ((char *name, int req, int opt, 
+                                       int rst, void*));
+
+or patch guile's snarf.h to insert the appropriate case at each call to
+SCM_PROC and SCM_PROC1.  (Thanks to Alexandre Duret-Lutz for the above
+information about more recent g++/egcs compilers).
+
 Note that the generated Makefiles depend upon features of GNU Make.  See:
 
 ftp://ftp.gnu.org/pub/gnu/
