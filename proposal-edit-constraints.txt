@@ -109,6 +109,7 @@ buttonPress
 
 dragging
 --------
+    // e is the MouseEvent object: e.g., e->x() is the X coord of the pointer
     solver
       .suggestValue(db[idbDragging].X(),e->x())
       .suggestValue(db[idbDragging].Y(),e->y())
