@@ -32,7 +32,7 @@ ClTableau::~ClTableau()
     }
 }
 
-
+// Some extra debugging info
 ostream &
 ClTableau::printInternalInfo(ostream &xo) const
 {
