@@ -18,17 +18,17 @@ SWIG = swig
 PYTHON_INCLUDE = /uns/include/python1.5
 
 #CPPFLAGS = -O6 -DCL_NO_TRACE -DNO_SOLVER_STATS -DNDEBUG -Wall -pedantic -W
-CPPFLAGS = -O6 -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W
+#CPPFLAGS = -O6 -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W
 #CPPFLAGS = -O6 -DNO_REQUIRED_EXCEPTIONS -DCL_NO_TRACE -Wall -pedantic -W
 #CPPFLAGS = -O6 -pg -DCL_NO_TRACE -Wall -pedantic -W
-#CPPFLAGS = -g -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W
+CPPFLAGS = -g -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W
 #CPPFLAGS = -g -Wall -pedantic -W
 
 #LIB=cassowary-optimized
-#LIB=cassowary-notrace
+LIB=cassowary-notrace
 #LIB=cassowary-trace
 #LIB=cassowary-debug
-LIB=cassowary
+#LIB=cassowary
 LIB_FILE=lib$(LIB).a
 
 LDLIBS = -l$(LIB)
@@ -47,13 +47,14 @@ OBJS = 	ClAbstractVariable.o \
 	ClTableau.o
 
 
-TEST_OBJS = test-ClConstraint.o   \
+TEST_OBJS = test-ClConstraint.o    \
 	test-ClLinearExpression.o  \
 	test-ClSimplexSolver.o     \
 	test-ClStrength.o          \
 	test-ClVariable.o	   \
 	test-ClBounds.o	           \
-	ClTests.o \
+	ClTests.o                  \
+	ClSubgraphTest.o           \
 	ClTestColumns.o
 
 
@@ -65,7 +66,7 @@ TEST_SRCS = $(TEST_OBJS:.o=.cc)
 NT_SOURCES = $(OBJS:.o=.cpp) $(TEST_OBJS:.o=.cpp)
 
 TESTS = test-ClStrength test-ClVariable test-ClLinearExpression test-ClConstraint \
-	test-ClSimplexSolver ClTests
+	test-ClSimplexSolver ClTests ClSubgraphTest
 
 HEADERS = Cassowary.h \
 	Cl.h \
@@ -89,7 +90,7 @@ HEADERS = Cassowary.h \
 	ClVariable.h \
 	ClPoint.h
 
-all:	lib ClTests ClTestColumns
+all:	lib ClTests ClTestColumns ClSubgraphTest
 
 lib:    $(CL_LIBRARY)
 
@@ -107,6 +108,9 @@ TAGS: $(SOURCES) $(HEADERS)
 cassowary-tests: $(TESTS)
 
 ClTests: ClTests.o $(LIB_FILE)
+	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
+
+ClSubgraphTest: ClSubgraphTest.o $(LIB_FILE)
 	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 ClTestColumns: ClTestColumns.o $(LIB_FILE)
