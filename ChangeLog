@@ -1,8 +1,10 @@
-Wed Dec 15 19:16:20 1999  Greg J. Badros  <gjb@cs.washington.edu>
+Wed Dec 15 19:31:48 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* java/README: More notes re: security problems w/ Java 2.
+
+	* java/cda/Makefile.am: Added run target to ease running it.
 
 	* Makefile.am (EXTRA_DIST): Added c++/{config.h.in,stamp-h.in}
-
-Wed Dec 15 19:11:57 1999  Greg J. Badros  <gjb@cs.washington.edu>
 
 	* java/cda/Makefile.am (EXTRA_DIST): Clean up install of .gif
 	files.
