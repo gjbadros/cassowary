@@ -1,10 +1,17 @@
+GTL.spec
 Makefile
 Makefile.in
 aclocal.m4
+cassowary-0.51.tar.gz
+cassowary.spec
 config.cache
 config.h
 config.log
 config.status
+configure
+libtool
+ltconfig
+ltmain.sh
 stamp-h
 stamp-h.in
 test

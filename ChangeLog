@@ -1,3 +1,30 @@
+Thu Aug 26 11:02:36 1999    <gjb@cs.washington.edu>
+
+	* guile/Makefile.am (EXTRA_DIST), docs/Makefile.am: Added docs to
+	EXTRA_DIST.
+
+	* c++/Makefile.am: Added ClReader.l, ClReader.y to EXTRA_DIST,
+	remove ClReader.cc from sources.  Added timer.h to
+	pkginclude_HEADERS.
+
+	* Makefile.am: Update EXTRA_DIST
+
+Thu Aug 26 08:45:08 1999    <gjb@cs.washington.edu>
+
+	* configure.in: Write cassowary.spec, GTL.spec.  Bump version to
+	0.51.
+
+	* autogen.sh: Run configure, not config.status
+
+	* VERSION, README, NEWS, ANNOUNCE: Bump to 0.51, add date, notes.
+
+	* Makefile.am: Drop Java, Python to make easier to package.  Added 
+	EXTRA_DIST to include some doc files and the cassowary.spec file.
+
+Wed Aug 25 22:54:18 1999    <gjb@cs.washington.edu>
+
+	* c++/Makefile.am (pkginclude_HEADERS): cl_auto_ptr.h now, not auto_ptr.h
+
 Mon Aug 23 21:26:31 1999    <gjb@cs.washington.edu>
 
 	* ltmain.sh, ltconfig, libtool, configure: Removed -- these are
