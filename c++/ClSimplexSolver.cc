@@ -866,7 +866,7 @@ ClSimplexSolver::ChooseSubject(ClLinearExpression &expr)
     ClVariable v = (*it).first;
     Number c = (*it).second;
     if (!v.IsDummy())
-      return (ClFloatVariable *) NULL; // nope, no luck
+      return clvNil; // nope, no luck
     // if v is new to the solver, tentatively make it the subject
     if (!ColumnsHasKey(v))
       {
@@ -890,7 +890,7 @@ ClSimplexSolver::ChooseSubject(ClLinearExpression &expr)
     if (FIsExplaining()) 
       {
       ExCLRequiredFailureWithExplanation e;
-      BuildExplanation(e, (ClFloatVariable *) NULL, &expr);
+      BuildExplanation(e, clvNil, &expr);
       throw e;
       }
     else
@@ -1202,8 +1202,8 @@ ClSimplexSolver::Optimize(ClVariable zVar)
 #endif
   ClLinearExpression *pzRow = RowExpression(zVar);
   assert(pzRow != NULL);
-  ClVariable entryVar = (ClFloatVariable *) NULL;
-  ClVariable exitVar = (ClFloatVariable *) NULL;
+  ClVariable entryVar = clvNil;
+  ClVariable exitVar = clvNil;
   while (true)
     {
     Number objectiveCoeff = 0;
