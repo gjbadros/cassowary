@@ -23,15 +23,17 @@ SWIG = swig
 PYTHON_INCLUDE = /usr/include/python1.4
 
 #CPPFLAGS = -O6 -DCL_NO_TRACE -DNO_SOLVER_STATS -DNDEBUG -Wall -pedantic -W
-CPPFLAGS = -O6 -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W
+#CPPFLAGS = -O6 -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W
+#CPPFLAGS = -O6 -DNO_REQUIRED_EXCEPTIONS -DCL_NO_TRACE -Wall -pedantic -W
 #CPPFLAGS = -O6 -pg -DCL_NO_TRACE -Wall -pedantic -W
-#CPPFLAGS = -g -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W
+CPPFLAGS = -g -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W
 #CPPFLAGS = -g -Wall -pedantic -W
 
 #LIB=cassowary-optimized
 #LIB=cassowary-notrace
 #LIB=cassowary-trace
-LIB=cassowary
+LIB=cassowary-debug
+#LIB=cassowary
 
 LDLIBS = -l$(LIB)
 
@@ -98,7 +100,7 @@ swig: cassowary.i
 	$(SWIG) -c++ -python -shadow cassowary.i
 
 swig-guile: cassowary.i
-	$(SWIG) -c++ -guile -shadow cassowary.i
+	$(SWIG) -c++ -guile cassowary.i
 
 module: $(CL_LIBRARY) cassowary_wrap.o
 	$(CPP) -shared -o cassowarycmodule.so cassowary_wrap.o $(CL_LIBRARY)
