@@ -338,7 +338,7 @@ ClSimplexSolver::addWithArtificialVariable(const ClLinearExpression &expr)
 bool 
 ClSimplexSolver::tryAddingDirectly(ClLinearExpression &expr)
 {
-  ClVariable &subject = chooseSubject(expr);
+  const ClVariable &subject = chooseSubject(expr);
   if (subject == clvNil() )
     {
     return false;
@@ -371,11 +371,109 @@ ClSimplexSolver::tryAddingDirectly(ClLinearExpression &expr)
 // ignore whether a variable occurs in the objective function, since
 // new slack variables are added to the objective function by
 // 'makeExpression:', which is called before this method.
-ClVariable &
-ClSimplexSolver::chooseSubject(const ClLinearConstraint &expr)
+const ClVariable &
+ClSimplexSolver::chooseSubject(ClLinearExpression &expr)
 {
-  // FIXGJB
-  assert(false);
+  ClVariable &subject = clvNil(); // the current best subject, if any
+
+  // true iff we have found a subject that is an unrestricted variable
+  bool foundUnrestricted = false; 
+
+  // true iff we have found a restricted variable that is new to the
+  // solver (except for being in the obj. function) and that has a
+  // negative coefficient
+  bool foundNewRestricted = false;
+
+  const map<ClVariable,Number> &terms = expr.terms();
+  map<ClVariable,Number>::const_iterator it = terms.begin();
+  for ( ; it != terms.end(); ++it )
+    {
+    const ClVariable &v = (*it).first;
+    Number c = (*it).second;
+
+    if (foundUnrestricted)
+      {
+      // We have already found an unrestricted variable.  The only
+      // time we will want to use v instead of the current choice
+      // 'subject' is if v is unrestricted and new to the solver and
+      // 'subject' isn't new.  If this is the case just pick v
+      // immediately and return.
+      if (!v.isRestricted())
+	{
+	if (!columnsHasKey(v))
+	  return v;
+	}
+      }
+    else
+      { // we haven't found an restricted variable yet
+      if (v.isRestricted())
+	{
+	// v is restricted.  If we have already found a suitable
+	// restricted variable just stick with that.  Otherwise, if v
+	// is new to the solver and has a negative coefficient pick
+	// it.  Regarding being new to the solver -- if the variable
+	// occurs only in the objective function we regard it as being
+	// new to the solver, since error variables are added to the
+	// objective function when we make the expression.  We also
+	// never pick a dummy variable here.
+	if (!foundNewRestricted && !v.isDummy() && c < 0.0)
+	  {
+	  const map<ClVariable, set<ClVariable> > &col = columns();
+	  map<ClVariable, set<ClVariable> >::const_iterator it_col = col.find(v);
+	  if (it_col == col.end() || 
+	      ( col.size() == 1 && columnsHasKey(my_objective) ) )
+	    {
+	    subject = v;
+	    foundNewRestricted = true;
+	    }
+	  }
+	}
+      else
+	{
+	// v is unrestricted.  
+	// If v is also new to the solver just pick it now
+	subject = v;
+	foundUnrestricted = true;
+	}
+      }
+    }
+  if (subject != clvNil())
+    return subject;
+
+  // subject is nil. 
+  // Make one last check -- if all of the variables in expr are dummy
+  // variables, then we can pick a dummy variable as the subject
+  Number coeff = 0;
+  it = terms.begin();
+  for ( ; it != terms.end(); ++it )
+    {
+    const ClVariable &v = (*it).first;
+    Number c = (*it).second;
+    if (!v.isDummy())
+      return clvNil(); // nope, no luck
+    // if v is new to the solver, tentatively make it the subject
+    if (!columnsHasKey(v))
+      {
+      subject = v;
+      coeff = c;
+      }
+    }
+
+  // If we get this far, all of the variables in the expression should
+  // be dummy variables.  If the constant is nonzero we are trying to
+  // add an unsatisfiable required constraint.  (Remember that dummy
+  // variables must take on a value of 0.)  Otherwise, if the constant
+  // is zero, multiply by -1 if necessary to make the coefficient for
+  // the subject negative."
+  if (!clApprox(expr.constant(),0.0))
+    {
+    throw new ExCLRequiredFailure;
+    }
+  if (coeff > 0.0)
+    {
+    expr.multiplyMe(-1);
+    }
+  return subject;
 }
   
 void 

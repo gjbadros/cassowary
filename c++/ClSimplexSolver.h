@@ -105,7 +105,7 @@ class ClSimplexSolver : public ClTableau {
   // ignore whether a variable occurs in the objective function, since
   // new slack variables are added to the objective function by
   // 'makeExpression:', which is called before this method.
-  ClVariable &chooseSubject(const ClLinearConstraint &expr);
+  const ClVariable &chooseSubject(ClLinearExpression &expr);
   
   void deltaEditConstant(Number delta, const ClVariable &v1, const ClVariable &v2);
   

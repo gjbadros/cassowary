@@ -197,13 +197,10 @@ class ClLinearExpression  {
 			 const ClLinearExpression &e2)
     { return &e1 == &e2; }
 
- private:
 
   ClLinearExpression &ClLinearExpression::multiplyMe(Number x);
 
-  // Initialize this linear expression to 0.
-  // I think ctr obviates need for this --01/09/98 gjb
-  // void initialize();
+ private:
 
   Number my_constant;
   map<ClVariable,Number> my_terms;
