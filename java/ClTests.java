@@ -215,6 +215,113 @@ public class ClTests extends CL {
       }
   }
 
+  public final static boolean multiedit()
+       throws ExCLInternalError, ExCLRequiredFailure, ExCLError
+  {
+    try 
+      {
+      boolean fOkResult = true;
+
+      ClVariable x = new ClVariable("x");
+      ClVariable y = new ClVariable("y");
+      ClVariable w = new ClVariable("w");
+      ClVariable h = new ClVariable("h");
+      ClSimplexSolver solver = new ClSimplexSolver();
+      
+      solver
+        .addStay(x)
+        .addStay(y)
+        .addStay(w)
+        .addStay(h);
+
+      solver
+        .addEditVar(x)
+        .addEditVar(y)
+        .beginEdit();
+
+      solver
+        .suggestValue(x,10)
+        .suggestValue(y,20)
+        .resolve();
+
+      System.out.println("x = " + x.value() + "; y = " + y.value());
+      System.out.println("w = " + w.value() + "; h = " + h.value());
+
+      fOkResult = fOkResult &&
+        CL.approx(x,10) && CL.approx(y,20) &&
+        CL.approx(w,0) && CL.approx(h,0);
+
+      solver
+        .addEditVar(w)
+        .addEditVar(h)
+        .beginEdit();
+
+      solver
+        .suggestValue(w,30)
+        .suggestValue(h,40)
+        .endEdit();
+
+      System.out.println("x = " + x.value() + "; y = " + y.value());
+      System.out.println("w = " + w.value() + "; h = " + h.value());
+
+      fOkResult = fOkResult &&
+        CL.approx(x,10) && CL.approx(y,20) && 
+        CL.approx(w,30) && CL.approx(h,40);
+
+      solver
+        .suggestValue(x,50)
+        .suggestValue(y,60)
+        .endEdit();
+
+      System.out.println("x = " + x.value() + "; y = " + y.value());
+      System.out.println("w = " + w.value() + "; h = " + h.value());
+
+      fOkResult = fOkResult &&
+        CL.approx(x,50) && CL.approx(y,60) &&
+        CL.approx(w,30) && CL.approx(h,40);
+
+      return(fOkResult);
+      } 
+    catch (ExCLRequiredFailure err)
+      {
+      // we want this exception to get thrown
+      System.out.println("Success -- got the exception");
+      return(true);
+      }
+  }
+
+
+  public final static boolean inconsistent3()
+       throws ExCLInternalError, ExCLRequiredFailure
+  {
+    try 
+      {
+      ClVariable w = new ClVariable("w");
+      ClVariable x = new ClVariable("x");
+      ClVariable y = new ClVariable("y");
+      ClVariable z = new ClVariable("z");
+      ClSimplexSolver solver = new ClSimplexSolver();
+      
+      solver
+	.addConstraint( new ClLinearInequality(w,CL.GEQ,10.0) )
+	.addConstraint( new ClLinearInequality(x,CL.GEQ,w) )
+	.addConstraint( new ClLinearInequality(y,CL.GEQ,x) )
+	.addConstraint( new ClLinearInequality(z,CL.GEQ,y) )
+	.addConstraint( new ClLinearInequality(z,CL.GEQ,8.0) )
+	.addConstraint( new ClLinearInequality(z,CL.LEQ, 4.0) );
+
+      // no exception, we failed!
+      return(false);
+      } 
+    catch (ExCLRequiredFailure err)
+      {
+      // we want this exception to get thrown
+      System.out.println("Success -- got the exception");
+      return(true);
+      }
+  }
+
+
   public final static boolean addDel(int nCns, int nVars, int nResolves)
        throws ExCLInternalError, ExCLRequiredFailure, 
 	 ExCLNonlinearExpression, ExCLConstraintNotFound
@@ -346,7 +453,7 @@ public class ClTests extends CL {
 
   public final static void main( String[] args )
        throws ExCLInternalError, ExCLNonlinearExpression,
-	 ExCLRequiredFailure, ExCLConstraintNotFound
+	 ExCLRequiredFailure, ExCLConstraintNotFound, ExCLError
   {
     //    try 
     {
@@ -387,6 +494,16 @@ public class ClTests extends CL {
     
       System.out.println("inconsistent2:");
       fResult = inconsistent2(); fAllOkResult &= fResult;
+      if (!fResult) System.out.println("Failed!");
+      if (CL.fGC) System.out.println("Num vars = " + ClAbstractVariable.numCreated() );
+
+      System.out.println("inconsistent3:");
+      fResult = inconsistent3(); fAllOkResult &= fResult;
+      if (!fResult) System.out.println("Failed!");
+      if (CL.fGC) System.out.println("Num vars = " + ClAbstractVariable.numCreated() );
+
+      System.out.println("multiedit:");
+      fResult = multiedit(); fAllOkResult &= fResult;
       if (!fResult) System.out.println("Failed!");
       if (CL.fGC) System.out.println("Num vars = " + ClAbstractVariable.numCreated() );
       

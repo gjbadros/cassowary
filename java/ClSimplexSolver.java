@@ -42,6 +42,9 @@ public class ClSimplexSolver extends ClTableau
     
     ClLinearExpression e = new ClLinearExpression();
     _rows.put(_objective,e);
+    _stkCedcns = new Stack();
+    _stkCedcns.push(new Integer(0));
+
     if (fTraceOn) traceprint("objective expr == " + rowExpression(_objective));
   }
 
@@ -186,6 +189,7 @@ public class ClSimplexSolver extends ClTableau
     // may later want to do more in here
     _infeasibleRows.clear();
     resetStayConstants();
+    _stkCedcns.addElement(new Integer(_editVarMap.size()));
     return this;
   }
 
@@ -195,7 +199,9 @@ public class ClSimplexSolver extends ClTableau
     throws ExCLInternalError
   {
     assert(_editVarMap.size() > 0);
-    removeAllEditVars();
+    resolve();
+    int n = ((Integer)_stkCedcns.pop()).intValue();
+    removeEditVarsTo(n);
     // may later want to do more in here
     return this;
   }
@@ -204,15 +210,22 @@ public class ClSimplexSolver extends ClTableau
   // that were added
   public final ClSimplexSolver removeAllEditVars()
     throws ExCLInternalError
+  { return removeEditVarsTo(0); }
+
+  // remove the last added edit vars to leave only n edit vars left
+  public final ClSimplexSolver removeEditVarsTo(int n)
+    throws ExCLInternalError
   {
     try
       {
         for (Enumeration e = _editVarMap.keys(); e.hasMoreElements() ; ) {
           ClVariable v = (ClVariable) e.nextElement();
-          removeEditVar(v);
+          ClEditInfo cei = (ClEditInfo) _editVarMap.get(v);
+          if (cei.Index() >= n) {
+            removeEditVar(v);
+          }
         }
-        
-        _editVarMap.clear();
+        assert(_editVarMap.size() == n);
         
         return this;
       }
@@ -450,6 +463,12 @@ public class ClSimplexSolver extends ClTableau
   
   // Re-solve the current collection of constraints for new values for
   // the constants of the edit variables.
+  // DEPRECATED:  use suggestValue(...) then resolve()
+  // If you must use this, be sure to not use it if you
+  // remove an edit variable (or edit constraint) from the middle
+  // of a list of edits and then try to resolve with this function
+  // (you'll get the wrong answer, because the indices will be wrong
+  // in the ClEditInfo objects)
   public final void resolve(Vector newEditConstants)
        throws ExCLInternalError
   {
@@ -618,6 +637,9 @@ public class ClSimplexSolver extends ClTableau
     bstr.append("\n");
     return bstr.toString();
   }
+
+  public Hashtable getConstraintMap()
+  { return _markerVars; }
 
   //// END PUBLIC INTERFACE
   
@@ -1151,6 +1173,8 @@ public class ClSimplexSolver extends ClTableau
 
   private double _epsilon;
 
-  boolean _fOptimizeAutomatically;
-  boolean _fNeedsSolving;
+  private boolean _fOptimizeAutomatically;
+  private boolean _fNeedsSolving;
+
+  private Stack _stkCedcns;
 }

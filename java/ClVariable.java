@@ -11,6 +11,8 @@
 
 package EDU.Washington.grad.gjb.cassowary;
 
+import java.util.*;
+
 public class ClVariable extends ClAbstractVariable
 {
 
@@ -18,12 +20,18 @@ public class ClVariable extends ClAbstractVariable
     {
       super(name);
       _value = value;
+      if (_ourVarMap != null) {
+        _ourVarMap.put(name,this);
+      }
     }
 
   public ClVariable(String name)
     {
       super(name);
       _value = 0.0;
+      if (_ourVarMap != null) {
+        _ourVarMap.put(name,this);
+      }
     }
 
   public ClVariable(double value)
@@ -81,5 +89,22 @@ public class ClVariable extends ClAbstractVariable
   public void change_value(double value)
     { _value = value; }
 
+  public void setAttachedObject(Object o)
+    { _attachedObject = o; }
+
+  public Object getAttachedObject()
+    { return _attachedObject; }
+
+  public static void setVarMap(Hashtable map)
+  { _ourVarMap = map; }
+
+  public static Hashtable getVarMap()
+  { return _ourVarMap; }
+
+  private static Hashtable _ourVarMap;
+
   private double _value;
+
+  private Object _attachedObject;
+
 }

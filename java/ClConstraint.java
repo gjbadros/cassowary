@@ -51,6 +51,12 @@ public abstract class ClConstraint
     { return _strength.toString() +
 	" {" + weight() + "} (" + expression(); }
 
+  public void setAttachedObject(Object o)
+    { _attachedObject = o; }
+
+  public Object getAttachedObject()
+    { return _attachedObject; }
+
   private void setStrength(ClStrength strength)
     { _strength = strength; }
 
@@ -60,4 +66,5 @@ public abstract class ClConstraint
   private ClStrength _strength;
   private double _weight;
 
+  private Object _attachedObject;
 }
