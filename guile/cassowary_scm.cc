@@ -69,6 +69,19 @@ inline bool FIsClVariableScm(SCM scm)
 inline ClVariable *PclvFromScm(SCM scm)
 { return (ClVariable *)(SCM_CDR(scm)); }
 
+inline SCM ScmMakeClVariable(ClVariable *pclv) {
+  SCM answer;
+  
+  SCM_DEFER_INTS;
+  SCM_NEWCELL(answer);
+  SCM_SETCAR(answer, (SCM) SCMTYPEID);
+  SCM_SETCDR(answer, (SCM) pclv);
+  SCM_ALLOW_INTS;
+
+  return answer;
+}
+
+
 SCM mark_cl_variable(SCM scm)
 {
   SCM_SETGC8MARK(scm);
@@ -132,15 +145,7 @@ SCWM_PROC (make_cl_variable, "make-cl-variable", 0, 2, 0,
     pclv = new ClVariable(value);
   }
 
-  SCM answer;
-
-  SCM_DEFER_INTS;
-  SCM_NEWCELL(answer);
-  SCM_SETCAR(answer, (SCM) SCMTYPEID);
-  SCM_SETCDR(answer, (SCM) pclv);
-  SCM_ALLOW_INTS;
-
-  return answer;
+  return ScmMakeClVariable(pclv);
 }
 #undef FUNC_NAME
 
@@ -582,7 +587,7 @@ SCWM_PROC (cl_divide, "cl-divide", 2, 0, 0,
   } catch (const ExCLNonlinearExpression &e) {
     delete pexprA;
     delete pexprB;
-    scm_misc_error(FUNC_NAME, "NonlinearExpression exception", SCM_EOL);
+    scm_misc_error(FUNC_NAME, e.description(), SCM_EOL);
   }
 }
 #undef FUNC_NAME
@@ -1022,6 +1027,7 @@ SCWM_PROC (cl_add_constraint, "cl-add-constraint", 1, 0, 1,
       psolver->addConstraint(*pconstraint);
     }
   } catch (const ExCLRequiredFailure &e) {
+    // scm_misc_error(FUNC_NAME,e.description, SCM_EOL);
     return SCM_BOOL_F;
   }
 
@@ -1052,6 +1058,7 @@ SCWM_PROC (cl_remove_constraint, "cl-remove-constraint", 1, 0, 1,
       psolver->removeConstraint(*pconstraint);
     }
   } catch (const ExCLConstraintNotFound &e) {
+    // scm_misc_error(FUNC_NAME,e.description(),SCM_EOL);
     return SCM_BOOL_F;
   }
 
@@ -1081,8 +1088,8 @@ SCWM_PROC (cl_add_editvar, "cl-add-editvar", 1, 0, 1,
       ClVariable *pclv = PclvFromScm(var);
       psolver->addEditVar(*pclv);
     }
-  } catch (const ExCLError &e) {
-    scm_misc_error(FUNC_NAME, "Solver error", SCM_EOL);
+  } catch (const ExCLEditMisuse &e) {
+    scm_misc_error(FUNC_NAME, e.description, SCM_EOL);
   }
 
   return SCM_UNDEFINED;
@@ -1111,7 +1118,7 @@ SCWM_PROC (cl_add_stay, "cl-add-stay", 1, 0, 1,
       psolver->addStay(*pclv);
     }
   } catch (const ExCLError &e) {
-    scm_misc_error(FUNC_NAME, "Solver error", SCM_EOL);
+    scm_misc_error(FUNC_NAME, e.description, SCM_EOL);
   }
 
   return SCM_UNDEFINED;
@@ -1173,7 +1180,11 @@ SCWM_PROC (cl_suggest_value, "cl-suggest-value", 3, 0, 0,
   ClVariable *pclv = PclvFromScm(variable);
   double n = gh_scm2double(value);
 
-  psolver->suggestValue(*pclv,n);
+  try {
+    psolver->suggestValue(*pclv,n);
+  } catch (const ExCLError &e) {
+    scm_misc_error(FUNC_NAME, e.description, SCM_EOL);
+  }
   return SCM_UNDEFINED;
 }
 #undef FUNC_NAME
@@ -1212,7 +1223,7 @@ SCWM_PROC (cl_resolve, "cl-resolve", 1, 0, 1,
     else
       psolver->resolve(rgval);
   } catch (const ExCLBadResolve &e) {
-    scm_misc_error(FUNC_NAME, "Resolve protocol misused", SCM_EOL);
+    scm_misc_error(FUNC_NAME, e.description(), SCM_EOL);
   }
   
   return SCM_UNDEFINED;
