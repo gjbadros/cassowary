@@ -1,11 +1,23 @@
-/*
- * Quadrilateral demo of Cassowary solver
- * Everything really happens in the QuadDemoPanel class.
- *
- * Michael Noth
- * 9 February 1998
- * 
- */
+// $Id$
+//
+// Cassowary Incremental Constraint Solver
+// Original Smalltalk Implementation by Alan Borning
+// This C++ Implementation by Greg J. Badros, <gjb@cs.washington.edu>
+// http://www.cs.washington.edu/homes/gjb
+// (C) 1998, All Rights Reserved.
+//
+// (c) 1998 Alan Borning, Michael Noth, and Greg Badros.  
+// This code is provided for use by students for course projects in
+// the course CSE 595 in the Department of Computer Science and
+// Engineering, University of Washington, during winter quarter 1998.
+// Any other use requires written permission from the copyright
+// holders.
+//
+// Implementation of the QuadDemo
+// By Michael Noth, 8 Feb 1998
+// Port of QuadDemo made more like the C++ version -- gjb, 13 Feb 1998
+//
+// QuadDemo.java
 
 import java.awt.*;
 import java.applet.*;
@@ -32,7 +44,7 @@ public class QuadDemo extends Applet {
     int a;
 
     for ( a = 0; a < 8; a++ ) 
-      db[a] = new DraggableBox();
+      db[a] = new DraggableBox(a);
 
     for ( a = 0; a < 4; a++ ) 
       mp[a] = db[a+4];
@@ -46,9 +58,9 @@ public class QuadDemo extends Applet {
     try {
       // Add stay constraints on line endpoints
       solver.addPointStay(db[0].CenterPt(), 1.0);
-      solver.addPointStay(db[1].CenterPt(), 1.0);
-      solver.addPointStay(db[2].CenterPt(), 1.0);
-      solver.addPointStay(db[3].CenterPt(), 1.0);
+      solver.addPointStay(db[1].CenterPt(), 2.0);
+      solver.addPointStay(db[2].CenterPt(), 4.0);
+      solver.addPointStay(db[3].CenterPt(), 8.0);
 
       ClLinearExpression cle;
       ClLinearEquation   cleq;
@@ -98,6 +110,65 @@ public class QuadDemo extends Applet {
       System.out.println("Adding " + cleq);
       solver.addConstraint(cleq);
 
+
+      // keep window from turning inside out
+//       ClLinearInequality clie;
+
+//       cle = CL.Plus(db[0].X(),10);
+//       clie = new ClLinearInequality(cle,CL.LEQ,db[2].X());
+//       solver.addConstraint(clie);
+//       System.err.println(clie.toString());
+//       clie = new ClLinearInequality(cle,CL.LEQ,db[3].X());
+//       solver.addConstraint(clie);
+//       System.err.println(clie.toString());
+
+//       cle = CL.Plus(db[1].X(),10);
+//       clie = new ClLinearInequality(cle,CL.LEQ,db[2].X());
+//       solver.addConstraint(clie);
+//       System.err.println(clie.toString());
+//       clie = new ClLinearInequality(cle,CL.LEQ,db[3].X());
+//       solver.addConstraint(clie);
+//       System.err.println(clie.toString());
+
+//       cle = CL.Plus(db[0].Y(),10);
+//       clie = new ClLinearInequality(cle,CL.LEQ,db[1].Y());
+//       solver.addConstraint(clie);
+//       System.err.println(clie.toString());
+//       clie = new ClLinearInequality(cle,CL.LEQ,db[2].Y());
+//       solver.addConstraint(clie);
+//       System.err.println(clie.toString());
+
+//       cle = CL.Plus(db[3].Y(),10);
+//       clie = new ClLinearInequality(cle,CL.LEQ,db[1].Y());
+//       solver.addConstraint(clie);
+//       System.err.println(clie.toString());
+//       clie = new ClLinearInequality(cle,CL.LEQ,db[2].Y());
+//       solver.addConstraint(clie);
+//       System.err.println(clie.toString());
+
+       cle = CL.Plus(db[0].X(),10);
+       solver
+ 	.addConstraint(new ClLinearInequality(cle,CL.LEQ,db[2].X()))
+ 	.addConstraint(new ClLinearInequality(cle,CL.LEQ,db[3].X()));
+
+       cle = CL.Plus(db[1].X(),10);
+       solver
+ 	.addConstraint(new ClLinearInequality(cle,CL.LEQ,db[2].X()))
+ 	.addConstraint(new ClLinearInequality(cle,CL.LEQ,db[3].X()));
+
+       cle = CL.Plus(db[0].Y(),10);
+       solver
+ 	.addConstraint(new ClLinearInequality(cle,CL.LEQ,db[1].Y()))
+ 	.addConstraint(new ClLinearInequality(cle,CL.LEQ,db[2].Y()));
+
+       cle = CL.Plus(db[3].Y(),10);
+       solver
+ 	.addConstraint(new ClLinearInequality(cle,CL.LEQ,db[1].Y()))
+ 	.addConstraint(new ClLinearInequality(cle,CL.LEQ,db[2].Y()));
+
+      int width = getSize().width;
+      int height = getSize().height;
+
       // Add constraints to keep points inside window
       solver.addConstraint(new ClLinearInequality(db[0].X(), CL.GEQ, 0.0));
       solver.addConstraint(new ClLinearInequality(db[0].Y(), CL.GEQ, 0.0));
@@ -108,14 +179,14 @@ public class QuadDemo extends Applet {
       solver.addConstraint(new ClLinearInequality(db[3].X(), CL.GEQ, 0.0));
       solver.addConstraint(new ClLinearInequality(db[3].Y(), CL.GEQ, 0.0));
 
-      solver.addConstraint(new ClLinearInequality(db[0].X(), CL.LEQ, 450.0));
-      solver.addConstraint(new ClLinearInequality(db[0].Y(), CL.LEQ, 450.0));
-      solver.addConstraint(new ClLinearInequality(db[1].X(), CL.LEQ, 450.0));
-      solver.addConstraint(new ClLinearInequality(db[1].Y(), CL.LEQ, 450.0));
-      solver.addConstraint(new ClLinearInequality(db[2].X(), CL.LEQ, 450.0));
-      solver.addConstraint(new ClLinearInequality(db[2].Y(), CL.LEQ, 450.0));
-      solver.addConstraint(new ClLinearInequality(db[3].X(), CL.LEQ, 450.0));
-      solver.addConstraint(new ClLinearInequality(db[3].Y(), CL.LEQ, 450.0));
+      solver.addConstraint(new ClLinearInequality(db[0].X(), CL.LEQ, width));
+      solver.addConstraint(new ClLinearInequality(db[0].Y(), CL.LEQ, height));
+      solver.addConstraint(new ClLinearInequality(db[1].X(), CL.LEQ, width));
+      solver.addConstraint(new ClLinearInequality(db[1].Y(), CL.LEQ, height));
+      solver.addConstraint(new ClLinearInequality(db[2].X(), CL.LEQ, width));
+      solver.addConstraint(new ClLinearInequality(db[2].Y(), CL.LEQ, height));
+      solver.addConstraint(new ClLinearInequality(db[3].X(), CL.LEQ, width));
+      solver.addConstraint(new ClLinearInequality(db[3].Y(), CL.LEQ, height));
 
     } catch (ExCLInternalError e) {
       System.out.println("constructor: CLInternalError!");
@@ -132,11 +203,10 @@ public class QuadDemo extends Applet {
 
   // Event handlers
   public boolean mouseDown(Event e, int x, int y) {
-    System.out.println("mouseDown at (" + x + ", " + y + ")");
-
     for ( int a = 0; a < db.length; a++ ) {
       if ( db[a].Contains(x, y) ) {
         dbDragging = a;
+	System.err.println("dragging " + a);
         break;
       }
     }
