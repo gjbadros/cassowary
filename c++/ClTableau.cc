@@ -88,10 +88,13 @@ ClTableau::removeRow(const ClVariable &var)
 
 // Replace all occurrences of oldVar with expr, and update column cross indices
 // oldVar should now be a basic variable
+// Uses the columns data structure and calls substituteOut on each
+// row that has oldVar in it
 void 
 ClTableau::substituteOut(const ClVariable &oldVar, const ClLinearExpression &expr)
 {
 #ifndef NO_TRACE
+  cerr << "* ClTableau::";
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << oldVar << ", " << expr << ")" << endl;
   cerr << (*this) << endl;
@@ -114,7 +117,9 @@ ClTableau::substituteOut(const ClVariable &oldVar, const ClLinearExpression &exp
   my_columns.erase(it_oldVar);
 }
 
-ostream &operator<<(ostream &xo, const ClTableau &clt)
+
+ostream &
+printTo(ostream &xo, const ClTableau &clt)
 {
   xo << "Tableau:\n" 
      << clt.my_rows << endl;
@@ -125,8 +130,11 @@ ostream &operator<<(ostream &xo, const ClTableau &clt)
   return xo;
 }
 
+ostream &operator<<(ostream &xo, const ClTableau &clt)
+{ return printTo(xo,clt); }
 
-ostream &operator<<(ostream &xo, const set<ClVariable> & varset)
+ostream &
+printTo(ostream &xo, const set<ClVariable> & varset)
 {
   set<ClVariable>::const_iterator it = varset.begin();
   xo << "{ ";
@@ -143,8 +151,12 @@ ostream &operator<<(ostream &xo, const set<ClVariable> & varset)
   return xo;
 }  
 
+ostream &operator<<(ostream &xo, const set<ClVariable> & varset)
+{ return printTo(xo,varset); }
 
-ostream &operator<<(ostream &xo, const map<ClVariable, set<ClVariable> > & varmap)
+
+ostream &
+printTo(ostream &xo, const map<ClVariable, set<ClVariable> > & varmap)
 {
   map<ClVariable, set<ClVariable> >::const_iterator it = varmap.begin();
   for (; it != varmap.end(); ++it) 
@@ -154,7 +166,11 @@ ostream &operator<<(ostream &xo, const map<ClVariable, set<ClVariable> > & varma
   return xo;
 }
 
-ostream &operator<<(ostream &xo, const map<ClVariable, ClLinearExpression > & rows)
+ostream &operator<<(ostream &xo, const map<ClVariable, set<ClVariable> > & varmap)
+{ return printTo(xo,varmap); }
+
+ostream &
+printTo(ostream &xo, const map<ClVariable, ClLinearExpression > & rows)
 {
   map<ClVariable, ClLinearExpression >::const_iterator it = rows.begin();
   for (; it != rows.end(); ++it) 
@@ -163,3 +179,7 @@ ostream &operator<<(ostream &xo, const map<ClVariable, ClLinearExpression > & ro
     }
   return xo;
 }
+
+ostream &operator<<(ostream &xo, const map<ClVariable, ClLinearExpression > & rows)
+{ return printTo(xo,rows); }
+

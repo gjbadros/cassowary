@@ -995,8 +995,8 @@ ClSimplexSolver::setExternalVariables()
     }
 }
 
-
-ostream &operator<<(ostream &xo, const vector<ClVariable> &varlist)
+ostream &
+printTo(ostream &xo, const vector<ClVariable> &varlist)
 {
   vector<ClVariable>::const_iterator it = varlist.begin();
   xo << varlist.size() << ":" << "[ ";
@@ -1013,10 +1013,20 @@ ostream &operator<<(ostream &xo, const vector<ClVariable> &varlist)
   return xo;
 }
 
+ostream &operator<<(ostream &xo, const vector<ClVariable> &varlist)
+{
+  return printTo(xo,varlist);
+}
 
-ostream &operator<<(ostream &xo, const ClSimplexSolver &tableau)
+ostream &
+printTo(ostream &xo, const ClSimplexSolver &tableau)
 {
   operator<<(xo,static_cast<ClTableau>(tableau));
   xo << "my_editPlusErrorVars: " << tableau.my_editPlusErrorVars <<endl;
   return xo;
+}
+
+ostream &operator<<(ostream &xo, const ClSimplexSolver &tableau)
+{
+  return printTo(xo,tableau);
 }

@@ -10,9 +10,9 @@
 
 #include <assert.h>
 #include "ClLinearExpression.h"
-//#include "ClSimplexSolver.h"
 #include "ClTableau.h"
 #include "ClErrors.h"
+#include "debug.h"
 
 ClLinearExpression &cleNil()
 {
@@ -49,12 +49,12 @@ ClLinearExpression::printOn(ostream &xo) const
     {
     if (i == my_terms.end())
       return xo;
-    xo << (*i).first << "*" << (*i).second;
+    xo << (*i).second << "*" << (*i).first;
     ++i;
     }
   for ( ; i != my_terms.end(); ++i)
     {
-    xo << " + " << (*i).first << "*" << (*i).second;
+    xo << " + " << (*i).second << "*" << (*i).first;
     }
   return xo;
 }
@@ -214,6 +214,10 @@ ClLinearExpression::addExpression(const ClLinearExpression &expr, Number n,
 ClLinearExpression &
 ClLinearExpression::addVariable(const ClVariable &v, Number c)
 { // body largely duplicated below
+#ifndef NO_TRACE
+  Tracer TRACER(__FUNCTION__);
+  cerr << "(" << v << ", " << c << ")" << endl;
+#endif
   map<ClVariable,Number>::iterator i = my_terms.find(v);
   if (i != my_terms.end())
     {
@@ -249,6 +253,10 @@ ClLinearExpression::addVariable(const ClVariable &v, Number c,
 				const ClVariable &subject,
 				ClTableau &solver)
 { // body largely duplicated above
+#ifndef NO_TRACE
+  Tracer TRACER(__FUNCTION__);
+  cerr << "(" << v << ", " << c << ", " << subject << ", ...)" << endl;
+#endif
   map<ClVariable,Number>::iterator i = my_terms.find(v);
   if (i != my_terms.end())
     {
@@ -274,6 +282,9 @@ ClLinearExpression::addVariable(const ClVariable &v, Number c,
       solver.noteAddedVariable(v,subject);
       }
     }
+#ifndef NO_TRACE
+  cerr << "Now *this == " << *this << endl;
+#endif
   return *this;
 }
 
@@ -297,12 +308,19 @@ ClLinearExpression::anyVariable() const
 // PRECONDITIONS:
 //   var occurs with a non-zero coefficient in this expression.
 void 
-ClLinearExpression::substituteOut(const ClVariable &v, 
+ClLinearExpression::substituteOut(const ClVariable &var, 
 				  const ClLinearExpression &expr,
 				  const ClVariable &subject,
 				  ClTableau &solver)
 {
-  map<ClVariable,Number>::iterator pv = my_terms.find(v);
+#ifndef NO_TRACE
+  cerr << "* ClLinearExpression::";
+  Tracer TRACER(__FUNCTION__);
+  cerr << "(" << var << ", " << expr << ", " << subject << ", " 
+       << solver << ")" << endl;
+  cerr << "*this == " << *this << endl;
+#endif
+  map<ClVariable,Number>::iterator pv = my_terms.find(var);
   assert(pv != my_terms.end() && !clApprox((*pv).second,0.0));
 
   Number multiplier = (*pv).second;
@@ -311,11 +329,16 @@ ClLinearExpression::substituteOut(const ClVariable &v,
   map<ClVariable,Number>::const_iterator i = expr.my_terms.begin();
   for ( ; i != expr.my_terms.end(); ++i)
     {
+    const ClVariable &v = (*i).first;
+    Number c = (*i).second;
     map<ClVariable,Number>::iterator poc = my_terms.find(v);
-    if (poc != expr.my_terms.end())
-      {
+    if (poc != my_terms.end())
+      { // if oldCoeff is not nil
+#ifndef NO_TRACE
+      cerr << "Considering (*poc) == " << (*poc).second << "*" << (*poc).first << endl;
+#endif
       // found it, so new coefficient is old one plus what is in *i
-      Number newCoeff = (*poc).second + (multiplier*(*i).second);
+      Number newCoeff = (*poc).second + (multiplier*c);
       if (clApprox(newCoeff,0.0))
 	{
 	solver.noteRemovedVariable((*poc).first,subject);
@@ -327,11 +350,15 @@ ClLinearExpression::substituteOut(const ClVariable &v,
 	}
       }
     else
-      { // did not have that variable already
-      my_terms[(*i).first] = multiplier * (*i).second;
-      solver.noteAddedVariable((*i).first,subject);
+      { // did not have that variable already (oldCoeff == nil)
+#ifndef NO_TRACE
+      cerr << "Adding (*i) == " << (*i).second << "*" << (*i).first << endl;
+#endif
+      my_terms[v] = multiplier * c;
+      solver.noteAddedVariable(v,subject);
       }
     }
+  cerr << "Now (*this) is " << *this << endl;
 }
 
 // This linear expression currently represents the equation

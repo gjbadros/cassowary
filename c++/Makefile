@@ -10,7 +10,7 @@
 CC = gcc
 CPP = egcs-g++
 CFLAGS = -g -Wall
-CPPFLAGS = -g -Wall -fhandle-exceptionsx -fno-rtti -L/uns/lib/egcs
+CPPFLAGS = -g -Wall -fno-rtti -L/uns/lib/egcs
 CXX = $(CPP)
 # -falt-external-templates
 LDFLAGS = -L/uns/lib/egcs

@@ -38,9 +38,15 @@ class ClTableau {
   // v has been added to the linear expression for subject
   // update column cross indices
   void noteAddedVariable(const ClVariable &v, const ClVariable &subject)
-    { my_columns[v].insert(subject); }
+    { 
+#ifndef NO_TRACE
+    Tracer TRACER(__FUNCTION__);
+    cerr << "(" << v << ", " << subject << ")" << endl;
+#endif
+    my_columns[v].insert(subject); 
+    }
 
-  friend ostream &operator<<(ostream &xo, const ClTableau &clt);
+  friend ostream &printTo(ostream &xo, const ClTableau &clt);
 
  protected:
   // Constructor -- want to start with empty objects so not much to do
@@ -99,5 +105,7 @@ class ClTableau {
   set<ClVariable> my_infeasibleRows;
 
 };
+
+ostream &operator<<(ostream &xo, const ClTableau &clt);
 
 #endif

@@ -25,6 +25,8 @@ main( char **argv, int argc )
   
   ClSimplexSolver solver;
   
+
+  cerr << "Starting addConstraint-s" << endl;
   solver.addConstraint(cn);
   solver.addConstraint(cnEdit);
   solver.addConstraint(constraint2);

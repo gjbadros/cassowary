@@ -31,6 +31,10 @@ class ClSimplexSolver : public ClTableau {
     my_artificialCounter(0),
     my_dummyCounter(0)
     { my_rows[my_objective] = *(new ClLinearExpression()); }
+
+  ~ClSimplexSolver()
+    { // FIXGJB need to delete my_rows[my_objective]
+    }
   
   // Add constraints so that lower<=var<=upper.  (nil means no  bound.)
   void addLowerBound(const ClVariable &v, Number lower)
@@ -76,6 +80,7 @@ class ClSimplexSolver : public ClTableau {
   void resolve(const vector<double> &newEditConstants);
 
   friend ostream &operator<<(ostream &xo, const ClSimplexSolver &tableau);
+  friend ostream &printTo(ostream &xo, const ClSimplexSolver &tableau);
 
  protected:
   // Add the constraint expr=0 to the inequality tableau using an
