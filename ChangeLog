@@ -1,3 +1,21 @@
+Tue Feb 23 18:48:21 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/creader.y, c++/creader.h: Remove old crummy lexer.  Added
+ 	fAutoCreate flag to PcnParseConstraint to allow parsing with
+ 	automatic introduction of newly-referenced variables.
+
+	* c++/creader.l: Fixed bugs in missing tokens "|", "(", ")", and
+	permit "==" as a synonym for "=".  Honour the _fAutoCreate flag by 
+	introducing variables when needed.
+
+	* c++/ClTests.cc: Display version id string at startup.
+
+	* c++/ClSimplexSolver.cc, c++/Cl.h: Added szCassowaryVersion id
+	string.
+
+	* c++/ClParseTest.cc: Test auto-addition of variable (fAutoCreate
+	= true)
+
 Tue Feb 23 18:12:23 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* c++/Makefile: Build libcassowary.{a,so} by default, not
