@@ -93,24 +93,6 @@ all:	lib ClTests ClTestColumns
 
 lib:    $(CL_LIBRARY)
 
-# swig-python, swig-guile, and module are phony targets
-
-swig-python: cassowary.py cassowary_wrap.c cassowary_wrap.doc
-
-cassowary.py cassowary_wrap.c cassowary_wrap.doc: cassowary.i
-	$(SWIG) -c++ -python -shadow cassowary.i
-
-cassowary_wrap.o: cassowary_wrap.c
-	$(CPP) -I$(PYTHON_INCLUDE) -fpic -c cassowary_wrap.c
-
-#swig-guile: cassowary.i
-#	$(SWIG) -c++ -guile cassowary.i
-
-module: cassowarycmodule.so
-
-cassowarycmodule.so: cassowary_wrap.o $(CL_LIBRARY)
-	$(CPP) -shared -o $@ $^
-
 $(CL_LIBRARY): $(OBJS)
 	rm -f $@
 	ar ruv $@ $(OBJS)
@@ -167,7 +149,7 @@ ntsources: $(NT_SOURCES)
 	modpod2texinfo $< >$@
 
 
-.PHONY:	all cassowary-tests lib tags ntsources tests depend swig module module-guile
+.PHONY:	all cassowary-tests lib tags ntsources tests depend 
 
 %.cpp: %.cc
 	ln -s $< $@
