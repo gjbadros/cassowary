@@ -136,20 +136,19 @@ class ClLinearExpression
   public ClLinearExpression subtractFrom(ClLinearExpression expr)
     { return expr.minus( this); }
 
-  // FIXGJB
-//   public ClLinearExpression addExpression(ClLinearExpression expr, double n,
-// 					  ClAbstractVariable subject, 
-// 					  ClTableau solver)
-//     {
-//       incrementConstant(n * expr.constant());
+  public ClLinearExpression addExpression(ClLinearExpression expr, double n,
+ 					  ClAbstractVariable subject, 
+ 					  ClTableau solver)
+    {
+      incrementConstant(n * expr.constant());
       
-//       for (Enumeration e = expr.terms().keys() ; e.hasMoreElements(); ) {
-//         ClVariable clv = (ClVariable) e.nextElement();
-// 	double coeff = ((Double) expr.terms().get(clv)).doubleValue();
-// 	addVariable(clv,coeff*n, subject, solver);
-//       }
-//       return this;
-//     }
+      for (Enumeration e = expr.terms().keys() ; e.hasMoreElements(); ) {
+	ClVariable clv = (ClVariable) e.nextElement();
+ 	double coeff = ((Double) expr.terms().get(clv)).doubleValue();
+ 	addVariable(clv,coeff*n, subject, solver);
+      }
+      return this;
+    }
 
   public ClLinearExpression addExpression(ClLinearExpression expr, double n)
     {
@@ -204,38 +203,37 @@ class ClLinearExpression
       my_terms.put(v,new Double(c)); return this;
     }
 
-  // FIXGJB  
-//   public ClLinearExpression addVariable(ClAbstractVariable v, double c,
-// 					ClAbstractVariable subject, ClTableau solver)
-//     { // body largely duplicated above
-//       //#ifndef CL_NO_TRACE
-//       // Tracer TRACER(__FUNCTION__);
-//       // System.err.println("(" + String.valueOf(v) + ", " + String.valueOf(c) + ", " + String.valueOf(subject) + ", ...)");
-//       // #endif
-//       Double coeff = (Double) my_terms.get(v);
-//       if (coeff != null) 
-// 	{
-// 	double new_coefficient = coeff.doubleValue() + c;
-// 	if (ClVariable.clApprox(new_coefficient,0))
-// 	  {
-// 	  solver.noteRemovedVariable(v,subject);
-// 	  my_terms.remove(v);
-// 	  }
-// 	else 
-// 	  {
-// 	  my_terms.put(v, new Double( new_coefficient));
-// 	  }
-// 	}
-//       else
-// 	{
-// 	if (!ClVariable.clApprox(c,0.0))
-// 	  {
-// 	  my_terms.put(v,new Double(c));
-// 	  solver.noteAddedVariable(v,subject);
-// 	  }
-// 	}
-//       return this;
-//     }
+  public ClLinearExpression addVariable(ClAbstractVariable v, double c,
+ 					ClAbstractVariable subject, ClTableau solver)
+     { // body largely duplicated above
+       //#ifndef CL_NO_TRACE
+       // Tracer TRACER(__FUNCTION__);
+       // System.err.println("(" + String.valueOf(v) + ", " + String.valueOf(c) + ", " + String.valueOf(subject) + ", ...)");
+       // #endif
+       Double coeff = (Double) my_terms.get(v);
+       if (coeff != null) 
+ 	{
+ 	double new_coefficient = coeff.doubleValue() + c;
+ 	if (ClVariable.clApprox(new_coefficient,0))
+ 	  {
+ 	  solver.noteRemovedVariable(v,subject);
+ 	  my_terms.remove(v);
+ 	  }
+ 	else 
+ 	  {
+ 	  my_terms.put(v, new Double( new_coefficient));
+ 	  }
+ 	}
+       else
+ 	{
+ 	if (!ClVariable.clApprox(c,0.0))
+ 	  {
+ 	  my_terms.put(v,new Double(c));
+ 	  solver.noteAddedVariable(v,subject);
+ 	  }
+ 	}
+       return this;
+     }
   
   public ClAbstractVariable  anyVariable() throws ExCLInternalError
     {
@@ -246,20 +244,39 @@ class ClLinearExpression
       return (ClAbstractVariable) my_terms.keys().nextElement();
     }
 
-  // FIXGJB  
-  //  public void substituteOut(ClAbstractVariable var, ClLinearExpression expr, 
-  //			    ClAbstractVariable subject, ClTableau solver)
-  //    {
-      //#ifndef CL_NO_TRACE
-      //System.err.print("* ClLinearExpression::");
-      //Tracer TRACER(__FUNCTION__);
-      //System.err.print("(" + String.valueOf(var) + ", " + String.valueOf(expr) + ", " + String.valueOf(subject) + ", ");
-      //System.err.println("*this == " + String.valueOf(*this));
-      //#endif
+  public void substituteOut(ClAbstractVariable var, ClLinearExpression expr, 
+ 			    ClAbstractVariable subject, ClTableau solver)
+  {
+    //#ifndef CL_NO_TRACE
+    //System.err.print("* ClLinearExpression::");
+    //Tracer TRACER(__FUNCTION__);
+    //System.err.print("(" + String.valueOf(var) + ", " + String.valueOf(expr) + ", " + String.valueOf(subject) + ", ");
+    //System.err.println("*this == " + String.valueOf(*this));
+    //#endif
 
-
-      // FIXGJB write this
-  //}
+    double multiplier = ((Double) my_terms.remove(var)).doubleValue();
+    incrementConstant(multiplier * expr.constant());
+    
+    for (Enumeration e = expr.terms().keys(); e.hasMoreElements(); ) {
+      ClVariable clv = (ClVariable) e.nextElement();
+      double coeff = ((Double) expr.terms().get(clv)).doubleValue();
+      Double d_old_coeff = (Double) my_terms.get(clv);
+      if (d_old_coeff != null) {
+	double old_coeff = ((Double) d_old_coeff).doubleValue();
+	double newCoeff = old_coeff + multiplier * coeff;
+	if (ClVariable.clApprox(newCoeff,0.0)) {
+	  solver.noteRemovedVariable(clv,subject);
+	  my_terms.remove(clv);
+	} else {
+	  expr.terms().put(clv,new Double(newCoeff));
+	}
+      } else {
+	// did not have that variable already
+	my_terms.put(clv,new Double(multiplier * coeff));
+	solver.noteAddedVariable(clv,subject);
+      }
+    }
+  }
   
   public void changeSubject(ClAbstractVariable old_subject, ClAbstractVariable new_subject)
     {
