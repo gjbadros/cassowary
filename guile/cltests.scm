@@ -40,7 +40,7 @@
   (define y (make-cl-variable "y" 10))
   (cl-add-stay solver (list x y))
   (for-each (lambda (x) (display x))
-	    (list "x = " (cl-value x) "\n" "y = " (cl-value y) "\n")))
+            (list "x = " (cl-value x) "\n" "y = " (cl-value y) "\n")))
 
 ;;; addDelete1
 (begin
