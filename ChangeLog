@@ -1,3 +1,14 @@
+Tue Aug 31 21:30:24 1999    <gjb@cs.washington.edu>
+
+	* cassowary.spec.in: Do not use --disable-java-build, since that
+	still invokes the rule which is not what I want.
+
+	* java/demos/Makefile.am, java/cda/Makefile.am: Added bogus
+ 	classjava.stamp rule when no HAVE_JAVA to work around getting an
+ 	error when trying to run javac with no source files.
+
+	* configure.in: Fix some HAVE_JAVA bugs.  Still not perfect, but better.
+
 Tue Aug 31 17:07:31 1999    <gjb@cs.washington.edu>
 
 	* java/demos/Makefile.am, java/cda/Makefile.am, java/Makefile.am:

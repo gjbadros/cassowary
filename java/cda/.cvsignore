@@ -2,3 +2,4 @@
 .built-classes
 Makefile
 Makefile.in
+classjava.stamp
