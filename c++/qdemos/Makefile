@@ -3,7 +3,7 @@
 #######    linux-gcc-shared on Fri Jan 23 16:00:50 PST 1998
 
 EGCSDIR=/uns/egcs
-QTDIR=/scratch/gjb/qt
+QTDIR=/uns/qt
 
 INCDIR = $(QTDIR)/include
 # CFLAGS = -pg -O2 -fno-strength-reduce -Wall -W -I/usr/X11R6/include -I.. -DCL_NO_TRACE
