@@ -18,6 +18,7 @@
 #include "ClObjectiveVariable.h"
 #include "ClDummyVariable.h"
 #include "auto_ptr.h"
+#include <algorithm>
 #include <float.h>
 #include <strstream>
 
@@ -187,6 +188,25 @@ ClSimplexSolver::removeEditVarsTo(int n)
     }
   return *this;
 }
+
+
+/* A predicate used for remove_if */
+class VarInVarSet {
+public:
+  VarInVarSet(const ClTableauVarSet &clvset) : 
+      _set(clvset),
+      _setEnd(clvset.end()) 
+    { }
+
+  bool operator ()(const ClAbstractVariable *&pclv) const {
+    return (_set.find(pclv) != _setEnd);
+  }
+  
+private:
+  const ClTableauVarSet &_set;
+  const ClTableauVarSet::iterator _setEnd;
+};
+
 
 
 // Remove the constraint cn from the tableau
@@ -372,20 +392,14 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
     if (it_eVars != _errorVars.end())
       {
       ClTableauVarSet &eVars = (*it_eVars).second;
-      ClVarVector::iterator itStayPlusErrorVars = _stayPlusErrorVars.begin();
-      ClVarVector::iterator itStayMinusErrorVars = _stayMinusErrorVars.begin();
-      for (; itStayMinusErrorVars != _stayMinusErrorVars.end();
-	   ++itStayPlusErrorVars, ++itStayMinusErrorVars)
-	{
-	if (eVars.find(*itStayPlusErrorVars) != eVars.end())
-	  {
-	  _stayPlusErrorVars.erase(itStayPlusErrorVars);
-	  }
-	if (eVars.find(*itStayMinusErrorVars) != eVars.end())
-	  {
-	  _stayMinusErrorVars.erase(itStayMinusErrorVars);
-	  }
-	}
+      _stayPlusErrorVars
+        .erase(remove_if(_stayPlusErrorVars.begin(),_stayPlusErrorVars.end(),
+                         VarInVarSet(eVars)),
+               _stayPlusErrorVars.end());
+      _stayMinusErrorVars
+        .erase(remove_if(_stayMinusErrorVars.begin(),_stayMinusErrorVars.end(),
+                         VarInVarSet(eVars)),
+               _stayMinusErrorVars.end());
       }
     }
   else if (cn.isEditConstraint())
