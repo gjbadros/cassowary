@@ -1,12 +1,5 @@
 #!/bin/sh -
 ln -sf . ./c++/cassowary
-ln -sf libcassowary.so.0.0.1 ./c++/.libs/libcassowary.so.0
-ln -sf libcassowary.so.0.0.1 ./c++/.libs/libcassowary.so
-ln -sf ../libcassowary.la ./c++/.libs/libcassowary.la
-ln -sf .libs ./guile/cassowary
-ln -sf libconstraints.so.0.0.0 ./guile/.libs/libconstraints.so.0
-ln -sf libconstraints.so.0.0.0 ./guile/.libs/libconstraints.so
-ln -sf ../libconstraints.la ./guile/.libs/libconstraints.la
 ln -sf ../../../EDU/ ./java/cda/classes/EDU
 ln -sf ../../EDU ./java/demos/EDU
 ln -sf ../uist97/eepic.sty ./papers/cassowary-tr/eepic.sty
