@@ -1,26 +1,64 @@
 %module cassowary
+%include typemaps.i
 %{
 #include "Cl.h"
 #include "ClPoint.h"
 %}
 
+
+%typemap(python,in) vector<double> &{
+	if (PyList_Check($source)) {
+		int size = PyList_Size($source);
+		int i;
+
+		$target = new vector<double>;
+		for (i=0; i<size; i++) {
+			PyObject *o = PyList_GetItem($source, i);
+			if (PyFloat_Check(o)) {
+				$target->push_back(PyFloat_AsDouble(o));
+			} else if (PyInt_Check(o)) {
+				$target->push_back(PyInt_AsLong(o));
+			} else {
+				PyErr_SetString(PyExc_TypeError,
+						"list must contain numbers");
+				delete $target;
+				return NULL;
+			}
+		}
+	} else {
+		PyErr_SetString(PyExc_TypeError, "expected list");
+		return NULL;
+	}
+}
+
+%typemap(python, freearg) vector<double> & {
+	delete $source;
+}
+
+typedef double Number;
+%apply double { Number };
+
 class ClVariable {
 public:
 
-  ClVariable(char *name, double value);
+  ClVariable(Number value);
+  %name(ClVariableNamed) ClVariable(char *name = "", Number value = 0.0);
+  %name(ClVariablePrefix) ClVariable(
+  	long number, char *prefix, Number value = 0.0);
+
 
   // Return the current value I hold.
-  double value() const
+  Number value() const
     { return my_value; }
 
-  void set_value(double value)
+  void set_value(Number value)
     { my_value = value; }
-
 };
 
 class ClPoint {
  public:
-  ClPoint(double x, double y)
+  ClPoint();
+  %name(ClPointXY) ClPoint(Number x, Number y)
     : clv_x(x), clv_y(y)
     { }
 
@@ -30,10 +68,10 @@ class ClPoint {
   ClVariable &Y()
     { return clv_y; }
 
-  double Xvalue() const
+  Number Xvalue() const
     { return X().value(); }
 
-  double Yvalue() const
+  Number Yvalue() const
     { return Y().value(); }
 
 };
@@ -62,10 +100,16 @@ class ClLinearEquation : public ClConstraint {
 
  public:
   // Constructor
- ClLinearEquation(const ClVariable &clv,
+ ClLinearEquation(const ClLinearExpression &cle,
+		  const ClStrength strength,
+		  double weight = 1.0);
+ %name(ClLinearEquation1) ClLinearEquation(const ClVariable &clv,
 		  const ClLinearExpression &cle,
 		  const ClStrength strength,
 		  double weight = 1.0);
+ %name(ClLinearEquation2) ClLinearEquation(const ClLinearExpression &cle,
+ 		const ClVariable &clv, const ClStrength strength,
+		double weight = 1.0);
 };
 
 enum ClInequalityOperator { cnLEQ, cnGEQ };
@@ -74,11 +118,98 @@ class ClLinearInequality : public ClConstraint {
 
  public:
  // Constructor
- ClLinearInequality(const ClLinearExpression &cle1,
+ ClLinearInequality(const ClLinearExpression &cle,
+ 		    const ClStrength strength, double weight = 1.0);
+ %name(ClLinearInequality1) ClLinearInequality(const ClVariable &clv,
+  		    ClInequalityOperator op,
+		    const ClLinearExpression &cle,
+		    const ClStrength strength,
+		    double weight = 1.0);
+ %name(ClLinearInequality2) ClLinearInequality(const ClLinearExpression &cle1,
 		    ClInequalityOperator op,
 		    const ClLinearExpression &cle2,
 		    const ClStrength strength,
 		    double weight = 1.0);
+};
+
+class ClLinearExpression  {
+ public:
+
+  // Convert from ClVariable to a ClLinearExpression
+  // this replaces ClVariable::asLinearExpression
+  ClLinearExpression(const ClVariable &clv, Number value = 1.0,
+	  Number constant = 0.0);
+  %name(ClLinearExpressionNum) ClLinearExpression(Number num = 0.0);
+
+  virtual ~ClLinearExpression();
+
+  // Return a new linear expression formed by multiplying self by x.
+  // (Note that this result must be linear.)
+  ClLinearExpression times(Number x) const;
+
+  // Return a new linear expression formed by multiplying self by x.
+  // (Note that this result must be linear.)
+  %name(timesE) ClLinearExpression times(const ClLinearExpression &expr)
+	const;
+
+  // Return a new linear expression formed by adding x to self.
+  ClLinearExpression plus(const ClLinearExpression &expr) const;
+
+  // Return a new linear expression formed by subtracting x from self.
+  ClLinearExpression minus(const ClLinearExpression &expr) const;
+
+  // Return a new linear expression formed by dividing self by x.
+  // (Note that this result must be linear.)
+  ClLinearExpression divide(Number x) const;
+
+  // Return a new linear expression formed by dividing self by x.
+  // (Note that this result must be linear.)
+  %name(divideE) ClLinearExpression divide(const ClLinearExpression &expr)
+	const;
+
+  // Return a new linear expression (aNumber/this).  Since the result
+  // must be linear, this is permissible only if 'this' is a constant.
+  ClLinearExpression divFrom(const ClLinearExpression &expr) const;
+
+  // Return a new linear expression (aNumber-this).
+  ClLinearExpression subtractFrom(const ClLinearExpression &expr) const
+  { return expr.minus(*this); }
+
+  // Add n*expr to this expression for another expression expr.
+  ClLinearExpression &addExpression(const ClLinearExpression &expr, 
+				    Number n = 1.0);
+
+  // Add n*expr to this expression for another expression expr.
+  // Notify the solver if a variable is added or deleted from this
+  // expression.
+  %name(addExpression1) ClLinearExpression
+  	&addExpression(const ClLinearExpression &expr, Number n,
+				    const ClVariable &subject,
+				    ClSimplexSolver &solver);
+
+  // Add a term c*v to this expression.  If the expression already
+  // contains a term involving v, add c to the existing coefficient.
+  // If the new coefficient is approximately 0, delete v.
+  ClLinearExpression &addVariable(const ClVariable &v, Number c);
+
+  // Add a term c*v to this expression.  If the expression already
+  // contains a term involving v, add c to the existing coefficient.
+  // If the new coefficient is approximately 0, delete v.  Notify the
+  // solver if v appears or disappears from this expression.
+  %name(addVariable1) ClLinearExpression &addVariable(const ClVariable &v,
+				  Number c,
+				  const ClVariable &subject,
+				  ClSimplexSolver &solver);
+
+  // Add a term c*v to this expression.  If the expression already
+  // contains a term involving v, add c to the existing coefficient.
+  // If the new coefficient is approximately 0, delete v.
+  ClLinearExpression &setVariable(const ClVariable &v, Number c)
+    {assert(c != 0.0);  my_terms[&v] = c; return *this; }
+
+  // Return a variable in this expression.  (It is an error if this
+  // expression is constant -- signal ExCLInternalError in that case).
+  const ClVariable *anyVariable() const;
 };
 
 class ClSimplexSolver {
@@ -91,12 +222,12 @@ class ClSimplexSolver {
   ~ClSimplexSolver();
   
   // Add constraints so that lower<=var<=upper.  (nil means no  bound.)
-  ClSimplexSolver &addLowerBound(const ClVariable &v, double lower);
+  ClSimplexSolver &addLowerBound(const ClVariable &v, Number lower);
 
-  ClSimplexSolver &addUpperBound(const ClVariable &v, double upper);
+  ClSimplexSolver &addUpperBound(const ClVariable &v, Number upper);
 
-  ClSimplexSolver &addBounds(const ClVariable &v, double lower,
-  	double upper);
+  ClSimplexSolver &addBounds(const ClVariable &v, Number lower,
+  	Number upper);
 
   // Add the constraint cn to the tableau
   ClSimplexSolver &addConstraint(const ClConstraint &cn);
@@ -108,14 +239,14 @@ class ClSimplexSolver {
   // !!! Find some way to turn a Python list into a vector !!!
   ClSimplexSolver &addPointStays(const vector<const ClPoint *> &listOfPoints);
 
-  ClSimplexSolver &addPointStay(const ClPoint &clp, double weight);
+  ClSimplexSolver &addPointStay(const ClPoint &clp, Number weight);
 
   %name(addPointStayXY) ClSimplexSolver &addPointStay(const ClVariable &vx,
-  	const ClVariable &vy, double weight);
+  	const ClVariable &vy, Number weight);
 
   // Add a stay of the given strength (default to weak) of v to the tableau
   ClSimplexSolver &addStay(const ClVariable &v,
-			   const ClStrength &strength, double weight =
+			   const ClStrength &strength, Number weight =
 			   1.0 );
 
   // Remove the constraint cn from the tableau
@@ -130,50 +261,17 @@ class ClSimplexSolver {
 
   // Re-solve the current collection of constraints for new values for
   // the constants of the edit variables.
-  void resolve(const vector<double> &newEditConstants);
+//  void resolve(vector<double> &newEditConstants);
+  void resolve(vector<double> &INPUT);
 
-  %name(resolveXY) void resolve(double x, double y);
+  %name(resolveXY) void resolve(Number x, Number y);
 
-};
-
-class ClLinearExpression  {
- public:
-
-  // Convert from ClVariable to a ClLinearExpression
-  // this replaces ClVariable::asLinearExpression
-  ClLinearExpression(const ClVariable &clv, double value = 1.0,
-	  double constant = 0.0);
-
-  %name(ClLinearExpressionNum) ClLinearExpression(double num = 0.0);
-
-  virtual ~ClLinearExpression();
-
-  // Return a new linear expression formed by multiplying self by x.
-  // (Note that this result must be linear.)
-  ClLinearExpression times(double x) const;
-
-  // Return a new linear expression formed by adding x to self.
-  ClLinearExpression plus(const ClLinearExpression &expr) const;
-
-  // Return a new linear expression formed by subtracting x from self.
-  ClLinearExpression minus(const ClLinearExpression &expr) const;
-
-  // Return a new linear expression formed by dividing self by x.
-  // (Note that this result must be linear.)
-  ClLinearExpression divide(double x) const;
-
-  // Python operator overloads
-  %addmethods {
-  	ClLinearExpression __add__(ClLinearExpression &expr) {
-	   return self->plus(expr);
-	}
-  }
 };
 
 class ClEditConstraint : public ClConstraint {
  public:
   
   ClEditConstraint(const ClVariable &var,
-		   const ClStrength &strength, double weight = 1.0 );
+		   const ClStrength &strength, Number weight = 1.0 );
 };
 
