@@ -1,3 +1,25 @@
+Sat Sep  4 15:17:13 1999    <gjb@cs.washington.edu>
+
+	* acconfig.h: Added NO_CC_PERMISSIVE flag.
+
+	* autogen.sh: Added #!/bin/sh -  to top.
+
+	* configure.in: Test for g++/gcc -fpermissive flag.  Hopefully
+	this will let it get used only where it is accepted.  Some better
+	guile tests, too.
+
+	* cassowary.spec.in: Use --enable-permissive flag, bump from
+	release 3 to 5.
+
+Sat Sep  4 14:44:14 1999    <gjb@cs.washington.edu>
+
+	* c++/Makefile.am, guile/Makefile.am: Added CPPEXTRAFLAGS to
+ 	AM_CPPFLAGS.
+
+	* guile/Makefile.am: Guard lib_LIBRARIES with HAVE_GUILE test so
+	that guile stuff is only built when GUILE is desired and we have
+	the libraries installed.
+
 Tue Aug 31 22:16:04 1999    <gjb@cs.washington.edu>
 
 	* java/demos/Makefile.am, java/cda/Makefile.am, java/Makefile.am
