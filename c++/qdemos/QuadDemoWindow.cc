@@ -184,6 +184,7 @@ void QuadDemoWindow::paintEvent( QPaintEvent * )
   pm.fill( backgroundColor() );
 #else
   QBitmap pm( size() );
+  pm.fill();
 #endif
   
   // Paint the pixmap
