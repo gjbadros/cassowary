@@ -89,6 +89,8 @@ void CL_SimplexSolverSetChangeClvCallback(CL_SimplexSolver solver, PfnChangeClvC
 
 void CL_SimplexSolverAddStrongStay(CL_SimplexSolver solver, CLV var, double weight);
 
+void CL_SimplexSolverAddStay(CL_SimplexSolver solver, CLV var, double weight);
+
 void CL_TableauPrintExternalVariables(CL_Tableau tableau, FILE *out);
 
 /* Return a clvariable with the given name, or NULL if not found */

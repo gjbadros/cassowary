@@ -32,7 +32,7 @@ istream *pxi_lexer;
 
 /* Make lexer reader from the global variable */
 #define YY_INPUT(buf,result,max_size) \
-	 do { if (pxi_lexer->get(buf[0])) result = 1; \
+	 do { if (pxi_lexer->get(buf[0]) && buf[0] > 0) result = 1; \
 		  else result = YY_NULL; } while (0)
 
 %}
@@ -67,6 +67,7 @@ ws [ \t\n]+
         return VAR;
       } else {
 	pxi_lexer = NULL;
+	yy_flush_buffer(YY_CURRENT_BUFFER);
 	throw ExCLParseErrorBadIdentifier(str);
         return 0;
       }

@@ -143,6 +143,11 @@ CL_SimplexSolverAddStrongStay(CL_SimplexSolver solver, CLV var, double weight)
   solver->AddStay(*var,ClsMedium(),weight);
 }
 
+void 
+CL_SimplexSolverAddStay(CL_SimplexSolver solver, CLV var, double weight)
+{
+  solver->AddStay(*var,ClsWeak(),weight);
+}
 
 
 /* Return a clvariable with the given name, or NULL if not found */
@@ -175,7 +180,7 @@ CL_Constraint CL_ParseConstraint(const char *szConstraintRule, const char *szCon
   try {
     istrstream xiLine(szConstraintRule);
     ClConstraint *pcn = PcnParseConstraint(xiLine,ClVarLookupInMap(varmap,false),
-                                           ClsFromSz(szConstraintStrength);
+                                           ClsFromSz(szConstraintStrength));
     return pcn;
   } catch (ExCLError &e) {
     fprintf(stderr,"%s\n",e.description().c_str());
