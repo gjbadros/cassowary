@@ -20,14 +20,19 @@ CFLAGS = -g -Wall
 EGCSDIR = /uns/egcs
 CXX = $(CPP)
 
-#CPPFLAGS = -O6 -DCL_NO_TRACE -DNO_SOLVER_STATS -DNDEBUG -Wall -pedantic -W -L$(EGCSDIR)/lib -I$(EGCSDIR)/include
-CPPFLAGS = -O6 -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W -L$(EGCSDIR)/lib -I$(EGCSDIR)/include
-#CPPFLAGS = -O6 -pg -DCL_NO_TRACE -Wall -pedantic -W -L$(EGCSDIR)/lib -I$(EGCSDIR)/include
-#CPPFLAGS = -g -DCL_NO_TRACE -Wall -pedantic -W -L$(EGCSDIR)/lib -I$(EGCSDIR)/include
-#CPPFLAGS = -g -Wall -pedantic -W -L$(EGCSDIR)/lib -I$(EGCSDIR)/include
+#CPPFLAGS = -O6 -DCL_NO_TRACE -DNO_SOLVER_STATS -DNDEBUG -Wall -pedantic -W
+#CPPFLAGS = -O6 -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W
+#CPPFLAGS = -O6 -pg -DCL_NO_TRACE -Wall -pedantic -W
+CPPFLAGS = -g -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W
+#CPPFLAGS = -g -Wall -pedantic -W
 
-LDFLAGS = -L/uns/lib/egcs -pg
-#LDFLAGS = -L/uns/lib/egcs
+#LDFLAGS = -L. -pg
+LDFLAGS = -L.
+
+#LIBS = -lcassowary-optimized
+#LIBS = -lcassowary-notrace
+#LIBS = -lcassowary-trace
+LIBS = -lcassowary
 
 
 CL_LIBRARY = libcassowary.a
@@ -46,6 +51,7 @@ TEST_OBJS = test-ClConstraint.o   \
 	test-ClSimplexSolver.o     \
 	test-ClStrength.o          \
 	test-ClVariable.o	   \
+	test-ClBounds.o	           \
 	ClTests.o
 
 
@@ -98,22 +104,25 @@ TAGS: $(SOURCES)
 
 cassowary-tests: $(TESTS)
 
-ClTests: ClTests.o $(OBJS)
+ClTests: ClTests.o $(LIBS)
 	$(CPP) $(LDFLAGS) -o $@ $^
 
 test-ClStrength: test-ClStrength.o ClStrength.o ClSymbolicWeight.o
 	$(CPP) $(LDFLAGS) -o $@ $^
 
-test-ClLinearExpression: test-ClLinearExpression.o $(OBJS)
+test-ClLinearExpression: test-ClLinearExpression.o $(LIBS)
 	$(CPP) $(LDFLAGS) -o $@ $^
 
-test-ClVariable: test-ClVariable.o $(OBJS)
+test-ClVariable: test-ClVariable.o $(LIBS)
 	$(CPP) $(LDFLAGS) -o $@ $^
 
-test-ClConstraint: test-ClConstraint.o $(OBJS)
+test-ClConstraint: test-ClConstraint.o $(LIBS)
 	$(CPP) $(LDFLAGS) -o $@ $^
 
-test-ClSimplexSolver: test-ClSimplexSolver.o $(OBJS)
+test-ClBounds: test-ClBounds.o $(LIBS)
+	$(CPP) $(LDFLAGS) -o $@ $^
+
+test-ClSimplexSolver: test-ClSimplexSolver.o $(LIBS)
 	$(CPP) $(LDFLAGS) -o $@ $^
 
 cassowary-test:	$(TEST_OBJS)
