@@ -426,6 +426,7 @@ AC_OUTPUT([
 	cassowary-config \
 	c++/Makefile \
 	guile/Makefile \
+	guile/doc/Makefile \
 	docs/Makefile \
 	smalltalk/Makefile \
 	cassowary.spec \
