@@ -8,10 +8,6 @@
 #ifndef CASSOWARY_SCM_H__
 #define CASSOWARY_SCM_H__
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #ifdef __cplusplus
 extern "C" {
 #endif

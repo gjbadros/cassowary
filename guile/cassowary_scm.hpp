@@ -9,8 +9,9 @@
 #ifndef CASSOWARY_SCM_HPP__
 #define CASSOWARY_SCM_HPP__
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
+#if defined(HAVE_CONFIG_H) && !defined(CONFIG_H_INCLUDED) && !defined(CONFIG_INLINE_H_INCLUDED)
+#include <cassowary/config-inline.h>
+#define CONFIG_INLINE_H_INCLUDED
 #endif
 
 #include <guile/gh.h>

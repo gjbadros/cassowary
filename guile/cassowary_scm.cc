@@ -12,7 +12,7 @@
 // cl-begin-edit, cl-end-edit, cl-suggest-value
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include <cassowary/config.h>
 #endif
 
 #define CASSOWARY_SCM_IMPLEMENTATION
