@@ -50,11 +50,11 @@ ClBug1_SOURCES = ClBug1.cc
 
 ClBug2_SOURCES = ClBug2.cc
 
-sources_for_fd_solver = \
-	ClFDSolver.cc \
-	ClFDVariable.cc \
-	ClFDConnectorVariable.cc \
-	ClFDBinaryOneWayConstraint.cc
+##sources_for_fd_solver = \
+##	ClFDSolver.cc \
+##	ClFDVariable.cc \
+##	ClFDConnectorVariable.cc \
+##	ClFDBinaryOneWayConstraint.cc
 
 
 libcassowary_a_SOURCES = \
@@ -73,7 +73,7 @@ libcassowary_a_SOURCES = \
 	ClReader-lex.cc \
 	ClReader.cc \
 	ClC.cc \
-	@SOURCES_FOR_FD_SOLVER@
+ClFDSolver.cc ClFDVariable.cc ClFDConnectorVariable.cc ClFDBinaryOneWayConstraint.cc
 
 libcassowary_la_SOURCES = \
 	ClAbstractVariable.cc \
@@ -94,7 +94,7 @@ libcassowary_la_SOURCES = \
 	ClReader-lex.cc \
 	ClReader.cc \
 	ClC.cc \
-	@SOURCES_FOR_FD_SOLVER@
+ClFDSolver.cc ClFDVariable.cc ClFDConnectorVariable.cc ClFDBinaryOneWayConstraint.cc
 
 include_HEADERS = Cl.h ClC.h
 

@@ -38,7 +38,7 @@
 #include "cassowary/ClEditConstraint.h"
 #include "cassowary/ClStayConstraint.h"
 #include "cassowary/ClReader.h"
-#if defined(HAVE_GTL) && defined(BUILD_FD_SOLVER)
+#if defined(CL_HAVE_GTL) && defined(CL_BUILD_FD_SOLVER)
 #include "cassowary/ClFDBinaryOneWayConstraint.h"
 #include "cassowary/ClFDSolver.h"
 #endif

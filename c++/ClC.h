@@ -84,7 +84,7 @@ void *CL_VariablePv(CLV var);
 
 const char *CL_VariableName(CLV var);
 
-#if defined(HAVE_GTL) && defined(BUILD_FD_SOLVER)
+#if defined(CL_HAVE_GTL) && defined(CL_BUILD_FD_SOLVER)
 #ifndef FDN_EOL
 #define FDN_EOL MINLONG
 #endif

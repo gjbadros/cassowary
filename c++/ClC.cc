@@ -271,7 +271,7 @@ void CL_SimplexSolverSetEditedValue(CL_SimplexSolver solver, CLV var, double n)
   solver->SetEditedValue(*var,n);
 }
 
-#if defined(HAVE_GTL) && defined(BUILD_FD_SOLVER)
+#if defined(CL_HAVE_GTL) && defined(CL_BUILD_FD_SOLVER)
 
 #include <stdarg.h>
 
