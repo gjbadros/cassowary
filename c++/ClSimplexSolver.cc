@@ -351,6 +351,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
 	  itEditMinusErrorVars = my_editMinusErrorVars.begin() + index;
 	vector<Number>::iterator 
 	  itPrevEditConstants = my_prevEditConstants.begin() + index;
+        removeColumn(**itEditMinusErrorVars);
 	my_editPlusErrorVars.erase(itEditPlusErrorVars);
 	my_editMinusErrorVars.erase(itEditMinusErrorVars);
 	my_prevEditConstants.erase(itPrevEditConstants);
