@@ -1262,6 +1262,11 @@ ClSimplexSolver::setExternalVariables()
   for ( ; itParVars != _externalParametricVars.end(); ++itParVars )
     {
     ClVariable *pv = const_cast<ClVariable *>(*itParVars);
+    // skip it if it is basic -- not needed since we set basic-s below
+#if 0
+    if (rowExpression(*pv))
+      continue;
+#endif
     pv->set_value(0.0);
     }
 
