@@ -92,6 +92,12 @@ public:
   virtual void change_value(Number value)
     { _value = value; }
 
+  void setPv(void *pv)
+    { _pv = pv; }
+
+  void *Pv() const
+    { return _pv; }
+
 private:
 
   // similar to set_value -- see caveat above -- made private for now
@@ -105,6 +111,10 @@ private:
   ClVariable(const ClVariable &);
 
   Number _value;
+
+  // Crazy extension mechanism so I don't have to wrap ScwmClVariables
+  // separately
+  void *_pv;
 };
 
 typedef ClVariable *PClVariable;
