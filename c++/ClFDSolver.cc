@@ -35,15 +35,15 @@ ClFDSolver::AddConstraint(ClConstraint *const pcn)
   ClFDBinaryOneWayConstraint *const pcnfd = 
     dynamic_cast<ClFDBinaryOneWayConstraint *const>(pcn);
   if (!pcnfd) {
-    throw ExCLEditMisuse("Can only add ClFDBinaryOneWayConstraint-s to ClFDSolvers");
+    throw ExCLTooDifficultSpecial("Can only add ClFDBinaryOneWayConstraint-s to ClFDSolvers");
   }
   ClVariable rw = pcnfd->ClvRW();
   ClVariable ro = pcnfd->ClvRO();
   if (!rw.IsFDVariable()) {
-    throw ExCLEditMisuse("RW variable must be an FDVariable");
+    throw ExCLTooDifficultSpecial("RW variable must be an FDVariable");
   }
   if (!(ro.IsNil() || ro.IsFDVariable())) {
-    throw ExCLEditMisuse("RO variable must be an FDVariable or clvNil");
+    throw ExCLTooDifficultSpecial("RO variable must be an FDVariable or clvNil");
   }
   // add the constraint to our set of cns
   _setCns.insert(pcn);
@@ -62,7 +62,7 @@ ClFDSolver::AddConstraint(ClConstraint *const pcn)
     if (!G.is_acyclic()) {
       /* there is a cycle... give up after cleaning up */
       RemoveConstraint(pcn);
-      throw ExCLTooDifficult();
+      throw ExCLCycleNotAllowed();
     }
   }
   return *this;
@@ -185,7 +185,6 @@ ClFDSolver::ComputeBest(ClFDVariable *pcldv)
   }
   // now minError is the lowest error we can get for clv
   // and it occurs binding clv <- bestValue
-  assert(minError < MAXDOUBLE);
   assert(bestValue != FDN_NOTSET);
   return pair<ClSymbolicWeight,FDNumber>(minError,bestValue);
 }

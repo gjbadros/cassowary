@@ -78,6 +78,7 @@ ClFDBinaryOneWayConstraint::ClFDBinaryOneWayConstraint(const ClLinearConstraint 
   }
 
   bool fInequality = cn.IsInequality();
+  bool fStrictInequality = cn.IsStrictInequality();
   double rhs_constant = expr.Constant();
 
   // now we have:
@@ -91,7 +92,16 @@ ClFDBinaryOneWayConstraint::ClFDBinaryOneWayConstraint(const ClLinearConstraint 
   // coefficient = -coeffRO/coeffRW
   // constant = rhs_constant/coeffRW
 
-  _rel = fInequality? cnGEQ: cnEQ;
+  if (fStrictInequality)
+    _rel = cnGT;
+  else if (fInequality)
+    _rel = cnGEQ;
+  else
+    _rel = cnEQ;
+
+  if (coeffRW < 0)
+    _rel = ReverseInequality(_rel);
+
   _coefficient = -coeffRO/coeffRW;
   _constant = -rhs_constant/coeffRW;
   _vRW = clvRW;

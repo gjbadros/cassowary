@@ -42,8 +42,11 @@ int main()
         cerr << "Got constraint: " << *pcn << "... ";
         if (solver.AddConstraintNoException(*pcn))
           cerr << "Added!";
-        else
-          cerr << "Inconsistent!";
+        else {
+          // could be inconsistent req'd constraints,
+          // or could be a strict inequality.
+          cerr << "Inconsistent or not permitted!";
+        }
         cerr << endl;
         try {
           ClLinearConstraint *pcnLin = dynamic_cast<ClLinearConstraint *>(pcn);

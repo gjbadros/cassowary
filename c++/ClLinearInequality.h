@@ -30,7 +30,8 @@ class ClLinearInequality : public ClLinearConstraint {
  ClLinearInequality(const ClLinearExpression &cle,
 		    const ClStrength &strength = ClsRequired(),
 		    double weight = 1.0) :
-   ClLinearConstraint(cle,strength, weight)
+   ClLinearConstraint(cle,strength, weight),
+   _fStrictInequality(false)
    { }
 
  // ClLinearInequality(var,OP,expr) is  var >= expr
@@ -39,17 +40,21 @@ class ClLinearInequality : public ClLinearConstraint {
 		    const ClLinearExpression &cle,
 		    const ClStrength &strength = ClsRequired(),
 		    double weight = 1.0) :
-   ClLinearConstraint( cle, strength, weight)
+   ClLinearConstraint( cle, strength, weight),
+   _fStrictInequality(false)
    { 
-   if (op == cnGEQ)
+   if (op == cnGEQ || op == cnGT)
      {
      _expression.MultiplyMe(-1.0);
      _expression.AddVariable(clv,1.0);
      }
-   else // op == cnLEQ
+   else if (op == cnLEQ || op == cnGEQ)
      {
      _expression.AddVariable(clv,-1.0);
      }
+   if (op == cnLT || op == cnGT) {
+     _fStrictInequality = true;
+   }
    }
 
 #ifdef FIXGJB_AMBIGUOUS
@@ -59,17 +64,21 @@ class ClLinearInequality : public ClLinearConstraint {
 		    const ClVariable clv,
 		    const ClStrength &strength = ClsRequired(),
 		    double weight = 1.0) :
-   ClLinearConstraint( cle, strength, weight)
+   ClLinearConstraint( cle, strength, weight),
+   _fStrictInequality(false)
    { 
-   if (op == cnLEQ)
+   if (op == cnLEQ || op == cnLT)
      {
      _expression.MultiplyMe(-1.0);
      _expression.AddVariable(clv,1.0);
      }
-   else // op == cnGEQ
+   else if (op == cnGEQ || op == cnGT)
      {
      _expression.AddVariable(clv,-1.0);
      }
+   if (op == cnLT || op == cnGT) {
+     _fStrictInequality = true;
+   }
    }
 #endif
 
@@ -79,17 +88,21 @@ class ClLinearInequality : public ClLinearConstraint {
 		    const ClLinearExpression &cle2,
 		    const ClStrength &strength = ClsRequired(),
 		    double weight = 1.0) :
-   ClLinearConstraint( cle2, strength, weight)
+   ClLinearConstraint( cle2, strength, weight),
+   _fStrictInequality(false)
    { 
-   if (op == cnGEQ)
+   if (op == cnGEQ || op == cnGT)
      {
      _expression.MultiplyMe(-1.0);
      _expression.AddExpression(cle1);
      }
-   else // op == cnLEQ
+   else if (op == cnLEQ || op == cnLT)
      {
      _expression.AddExpression(cle1,-1.0);
      }
+   if (op == cnLT || op == cnGT) {
+     _fStrictInequality = true;
+   }
    }
 
 #ifdef FIXGJB_AMBIGUOUS
@@ -99,17 +112,21 @@ class ClLinearInequality : public ClLinearConstraint {
 		    const ClVariable clv2,
 		    const ClStrength &strength = ClsRequired(),
 		    double weight = 1.0) :
-   ClLinearConstraint( clv2, strength, weight)
+   ClLinearConstraint( clv2, strength, weight),
+   _fStrictInequality(false)
    { 
-   if (op == cnGEQ)
+   if (op == cnGEQ || op == cnGT)
      {
      _expression.MultiplyMe(-1.0);
      _expression.AddVariable(clv1,1.0);
      }
-   else // op == cnLEQ
+   else if (op == cnLEQ || op == cnLT)
      {
      _expression.AddVariable(clv1,-1.0);
      }
+   if (op == cnLT || op == cnGT) {
+     _fStrictInequality = true;
+   }
    }
 #endif
 
@@ -119,6 +136,9 @@ class ClLinearInequality : public ClLinearConstraint {
  // that it is not.
  virtual bool IsInequality() const
    { return true; }
+
+ virtual bool IsStrictInequality() const
+   { return _fStrictInequality; }
 
 #ifndef CL_NO_IO 
  virtual ostream &PrintOn(ostream &xo) const
@@ -130,6 +150,7 @@ class ClLinearInequality : public ClLinearConstraint {
 
  private:
 
+  bool _fStrictInequality;
 };
 
 #endif

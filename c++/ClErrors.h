@@ -77,6 +77,35 @@ class ExCLTooDifficult : public ExCLError {
     { return "(ExCLTooDifficult) The constraints are too difficult to solve"; }
 };
 
+class ExCLTooDifficultSpecial : public ExCLTooDifficult {
+ public:
+  ExCLTooDifficultSpecial(const char *sz)
+    { _msg = strdup(sz); }
+  virtual string description() const
+    {
+      if (_msg) return _msg;
+      else return "(ExCLTooDifficultSpecial) Solver requirements are not satisfied";
+    }
+};
+
+class ExCLReadOnlyNotAllowed : public ExCLTooDifficult {
+ public:
+  virtual string description() const
+  { return "(ExCLReadOnlyNotAllowed) The read-only annotation is not permitted by the solver"; }
+};
+
+class ExCLCycleNotAllowed : public ExCLTooDifficult {
+ public:
+  virtual string description() const
+  { return "(ExCLCycleNotAllowed) A cyclic constraint graph is not permitted by the solver"; }
+};
+
+class ExCLStrictInequalityNotAllowed : public ExCLTooDifficult {
+ public:
+  virtual string description() const
+  { return "(ExCLStrictInequalityNotAllowed) The strict inequality is not permitted by the solver"; }
+};
+
 class ExCLRequiredFailure : public ExCLError {
  public:
   virtual string description() const

@@ -58,6 +58,16 @@ ClSimplexSolver::AddConstraint(ClConstraint *const pcn)
   cerr << "(" << *pcn << ")" << endl;
 #endif
   
+  if (pcn->IsStrictInequality()) {
+    // cannot handle strict inequalities
+    throw ExCLStrictInequalityNotAllowed();
+  }
+
+  if (pcn->ReadOnlyVars().size() > 0) {
+    // cannot handle read-only vars
+    throw ExCLReadOnlyNotAllowed();
+  }
+
   if (pcn->IsEditConstraint())
     {
     ClEditConstraint *pcnEdit = dynamic_cast<ClEditConstraint *>(pcn);

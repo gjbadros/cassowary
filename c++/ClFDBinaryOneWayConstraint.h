@@ -76,6 +76,9 @@ class ClFDBinaryOneWayConstraint : public ClFDConstraint {
   bool IsInequality() const
     { return (_rel != cnEQ && _rel != cnNEQ); }
 
+  bool IsStrictInequality() const
+    { return (_rel == cnGT || _rel == cnLT); }
+
  protected:
   ClVariable _vRW;
   ClCnRelation _rel;

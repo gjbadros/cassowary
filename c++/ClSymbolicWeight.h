@@ -27,9 +27,9 @@ class ClSymbolicWeight : public gc {
 class ClSymbolicWeight {
 #endif
  public:
-  ClSymbolicWeight(int CLevels = 3, Number value = 0.0);
+  ClSymbolicWeight(unsigned CLevels = 3, Number value = 0.0);
 
-  ClSymbolicWeight(Number w1, Number w2 = 0.0, Number w3 = 0.0);
+  ClSymbolicWeight(Number w1, Number w2, Number w3);
 
   ClSymbolicWeight(const vector<Number> &weights);
 

@@ -28,7 +28,16 @@
 class ClSimplexSolver;
 class ClFDSolver;
 
-enum ClCnRelation {cnEQ, cnNEQ, cnLEQ, cnGEQ, cnLT, cnGT };
+// enum setup so additive inverse flips the direction of the inequality
+enum ClCnRelation {cnEQ = 0, cnNEQ = 100, cnLEQ = 2, cnGEQ = -2, cnLT = 3, cnGT = -3 };
+
+inline enum ClCnRelation
+ReverseInequality(enum ClCnRelation c)
+{
+  if (c != cnNEQ)
+    c = (enum ClCnRelation) (- int(c));
+  return c;
+}
 
 inline string
 StrCnRelation(ClCnRelation rel) {
@@ -81,6 +90,9 @@ public:
   // false if it is an equality constraint.  The default is
   // that it is not.
   virtual bool IsInequality() const
+    { return false; }
+
+  virtual bool IsStrictInequality() const
     { return false; }
 
   virtual bool IsRequired() const
@@ -136,7 +148,7 @@ public:
     return !(_readOnlyVars.find(v) == _readOnlyVars.end());
   }
 
-  const ClVarSet ReadOnlyVars() const {
+  const ClVarSet &ReadOnlyVars() const {
     return _readOnlyVars;
   }
 
