@@ -1,0 +1,23 @@
+Cassowary/Java was developed using the JDK 1.1.3 port for Linux.
+
+Before trying to build Cassowary/Java, be sure to include the directory
+java/classes in your CLASSPATH environment variable, e.g., if you untar
+the distribution in $HOME, then add: $HOME/cassowary/java/classes to
+your $CLASSPATH.  My CLASSPATH looks like this:
+
+/usr/local/.licensed/jdk/lib/classes.zip:/homes/gws/gjb/cassowary/java/classes
+
+Then you can just use `make all' (GNU Make) to build the .class files.
+
+
+The demos/ subdirectory contains the quadrilateral demo;  `make run'
+should run it using the appletviewer after building it.
+
+
+The cda/ subdirectory contains Michael Noth's Constraint Drawing
+Application.  `make run' should run it using the appletviewer after
+building it.  See:
+
+http://www.cs.washington.edu/research/constraints/cda/info.html
+
+For more information about the CDA.

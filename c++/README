@@ -1,0 +1,24 @@
+See ../README for general information and generic instructions.
+Also see ../IMPORTANT for some important notes that you mustn't overlook.
+
+To build, just use GNU make, and "make all" within this directory.
+
+The qdemos/ subdirectory contains a demonstration application that
+builds using the Qt widget toolkit (cross-platform, free for Unices
+only) from:
+
+http://www.troll.no/dl/qtfree-dl.html
+
+
+
+The ccc/ subdirectory contains some files that may help you in building
+under MS Visual C++ 5.0 (not tested recently--- please feel free to
+contribute improved versions).
+
+The demos/ subdirectory contains the ClBoundedQuadDemo (a.k.a. QuadDemo) 
+for the wxWindows widget toolkit (cross platform, free everywhere) from:
+
+http://web.ukonline.co.uk/julian.smart/wxwin/
+
+(this demo is depracated, and may not build as easily at the Qt demo in
+the qdemos/ subdirectory)
