@@ -1,3 +1,30 @@
+Thu Mar  4 18:41:03 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile: Added DYNLINK = yes/no variable for controlling
+	dynamic linking more easily.
+
+	* c++/ClSimplexSolver.h: Changed PfnChangeClvCallback to take a
+	ClVariable * instead of a ClVariable.  This make it easier for the 
+	C interface since it has "CLV" as a "ClVariable *" and cannot
+	reason about ClVariable-s because it doesn't see the struct defn.
+
+	* c++/ClC.cc, c++/ClC.h:  Added CL_SimplexSolverSetEditedValue,
+	CL_SimplexSolverPrint, CL_SimplexSolverSetChangeClvCallback,
+	CL_VariableSetPv, CL_VariablePv.
+
+	* c++/ClCTest.cc: Test CL_SimplexSolverSetEditedValue, CL_SimplexSolverPrint.
+
+Wed Mar  3 17:37:17 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSimplexSolver.h (UpdateExternalVariables): Added this
+	function to provide a publicly available way to get at setExternalVariables()
+
+	* c++/ClCTest.c, c++/ClC.h, c++/ClC.cc: Added for the beginnings
+ 	of a rudimentary C interface to the c++ library.
+
+	* c++/Makefile: Updated to build ClCTest, libccassowary.so (the C
+	interface to Cassowary [for Amaya, initially])
+
 Mon Mar  1 15:11:52 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* c++/ClVariable.h: Added explict copy ctr.
