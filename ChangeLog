@@ -1,3 +1,14 @@
+Thu Dec 16 11:12:34 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* configure.in: Version bumped to 0.54a
+
+Thu Dec 16 11:10:42 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* java/Makefile.am: Force prefix ordering in SUBDIRS so that "."
+	dir gets built before the demos subdirectory.
+
+	* smalltalk/Makefile.am: Fix .dat file -- thanks Alan!
+
 Wed Dec 15 19:31:48 1999  Greg J. Badros  <gjb@cs.washington.edu>
 
 	* java/README: More notes re: security problems w/ Java 2.

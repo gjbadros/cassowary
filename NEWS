@@ -11,6 +11,11 @@ Seattle, WA 98195-2350
 
 with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
 
+16-Dec-1999: Version 0.54a released.
+* Include correct version of OTI Smalltalk .dat file
+  (the source in the *.app files was right, the .dat file was old)
+* Fix java build bug
+
 15-Dec-1999: Version 0.54 released.
 * Bug fixes
 * auto-configuration improvements
