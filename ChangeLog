@@ -1,3 +1,20 @@
+Tue Feb 23 18:12:23 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile: Build libcassowary.{a,so} by default, not
+	libcassowary-notrace.{a,so}.  Remove special rule for building
+	ClParseTest; list creader-lex.o, creader.o in OBJS and have them
+	be a part of the library.
+
+	* c++/ClVariable.h, c++/ClVariable.cc: Rename pmapSzPclv to
+	pmapStrPclv.  Make it a map from "const string" not "string".
+	Make setName erase the old mapping, and add the new mapping.
+
+	* c++/ClParseTest.cc: Accept "-" option to mean "rename x to foo"
+	for testing the setName change above.
+
+	* c++/ClFloatVariable.cc: Do not output warning msg in setName --
+	instead, do the right thing in ClVariable.h
+
 Tue Feb 23 08:55:28 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* c++/Makefile: Fix build rules for bison/flex parser so
