@@ -13,13 +13,17 @@
 #ifndef CREADER_H
 #define CREADER_H
 
+#include <string>
+#include <map>
 class istream;
 class ClConstraint;
 class ClVariable;
 
+typedef map<string,const ClVariable *> StringToVarMap;
+
 // Attempts to read a constraint of input stream in
 // Returns constraint (freshly allocated, client responsibility to deallocate)
 // if succesful. Otherwise, returns 0.
-ClConstraint * parseConstraint(istream &xi, ClVariable *pclv);
+ClConstraint * parseConstraint(istream &xi, StringToVarMap &mapVars);
 
 #endif

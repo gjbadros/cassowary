@@ -9,7 +9,7 @@
  See ../COPYRIGHT for legal details regarding this software
 
  creader.y
- Contributed by Steve Wolfman
+ Original implementation contributed by Steve Wolfman
 */
 
 
@@ -17,18 +17,18 @@
   /* C Declarations */
 
 #include "Cl.h"
+#include "creader.h"
 #include <string>
-
-class istream;
+#include <map>
 
 string current;  /* Global to help in debugging/error messages */
 
 struct yyarg {
-  yyarg(istream & in, ClVariable * aVars) : _in(in), _aVars(aVars) {};
+  yyarg(istream &xi, StringToVarMap &mapVars) : _xi(xi), _mapVars(mapVars) {};
 
-  istream & _in;
-  ClConstraint * _clcons;
-  ClVariable * _aVars;
+  istream & _xi;
+  ClConstraint * _pcn;
+  StringToVarMap &_mapVars;
 };
 
 #define YYPARSE_PARAM parm
@@ -43,24 +43,24 @@ struct yyarg {
 
 %union {
   double num;
-  ClVariable * clvar;
-  ClLinearExpression * clexpr;
-  ClConstraint * clcons;
+  const ClVariable *pclv;
+  ClLinearExpression *pcle;
+  ClConstraint *pcn;
 }
 
 %{
 int yylex(YYSTYPE * lvalp, void * YYLEX_PARAM);
-void yyerror(char * s);
+void yyerror(const char * s);
 %}
 
 %token <num> NUM
-%token <clvar> VAR
+%token <pclv> VAR
 
 %token GEQ
 %token LEQ
 
-%type <clexpr> expr
-%type <clcons> constraint equation inequality
+%type <pcle> expr
+%type <pcn> constraint equation inequality
 
 %left '-' '+'
 %left '*' '/'
@@ -70,9 +70,9 @@ void yyerror(char * s);
 /* Grammar Rules */
 
 constraint:     equation           { $$ = $1;
-                                     ((yyarg*)YYPARSE_PARAM)->_clcons = $1;  }
+                                     ((yyarg*)YYPARSE_PARAM)->_pcn = $1;  }
               | inequality         { $$ = $1;
-                                     ((yyarg*)YYPARSE_PARAM)->_clcons = $1;  }
+                                     ((yyarg*)YYPARSE_PARAM)->_pcn = $1;  }
 ;
 
 equation:       expr '=' expr       { $$ = new ClLinearEquation(*$1, *$3);   }
@@ -95,14 +95,14 @@ expr:           NUM                { $$ = new ClLinearExpression($1);        }
 %%
 
 /* Additional C Code */
-#include <iostream.h>  /* for yyerror */
+#include <iostream>  /* for yyerror */
 #include <ctype.h> /* for testing tokens */
 #include <stdlib.h> /* for strtod */
 
 /* Return 0 for EOF or a token number with a value on the stack */
 int yylex(YYSTYPE * lvalp, void * YYLEX_PARAM)
 {
-  istream & yylexIn = ((yyarg*)YYLEX_PARAM)->_in;
+  istream & yylexIn = ((yyarg*)YYLEX_PARAM)->_xi;
   string token;
   current = "";
   if (yylexIn >> token) {
@@ -111,20 +111,26 @@ int yylex(YYSTYPE * lvalp, void * YYLEX_PARAM)
 	 lvalp->num = strtod(token.c_str(), 0);
 	 return NUM;
     }
-    else if (token[0] == 'r') { /* VAR */
-	 // Pull the variable from the argument:
-	 int index = atoi(token.substr(1).c_str());
-	 assert(index > 0);
-
-	 lvalp->clvar = &((yyarg*)YYLEX_PARAM)->_aVars[index - 1];
-	 
-	 return VAR;
-    }
     else if (token == ">=") {
 	 return GEQ;
     }
     else if (token == "<=") {
 	 return LEQ;
+    }
+    else if (isalpha(token[0])) { /* VAR */
+	 yyarg *parg = ((yyarg*)YYLEX_PARAM);
+	 // Lookup the variable name
+	 StringToVarMap::iterator it = parg->_mapVars.find(token);
+	 if (it != parg->_mapVars.end()) {
+ 	     lvalp->pclv = it->second;
+	     return VAR;
+   	 } else {
+	     string szErr = "Unrecognized identifier: '";
+	     szErr += token;
+	     szErr += "'";
+	     yyerror(szErr.c_str());
+	     return 0;
+         }
     }
     else { /* OP or error! */
 	 return (int)token[0]; /* Code for one char OP is ASCII code */
@@ -134,25 +140,24 @@ int yylex(YYSTYPE * lvalp, void * YYLEX_PARAM)
     return 0;
 }
 
-void yyerror(char * s)
+void yyerror(const char * s)
 {
   cerr << s << ": " << current << endl;
-  exit(1);
+  throw s;
 }
 
-// in is the stream from which to read the constraint.
+// xi is the stream from which to read the constraint.
 // aVars is an array of variables large enough to account for
-// each one that might be mentioned in a constraint (as tXX where
-// XX is some number).
-ClConstraint * parseConstraint(istream &xi, ClVariable *pclv)
+// each one that might be mentioned in a constraint
+ClConstraint *parseConstraint(istream &xi, StringToVarMap &mapVars)
 {
-  yyarg arg(xi, pclv);
+  yyarg arg(xi, mapVars);
 
   if (yyparse(&arg) == 0) {// success
 #ifndef NDEEPDEBUG
-    cerr << *arg._clcons << endl;
+    cerr << *arg._pcn << endl;
 #endif
-    return arg._clcons;
+    return arg._pcn;
   }
   else {               // failure
     return 0;
