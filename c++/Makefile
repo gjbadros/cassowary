@@ -67,6 +67,7 @@ HEADERS = Cassowary.h \
 all:	libcassowary.a cassowary-tests $(CL_LIBRARY)
 
 $(CL_LIBRARY): $(OBJS)
+	rm -f $@
 	ar ruv $@ $(OBJS)
 
 clean:	
