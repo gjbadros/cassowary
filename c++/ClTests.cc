@@ -349,6 +349,85 @@ inconsistent2()
    }
 }
 
+bool
+multiedit()
+{
+ try
+   {
+   bool fOkResult = true;
+
+   ClVariable x("x",0);
+   ClVariable y("y",0);
+   ClVariable w("w",0);
+   ClVariable h("h",0);
+   ClSimplexSolver solver;
+
+   solver
+     .addStay(x)
+     .addStay(y)
+     .addStay(w)
+     .addStay(h);
+
+   solver
+     .addEditVar(x)
+     .addEditVar(y)
+     .beginEdit();
+
+   solver
+     .suggestValue(x,10)
+     .suggestValue(y,20)
+     .resolve();
+
+   cout << "x = " << x.value() << "; y = " << y.value() << endl
+        << "w = " << w.value() << "; h = " << h.value() << endl;
+
+   fOkResult = fOkResult &&
+     clApprox(x,10) && clApprox(y,20) && clApprox(w,0) && clApprox(h,0);
+
+   solver
+     .addEditVar(w)
+     .addEditVar(h)
+     .beginEdit();
+
+   solver
+     .suggestValue(w,30)
+     .suggestValue(h,40)
+     .endEdit();
+
+   cout << "x = " << x.value() << "; y = " << y.value() << endl
+        << "w = " << w.value() << "; h = " << h.value() << endl;
+
+   fOkResult = fOkResult &&
+     clApprox(x,10) && clApprox(y,20) && clApprox(w,30) && clApprox(h,40);
+
+   solver
+     .suggestValue(x,50)
+     .suggestValue(y,60)
+     .endEdit();
+
+   cout << "x = " << x.value() << "; y = " << y.value() << endl
+        << "w = " << w.value() << "; h = " << h.value() << endl;
+
+   fOkResult = fOkResult &&
+     clApprox(x,50) && clApprox(y,60) && clApprox(w,30) && clApprox(h,40);
+
+   return fOkResult;
+   } 
+ catch (ExCLError &error) 
+   {
+   cerr << "Exception! " << error.description() << endl;
+   return(false);
+   } 
+ catch (...) 
+   {
+   cerr << "Unknown exception" << endl;
+   return(false);
+   }
+ cerr << "Should have gotten an exception!" << endl;
+ return false;
+}
+
+
 // From a bug report from Steve Wolfman on his
 // SAT project using "blackbox"
 bool
@@ -615,6 +694,7 @@ main( int argc, char **argv )
     RUN_TEST(casso1);
     RUN_TEST(inconsistent1);
     RUN_TEST(inconsistent2);
+    RUN_TEST(multiedit);
     // RUN_TEST(blackboxsat);
 
     int cns = 900, vars = 900, resolves = 10000;

@@ -19,6 +19,7 @@
 #include "ClStayConstraint.h"
 #include "ClEditConstraint.h"
 #include "ClObjectiveVariable.h"
+#include <stack>
 
 class ClVariable;
 class ClPoint;
@@ -69,6 +70,8 @@ class ClSimplexSolver : public ClTableau {
     _pfnCnSatCallback(NULL)
     { 
     _rows[&_objective] = new ClLinearExpression(); 
+    // start out with no edit variables
+    _stkCedcns.push(0);
 #ifndef CL_NO_TRACE
     cerr << "objective row new@ " << _rows[&_objective] << endl;
 #endif
@@ -124,6 +127,7 @@ class ClSimplexSolver : public ClTableau {
       // may later want to do more in here
       _infeasibleRows.clear();
       resetStayConstants();
+      _stkCedcns.push(_editVarMap.size());
       return *this;
     }
 
@@ -133,14 +137,18 @@ class ClSimplexSolver : public ClTableau {
     {
       assert(_editVarMap.size() != 0);
       resolve();
-      removeAllEditVars();
+      _stkCedcns.pop();
+      removeEditVarsTo(_stkCedcns.top());
       // may later want to do more in here
       return *this;
     }
 
   // removeAllEditVars() just eliminates all the edit constraints
   // that were added
-  ClSimplexSolver &removeAllEditVars();
+  ClSimplexSolver &removeAllEditVars() { removeEditVarsTo(0); return *this; }
+
+  // remove the last added edit vars to leave only n edit vars left
+  ClSimplexSolver &removeEditVarsTo(int n);
 
   int numEditVars() const
   { return _editVarMap.size(); }
@@ -445,6 +453,13 @@ class ClSimplexSolver : public ClTableau {
   PfnChangeClvCallback _pfnChangeClvCallback;
   PfnResolveCallback _pfnResolveCallback;
   PfnCnSatCallback _pfnCnSatCallback;
+
+  // a stack of the number of edit constraints
+  // that existed at the prior beginEdit.
+  // an endEdit needs to pop off the top value,
+  // then remove constraints to get down
+  // to the # of constraints as in _stkCedcns.top()
+  stack<int> _stkCedcns;
 
 };
 

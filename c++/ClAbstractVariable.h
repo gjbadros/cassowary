@@ -92,6 +92,8 @@ public:
     return !(cl1 == cl2);
     }
 
+  virtual Number value() const { return 0; }
+
 private:
   string _name;
 

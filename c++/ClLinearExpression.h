@@ -177,6 +177,10 @@ class ClGenericLinearExpression  {
   // Returns the reciprocal, so changeSubject can use it, too
   T newSubject(const ClAbstractVariable &subject);
 
+  // Return the value of the linear expression
+  // given the current assignments of values to contained variables
+  T evaluate() const;
+
   // Return the coefficient corresponding to variable var, i.e.,
   // the 'ci' corresponding to the 'vi' that var is:
   //     v1*c1 + v2*c2 + .. + vn*cn + c

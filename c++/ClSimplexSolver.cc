@@ -166,17 +166,21 @@ ClSimplexSolver::addPointStay(const ClPoint &clp, double weight)
 
 
 ClSimplexSolver &
-ClSimplexSolver::removeAllEditVars()
+ClSimplexSolver::removeEditVarsTo(int n)
 {
   while (true)
     {
     ClVarToConstraintAndIndexMap::const_iterator it = _editVarMap.begin();
-    if (it == _editVarMap.end())
+    if (it == _editVarMap.end() || _editVarMap.size() == n)
       break;
     const ClConstraintAndIndex *pcai = (*it).second;
     assert(pcai);
-    const ClEditConstraint *pcnEdit = dynamic_cast<const ClEditConstraint *>(pcai->pconstraint);
-    removeEditVar(pcnEdit->variable());
+    if (pcai->index >= n)
+      {
+      const ClEditConstraint *pcnEdit = dynamic_cast<const ClEditConstraint *>(pcai->pconstraint);
+      cerr << "Removing " << pcnEdit->variable() << endl;
+      removeEditVar(pcnEdit->variable());
+      }
     }
   return *this;
 }
@@ -1382,7 +1386,9 @@ ClSimplexSolver::FIsConstraintSatisfied(const ClConstraint &cn) const
     { // could not find the constraint
     throw ExCLConstraintNotFound();
     }
-  
+
+  bool fCnsays = cn.FIsSatisfied();
+
   ClConstraintToVarSetMap::const_iterator it_eVars = _errorVars.find(&cn);
 
   if (it_eVars != _errorVars.end())
@@ -1393,9 +1399,15 @@ ClSimplexSolver::FIsConstraintSatisfied(const ClConstraint &cn) const
       {
       const ClLinearExpression *pexpr = rowExpression(*(*it));
       if (pexpr != NULL && !clApprox(pexpr->constant(),0.0))
+        {
+        if (fCnsays)
+          cerr << __FUNCTION__ << ": constraint says satisfiable, but solver does not" << endl;
         return false;
+        }
       }
     }
 
+  if (!fCnsays)
+    cerr << __FUNCTION__ << ": solver says satisfiable, but constraint does not" << endl;
   return true;
 }

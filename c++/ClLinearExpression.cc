@@ -440,6 +440,20 @@ ClGenericLinearExpression<T>::newSubject(const ClAbstractVariable &subject)
   return reciprocal;
 }
 
+template <class T>
+T
+ClGenericLinearExpression<T>::evaluate() const
+{
+  T answer = _constant;
+  ClVarToCoeffMap::const_iterator i = _terms.begin();
+
+  for ( ; i != _terms.end(); ++i)
+    {
+    answer += (*i).second * ((*i).first)->value();
+    }
+  return answer;
+}
+
 
 template class ClGenericLinearExpression<Number>;
 template class ClGenericLinearExpression<ClSymbolicWeight>;

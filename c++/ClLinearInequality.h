@@ -120,6 +120,9 @@ class ClLinearInequality : public ClLinearConstraint {
  virtual ostream &printOn(ostream &xo) const
    {  super::printOn(xo); xo << " >= 0 )"; return xo; }
 
+  virtual bool FIsSatisfied() const
+    { return (_expression.evaluate() >= 0); }
+
  private:
 
 };

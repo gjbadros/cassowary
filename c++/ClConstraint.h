@@ -67,6 +67,8 @@ public:
   void *Pv() const
     { return _pv; }
 
+  virtual bool FIsSatisfied() const { return false; }
+
 private:
 
   void setStrength( const ClStrength &strength )
