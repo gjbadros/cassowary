@@ -37,6 +37,7 @@ class ClSimplexSolver extends ClTableau
     my_slackCounter = 0;
     my_artificialCounter = 0;
     my_dummyCounter = 0;
+    my_epsilon = 1e-8;
     ClLinearExpression e = new ClLinearExpression();
     my_rows.put(my_objective,e);
     if (fTraceOn) traceprint("objective expr == " + rowExpression(my_objective));
@@ -646,7 +647,7 @@ class ClSimplexSolver extends ClTableau
 	  entryVar = v;
 	}
       }
-      if (objectiveCoeff == 0 || entryVar == null)
+      if (objectiveCoeff >= my_epsilon || entryVar == null)
 	return;
       if (fTraceOn) traceprint("entryVar == " + entryVar + ", objectiveCoeff == " + objectiveCoeff);
 
@@ -774,5 +775,6 @@ class ClSimplexSolver extends ClTableau
   private long my_dummyCounter;
 
   private Vector my_resolve_pair;
-  
+
+  private double my_epsilon;
 }
