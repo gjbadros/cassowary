@@ -7,11 +7,22 @@ Cassowary/Java was developed using the JDK 1.1.3 port for Linux.
 Before trying to build Cassowary/Java, be sure to include the directory
 java/classes in your CLASSPATH environment variable, e.g., if you untar
 the distribution in $HOME, then add: $HOME/cassowary/java/classes to
-your $CLASSPATH.  My CLASSPATH looks like this:
+your $CLASSPATH, and be sure "." does not occur before that directory
+in your CLASSPATH.  My CLASSPATH looks like this:
 
 /usr/local/.licensed/jdk/lib/classes.zip:/homes/gws/gjb/cassowary/java/classes
 
-Then you can just use `make all' (GNU Make) to build the .class files.
+Then you can just use `make all' (GNU Make) to build the .class files.  If you
+get an error message such as:
+
+  error: File ./CL.java does not contain type CL as expected. Please
+  adjust the class path so that the file does not appear in the unnamed
+  package.
+
+  ClTests.java:17: Superclass CL of class ClTests not found.
+  public class ClTests extends CL {
+                               ^
+when building ClTests, your CLASSPATH is probably wrong. 
 
 Try running ClTests after the build completes.  Be sure your CLASSPATH
 is set correctly (as discussed above) and do:
