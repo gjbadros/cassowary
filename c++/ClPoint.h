@@ -39,7 +39,7 @@ class ClPoint {
     { return _clv_y; }
 
   void SetXY(Number x, Number y)
-    { _clv_x = x; _clv_y = y; }
+    { _clv_x.set_value(x); _clv_y.set_value(y); }
 
   Number Xvalue() const
     { return X().value(); }
