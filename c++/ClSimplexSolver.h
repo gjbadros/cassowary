@@ -118,7 +118,7 @@ class ClSimplexSolver : public ClTableau {
   // Normalize if necessary so that the constant is non-negative.  If
   // the constraint is non-required give its error variables an
   // appropriate weight in the objective function.
-  ClLinearExpression makeExpression(const ClLinearConstraint &cn);
+  ClLinearExpression makeExpression(ClLinearConstraint &cn);
 
   // Minimize the value of the objective.  (The tableau should already
   // be feasible.)

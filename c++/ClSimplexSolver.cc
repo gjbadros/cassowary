@@ -590,10 +590,107 @@ ClSimplexSolver::dualOptimize()
 // the constraint is non-required give its error variables an
 // appropriate weight in the objective function.
 ClLinearExpression 
-ClSimplexSolver::makeExpression(const ClLinearConstraint &cn)
+ClSimplexSolver::makeExpression(ClLinearConstraint &cn)
 {
-  // FIXGJB
-  assert(false);
+  const ClLinearExpression &cnExpr = cn.expression();
+  ClLinearExpression expr(cnExpr.constant());
+  const map<ClVariable, Number> &cnTerms = cnExpr.terms();
+  map<ClVariable,Number>::const_iterator it = cnTerms.begin();
+  for ( ; it != cnTerms.end(); ++it)
+    {
+    const ClVariable &v = (*it).first;
+    Number c = (*it).second;
+    const ClLinearExpression &e = rowExpression(v);
+    if (e == cleNil())
+      {
+      expr.addVariable(v,c);
+      }
+    else
+      {
+      expr.addExpression(e,c);
+      }
+    }
+
+  // add slack and error variables as needed
+  if (cn.isInequality())
+    {
+    // cn is an inequality, so add a slack variable.  The original
+    // constraint is expr>=0, so that the resulting equality is
+    // expr-slackVar=0.  If cn is also non-required add a negative
+    // error variable, giving
+    //    expr-slackVar = -errorVar, in other words
+    //    expr-slackVar+errorVar=0.
+    // Since both of these variables are newly created we can just add
+    // them to the expression (they can't be basic).
+    ++slackCounter;
+    ClVariable &slackVar = *(new ClVariable("s",CLSlackVar));
+    expr.addVariable(slackVar,-1);
+    // index the constraint under its slack variable
+    my_markerVars[&cn] = slackVar;
+    if (!cn.isRequired())
+      {
+      ++slackCounter;
+      ClVariable &eminus = *(new ClVariable("em",CLSlackVar));
+      expr.addVariable(eminus,1.0);
+      // add emnius to the objective function with the appropriate weight
+      ClLinearExpression &zRow = rowExpression(my_objective);
+      // FIXGJB: zRow.addVariable(eminus,cn.strength().symbolicWeight() * cn.weight());
+      my_errorVars[&cn].insert(eminus);
+      noteAddedVariable(eminus,my_objective);
+      }
+    }
+  else
+    { // cn is an equality
+    if (cn.isRequired())
+      {
+      // Add a dummy variable to the expression to serve as a marker
+      // for this constraint.  The dummy variable is never allowed to
+      // enter the basis when pivoting.
+      ++dummyCounter;
+      ClVariable &dummyVar = *(new ClVariable("d",CLDummyVar));
+      expr.addVariable(dummyVar,1.0);
+      my_markerVars[&cn] = dummyVar;
+      }
+    else
+      {
+      // cn is a non-required equality.  Add a positive and a negative
+      // error variable, making the resulting constraint 
+      //       expr = eplus - eminus, 
+      // in other words:  expr-eplus+eminus=0
+      ++slackCounter;
+      ClVariable &eplus = *(new ClVariable("ep",CLSlackVar));
+      ClVariable &eminus = *(new ClVariable("em",CLSlackVar));
+      expr.addVariable(eplus,-1.0);
+      expr.addVariable(eminus,-1.0);
+      // index the constraint under one of the error variables
+      my_markerVars[&cn] = eplus;
+      ClLinearExpression &zRow = rowExpression(my_objective);
+      // FIXGJB: zRow.addVariable(eplus,cn.strength().symbolicWeight() * cn.weight());
+      noteAddedVariable(eplus,my_objective);
+      // FIXGJB: zRow.addVariable(eminus,cn.strength().symbolicWeight() * cn.weight());
+      noteAddedVariable(eminus,my_objective);
+      if (cn.isStayConstraint()) 
+	{
+	my_stayPlusErrorVars.push_back(eplus);
+	my_stayMinusErrorVars.push_back(eminus);
+	}
+      if (cn.isEditConstraint())
+	{
+	my_stayPlusErrorVars.push_back(eplus);
+	my_stayMinusErrorVars.push_back(eminus);
+	my_prevEditConstants.push_back(cnExpr.constant());
+	}
+      }
+    }
+
+  // the constant in the expression should be non-negative.
+  // If necessary normalize the expression by multiplying by -1
+  if (expr.constant() < 0)
+    {
+    expr.set_constant(-expr.constant());
+    expr.multiplyMe(-1);
+    }
+  return expr;
 }
 
 // Minimize the value of the objective.  (The tableau should already
