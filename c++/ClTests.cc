@@ -168,16 +168,22 @@ inconsistent1()
 {
  try 
    {
-   bool fOkResult = true; 
    ClVariable x("x");
-   ClVariable y("y");
    ClSimplexSolver solver;
 
-   fOkResult = fOkResult && clApprox(x,10.0);
-   cout << "x == " << x.value() << ", y == " << y.value() << endl;
+   solver
+     .addConstraint( ClLinearEquation(x,10.0) )
+     .addConstraint( ClLinearEquation(x, 5.0) );
 
-   return(fOkResult);
+   // no exception, we failed!
+   return(false);
    } 
+ catch (ExCLRequiredFailure &error)
+   {
+   // we want this exception to get thrown
+   cout << "Success -- got the exception" << endl;
+   return(true);
+   }
  catch (ExCLError &error) 
    {
    cerr << "Exception! " << error.description() << endl;
@@ -195,16 +201,22 @@ inconsistent2()
 {
  try 
    {
-   bool fOkResult = true; 
    ClVariable x("x");
-   ClVariable y("y");
    ClSimplexSolver solver;
 
-   fOkResult = fOkResult && clApprox(x,10.0);
-   cout << "x == " << x.value() << ", y == " << y.value() << endl;
+   solver
+     .addConstraint( ClLinearInequality(x,cnGEQ,10.0) )
+     .addConstraint( ClLinearInequality(x,cnLEQ, 5.0) );
 
-   return(fOkResult);
+   // no exception, we failed!
+   return(false);
    } 
+ catch (ExCLRequiredFailure &error)
+   {
+   // we want this exception to get thrown
+   cout << "Success -- got the exception" << endl;
+   return(true);
+   }
  catch (ExCLError &error) 
    {
    cerr << "Exception! " << error.description() << endl;
@@ -223,14 +235,19 @@ main( char **argv, int argc )
 {
   bool fAllOkResult = true;
   bool fResult;
-  cout << "addDelete1:" << endl;
-  fResult = addDelete1(); fAllOkResult &= fResult;
-  if (!fResult) cout << "failed!" <<endl;
-  cout << "addDelete2:" << endl;
-  fResult = addDelete2(); fAllOkResult &= fResult;
-  if (!fResult) cout << "failed!" <<endl;
-  cout << "casso1:" << endl;
-  fResult = casso1(); fAllOkResult &= fResult;
+
+#define RUN_TEST(x) \
+cout << #x << ":" << endl; \
+fResult = x(); fAllOkResult &= fResult; \
+if (!fResult) cout << "Failed!" << endl;
+
+  RUN_TEST(addDelete1);
+  RUN_TEST(addDelete2);
+  RUN_TEST(casso1);
+  RUN_TEST(inconsistent1);
+  RUN_TEST(inconsistent2);
   
+#undef RUN_TEST
+
   exit (fAllOkResult? 0 : 255);
 }
