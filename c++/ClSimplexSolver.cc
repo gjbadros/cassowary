@@ -1270,7 +1270,7 @@ ClSimplexSolver::setExternalVariables()
            << " in _externalParametricVars is basic" << endl;
       continue;
       }
-    pv->change_value(0.0);
+    ChangeClv(pv,0.0);
     }
 
   // Only iterate over the rows w/ external variables
@@ -1279,10 +1279,12 @@ ClSimplexSolver::setExternalVariables()
     {
     ClVariable *pv = const_cast<ClVariable *>(*itRowVars);
     ClLinearExpression *pexpr = rowExpression(*pv);
-    pv->change_value(pexpr->constant());
+    ChangeClv(pv,pexpr->constant());
     }
 
   _fNeedsSolving = false;
+  if (_pfnResolveCallback)
+    _pfnResolveCallback(this);
 }
 
 ostream &

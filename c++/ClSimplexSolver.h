@@ -63,7 +63,9 @@ class ClSimplexSolver : public ClTableau {
     _dummyCounter(0),
     _epsilon(1e-8),
     _fOptimizeAutomatically(true),
-    _fNeedsSolving(false)
+    _fNeedsSolving(false),
+    _pfnChangeClvCallback(NULL),
+    _pfnResolveCallback(NULL)
     { 
     _rows[&_objective] = new ClLinearExpression(); 
 #ifndef CL_NO_TRACE
@@ -71,7 +73,7 @@ class ClSimplexSolver : public ClTableau {
 #endif
     }
 
-  ~ClSimplexSolver();
+  virtual ~ClSimplexSolver();
   
   // Add constraints so that lower<=var<=upper.  (nil means no  bound.)
   ClSimplexSolver &addLowerBound(const ClAbstractVariable &v, Number lower)
@@ -239,7 +241,7 @@ class ClSimplexSolver : public ClTableau {
     {
     if (!FContainsVariable(v))
       {
-      v.change_value(n);
+      ChangeClv(&v,n);
       return *this;
       }
 
@@ -267,6 +269,16 @@ class ClSimplexSolver : public ClTableau {
 #endif
         }
       return *this; }
+
+  typedef void (*PfnChangeClvCallback)(ClVariable *pclv, ClSimplexSolver *psolver);
+
+  void SetChangeClvCallback(PfnChangeClvCallback pfn)
+    { _pfnChangeClvCallback = pfn; }
+
+  typedef void (*PfnResolveCallback)(ClSimplexSolver *psolver);
+
+  void SetResolveCallback(PfnResolveCallback pfn)
+    { _pfnResolveCallback = pfn; }
 
   friend ostream &operator<<(ostream &xo, const ClSimplexSolver &tableau);
   ostream &printOn(ostream &xo) const;
@@ -372,6 +384,13 @@ class ClSimplexSolver : public ClTableau {
   // them.
   void setExternalVariables();
 
+  void ChangeClv(ClVariable *pclv, Number n) {
+    assert(pclv);
+    pclv->change_value(n); 
+    if (_pfnChangeClvCallback) 
+      _pfnChangeClvCallback(pclv,this);
+  }
+
   /// instance variables
 
   // the arrays of positive and negative error vars for the edit constraints
@@ -410,6 +429,9 @@ class ClSimplexSolver : public ClTableau {
 
   bool _fOptimizeAutomatically;
   bool _fNeedsSolving;
+
+  PfnChangeClvCallback _pfnChangeClvCallback;
+  PfnResolveCallback _pfnResolveCallback;
 
 };
 
