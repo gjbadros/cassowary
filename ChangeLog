@@ -1,3 +1,17 @@
+Wed Sep  8 20:03:25 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* cassowary.spec.in: Bump to release 8
+
+	* cassowary-nofd.spec2.in: Bump to release 2.
+
+Wed Sep  8 19:43:53 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile.am: Drop building of config-inline.h -- let
+	configure handle that-- this was causing a double-build
+	(!!!ugh!!!) of Cassowary when building from RPMs, e.g.
+
+	* GTL.spec.in: Use install-strip target.
+
 Tue Sep  7 23:34:49 1999  Greg J. Badros  <gjb@cs.washington.edu>
 
 	* configure.in, Makefile.am: use cassowary-nofd.spec2.in
