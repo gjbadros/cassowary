@@ -742,7 +742,7 @@ fi
 
 PACKAGE=cassowary
 
-VERSION=0.4
+VERSION=0.41
 
 if test "`cd $srcdir && pwd`" != "`pwd`" && test -f $srcdir/config.status; then
   { echo "configure: error: source directory already configured; run "make distclean" there first" 1>&2; exit 1; }
@@ -2618,6 +2618,7 @@ test "$no_create" = yes || ${CONFIG_SHELL-/bin/sh} $CONFIG_STATUS || exit 1
 #  header files -- w/o this hack the two config.h files and their defs would
 #  conflict and cause at least warnings, and maybe really bad things --03/18/99 gjb)
 grep '#define CL_' c++/cassowary/config.h > c++/cassowary/config-inline-check.h || true
+echo "" >> c++/cassowary/config-inline-check.h  # add a newline
 
 # replace config-inline.h only if the new version is different
 # (avoid rebuilding everything)
@@ -2625,6 +2626,10 @@ d=c++/cassowary
 if test ! -f $d/config-inline.h; then 
    mv $d/config-inline-check.h $d/config-inline.h && echo "creating $d/config-inline.h"
 else
-   { diff -q $d/config-inline-check.h $d/config-inline.h >/dev/null 2>&1 && echo "$d/config-inline.h is unchanged" } || \
-	   { mv -f $d/config-inline-check.h $d/config-inline.h && echo "creating $d/config-inline.h" }
+   if diff -q $d/config-inline-check.h $d/config-inline.h >/dev/null 2>&1; then
+      echo "$d/config-inline.h is unchanged" }
+   else
+      mv -f $d/config-inline-check.h $d/config-inline.h && echo "creating $d/config-inline.h"
+   fi
 fi
+rm -f $d/config-inline-check.h
