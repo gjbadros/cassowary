@@ -1,3 +1,13 @@
+Sun Jul 11 19:37:39 1999  Greg Badros  <gjb@cs.washington.edu>
+
+	* c++/ClLinearExpression.h: Remove "class" from a typedef
+	ClMap<ClVariable,class T>.  Thanks Alexandre 'Pollux' Duret-Lutz
+	for testing against a more recent egcs (gcc-2.95) that caught this 
+	problem.
+
+	* configure.in: Improve checks for guile so that it uses --prefix
+	and --exec-prefix to --guile-prefix and --guile-exec-prefix
+
 Sat Jul 10 19:21:34 1999  Greg Badros  <gjb@cs.washington.edu>
 
 	* autogen.sh: rm libtool stuff just in case.
