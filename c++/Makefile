@@ -21,9 +21,9 @@ EGCSDIR = /uns/egcs
 CXX = $(CPP)
 
 #CPPFLAGS = -O6 -DCL_NO_TRACE -DNO_SOLVER_STATS -DNDEBUG -Wall -pedantic -W -L$(EGCSDIR)/lib -I$(EGCSDIR)/include
-#CPPFLAGS = -O6 -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W -L$(EGCSDIR)/lib -I$(EGCSDIR)/include
+CPPFLAGS = -O6 -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W -L$(EGCSDIR)/lib -I$(EGCSDIR)/include
 #CPPFLAGS = -O6 -pg -DCL_NO_TRACE -Wall -pedantic -W -L$(EGCSDIR)/lib -I$(EGCSDIR)/include
-CPPFLAGS = -g -DCL_NO_TRACE -Wall -pedantic -W -L$(EGCSDIR)/lib -I$(EGCSDIR)/include
+#CPPFLAGS = -g -DCL_NO_TRACE -Wall -pedantic -W -L$(EGCSDIR)/lib -I$(EGCSDIR)/include
 #CPPFLAGS = -g -Wall -pedantic -W -L$(EGCSDIR)/lib -I$(EGCSDIR)/include
 
 LDFLAGS = -L/uns/lib/egcs -pg
