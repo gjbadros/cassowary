@@ -7,9 +7,9 @@ CPP = g++
 CFLAGS = -Wall -g
 
 # See SCWM distribution for the extract-docs script
-# http://web.mit.edu/mstachow/www/scwm.html
+# http://vicarious-existence.mit.edu/scwm
 
-EXTRACT_DOCS = perl ../../scwm/utilities/dev/extract-docs
+EXTRACT_DOCS = perl ../../scwm/utilities/dev/scwmdoc -PCL
 
 INCLUDES = -I. -I../c++ -I/uns/share/include -I/uns/include
 
@@ -19,10 +19,12 @@ cassowary_scm.o: cassowary_scm.cc cassowary_scm.x
 cassowary_scm.x: cassowary_scm.cc
 	CC=$(CPP) guile-snarf $(INCLUDES)  $<  >$@
 
-cassowary_scm.sgml cassowary_scm-procedures.txt: cassowary_scm.cc
-	 $(EXTRACT_DOCS) -o cassowary_scm.sgml $^ > cassowary_scm-procedures.txt
+cassowary_scm.sgml cassowary_scm-procedures.txt cassowary_scm-variables.txt: cassowary_scm.cc
+	 $(EXTRACT_DOCS) -o cassowary_scm.sgml -O cassowary_scm-variables.txt $^ > cassowary_scm-procedures.txt
 
 clean:
 	rm -f cassowary_scm.o cassowary_scm.x cassowary_scm.sgml
 
-.PHONY: clean
+doc: cassowary_scm.sgml
+
+.PHONY: clean doc
