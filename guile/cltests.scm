@@ -1,4 +1,4 @@
-#!/uns/bin/guile -s
+#!/usr/local/bin/guile -s
 !#
 ;;; $Id$ -*- scwm -*-
 ;;; simple1
