@@ -88,11 +88,18 @@ ClSimplexSolver::addConstraint(const ClConstraint &cn)
 
   if (!fAddedOkDirectly)
     { // could not add directly
-    if (!addWithArtificialVariable(*pexpr))
+    ExCLRequiredFailureWithExplanation e;
+    if (!addWithArtificialVariable(*pexpr, e))
       {
-      cerr << *this << endl;
+#ifdef DEBUG_FAILURES
+      cerr << "Failed solve! Could not add constraint.\n"
+           << *this << endl;
+#endif
       removeConstraint(cn);
-      throw ExCLRequiredFailure();
+      if (FIsExplaining())
+        throw e;
+      else
+        throw ExCLRequiredFailure();
       }
     }
 
@@ -264,6 +271,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
   // try to make the marker variable basic if it isn't already
   const ClAbstractVariable &marker = *((*it_marker).second);
   _markerVars.erase(it_marker);
+  _constraintsMarked.erase(&marker);
   // delete &marker happens below
 #ifndef CL_NO_TRACE
   cerr << "Looking to remove var " << marker << endl;
@@ -574,7 +582,8 @@ ClSimplexSolver::suggestValue(ClVariable &v, Number x)
 // av and add av=expr to the inequality tableau, then make av be 0.
 // (Raise an exception if we can't attain av=0.)
 bool
-ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
+ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr,
+                                           ExCLRequiredFailureWithExplanation &e)
 {
 #ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -592,8 +601,8 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
   // (which contains only parametric variables)
 
 #ifndef CL_NO_TRACE
-  cerr << __FUNCTION__ << " before addRow-s:" << endl;
-  cerr << (*this) << endl;
+  cerr << __FUNCTION__ << " before addRow-s:\n"
+       << (*this) << endl;
 #endif
 
   // the artificial objective is av, which we know is equal to expr
@@ -612,8 +621,8 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
   addRow(*pav,expr);
 
 #ifndef CL_NO_TRACE
-  cerr << __FUNCTION__ << " after addRow-s:" << endl;
-  cerr << (*this) << endl;
+  cerr << __FUNCTION__ << " after addRow-s:\n"
+       << (*this) << endl;
 #endif
 
   // try to optimize az to 0
@@ -633,6 +642,7 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
   // If not, the original constraint was not satisfiable
   if (!clApprox(pazTableauRow->constant(),0.0))
     {
+    buildExplanation(e, paz, pazTableauRow);
     // remove the artificial objective row that we just
     // added temporarily
     delete removeRow(*paz);
@@ -662,7 +672,10 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
     const ClAbstractVariable *pentryVar = pe->anyPivotableVariable();
     assert(pentryVar);  // this assertion may be bogus --12/03/98 gjb
     if (!pentryVar)
+      {
+      buildExplanation(e, pav, pe);
       return false; /* required failure */
+      }
     pivot(*pentryVar, *pav);
     }
   // now av should be parametric
@@ -674,6 +687,40 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
   delete paz;
   return true;
 }
+
+
+// Using the given equation (av = cle) build an explanation which
+// implicates all constraints used to construct the equation. That
+// is, everything for which the variables in the equation are markers.
+void ClSimplexSolver::buildExplanation(ExCLRequiredFailureWithExplanation & e,
+                                       const ClAbstractVariable * pav, 
+                                       const ClLinearExpression * pcle)
+{
+  ClVarToConstraintMap::iterator it_cn;
+  if (pav != NULL) 
+    {
+    it_cn = _constraintsMarked.find(pav);
+    if (it_cn != _constraintsMarked.end()) 
+      {
+      e.addConstraint((*it_cn).second);
+      }
+    }
+  
+  assert(pcle != NULL);
+  
+  const ClVarToNumberMap & terms = pcle->terms();
+  ClVarToNumberMap::const_iterator it_term;
+  for (it_term = terms.begin(); it_term != terms.end(); it_term++)
+    {
+    it_cn = _constraintsMarked.find((*it_term).first);
+    if (it_cn != _constraintsMarked.end()) 
+      {
+      e.addConstraint((*it_cn).second);
+      }
+    }
+}
+
+
 
 // We are trying to add the constraint expr=0 to the appropriate
 // tableau.  Try to add expr directly to the tableaus without
@@ -825,8 +872,18 @@ ClSimplexSolver::chooseSubject(ClLinearExpression &expr)
   // the subject negative."
   if (!clApprox(expr.constant(),0.0))
     {
-    cerr << "in choose subject:\n" <<  *this << endl;
-    throw ExCLRequiredFailure();
+#ifdef DEBUG_FAILURES
+    cerr << "required failure in choose subject:\n"
+         << *this << endl;
+#endif
+    if (FIsExplaining()) 
+      {
+      ExCLRequiredFailureWithExplanation e;
+      buildExplanation(e, NULL, &expr);
+      throw e;
+      }
+    else
+      throw ExCLRequiredFailure();
     }
   if (coeff > 0.0)
     {
@@ -996,8 +1053,10 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
     ++_slackCounter;
     ReinitializeAutoPtr(pslackVar,new ClSlackVariable (_slackCounter, "s"));
     pexpr->setVariable(*pslackVar,-1);
-    // index the constraint under its slack variable
+    // index the constraint under its slack variable and vice-versa
     _markerVars[&cn] = pslackVar.get();
+    _constraintsMarked[pslackVar.get()] = &cn;
+    
     if (!cn.isRequired())
       {
       ++_slackCounter;
@@ -1023,6 +1082,7 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
       ReinitializeAutoPtr(pdummyVar,new ClDummyVariable (_dummyCounter, "d"));
       pexpr->setVariable(*pdummyVar,1.0);
       _markerVars[&cn] = pdummyVar.get();
+      _constraintsMarked[pdummyVar.get()] = &cn;
 #ifndef CL_NO_TRACE
       cerr << "Adding dummyVar == d" << _dummyCounter << endl;
 #endif
@@ -1041,6 +1101,8 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
       pexpr->setVariable(*peminus,1.0);
       // index the constraint under one of the error variables
       _markerVars[&cn] = peplus.get();
+      _constraintsMarked[peplus.get()] = &cn;
+
       ClLinearExpression *pzRow = rowExpression(_objective);
       // FIXGJB: pzRow->addVariable(eplus,cn.strength().symbolicWeight() * cn.weight());
       ClSymbolicWeight sw = cn.strength().symbolicWeight().times(cn.weight());
@@ -1104,8 +1166,8 @@ ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
 {
 #ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
-  cerr << "(" << zVar << ")" << endl;
-  cerr << *this << endl;
+  cerr << "(" << zVar << ")\n"
+       << *this << endl;
 #endif
   ClLinearExpression *pzRow = rowExpression(zVar);
   assert(pzRow != NULL);
@@ -1184,7 +1246,8 @@ ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
       }
     pivot(*pentryVar, *pexitVar);
 #ifndef CL_NO_TRACE
-    cerr << *this << endl;
+    cerr << "After optimize:\n"
+         << *this << endl;
 #endif
     }
 }
@@ -1323,8 +1386,8 @@ ClSimplexSolver::setExternalVariables()
 {
 #ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
-  cerr << "()" << endl;
-  cerr << *this << endl;
+  cerr << "()\n"
+       << *this << endl;
 #endif
 
   // FIXGJB -- oughta check some invariants here

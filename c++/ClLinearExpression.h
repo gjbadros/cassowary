@@ -12,7 +12,7 @@
 #ifndef ClLinearExpression_H
 #define ClLinearExpression_H
 
-#include <map>
+#include "ClMap.h"
 #include "Cassowary.h"
 #include "debug.h"
 #include "ClAbstractVariable.h"
@@ -36,7 +36,7 @@ class ClGenericLinearExpression : public gc {
 class ClGenericLinearExpression  {
 #endif
  public:
-  typedef map<PconstClAbstractVariable,class T> ClVarToCoeffMap;
+  typedef ClMap<PconstClAbstractVariable,class T> ClVarToCoeffMap;
 
   // convert Number-s into ClLinearExpression-s
   ClGenericLinearExpression(T num = 0.0);

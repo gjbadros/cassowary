@@ -13,6 +13,7 @@
 #define ClErrors_H
 
 #include "Cassowary.h"
+#include "ClSet.h"
 #include <string.h>
 #include <stdexcept>
 
@@ -93,6 +94,21 @@ class ExCLConstraintNotFound : public ExCLError {
   virtual char *description() const
     { return "(ExCLConstraintNotFound) Tried to remove a constraint never added to the tableu"; }
 };
-  
+
+class ClConstraint;
+typedef ClSet<const ClConstraint *> ClConstraintSet;
+ 
+class ExCLRequiredFailureWithExplanation : public ExCLRequiredFailure 
+{
+public:
+  virtual char *description() const
+    { return "(ExCLRequiredFailureWithExplanation) A required constraint cannot be satisfied"; }
+  virtual void addConstraint(const ClConstraint * cnExpl)
+    { _explanation.insert(cnExpl); }
+  virtual const ClConstraintSet & explanation() const
+    { return _explanation; }
+protected:
+  ClConstraintSet _explanation;
+};
 
 #endif

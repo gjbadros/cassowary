@@ -12,16 +12,16 @@
 #ifndef ClTableau_H
 #define ClTableau_H
 
-#include <map>
-#include <set>
+#include "ClMap.h"
+#include "ClSet.h"
 #include "Cassowary.h"
 #include "ClLinearExpression.h"
 #include "ClVariable.h"
 
-typedef set<const ClAbstractVariable *> ClTableauVarSet;
-typedef set<const ClVariable *> ClExternalVarSet;
-typedef map<const ClAbstractVariable *, ClTableauVarSet > ClTableauColumnsMap;
-typedef map<const ClAbstractVariable *, ClLinearExpression *> ClTableauRowsMap;
+typedef ClSet<const ClAbstractVariable *> ClTableauVarSet;
+typedef ClSet<const ClVariable *> ClExternalVarSet;
+typedef ClMap<const ClAbstractVariable *, ClTableauVarSet > ClTableauColumnsMap;
+typedef ClMap<const ClAbstractVariable *, ClLinearExpression *> ClTableauRowsMap;
 
 class ClTableau {
 
@@ -39,14 +39,15 @@ class ClTableau {
     Tracer TRACER(__FUNCTION__);
     cerr << "(" << v << ", " << subject << ")" << endl;
 #endif
-    ClTableauVarSet::const_iterator it = _columns[&v].find(&subject);
-    assert(it != _columns[&v].end());
-    _columns[&v].erase(it);
+    ClTableauVarSet &column = _columns[&v];
+    ClTableauVarSet::const_iterator it = column.find(&subject);
+    assert(it != column.end());
+    column.erase(it);
 #if 0
     cerr << "v = " << v << " and columns[&v].size() = "
-         << _columns[&v].size() << endl;
+         << column.size() << endl;
 #endif
-    if (_columns[&v].size() == 0)
+    if (column.size() == 0)
       {
       const ClVariable *pclv = static_cast<const ClVariable *>(&v);  
       _columns.erase(pclv);

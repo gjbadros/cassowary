@@ -19,10 +19,12 @@
 #include "ClStayConstraint.h"
 #include "ClEditConstraint.h"
 #include "ClObjectiveVariable.h"
+#include "ClErrors.h"
 #include <stack>
 
 class ClVariable;
 class ClPoint;
+class ExCLRequiredFailureWithExplanation;
 
 // ClConstraintAndIndex is a privately used class
 // that just wraps a constraint and an index into
@@ -43,9 +45,10 @@ private:
 };
 
 // Give a bunch of simpler names to the various useful maps
-typedef map<const ClConstraint *, ClTableauVarSet > ClConstraintToVarSetMap;
-typedef map<const ClConstraint *, const ClAbstractVariable *> ClConstraintToVarMap;
-typedef map<const ClVariable *, const ClConstraintAndIndex *> ClVarToConstraintAndIndexMap;
+typedef ClMap<const ClConstraint *, ClTableauVarSet > ClConstraintToVarSetMap;
+typedef ClMap<const ClConstraint *, const ClAbstractVariable *> ClConstraintToVarMap;
+typedef ClMap<const ClVariable *, const ClConstraintAndIndex *> ClVarToConstraintAndIndexMap;
+typedef ClMap<const ClAbstractVariable *, const ClConstraint *> ClVarToConstraintMap;
 typedef vector<const ClAbstractVariable *> ClVarVector;
 
 
@@ -65,6 +68,7 @@ class ClSimplexSolver : public ClTableau {
     _epsilon(1e-8),
     _fOptimizeAutomatically(true),
     _fNeedsSolving(false),
+    _fExplainFailure(false),
     _pfnChangeClvCallback(NULL),
     _pfnResolveCallback(NULL),
     _pfnCnSatCallback(NULL)
@@ -231,6 +235,15 @@ class ClSimplexSolver : public ClTableau {
   bool FIsAutosolving() const
     { return _fOptimizeAutomatically; }
 
+  // Set and check whether or not the solver will attempt to compile
+  // an explanation of failure when a required constraint conflicts
+  // with another required constraint
+  ClSimplexSolver &setExplaining(bool f)
+    { _fExplainFailure = f; return *this; }
+
+  bool FIsExplaining() const
+    { return _fExplainFailure; }
+
   // If autosolving has been turned off, client code needs
   // to explicitly call solve() before accessing variables
   // values
@@ -243,7 +256,7 @@ class ClSimplexSolver : public ClTableau {
       {
       optimize(_objective);
       setExternalVariables();
-#ifndef NDEBUG
+#if 0
       cerr << "Manual solve actually solving." << endl;
 #endif
       }
@@ -308,7 +321,10 @@ class ClSimplexSolver : public ClTableau {
     { printOn(xo); printInternalInfo(xo); xo << endl; return xo; }
 
   const ClConstraintToVarMap &ConstraintMap() const
-  {  return _markerVars; }
+    { return _markerVars; }
+
+  const ClVarToConstraintMap &MarkerMap() const
+    { return _constraintsMarked; }
 
   bool FIsConstraintSatisfied(const ClConstraint &cn) const;
 
@@ -323,7 +339,20 @@ class ClSimplexSolver : public ClTableau {
   // artificial variable.  To do this, create an artificial variable
   // av and add av=expr to the inequality tableau, then make av be 0.
   // (Raise an exception if we can't attain av=0.)
-  bool addWithArtificialVariable(ClLinearExpression &pexpr);
+  // (Raise an exception if we can't attain av=0.) If the add fails,
+  // prepare an explanation in e that describes why it failed (note
+  // that an empty explanation is considered to mean the explanation
+  // encompasses all active constraints.
+  bool addWithArtificialVariable(ClLinearExpression &pexpr, 
+                                 ExCLRequiredFailureWithExplanation &e);
+  
+  // Using the given equation (av = cle) build an explanation which
+  // implicates all constraints used to construct the equation. That
+  // is, everything for which the variables in the equation are markers.
+  // Thanks to Steve Wolfman for the implementation of the explanation feature
+  void buildExplanation(ExCLRequiredFailureWithExplanation & e, 
+                        const ClAbstractVariable * pav,
+                        const ClLinearExpression * pcle);
 
   // We are trying to add the constraint expr=0 to the appropriate
   // tableau.  Try to add expr directly to the tableax without
@@ -446,6 +475,10 @@ class ClSimplexSolver : public ClTableau {
   // constraint (used when deleting a constraint).
   ClConstraintToVarMap _markerVars;
 
+  // Reverse of the above-- a lookup table giving the constraint
+  // for each marker variable (used when building failure explanations)
+  ClVarToConstraintMap _constraintsMarked;
+
   ClObjectiveVariable &_objective;
 
   // Map edit variables to their constraints and the index into
@@ -459,6 +492,7 @@ class ClSimplexSolver : public ClTableau {
 
   bool _fOptimizeAutomatically;
   bool _fNeedsSolving;
+  bool _fExplainFailure;
 
   PfnChangeClvCallback _pfnChangeClvCallback;
   PfnResolveCallback _pfnResolveCallback;

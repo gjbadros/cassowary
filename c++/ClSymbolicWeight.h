@@ -56,13 +56,13 @@ class ClSymbolicWeight {
 
   // FIXGJB: can we express this statically?
   ClSymbolicWeight operator*(const ClSymbolicWeight &) const
-    { assert(false); }
+    { assert(false); return ClSymbolicWeight(); }
   ClSymbolicWeight &operator*=(const ClSymbolicWeight &)
     { assert(false); }
 
   // FIXGJB: can we express this statically?
   ClSymbolicWeight operator-() const
-    { assert(false); }
+    { assert(false); return ClSymbolicWeight(); }
 
   friend ClSymbolicWeight ReciprocalOf(const ClSymbolicWeight &);
 

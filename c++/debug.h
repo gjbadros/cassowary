@@ -13,18 +13,18 @@
 #define CASSOWARY_DEBUG_H_
 
 #include "Cassowary.h"
-#include <map>
-#include <set>
+#include "ClMap.h"
+#include "ClSet.h"
 #include <vector>
 #include "ClLinearExpression_fwd.h"
 
 class ClAbstractVariable;
 
-ostream &operator<<(ostream &xo, const set<const ClAbstractVariable *> & varset);
+ostream &operator<<(ostream &xo, const ClSet<const ClAbstractVariable *> & varset);
 
-ostream &operator<<(ostream &xo, const map<const ClAbstractVariable *, set<const ClAbstractVariable *> > & varmap);
+ostream &operator<<(ostream &xo, const ClMap<const ClAbstractVariable *, ClSet<const ClAbstractVariable *> > & varmap);
 
-ostream &operator<<(ostream &xo, const map<const ClAbstractVariable *, ClLinearExpression * > & rows);
+ostream &operator<<(ostream &xo, const ClMap<const ClAbstractVariable *, ClLinearExpression * > & rows);
 
 ostream &operator<<(ostream &xo, const vector<const ClAbstractVariable *> &varlist);
 
