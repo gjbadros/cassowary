@@ -24,7 +24,7 @@
 #include <iostream.h>
 #include <assert.h>
 #include <strstream.h>
-#include "scwm-snarf.h"
+#include "cl-snarf.h"
 
 #include <guile/gh.h>
 
@@ -56,6 +56,25 @@ static scm_smobfuns T ## _smobfuns = { \
 #define REGISTER_SMOBFUNS(T) scm_tc16_ ## T = scm_newsmob(& T ## _smobfuns)
 
 
+#define CL_VAR_INIT(cvar, name, val) \
+  do { scm_ ## cvar = \
+      scm_sysintern(name, val); } while (0)
+
+#define CL_VAR_INIT_PERMANENT(cvar, name, val) \
+  do { scm_ ## cvar =  \
+      scm_sysintern(name, val); scm_permanent_object(scm_ ## cvar); \
+  } while (0)
+
+
+#define CL_VAR(cvar, name) \
+  do { scm_ ## cvar = \
+      scm_sysintern0(name); } while (0)
+
+
+/* FIXGJB: Note that cvar is ignored for now */
+#define CL_VAR_READ_ONLY(cvar, name,val) \
+  do { scm_sysintern(name,val); \
+     } while (0)
 
 extern "C" {
 
@@ -95,7 +114,7 @@ int print_cl_variable(SCM scm, SCM port, scm_print_state *pstate)
   return 1;
 }
 
-SCWM_PROC(cl_variable_p, "cl-variable?", 1, 0, 0,
+CL_PROC(cl_variable_p, "cl-variable?", 1, 0, 0,
            (SCM obj))
   /** Return #t if OBJ is a constraint variable, #f otherwise. */
 #define FUNC_NAME s_cl_variable_p
@@ -104,7 +123,7 @@ SCWM_PROC(cl_variable_p, "cl-variable?", 1, 0, 0,
 }
 #undef FUNC_NAME
 
-SCWM_PROC(make_cl_variable, "make-cl-variable", 0, 2, 0,
+CL_PROC(make_cl_variable, "make-cl-variable", 0, 2, 0,
            (SCM name, SCM value))
   /** Return a newly-created constraint variable.
 The created variable has the name NAME, and an initial
@@ -147,7 +166,7 @@ variable if you want its value to not change. */
 #undef FUNC_NAME
 
 
-SCWM_PROC (clv_attach_x, "clv-attach!", 2, 0, 0,
+CL_PROC (clv_attach_x, "clv-attach!", 2, 0, 0,
            (SCM var, SCM obj))
      /** Attach OBJ to VAR, undoing any previous attachments. 
 Use `clv-attached-object' to retreive OBJ later.  
@@ -166,7 +185,7 @@ Consider instead using `set-object-property' and `object-property'. */
 }
 #undef FUNC_NAME
 
-SCWM_PROC (clv_attached_object, "clv-attached-object", 1, 0, 0,
+CL_PROC (clv_attached_object, "clv-attached-object", 1, 0, 0,
            (SCM var))
      /** Return the object attached to cl-variable VAR.
 Returns #f if no object was attached using `clv-attach!'.
@@ -185,7 +204,7 @@ Consider instead using `set-object-property' and `object-property'. */
 #undef FUNC_NAME
 
 
-SCWM_PROC(cl_value, "cl-value", 1, 0, 0,
+CL_PROC(cl_value, "cl-value", 1, 0, 0,
            (SCM clv))
   /** Return the current value of the constraint variable CLV.
 The value is a double.  Use `cl-int-value' to return an integer. */
@@ -200,7 +219,7 @@ The value is a double.  Use `cl-int-value' to return an integer. */
 }
 #undef FUNC_NAME
 
-SCWM_PROC(cl_int_value, "cl-int-value", 1, 0, 0,
+CL_PROC(cl_int_value, "cl-int-value", 1, 0, 0,
            (SCM clv))
   /** Return the value of the constraint variable CLV as an integer.
 Internally, the value is a double.  This rounds that real number to
@@ -249,7 +268,7 @@ print_cl_weight(SCM scm, SCM port, scm_print_state *pstate)
   return 1;
 }
 
-SCWM_PROC(cl_weight_p, "cl-weight?", 1, 0, 0,
+CL_PROC(cl_weight_p, "cl-weight?", 1, 0, 0,
            (SCM obj))
   /** Return #t if OBJ is a constraint weight object, #f otherwise. */
 #define FUNC_NAME s_cl_weight_p
@@ -258,7 +277,7 @@ SCWM_PROC(cl_weight_p, "cl-weight?", 1, 0, 0,
 }
 #undef FUNC_NAME
 
-SCWM_PROC(make_cl_weight, "make-cl-weight", 3, 0, 0,
+CL_PROC(make_cl_weight, "make-cl-weight", 3, 0, 0,
            (SCM w1, SCM w2, SCM w3))
   /** Return a newly-created constraint symbolic weight object.
 Symbolic weights are sequences of real numbers that are sorted
@@ -322,7 +341,7 @@ print_cl_strength(SCM scm, SCM port, scm_print_state *pstate)
   return 1;
 }
 
-SCWM_PROC(cl_strength_p, "cl-strength?", 1, 0, 0,
+CL_PROC(cl_strength_p, "cl-strength?", 1, 0, 0,
            (SCM obj))
   /** Return #t if OBJ is a constraint strength, #f otherwise. */
 #define FUNC_NAME s_cl_strength_p
@@ -347,7 +366,7 @@ ScmMakeClStrength(ClStrength *pcls)
   return answer;
 }
 
-SCWM_PROC(make_cl_strength, "make-cl-strength", 2, 0, 0,
+CL_PROC(make_cl_strength, "make-cl-strength", 2, 0, 0,
            (SCM name, SCM weight))
   /** Return a newly-created constraint strength object.
 The object is given the name NAME, a string, and the symbolic
@@ -377,7 +396,7 @@ but new strengths can be introduced if necessary. */
 #undef FUNC_NAME
 
 
-SCWM_PROC(make_cl_strength_3, "make-cl-strength-3", 4, 0, 0,
+CL_PROC(make_cl_strength_3, "make-cl-strength-3", 4, 0, 0,
            (SCM name, SCM w1, SCM w2, SCM w3))
   /** Return a newly-created constraint strength object.
 The object is given the name NAME, a string, and a symbolic weight of
@@ -440,7 +459,7 @@ print_cl_expression(SCM scm, SCM port, scm_print_state *pstate)
   return 1;
 }
 
-SCWM_PROC(cl_expression_p, "cl-expression?", 1, 0, 0,
+CL_PROC(cl_expression_p, "cl-expression?", 1, 0, 0,
            (SCM obj))
   /** Return #t if OBJ is a constraint expression, #f otherwise. */
 #define FUNC_NAME s_cl_expression_p
@@ -449,7 +468,7 @@ SCWM_PROC(cl_expression_p, "cl-expression?", 1, 0, 0,
 }
 #undef FUNC_NAME
 
-SCWM_PROC(make_cl_expression, "make-cl-expression", 1, 0, 0,
+CL_PROC(make_cl_expression, "make-cl-expression", 1, 0, 0,
            (SCM clv))
   /** Return a newly-create constraint expression object.
 The expression is contains just the value CLV.  Often constraint
@@ -489,7 +508,7 @@ PexprNewConvertSCM(SCM scm)
 }
 
 
-SCWM_PROC(cl_plus, "cl-plus", 2, 0, 0,
+CL_PROC(cl_plus, "cl-plus", 2, 0, 0,
            (SCM exprA, SCM exprB))
   /** Return the cl-expression that is the sum of EXPRA and EXPRB. 
 Both EXPRA and EXPRB may be cl-expression objects or cl-variable
@@ -522,7 +541,7 @@ objects. */
 #undef FUNC_NAME
 
 
-SCWM_PROC(cl_minus, "cl-minus", 2, 0, 0,
+CL_PROC(cl_minus, "cl-minus", 2, 0, 0,
            (SCM exprA, SCM exprB))
   /** Return the cl-expression that is the difference of EXPRA and EXPRB.
 Both EXPRA and EXPRB may be cl-expression objects or cl-variable
@@ -555,7 +574,7 @@ objects. */
 #undef FUNC_NAME
 
 
-SCWM_PROC(cl_times, "cl-times", 2, 0, 0,
+CL_PROC(cl_times, "cl-times", 2, 0, 0,
            (SCM exprA, SCM exprB))
   /** Return the cl-expression that is the product of EXPRA and EXPRB.
 Both EXPRA and EXPRB may be cl-expression objects or cl-variable
@@ -597,7 +616,7 @@ cl-variable), an error will result. */
 #undef FUNC_NAME
 
 
-SCWM_PROC(cl_divide, "cl-divide", 2, 0, 0,
+CL_PROC(cl_divide, "cl-divide", 2, 0, 0,
            (SCM exprA, SCM exprB))
   /** Return the cl-expression that is the quotient of EXPRA and EXPRB.
 Both EXPRA and EXPRB may be cl-expression objects or cl-variable
@@ -670,7 +689,7 @@ print_cl_equation(SCM scm, SCM port, scm_print_state *pstate)
   return 1;
 }
 
-SCWM_PROC(cl_equation_p, "cl-equation?", 1, 0, 0,
+CL_PROC(cl_equation_p, "cl-equation?", 1, 0, 0,
            (SCM obj))
   /** Return #t if OBJ is a constraint equation, #f otherwise.
 Constraint equations also respond #t to `cl-constraint?' queries,
@@ -681,7 +700,7 @@ since they are also constraint objects. */
 }
 #undef FUNC_NAME
 
-SCWM_PROC(make_cl_equation, "make-cl-equation", 1, 2, 0,
+CL_PROC(make_cl_equation, "make-cl-equation", 1, 2, 0,
            (SCM expr, SCM strength, SCM factor))
   /** Return a newly-created constraint equation.
 The resulting constraint is that EXPR is equal to 0.  EXPR is a
@@ -718,7 +737,7 @@ number.  STRENGTH defaults to cls-required, FACTOR defaults to 1. */
 }
 #undef FUNC_NAME
 
-SCWM_PROC(make_cl_equality, "make-cl-equality", 2, 2, 0,
+CL_PROC(make_cl_equality, "make-cl-equality", 2, 2, 0,
            (SCM exprA, SCM exprB, SCM strength, SCM factor))
   /** Return a newly-created constraint equation.
 The resulting constraint is that EXPRA is equal to EXPRB.  EXPRA and
@@ -809,7 +828,7 @@ print_cl_inequality(SCM scm, SCM port, scm_print_state *pstate)
   return 1;
 }
 
-SCWM_PROC(cl_inequality_p, "cl-inequality?", 1, 0, 0,
+CL_PROC(cl_inequality_p, "cl-inequality?", 1, 0, 0,
            (SCM obj))
   /** Return #t if OBJ is a constraint inequality object, #t otherwise.
 Constraint inequalities also respond #t to `cl-constraint?' queries,
@@ -820,7 +839,7 @@ since they are also constraint objects. */
 }
 #undef FUNC_NAME
 
-SCWM_PROC(make_cl_inequality, "make-cl-inequality", 3, 2, 0,
+CL_PROC(make_cl_inequality, "make-cl-inequality", 3, 2, 0,
            (SCM exprA, SCM op, SCM exprB, SCM strength, SCM factor))
   /** Return a newly-constructed constraint inequality object.
 
@@ -908,7 +927,7 @@ print_cl_stay_constraint(SCM scm, SCM port, scm_print_state *pstate)
   return 1;
 }
 
-SCWM_PROC(cl_stay_constraint_p, "cl-stay-constraint?", 1, 0, 0,
+CL_PROC(cl_stay_constraint_p, "cl-stay-constraint?", 1, 0, 0,
            (SCM obj))
   /** Return #t if OBJ is a stay constraint object, #t otherwise.
 Stay constraints also respond #t to `cl-constraint?' queries,
@@ -920,7 +939,7 @@ since they are also constraint objects. */
 #undef FUNC_NAME
 
 
-SCWM_PROC(make_cl_stay_constraint, "make-cl-stay-constraint", 1, 2, 0,
+CL_PROC(make_cl_stay_constraint, "make-cl-stay-constraint", 1, 2, 0,
            (SCM cl_var, SCM strength, SCM factor))
   /** Return a stay constraint for CL-VAR to stay at its current value.
 Weight the constraint according to STRENGTH and FACTOR.  Use
@@ -958,20 +977,21 @@ or use the `cl-add-stay' convenience function instead. */
 //// cl-constraint -- a wrapper for cl-equation and cl-inequality
 /// NOT a new SMOB type, just for convenience
 
-SCWM_PROC(cl_constraint_p, "cl-constraint?", 1, 0, 0,
+CL_PROC(cl_constraint_p, "cl-constraint?", 1, 0, 0,
            (SCM obj))
-  /** Return #t if OBJ is some kind of constraint object, #f otherwise.
-There are at least two kinds of objects for which this procedure will
-return #t: "cl-inequality" and "cl-equation" objects.  Since it is
-often useful to treat either as a general constraint, this procedure
-exists to simplify that test. */
+  /** Return #t if OBJ is some kind of constraint object, #f otherwise. 
+There are three kinds of objects for which this procedure
+will return #t: "cl-inequality", "cl-equation", and
+"cl-stay-constraint" objects.  Since it is often useful to treat
+either as a general constraint, this procedure exists to simplify that
+test. */
 #define FUNC_NAME s_cl_constraint_p
 {
   return SCM_BOOL_FromF(FIsClConstraintScm(obj));
 }
 #undef FUNC_NAME
 
-SCWM_PROC(cl_constraint_strength, "cl-constraint-strength", 1, 0, 0,
+CL_PROC(cl_constraint_strength, "cl-constraint-strength", 1, 0, 0,
           (SCM constraint))
   /** Return the cl-strength object for constraint CONSTRAINT. */
 #define FUNC_NAME s_cl_constraint_strength
@@ -985,7 +1005,7 @@ SCWM_PROC(cl_constraint_strength, "cl-constraint-strength", 1, 0, 0,
 #undef FUNC_NAME
 
 
-SCWM_PROC(cl_constraint_weight, "cl-constraint-weight", 1, 0, 0,
+CL_PROC(cl_constraint_weight, "cl-constraint-weight", 1, 0, 0,
           (SCM constraint))
   /** Return the weighting factor (a number) for constraint CONSTRAINT. */
 #define FUNC_NAME s_cl_constraint_weight
@@ -1000,7 +1020,7 @@ SCWM_PROC(cl_constraint_weight, "cl-constraint-weight", 1, 0, 0,
 
 
 
-SCWM_PROC(make_cl_constraint, "make-cl-constraint", 3, 2, 0,
+CL_PROC(make_cl_constraint, "make-cl-constraint", 3, 2, 0,
            (SCM exprA, SCM op, SCM exprB, SCM strength, SCM factor))
   /** Return a newly-constructed constraint object.
 
@@ -1103,7 +1123,7 @@ print_cl_solver(SCM scm, SCM port, scm_print_state *pstate)
 }
 
 
-SCWM_PROC(cl_solver_debug_print, "cl-solver-debug-print", 1, 1, 0,
+CL_PROC(cl_solver_debug_print, "cl-solver-debug-print", 1, 1, 0,
            (SCM solver, SCM port))
   /** Output a complete dump of SOLVER onto output port PORT.
 The output contains the contents of the tableau contained in SOLVER,
@@ -1129,7 +1149,7 @@ brief summary of the contents of the solver. */
 #undef FUNC_NAME
 
 
-SCWM_PROC(cl_solver_p, "cl-solver?", 1, 0, 0,
+CL_PROC(cl_solver_p, "cl-solver?", 1, 0, 0,
            (SCM obj))
   /** Return #t if OBJ is a constraint solver object, #f otherwise. */
 #define FUNC_NAME s_cl_solver_p
@@ -1138,7 +1158,7 @@ SCWM_PROC(cl_solver_p, "cl-solver?", 1, 0, 0,
 }
 #undef FUNC_NAME
 
-SCWM_PROC(make_cl_solver, "make-cl-solver", 0, 0, 0,
+CL_PROC(make_cl_solver, "make-cl-solver", 0, 0, 0,
            ())
   /** Return a newly-created constraint solver object.
 Often, an application will need only one of these objects,  but
@@ -1162,7 +1182,7 @@ share constraint variable objects. */
 }
 #undef FUNC_NAME
 
-SCWM_PROC(cl_add_constraint, "cl-add-constraint", 1, 0, 1,
+CL_PROC(cl_add_constraint, "cl-add-constraint", 1, 0, 1,
            (SCM solver, SCM args))
   /** Add the constraints, ARGS, to the solver SOLVER.
 Each constraint given after the SOLVER argument is added to that
@@ -1202,7 +1222,7 @@ been added. */
 }
 #undef FUNC_NAME
 
-SCWM_PROC(cl_remove_constraint, "cl-remove-constraint", 1, 0, 1,
+CL_PROC(cl_remove_constraint, "cl-remove-constraint", 1, 0, 1,
            (SCM solver, SCM args))
   /** Remove the constraints, ARGS, from the solver SOLVER.
 Each constraint given after the SOLVER argument is removed from that
@@ -1241,13 +1261,13 @@ object, the preceding arguments will have already been removed. */
 #undef FUNC_NAME
 
 
-SCWM_PROC(cl_add_editvar, "cl-add-editvar", 2, 2, 0,
+CL_PROC(cl_add_editvar, "cl-add-editvar", 2, 2, 0,
            (SCM solver, SCM cl_vars, SCM strength, SCM factor))
   /** Add edit constraints on variables CL-VARS to SOLVER.
 CL-VARS is a or a list of cl-variable object(s) that you wish to permit to change under
 the solver's control.  An edit-constraint for each cl-variable object
-is added in turn.   Each of the stay constraints will have strength
-STRENGTH (#f for default of cls-weak) and weight FACTOR (#f for
+is added in turn.   Each of the edit constraints will have strength
+STRENGTH (#f for default of cls-strong) and weight FACTOR (#f for
 default of 1).  If any element of CL-VARS is not a cl-variable, an error is
 thrown (after the preceding variables have been handled).  After
 selecting the edit variables with this procedure, you must call
@@ -1261,7 +1281,7 @@ values. */
   }
   ClSimplexSolver *psolver = PsolverFromScm(solver);
 
-  const ClStrength *pcls = &clsWeak();
+  const ClStrength *pcls = &clsStrong();
   if (FIsClStrengthScm(strength)) {
     pcls = PclsFromScm(strength);
   } else if (!FUnsetSCM(strength)) {
@@ -1283,14 +1303,14 @@ values. */
           scm_wrong_type_arg(FUNC_NAME,2,cl_vars);
         }
         ClVariable *pclv = PclvFromScm(var);
-        psolver->addEditVar(*pclv);
+        psolver->addEditVar(*pclv,*pcls,nWeight);
       }
     } else {
       if (!FIsClVariableScm(cl_vars)) {
         scm_wrong_type_arg(FUNC_NAME,2,cl_vars);
       }
       ClVariable *pclv = PclvFromScm(cl_vars);
-      psolver->addEditVar(*pclv);
+      psolver->addEditVar(*pclv,*pcls,nWeight);
     }
   } catch (const ExCLEditMisuse &e) {
     scm_misc_error(FUNC_NAME, e.description(), SCM_EOL);
@@ -1301,7 +1321,7 @@ values. */
 #undef FUNC_NAME
 
 
-SCWM_PROC(cl_add_stay, "cl-add-stay", 2, 2, 0,
+CL_PROC(cl_add_stay, "cl-add-stay", 2, 2, 0,
            (SCM solver, SCM cl_vars, SCM strength, SCM factor))
   /** Add stay constraints on variables CL-VARS to SOLVER.
 
@@ -1366,7 +1386,7 @@ you intend to use with the given SOLVER. */
 
 
 
-SCWM_PROC(cl_begin_edit, "cl-begin-edit", 1, 0, 0,
+CL_PROC(cl_begin_edit, "cl-begin-edit", 1, 0, 0,
            (SCM solver))
   /** Begin changing values of the edit variables of SOLVER.
 This procedure must be invoked after adding edit variables to SOLVER
@@ -1386,7 +1406,7 @@ have a matching `cl-end-edit' call. */
 }
 #undef FUNC_NAME
 
-SCWM_PROC(cl_end_edit, "cl-end-edit", 1, 0, 0,
+CL_PROC(cl_end_edit, "cl-end-edit", 1, 0, 0,
            (SCM solver))
   /** Finish changing the values of the edit variables in SOLVER.
 This procedure must be invoked once for every invocation of 
@@ -1406,7 +1426,7 @@ any edit variables that have been added via `cl-add-editvar'. */
 #undef FUNC_NAME
 
 
-SCWM_PROC (cl_is_constraint_satisfied_p, "cl-is-constraint-satisfied?", 2, 0, 0,
+CL_PROC (cl_is_constraint_satisfied_p, "cl-is-constraint-satisfied?", 2, 0, 0,
            (SCM solver, SCM cn))
   /** Return #t if CN is satisfied in SOLVER, #f otherwise. */
 #define FUNC_NAME s_cl_is_constraint_satisfied_p
@@ -1425,7 +1445,7 @@ SCWM_PROC (cl_is_constraint_satisfied_p, "cl-is-constraint-satisfied?", 2, 0, 0,
 
 
 
-SCWM_PROC(cl_suggest_value, "cl-suggest-value", 3, 0, 0,
+CL_PROC(cl_suggest_value, "cl-suggest-value", 3, 0, 0,
            (SCM solver, SCM var, SCM value))
   /** Try to change VAR's value to VALUE within SOLVER.
 
@@ -1463,7 +1483,7 @@ SOLVER may not permit changing VAR to VALUE. */
 #undef FUNC_NAME
 
 
-SCWM_PROC(cl_resolve, "cl-resolve", 1, 0, 1,
+CL_PROC(cl_resolve, "cl-resolve", 1, 0, 1,
            (SCM solver, SCM args))
      /** Ask SOLVER to re-solve its system using the suggested values.
 
@@ -1518,7 +1538,7 @@ variables from the solver after you are done changing their values. */
 #undef FUNC_NAME
 
 
-SCWM_PROC (cl_constraint_list, "cl-constraint-list", 1, 1, 0,
+CL_PROC (cl_constraint_list, "cl-constraint-list", 1, 1, 0,
            (SCM solver, SCM internal_also_p))
      /** Return the list of constraints in SOLVER.
 Each object in the returned list is a cl-constraint object (i.e.,
@@ -1600,22 +1620,19 @@ init_cassowary_scm()
   REGISTER_SMOBFUNS(cl_solver);
 
   SCM_DEFER_INTS;
-  scm_permanent_object(
-    scm_cls_weak = scm_sysintern("cls-weak",ScmMakeClStrength(const_cast<ClStrength *>
-                                                              (&clsWeak())))
-    );
-  scm_permanent_object(
-    scm_cls_medium = scm_sysintern("cls-medium",ScmMakeClStrength(const_cast<ClStrength *>
-                                                                  (&clsMedium())))
-    );
-  scm_permanent_object(
-    scm_cls_strong = scm_sysintern("cls-strong",ScmMakeClStrength(const_cast<ClStrength *>
-                                                                  (&clsStrong())))
-    );
-  scm_permanent_object(
-    scm_cls_required = scm_sysintern("cls-required",ScmMakeClStrength(const_cast<ClStrength *>
-                                                                      (&clsRequired())))
-    );
+
+  CL_VAR_INIT_PERMANENT(cls_weak,"cls-weak", ScmMakeClStrength(const_cast<ClStrength *> (&clsWeak())));
+  /** The "weak" predefined cl-strength object. */
+
+  CL_VAR_INIT_PERMANENT(cls_medium,"cls-medium", ScmMakeClStrength(const_cast<ClStrength *> (&clsMedium())));
+  /** The "medium" predefined cl-strength object. */
+
+  CL_VAR_INIT_PERMANENT(cls_strong,"cls-strong", ScmMakeClStrength(const_cast<ClStrength *> (&clsStrong())));
+  /** The "strong" predefined cl-strength object. */
+
+  CL_VAR_INIT_PERMANENT(cls_required,"cls-required", ScmMakeClStrength(const_cast<ClStrength *> (&clsRequired())));
+  /** The "required" predefined cl-strength object. */
+
   SCM_ALLOW_INTS;
 #ifndef SCM_MAGIC_SNARFER
 #include "cassowary_scm.x"
