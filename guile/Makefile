@@ -9,7 +9,7 @@ CFLAGS = -Wall -g
 # See SCWM distribution for the extract-docs script
 # http://web.mit.edu/mstachow/www/scwm.html
 
-EXTRACT_DOCS = ../../scwm/utilities/dev/extract-docs
+EXTRACT_DOCS = perl ../../scwm/utilities/dev/extract-docs
 
 INCLUDES = -I. -I../c++ -I/uns/share/include -I/uns/include
 
