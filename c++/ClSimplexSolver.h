@@ -156,7 +156,7 @@ class ClSimplexSolver : public ClTableau {
   // Add a stay of the given strength (default to weak) of v to the tableau
   ClSimplexSolver &addStay(const ClVariable &v,
 			   const ClStrength &strength = clsWeak(), double weight = 1.0 )
-    { 
+    {
     ClStayConstraint *pcn = new ClStayConstraint(v,strength,weight); 
     return addConstraint(*pcn); 
     }
@@ -233,6 +233,39 @@ class ClSimplexSolver : public ClTableau {
       }
     return *this;
     }
+
+  ClSimplexSolver &setEditedValue(ClVariable &v, double n)
+    {
+    if (!FContainsVariable(v))
+      {
+      v.set_value(n);
+      return *this;
+      }
+
+    if (!clApprox(n, v.value())) 
+      {
+      addEditVar(v);
+      beginEdit();
+      suggestValue(v,n);
+      endEdit();
+      }
+    return *this;
+    }
+
+  // Solver contains the variable if it's in either the columns
+  // list or the rows list
+  bool FContainsVariable(const ClVariable &v)
+    { return columnsHasKey(v) || rowExpression(v); }
+
+  ClSimplexSolver &addVar(const ClVariable &v)
+    { if (!FContainsVariable(v)) 
+        {
+        addStay(v); 
+#ifndef CLNO_TRACE
+        cerr << "added initial stay on " << v << endl;
+#endif
+        }
+      return *this; }
 
   friend ostream &operator<<(ostream &xo, const ClSimplexSolver &tableau);
   ostream &printOn(ostream &xo) const;
