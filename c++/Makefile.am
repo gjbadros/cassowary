@@ -108,3 +108,12 @@ ClBug1_SOURCES = ClBug1.cc
 
 ClBug2_SOURCES = ClBug2.cc
 
+ClReader-lex.cc: ClReader.l ClReader.h
+	$(LEX) -Pcl -o$@ $<
+
+ClReader-lex.cc: ClReader.cc.h
+
+ClReader.cc: ClReader.y ClReader.h
+	$(YACC) -d -pcl --output-file $@ $<
+
+ClReader.cc.h: ClReader.cc
