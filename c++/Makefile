@@ -57,7 +57,8 @@ TEST_OBJS = test-ClConstraint.o   \
 	test-ClStrength.o          \
 	test-ClVariable.o	   \
 	test-ClBounds.o	           \
-	ClTests.o
+	ClTests.o \
+	ClTestColumns.o
 
 
 
@@ -92,7 +93,7 @@ HEADERS = Cassowary.h \
 	ClVariable.h \
 	ClPoint.h
 
-all:	lib ClTests
+all:	lib ClTests ClTestColumns
 
 lib:    $(CL_LIBRARY)
 
@@ -126,6 +127,9 @@ TAGS: $(SOURCES)
 cassowary-tests: $(TESTS)
 
 ClTests: ClTests.o
+	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
+
+ClTestColumns: ClTestColumns.o
 	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 test-ClStrength: test-ClStrength.o ClStrength.o ClSymbolicWeight.o

@@ -15,11 +15,11 @@
 # Makefile for cassowary, java version
 
 JAVAC = javac
-#JAVAC_FLAGS = -g
-JAVAC_FLAGS = -O
+JAVAC_FLAGS = -g
+#JAVAC_FLAGS = -O
 
 TESTS = test-ClStrength test-ClVariable test-ClLinearExpression test-ClConstraint \
-	test-ClSimplexSolver ClTests
+	test-ClSimplexSolver ClTests ClTestColumns
 
 # For java, keep ClErrors.java first, since it defines multiple
 # classes that are used by the others (javac does not get
@@ -58,7 +58,7 @@ JAVAFILES = \
 TESTFILES = \
 	testClStrength.java \
 	testClLinearExpression.java \
-	ClTests.java
+	ClTests.java ClTestColumns.java
 
 CLASSFILES = $(JAVAFILES:.java=.class)
 
