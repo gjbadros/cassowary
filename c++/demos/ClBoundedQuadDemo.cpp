@@ -46,8 +46,65 @@ MyApp myApp;
 // in the application itself.
 IMPLEMENT_WXWIN_MAIN
 
+ClVariable xStart, yStart;
+ClVariable xEnd, yEnd;
 ClSimplexSolver solver;
 
+class MyCanvas: public wxCanvas
+{
+public:
+  MyCanvas(wxWindow *window, int x = -1, int y = -1, int width = -1, int height = -1,
+	   long style = wxRETAINED, char *name = "mycanvas") :
+    wxCanvas(window,x,y,width,height,style,name)
+    { }
+  
+  void OnEvent(wxMouseEvent &event)
+    { 
+      float x, y;
+      vector<Number> v;
+      event.Position(&x,&y); // get the position
+      v.push_back(x);
+      v.push_back(y);
+      solver.resolve(v);
+      Clear();
+      OnPaint(); // repaint
+    }
+
+  // Called when canvas needs to be repainted.
+  void OnPaint(void)
+    {
+      // Speeds up drawing under Windows.
+      GetDC()->BeginDrawing();
+      wxCanvasDC *canvdc = GetDC();
+
+#if 0      
+      // Find Out where the window is scrolled to
+      int vbX,vbY;                     // Top left corner of client
+      ViewStart(&vbX,&vbY);
+      
+      int vX,vY,vW,vH;                 // Dimensions of client area in pixels
+      wxUpdateIterator      upd(this); // get the update rect list
+      
+      while (upd)
+	{
+	vX = upd.GetX();
+	vY = upd.GetY();
+	vW = upd.GetW();
+	vH = upd.GetH();
+	
+	// Alternatively we can do this:
+	// wxRectangle rect;
+	// upd.GetRect(&rect);
+	
+	
+
+	upd ++ ;
+	}
+#endif
+      IntDrawLine(xStart.value(),yStart.value(),xEnd.value(),yEnd.value());
+      GetDC()->EndDrawing();
+    }
+};
 // `Main program' equivalent, creating windows and returning main app frame
 wxFrame *MyApp::OnInit(void)
 {
@@ -71,13 +128,25 @@ wxFrame *MyApp::OnInit(void)
   frame->SetMenuBar(menu_bar);
 
   // Make a panel with a message
-  wxPanel *panel = new wxPanel(frame, 0, 0, 400, 400);
-
-  panel->SetLabelPosition(wxHORIZONTAL) ;
-  wxMessage *msg = new wxMessage(panel, "Hello, this is a minimal wxWindows program!", 5, 5);
+  wxCanvas *pcanvas = new MyCanvas(frame);
 
   // Show the frame
   frame->Show(TRUE);
+
+  xEnd.set_value(100.0);
+  yEnd.set_value(100.0);
+
+  solver
+    .addStay(xStart)
+    .addStay(yStart)
+    .addStay(xEnd)
+    .addStay(yEnd);
+
+  solver
+    .addConstraint(ClLinearEquation(xEnd,xStart+200.0))
+    .addConstraint(ClLinearEquation(yEnd,xStart*2.0))
+    .addConstraint(ClEditConstraint(xStart))
+    .addConstraint(ClEditConstraint(yStart));
 
   // Return the main frame window
   return frame;
