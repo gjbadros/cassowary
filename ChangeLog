@@ -1,0 +1,21 @@
+Fri Jul 10 09:00:15 1998  Greg Badros  <gjb@cs.washington.edu>
+
+	* Fixed bug whereby a dummy variable was being pivoted into the
+	basis because pexpr->anyVariable() didn't guarantee the variable
+	it returned was a pivotable variable -- now it's called
+	anyPivotableVariable(), and does the right thing.
+
+	* Fixed bug whereby column mappings that had no rows remained in
+	the list of columns -- now erase the column key when its value is
+	the empty set
+
+	* Fixed bug whereby constraints that threw required failure
+	exceptions remained in the tableau (a removeConstraint on a
+	constraint that failed to be added used to succeed, now it does
+	not)
+
+Monday Jun 29 16:50:00 1998  Greg Badros  <gjb@cs.washington.edu>
+
+	* Cassowary v0.1 is released  --- see local/POST-ANNOUNCE-TO for
+	list of places where it was announced
+
