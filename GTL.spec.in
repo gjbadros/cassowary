@@ -57,7 +57,7 @@ algorithms are under work.
 make
 
 %install
-make prefix=$RPM_BUILD_ROOT%{prefix} install
+make prefix=$RPM_BUILD_ROOT%{prefix} install-strip
 libtool --finish %prefix/lib
 
 %clean

@@ -166,6 +166,3 @@ ClReader-lex.cc: ClReader.l ClReader.h ClReader.cc.h
 
 ClReader.cc.h ClReader.cc: ClReader.y ClReader.h
 	$(YACC) -d -pcl --output-file $@ $<
-
-config-inline.h: config.h
-	grep '#define CL_' $^ > $@ || true
