@@ -30,7 +30,7 @@ LDFLAGS = -L/uns/lib/egcs -pg
 #LDFLAGS = -L/uns/lib/egcs
 
 
-CL_LIBRARY = libCl.a
+CL_LIBRARY = libcassowary.a
 
 OBJS = 	ClAbstractVariable.o \
 	ClConstraint.o \
