@@ -14,11 +14,11 @@ gcc -DHAVE_CONFIG_H -I. -I. -I../include -I/usr/X11R6/include -I/uns/include -E 
 
 #ifndef CL_EXTRACT_COMMENTS
 #ifndef SCM_MAGIC_SNARFER
-#define CL_PROC(fname,primname, req, opt, var, ARGLIST) \
+#define CL_PROC(fname,primname, req, opt, var, ARGLIST, docstring) \
 	SCM_PROC(s_ ## fname, primname, req, opt, var, fname); \
 SCM fname ARGLIST
 #else
-#define CL_PROC(fname,primname, req, opt, var, ARGLIST) \
+#define CL_PROC(fname,primname, req, opt, var, ARGLIST, docstring) \
 	SCM_PROC(s_ ## fname, primname, req, opt, var, fname);
 #endif
 #endif
