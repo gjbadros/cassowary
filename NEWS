@@ -11,9 +11,11 @@ Seattle, WA 98195-2350
 
 with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
 
-26-August-1999: Version 0.51 released.
+14-September-1999: Version 0.51 released.
 * Minor bug fixes
-* Better packaging, more forced reliance on GTL
+* Much better packaging, RPMs, etc. more forced reliance on GTL
+
+26-August-1999: Version 0.51 pre-releases begin
 
 12-July-1999: Version 0.50 released.
 * Made only C++ version build by default, --enable-java-build is needed to turn java on

@@ -1,5 +1,3 @@
-!!PACKAGE TESTING PRE-RELEASE!!
-
 Cassowary Constraint Solving Toolkit for C++, Java, and Smalltalk
 Version 0.51
 
@@ -11,7 +9,7 @@ Alan Borning <borning@cs.washington.edu>
 University of Washington
 Computer Science and Engineering
 Seattle, WA 98195-2350
-26-August-1999
+14-September-1999
 
 with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
 
