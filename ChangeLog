@@ -1,3 +1,22 @@
+Sat Feb 12 20:34:55 2000  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* Makefile.am: Added GTL.h.patch to EXTRA_DIST
+
+Sat Feb 12 20:31:47 2000  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSimplexSolver.cc, c++/ClSimplexSolver.h: Drop
+ 	ExternalResetStayConstants, make ResetStayConstants() public.
+  	Test _fResetStayConstantsAutomatically before doing so in
+ 	Resolve().  Use _fAutosolve instead of _fOptimizeAutomatically.
+	Drop DisplayObjective (wasn't defined anyway).  Drop field
+	_fOptimizeAutomatically (use _fAutosolve from parent, instead).
+
+	* guile/cassowary_scm.hpp, guile/cassowary_scm.cc: Drop extra
+ 	include of guile/gh.h
+
+	* guile/cassowary_scm.cc: Added `cl-set-auto-solve!',
+	`cl-set-auto-reset-stay-constants!'
+
 Sat Jan 29 17:45:32 2000  Greg J. Badros  <gjb@cs.washington.edu>
 
 	* configure.in (CASSOWARY_VERSION): Bump to 0.55.
