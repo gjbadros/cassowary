@@ -8,10 +8,14 @@
 # Makefile for cassowary
 
 CC = gcc
-CPP = g++
-CFLAGS = -g
+CPP = egcs-g++
+CFLAGS = -g -Wall
+CPPFLAGS = -g -Wall -fno-rtti -L/uns/lib/egcs
+CXX = $(CPP)
+# -falt-external-templates
+LDFLAGS = -L/uns/lib/egcs
 
-TEST_OBJS = ClStrength.o ClSymbolicWeight.o
+TEST_OBJS = ClStrength.o ClSymbolicWeight.o ClLinearExpression.o
 TEST_SRCS = $(OBJS:.o=.cc)
 
 SOURCES = $(wildcard *.cc)
@@ -29,12 +33,13 @@ TAGS: $(SOURCES)
 cassowary-tests: test-ClStrength test-ClVariable
 
 test-ClStrength: test-ClStrength.o ClStrength.o ClSymbolicWeight.o
-	g++ -o $@ $^
+	$(CPP) $(LDFLAGS) -o $@ $^
 
 test-ClLinearExpression: test-ClLinearExpression.o $(TEST_OBJS)
+	$(CPP) $(LDFLAGS) -o $@ $^
 
 test-ClVariable: test-ClVariable.o $(TEST_OBJS)
-	g++ -o $@ $^
+	$(CPP) $(LDFLAGS) -o $@ $^
 
 
 cassowary-test:	$(TEST_OBJS)
