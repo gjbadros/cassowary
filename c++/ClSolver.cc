@@ -32,3 +32,8 @@ PrintTo(ostream &xo, const ClConstraintSet &setCn)
 
 ostream &operator<<(ostream &xo, const ClConstraintSet &setCn)
 { return PrintTo(xo,setCn); }
+
+
+ostream &operator<<(ostream &xo, const ClSolver &solver)
+{ return solver.PrintOn(xo); }
+

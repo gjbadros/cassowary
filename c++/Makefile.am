@@ -5,6 +5,7 @@ lib_LIBRARIES = libcassowary.a
 lib_LTLIBRARIES = libcassowary.la
 
 LDADD = libcassowary.a -L@prefix@/lib -lGTL
+ClCTest_LDADD = $(LDADD) -lstdc++
 
 benchdir=$(libdir)/cassowary/bench
 bugsdir=$(libdir)/cassowary/bugs
@@ -15,6 +16,7 @@ bench_PROGRAMS = ClTests QocaBench
 test_PROGRAMS = \
 	ClParseTest \
 	ClSubgraphTest \
+	ClCTest \
 	ClLeakTest \
 	ClFDTests \
 	test-ClConstraint \

@@ -108,9 +108,9 @@ CL_SimplexSolver CL_SimplexSolverNew()
 }
 
 
-/* Print the ClSimplexSolver object out to the given FILE * */
+/* Print the ClSolver object out to the given FILE * */
 void 
-CL_SimplexSolverPrint(CL_SimplexSolver solver, FILE *out)
+CL_SolverPrint(CL_Solver solver, FILE *out)
 {
   strstream xo;
   xo << *solver << ends;
@@ -224,7 +224,7 @@ boolean CL_FIsSatisfied(ClConstraint *pcn)
 
 
 /* Add a constraint to the solver; return 1 on success, 0 on failure */
-boolean CL_AddConstraint(CL_SimplexSolver solver, CL_Constraint cn)
+boolean CL_AddConstraint(CL_Solver solver, CL_Constraint cn)
 {
   try {
     return (solver->AddConstraintNoException(cn)?1:0);
@@ -234,7 +234,7 @@ boolean CL_AddConstraint(CL_SimplexSolver solver, CL_Constraint cn)
 }
 
 /* Add a constraint to the solver; return 1 on success, 0 on failure */
-boolean CL_RemoveConstraint(CL_SimplexSolver solver, CL_Constraint cn)
+boolean CL_RemoveConstraint(CL_Solver solver, CL_Constraint cn)
 {
   try {
     return (solver->RemoveConstraintNoException(cn)?1:0);
@@ -243,12 +243,12 @@ boolean CL_RemoveConstraint(CL_SimplexSolver solver, CL_Constraint cn)
   }
 }
 
-void CL_Solve(CL_SimplexSolver solver)
+void CL_Solve(CL_Solver solver)
 {
   solver->Solve();
 }
 
-void CL_Resolve(CL_SimplexSolver solver)
+void CL_Resolve(CL_Solver solver)
 {
   solver->Resolve();
 }

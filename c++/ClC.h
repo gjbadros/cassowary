@@ -32,11 +32,17 @@ typedef struct ClVariable *CL_Variable;
 
 typedef CL_Variable CLV; /* synonym, for brevity */
 
+struct ClSolver;
+typedef struct ClSolver *CL_Solver;
+
 struct ClSimplexSolver;
 typedef struct ClSimplexSolver *CL_SimplexSolver;
 
+struct ClFDSolver;
+typedef struct ClFDSolver *CL_FDSolver;
+
 struct ClTableau;
-typedef struct ClSimplexSolver *CL_Tableau;
+typedef struct ClSimplexSolver *CL_Tableau; // ClSimplexSolver * on purpose
 
 struct ClConstraint;
 typedef struct ClConstraint *CL_Constraint;
@@ -76,11 +82,14 @@ void *CL_VariablePv(CLV var);
 const char *CL_VariableName(CLV var);
 
 
+/* Return a new ClFDSolver object */
+CL_FDSolver CL_FDSolverNew();
+
 /* Return a new ClSimplexSolver object */
 CL_SimplexSolver CL_SimplexSolverNew();
 
-/* Print the ClSimplexSolver object out to the given FILE * */
-void CL_SimplexSolverPrint(CL_SimplexSolver solver, FILE *out);
+/* Print the ClSolver object out to the given FILE * */
+void CL_SolverPrint(CL_Solver solver, FILE *out);
 
 void CL_ConstraintPrint(CL_Constraint pcn, FILE *out);
 
@@ -112,13 +121,13 @@ CL_Constraint CL_ParseConstraint(const char *szConstraintRule, const char *szCon
 boolean CL_FIsSatisfied(CL_Constraint pcn);
 
 /* Add a constraint to the solver */
-int CL_AddConstraint(CL_SimplexSolver solver, CL_Constraint cn);
+int CL_AddConstraint(CL_Solver solver, CL_Constraint cn);
 
-int CL_RemoveConstraint(CL_SimplexSolver solver, CL_Constraint cn);
+int CL_RemoveConstraint(CL_Solver solver, CL_Constraint cn);
 
-void CL_Solve(CL_SimplexSolver solver);
+void CL_Solve(CL_Solver solver);
 
-void CL_Resolve(CL_SimplexSolver solver);
+void CL_Resolve(CL_Solver solver);
 
 void CL_SimplexSolverSetEditedValue(CL_SimplexSolver solver, CLV var, double n);
 

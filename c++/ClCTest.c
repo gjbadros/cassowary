@@ -18,11 +18,11 @@ int main(int argc, char *argv[] )
   CLV frameWidth;
   CLV frameHeight;
   CLV x;
-  CLV y;
   CL_Constraint cn;
 
   CL_Init();
 
+  CL_SetVarMap(CL_VarMapNew());
   solver = CL_SimplexSolverNew();
   frameWidth = CL_ClvNew("frameWidth",577,solver);
   frameHeight = CL_ClvNew("frameHeight",651,solver);
@@ -45,12 +45,12 @@ int main(int argc, char *argv[] )
 
   printf("\"x\" has Value %g\n", CL_ClvValue(CL_ClvLookup("x")));
 
-  CL_SimplexSolverPrint(solver,stderr);
+  CL_SolverPrint(solver,stderr);
 
   CL_SimplexSolverSetEditedValue(solver,frameWidth,620);
   printf("x = %g, frameWidth = %g\n",CL_ClvValue(x),CL_ClvValue(frameWidth));
 
-  CL_SimplexSolverPrint(solver,stderr);
+  CL_SolverPrint(solver,stderr);
 
   printf("x = %g, frameWidth = %g\n",CL_ClvValue(x),CL_ClvValue(frameWidth));
 

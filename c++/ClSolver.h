@@ -76,11 +76,21 @@ class ClSolver {
   virtual ClSolver &Solve()
     { assert(false); return *this; }
 
+  virtual void Resolve()
+    { assert(false); }
+
   void SetPv(void *pv)
     { _pv = pv; }
 
   void *Pv() const
     { return _pv; }
+
+#ifndef CL_NO_IO
+  friend ostream &operator<<(ostream &xo, const ClSolver &solver);
+
+  virtual ostream &PrintOn(ostream &xo) const = 0;
+
+#endif  
 
  protected:
 
