@@ -37,8 +37,7 @@ class DraggableBox {
 
   void SetCenter(Number x, Number y)
     {
-    _center.X() = x;
-    _center.Y() = y;
+    _center.SetXY(x,y);
     }
 
   void SetSize(int width, int height)
