@@ -212,9 +212,11 @@ grep '#define CL_' c++/cassowary/config.h > c++/cassowary/config-inline-check.h 
 
 # replace config-inline.h only if the new version is different
 # (avoid rebuilding everything)
-if test ! -f c++/cassowary/config-inline.h
-   mv c++/cassowary/config-inline-check.h c++/cassowary/config-inline.h
+d=c++/cassowary
+if test ! -f $d/config-inline.h; then 
+   mv $d/config-inline-check.h $d/config-inline.h && echo "creating $d/config-inline.h"
 else
-   diff c++/cassowary/config-inline-check.h c++/cassowary/config-inline.h || \
-	   mv -f c++/cassowary/config-inline-check.h c++/cassowary/config-inline.h
+   { diff -q $d/config-inline-check.h $d/config-inline.h >/dev/null 2>&1 && echo "$d/config-inline.h is unchanged" } || \
+	   { mv -f $d/config-inline-check.h $d/config-inline.h && echo "creating $d/config-inline.h" }
 fi
+rm -f $d/config-inline-check.h
