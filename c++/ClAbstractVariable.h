@@ -50,7 +50,7 @@ public:
     { return _name; }
 
   // Set the name of the variable
-  void setName(string const &name)
+  virtual void setName(string const &name)
     { _name = name; }
 
   // Return true if this a dummy variable (used as a marker variable

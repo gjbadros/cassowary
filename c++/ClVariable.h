@@ -13,16 +13,24 @@
 #define ClVariable_H
 
 #include <stdio.h>
+#include <map>
+#include <string>
 #include "Cassowary.h"
 #include "ClAbstractVariable.h"
 
+class ClVariable;
+
+typedef map<string,const ClVariable *> StringToVarMap;
+
 class ClVariable : public ClAbstractVariable {
 public:
+  typedef ClAbstractVariable super;
+
   ClVariable(string name = "", Number value = 0.0) :
     ClAbstractVariable(name),
     _value(value),
     _pv(NULL)
-    { }
+    { if (pmapSzPclv) { (*pmapSzPclv)[name] = this; } }
 
   ClVariable(Number value) :
     ClAbstractVariable(""),
@@ -101,7 +109,21 @@ public:
   void *Pv() const
     { return _pv; }
 
+  // Set the name of the variable
+  virtual void setName(string const &name)
+    { 
+      super::setName(name); 
+#ifndef CL_NO_IO
+      cerr << "Not updating symbol table!" << endl;
+#endif
+    }
+
+  static void SetVarMap(StringToVarMap *pmap) { pmapSzPclv = pmap; }
+  static StringToVarMap *VarMap() { return pmapSzPclv; }
+  
 private:
+
+  static StringToVarMap *pmapSzPclv;
 
   // similar to set_value -- see caveat above -- made private for now
   // since it's probably the wrong thing and is too easy to invoke
