@@ -371,7 +371,7 @@ public class ClSimplexSolver extends ClTableau
       }
       
       if (exitVar == null) {
-	// exitVar is still nil
+	// exitVar is still null
 	if (col.size() == 0) {
 	  removeColumn(marker);
 	} else {
@@ -538,6 +538,49 @@ public class ClSimplexSolver extends ClTableau
     if (_fNeedsSolving) {
       optimize(_objective);
       setExternalVariables();
+    }
+    return this;
+  }
+
+  public ClSimplexSolver setEditedValue(ClVariable v, double n)
+    throws ExCLInternalError
+  {
+    if (!FContainsVariable(v)) {
+      v.change_value(n);
+      return this;
+    }
+
+    if (!CL.approx(n, v.value())) {
+      addEditVar(v);
+      beginEdit();
+      try {
+        suggestValue(v,n);
+      } catch (ExCLError e) {
+        // just added it above, so we shouldn't get an error
+        throw new ExCLInternalError();
+      }
+      endEdit();
+    }
+    return this;
+  }
+
+  public final boolean FContainsVariable(ClVariable v)
+    throws ExCLInternalError
+  {
+    return columnsHasKey(v) || (rowExpression(v) != null); 
+  }
+    
+  public ClSimplexSolver addVar(ClVariable v)
+    throws ExCLInternalError
+  {
+    if (!FContainsVariable(v)) {
+      try {
+        addStay(v);
+      } catch (ExCLRequiredFailure e) {
+        // cannot have a required failure, since we add w/ weak
+        throw new ExCLInternalError();
+      }
+      if (fTraceOn) { traceprint("added initial stay on " + v); }
     }
     return this;
   }
@@ -1072,7 +1115,12 @@ public class ClSimplexSolver extends ClTableau
     for (Enumeration e = _externalParametricVars.elements(); 
 	 e.hasMoreElements() ; ) {
       ClVariable v = (ClVariable) e.nextElement();
-      v.set_value(0.0);
+      if (rowExpression(v) != null) {
+        System.err.println("Error: variable" + v + 
+                          " in _externalParametricVars is basic");
+        continue;
+      }
+      v.change_value(0.0);
     }
     
     for (Enumeration e = _externalRows.elements(); e.hasMoreElements(); ) {
@@ -1080,7 +1128,7 @@ public class ClSimplexSolver extends ClTableau
       ClLinearExpression expr = rowExpression(v);
       if (fTraceOn) debugprint("v == " + v);
       if (fTraceOn) debugprint("expr == " + expr);
-      v.set_value(expr.constant());
+      v.change_value(expr.constant());
     }
 
     _fNeedsSolving = false;
