@@ -38,12 +38,10 @@ class QuadDemoWindow : public QWidget
   void paintEvent( QPaintEvent * );
   private slots:
  private:
-  DraggableBox db[8];
   enum {cdb = 8};
+  DraggableBox db[cdb];
   DraggableBox *const mp;
   ClSimplexSolver solver;
-  ClEditConstraint *peditX;
-  ClEditConstraint *peditY;
   int idbDragging; // the index of the draggable box used
   int imbUsed; // the mouse button pressed to start a drag
 };
