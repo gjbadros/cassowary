@@ -1,21 +1,15 @@
 This directory contains files for a Smalltalk implementation of Cassowary.  
 
-Note that the Smalltalk distribution will be updated only if we know of
-people actively using that implementation.  The included Smalltalk
-implementation is still at version 0.1, which has at least one bug that
-we are aware of.  Please contact <cassowary@cs.washington.edu> if you
-would like an update.
-
-A980625.dat is a configuration map for Version 4.44 of Cassowary 
-(25 June 1998).  If you are using OTI Smalltalk use this.
+A990112.dat is a configuration map for Version 4.46 of Cassowary 
+(12 January 1999).  If you are using OTI Smalltalk use this.
 
 Otherwise you can try using the following fileout files:
     ClKernel.app -  the kernel application
     ClTests.app - some small test examples
     ClDemos.app - some graphical demos
 You will probably need to make some changes to run these under different
-implementations of Smalltalk -- the kernel and the tests will probably port without
-too much trouble; the graphical demos would need to be redone.
+implementations of Smalltalk -- the kernel and the tests will probably port
+without too much trouble; the graphical demos would need to be redone.
 
 
 Here are some statements to execute to open up the graphical demos:
