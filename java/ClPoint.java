@@ -23,6 +23,12 @@ class ClPoint
       my_clv_y = new ClVariable(y);
     }
 
+  public ClPoint(double x, double y, int a)
+    {
+      my_clv_x = new ClVariable("x"+a,x);
+      my_clv_y = new ClVariable("y"+a,y);
+    }
+
   public ClPoint(ClVariable clv_x, ClVariable clv_y)
     { my_clv_x = clv_x; my_clv_y = clv_y; }
 
@@ -32,8 +38,9 @@ class ClPoint
   public ClVariable Y()
     { return my_clv_y; }
 
+  // use only before adding into the solver
   public void SetXY(double x, double y)
-    { my_clv_x = new ClVariable(x); my_clv_y = new ClVariable(y); }
+    { my_clv_x.set_value(x); my_clv_y.set_value(y); }
 
   public void SetXY(ClVariable clv_x, ClVariable clv_y)
     { my_clv_x = clv_x; my_clv_y = clv_y; }
