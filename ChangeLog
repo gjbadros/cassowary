@@ -1,3 +1,38 @@
+Fri Feb 19 08:45:24 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSubgraphTest.cc: Fix some bugs just from not testing
+	completely. 
+
+	* c++/*: Fix bugs from not-updated-code hidden by #ifdefs.  Builds 
+	w/ all compile-options except -DCL_USE_HASH_MAP_AND_SET.  Drop
+	some gratuitous appearances of ClAbstractVariable
+
+Thu Feb 18 18:53:56 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClLinearExpression.cc: Use clvNill when returning a
+	ClVariable instead of NULL
+
+	* c++/ClVariable.h, c++/ClVariable.cc: operators ==, !=, < all should use the
+	contained pointers address, not value.  Also define global clvNil,
+	isNil(). 
+
+	* c++/ClTests.cc: BUGFIX: #if 0 removed from adding stays in
+	simple1 test
+
+	* c++/ClSimplexSolver.h:  Use ClVariable-s internally for
+	ClObjectiveVariable-s.
+
+	* c++/ClSimplexSolver.cc: Use ClVariable-s internally for
+	ClObjectiveVariable-s and replace ClAbstractVariable
+	*p{entryVar,exitVar} with ClVariable-s.  (Use clvNil and isNil()
+	to test for not yet set).
+
+Thu Feb 18  Greg J Badros  <gjb@cs.washington.edu>
+	
+	* c++/*: First compilable and almost working version with
+ 	ClVariable as a handle to ClVariableRep.  Major simplifications
+	throughout.
+
 Thu Feb 18 14:22:14 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* c++/Makefile: Split out the options into += lists so they can be 
