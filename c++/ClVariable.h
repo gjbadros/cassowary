@@ -71,16 +71,30 @@ public:
   Number value() const
     { return _value; }
 
+  // Round the value to an integer and return it
+  int intValue() const
+    { int i = int(_value + 0.5); 
+#ifdef CL_TRACE_VERBOSE
+    cerr << "intValue() returning i = " << i << endl;
+#endif
+    return i;
+    }
+
+  // change the value held -- should *not* use this if the variable is
+  // in a solver -- instead use addEditVar() and suggestValue() interface
   void set_value(Number value)
     { _value = value; }
 
+private:
+
+  // similar to set_value -- see caveat above -- made private for now
+  // since it's probably the wrong thing and is too easy to invoke
   Number operator=(Number value)
     { _value = value; return value; }
 
-private:
   // Copy constructor left undefined since we want to
   // outlaw passing by value!  Will get a link error if you
-  // try to use
+  // try to use within ClVariable.c, compile-time error everywhere else
   ClVariable(const ClVariable &);
 
   Number _value;
