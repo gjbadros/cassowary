@@ -28,17 +28,22 @@ FLEX_FLAGS =
 ## with -pedantic -- just remove that option for compilation
 ## with egcs-1.1b, until they fix the problem (bug was reported --09/06/98 gjb)
 
-#CPPFLAGS = -O6 -DCL_NO_TRACE -DCL_NO_IO -DNDEBUG -Wall -pedantic -W
-#CPPFLAGS = -O6 -DCL_NO_TRACE -DNDEBUG -Wall -pedantic -W
-#CPPFLAGS = -O6 -DCL_NO_TRACE -Wall -pedantic -W
-#CPPFLAGS = -O6 -DNO_REQUIRED_EXCEPTIONS -DCL_NO_TRACE -Wall -pedantic -W
-#CPPFLAGS = -O6 -pg -DCL_NO_TRACE -DCL_SOLVER_STATS -Wall -pedantic -W
-#CPPFLAGS = -g -DCL_NO_TRACE -Wall -pedantic -W
-#CPPFLAGS = -g -DCL_NO_TRACE -DCL_USE_HASH_MAP_AND_SET -DCL_SOLVER_CHECK_INTEGRITY -Wall -pedantic -W #-DUSE_GC
-#CPPFLAGS = -g -DCL_NO_TRACE -DCL_NO_IO -DCL_SOLVER_CHECK_INTEGRITY -Wall -pedantic -W #-DUSE_GC
-#CPPFLAGS = -g -DCL_NO_TRACE -DCL_SOLVER_CHECK_INTEGRITY -Wall -pedantic -W -DCL_FIND_LEAK #-DUSE_GC
-CPPFLAGS = -g -DCL_NO_TRACE -DCL_SOLVER_CHECK_INTEGRITY -Wall -pedantic -W #-DUSE_GC
-#CPPFLAGS = -g -DCL_SOLVER_CHECK_INTEGRITY -Wall -pedantic -W #-DUSE_GC
+CPPFLAGS = -Wall -pedantic -W
+
+CPPFLAGS += -DCL_SOLVER_CHECK_INTEGRITY
+
+#CPPFLAGS += -O6 -NDEBUG
+#CPPFLAGS += -O6
+#CPPFLAGS += -O2
+CPPFLAGS += -g
+
+#CPPFLAGS += -DCL_USE_HASH_MAP_AND_SET
+
+#CPPFLAGS += -DCL_TRACE
+
+#CPPFLAGS += -DCL_SOLVER_STATS
+
+#CPPFLAGS += -DCL_NO_IO
 
 #OTHER_LIBS = 
 OTHER_LIBS = ../../gc/gc.a

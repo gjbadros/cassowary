@@ -15,6 +15,8 @@
 #include "ClMap.h"
 #include "ClSet.h"
 #include "ClLinearExpression_fwd.h"
+#include <set> // Since ClTableauVarSet is always a set (never a hash_set)
+#include <vector>
 
 class ClAbstractVariable;
 class ClVariable;
@@ -22,7 +24,10 @@ class ClConstraint;
 class ClEditInfo;
 
 // For Tableau
-typedef ClSet<const ClAbstractVariable *> ClTableauVarSet;
+// ClTableauVarSet is not a ClSet, for performance reasons 
+// (Steve Wolfman discovered this, and seems to be true --02/17/99 gjb)
+// I have not observed any big performance gains from using the hashtable based containers 
+typedef set<const ClAbstractVariable *> ClTableauVarSet;  
 typedef ClSet<const ClVariable *> ClExternalVarSet;
 typedef ClMap<const ClAbstractVariable *, ClTableauVarSet > ClTableauColumnsMap;
 typedef ClMap<const ClAbstractVariable *, ClLinearExpression *> ClTableauRowsMap;

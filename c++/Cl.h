@@ -8,14 +8,13 @@
 // See ../LICENSE for legal details regarding this software
 //
 // Cl.h
+// This is the top level include file for external clients
 
 #ifndef CL_H
 #define CL_H
 
 #ifdef CL_NO_IO
-#ifndef CL_NO_TRACE /* prevent re-def warning */
-#define CL_NO_TRACE
-#endif
+#undef CL_TRACE
 #undef CL_SOLVER_STATS
 #undef CL_DEBUG_FAILURES
 #undef CL_TRACE_VERBOSE

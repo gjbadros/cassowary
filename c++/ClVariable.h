@@ -69,10 +69,8 @@ public:
   // Prints a semi-descriptive representation to the stream, using the
   // name if there is one, and otherwise the hash number of this
   // object.
-  //	EXAMPLES
-  //	  x[10.0]		-- w/ name
-  //	  x[0.0,100]		-- w/ name, bounds but no value yet
-  //	  CV#345(10.0)		-- w/o name
+  //	EXAMPLE
+  //	  [x:10.0]		-- name = "x", value = 10.0
   virtual ostream &printOn(ostream &xo) const
   {  
     xo << "[" << name() << ":" << _value << "]";

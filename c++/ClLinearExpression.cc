@@ -210,7 +210,7 @@ template <class T>
 ClGenericLinearExpression<T> &
 ClGenericLinearExpression<T>::addVariable(const ClAbstractVariable &v, T c)
 { // body largely duplicated below
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << v << ", " << c << ")" << endl;
 #endif
@@ -250,7 +250,7 @@ ClGenericLinearExpression<T>::addVariable(const ClAbstractVariable &v, T c,
                                           const ClAbstractVariable &subject,
                                           ClTableau &solver)
 { // body largely duplicated above
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << v << ", " << c << ", " << subject << ", ...)" << endl;
 #endif
@@ -278,7 +278,7 @@ ClGenericLinearExpression<T>::addVariable(const ClAbstractVariable &v, T c,
       solver.noteAddedVariable(v,subject);
       }
     }
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   cerr << "Now *this == " << *this << endl;
 #endif
   return *this;
@@ -316,7 +316,7 @@ ClGenericLinearExpression<T>::substituteOut(const ClAbstractVariable &var,
                                             const ClAbstractVariable &subject,
                                             ClTableau &solver)
 {
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   cerr << "* ClGenericLinearExpression::";
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << var << ", " << expr << ", " << subject << ", " 
@@ -352,7 +352,7 @@ ClGenericLinearExpression<T>::substituteOut(const ClAbstractVariable &var,
     typename ClVarToCoeffMap::iterator poc = _terms.find(pv);
     if (poc != _terms.end())
       { // if oldCoeff is not nil
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
       cerr << "Considering (*poc) == " << (*poc).second << "*" << *(*poc).first << endl;
 #endif
       // found it, so new coefficient is old one plus what is in *i
@@ -369,14 +369,14 @@ ClGenericLinearExpression<T>::substituteOut(const ClAbstractVariable &var,
       }
     else
       { // did not have that variable already (oldCoeff == nil)
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
       cerr << "Adding (*i) == " << (*i).second << "*" << *(*i).first << endl;
 #endif
       _terms[pv] = multiplier * c;
       solver.noteAddedVariable(*pv,subject);
       }
     }
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   cerr << "Now (*this) is " << *this << endl;
 #endif
 }
@@ -432,7 +432,7 @@ template <class T>
 T
 ClGenericLinearExpression<T>::newSubject(const ClAbstractVariable &subject)
 {
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << subject << ")" << endl;
 #endif

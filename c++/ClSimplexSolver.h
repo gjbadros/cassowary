@@ -92,7 +92,7 @@ class ClSimplexSolver : public ClTableau {
     _rows[&_objective] = new ClLinearExpression(); 
     // start out with no edit variables
     _stkCedcns.push(0);
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
     cerr << "objective row new@ " << _rows[&_objective] << endl;
 #endif
     }
@@ -312,7 +312,7 @@ class ClSimplexSolver : public ClTableau {
     { if (!FContainsVariable(v)) 
         {
         addStay(v); 
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
         cerr << "added initial stay on " << v << endl;
 #endif
         }
@@ -534,4 +534,14 @@ class ClSimplexSolver : public ClTableau {
 
 };
 
+#ifndef CL_NO_IO
+ostream &printTo(ostream &xo, const ClVarVector &varlist);
+ostream &operator<<(ostream &xo, const ClVarVector &varlist);
+
+ostream &printTo(ostream &xo, const ClConstraintToVarSetMap &mapCnToVarSet);
+ostream &operator<<(ostream &xo, const ClConstraintToVarSetMap &mapCnToVarSet);
 #endif
+
+
+#endif
+

@@ -20,7 +20,7 @@ ClTableau::~ClTableau()
   for (; it != _rows.end(); ++it)
     {
     // free the ClLinearExpression that we new-ed 
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
     cerr << "Deleting row  delete@ " << ((*it).second) << endl;
 #endif
     delete (*it).second;
@@ -50,7 +50,7 @@ ClTableau::printInternalInfo(ostream &xo) const
 void 
 ClTableau::addRow(const ClAbstractVariable &var, const ClLinearExpression &expr)
 {
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << var << ", " << expr << ")" << endl;
 #endif
@@ -71,7 +71,7 @@ ClTableau::addRow(const ClAbstractVariable &var, const ClLinearExpression &expr)
     {
     _externalRows.insert(static_cast<const ClVariable *>(&var));
     }
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   cerr << *this << endl;
 #endif
 }
@@ -83,7 +83,7 @@ ClTableau::addRow(const ClAbstractVariable &var, const ClLinearExpression &expr)
 const ClAbstractVariable *
 ClTableau::removeColumn(const ClAbstractVariable &var)
 {
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << var << ")" << endl;
 #endif
@@ -115,7 +115,7 @@ ClTableau::removeColumn(const ClAbstractVariable &var)
 ClLinearExpression *
 ClTableau::removeRow(const ClAbstractVariable &var)
 {
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << var << ")" << endl;
 #endif
@@ -144,7 +144,7 @@ ClTableau::removeRow(const ClAbstractVariable &var)
     }
 
   _rows.erase(it);
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   cerr << "- returning " << *pexpr << endl;
 #endif
   return pexpr;
@@ -158,7 +158,7 @@ ClTableau::removeRow(const ClAbstractVariable &var)
 void 
 ClTableau::substituteOut(const ClAbstractVariable &oldVar, const ClLinearExpression &expr)
 {
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   cerr << "* ClTableau::";
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << oldVar << ", " << expr << ")" << endl;

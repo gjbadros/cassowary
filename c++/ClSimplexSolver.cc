@@ -45,7 +45,7 @@ ClSimplexSolver::~ClSimplexSolver()
 ClSimplexSolver &
 ClSimplexSolver::addConstraint(const ClConstraint &cn)
 {
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << cn << ")" << endl;
 #endif
@@ -82,7 +82,7 @@ ClSimplexSolver::addConstraint(const ClConstraint &cn)
     }
   catch (ExCLRequiredFailure &error)
     {
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
     cerr << "could not add directly -- caught ExCLRequiredFailure error" << endl;
 #endif
     removeConstraint(cn);
@@ -135,7 +135,7 @@ ClSimplexSolver::addConstraint(const ClConstraint &cn)
 bool
 ClSimplexSolver::addConstraintNoException(const ClConstraint &cn)
 {
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << cn << ")" << endl;
 #endif
@@ -157,7 +157,7 @@ ClSimplexSolver::addConstraintNoException(const ClConstraint &cn)
 ClSimplexSolver &
 ClSimplexSolver::addPointStays(const vector<const ClPoint *> &listOfPoints)
 {
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
 #endif
 
@@ -194,7 +194,7 @@ ClSimplexSolver::removeEditVarsTo(int n)
     if (pcei->_index >= n)
       {
       const ClEditConstraint *pcnEdit = dynamic_cast<const ClEditConstraint *>(pcei->_pconstraint);
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
       cerr << __FUNCTION__ << ": Removing " << pcnEdit->variable() << endl;
 #endif
       qpclv.push(&pcnEdit->variable());
@@ -234,7 +234,7 @@ private:
 ClSimplexSolver &
 ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
 {
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << cnconst << ")" << endl;
 #endif
@@ -254,11 +254,15 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
   // remove any error variables from the objective function
   ClLinearExpression *pzRow = rowExpression(_objective);
 
-  ClConstraintToVarSetMap errorVarsCopy(_errorVars);
+#ifdef CL_TRACE
+  cerr << _errorVars << endl << endl;
+#endif
 
   ClConstraintToVarSetMap::iterator 
-    it_eVars = errorVarsCopy.find(&cn);
-  if (it_eVars != errorVarsCopy.end())
+    it_eVars = _errorVars.find(&cn);
+  bool fFoundErrorVar = (it_eVars != _errorVars.end());
+
+  if (fFoundErrorVar)
     {
     ClTableauVarSet &eVars = (*it_eVars).second;
     ClTableauVarSet::iterator it = eVars.begin();
@@ -289,7 +293,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
   _markerVars.erase(it_marker);
   _constraintsMarked.erase(&marker);
   // delete &marker happens below
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   cerr << "Looking to remove var " << marker << endl;
 #endif
   if (!FIsBasicVar(marker))
@@ -298,7 +302,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
     // only consider restricted basic variables
     ClTableauVarSet &col = _columns[&marker];
     ClTableauVarSet::iterator it_col = col.begin();
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
     cerr << "Must pivot -- columns are " << col << endl;
 #endif
 
@@ -312,7 +316,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
 	const ClLinearExpression *pexpr = rowExpression(*pv);
 	assert(pexpr != NULL );
 	Number coeff = pexpr->coefficientFor(marker);
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
 	cerr << "Marker " << marker << "'s coefficient in " << *pexpr << " is "
 	     << coeff << endl;
 #endif
@@ -339,7 +343,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
     // non-negativity restriction on the marker variable.)
     if (pexitVar == NULL ) 
       {
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
       cerr << "pexitVar is still NULL" << endl;
 #endif
       it_col = col.begin();
@@ -385,7 +389,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
   if (FIsBasicVar(marker))
     {
     ClLinearExpression *pexpr = removeRow(marker);
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
     cerr << "delete@ " << pexpr << endl;
 #endif
     delete pexpr;
@@ -394,7 +398,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
   // Delete any error variables.  If cn is an inequality, it also
   // contains a slack variable; but we use that as the marker variable
   // and so it has been deleted when we removed its row.
-  if (it_eVars != errorVarsCopy.end())
+  if (fFoundErrorVar)
     {
     ClTableauVarSet &eVars = (*it_eVars).second;
     ClTableauVarSet::iterator it = eVars.begin();
@@ -404,7 +408,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
       if (*pv != marker)
 	{
 	removeColumn(*pv);
-        //	delete pv;  // FIXNOWGJB: leak?  This delete causes segfault when -O2
+        // delete pv;  // FIXNOWGJB: leak?  This delete causes segfault when -O2
 	}
       }
     }
@@ -413,7 +417,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
     {
     // iterate over the stay{Plus,Minus}ErrorVars and remove those
     // variables v in those vectors that are also in set eVars
-    if (it_eVars != errorVarsCopy.end())
+    if (fFoundErrorVar)
       {
       ClTableauVarSet &eVars = (*it_eVars).second;
       _stayPlusErrorVars
@@ -431,6 +435,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
     const ClEditConstraint *pcnEdit = dynamic_cast<const ClEditConstraint *>(&cn);
     const ClVariable *pclv = &pcnEdit->variable();
     ClEditInfo *pcei = _editVarMap[pclv];
+    assert(pcei);
     ClSlackVariable *pclvEditMinus = pcei->_pclvEditMinus;
     removeColumn(*pclvEditMinus);  // FIXNOWGJB: just added this
     // because the Java version did it --02/16/99 gjb
@@ -438,7 +443,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
     _editVarMap.erase(pclv);
     }
 
-  if (it_eVars != errorVarsCopy.end())
+  if (fFoundErrorVar)
     {
     // FIXGJB
     // This code is not needed since the variables are deleted
@@ -470,7 +475,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
 bool
 ClSimplexSolver::removeConstraintNoException(const ClConstraint &cn)
 {
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << cn << ")" << endl;
 #endif
@@ -493,7 +498,7 @@ ClSimplexSolver::removeConstraintNoException(const ClConstraint &cn)
 void 
 ClSimplexSolver::reset()
 {
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "()" << endl;
 #endif
@@ -510,7 +515,7 @@ ClSimplexSolver::reset()
 void 
 ClSimplexSolver::resolve()
 { // CODE DUPLICATED ABOVE
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
 #endif
   dualOptimize();
@@ -522,7 +527,7 @@ ClSimplexSolver::resolve()
 ClSimplexSolver &
 ClSimplexSolver::suggestValue(ClVariable &v, Number x)
 {
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
 #endif
   ClVarToEditInfoMap::const_iterator itEditVarMap = _editVarMap.find(&v);
@@ -580,7 +585,7 @@ bool
 ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr,
                                            ExCLRequiredFailureWithExplanation &e)
 {
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << expr << ")" << endl;
 #endif
@@ -599,7 +604,7 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr,
   cerr << "aC = " << _artificialCounter
        << "\nDeletes = " << _cArtificialVarsDeleted << endl;
 #endif
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   cerr << __FUNCTION__ << " before addRow-s:\n"
        << (*this) << endl;
 #endif
@@ -619,7 +624,7 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr,
   // we are trying to add
   addRow(*pav,expr);
 
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   cerr << __FUNCTION__ << " after addRow-s:\n"
        << (*this) << endl;
 #endif
@@ -633,7 +638,7 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr,
   // Careful, we want to get the expression that is in
   // the tableau, not the one we initialized it with!
   ClLinearExpression *pazTableauRow = rowExpression(*paz);
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   cerr << "pazTableauRow->constant() == " << pazTableauRow->constant() << endl;
 #endif
 
@@ -734,14 +739,14 @@ void ClSimplexSolver::buildExplanation(ExCLRequiredFailureWithExplanation & e,
 bool 
 ClSimplexSolver::tryAddingDirectly(ClLinearExpression &expr) 
 {
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << expr << ")" << endl;
 #endif
   const ClAbstractVariable *psubject = chooseSubject(expr);
   if (psubject == NULL )
     {
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
     cerr << "- returning false" << endl;
 #endif
     return false;
@@ -752,7 +757,7 @@ ClSimplexSolver::tryAddingDirectly(ClLinearExpression &expr)
     substituteOut(*psubject,expr);
     }
   addRow(*psubject,expr);
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   cerr << "- returning true" << endl;
 #endif
   return true; // successfully added directly
@@ -780,7 +785,7 @@ ClSimplexSolver::tryAddingDirectly(ClLinearExpression &expr)
 const ClAbstractVariable *
 ClSimplexSolver::chooseSubject(ClLinearExpression &expr)
 {
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << expr << ")" << endl;
 #endif
@@ -918,7 +923,7 @@ ClSimplexSolver::deltaEditConstant(Number delta,
 				   const ClAbstractVariable &plusErrorVar,
 				   const ClAbstractVariable &minusErrorVar)
 {
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << delta << ", " << plusErrorVar << ", " << minusErrorVar << ")" << endl;
 #endif
@@ -972,7 +977,7 @@ ClSimplexSolver::deltaEditConstant(Number delta,
 void 
 ClSimplexSolver::dualOptimize()
 {
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "()" << endl;
 #endif
@@ -1034,7 +1039,7 @@ ClSimplexSolver::newExpression(const ClConstraint &cn,
                                ClSlackVariable *&pclvEminus,
                                Number &prevEConstant)
 {
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << cn << ")" << endl;
   cerr << "cn.isInequality() == " << cn.isInequality() << endl;
@@ -1107,7 +1112,7 @@ ClSimplexSolver::newExpression(const ClConstraint &cn,
       pexpr->setVariable(*pdummyVar,1.0);
       _markerVars[&cn] = pdummyVar.get();
       _constraintsMarked[pdummyVar.get()] = &cn;
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
       cerr << "Adding dummyVar == d" << _dummyCounter << endl;
 #endif
       }
@@ -1131,7 +1136,7 @@ ClSimplexSolver::newExpression(const ClConstraint &cn,
       // FIXGJB: pzRow->addVariable(eplus,cn.strength().symbolicWeight() * cn.weight());
       ClSymbolicWeight sw = cn.strength().symbolicWeight().times(cn.weight());
       double swCoeff = sw.asDouble();
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
       if (swCoeff == 0) 
 	{
 	cerr << "sw == " << sw << endl
@@ -1165,12 +1170,12 @@ ClSimplexSolver::newExpression(const ClConstraint &cn,
   // If necessary normalize the expression by multiplying by -1
   if (pexpr->constant() < 0)
     {
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
     cerr << "newExpression's constant is " << pexpr->constant() << ", < 0, so flipping" << endl;
 #endif
     pexpr->multiplyMe(-1);
     }
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   cerr << "- returning " << *pexpr << endl;
 #endif
   // Terrible name -- release() does *not* delete the object,
@@ -1188,7 +1193,7 @@ ClSimplexSolver::newExpression(const ClConstraint &cn,
 void 
 ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
 {
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << zVar << ")\n"
        << *this << endl;
@@ -1220,7 +1225,7 @@ ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
     // we are at an optimum
     if (objectiveCoeff >= -_epsilon)
       return;
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
     cerr << "*pentryVar == " << *pentryVar << ", "
 	 << "objectiveCoeff == " << objectiveCoeff
 	 << endl;
@@ -1236,7 +1241,7 @@ ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
     for (; it_rowvars != columnVars.end(); ++it_rowvars)
       {
       const ClAbstractVariable *pv = *it_rowvars;
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
       cerr << "Checking " << *pv << endl;
 #endif
       if (pv->isPivotable()) 
@@ -1249,7 +1254,7 @@ ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
 	  r = - pexpr->constant() / coeff;
 	  if (r < minRatio)
 	    {
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
 	    cerr << "New minRatio == " << r << endl;
 #endif
 	    minRatio = r;
@@ -1269,7 +1274,7 @@ ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
       throw ExCLInternalError(ss.str());
       }
     pivot(*pentryVar, *pexitVar);
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
     cerr << "After optimize:\n"
          << *this << endl;
 #endif
@@ -1281,7 +1286,7 @@ ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
 void 
 ClSimplexSolver::pivot(const ClAbstractVariable &entryVar, const ClAbstractVariable &exitVar)
 {
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << entryVar << ", " << exitVar << ")" << endl;
 #endif
@@ -1328,7 +1333,7 @@ ClSimplexSolver::pivot(const ClAbstractVariable &entryVar, const ClAbstractVaria
 void 
 ClSimplexSolver::resetStayConstants()
 {
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "()" << endl;
 #endif
@@ -1365,7 +1370,7 @@ ClSimplexSolver::resetStayConstants()
 void 
 ClSimplexSolver::setExternalVariables()
 {
-#ifndef CL_NO_TRACE
+#ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "()\n"
        << *this << endl;
@@ -1428,7 +1433,24 @@ printTo(ostream &xo, const ClVarVector &varlist)
 }
 
 ostream &operator<<(ostream &xo, const ClVarVector &varlist)
-{  return printTo(xo,varlist); }
+{ return printTo(xo,varlist); }
+
+
+ostream &
+printTo(ostream &xo, const ClConstraintToVarSetMap &mapCnToVarSet)
+{
+  ClConstraintToVarSetMap::const_iterator it = mapCnToVarSet.begin();
+  for ( ; it != mapCnToVarSet.end(); ++it) {
+    const ClConstraint *pcn = (*it).first;
+    const ClTableauVarSet &set = (*it).second;
+    xo << "CN: " << pcn << *pcn << ":: " << set << endl;
+  }
+  return xo;
+}
+
+ostream &operator <<(ostream &xo, const ClConstraintToVarSetMap &mapCnToVarSet)
+{ return printTo(xo,mapCnToVarSet); }
+
 
 
 ostream &
@@ -1498,3 +1520,4 @@ ClSimplexSolver::FIsConstraintSatisfied(const ClConstraint &cn) const
 #endif
   return true;
 }
+

@@ -27,10 +27,14 @@ public:
     _strength(strength),
     _weight(weight),
     _pv(0)
-    { }
+    { 
+      CtrTracer(__FUNCTION__,this);
+    }
 
   virtual ~ClConstraint()
-    { }
+    { 
+      DtrTracer(__FUNCTION__,this);
+    }
 
   // Return my linear expression.  (For linear equations, this
   // constraint represents expression=0; for linear inequalities it
