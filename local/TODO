@@ -1,5 +1,3 @@
-* test independent subgraph efficiency question
-
 * read thing lab thesis, esp. chap 4 on "paths"
 
 * warning for two suggestValue-s on same variable in a row w/o intervening resolve.
@@ -9,9 +7,6 @@
 ** better debug-printout where stay constraints rows are omitted?
 
 * squashing and exploding aliased variables when equality constrained
-
-* permit multiple beginEdit()'s and have the endEdit() only remove the appropriate edit variables
-This will fix the problem in changing the virtual desktop while moving a window in scwm.
 
 * Envelope/letter or handle/body idiom for variables, constraints, and expressions, at least
 
@@ -82,7 +77,17 @@ This will fix the problem in changing the virtual desktop while moving a window 
 ** register variables... why (other than for parsing)
 *** Ask Kim
 
-** python wrapper, guile wrapper
+** python wrapper -- get it working again
+
+* Done Stuff
+
+** permit multiple beginEdit()'s and have the endEdit() only remove the appropriate edit variables
+This will fix the problem in changing the virtual desktop while moving a window in scwm.
+  DONE Aug 1998
+
+* test independent subgraph efficiency question -- partially done Aug 1998
+
+** guile wrapper -- done July 1998
 
 ;;; Local Variables:
 ;;; eval: (outline-mode)
