@@ -17,17 +17,18 @@
 #include "ClLinearExpression.h"
 
 class ClLinearEquation : public ClLinearConstraint {
+ private: typedef ClLinearConstraint super;
+
  public:
-  
-  virtual ostream &printOn(ostream &xo) const
-    {  xo << strength() << "(" << expression() << "=0)"; }
-
- private:
-
-  ClLinearExpression my_expression;
-
-  virtual void setExpression( const ClLinearExpression &expr)
-    { my_expression = expr; }
+  // Constructor
+ ClLinearEquation(const ClLinearExpression &cle,
+		  const ClStrength strength = clsRequired(),
+		  double weight = 1.0) :
+   ClLinearConstraint(cle,strength, weight)
+   { }
+ 
+ virtual ostream &printOn(ostream &xo) const
+   {  super::printOn(xo); xo << " = 0 )"; return xo; }
 
 };
 

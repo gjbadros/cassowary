@@ -15,7 +15,11 @@
 #include "ClConstraint.h"
 #include "ClLinearExpression.h"
 
+// Add the ClLinearExpression member variable needed for both
+// ClLinearEquation and ClLinearInequality
 class ClLinearConstraint : public ClConstraint {
+ private: typedef ClLinearConstraint super;
+
  public:
 
   // Constructor

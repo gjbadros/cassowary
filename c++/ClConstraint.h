@@ -54,11 +54,7 @@ public:
   virtual double weight() const
     { return my_weight; }
 
-  virtual ostream &printOn(ostream &xo) const
-    {
-    xo << my_strength << " {" << my_weight << "} (" << expression() << " = 0 )";
-    return xo;
-    }
+  virtual ostream &printOn(ostream &xo) const = 0;
 
   friend ostream& operator<<(ostream &xos, const ClConstraint &constraint)
     { constraint.printOn(xos); return xos; }
