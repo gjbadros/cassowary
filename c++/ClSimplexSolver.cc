@@ -22,9 +22,17 @@
 // See newExpression -- all allocation is done in there
 ClSimplexSolver::~ClSimplexSolver()
 {
-   cerr << "my_slackCounter == " << my_slackCounter
-	<< "\nmy_artificialCounter == " << my_artificialCounter
-	<< "\nmy_dummyCounter == " << my_dummyCounter << endl;
+#ifndef NO_SOLVER_STATS
+  cerr << "my_slackCounter == " << my_slackCounter
+       << "\nmy_artificialCounter == " << my_artificialCounter
+       << "\nmy_dummyCounter == " << my_dummyCounter << endl;
+  cerr << "editMinusErrorVars " << my_editMinusErrorVars.size() << ", "
+       << "editPlusErrorVars " << my_editPlusErrorVars.size() << ", "
+       << "stayMinusErrorVars " << my_stayMinusErrorVars.size() << ", "
+       << "stayPlusErrorVars " << my_stayPlusErrorVars.size() << ", "
+       << "errorVars " << my_errorVars.size() << ", "
+       << "markerVars " << my_markerVars.size() << endl;
+#endif
 }
 
 // Add the constraint cn to the tableau
@@ -123,6 +131,8 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
     }
   // try to make the marker variable basic if it isn't already
   const ClAbstractVariable &marker = *((*it_marker).second);
+  my_markerVars.erase(it_marker);
+  // delete &marker happens below
 #ifndef NO_TRACE
   cerr << "Looking to remove var " << marker << endl;
 #endif
@@ -238,6 +248,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
       if (*pv != marker)
 	{
 	removeColumn(*pv);
+	delete pv;
 	}
       }
     }
@@ -301,7 +312,16 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
     }
 
   if (it_eVars != my_errorVars.end())
+    {
+    // delete the constraint's error variables
+    set<const ClAbstractVariable *>::const_iterator it_set = (it_eVars->second).begin();
+    for ( ; it_set != (it_eVars->second).end(); ++it_set)
+      {
+      delete *it_set;
+      }
     my_errorVars.erase(it_eVars);
+    }
+  delete &marker;
   optimize(my_objective);
   setExternalVariables();
   return *this;
@@ -405,11 +425,12 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
   if (pe != NULL )
     {
     // Find another variable in this row and pivot, so that av becomes parametric
-    // If there isn't another variabel in the row then 
+    // If there isn't another variable in the row then 
     // the tableau contains the equation av = 0  -- just delete av's row
     if (pe->isConstant())
       {
       delete removeRow(*pav);
+      delete pav;
       return;
       }
     const ClAbstractVariable *pentryVar = pe->anyVariable();
@@ -418,6 +439,7 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
   // now av should be parametric
   assert(rowExpression(*pav) == NULL);
   removeColumn(*pav);
+  delete pav;
   // remove the temporary objective function
   delete removeRow(*paz);
 }
