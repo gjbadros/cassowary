@@ -402,6 +402,10 @@ ClLinearExpression::changeSubject(const ClAbstractVariable &old_subject,
 Number
 ClLinearExpression::newSubject(const ClAbstractVariable &subject)
 {
+#ifndef NO_TRACE
+  Tracer TRACER(__FUNCTION__);
+  cerr << "(" << subject << ")" << endl;
+#endif
   map<const ClAbstractVariable *,Number>::iterator pnewSubject = my_terms.find(&subject);
   assert(pnewSubject != my_terms.end());
   //  assert(!clApprox((*pnewSubject).second,0.0));

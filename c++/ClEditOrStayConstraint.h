@@ -24,11 +24,11 @@ class ClEditOrStayConstraint : public ClConstraint {
     my_pvariable(&var)
     { }
   
-  const ClAbstractVariable *variable() const
-    { return my_pvariable; }
+  const ClAbstractVariable &variable() const
+    { return *my_pvariable; }
 
   ClLinearExpression expression() const
-    { ClLinearExpression expr(*my_pvariable); return expr; }
+    { return ClLinearExpression(*my_pvariable); }
 
  private:
 

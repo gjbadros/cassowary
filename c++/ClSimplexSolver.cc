@@ -694,14 +694,14 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
     // Since both of these variables are newly created we can just add
     // them to the expression (they can't be basic).
     ++my_slackCounter;
-    ClSlackVariable &slackVar = *(new ClSlackVariable("s"));
+    ClSlackVariable &slackVar = *(new ClSlackVariable(my_slackCounter,"s"));
     expr.addVariable(slackVar,-1);
     // index the constraint under its slack variable
     my_markerVars[&cn] = &slackVar;
     if (!cn.isRequired())
       {
       ++my_slackCounter;
-      ClSlackVariable &eminus = *(new ClSlackVariable("em"));
+      ClSlackVariable &eminus = *(new ClSlackVariable(my_slackCounter,"em"));
       expr.addVariable(eminus,1.0);
       // add emnius to the objective function with the appropriate weight
       ClLinearExpression *pzRow = rowExpression(my_objective);
@@ -720,7 +720,7 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
       // for this constraint.  The dummy variable is never allowed to
       // enter the basis when pivoting.
       ++my_dummyCounter;
-      ClDummyVariable &dummyVar = *(new ClDummyVariable("d"));
+      ClDummyVariable &dummyVar = *(new ClDummyVariable(my_dummyCounter,"d"));
       expr.addVariable(dummyVar,1.0);
       my_markerVars[&cn] = &dummyVar;
       }
@@ -731,8 +731,8 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
       //       expr = eplus - eminus, 
       // in other words:  expr-eplus+eminus=0
       ++my_slackCounter;
-      ClSlackVariable &eplus = *(new ClSlackVariable("ep"));
-      ClSlackVariable &eminus = *(new ClSlackVariable("em"));
+      ClSlackVariable &eplus = *(new ClSlackVariable(my_slackCounter,"ep"));
+      ClSlackVariable &eminus = *(new ClSlackVariable(my_slackCounter,"em"));
       expr.addVariable(eplus,-1.0);
       expr.addVariable(eminus,1.0);
       // index the constraint under one of the error variables
