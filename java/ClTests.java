@@ -14,7 +14,7 @@ import EDU.Washington.grad.gjb.cassowary.*;
 import java.lang.*;
 import java.util.Random;
 
-class ClTests extends CL {
+public class ClTests extends CL {
   public ClTests()
   {
     RND = new Random(123456789);
