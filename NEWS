@@ -11,8 +11,10 @@ Seattle, WA 98195-2350
 
 with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
 
-26-Feb-1999: Changes since Cassowary v0.3 (for release v0.31)
+1-Mar-1999: Changes since Cassowary v0.3 (for release v0.31)
 * Changes to C++
+** Some bug fixes -- pass ClVariable-s around by value instead of const
+& since they are now a handle class.
 ** Use a function-object for controlling lookup/creation of variables in PcnParseConstraint
 ** Fix bugs in creader.y parser (did not accept parens or division
 before).  Introduced "==" as a a synonym for "="
