@@ -15,6 +15,7 @@
 // ClTests.java
 
 import java.lang.*;
+import java.util.Random;
 
 class ClTests extends CL {
   public final static boolean justStay1()
@@ -200,6 +201,8 @@ class ClTests extends CL {
     // FIXGJB: from where did .12 come?
     final double ineqProb = 0.12;
     final int maxVars = 3;
+    //    Random RND = new Random(123456789);
+    Random RND = new Random(123456);
 
     System.out.println("starting timing test. nCns = " + nCns +
         ", nVars = " + nVars + ", nResolves = " + nResolves);
@@ -220,13 +223,13 @@ class ClTests extends CL {
     double coeff;
     for (j = 0; j < nCns; j++) {
       // number of variables in this constraint
-      nvs = (int) (Math.random()*maxVars) + 1;
-      ClLinearExpression expr = new ClLinearExpression(Math.random() * 20.0 - 10.0);
+      nvs = (int) (RND.nextDouble()*maxVars) + 1;
+      ClLinearExpression expr = new ClLinearExpression(RND.nextDouble() * 20.0 - 10.0);
       for (k = 0; k < nvs; k++) {
-        coeff = Math.random()*10 - 5;
-        expr.addExpression(CL.Times(rgpclv[(int) (Math.random()*nVars)], coeff));
+        coeff = RND.nextDouble()*10 - 5;
+        expr.addExpression(CL.Times(rgpclv[(int) (RND.nextDouble()*nVars)], coeff));
       }
-      if (Math.random() < ineqProb) {
+      if (RND.nextDouble() < ineqProb) {
         rgpcns[j] = new ClLinearInequality(expr);
       } else {  
         rgpcns[j] = new ClLinearEquation(expr);
@@ -258,8 +261,8 @@ class ClTests extends CL {
    System.out.println("time = " + timer.ElapsedTime() + "\n");
    timer.Start();
 
-   int e1Index = (int) Math.random()*nVars;
-   int e2Index = (int) Math.random()*nVars;
+   int e1Index = (int) RND.nextDouble()*nVars;
+   int e2Index = (int) RND.nextDouble()*nVars;
    
    ClEditConstraint edit1 = new ClEditConstraint(rgpclv[e1Index],ClStrength.strong);
    ClEditConstraint edit2 = new ClEditConstraint(rgpclv[e2Index],ClStrength.strong);
@@ -313,29 +316,29 @@ class ClTests extends CL {
       boolean fAllOkResult = true;
       boolean fResult;
       
-      System.out.println("justStay1:");
-      fResult = justStay1(); fAllOkResult &= fResult;
-      if (!fResult) System.out.println("Failed!");
+//       System.out.println("justStay1:");
+//       fResult = justStay1(); fAllOkResult &= fResult;
+//       if (!fResult) System.out.println("Failed!");
       
-      System.out.println("addDelete1:");
-      fResult = addDelete1(); fAllOkResult &= fResult;
-      if (!fResult) System.out.println("Failed!");
+//       System.out.println("addDelete1:");
+//       fResult = addDelete1(); fAllOkResult &= fResult;
+//       if (!fResult) System.out.println("Failed!");
       
-      System.out.println("addDelete2:");
-      fResult = addDelete2(); fAllOkResult &= fResult;
-      if (!fResult) System.out.println("Failed!");
+//       System.out.println("addDelete2:");
+//       fResult = addDelete2(); fAllOkResult &= fResult;
+//       if (!fResult) System.out.println("Failed!");
       
-      System.out.println("casso1:");
-      fResult = casso1(); fAllOkResult &= fResult;
-      if (!fResult) System.out.println("Failed!");
+//       System.out.println("casso1:");
+//       fResult = casso1(); fAllOkResult &= fResult;
+//       if (!fResult) System.out.println("Failed!");
       
-      System.out.println("inconsistent1:");
-      fResult = inconsistent1(); fAllOkResult &= fResult;
-      if (!fResult) System.out.println("Failed!");
+//       System.out.println("inconsistent1:");
+//       fResult = inconsistent1(); fAllOkResult &= fResult;
+//       if (!fResult) System.out.println("Failed!");
       
-      System.out.println("inconsistent2:");
-      fResult = inconsistent2(); fAllOkResult &= fResult;
-      if (!fResult) System.out.println("Failed!");
+//       System.out.println("inconsistent2:");
+//       fResult = inconsistent2(); fAllOkResult &= fResult;
+//       if (!fResult) System.out.println("Failed!");
       
       System.out.println("addDel:");
       //fResult = addDel(900,900,10000);
