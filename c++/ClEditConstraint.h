@@ -19,7 +19,7 @@ class ClEditConstraint : public ClEditOrStayConstraint {
      typedef ClEditOrStayConstraint super;
  public:
   
-  ClEditConstraint(const ClVariable &var,
+  ClEditConstraint(const ClVariable var,
 		   const ClStrength &strength = clsStrong(), double weight = 1.0 ) :
     ClEditOrStayConstraint(var,strength,weight)
     { }

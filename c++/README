@@ -48,7 +48,7 @@ contribute improved versions).
 The demos/ subdirectory contains the ClBoundedQuadDemo (a.k.a. QuadDemo) 
 for the wxWindows widget toolkit (cross platform, free everywhere) from:
 
-http://web.ukonline.co.uk/julian.smart/wxwin/
+http://www.wxwindows.org/
 
-(this demo is depracated, and may not build as easily at the Qt demo in
+(this demo is deprecated, and may not build as easily at the Qt demo in
 the qdemos/ subdirectory)

@@ -44,7 +44,7 @@ CPPFLAGS += -g
 CPPFLAGS += -pg
 LDFLAGS += -pg
 
-CPPFLAGS += -DCL_USE_HASH_MAP_AND_SET
+#CPPFLAGS += -DCL_USE_HASH_MAP_AND_SET
 
 #CPPFLAGS += -DCL_TRACE
 
@@ -95,7 +95,8 @@ TEST_OBJS = test-ClConstraint.o    \
 	ClLeakTest.o		   \
 	ClParseTest.o              \
 	ClSubgraphTest.o           \
-	ClTestColumns.o
+	ClTestColumns.o            \
+	QocaBench.o
 
 
 
@@ -106,7 +107,7 @@ TEST_SRCS = $(TEST_OBJS:.o=.cc)
 NT_SOURCES = $(OBJS:.o=.cpp) $(TEST_OBJS:.o=.cpp)
 
 TESTS = test-ClStrength test-ClVariable test-ClLinearExpression test-ClConstraint \
-	test-ClSimplexSolver ClTests ClBug0 ClBug1 ClLeakTest ClSubgraphTest ClParseTest
+	test-ClSimplexSolver ClTests ClBug0 ClBug1 ClLeakTest ClSubgraphTest ClParseTest QocaBench
 
 HEADERS = Cassowary.h \
 	Cl.h \
@@ -145,7 +146,7 @@ lib:    $(CL_LIBRARY)
 
 all-notests: lib shared_lib
 
-all-tests: ClParseTest ClLeakTest ClTestColumns ClSubgraphTest bugtests
+all-tests: $(TESTS)
 
 bugtests: ClBug0 ClBug1
 

@@ -26,7 +26,7 @@ addDelete1()
    ClLinearInequality c20(x,cnLEQ,20.0);
 
    ClSimplexSolver solver;
-   solver.addConstraint( ClLinearEquation( x, 100, clsWeak() ) );
+   solver.addConstraint( new ClLinearEquation( x, 100, clsWeak() ) );
     
    solver
      .addConstraint(c10)

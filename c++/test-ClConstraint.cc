@@ -23,8 +23,8 @@ main( char **, int )
   ClVariable b("b");
   ClVariable c("c");
   ClVariable w("w");
-  ClVariable x("x");
-  ClVariable y("y");
+  //  ClVariable x("x");
+  //  ClVariable y("y");
 
   ClLinearExpression cle = a * 3 + b * 2 + c + 5;
   ClLinearEquation constraint(cle);

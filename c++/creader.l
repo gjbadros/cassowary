@@ -39,6 +39,7 @@ ALPHA [A-Za-z]
 ALPHANUM [A-Za-z0-9]
 ID_OK_PUNC [-\[\]]
 ID {ALPHA}({ALPHANUM}|{ID_OK_PUNC})*
+NUMID "{"{DIGIT}+"}"
 ws [ \t\n]+
 
 %%

@@ -26,16 +26,16 @@ class ClPoint {
   ClPoint()
     { }
 
-  ClVariable &X()
+  ClVariable X()
     { return _clv_x; }
 
-  ClVariable &Y()
+  ClVariable Y()
     { return _clv_y; }
 
-  const ClVariable &X() const
+  const ClVariable X() const
     { return _clv_x; }
 
-  const ClVariable &Y() const
+  const ClVariable Y() const
     { return _clv_y; }
 
   void SetXY(Number x, Number y)

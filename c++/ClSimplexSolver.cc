@@ -522,7 +522,7 @@ ClSimplexSolver::resolve()
 }
 
 ClSimplexSolver &
-ClSimplexSolver::suggestValue(ClVariable &v, Number x)
+ClSimplexSolver::suggestValue(ClVariable v, Number x)
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -1028,8 +1028,8 @@ ClSimplexSolver::dualOptimize()
 // appropriate weight in the objective function.
 ClLinearExpression *
 ClSimplexSolver::newExpression(const ClConstraint *pcn,
-                               ClVariable &clvEplus,
-                               ClVariable &clvEminus,
+                               ClVariable clvEplus,
+                               ClVariable clvEminus,
                                Number &prevEConstant)
 {
 #ifdef CL_TRACE

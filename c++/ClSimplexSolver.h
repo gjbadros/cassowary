@@ -102,7 +102,7 @@ class ClSimplexSolver : public ClTableau {
 
 
   // Add an edit constraint for "v" with given strength
-  ClSimplexSolver &addEditVar(const ClVariable &v, const ClStrength &strength = clsStrong(),
+  ClSimplexSolver &addEditVar(const ClVariable v, const ClStrength &strength = clsStrong(),
                               double weight = 1.0 )
     { 
       ClEditConstraint *pedit = new ClEditConstraint(v, strength, weight);
@@ -112,6 +112,9 @@ class ClSimplexSolver : public ClTableau {
   ClSimplexSolver &removeEditVar(ClVariable v)
     {
       ClEditInfo *pcei = _editVarMap[v];
+      if (!pcei) {
+        throw ExCLEditMisuse("Removing edit variable that was not found");
+      }
       ClConstraint *pcnEdit = pcei->_pconstraint;
       removeConstraint(pcnEdit);
       delete pcnEdit;
@@ -122,7 +125,9 @@ class ClSimplexSolver : public ClTableau {
   // resolve() messages, after adding the appropriate edit variables
   ClSimplexSolver &beginEdit()
     {
-      assert(_editVarMap.size() != 0);
+      if (_editVarMap.size() == 0) {
+        throw ExCLEditMisuse("beginEdit called, but no edit variable");
+      }
       // may later want to do more in here
       _infeasibleRows.clear();
       resetStayConstants();
@@ -158,14 +163,14 @@ class ClSimplexSolver : public ClTableau {
   // the y stay on another.
   ClSimplexSolver &addPointStays(const vector<const ClPoint *> &listOfPoints);
 
-  ClSimplexSolver &addPointStay(const ClVariable &vx, const ClVariable &vy, double weight)
+  ClSimplexSolver &addPointStay(const ClVariable vx, const ClVariable vy, double weight)
     { addStay(vx,clsWeak(),weight); addStay(vy,clsWeak(),weight); return *this; }
 
   ClSimplexSolver &addPointStay(const ClPoint &clp, double weight);
 
 
   // Add a stay of the given strength (default to weak) of v to the tableau
-  ClSimplexSolver &addStay(const ClVariable &v,
+  ClSimplexSolver &addStay(const ClVariable v,
 			   const ClStrength &strength = clsWeak(), double weight = 1.0 )
     {
     ClStayConstraint *pcn = new ClStayConstraint(v,strength,weight); 
@@ -230,7 +235,7 @@ class ClSimplexSolver : public ClTableau {
   // and beginEdit() needs to be called before this is called.
   // The tableau will not be solved completely until
   // after resolve() has been called
-  ClSimplexSolver &suggestValue(ClVariable &v, Number x);
+  ClSimplexSolver &suggestValue(ClVariable v, Number x);
 
   // Control whether optimization and setting of external variables
   // is done automatically or not.  By default it is done
@@ -277,7 +282,7 @@ class ClSimplexSolver : public ClTableau {
     return *this;
     }
 
-  ClSimplexSolver &setEditedValue(ClVariable &v, double n)
+  ClSimplexSolver &setEditedValue(ClVariable v, double n)
     {
     if (!FContainsVariable(v))
       {
@@ -297,10 +302,10 @@ class ClSimplexSolver : public ClTableau {
 
   // Solver contains the variable if it's in either the columns
   // list or the rows list
-  bool FContainsVariable(const ClVariable &v)
+  bool FContainsVariable(const ClVariable v)
     { return columnsHasKey(v) || rowExpression(v); }
 
-  ClSimplexSolver &addVar(const ClVariable &v)
+  ClSimplexSolver &addVar(const ClVariable v)
     { if (!FContainsVariable(v)) 
         {
         addStay(v); 
@@ -467,8 +472,8 @@ class ClSimplexSolver : public ClTableau {
   // the constraint is non-required give its error variables an
   // appropriate weight in the objective function.
   ClLinearExpression *newExpression(const ClConstraint *pcn,
-                                    ClVariable &clvEplus,
-                                    ClVariable &clvEminus,
+                                    ClVariable clvEplus,
+                                    ClVariable clvEminus,
                                     Number &prevEConstant);
 
   // Minimize the value of the objective.  (The tableau should already
