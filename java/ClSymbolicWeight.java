@@ -22,9 +22,10 @@ class ClSymbolicWeight
   public ClSymbolicWeight(int cLevels)
     { 
       my_values = new double[cLevels];
-      for (int i = 0; i < cLevels; i++) {
-	my_values[i] = 0;
-      }
+      // FIXGJB: ok to assume these get initialized to 0?
+//       for (int i = 0; i < cLevels; i++) {
+// 	my_values[i] = 0;
+//       }
     }
 
   public ClSymbolicWeight(double w1, double w2, double w3)
