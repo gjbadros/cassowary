@@ -1,3 +1,27 @@
+Thu Mar 18 12:59:02 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* README, configure.in, wrappers/Makefile.in: Added
+ 	--with-python-headers configure option.
+
+Thu Mar 18 12:48:55 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* README: Added notes about what to do when a subdir build fails,
+	suggest -k by default.
+
+	* guile/Makefile.am (test): Added this target for easier way to
+	run cltests.scm.
+
+	* guile/README: Updated with notes about how to run cltests.scm. 
+
+	* java/Makefile.in: Fix tests build rule.
+
+Thu Mar 18 11:42:49 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* configure.in: Create config-inline.h at end of script.
+
+	* c++/Makefile.am: Do not have rule for building config-inline.h; 
+	let configure script do that.
+
 Thu Mar 18 11:05:27 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* c++/*.h: Use #include config-inline.h incantation so that header 
