@@ -23,6 +23,8 @@
 #include <strstream>
 #include <queue>
 
+#include "config.h"
+
 char *szCassowaryVersion = VERSION;
 
 
