@@ -1,3 +1,13 @@
+Mon Jul 26 10:19:35 1999  Greg Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile.am (libcassowary_la_SOURCES): Remove redundant
+	listing of ClFD* files from this target.
+
+Mon Jul 26 09:41:09 1999  Greg Badros  <gjb@cs.washington.edu>
+
+	* c++/Cl.h: Include ClConstraint.h, since cnLT, etc., need to be
+	defined for ClReader.y
+
 Mon Jul 26 09:22:11 1999  Greg Badros  <gjb@cs.washington.edu>
 
 	* acconfig.h, configure.in: Use CL_ prefix for BUILD_FD_SOLVER and
