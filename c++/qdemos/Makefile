@@ -1,12 +1,10 @@
-####### This section was automatically generated from
-#######    /scratch/gjb/qt-1.32/Makefile for building on
-#######    linux-gcc-shared on Fri Jan 23 16:00:50 PST 1998
+# $Id$
+# Be sure your environment variable QTDIR points to the
+# right directory (as instructed by the Qt documentation)
 
 EGCSDIR=/uns/egcs
-QTDIR=/uns/qt
 
 INCDIR = $(QTDIR)/include
-# CFLAGS = -pg -O2 -fno-strength-reduce -Wall -W -I/usr/X11R6/include -I.. -DCL_NO_TRACE
 CFLAGS = -g -fno-strength-reduce -Wall -W -I/usr/X11R6/include -I.. -DCL_NO_TRACE
 LIBCFLAGS = -fPIC
 YACCCFLAGS = -Wno-unused -Wno-parentheses

@@ -1,0 +1,4 @@
+This has been tested with qt-1.42, and earlier versions were tested
+against qt-1.3x.  You will have to edit the Makefiles to point at the
+your installation directories.
+

@@ -1,16 +1,15 @@
-####### This section was automatically generated from
-#######    /scratch/gjb/qt-1.32/Makefile for building on
-#######    linux-gcc-shared on Fri Jan 23 16:00:50 PST 1998
+# $Id$
+# Be sure your environment variable QTDIR points to the
+# right directory (as instructed by the Qt documentation)
 
 EGCSDIR=/uns/egcs
-
-INCDIR = /scratch/gjb/qt-1.32/include
-CFLAGS = -pg -O2 -fno-strength-reduce -Wall -W -I/usr/X11R6/include -I.. -DCL_NO_TRACE
+INCDIR = $(QTDIR)/include
+CFLAGS = -g -O2 -fno-strength-reduce -Wall -W -I/usr/X11R6/include -I.. -DCL_NO_TRACE
 LIBCFLAGS = -fPIC
 YACCCFLAGS = -Wno-unused -Wno-parentheses
-LFLAGS = -pg -L$(EGCSDIR)/lib -L/scratch/gjb/qt-1.32/lib -lqt -L.. -lcassowary
+LFLAGS = -pg -L$(EGCSDIR)/lib -L$(QTDIR)/lib -lqt -L.. -lcassowary
 CC = g++
-MOC = /scratch/gjb/qt-1.32/bin/moc
+MOC = $(QTDIR)/bin/moc
 SHELL =	/bin/sh
 
 ####### End of automatically generated section
