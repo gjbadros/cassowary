@@ -1,3 +1,25 @@
+Tue Mar 16 19:26:23 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* configure.in, acconfig.h: Better autoconf support, including
+	several --enable options.  Added acconfig.h to support autoheader
+	doing the right thing in making config.h.in.
+
+Tue Mar 16 19:22:50 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSimplexSolver.cc, c++/Cassowary.h: Include "config.h" from
+ 	here, not from Cassowary.h (still not right-- problem is scwm gets 
+	the wrong config.h.  Maybe config.h should be in ..?
+
+Tue Mar 16 19:21:06 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* java/README: Added note about common error when CLASSPATH is wrong.
+
+Tue Mar 16 15:51:15 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/Cassowary.h: #include "config.h"
+
+	* c++/ClSimplexSolver.cc: Use VERSION to init szCassowaryVersion.
+
 Tue Mar 16 12:44:33 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* c++/**: Updated function names to always start with an uppercase 

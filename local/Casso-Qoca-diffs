@@ -19,12 +19,12 @@ Performance (on bowman):
 Prefix:
  Casso: Cl == Constraint Library (on both filenames and classes)
  QOCA: Qc (on filenames only, not classes)
-*** namespace support in egcs yet?
+*** namespace support in egcs yet?  **nope, not in 1.1.1 (i.e., egcs-2.91.60) --03/16/99 gjb
 
 Naming convention:
  Casso: mixed initial caps (original are lowercase), often Hungarian
  QOCA: Initial caps on all fns.
-*** Casso: use initial caps
+*** Casso: use initial caps **done --03/16/99 gjb
 
 Top level include:
  Casso: "Cl.h"
@@ -35,10 +35,11 @@ Top level include:
 Casso: ClVariable x(NAME, VALUE) among others
 QOCA: CFloatHandle x(stay_weight, edit_weight, desired_value)
 -> Casso's weights are attached to constraints, not variables!
-*** Casso: Add ClVariable::ClVariable(char *name, double value, 
+*** Casso: Add ClVariable::ClVariable(string name, double value, 
 	                              const ClStrength &stay_strength, const ClStrength &editStrength)
 *** Casso: Add list of solver that the variable is in, or keep the error value with the variable
     (instead of in the Solver)
+*** Qoca: Reorder arguments to CFloatHandle, and add name argument.
 
 Casso: Must addStay-s explicitly
 QOCA: stay strength implicit in creation of the variable via CFloatHandle ctr,
