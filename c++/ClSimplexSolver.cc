@@ -171,7 +171,7 @@ ClSimplexSolver::removeEditVarsTo(int n)
   while (true)
     {
     ClVarToConstraintAndIndexMap::const_iterator it = _editVarMap.begin();
-    if (it == _editVarMap.end() || _editVarMap.size() == n)
+    if (it == _editVarMap.end() || _editVarMap.size() == static_cast<unsigned int>(n))
       break;
     const ClConstraintAndIndex *pcai = (*it).second;
     assert(pcai);
