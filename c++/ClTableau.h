@@ -18,16 +18,22 @@
 #include "ClLinearExpression.h"
 
 class ClTableau {
+
  public:
-  // v has been removed from the linear expression for subject
-  // update column cross indices
-  void noteRemovedVariable(const ClVariable &v, const ClVariable &subject);
+  // Variable v has been removed from an expression.  If the
+  // expression is in a tableau the corresponding basic variable is
+  // subject (or if subject is nil then it's in the objective function).
+  // Update the column cross-indices.
+  void noteRemovedVariable(const ClVariable &v, const ClVariable &subject)
+    {  my_columns[v].erase(subject); }
 
   // v has been added to the linear expression for subject
   // update column cross indices
-  void noteAddedVariable(const ClVariable &v, const ClVariable &subject);
+  void noteAddedVariable(const ClVariable &v, const ClVariable &subject)
+    { my_columns[v].insert(subject); }
 
  protected:
+  // Constructor -- want to start with empty objects so not much to do
   ClTableau()
     { }
   

@@ -26,27 +26,6 @@ ClTableau::addRow(const ClVariable &var, const ClLinearExpression &expr)
     }
 }
 
-// v has been removed from the linear expression for subject
-// update column cross indices 
-// Variable v has been removed from an expression.  If the
-// expression is in a tableau the corresponding basic variable is
-// subject (or if subject is nil then it's in the objective function).
-// Update the column cross-indices.
-
-void 
-ClTableau::noteRemovedVariable(const ClVariable &v, const ClVariable &subject)
-{
-  my_columns[v].erase(subject);
-}
-
-// v has been added to the linear expression for subject
-// update column cross indices
-void 
-ClTableau::noteAddedVariable(const ClVariable &v, const ClVariable &subject)
-{
-  my_columns[v].insert(subject);
-}
-
 // Remove var from the tableau -- remove the column cross indices for var
 // and remove var from every expression in rows in which v occurs
 // Remove the parametric variable var, updating the appropriate column and row entries.

@@ -10,13 +10,6 @@
 
 #include "ClSimplexSolver.h"
 
-ClSimplexSolver::ClSimplexSolver() :
-  slackCounter(0),
-  artificialCounter(0),
-  dummyCounter(0)
-{ }
-
-
 // Add the constraint cn to the tableau
 void 
 ClSimplexSolver::addConstraint(const ClLinearConstraint &cn)

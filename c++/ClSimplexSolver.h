@@ -20,7 +20,12 @@ class ClVariable;
 
 class ClSimplexSolver : public ClTableau {
  public:
-  ClSimplexSolver()
+
+  // Constructor
+  ClSimplexSolver() :
+    slackCounter(0),
+    artificialCounter(0),
+    dummyCounter(0)
     { }
   
   // Add constraints so that lower<=var<=upper.  (nil means no  bound.)
@@ -174,11 +179,11 @@ class ClSimplexSolver : public ClTableau {
 
   // give error variables for a non required constraint,
   // maps to ClSlackVariable-s
-  map<ClConstraint, ClVariable> my_errorVars;
+  map<ClConstraint &, ClVariable> my_errorVars;
 
   // Return a lookup table giving the marker variable for each
   // constraint (used when deleting a constraint).
-  map<ClConstraint, ClVariable> my_markerVars;
+  map<ClConstraint &, ClVariable> my_markerVars;
 
   ClLinearExpression my_objective;
 
