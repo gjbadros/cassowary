@@ -12,8 +12,10 @@ public final class PlaceBtnsActionListener implements ActionListener {
 
   // Reference to DrawPanel
   DrawPanel drawPanel;
-
+  
   public void actionPerformed(ActionEvent e) {
+    ImageButton ib = (ImageButton) e.getSource();
+    ib.repaint();
 
     if ( e.getActionCommand().equals("P1") ) {
       drawPanel.createNewCC("LineCC");
@@ -40,6 +42,9 @@ public final class PlaceBtnsActionListener implements ActionListener {
 
 /*
  * $Log$
+ * Revision 1.2  1998/05/09 00:30:35  gjb
+ * Remove cr-s
+ *
  * Revision 1.1  1998/05/09 00:11:16  gjb
  * Added
  *

@@ -14,6 +14,8 @@ public final class ConstraintBtnsActionListener implements ActionListener {
   DrawPanel drawPanel;
 
   public void actionPerformed(ActionEvent e) {
+    ImageButton ib = (ImageButton) e.getSource();
+    ib.repaint();
 
     if ( e.getActionCommand().equals("C1") ) {
       // Create a new anchor constraint
@@ -75,6 +77,9 @@ public final class ConstraintBtnsActionListener implements ActionListener {
 
 /*
  * $Log$
+ * Revision 1.2  1998/05/09 00:30:30  gjb
+ * Remove cr-s
+ *
  * Revision 1.1  1998/05/09 00:11:12  gjb
  * Added
  *
