@@ -190,3 +190,9 @@ AC_OUTPUT(
 	wrappers/Makefile \
 	docs/Makefile \
 	)
+
+# Not create config-inline.h for the C++ header files to include
+# (needed in case another package uses autoconf and includes the Cassowary
+#  header files -- w/o this hack the two config.h files and their defs would
+#  conflict and cause at least warnings, and maybe really bad things --03/18/99 gjb)
+grep '#define CL_' c++/cassowary/config.h > c++/cassowary/config-inline.h || true

@@ -138,3 +138,4 @@ ClReader.cc.h: ClReader.cc
 
 config-inline.h: config.h
 	grep '#define CL_' $^ > $@ || true
+
