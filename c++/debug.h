@@ -21,9 +21,9 @@
 #include <map>
 #include <set>
 #include <vector>
+#include "ClLinearExpression_fwd.h"
 
 class ClAbstractVariable;
-class ClLinearExpression;
 
 ostream &operator<<(ostream &xo, const set<const ClAbstractVariable *> & varset);
 
