@@ -305,7 +305,7 @@ ClSimplexSolver::addWithArtificialVariable(const ClLinearExpression &expr)
   // If not, the original constraint was not satisfiable
   if (!clApprox(azRow.constant(),0.0))
     {
-    throw new ExCLRequiredFailure;
+    throw ExCLRequiredFailure();
     }
 
   // see if av is a basic variable
@@ -466,7 +466,7 @@ ClSimplexSolver::chooseSubject(ClLinearExpression &expr)
   // the subject negative."
   if (!clApprox(expr.constant(),0.0))
     {
-    throw new ExCLRequiredFailure;
+    throw ExCLRequiredFailure();
     }
   if (coeff > 0.0)
     {
@@ -574,7 +574,7 @@ ClSimplexSolver::dualOptimize()
 	  }
 	if (ratio == MAXDOUBLE)
 	  {
-	  throw new ExCLInternalError;
+	  throw ExCLInternalError();
 	  }
 	pivot(*pentryVar,exitVar);
 	}
@@ -766,7 +766,7 @@ ClSimplexSolver::optimize(const ClVariable &zVar)
     // application.
     if (minRatio == MAXDOUBLE)
       {
-      throw new ExCLInternalError;
+      throw ExCLInternalError();
       }
     pivot(entryVar, exitVar);
     }
@@ -808,7 +808,7 @@ ClSimplexSolver::resetEditConstants(const vector<Number> &newEditConstants)
 {
   if (newEditConstants.size() != my_editPlusErrorVars.size())
     { // number of edit constants doesn't match the number of edit error variables
-    throw new ExCLInternalError;
+    throw ExCLInternalError();
     }
   vector<Number>::const_iterator itNew = newEditConstants.begin();
   vector<Number>::iterator itPrev = my_prevEditConstants.begin();

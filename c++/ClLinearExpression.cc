@@ -92,7 +92,7 @@ ClLinearExpression::times(const ClLinearExpression &expr) const
   else
     {
     // neither are constants, so we'd introduce non-linearity
-    throw new ExCLNonlinearExpression;
+    throw ExCLNonlinearExpression();
     }
 }
 
@@ -122,7 +122,7 @@ ClLinearExpression::divide(Number x) const
 {
   if (clApprox(x,0.0))
     {
-    throw new ExCLNonlinearExpression;
+    throw ExCLNonlinearExpression();
     }
   else
     {
@@ -137,7 +137,7 @@ ClLinearExpression::divide(const ClLinearExpression &expr) const
 {
   if (!expr.isConstant())
     {
-    throw new ExCLNonlinearExpression;
+    throw ExCLNonlinearExpression();
     }
   else
     {
@@ -153,7 +153,7 @@ ClLinearExpression::divFrom(const ClLinearExpression &expr) const
 {
   if (!isConstant() || clApprox(my_constant,0.0))
     {
-    throw new ExCLNonlinearExpression;
+    throw ExCLNonlinearExpression();
     }
   else
     {
@@ -269,7 +269,7 @@ ClLinearExpression::anyVariable() const
 {
   if (isConstant())
     {
-    throw new ExCLInternalError();
+    throw ExCLInternalError();
     }
   return (*my_terms.begin()).first;
 }
@@ -365,7 +365,8 @@ Number
 ClLinearExpression::newSubject(const ClVariable &subject)
 {
   map<ClVariable,Number>::iterator pnewSubject = my_terms.find(subject);
-  assert(pnewSubject != my_terms.end() && !clApprox((*pnewSubject).second,0.0));
+  assert(pnewSubject != my_terms.end());
+  //  assert(!clApprox((*pnewSubject).second,0.0));
   Number reciprocal = 1.0 / (*pnewSubject).second;
   my_terms.erase(pnewSubject);
   multiplyMe(-reciprocal);
