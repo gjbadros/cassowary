@@ -3,6 +3,7 @@ Makefile
 Makefile.in
 aclocal.m4
 cassowary-*.tar.gz
+cassowary-nofd-*.tar.gz
 cassowary-config
 cassowary-nofd.spec
 cassowary-nofd.spec2
