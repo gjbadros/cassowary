@@ -119,6 +119,9 @@ public:
   friend bool operator<(const ClVariable &cl1, const ClVariable &cl2)
     { return cl1.my_name < cl2.my_name; }
 
+  friend bool operator==(const ClVariable &cl1, const ClVariable &cl2)
+    { return cl1.my_name == cl2.my_name; }
+
 private:
   void initializeFor(ClVariableKind kind)
     {
