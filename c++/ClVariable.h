@@ -28,6 +28,11 @@ public:
     my_value(value)
     { }
 
+  ClVariable(Number value) :
+    ClAbstractVariable(""),
+    my_value(value)
+    { }
+
   ClVariable(long number, char *prefix, Number value = 0.0) :
     ClAbstractVariable(number,prefix),
     my_value(value)
@@ -78,6 +83,11 @@ public:
     { my_value = value; return value; }
 
 private:
+  // Copy constructor left undefined since we want to
+  // outlaw passing by value!  Will get a link error if you
+  // try to use
+  ClVariable(const ClVariable &);
+
   Number my_value;
 };
 
