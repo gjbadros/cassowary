@@ -3,14 +3,15 @@
 #######    linux-gcc-shared on Fri Jan 23 16:00:50 PST 1998
 
 EGCSDIR=/uns/egcs
-QTDIR=/home/gjb/qt
+QTDIR=/scratch/gjb/qt
 
 INCDIR = $(QTDIR)/include
 # CFLAGS = -pg -O2 -fno-strength-reduce -Wall -W -I/usr/X11R6/include -I.. -DCL_NO_TRACE
 CFLAGS = -g -fno-strength-reduce -Wall -W -I/usr/X11R6/include -I.. -DCL_NO_TRACE
 LIBCFLAGS = -fPIC
 YACCCFLAGS = -Wno-unused -Wno-parentheses
-LFLAGS = -pg -L$(EGCSDIR)/lib -L$(QTDIR)/lib -lqt -L.. -lcassowary-optimized
+CASSO_LIBRARY = ../libcassowary.a
+LFLAGS = -pg -L$(EGCSDIR)/lib -L$(QTDIR)/lib -lqt -L.. -lcassowary
 CC = g++
 MOC = $(QTDIR)/bin/moc
 SHELL =	/bin/sh
@@ -54,7 +55,7 @@ TARGET	=	QuadDemo
 
 all: $(TARGET) 
 
-$(TARGET): $(OBJECTS) $(OBJMOC)
+$(TARGET): $(OBJECTS) $(OBJMOC) $(CASSO_LIBRARY)
 	$(CC) $(OBJECTS) $(OBJMOC) -o $(TARGET) $(LFLAGS) 
 
 moc: $(SRCMOC)
