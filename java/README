@@ -1,3 +1,7 @@
+See ../README for general information and generic instructions.
+Also see ../COPYRIGHT for legalese regarding use of this distribution.
+Also see ../IMPORTANT for some important notes that you mustn't overlook.
+
 Cassowary/Java was developed using the JDK 1.1.3 port for Linux.
 
 Before trying to build Cassowary/Java, be sure to include the directory
