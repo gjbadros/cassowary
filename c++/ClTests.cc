@@ -348,6 +348,8 @@ addDel(int nCns = 900, int nVars = 900, int nResolves = 10000)
   // FIXGJB end = Timer.now();
   cout << "done adding constraints [" << cExceptions << " exceptions]" << endl;
   cout << "time = " << timer.ElapsedTime() << "\n" << endl;
+  cout << "time per cn = " << timer.ElapsedTime()/nCns << "\n" << endl;
+  cout << "time per actual cn = " << timer.ElapsedTime()/(nCns - cExceptions) << "\n" <<endl;
   timer.Start();
 
   int e1Index = int(UniformRandom()*nVars);
@@ -377,6 +379,7 @@ addDel(int nCns = 900, int nVars = 900, int nResolves = 10000)
 
   cout << "done resolves -- now removing constraints" << endl;
   cout << "time = " << timer.ElapsedTime() << "\n" <<endl;
+  cout << "time per resolve = " << timer.ElapsedTime()/nResolves << "\n" <<endl;
   solver.removeConstraint(edit1);
   solver.removeConstraint(edit2);
   
@@ -395,6 +398,8 @@ addDel(int nCns = 900, int nVars = 900, int nResolves = 10000)
   //      << "remove time per cn"
   cout << "done removing constraints and addDel timing test" << endl;
   cout << "time = " << timer.ElapsedTime() << "\n" <<endl;
+  cout << "time per cn = " << timer.ElapsedTime()/nCns << "\n" <<endl;
+  cout << "time per actual cn = " << timer.ElapsedTime()/(nCns - cExceptions) << "\n" <<endl;
 
   timer.Start();
 
@@ -403,7 +408,7 @@ addDel(int nCns = 900, int nVars = 900, int nResolves = 10000)
 
 
 int
-main( char **, int  )
+main( int argc, char **argv )
 {
   try 
     {
@@ -421,7 +426,21 @@ main( char **, int  )
     RUN_TEST(casso1);
     RUN_TEST(inconsistent1);
     RUN_TEST(inconsistent2);
-    RUN_TEST(addDel);
+
+    int cns = 900, vars = 900, resolves = 10000;
+
+    if (argc > 1)
+      cns = atoi(argv[1]);
+
+    if (argc > 2)
+      vars = atoi(argv[2]);
+
+    if (argc > 3)
+      resolves = atoi(argv[3]);
+
+    cout << "addDel" << ":" << endl; \
+    fResult = addDel(cns,vars,resolves); fAllOkResult &= fResult; \
+    if (!fResult) cout << "Failed!" << endl;
   
 #undef RUN_TEST
     return (fAllOkResult? 0 : 255);
