@@ -146,7 +146,13 @@ class ClLinearInequality : public ClLinearConstraint {
 #endif
 
   virtual bool FIsSatisfied() const
-    { return (_expression.Evaluate() >= 0); }
+    { 
+      Number v = _expression.Evaluate();
+      if (_fStrictInequality) 
+        return (v > 0);
+      else 
+        return (v >= 0);
+    }
 
  private:
 

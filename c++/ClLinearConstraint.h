@@ -44,7 +44,7 @@ class ClLinearConstraint : public ClConstraint {
     { return _expression; }
 
   // do not do this if *this is inside a solver
-  ChangeConstant(Number constant)
+  void ChangeConstant(Number constant)
     { _expression.Set_constant(constant); }
 
  protected:

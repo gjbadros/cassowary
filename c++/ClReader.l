@@ -42,7 +42,7 @@ istream *pxi_lexer;
 DIGIT [0-9]
 ALPHA [A-Za-z]
 ALPHANUM [A-Za-z0-9]
-ID_OK_PUNC [-\[\]]
+ID_OK_PUNC [-_\[\]]
 RO_ANNOTATION "?"
 ID {ALPHA}({ALPHANUM}|{ID_OK_PUNC})*({RO_ANNOTATION})?
 NUMID "{"{DIGIT}+"}"
