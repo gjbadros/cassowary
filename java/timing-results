@@ -1,4 +1,42 @@
+Kazmig w/o kaffe 2/13/98:
 
+addDel:
+starting timing test. nCns = 900, nVars = 900, nResolves = 10000
+done building data structures
+time = 21.798
+done adding constraints [122 exceptions]
+time = 51.39
+
+indices 695, 4
+done creating edit constraints -- about to start resolves
+time = 0.099
+
+done resolves -- now removing constraints
+time = 284.586
+
+done removing constraints and addDel timing test
+time = 67.382
+
+----
+
+Kazmig w/ kaffe 2/13/98:
+
+addDel:
+starting timing test. nCns = 900, nVars = 900, nResolves = 10000
+done building data structures
+time = 15.628
+done adding constraints [122 exceptions]
+time = 43.986
+
+indices 695, 4
+done creating edit constraints -- about to start resolves
+time = 0.085
+
+done resolves -- now removing constraints
+time = 173.099
+
+done removing constraints and addDel timing test
+time = 52.611
 
 --------------------
 OLD VERSIONS THAT USED traceprint(foo.toString()), and thus generated lots
