@@ -43,6 +43,9 @@ class Set {
 
   public Object clone()
     { return new Set((Hashtable) hash.clone()); }
+
+  public Enumeration elements()
+    { return hash.elements(); }
   
   private Hashtable hash;
 }
