@@ -1,6 +1,6 @@
-package edu.washington.grad.will;
+ java_cup.runtime.*;
 
-import java_cup.runtime.*;
+import EDU.Washington.grad.gjb.cassowary.*;
 
 parser code
 {:
@@ -10,9 +10,9 @@ parser code
 	}
 :}
 
-terminal GEQ, GT, LEQ, LT, EQ, PLUS, MINUS, UMINUS, TIMES, DIVIDE, LPAREN, RPAREN;
+terminal GEQ, LEQ, EQ, PLUS, MINUS, UMINUS, TIMES, DIVIDE, LPAREN, RPAREN;
 terminal Double NUMBER;
-terminal VARIABLE;
+terminal String VARIABLE;
 
 non terminal constraint, equation, inequality, expr;
 
@@ -20,21 +20,20 @@ precedence left TIMES, DIVIDE;
 precedence left PLUS, MINUS;
 precedence left UMINUS;
 
-constraint	::=	  equation:a			{: RESULT = a;						:}
-			| inequality:a			{: RESULT = a;						:};
+constraint	::=	  equation:a			{: RESULT = a;													:}
+			| inequality:a			{: RESULT = a;													:};
 
-equation	::=	  expr:a EQ expr:b		{: RESULT = new ClLinearEquation(a, b);			:};
+equation	::=	  expr:a EQ expr:b		{: RESULT = (Object)(new ClLinearEquation	((ClLinearExpression) a, (ClLinearExpression) b));		:};
 
-inequality	::=	  expr:a GEQ expr:b		{: RESULT = new ClLinearInequality(a, CL.GEQ, b); 	:}
-			| expr:a LEQ expr:b		{: RESULT = new ClLinearInequality(a, CL.LEQ, b); 	:}
-			| expr:a LT  expr:b		{: RESULT = new ClLinearInequality(a, CL.LT,  b); 	:}
-			| expr:a GT  expr:b		{: RESULT = new ClLinearInequality(a, CL.GT,  b);	:};
+inequality	::=	  expr:a GEQ expr:b		{: RESULT = (Object)(new ClLinearInequality	((ClLinearExpression) a, CL.GEQ, (ClLinearExpression) b)); 	:}
+			| expr:a LEQ expr:b		{: RESULT = (Object)(new ClLinearInequality	((ClLinearExpression) a, CL.LEQ, (ClLinearExpression) b)); 	:};
 
-expr		::=	  NUMBER:a			{: RESULT = new ClLinearExpression(a);			:}
-			| VARIABLE:a			{: RESULT = new ClLinearExpression(a);			:}
-			| expr:a PLUS expr:b		{: RESULT = new ClLinearExpression(CL.Plus(a, b));	:}
-			| expr:a MINUS expr:b		{: RESULT = new ClLinearExpression(CL.Minus(a, b));	:}
-			| expr:a TIMES expr:b		{: RESULT = new ClLinearExpression(CL.Times(a, b));	:}
-			| expr:a DIVIDE expr:b		{: RESULT = new ClLinearExpression(CL.Divide(a, b));	:}
-			| MINUS expr:a			{: RESULT = new ClLinearExpression(CL.Times(-1, a);	:} %prec UMINUS
-			| LPAREN expr:a RPAREN		{: RESULT = a;						:};
+expr		::=	  NUMBER:a			{: RESULT = (Object)(a);											:}
+			| VARIABLE:a			{: RESULT = (Object)(new ClVariable(a));									:}
+			| expr:a PLUS expr:b		{: RESULT = (Object)(CL.Plus	((ClLinearExpression) a	, (ClLinearExpression) b));				:}
+			| expr:a MINUS expr:b		{: RESULT = (Object)(CL.Minus	((ClLinearExpression) a	, (ClLinearExpression) b));				:}
+			| expr:a TIMES expr:b		{: RESULT = (Object)(CL.Times	((ClLinearExpression) a	, (ClLinearExpression) b));				:}
+			| expr:a DIVIDE expr:b		{: RESULT = (Object)(CL.Divide	((ClLinearExpression) a	, (ClLinearExpression) b));				:}
+			| MINUS expr:a			{: RESULT = (Object)(CL.Times	(-1			, (ClLinearExpression) a));				:}
+			%prec UMINUS
+			| LPAREN expr:a RPAREN		{: RESULT = a;													:};
