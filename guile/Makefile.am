@@ -32,10 +32,11 @@ libconstraints_a_LIBADD = $(top_builddir)/c++/libcassowary.a
 # also, guile doesn't load the module properly when I do this
 #libconstraints_la_LIBADD = -lcassowary
 
+
 # The horrid ugly hack that seems to work
 # It'd be nice to be able to mention the name of 
 # a library from the directory instead of this
-libconstraints_la_LIBADD = $(top_builddir)/c++/*.lo
+libconstraints_la_LIBADD = $(top_builddir)/c++/*.lo @GTL_LIB@
 
 include_HEADERS = \
 	cassowary_scm.h \
