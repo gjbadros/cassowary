@@ -1020,6 +1020,21 @@ CL_PROC(cl_constraint_weight, "cl-constraint-weight", 1, 0, 0,
 }
 #undef FUNC_NAME
 
+
+CL_PROC(cl_constraint_is_in_solver_p, "cl-constraint-is-in-solver?", 1, 0, 0,
+          (SCM constraint))
+  /** Return #t if CONSTRAINT has been added to a solver, #f otherwise. */
+#define FUNC_NAME s_cl_constraint_is_in_solver_p
+{
+  if (!FIsClConstraintScm(constraint)) {
+    scm_wrong_type_arg(FUNC_NAME,1,constraint);
+  }
+  ClConstraint *pconstraint = PcnFromScm(constraint);
+  return SCM_BOOL_FromF(pconstraint->FIsInSolver());
+}
+#undef FUNC_NAME
+
+
 CL_PROC(cl_constraint_change_strength_x, "cl-constraint-change-strength!", 2, 0, 0,
           (SCM constraint, SCM strength))
   /** Set CONSTRAINT's strength to STRENGTH.
