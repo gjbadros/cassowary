@@ -21,20 +21,20 @@
 #include <string>
 #include <map>
 
-  string current;  /* Global to help in debugging/error messages */
+string current;  /* Global to help in debugging/error messages */
 
-  struct yyarg {
-    yyarg(istream &xi, StringToVarMap &mapVars) : _xi(xi), _mapVars(mapVars) {};
+struct yyarg {
+  yyarg(istream &xi, StringToVarMap &mapVars) : _xi(xi), _mapVars(mapVars) {};
 
-    istream & _xi;
-    ClConstraint * _pcn;
-    StringToVarMap &_mapVars;
-  };
+  istream & _xi;
+  ClConstraint * _pcn;
+  StringToVarMap &_mapVars;
+};
 
 #define YYPARSE_PARAM parm
 #define YYLEX_PARAM parm
 
-  %}
+%}
 
 
 /* Bison Declarations */
@@ -49,9 +49,9 @@
 }
 
 %{
-  int yylex(YYSTYPE * lvalp, void * YYLEX_PARAM);
-  void yyerror(const char * s);
-  %}
+int yylex(YYSTYPE * lvalp, void * YYLEX_PARAM);
+void yyerror(const char * s);
+%}
 
 %token <num> NUM
 %token <pclv> VAR
