@@ -16,8 +16,8 @@
 // let ClSimplexSolver worry about deleting the variables
 ClTableau::~ClTableau()
 {
-  ClTableauRowsMap::iterator it = my_rows.begin();
-  for (; it != my_rows.end(); ++it)
+  ClTableauRowsMap::iterator it = _rows.begin();
+  for (; it != _rows.end(); ++it)
     {
     // free the ClLinearExpression that we new-ed 
 #ifndef CL_NO_TRACE
@@ -32,12 +32,12 @@ ostream &
 ClTableau::printInternalInfo(ostream &xo) const
 {
   xo << "Tableau Information:" << endl
-     << "Rows: " << my_rows.size()
-     << " (= " << my_rows.size() - 1 << " constraints)" << endl
-     << "Columns: " << my_columns.size() << endl
-     << "Infeasible Rows: " << my_infeasibleRows.size() << endl
-     << "External basic variables: " << my_externalRows.size() << endl
-     << "External parameteric variables: " << my_externalParametricVars.size() << endl;
+     << "Rows: " << _rows.size()
+     << " (= " << _rows.size() - 1 << " constraints)" << endl
+     << "Columns: " << _columns.size() << endl
+     << "Infeasible Rows: " << _infeasibleRows.size() << endl
+     << "External basic variables: " << _externalRows.size() << endl
+     << "External parameteric variables: " << _externalParametricVars.size() << endl;
   return xo;
 }
 
@@ -54,18 +54,18 @@ ClTableau::addRow(const ClAbstractVariable &var, const ClLinearExpression &expr)
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << var << ", " << expr << ")" << endl;
 #endif
-  my_rows[&var] = const_cast<ClLinearExpression *>(&expr);
+  _rows[&var] = const_cast<ClLinearExpression *>(&expr);
   ClVarToNumberMap::const_iterator it = expr.terms().begin();
   // for each variable in expr, add var to the set of rows which have that variable
   // in their expression
   for (; it != expr.terms().end(); ++it)
     {
     const ClAbstractVariable *pv = (*it).first;
-    my_columns[pv].insert(&var);
+    _columns[pv].insert(&var);
     }
   if (var.isExternal())
     {
-    my_externalRows.insert(static_cast<const ClVariable *>(&var));
+    _externalRows.insert(static_cast<const ClVariable *>(&var));
     }
 #ifndef CL_NO_TRACE
   cerr << *this << endl;
@@ -83,23 +83,23 @@ ClTableau::removeColumn(const ClAbstractVariable &var)
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << var << ")" << endl;
 #endif
-  ClTableauColumnsMap::iterator it_var = my_columns.find(&var);
-  assert(it_var != my_columns.end());
+  ClTableauColumnsMap::iterator it_var = _columns.find(&var);
+  assert(it_var != _columns.end());
   ClTableauVarSet &varset = (*it_var).second;
   // remove the rows with the variables in varset
   ClTableauVarSet::iterator it = varset.begin();
   for (; it != varset.end(); ++it)
     {
     const ClAbstractVariable *pv = (*it);
-    ClVarToNumberMap &terms = my_rows[pv]->terms();
+    ClVarToNumberMap &terms = _rows[pv]->terms();
     terms.erase(terms.find(&var));
     }
   if (var.isExternal())
     {
-    my_externalRows.erase(static_cast<const ClVariable *>(&var));
-    my_externalParametricVars.erase(static_cast<const ClVariable *>(&var));
+    _externalRows.erase(static_cast<const ClVariable *>(&var));
+    _externalParametricVars.erase(static_cast<const ClVariable *>(&var));
     }
-  my_columns.erase(it_var);
+  _columns.erase(it_var);
 }
 
 // Remove the basic variable v from the tableau row v=expr
@@ -111,24 +111,24 @@ ClTableau::removeRow(const ClAbstractVariable &var)
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << var << ")" << endl;
 #endif
-  ClTableauRowsMap::iterator it = my_rows.find(&var);
-  assert(it != my_rows.end());
+  ClTableauRowsMap::iterator it = _rows.find(&var);
+  assert(it != _rows.end());
   ClLinearExpression *pexpr = (*it).second;
   ClVarToNumberMap &terms = pexpr->terms();
   ClVarToNumberMap::iterator it_term = terms.begin();
   for (; it_term != terms.end(); ++it_term)
     {
     const ClAbstractVariable *pv = (*it_term).first;
-    my_columns[pv].erase(&var);
+    _columns[pv].erase(&var);
     }
 
-  my_infeasibleRows.erase(&var);
+  _infeasibleRows.erase(&var);
 
   if (var.isExternal())
     {
-    my_externalRows.erase(static_cast<const ClVariable *>(&var));
+    _externalRows.erase(static_cast<const ClVariable *>(&var));
     }
-  my_rows.erase(it);
+  _rows.erase(it);
 #ifndef CL_NO_TRACE
   cerr << "- returning " << *pexpr << endl;
 #endif
@@ -149,26 +149,26 @@ ClTableau::substituteOut(const ClAbstractVariable &oldVar, const ClLinearExpress
   cerr << (*this) << endl;
 #endif
 
-  ClTableauColumnsMap::iterator it_oldVar = my_columns.find(&oldVar);
-  assert(it_oldVar != my_columns.end());
+  ClTableauColumnsMap::iterator it_oldVar = _columns.find(&oldVar);
+  assert(it_oldVar != _columns.end());
   ClTableauVarSet &varset = (*it_oldVar).second;
   ClTableauVarSet::iterator it = varset.begin();
   for (; it != varset.end(); ++it)
     {
     const ClAbstractVariable *pv = (*it);
-    ClLinearExpression *prow = my_rows[pv];
+    ClLinearExpression *prow = _rows[pv];
     prow->substituteOut(oldVar,expr,*pv,*this);
     if (pv->isRestricted() && prow->constant() < 0.0)
       {
-      my_infeasibleRows.insert(pv);
+      _infeasibleRows.insert(pv);
       }
     }
   if (oldVar.isExternal())
     {
-    my_externalRows.insert(static_cast<const ClVariable *>(&oldVar));
-    my_externalParametricVars.erase(static_cast<const ClVariable *>(&oldVar));
+    _externalRows.insert(static_cast<const ClVariable *>(&oldVar));
+    _externalParametricVars.erase(static_cast<const ClVariable *>(&oldVar));
     }
-  my_columns.erase(it_oldVar);
+  _columns.erase(it_oldVar);
 }
 
 
@@ -252,15 +252,15 @@ ostream &
 ClTableau::printOn(ostream &xo) const
 {
   xo << "Tableau:\n" 
-     << my_rows << endl;
+     << _rows << endl;
   xo << "Columns:\n" 
-     << my_columns << endl;
+     << _columns << endl;
   xo << "Infeasible rows: " 
-     << my_infeasibleRows << endl;
+     << _infeasibleRows << endl;
   xo << "External basic variables: "
-     << my_externalRows << endl;
+     << _externalRows << endl;
   xo << "External parametric variables: "
-     << my_externalParametricVars << endl;
+     << _externalParametricVars << endl;
   return xo;
 }
 

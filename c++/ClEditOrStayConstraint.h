@@ -23,22 +23,22 @@ class ClEditOrStayConstraint : public ClConstraint {
   ClEditOrStayConstraint(const ClVariable &var,
 			 const ClStrength &strength = clsRequired(), double weight = 1.0 ) :
     ClConstraint(strength,weight),
-    my_pvariable(&var)
+    _pvariable(&var)
     { }
   
   const ClVariable &variable() const
-    { return *my_pvariable; }
+    { return *_pvariable; }
 
   ClLinearExpression expression() const
-    { return ClLinearExpression(*my_pvariable,-1,my_pvariable->value()); }
+    { return ClLinearExpression(*_pvariable,-1,_pvariable->value()); }
 
  private:
 
   void setVariable( const ClVariable &v)
-    { my_pvariable = &v; }
+    { _pvariable = &v; }
 
   /// instance variables
-  const ClVariable *my_pvariable;
+  const ClVariable *_pvariable;
 
 
 };

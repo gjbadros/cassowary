@@ -20,17 +20,17 @@ class ClVariable : public ClAbstractVariable {
 public:
   ClVariable(string name = "", Number value = 0.0) :
     ClAbstractVariable(name),
-    my_value(value)
+    _value(value)
     { }
 
   ClVariable(Number value) :
     ClAbstractVariable(""),
-    my_value(value)
+    _value(value)
     { }
 
   ClVariable(long number, char *prefix, Number value = 0.0) :
     ClAbstractVariable(number,prefix),
-    my_value(value)
+    _value(value)
     { }
 
   // Return true if this a dummy variable (used as a marker variable
@@ -63,19 +63,19 @@ public:
   //	  CV#345(10.0)		-- w/o name
   virtual ostream &printOn(ostream &xo) const
   {  
-    xo << "[" << name() << ":" << my_value << "]";
+    xo << "[" << name() << ":" << _value << "]";
     return xo;
   }
   
   // Return the current value I hold.
   Number value() const
-    { return my_value; }
+    { return _value; }
 
   void set_value(Number value)
-    { my_value = value; }
+    { _value = value; }
 
   Number operator=(Number value)
-    { my_value = value; return value; }
+    { _value = value; return value; }
 
 private:
   // Copy constructor left undefined since we want to
@@ -83,7 +83,7 @@ private:
   // try to use
   ClVariable(const ClVariable &);
 
-  Number my_value;
+  Number _value;
 };
 
 typedef ClVariable *PClVariable;

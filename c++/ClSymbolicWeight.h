@@ -94,11 +94,11 @@ class ClSymbolicWeight {
 
   double asDouble() const
     {
-    vector<double>::const_reverse_iterator i = my_values.rbegin();
+    vector<double>::const_reverse_iterator i = _values.rbegin();
     double sum  = 0;
     double factor = 1;
     double multiplier = 1000;
-    for ( ; i != my_values.rend(); ++i) 
+    for ( ; i != _values.rend(); ++i) 
       {
       sum += *i * factor;
       factor *= multiplier;
@@ -108,12 +108,12 @@ class ClSymbolicWeight {
 
   ostream &printOn(ostream &xo) const
     { 
-    vector<double>::const_iterator i = my_values.begin();
-    if (i == my_values.end())
+    vector<double>::const_iterator i = _values.begin();
+    if (i == _values.end())
       return xo;
 
     xo << *i;
-    for (++i; i != my_values.end(); ++i) 
+    for (++i; i != _values.end(); ++i) 
       {
       xo << "," << *i;
       }
@@ -121,7 +121,7 @@ class ClSymbolicWeight {
     }
 
   int cLevels() const
-    { return my_values.size(); }
+    { return _values.size(); }
 
   // FIXGJB: use a template function to generate these automatically
   friend ostream& operator<<(ostream &xos, const ClSymbolicWeight &clsw)
@@ -131,21 +131,21 @@ class ClSymbolicWeight {
   friend bool clApprox(const ClSymbolicWeight &cl1, const ClSymbolicWeight &cl2);
 
  private:
-  vector<Number> my_values;
+  vector<Number> _values;
 
   void push_back(double d) 
-    { my_values.push_back(d); }
+    { _values.push_back(d); }
 
 };
 
 inline bool clApprox(const ClSymbolicWeight &cl, Number n)
 {
-  vector<Number>::const_iterator it = cl.my_values.begin();
+  vector<Number>::const_iterator it = cl._values.begin();
   if (!clApprox(*it,n))
     return false;
 
   ++it;
-  for (; it != cl.my_values.end(); ++it)
+  for (; it != cl._values.end(); ++it)
     {
     if (!clApprox(*it,0))
       return false;
@@ -156,17 +156,17 @@ inline bool clApprox(const ClSymbolicWeight &cl, Number n)
 
 inline bool clApprox(const ClSymbolicWeight &cl1, const ClSymbolicWeight &cl2)
 {
-  vector<Number>::const_iterator it1 = cl1.my_values.begin();
-  vector<Number>::const_iterator it2 = cl2.my_values.begin();
+  vector<Number>::const_iterator it1 = cl1._values.begin();
+  vector<Number>::const_iterator it2 = cl2._values.begin();
 
-  for (; it1 != cl1.my_values.end() && it2 != cl2.my_values.end(); 
+  for (; it1 != cl1._values.end() && it2 != cl2._values.end(); 
        ++it1, ++it2)
     {
     if (!clApprox(*it1,*it2))
       return false;
     }
 
-  if (it1 == cl1.my_values.end() && it2 == cl2.my_values.end())
+  if (it1 == cl1._values.end() && it2 == cl2._values.end())
     return true;
 
   return false;

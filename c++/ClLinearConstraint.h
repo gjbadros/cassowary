@@ -29,21 +29,21 @@ class ClLinearConstraint : public ClConstraint {
 		     const ClStrength strength = clsRequired(),
 		     double weight = 1.0) :
     ClConstraint(strength, weight),
-    my_expression(cle)
+    _expression(cle)
     { }
 
   // Return my linear expression.  (For linear equations, this
   // constraint represents expression=0; for linear inequalities it
   // represents expression>=0.)
   ClLinearExpression expression() const
-    { return my_expression; }
+    { return _expression; }
 
  protected:
 
-  ClLinearExpression my_expression;
+  ClLinearExpression _expression;
 
   virtual void setExpression( const ClLinearExpression &expr)
-    { my_expression = expr; }
+    { _expression = expr; }
 
 };
 

@@ -38,7 +38,7 @@ class ClLinearEquation : public ClLinearConstraint {
 		  const ClStrength strength = clsRequired(),
 		  double weight = 1.0) :
    ClLinearConstraint(cle,strength,weight)
-   { my_expression.addVariable(clv,-1.0); }
+   { _expression.addVariable(clv,-1.0); }
 
  // ClLinearEquation(expr,var,...) is   var == expr
  ClLinearEquation(const ClLinearExpression &cle,
@@ -46,7 +46,7 @@ class ClLinearEquation : public ClLinearConstraint {
 		  const ClStrength strength = clsRequired(),
 		  double weight = 1.0) :
    ClLinearConstraint(cle,strength,weight)
-   { my_expression.addVariable(clv,-1.0); }
+   { _expression.addVariable(clv,-1.0); }
 
  // ClLinearEquation(expr,expr,...) is   expr == expr
  ClLinearEquation(const ClLinearExpression &cle1,
@@ -54,7 +54,7 @@ class ClLinearEquation : public ClLinearConstraint {
 		  const ClStrength strength = clsRequired(),
 		  double weight = 1.0) :
    ClLinearConstraint(cle1,strength,weight)
-   { my_expression.addExpression(cle2,-1.0); }
+   { _expression.addExpression(cle2,-1.0); }
  
  virtual ostream &printOn(ostream &xo) const
    {  super::printOn(xo); xo << " = 0 )"; return xo; }

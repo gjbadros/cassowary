@@ -19,14 +19,14 @@
 class ClAbstractVariable {
 public:
   ClAbstractVariable(string name = "") :
-    my_name(name)
+    _name(name)
     { 
     iVariableNumber++;
     if (name.length() == 0)
       {
       char sz[16];
       sprintf(sz,"v%ld",iVariableNumber);
-      my_name = string(sz);
+      _name = string(sz);
       }
     }
 
@@ -35,7 +35,7 @@ public:
     auto_ptr<char> pch (new char[16+strlen(prefix)]);
     iVariableNumber++;
     sprintf(pch.get(),"%s%ld",prefix,varnumber);
-    my_name = string(pch.get());
+    _name = string(pch.get());
     }
 
   virtual ~ClAbstractVariable()
@@ -43,11 +43,11 @@ public:
 
   // Return the name of the variable
   string name() const
-    { return my_name; }
+    { return _name; }
 
   // Set the name of the variable
   void setName(string const &name)
-    { my_name = name; }
+    { _name = name; }
 
   // Return true if this a dummy variable (used as a marker variable
   // for required equality constraints).  Such variables aren't
@@ -93,7 +93,7 @@ public:
     }
 
 private:
-  string my_name;
+  string _name;
 
   static long iVariableNumber;
 };

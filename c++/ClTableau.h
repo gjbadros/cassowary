@@ -39,9 +39,9 @@ class ClTableau {
     Tracer TRACER(__FUNCTION__);
     cerr << "(" << v << ", " << subject << ")" << endl;
 #endif
-    ClTableauVarSet::const_iterator it = my_columns[&v].find(&subject);
-    assert(it != my_columns[&v].end());
-    my_columns[&v].erase(it); 
+    ClTableauVarSet::const_iterator it = _columns[&v].find(&subject);
+    assert(it != _columns[&v].end());
+    _columns[&v].erase(it); 
     }
 
   // v has been added to the linear expression for subject
@@ -52,10 +52,10 @@ class ClTableau {
     Tracer TRACER(__FUNCTION__);
     cerr << "(" << v << ", " << subject << ")" << endl;
 #endif
-    my_columns[&v].insert(&subject); 
+    _columns[&v].insert(&subject); 
     if (v.isExternal())
       {
-      my_externalParametricVars.insert(static_cast<const ClVariable *>(&v));
+      _externalParametricVars.insert(static_cast<const ClVariable *>(&v));
       }
     }
 
@@ -93,22 +93,22 @@ class ClTableau {
   void substituteOut(const ClAbstractVariable &oldVar, const ClLinearExpression &expr);
 
   ClTableauColumnsMap columns()
-    { return my_columns; }  
+    { return _columns; }  
 
   ClTableauRowsMap rows()
-    { return my_rows; }  
+    { return _rows; }  
 
   // return true iff the variable subject is in the columns keys
   bool columnsHasKey(const ClAbstractVariable &subject) const
     { 
-    ClTableauColumnsMap::const_iterator i = my_columns.find(&subject);
-    return (i != my_columns.end());
+    ClTableauColumnsMap::const_iterator i = _columns.find(&subject);
+    return (i != _columns.end());
     }
 
   ClLinearExpression *rowExpression(const ClAbstractVariable &v)
     {
-    ClTableauRowsMap::const_iterator i = my_rows.find(&v);
-    if (i != my_rows.end())
+    ClTableauRowsMap::const_iterator i = _rows.find(&v);
+    if (i != _rows.end())
       return (*i).second;
     else
       return NULL;
@@ -116,24 +116,24 @@ class ClTableau {
 
   // private: FIXGJB: can I improve the encapsulation?
 
-  // my_columns is a mapping from variables which occur in expressions to the
+  // _columns is a mapping from variables which occur in expressions to the
   // set of basic variables whose expressions contain them
   // i.e., it's a mapping from variables in expressions (a column) to the 
   // set of rows that contain them
-  ClTableauColumnsMap my_columns;
-  ClTableauRowsMap my_rows;
+  ClTableauColumnsMap _columns;
+  ClTableauRowsMap _rows;
 
   // the ordered collection of basic variables that have infeasible rows
   // (used when reoptimizing)
-  ClTableauVarSet my_infeasibleRows;
+  ClTableauVarSet _infeasibleRows;
 
   // the set of rows where the basic variable is external
   // this was added to the C++ version to reduce time in setExternalVariables()
-  ClExternalVarSet my_externalRows;
+  ClExternalVarSet _externalRows;
 
   // the set of external variables which are parametric
   // this was added to the C++ version to reduce time in setExternalVariables()
-  ClExternalVarSet my_externalParametricVars;
+  ClExternalVarSet _externalParametricVars;
 
 };
 

@@ -21,8 +21,8 @@ class ClConstraint {
 public:
 
   ClConstraint(const ClStrength &strength = clsRequired(), double weight = 1.0 ) :
-    my_strength(strength),
-    my_weight(weight)
+    _strength(strength),
+    _weight(weight)
     { }
 
   virtual ~ClConstraint()
@@ -44,16 +44,16 @@ public:
     { return false; }
 
   virtual bool isRequired() const
-    { return my_strength.isRequired(); }
+    { return _strength.isRequired(); }
 
   virtual bool isStayConstraint() const
     { return false; }
 
   virtual ClStrength strength() const
-    { return my_strength; }
+    { return _strength; }
 
   virtual double weight() const
-    { return my_weight; }
+    { return _weight; }
 
   virtual ostream &printOn(ostream &xo) const = 0;
 
@@ -64,15 +64,15 @@ public:
 private:
 
   void setStrength( const ClStrength &strength )
-    { my_strength = strength; }
+    { _strength = strength; }
 
   void setWeight( double weight )
-    { my_weight = weight; }
+    { _weight = weight; }
 
   /// instance variables
-  ClStrength my_strength;
+  ClStrength _strength;
 
-  double my_weight;
+  double _weight;
 };
 
 typedef ClConstraint *PClConstraint;

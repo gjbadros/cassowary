@@ -39,8 +39,8 @@ class ClGenericLinearExpression  {
 
   // copy ctr
   ClGenericLinearExpression(const ClGenericLinearExpression<T> &expr) :
-    my_constant(expr.my_constant),
-    my_terms(expr.my_terms)
+    _constant(expr._constant),
+    _terms(expr._terms)
     { }
 
   virtual ~ClGenericLinearExpression();
@@ -115,7 +115,7 @@ class ClGenericLinearExpression  {
   // contains a term involving v, add c to the existing coefficient.
   // If the new coefficient is approximately 0, delete v.
   ClGenericLinearExpression<T> &setVariable(const ClAbstractVariable &v, T c)
-    {assert(c != 0.0);  my_terms[&v] = c; return *this; }
+    {assert(c != 0.0);  _terms[&v] = c; return *this; }
 
   // Add a term c*v to this expression.  If the expression already
   // contains a term involving v, add c to the existing coefficient.
@@ -181,29 +181,29 @@ class ClGenericLinearExpression  {
   //     v1*c1 + v2*c2 + .. + vn*cn + c
   T coefficientFor(const ClAbstractVariable &var) const
     { 
-    map<const ClAbstractVariable *, T>::const_iterator it = my_terms.find(&var);
-    if (it != my_terms.end())
+    map<const ClAbstractVariable *, T>::const_iterator it = _terms.find(&var);
+    if (it != _terms.end())
       return (*it).second;
     return 0.0;
     }
 
   T constant() const
-    { return my_constant; }
+    { return _constant; }
 
   void set_constant(T c)
-    { my_constant = c; }
+    { _constant = c; }
 
   const ClVarToCoeffMap &terms() const
-    { return my_terms; }
+    { return _terms; }
 
   ClVarToCoeffMap &terms() 
-    { return my_terms; }
+    { return _terms; }
 
   void incrementConstant(T c)
-    { my_constant += c; }
+    { _constant += c; }
 
   bool isConstant() const
-    { return my_terms.size() == 0; }
+    { return _terms.size() == 0; }
 
   virtual ostream &printOn(ostream &xo) const;
 
@@ -278,8 +278,8 @@ class ClGenericLinearExpression  {
 
  private:
 
-  T my_constant;
-  ClVarToCoeffMap my_terms;
+  T _constant;
+  ClVarToCoeffMap _terms;
 
 };
 

@@ -68,7 +68,7 @@ addDelete1()
     
    ClLinearInequality c10(x,cnLEQ,10.0);
    ClLinearInequality c20(x,cnLEQ,20.0);
-    
+   cerr << "next" << endl;
    solver
      .addConstraint(c10)
      .addConstraint(c20);
@@ -415,6 +415,9 @@ main( int argc, char **argv )
     bool fAllOkResult = true;
     bool fResult;
     
+    // seed the random number generator for reproducible results
+    srand(123456789);
+
 #define RUN_TEST(x) \
     cout << #x << ":" << endl; \
     fResult = x(); fAllOkResult &= fResult; \
@@ -448,6 +451,6 @@ main( int argc, char **argv )
     } 
   catch (...) 
     {
-    cerr << "Random exception!" << endl;
+    cerr << "exception!" << endl;
     }
 }

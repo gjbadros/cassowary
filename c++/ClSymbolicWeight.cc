@@ -16,19 +16,19 @@
 //template vector<double> &vector<double>::operator =(const vector<double> &);
 
 ClSymbolicWeight::ClSymbolicWeight(int cLevels, double value) :
-  my_values(cLevels, value)
+  _values(cLevels, value)
 { }
 
 ClSymbolicWeight::ClSymbolicWeight(double w1, double w2, double w3)
 {
-  my_values.push_back(w1);
-  my_values.push_back(w2);
-  my_values.push_back(w3);
-  assert(my_values.size() == 3);
+  _values.push_back(w1);
+  _values.push_back(w2);
+  _values.push_back(w3);
+  assert(_values.size() == 3);
 }
 
 ClSymbolicWeight::ClSymbolicWeight(const vector<double> &weights) :
-  my_values(weights)
+  _values(weights)
 { }
 
 ClSymbolicWeight &
@@ -42,8 +42,8 @@ ClSymbolicWeight::zero()
 ClSymbolicWeight &
 ClSymbolicWeight::negated()
 {
-  vector<double>::iterator it = my_values.begin();
-  for (; it != my_values.end(); ++it)
+  vector<double>::iterator it = _values.begin();
+  for (; it != _values.end(); ++it)
     {
     *it = -*it;
     }
@@ -53,8 +53,8 @@ ClSymbolicWeight::negated()
 ClSymbolicWeight &
 ClSymbolicWeight::multiplyMe(Number n)
 {
-  vector<double>::iterator it = my_values.begin();
-  for (; it != my_values.end(); ++it)
+  vector<double>::iterator it = _values.begin();
+  for (; it != _values.end(); ++it)
     {
     *it *= n;
     }
@@ -67,8 +67,8 @@ ClSymbolicWeight::divideBy(Number n) const
 {
   assert(n!=0);
   ClSymbolicWeight clsw(0);
-  vector<double>::const_iterator i = my_values.begin();
-  for (; i != my_values.end(); ++i)
+  vector<double>::const_iterator i = _values.begin();
+  for (; i != _values.end(); ++i)
     {
     clsw.push_back(*i / n);
     }
@@ -80,9 +80,9 @@ ClSymbolicWeight::addtoMe(const ClSymbolicWeight &cl)
 {
   assert(cl.cLevels() == cLevels());
 
-  vector<double>::iterator i1 = my_values.begin();
-  vector<double>::const_iterator i2 = cl.my_values.begin();
-  for (; i1 != my_values.end(); ++i1, ++i2)
+  vector<double>::iterator i1 = _values.begin();
+  vector<double>::const_iterator i2 = cl._values.begin();
+  for (; i1 != _values.end(); ++i1, ++i2)
     {
     *i1 += *i2;
     }
@@ -95,9 +95,9 @@ ClSymbolicWeight::subtract(const ClSymbolicWeight &cl) const
   assert(cl.cLevels() == cLevels());
 
   ClSymbolicWeight clsw(0);
-  vector<double>::const_iterator i1 = my_values.begin();
-  vector<double>::const_iterator i2 = cl.my_values.begin();
-  for (; i1 != my_values.end(); ++i1, ++i2)
+  vector<double>::const_iterator i1 = _values.begin();
+  vector<double>::const_iterator i2 = cl._values.begin();
+  for (; i1 != _values.end(); ++i1, ++i2)
     {
     clsw.push_back(*i1 - *i2);
     }
@@ -108,35 +108,35 @@ ClSymbolicWeight::subtract(const ClSymbolicWeight &cl) const
 bool 
 ClSymbolicWeight::lessThan(const ClSymbolicWeight &cl) const
 {
-  return my_values < cl.my_values;
+  return _values < cl._values;
 }
 
 bool 
 ClSymbolicWeight::lessThanOrEqual(const ClSymbolicWeight &cl) const
 {
-  return my_values <= cl.my_values;
+  return _values <= cl._values;
 }
 
 bool 
 ClSymbolicWeight::equal(const ClSymbolicWeight &cl) const
 {
-  return my_values == cl.my_values;
+  return _values == cl._values;
 }
 
 bool 
 ClSymbolicWeight::greaterThan(const ClSymbolicWeight &cl) const
 {
-  return my_values > cl.my_values;
+  return _values > cl._values;
 }
 
 bool 
 ClSymbolicWeight::greaterThanOrEqual(const ClSymbolicWeight &cl) const
 {
-  return my_values >= cl.my_values;
+  return _values >= cl._values;
 }
 
 bool 
 ClSymbolicWeight::isNegative() const
 {
-  return my_values < zero().my_values;
+  return _values < zero()._values;
 }

@@ -20,27 +20,26 @@
 class ClPoint {
  public:
   ClPoint(Number x, Number y)
-    : clv_x(x), clv_y(y)
+    : _clv_x(x), _clv_y(y)
     { }
 
   ClPoint()
     { }
 
-
   ClVariable &X()
-    { return clv_x; }
+    { return _clv_x; }
 
   ClVariable &Y()
-    { return clv_y; }
+    { return _clv_y; }
 
   const ClVariable &X() const
-    { return clv_x; }
+    { return _clv_x; }
 
   const ClVariable &Y() const
-    { return clv_y; }
+    { return _clv_y; }
 
   void SetXY(Number x, Number y)
-    { clv_x = x; clv_y = y; }
+    { _clv_x = x; _clv_y = y; }
 
   Number Xvalue() const
     { return X().value(); }
@@ -49,8 +48,8 @@ class ClPoint {
     { return Y().value(); }
 
  private:
-  ClVariable clv_x;
-  ClVariable clv_y;
+  ClVariable _clv_x;
+  ClVariable _clv_y;
 
   friend ostream &operator<<(ostream &xo, const ClPoint &clp);
   
@@ -59,7 +58,7 @@ class ClPoint {
 inline ostream &
 operator<<(ostream &xo, const ClPoint &clp)
 {
-  xo << "(" << clp.clv_x << ", " << clp.clv_y << ")";
+  xo << "(" << clp._clv_x << ", " << clp._clv_y << ")";
   return xo;
 }
 

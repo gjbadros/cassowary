@@ -40,12 +40,12 @@ class ClLinearInequality : public ClLinearConstraint {
    { 
    if (op == cnGEQ)
      {
-     my_expression.multiplyMe(-1.0);
-     my_expression.addVariable(clv,1.0);
+     _expression.multiplyMe(-1.0);
+     _expression.addVariable(clv,1.0);
      }
    else // op == cnLEQ
      {
-     my_expression.addVariable(clv,-1.0);
+     _expression.addVariable(clv,-1.0);
      }
    }
 
@@ -60,12 +60,12 @@ class ClLinearInequality : public ClLinearConstraint {
    { 
    if (op == cnLEQ)
      {
-     my_expression.multiplyMe(-1.0);
-     my_expression.addVariable(clv,1.0);
+     _expression.multiplyMe(-1.0);
+     _expression.addVariable(clv,1.0);
      }
    else // op == cnGEQ
      {
-     my_expression.addVariable(clv,-1.0);
+     _expression.addVariable(clv,-1.0);
      }
    }
 #endif
@@ -80,12 +80,12 @@ class ClLinearInequality : public ClLinearConstraint {
    { 
    if (op == cnGEQ)
      {
-     my_expression.multiplyMe(-1.0);
-     my_expression.addExpression(cle1);
+     _expression.multiplyMe(-1.0);
+     _expression.addExpression(cle1);
      }
    else // op == cnLEQ
      {
-     my_expression.addExpression(cle1,-1.0);
+     _expression.addExpression(cle1,-1.0);
      }
    }
 
@@ -100,12 +100,12 @@ class ClLinearInequality : public ClLinearConstraint {
    { 
    if (op == cnGEQ)
      {
-     my_expression.multiplyMe(-1.0);
-     my_expression.addVariable(clv1,1.0);
+     _expression.multiplyMe(-1.0);
+     _expression.addVariable(clv1,1.0);
      }
    else // op == cnLEQ
      {
-     my_expression.addVariable(clv1,-1.0);
+     _expression.addVariable(clv1,-1.0);
      }
    }
 #endif

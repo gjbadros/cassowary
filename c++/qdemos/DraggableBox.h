@@ -24,10 +24,10 @@
 
 class DraggableBox {
  public:
-  DraggableBox(Number x = 0.0, Number y = 0.0, int width_ = 6, int height_ = 6) :
-    center(x,y),
-    height(height_),
-    width(width_)
+  DraggableBox(Number x = 0.0, Number y = 0.0, int width = 6, int height = 6) :
+    _center(x,y),
+    _height(height),
+    _width(width)
     { }
 
   void DrawMe(QPainter *qpainter) const
@@ -37,45 +37,45 @@ class DraggableBox {
 
   void SetCenter(Number x, Number y)
     {
-    center.X() = x;
-    center.Y() = y;
+    _center.X() = x;
+    _center.Y() = y;
     }
 
-  void SetSize(int width_, int height_)
+  void SetSize(int width, int height)
     {
-    width = width_;
-    height = height_;
+    _width = width;
+    _height = height;
     }
 
   QRect QRectangle() const 
     {
-    QRect qr =  QRect(CenterX()-width/2, CenterY()-height/2, width, height);
+    QRect qr =  QRect(CenterX()-_width/2, CenterY()-_height/2, _width, _height);
     return qr;
     }
 
   Number CenterX() const
-    { return center.Xvalue(); }
+    { return _center.Xvalue(); }
 
   Number CenterY() const
-    { return center.Yvalue(); }
+    { return _center.Yvalue(); }
 
   ClVariable &X() 
-    { return center.X(); }
+    { return _center.X(); }
 
   ClVariable &Y() 
-    { return center.Y(); }
+    { return _center.Y(); }
 
   const ClVariable &X() const
-    { return center.X(); }
+    { return _center.X(); }
 
   const ClVariable &Y() const
-    { return center.Y(); }
+    { return _center.Y(); }
 
   const ClPoint &CenterPt() const
-    { return center; }
+    { return _center; }
 
   ClPoint &CenterPt()
-    { return center; }
+    { return _center; }
 
   QPoint QCenterPt() const
     { return QPoint(CenterX(),CenterY()); }
@@ -86,15 +86,15 @@ class DraggableBox {
   friend ostream &operator<<(ostream &xo, const DraggableBox &db);
 
  protected:
-  ClPoint center;
-  int height, width;
+  ClPoint _center;
+  int _height, _width;
   
 };
 
 inline ostream &
 operator<<(ostream &xo, const DraggableBox &db)
 {
-  xo << db.center << "[" << db.width << ", " << db.height << "]";
+  xo << db._center << "[" << db._width << ", " << db._height << "]";
   return xo;
 }
 
