@@ -5,7 +5,7 @@
  Original Smalltalk Implementation by Alan Borning
  This C++ Implementation by Greg J. Badros, <gjb@cs.washington.edu>
  http://www.cs.washington.edu/homes/gjb
- (C) 1998 Alan Borning and Greg Badros
+ (C) 1998, 1999 Alan Borning and Greg Badros
  See ../COPYRIGHT for legal details regarding this software
 
  creader.y
@@ -23,16 +23,9 @@
 
 string current;  /* Global to help in debugging/error messages */
 
-struct yyarg {
-  yyarg(istream &xi, StringToVarMap &mapVars) : _xi(xi), _mapVars(mapVars) {};
-
-  istream & _xi;
-  ClConstraint * _pcn;
-  StringToVarMap &_mapVars;
-};
-
-#define YYPARSE_PARAM parm
-#define YYLEX_PARAM parm
+/* Get yyparse, yylex to have an extra argument (type void *) */
+#define YYPARSE_PARAM cl_parse_data
+#define YYLEX_PARAM cl_parse_data
 
 %}
 
@@ -49,8 +42,8 @@ struct yyarg {
 }
 
 %{
-int yylex(YYSTYPE * lvalp, void * YYLEX_PARAM);
-void yyerror(const char * s);
+int yylex(YYSTYPE *lvalp, void *YYLEX_PARAM);
+void yyerror(const char *sz);
 %}
 
 %token <num> NUM
@@ -69,8 +62,8 @@ void yyerror(const char * s);
 %%
 /* Grammar Rules */
 
-constraint:     equation  { $$ = $1; ((yyarg*)YYPARSE_PARAM)->_pcn = $1; }
-            | inequality  { $$ = $1; ((yyarg*)YYPARSE_PARAM)->_pcn = $1; }
+constraint:     equation  { $$ = $1; ((ClParseData*)YYPARSE_PARAM)->_pcn = $1; }
+            | inequality  { $$ = $1; ((ClParseData*)YYPARSE_PARAM)->_pcn = $1; }
 ;
 
 equation:  expr '=' expr  { $$ = new ClLinearEquation(*$1, *$3);   }
@@ -92,16 +85,18 @@ expr:     NUM                { $$ = new ClLinearExpression($1);        }
 
 %%
 
+#ifdef USE_CRUMMY_LEXER
 /* Additional C Code */
 
-#include <iostream>  /* for yyerror */
+#include <stdiostream> 
 #include <ctype.h>   /* for testing tokens */
 #include <stdlib.h>  /* for strtod */
 
 /* Return 0 for EOF or a token number with a value on the stack */
-int yylex(YYSTYPE * lvalp, void * YYLEX_PARAM)
+int yylex(YYSTYPE *lvalp, void *YYLEX_PARAM)
 {
-  istream & yylexIn = ((yyarg*)YYLEX_PARAM)->_xi;
+  ClParseData *pclpd = ((ClParseData *) YYLEX_PARAM);
+  istream &yylexIn = pclpd->_xi;
   string token;
   current = "";
   if (yylexIn >> token) {
@@ -117,10 +112,9 @@ int yylex(YYSTYPE * lvalp, void * YYLEX_PARAM)
       return LEQ;
     }
     else if (isalpha(token[0])) { /* VAR */
-      yyarg *parg = ((yyarg*)YYLEX_PARAM);
       // Lookup the variable name
-      StringToVarMap::iterator it = parg->_mapVars.find(token);
-      if (it != parg->_mapVars.end()) {
+      StringToVarMap::iterator it = pclpd->_mapVars.find(token);
+      if (it != pclpd->_mapVars.end()) {
         lvalp->pclv = it->second;
         return VAR;
       } else {
@@ -138,27 +132,32 @@ int yylex(YYSTYPE * lvalp, void * YYLEX_PARAM)
   else /* EOF */
     return 0;
 }
+#endif
 
-void yyerror(const char * s)
+void clerror(const char *sz)
 {
-  cerr << s << ": " << current << endl;
-  throw s;
+#ifndef CL_NO_IO
+  cerr << sz << ": " << current << endl;
+#endif
+  throw sz;
 }
+
+extern istream *pxi_lexer;
 
 // xi is the stream from which to read the constraint.
 // aVars is an array of variables large enough to account for
 // each one that might be mentioned in a constraint
-ClConstraint *parseConstraint(istream &xi, StringToVarMap &mapVars)
+ClConstraint *PcnParseConstraint(istream &xi, StringToVarMap &mapVars)
 {
-  yyarg arg(xi, mapVars);
-  
-  if (yyparse(&arg) == 0) { // success
-#ifdef DEBUG_PARSER
-    cerr << *arg._pcn << endl;
+  ClParseData cl_parse_data(xi, mapVars);
+  pxi_lexer = &xi;
+  if (yyparse(&cl_parse_data) == 0) { // success
+#ifndef NO_DEBUG_PARSER
+    cerr << *cl_parse_data.Pcn() << endl;
 #endif
-    return arg._pcn;
+    return cl_parse_data.Pcn();
   }
-  else {               // failure
+  else { // failed
     return 0;
   }
 }

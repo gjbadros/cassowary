@@ -8,22 +8,41 @@
 // See ../COPYRIGHT for legal details regarding this software
 //
 // creader.h
-// Contributed by Steve Wolfman
+// Original implementation contributed by Steve Wolfman
+// Subsequently largely revised by Greg J. Badros
 
 #ifndef CREADER_H
 #define CREADER_H
 
 #include <string>
 #include <map>
+
 class istream;
 class ClConstraint;
 class ClVariable;
+
+#include "ClLinearExpression_fwd.h"
 
 typedef map<string,const ClVariable *> StringToVarMap;
 
 // Attempts to read a constraint of input stream in
 // Returns constraint (freshly allocated, client responsibility to deallocate)
 // if succesful. Otherwise, returns 0.
-ClConstraint * parseConstraint(istream &xi, StringToVarMap &mapVars);
+ClConstraint *PcnParseConstraint(istream &xi, StringToVarMap &mapVars);
+
+/* the "yyerror" function */
+void clerror(const char *sz);
+
+struct ClParseData {
+  ClParseData(istream &xi, StringToVarMap &mapVars)
+      : _xi(xi), _mapVars(mapVars) {};
+
+  ClConstraint *Pcn() { return _pcn; }
+      
+  istream & _xi;
+  ClConstraint * _pcn;
+  StringToVarMap &_mapVars;
+};
+
 
 #endif
