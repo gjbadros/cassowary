@@ -20,8 +20,5 @@ ostream &ClFloatVariable::printOn(ostream &xo) const
 void ClFloatVariable::setName(string const &name)
 { 
   super::setName(name); 
-#ifndef CL_NO_IO
-  cerr << "Not updating symbol table!" << endl;
-#endif
 }
 

@@ -29,6 +29,12 @@ int main()
   string szLine;
   while (getline(cin,szLine))
     {
+    if (szLine == "-") {
+      cerr << "Now renamed x to foo -- enter more constraints" << endl;
+      x.setName("foo");
+      continue;
+    }
+
     istrstream xiLine(szLine.c_str());
     try {
       if ((pcn = PcnParseConstraint(xiLine,mapVars)) != NULL) {
@@ -40,9 +46,9 @@ int main()
     }
 
   cout << solver << endl;
-  cout << "x = " << x << "\n"
-       << "y = " << y << "\n"
-       << "z = " << z << endl;
+  cout << "x (i.e., foo) = " << x << "\n"
+       << "y             = " << y << "\n"
+       << "z             = " << z << endl;
 
   return 0;
 }

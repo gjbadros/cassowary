@@ -20,7 +20,7 @@
 #include "ClFloatVariable.h"
 
 class ClVariable;
-typedef map<string,ClVariable> StringToVarMap;
+typedef map<const string,ClVariable> StringToVarMap;
 
 
 class ClVariable {
@@ -32,7 +32,7 @@ public:
   /// These ctrs build ClFloatVariable-s
   ClVariable(string name, Number value = 0.0) 
       : pclv(new ClFloatVariable(name,value)) 
-    { if (pmapSzPclv) { (*pmapSzPclv)[name] = *this; }  }
+    { if (pmapStrPclv) { (*pmapStrPclv)[name] = *this; }  }
   ClVariable(Number value = 0.0) 
       : pclv(new ClFloatVariable(value)) { }
   ClVariable(long number, char *prefix, Number value = 0.0)
@@ -61,14 +61,20 @@ public:
   void *Pv() const 
     { return pclv->Pv(); }
 
-  void setName(string const &name) { pclv->setName(name); }
+  void setName(string const &nm) {
+    if (pmapStrPclv) {
+      pmapStrPclv->erase(name());
+      (*pmapStrPclv)[nm] = *this;
+    }
+    pclv->setName(nm);
+  }
 
   ClAbstractVariable *get_pclv() const { return pclv; } 
   bool isNil() const { return pclv == NULL; }
 
-  static void SetVarMap(StringToVarMap *pmap) { pmapSzPclv = pmap; }
-  static StringToVarMap *VarMap() { return pmapSzPclv; }
-  static StringToVarMap *pmapSzPclv;
+  static void SetVarMap(StringToVarMap *pmap) { pmapStrPclv = pmap; }
+  static StringToVarMap *VarMap() { return pmapStrPclv; }
+  static StringToVarMap *pmapStrPclv;
 #ifndef CL_NO_IO
   ostream &printOn(ostream &xo) const
     { return pclv->printOn(xo); }

@@ -34,10 +34,10 @@ CPPFLAGS = -Wall -pedantic -W
 
 #CPPFLAGS += -DCL_NO_DEPRECATED
 
-CPPFLAGS += -O6 -DNEBUG
+#CPPFLAGS += -O6 -DNEBUG
 #CPPFLAGS += -O6
 #CPPFLAGS += -O2
-#CPPFLAGS += -g
+CPPFLAGS += -g
 
 #CPPFLAGS += -DCL_USE_HASH_MAP_AND_SET
 
@@ -52,11 +52,11 @@ CPPFLAGS += -O6 -DNEBUG
 OTHER_LIBS = 
 #OTHER_LIBS = ../../gc/gc.a
 
+LIB=cassowary
 #LIB=cassowary-optimized
-LIB=cassowary-notrace
+#LIB=cassowary-notrace
 #LIB=cassowary-trace
 #LIB=cassowary-debug
-#LIB=cassowary
 
 LDLIBS = -l$(LIB)
 
@@ -76,7 +76,9 @@ OBJS = 	ClAbstractVariable.o \
 	ClVariable.o \
 	ClFloatVariable.o \
 	ClSlackVariable.o \
-	ClDummyVariable.o
+	ClDummyVariable.o \
+	creader-lex.o \
+	creader.o
 
 
 TEST_OBJS = test-ClConstraint.o    \
@@ -180,9 +182,6 @@ creader-lex.cc: creader.cc.h
 
 creader-lex.cc: creader.l 
 	$(FLEX) $(FLEX_FLAGS) -Pcl -o$@ $<
-
-ClParseTest: $(CL_LIBRARY) $(OTHER_LIBS) ClParseTest.o creader-lex.o creader.o
-	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS) -lfl
 
 libcassowary.a:	
 

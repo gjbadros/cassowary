@@ -11,6 +11,6 @@
 
 #include "ClVariable.h"
 
-StringToVarMap *ClVariable::pmapSzPclv = NULL;
+StringToVarMap *ClVariable::pmapStrPclv = NULL;
 ClVariable clvNil(static_cast<ClAbstractVariable*>(0));
 
