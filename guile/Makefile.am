@@ -38,7 +38,7 @@ libconstraints_a_LIBADD = $(top_builddir)/c++/libcassowary.a
 # The horrid ugly hack that seems to work
 # It'd be nice to be able to mention the name of 
 # a library from the directory instead of this
-libconstraints_la_LIBADD = $(top_builddir)/c++/*.lo @GTL_LIB@
+libconstraints_la_LIBADD = $(top_builddir)/c++/*.lo -lstdc++ @GTL_LIB@
 
 include_HEADERS = \
 	cassowary_scm.h \
