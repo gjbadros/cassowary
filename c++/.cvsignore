@@ -1,4 +1,5 @@
 ClTests
+Makefile.dependencies
 output
 test-ClConstraint
 test-ClLinearExpression

@@ -61,3 +61,53 @@ time = 42.9
 done removing constraints and addDel timing test
 time = 8.07
 
+--------------------------
+dynamic_cast version, O6 NO_TRACE, 900
+addDel:
+starting timing test. nCns = 900, nVars = 900, nResolves = 10000
+done building data structures
+time = 2.14
+
+done adding constraints [120 exceptions]
+time = 43.9
+
+done creating edit constraints -- about to start resolves
+time = 0.14
+
+done resolves -- now removing constraints
+time = 65.33
+
+done removing constraints and addDel timing test
+time = 11.27
+
+my_slackCounter == 1017
+my_artificialCounter == 770
+my_dummyCounter == 785
+editMinusErrorVars 2, editPlusErrorVars 2, stayMinusErrorVars 900, stayPlusErrorVars 900, errorVars 0, markerVars 1022
+
+---------------------------
+static_cast version
+addDel:
+starting timing test. nCns = 900, nVars = 900, nResolves = 10000
+done building data structures
+time = 1.82
+
+done adding constraints [120 exceptions]
+time = 43.67
+
+done creating edit constraints -- about to start resolves
+time = 0.14
+
+done resolves -- now removing constraints
+time = 55.48
+
+done removing constraints and addDel timing test
+time = 10.56
+
+my_slackCounter == 1017
+my_artificialCounter == 770
+my_dummyCounter == 785
+editMinusErrorVars 2, editPlusErrorVars 2, stayMinusErrorVars 900, stayPlusErrorVars 900, errorVars 0, markerVars 1022
+
+------------------------
+
