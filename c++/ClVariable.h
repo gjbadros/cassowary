@@ -115,8 +115,8 @@ private:
 
   Number _value;
 
-  // Crazy extension mechanism so I don't have to wrap ScwmClVariables
-  // separately
+  // C-style extension mechanism so I
+  // don't have to wrap ScwmClVariables separately
   void *_pv;
 };
 
