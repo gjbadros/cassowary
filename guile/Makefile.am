@@ -1,11 +1,15 @@
 ## $Id$
 ## Process this file with automake to create Makefile.in
 
+if HAVE_GUILE
 # This gets put in with libcassowary.a
 lib_LIBRARIES = libconstraints.a
 
 # While this gets put where guile will look for it
 cassoguile_LTLIBRARIES = libconstraints.la
+endif
+
+AM_CPPFLAGS = $(CPPEXTRAFLAGS)
 
 GUILE_INCLUDES = @GUILE_INCLUDES@
 

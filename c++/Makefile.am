@@ -15,6 +15,8 @@ bugsdir=$(libdir)/cassowary/bugs
 testdir=$(libdir)/cassowary/tests
 moretestdir=$(libdir)/cassowary/tests
 
+AM_CPPFLAGS = $(CPPEXTRAFLAGS)
+
 EXTRA_PROGRAMS = $(test_programs) $(bench_programs) $(bugs_programs)
 
 EXTRA_DIST = ClReader.l ClReader.y
