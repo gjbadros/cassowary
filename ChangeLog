@@ -1,7 +1,9 @@
 1999-02-12  Greg J Badros  <gjb@cs.washington.edu>
 
 	* c++/creader.{y,h}: New version from Steve Wolfman, slightly
-	updated for cleaner integration.
+	updated for cleaner integration. Pass in a map<string,ClVariable
+	*> instead of an array of ClVariable; improve error handling a
+	bit.
 
 	* c++/debug.h: Use ClMap, ClSet
 
