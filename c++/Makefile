@@ -39,7 +39,7 @@ CPPFLAGS += -O6 -DNEBUG
 #CPPFLAGS += -O2
 #CPPFLAGS += -g
 
-CPPFLAGS += -DCL_USE_HASH_MAP_AND_SET
+#CPPFLAGS += -DCL_USE_HASH_MAP_AND_SET
 
 #CPPFLAGS += -DCL_TRACE
 
@@ -136,11 +136,16 @@ HEADERS = Cassowary.h \
 	timer.h \
 	creader.h
 
-all:	lib ClTests ClLeakTest ClTestColumns ClSubgraphTest $(bugtests)
+#Default rule is to just build the static library
+lib:    $(CL_LIBRARY)
+
+all-notests: lib shared_lib
+
+all-tests: ClParseTest ClLeakTest ClTestColumns ClSubgraphTest bugtests
 
 bugtests: ClBug0 ClBug1
 
-lib:    $(CL_LIBRARY)
+all: all-notests all-tests
 
 shared_lib:	$(CL_SHARED_LIBRARY)
 
@@ -153,7 +158,7 @@ $(CL_SHARED_LIBRARY): $(OBJS)
 	$(CPP_SO_LINK) -o $@ $(OBJS)
 
 clean:	
-	rm -f $(TESTS) *.o
+	rm -f $(TESTS) *.o creader.cc creader-lex.cc
 	@echo "Consider doing a \`make depend'"
 
 TAGS: $(SOURCES) $(HEADERS)
@@ -167,10 +172,14 @@ cassowary-tests: $(TESTS)
 cassowary-test:	$(TEST_OBJS)
 
 creader.cc: creader.y
-	$(BISON) -d -pcl --output-file $@ $^
+	$(BISON) -d -pcl --output-file $@ $<
 
-creader-lex.cc: creader.l
-	$(FLEX) $(FLEX_FLAGS) -Pcl -o$@ $^ 
+creader.cc.h: creader.cc
+
+creader-lex.cc: creader.cc.h
+
+creader-lex.cc: creader.l 
+	$(FLEX) $(FLEX_FLAGS) -Pcl -o$@ $<
 
 ClParseTest: $(CL_LIBRARY) $(OTHER_LIBS) ClParseTest.o creader-lex.o creader.o
 	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS) -lfl
