@@ -161,7 +161,7 @@ variable if you want its value to not change. */
   }
 
   SCM answer = ScmMakeClVariable(pclv);
-  pclv->setPv(PvFromScm(answer));
+  pclv->SetPv(PvFromScm(answer));
   return answer;
 }
 #undef FUNC_NAME
@@ -181,7 +181,7 @@ Consider instead using `set-object-property' and `object-property'. */
      but to mark it I'd need to be sure that all cl-variables'
      Pv() is a scheme object */
   scm_protect_object(obj);
-  pclv->setPv(PvFromScm(obj));
+  pclv->SetPv(PvFromScm(obj));
   return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
@@ -232,7 +232,7 @@ an integer before returning the value. */
   }
 
   ClVariable *pclv = PclvFromScm(clv);
-  return gh_double2scm(pclv->intValue());
+  return gh_double2scm(pclv->IntValue());
 }
 #undef FUNC_NAME
 
@@ -360,7 +360,7 @@ ScmMakeClStrength(ClStrength *pcls)
   SCM_NEWCELL(answer);
   SCM_SETCAR(answer, (SCM) SCMTYPEID);
   SCM_SETCDR(answer, (SCM) pcls);
-  pcls->setPv(PvFromScm(answer));
+  pcls->SetPv(PvFromScm(answer));
   SCM_ALLOW_INTS;
 
   
@@ -526,7 +526,7 @@ objects. */
     scm_wrong_type_arg(FUNC_NAME, 2, exprB);
   }
   
-  pexprA->addExpression(*pexprB);
+  pexprA->AddExpression(*pexprB);
   delete pexprB;
 
   SCM answer;
@@ -559,7 +559,7 @@ objects. */
     scm_wrong_type_arg(FUNC_NAME, 2, exprB);
   }
   
-  pexprA->addExpression(*pexprB,-1);
+  pexprA->AddExpression(*pexprB,-1);
   delete pexprB;
 
   SCM answer;
@@ -717,7 +717,7 @@ number.  STRENGTH defaults to cls-required, FACTOR defaults to 1. */
     scm_wrong_type_arg(FUNC_NAME, 1, expr);
   }
 
-  const ClStrength *pcls = &clsRequired();
+  const ClStrength *pcls = &ClsRequired();
   if (FIsClStrengthScm(strength)) {
     pcls = PclsFromScm(strength);
   } else if (!FUnsetSCM(strength)) {
@@ -734,7 +734,7 @@ number.  STRENGTH defaults to cls-required, FACTOR defaults to 1. */
   ClLinearEquation *peq = new ClLinearEquation(*pexpr,*pcls,nWeight);
 
   SCM answer = ScmMakeClLinearEquation(peq);
-  peq->setPv(PvFromScm(answer));
+  peq->SetPv(PvFromScm(answer));
   return answer;
 }
 #undef FUNC_NAME
@@ -768,7 +768,7 @@ error will be signalled. */
         FIsClLinearExpressionScm(exprB) || FIsClVariableScm(exprB))) {
     scm_misc_error(FUNC_NAME,"One of arguments must contain a variable",SCM_EOL);
   }
-  const ClStrength *pcls = &clsRequired();
+  const ClStrength *pcls = &ClsRequired();
   if (FIsClStrengthScm(strength)) {
     pcls = PclsFromScm(strength);
   } else if (!FUnsetSCM(strength)) {
@@ -870,7 +870,7 @@ arbitrary constraints. */
     scm_misc_error(FUNC_NAME,"One of arguments must contain a variable",SCM_EOL);
   }
 
-  const ClStrength *pcls = &clsRequired();
+  const ClStrength *pcls = &ClsRequired();
   if (FIsClStrengthScm(strength)) {
     pcls = PclsFromScm(strength);
   } else if (!FUnsetSCM(strength)) {
@@ -892,7 +892,7 @@ arbitrary constraints. */
   }
 
   SCM answer = ScmMakeClLinearInequality(pineq);
-  pineq->setPv(PvFromScm(answer));
+  pineq->SetPv(PvFromScm(answer));
   return answer;
 }
 #undef FUNC_NAME
@@ -954,7 +954,7 @@ or use the `cl-add-stay' convenience function instead. */
   }
   ClVariable *pclv = PclvFromScm(cl_var);
 
-  const ClStrength *pcls = &clsWeak();
+  const ClStrength *pcls = &ClsWeak();
   if (FIsClStrengthScm(strength)) {
     pcls = PclsFromScm(strength);
   } else if (!FUnsetSCM(strength)) {
@@ -1123,7 +1123,7 @@ create a return a new `cl-variable' object.
     scm_wrong_type_arg(FUNC_NAME,2,lookup_proc);
   }
 
-  const ClStrength *pcls = &clsRequired();
+  const ClStrength *pcls = &ClsRequired();
   if (FIsClStrengthScm(strength)) {
     pcls = PclsFromScm(strength);
   } else if (!FUnsetSCM(strength)) {
@@ -1143,7 +1143,7 @@ create a return a new `cl-variable' object.
   pcn->ChangeWeight(nWeight);
 
   SCM id = (SCM) scm_tc16_cl_equation;
-  if (pcn->isInequality())
+  if (pcn->IsInequality())
     id = (SCM) scm_tc16_cl_inequality;
 
   return ScmMakeClConstraint(pcn,id);
@@ -1180,7 +1180,7 @@ cls-required, FACTOR defaults to 1.  */
     scm_misc_error(FUNC_NAME,"One of arguments must contain a variable",SCM_EOL);
   }
 
-  const ClStrength *pcls = &clsRequired();
+  const ClStrength *pcls = &ClsRequired();
   if (FIsClStrengthScm(strength)) {
     pcls = PclsFromScm(strength);
   } else if (!FUnsetSCM(strength)) {
@@ -1240,7 +1240,7 @@ print_cl_solver(SCM scm, SCM port, scm_print_state *pstate)
   strstream ss;
   ClSimplexSolver *psolver = PsolverFromScm(scm);
   ss << "#<cl-solver ";
-  psolver->printInternalInfo(ss);
+  psolver->PrintInternalInfo(ss);
   ss << ">" << ends;
   scm_puts(ss.str(), port);
   return 1;
@@ -1265,7 +1265,7 @@ brief summary of the contents of the solver. */
   
   strstream ss;
   ClSimplexSolver *psolver = PsolverFromScm(solver);
-  psolver->printOnVerbose(ss);
+  psolver->PrintOnVerbose(ss);
   ss << ends;
   scm_puts(ss.str(), port);
   return SCM_UNSPECIFIED;
@@ -1300,7 +1300,7 @@ share constraint variable objects. */
   SCM_SETCDR(answer, (SCM) psolver);
   SCM_ALLOW_INTS;
 
-  psolver->setPv(PvFromScm(answer));
+  psolver->SetPv(PvFromScm(answer));
 
   return answer;
 }
@@ -1333,9 +1333,9 @@ been added. */
         scm_wrong_type_arg(FUNC_NAME,2,args);
       }
       ClConstraint *pconstraint = PcnFromScm(constraint);
-      psolver->addConstraint(*pconstraint);
+      psolver->AddConstraint(*pconstraint);
       scm_protect_object(constraint);
-      pconstraint->setPv(PvFromScm(constraint));
+      pconstraint->SetPv(PvFromScm(constraint));
     }
   } catch (const ExCLRequiredFailure &e) {
     // scm_misc_error(FUNC_NAME,e.description, SCM_EOL);
@@ -1371,8 +1371,8 @@ object, the preceding arguments will have already been removed. */
         scm_wrong_type_arg(FUNC_NAME,2,args);
       }
       ClConstraint *pconstraint = PcnFromScm(constraint);
-      psolver->removeConstraint(*pconstraint);
-      pconstraint->setPv(0);
+      psolver->RemoveConstraint(*pconstraint);
+      pconstraint->SetPv(0);
       scm_unprotect_object(constraint);  
     }
   } catch (const ExCLConstraintNotFound &e) {
@@ -1405,7 +1405,7 @@ values. */
   }
   ClSimplexSolver *psolver = PsolverFromScm(solver);
 
-  const ClStrength *pcls = &clsStrong();
+  const ClStrength *pcls = &ClsStrong();
   if (FIsClStrengthScm(strength)) {
     pcls = PclsFromScm(strength);
   } else if (!FUnsetSCM(strength)) {
@@ -1427,14 +1427,14 @@ values. */
           scm_wrong_type_arg(FUNC_NAME,2,cl_vars);
         }
         ClVariable *pclv = PclvFromScm(var);
-        psolver->addEditVar(*pclv,*pcls,nWeight);
+        psolver->AddEditVar(*pclv,*pcls,nWeight);
       }
     } else {
       if (!FIsClVariableScm(cl_vars)) {
         scm_wrong_type_arg(FUNC_NAME,2,cl_vars);
       }
       ClVariable *pclv = PclvFromScm(cl_vars);
-      psolver->addEditVar(*pclv,*pcls,nWeight);
+      psolver->AddEditVar(*pclv,*pcls,nWeight);
     }
   } catch (const ExCLEditMisuse &e) {
     scm_misc_error(FUNC_NAME, e.description().c_str(), SCM_EOL);
@@ -1468,7 +1468,7 @@ you intend to use with the given SOLVER. */
   }
   ClSimplexSolver *psolver = PsolverFromScm(solver);
 
-  const ClStrength *pcls = &clsWeak();
+  const ClStrength *pcls = &ClsWeak();
   if (FIsClStrengthScm(strength)) {
     pcls = PclsFromScm(strength);
   } else if (!FUnsetSCM(strength)) {
@@ -1490,14 +1490,14 @@ you intend to use with the given SOLVER. */
           scm_wrong_type_arg(FUNC_NAME,2,cl_vars);
         }
         ClVariable *pclv = PclvFromScm(var);
-        psolver->addStay(*pclv,*pcls,nWeight);
+        psolver->AddStay(*pclv,*pcls,nWeight);
       }
     } else {
       if (!FIsClVariableScm(cl_vars)) {
         scm_wrong_type_arg(FUNC_NAME,2,cl_vars);
       }
       ClVariable *pclv = PclvFromScm(cl_vars);
-      psolver->addStay(*pclv,*pcls,nWeight);
+      psolver->AddStay(*pclv,*pcls,nWeight);
     }
   } catch (const ExCLError &e) {
     scm_misc_error(FUNC_NAME, e.description().c_str(), SCM_EOL);
@@ -1524,7 +1524,7 @@ have a matching `cl-end-edit' call. */
   }
   ClSimplexSolver *psolver = PsolverFromScm(solver);
 
-  psolver->beginEdit();
+  psolver->BeginEdit();
 
   return SCM_UNSPECIFIED;
 }
@@ -1543,7 +1543,7 @@ any edit variables that have been added via `cl-add-editvar'. */
   }
   ClSimplexSolver *psolver = PsolverFromScm(solver);
 
-  psolver->endEdit();
+  psolver->EndEdit();
 
   return SCM_UNSPECIFIED;
 }
@@ -1598,7 +1598,7 @@ SOLVER may not permit changing VAR to VALUE. */
   double n = gh_scm2double(value);
 
   try {
-    psolver->suggestValue(*pclv,n);
+    psolver->SuggestValue(*pclv,n);
   } catch (const ExCLError &e) {
     scm_misc_error(FUNC_NAME, e.description().c_str(), SCM_EOL);
   }
@@ -1634,7 +1634,7 @@ variables from the solver after you are done changing their values. */
   ClSimplexSolver *psolver = PsolverFromScm(solver);
 
   if (FUnsetSCM(args)) {
-    psolver->resolve();
+    psolver->Resolve();
     return SCM_UNSPECIFIED;
   }
 
@@ -1650,9 +1650,9 @@ variables from the solver after you are done changing their values. */
 
   try {
     if (rgval.size() == 0)
-      psolver->resolve(); // No arg version is different fn
+      psolver->Resolve(); // No arg version is different fn
     else
-      psolver->resolve(rgval);
+      psolver->Resolve(rgval);
   } catch (const ExCLBadResolve &e) {
     scm_misc_error(FUNC_NAME, e.description().c_str(), SCM_EOL);
   }
@@ -1744,16 +1744,16 @@ init_cassowary_scm()
 
   SCM_DEFER_INTS;
 
-  CL_VAR_INIT_PERMANENT(cls_weak,"cls-weak", ScmMakeClStrength(const_cast<ClStrength *> (&clsWeak())));
+  CL_VAR_INIT_PERMANENT(cls_weak,"cls-weak", ScmMakeClStrength(const_cast<ClStrength *> (&ClsWeak())));
   /** The "weak" predefined cl-strength object. */
 
-  CL_VAR_INIT_PERMANENT(cls_medium,"cls-medium", ScmMakeClStrength(const_cast<ClStrength *> (&clsMedium())));
+  CL_VAR_INIT_PERMANENT(cls_medium,"cls-medium", ScmMakeClStrength(const_cast<ClStrength *> (&ClsMedium())));
   /** The "medium" predefined cl-strength object. */
 
-  CL_VAR_INIT_PERMANENT(cls_strong,"cls-strong", ScmMakeClStrength(const_cast<ClStrength *> (&clsStrong())));
+  CL_VAR_INIT_PERMANENT(cls_strong,"cls-strong", ScmMakeClStrength(const_cast<ClStrength *> (&ClsStrong())));
   /** The "strong" predefined cl-strength object. */
 
-  CL_VAR_INIT_PERMANENT(cls_required,"cls-required", ScmMakeClStrength(const_cast<ClStrength *> (&clsRequired())));
+  CL_VAR_INIT_PERMANENT(cls_required,"cls-required", ScmMakeClStrength(const_cast<ClStrength *> (&ClsRequired())));
   /** The "required" predefined cl-strength object. */
 
   SCM_ALLOW_INTS;
