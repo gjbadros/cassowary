@@ -43,12 +43,24 @@ java ClTests
 
 
 The demos/ subdirectory contains the quadrilateral demo;  `make run'
-should run it using the appletviewer after building it.
+should run it using the appletviewer after building it.  If you get
+a:
+
+ java.security.AccessControlException: access denied (java.io.FilePermission ...)
+
+error with Java 2, you may need to update your $HOME/.java.policy file.
+You can try making it containt the below three lines (BEWARE: this may
+be dangerous from a security perspective):
+
+ grant {
+	permission java.security.AllPermission;
+ };
 
 
 The cda/ subdirectory contains Michael Noth's Constraint Drawing
-Application.  `make run' should run it using the appletviewer after
-building it.  For more information about the CDA, see:
+Application.  `make run' from the cda/ directory should run it using the
+appletviewer after building it.  For more information about the CDA,
+see:
 
 http://www.cs.washington.edu/research/constraints/cda/info.html
 

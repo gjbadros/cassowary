@@ -80,3 +80,6 @@ EXTRA_DIST = $(ALL_FILES) $(ICON_GIFS) classes/run.html
 
 demo: all
 	tar -cf cdademo.tar $(ALL_CLASSES) $(ICON_GIFS) classes/*.htm*
+
+run:
+	cd classes && appletviewer run.html
