@@ -1,9 +1,11 @@
+#!/uns/bin/guile -s
+!#
 ;;; $Id$ -*- scwm -*-
 ;;; simple1
 ;;; be sure $CASSOWARY_HOME/guile is in your $GUILE_LOAD_PATH
 ;;; guile will look for app/cassowary/libconstraints.so to be somewhere off
 ;;; of a directory listed in $GUILE_LOAD_PATH
-(use-modules (app cassowary constraints))
+(use-modules (cassowary constraints))
 
 (begin
   (define solver (make-cl-solver))
@@ -16,7 +18,6 @@
 	    (list "x = " (cl-value x) "\n" "y = " (cl-value y) "\n"))
   (= (cl-value x) (cl-value y)))
 
-(use-modules (app cassowary constraints))
 (define solver (make-cl-solver))
 (define clv-table (make-vector 20))
 

@@ -1730,7 +1730,7 @@ static SCM scm_cls_medium;
 static SCM scm_cls_strong;
 static SCM scm_cls_required;
 
-void
+static void
 init_cassowary_scm()
 {
   REGISTER_SMOBFUNS(cl_variable);
@@ -1762,9 +1762,9 @@ init_cassowary_scm()
 #endif
 }
 
-void scm_init_app_cassowary_constraints_module()
+void scm_init_cassowary_constraints_module()
 {
-  scm_register_module_xxx("app cassowary constraints", init_cassowary_scm);
+  scm_register_module_xxx("cassowary constraints", init_cassowary_scm);
 }
 
 } // extern "C"

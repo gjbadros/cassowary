@@ -78,7 +78,7 @@ inline ClStrength *PclsFromScm(SCM scm)
 { return (ClStrength *)(SCM_CDR(scm)); }
 
 //// ClLinearExpression wrapper
-#include "ClLinearExpression_fwd.h"
+#include "cassowary/ClLinearExpression_fwd.h"
 
 #undef SCMTYPEID
 #define SCMTYPEID scm_tc16_cl_expression
