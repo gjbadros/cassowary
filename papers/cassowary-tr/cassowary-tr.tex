@@ -31,7 +31,7 @@ University of Washington \\
 Box 352350, Seattle, WA  98195-2350  USA \\
 {\small \{{\tt gjb},{\tt borning}\}{\tt @cs.washington.edu}} \\
 \vspace{2mm}
-28 June 1998}
+29 June 1998}
 
 \begin{document}
 \maketitle
@@ -47,8 +47,19 @@ a major limitation.  We describe Cassowary---an incremental algorithm based on t
 simplex method that can solve such systems of constraints
 efficiently.
 
-This informal technical report is details the latest version of the
-Cassowary algorithm.  An earlier technical report also
+This informal technical report describes the latest version of the
+Cassowary algorithm.  It is derived from the paper ``Solving Linear
+Arithmetic Constraints for User Interface Applications'' by Alan Borning,
+Kim Marriott, Peter Stuckey, and Yi Xiao \cite{borning-uist-97}, published
+in the UIST'97 Proceedings.  The UIST paper also contains a description of
+QOCA, a closely related solver that finds least-squares solutions to linear
+constraints.  This technical report, which is intended to be
+self-contained, includes material on Cassowary from the UIST paper, plus
+a description of the Java, C++, and Smalltalk implementations and
+their interfaces. along with additional details, corrections, and
+clarifications.
+
+An earlier technical report also
 discussed QOCA and the similarities between Cassowary and that
 algorithm~\cite{borning-simplex-tr}.
 \end{abstract}
@@ -251,16 +262,15 @@ computation progresses, but there is no notion as such of state and change.
 As a result, these systems are not so well suited for building interactive
 graphical applications.
 
-Borning, Marriot, Stuckey, and Xiao discuss both an early version of
-Cassowary and the related QOCA algorithm.  QOCA uses the same solving
-technique as Cassowary, but uses a least-squares-better comparator
-during the optimization from basic feasible solved
-form~\cite{borning-uist-97,borning-simplex-tr}.  An earlier version of
-QOCA is described in references \cite{helm-gi-92} and
-\cite{helm-eurographics-92}.  These earlier descriptions, however, do
-not give any details of the algorithm, although the incremental deletion
+Borning, Marriot, Stuckey, and Xiao discuss both the original version of
+Cassowary and the related QOCA
+algorithm~\cite{borning-uist-97,borning-simplex-tr}.  QOCA uses the same
+solving technique as Cassowary, but uses a least-squares-better comparator
+during the optimization from basic feasible solved form.  An earlier
+version of QOCA is described in references \cite{helm-gi-92} and
+\cite{helm-eurographics-92}.  These earlier descriptions, however, do not
+give any details of the algorithm, although the incremental deletion
 algorithm is described in \cite{huynh-marriott-96}.
-
 
 \section{Incremental Simplex}
 \label{inc-simplex}
@@ -428,7 +438,8 @@ explicitly in any event.)
 {\bf Another Detail.}  The operations are shown as modifying $C_U$ as well
 as $C_S$\@.  It would be possible to modify just $C_S$ and leave $C_U$
 unchanged, using $C_U$ only to define values for the variables on the left
-hand side of its equations.  This would speed up pivoting byt it would make the incremental updates of the constants in edit
+hand side of its equations.  This would speed up pivoting but 
+it would make the incremental updates of the constants in edit
 constraints slower; and since this is a much more frequent operation, in
 the implementation we do actually modify both $C_U$ and $C_S$\@.
 
@@ -522,6 +533,40 @@ since the objective function in those cases always only contains
 restricted variables, i.e., variables implicitly constrained to be
 non-negative.)
 
+
+\begin{figure}[tb]
+\begin{center}
+\fbox{
+\begin{minipage}{10cm}
+\begin{tabbing}
+xx \= xx \= xx \= xx \= \kill
+%Boolean
+\textsf{simplex\_opt}($C_S$,$f$) \\
+\> \textbf{repeat} \\
+\> \> \% Choose variable $y_J$ to become basic\\
+\> \> \textbf{if} for each $j \in \{ 1, \ldots ,m \}$ $d_j \ge 0$ \textbf{then} \\
+\> \> \> \textbf{return} \% an optimal solution has been found\\
+\> \> \textbf{endif} \\
+\> \> \textbf{choose} $J \in \{ 1, \ldots ,m \}$ such that $d_J < 0$\\
+\> \> \% Choose variable $x_I$ to become non-basic\\
+\> \> \textbf{choose} $I \in \{ 1, \ldots ,n \}$ such that\\
+\> \> \> $-c_I / a_{IJ} =
+    \min_{i \in \{1,\ldots, n\}} \{ -c_i / a_{iJ} \mid a_{iJ} < 0 \}$\\
+\> \> $e$ := $( x_I - c_I - \sum_{j=1, j\ne J}^m a_{Ij} y_j)/ a_{IJ}$\\
+\> \> $C_S \left[ I \right]$ := $(Y_J = e)$\\
+\> \> replace $Y_J$ by $e$ in $f$\\
+\> \> \textbf{for} each $i \in \{1, \ldots ,n\}$\\
+\> \> \> \textbf{if} $i \ne I$ \textbf{then}
+       replace $Y_J$ by $e$ in $C_S \left[ I \right]$ \textbf{endif}\\
+\> \> \textbf{endfor}\\
+\> \textbf{endrepeat}
+\end{tabbing}
+\end{minipage}
+}
+\end{center}
+\caption{Simplex optimization\label{fig:simplex-opt}}
+\end{figure}
+
 In general, the simplex algorithm applied to $C_S$ 
 is described as follows. 
 We are given a problem in basic feasible solved form in which 
@@ -565,40 +610,6 @@ to obtain the new basic feasible solution.
 We continue this process until an optimum is reached.
 The algorithm is specified in Figure~\ref{fig:simplex-opt},
 and takes as inputs the simplex tableau $C_S$ and the objective function $f$.
-
-
-\begin{figure}[tb]
-\begin{center}
-\fbox{
-\begin{minipage}{10cm}
-\begin{tabbing}
-xx \= xx \= xx \= xx \= \kill
-%Boolean
-\textsf{simplex\_opt}($C_S$,$f$) \\
-\> \textbf{repeat} \\
-\> \> \% Choose variable $y_J$ to become basic\\
-\> \> \textbf{if} for each $j \in \{ 1, \ldots ,m \}$ $d_j \ge 0$ \textbf{then} \\
-\> \> \> \textbf{return} \% an optimal solution has been found\\
-\> \> \textbf{endif} \\
-\> \> \textbf{choose} $J \in \{ 1, \ldots ,m \}$ such that $d_J < 0$\\
-\> \> \% Choose variable $x_I$ to become non-basic\\
-\> \> \textbf{choose} $I \in \{ 1, \ldots ,n \}$ such that\\
-\> \> \> $-c_I / a_{IJ} =
-    \min_{i \in \{1,\ldots, n\}} \{ -c_i / a_{iJ} \mid a_{iJ} < 0 \}$\\
-\> \> $e$ := $( x_I - c_I - \sum_{j=1, j\ne J}^m a_{Ij} y_j)/ a_{IJ}$\\
-\> \> $C_S \left[ I \right]$ := $(Y_J = e)$\\
-\> \> replace $Y_J$ by $e$ in $f$\\
-\> \> \textbf{for} each $i \in \{1, \ldots ,n\}$\\
-\> \> \> \textbf{if} $i \ne I$ \textbf{then}
-       replace $Y_J$ by $e$ in $C_S \left[ I \right]$ \textbf{endif}\\
-\> \> \textbf{endfor}\\
-\> \textbf{endrepeat}
-\end{tabbing}
-\end{minipage}
-}
-\end{center}
-\caption{Simplex optimization\label{fig:simplex-opt}}
-\end{figure}
 
 
 \ignore{ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1368,23 +1379,23 @@ Choose whether the solver should automatically optimize and set external variabl
 after each \textsf{addConstraint} or \textsf{removeConstraint}.  By
 default, auto-solving is on, but passing \textsf{false} to this method
 will turn it off (until later turned back on by passing \textsf{true} to 
-this method.  When auto-solving is off, \textsf{solve} (below) or
+this method).  When auto-solving is off, \textsf{solve} (below) or
 \textsf{resolve} must be invoked to see changes to the
-\textsf{ClVariable}s contained in the tableaux.
+\textsf{ClVariable}s contained in the tableau.
 
 \item[{\sf FIsAutoSolving()} returns {\sf boolean}] \ \\
 Return {\sf true} if and only if the solver is auto-solving, {\sf false} 
 otherwise.
 
 \item[{\sf solve()}] \ \\
-Optimize the tableaux and set the external \textsf{ClVariable}s
-contained in the tableaux to their new values.  This method need only
+Optimize the tableau and set the external \textsf{ClVariable}s
+contained in the tableau to their new values.  This method need only
 be invoked if auto-solving has been turned off.  It never needs to be
 called after a \textsf{resolve} method invocation.
 
 \item[{\sf reset()}] \ \\
 Re-initialize the solver from the original constraints,
-thus getting rid of any accumulated numerical problems.  (It is not clear
+thus getting rid of any accumulated numerical problems.  (It is not yet clear
 how often such problems arise, but here is the method anyway.)
 
 \end{description}
@@ -1399,7 +1410,7 @@ is likely to be changed inappropriately to satisfy the other
 constraints while initially building the tableau.
 
 Instead, stay constraints could be implicit for each variable, and thus
-be in effect before any other constraints.
+be in effect added before any other constraints.
 
 \subsection{Principal Classes}
 
@@ -1451,7 +1462,7 @@ defines the message protocol for constrainable variables.  Its only
 instance variable is {\sf name}, which is a string name for the variable.
 (This is used for debugging and constraint understanding tasks.)
 
-Instances of the concrete {\sf ClVariable} sub-class of {\sf
+Instances of the concrete {\sf ClVariable} subclass of {\sf
   ClAbstractVariable} are what the user of the solver sees (hence
 it was given a nicer class name).  This class has an instance variable
 {\sf value} that holds the value of this variable.  Users of the solver can
@@ -1629,8 +1640,8 @@ is not a number it raises an exception that the expression is
 non-linear.)  The linear expression representing $3x$ gets the message +
 with the argument 5, and returns a new linear expression representing $3
 x + 5$.  This linear expression gets the message {\sf cnLEQ:} with the
-argument {\sf y}.  It computes a new linear expression representing $3 x
-+ 5 - y$, and then returns an instance of {\sf ClLinearInequality} with
+argument {\sf y}.  It computes a new linear expression representing 
+$y - 3 x - 5$, and then returns an instance of {\sf ClLinearInequality} with
 this expression.
 
 (It is tempting to make this nicer by using the $=$, $<=$, and $>=$
@@ -1660,7 +1671,7 @@ In Java, the same constraint would be built as follows:
 
 Though the Java implementation makes it difficult to express hard-coded
 constraints, use of the implementation in conjunction with a
-user-interface for specifying the constraints has shown that the
+user interface for specifying the constraints has shown that the
 inconvenience is relatively unimportant.
 
 \subsubsection{Symbolic Weights and Strengths}
@@ -1760,9 +1771,9 @@ number that approximates the total ordering suggested by the more
 general vector of real numbers.  It is these real numbers that are used
 as the coefficients in the objective row of the tableau instead of {\sf
   ClSymbolicWeight}s (which the coefficients conceptually are).  This kludge
-avoids the obvious complexities such genericity introduces to the static
+avoids the complexities that such genericity introduces to the static
 type systems of C++ and Java. (An improved C++ implementation using
-templates is underway).
+templates is underway.)
 
 Also, since Java lacks operator overloading, the above operations are
 invoked using suggestive alphabetic method names such as {\sf add}, {\sf
@@ -2021,7 +2032,8 @@ polytope even if all the solutions on an edge or face are equally good.
 (And of course Cassowary behaves this way because simplex does.)
 
 Such solutions are also produced by greedy constraint satisfaction
-algorithms, such as local propagation algorithms like DeltaBlue and Indigo,
+algorithms, including local propagation algorithms such as
+DeltaBlue~\cite{sannella-spe-93} and Indigo~\cite{borning-uist-96},
 since these algorithms try to satisfy constraints one at a time, and in
 effect the constraints considered first are given a stronger strength than
 those considered later.
@@ -2175,7 +2187,8 @@ and the viewer.
 
 Thanks to Kim Marriott, Peter Stuckey and Yi Xiao, co-developers of both
 Cassowary and the closely related QOCA algorithm, for their help in this
-work.
+work, and for allowing us to reuse much of our jointly authored
+UIST paper in this report.
 
 This project has been funded in part by the National Science Foundation
 under Grants \mbox{IRI-9302249} and \mbox{CCR-9402551} and in part by Object
