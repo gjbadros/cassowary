@@ -1,3 +1,13 @@
+Wed Dec 15 19:11:57 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* java/cda/Makefile.am (EXTRA_DIST): Clean up install of .gif
+	files.
+
+	* java/Makefile.am (EXTRA_DIST): Added ClReader.{cup,lex}
+
+	* c++/Makefile.am: Do not make symlink to cassowary; let
+	configure.in do that.
+
 Wed Dec 15 18:13:14 1999  Greg J. Badros  <gjb@cs.washington.edu>
 
 	* java/Makefile.am: Put SUBDIRS demo cda back in since they
