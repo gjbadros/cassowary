@@ -210,34 +210,34 @@ casso1()
 bool
 inconsistent1()
 {
- try 
-   {
-   ClVariable x("x");
-   ClSimplexSolver solver;
-
-   solver
-     .addConstraint( ClLinearEquation(x,10.0) )
-     .addConstraint( ClLinearEquation(x, 5.0) );
-
-   // no exception, we failed!
-   return(false);
-   } 
- catch (ExCLRequiredFailure)
-   {
-   // we want this exception to get thrown
-   cout << "Success -- got the exception" << endl;
-   return(true);
-   }
- catch (ExCLError &error) 
-   {
-   cerr << "Exception! " << error.description() << endl;
-   return(false);
-   }
- catch (...) 
-   {
-   cerr << "Unknown exception" << endl;
-   return(false);
-   }
+  ClSimplexSolver solver;
+  ClVariable x("x");
+  try 
+    {
+    
+    solver.addConstraint( ClLinearEquation(x,10.0) );
+    solver.addConstraint( ClLinearEquation(x, 5.0) );
+    
+    // no exception, we failed!
+    return(false);
+    } 
+  catch (ExCLRequiredFailure)
+    {
+    // we want this exception to get thrown
+    cout << "Success -- got the exception" << endl;
+    //    cout << solver << endl;
+    return(true);
+    }
+  catch (ExCLError &error) 
+    {
+    cerr << "Exception! " << error.description() << endl;
+    return(false);
+    }
+  catch (...) 
+    {
+    cerr << "Unknown exception" << endl;
+    return(false);
+    }
 }
 
 bool
@@ -259,6 +259,7 @@ inconsistent2()
    {
    // we want this exception to get thrown
    cout << "Success -- got the exception" << endl;
+   //    cout << solver << endl;
    return(true);
    }
  catch (ExCLError &error) 
@@ -435,10 +436,13 @@ main( int argc, char **argv )
     if (argc > 3)
       resolves = atoi(argv[3]);
 
-    cout << "addDel" << ":" << endl; \
-    fResult = addDel(cns,vars,resolves); fAllOkResult &= fResult; \
-    if (!fResult) cout << "Failed!" << endl;
-  
+    if (cns > 0) 
+      {
+      cout << "addDel" << ":" << endl;
+      fResult = addDel(cns,vars,resolves); fAllOkResult &= fResult;
+      if (!fResult) cout << "Failed!" << endl;
+      }
+      
 #undef RUN_TEST
     return (fAllOkResult? 0 : 255);
     
