@@ -39,4 +39,10 @@ EXTRA_DIST=$(JAVAFILES)
 
 if HAVE_JAVA
 java_JAVA = $(JAVAFILES)
+else
+classjava.stamp:
+	echo timestamp > classjava.stamp
+
+install-javaJAVA:
+	echo "Not installing java .class files since Java build was disabled"
 endif

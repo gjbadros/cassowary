@@ -1,4 +1,4 @@
-## $Id$
+# $Id$
 ## Process this file with automake to create Makefile.in
 
 
@@ -32,6 +32,9 @@ java_JAVA = \
 else
 classjava.stamp:
 	echo timestamp > classjava.stamp
+
+install-javaJAVA:
+	echo "Not installing java .class files since Java build was disabled"
 endif
 
 ICON_BMPS = \
