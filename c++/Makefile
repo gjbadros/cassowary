@@ -175,15 +175,20 @@ cassowary-tests: $(TESTS)
 
 cassowary-test:	$(TEST_OBJS)
 
-creader.cc: creader.y
+creader.cc: creader.y creader.h
 	$(BISON) -d -pcl --output-file $@ $<
 
 creader.cc.h: creader.cc
 
 creader-lex.cc: creader.cc.h
 
-creader-lex.cc: creader.l 
+creader-lex.cc: creader.l creader.h
 	$(FLEX) $(FLEX_FLAGS) -Pcl -o$@ $<
+
+creader.o: creader.h
+
+creader-lex.o: creader.h
+
 
 libcassowary.a:	
 

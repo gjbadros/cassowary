@@ -212,7 +212,7 @@ ClSimplexSolver::removeEditVarsTo(int n)
 
 
 /* A predicate used for remove_if */
-class VarInVarSet {
+class VarInVarSet : public unary_function<ClVariable,bool> {
 public:
   VarInVarSet(const ClVarSet &clvset) : 
       _set(clvset),

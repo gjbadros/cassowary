@@ -26,7 +26,7 @@ class ExCLError : public exception {
 
  public:
   ExCLError() : _msg(NULL) { }
-  virtual char *description() const
+  virtual string description() const
     { return "(ExCLError) An error has occured in CL"; }
  protected:
   char *_msg;
@@ -36,7 +36,7 @@ class ExCLInternalError : public ExCLError {
  public:
   ExCLInternalError(const char *sz)
     { _msg = strdup(sz); }
-  virtual char *description() const
+  virtual string description() const
     { 
       if (_msg) return _msg;
       else return "(ExCLInternalError) An internal error has occurred"; 
@@ -47,7 +47,7 @@ class ExCLBadResolve : public ExCLError {
  public:
   ExCLBadResolve(const char *sz)
     { _msg = strdup(sz); }
-  virtual char *description() const
+  virtual string description() const
     {
       if (_msg) return _msg;
       else return "(ExCLBadResolve) Number of resolve values did not match number of edit vars"; 
@@ -58,7 +58,7 @@ class ExCLEditMisuse : public ExCLError {
  public:
   ExCLEditMisuse(const char *sz)
     { _msg = strdup(sz); }
-  virtual char *description() const
+  virtual string description() const
     {
       if (_msg) return _msg;
       return "(ExCLEditMisuse) Edit protocol usage violation"; 
@@ -68,38 +68,71 @@ class ExCLEditMisuse : public ExCLError {
 
 class ExCLTooDifficult : public ExCLError {
  public:
-  virtual char *description() const
+  virtual string description() const
     { return "(ExCLTooDifficult) The constraints are too difficult to solve"; }
 };
 
 class ExCLRequiredFailure : public ExCLError {
  public:
-  virtual char *description() const
+  virtual string description() const
     { return "(ExCLRequiredFailure) A required constraint cannot be satisfied"; }
 };
 
 class ExCLNotEnoughStays : public ExCLError {
  public:
-  virtual char *description() const
+  virtual string description() const
     { return "(ExCLNotEnoughStays) There are not enough stays to give specific values to every variable"; }
 };
 
 class ExCLNonlinearExpression : public ExCLError {
  public:
-  virtual char *description() const
+  virtual string description() const
     { return "(ExCLNonlinearExpression) The resulting expression would be nonlinear"; }
 };
   
 class ExCLConstraintNotFound : public ExCLError {
  public:
-  virtual char *description() const
-    { return "(ExCLConstraintNotFound) Tried to remove a constraint never added to the tableu"; }
+  virtual string description() const
+    { return "(ExCLConstraintNotFound) Tried to remove a constraint never added to the tableua"; }
 };
+
+class ExCLParseError : public ExCLError {
+ public:
+  virtual string description() const
+    { return "(ExCLParseError)"; }
+};
+
+class ExCLParseErrorMisc : public ExCLParseError {
+ public:
+  ExCLParseErrorMisc(const string &s) 
+      : _msg("(ExCLParseError) ")
+    { _msg += s; }
+  virtual string description() const
+    { return _msg; }
+ private:
+  string _msg;
+};
+
+class ExCLParseErrorBadIdentifier : public ExCLParseError {
+ public:
+  ExCLParseErrorBadIdentifier(const string &id) 
+      : _msg("(ExCLParseErrorBadIdentifier) Did not recognize identifier '")
+    { 
+      _msg += id;
+      _msg += "'";
+    }
+  virtual string description() const
+    { return _msg; }
+ private:
+  string _msg;
+};
+
+
 
 class ExCLRequiredFailureWithExplanation : public ExCLRequiredFailure 
 {
 public:
-  virtual char *description() const
+  virtual string description() const
     { return "(ExCLRequiredFailureWithExplanation) A required constraint cannot be satisfied"; }
   virtual void addConstraint(const ClConstraint *cnExpl)
     { _explanation.insert(cnExpl); }

@@ -27,6 +27,7 @@ int main()
 
   ClConstraint *pcn;
   string szLine;
+
   while (getline(cin,szLine))
     {
     if (szLine == "-") {
@@ -37,11 +38,14 @@ int main()
 
     istrstream xiLine(szLine.c_str());
     try {
-      if ((pcn = PcnParseConstraint(xiLine,mapVars,true)) != NULL) {
+      if ((pcn = PcnParseConstraint(xiLine,ClVarLookupInMap(&mapVars,false)))
+          != NULL) {
         solver.addConstraint(*pcn);
       }
     }
-    catch (const char *szError) { }
+    catch (const ExCLParseError &e) {
+      cerr << e.description() <<endl;
+    }
     catch (...) { }
     }
 

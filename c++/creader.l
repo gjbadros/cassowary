@@ -54,24 +54,15 @@ ws [ \t\n]+
 
 {ID} 			{       /* Lookup the variable name */
       ClParseData *pclpd = ((ClParseData *) YYLEX_PARAM);
-      StringToVarMap::iterator it = pclpd->_mapVars.find(yytext);
-      if (it != pclpd->_mapVars.end()) {
-        lvalp->pclv = &it->second;
+      const string str(yytext);
+      ClVariable *pclv = pclpd->_lookup_func(str);
+      if (!pclv->isNil()) {
+        lvalp->pclv = pclv;
         return VAR;
-      } else if (pclpd->_fAutoCreate) {
-	/* the ctr could register the variable in a different symbol table */
-	ClVariable v(yytext);
-	/* this will definitely register the variable in the parser's symbol table */
-	pclpd->_mapVars[yytext] = v;
-	lvalp->pclv = &(pclpd->_mapVars[yytext]);
-	return VAR;
       } else {
-        string szErr = "Unrecognized identifier: '";
-        szErr += yytext;
-        szErr += "'";
-        clerror(szErr.c_str());
+	throw ExCLParseErrorBadIdentifier(str);
         return 0;
       }
-    }
+   }
 
-.			{ cerr << "Unrecognized character: " << yytext << endl; return 0; }
+.			{ throw ExCLParseErrorMisc("Unrecognized character"); }

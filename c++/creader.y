@@ -89,10 +89,7 @@ expr:     NUM                { $$ = new ClLinearExpression($1);        }
 
 void clerror(const char *sz)
 {
-#ifndef CL_NO_IO
-  cerr << sz << endl;
-#endif
-  throw sz;
+  throw ExCLParseErrorMisc(sz);
 }
 
 extern istream *pxi_lexer;
@@ -100,9 +97,9 @@ extern istream *pxi_lexer;
 // xi is the stream from which to read the constraint.
 // aVars is an array of variables large enough to account for
 // each one that might be mentioned in a constraint
-ClConstraint *PcnParseConstraint(istream &xi, StringToVarMap &mapVars, bool fAutoCreate)
+ClConstraint *PcnParseConstraint(istream &xi, const ClVarLookupFunction &lookup_func)
 {
-  ClParseData cl_parse_data(xi, mapVars, fAutoCreate);
+  ClParseData cl_parse_data(xi, lookup_func);
   pxi_lexer = &xi;
   if (yyparse(&cl_parse_data) == 0) { // success
 #ifndef NO_DEBUG_PARSER

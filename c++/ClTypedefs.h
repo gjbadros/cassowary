@@ -26,7 +26,7 @@ class ClEditInfo;
 // ClTableauVarSet is not a ClSet, for performance reasons 
 // (Steve Wolfman discovered this, and seems to be true --02/17/99 gjb)
 // I have not observed any big performance gains from using the hashtable based containers 
-typedef set<ClVariable> ClVarSet;  
+typedef ClSet<ClVariable> ClVarSet;  
 typedef ClMap<ClVariable, ClVarSet > ClTableauColumnsMap;
 typedef ClMap<ClVariable, ClLinearExpression *> ClTableauRowsMap;
 
