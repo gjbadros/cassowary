@@ -182,10 +182,10 @@ class ClTableau
       return (ClLinearExpression) my_rows.get(v);
     }
 
-  private Hashtable my_columns; // From ClAbstractVariable to Set of variables
-  private Hashtable my_rows;    // From ClAbstractVariable to ClLinearExpression
-  private Set my_infeasibleRows; // Set of ClAbstractVariable-s
-  private Set my_externalRows; // Set of ClVariable-s
-  private Set my_externalParametricVars; // Set of ClVariable-s
+  protected Hashtable my_columns; // From ClAbstractVariable to Set of variables
+  protected Hashtable my_rows;    // From ClAbstractVariable to ClLinearExpression
+  protected Set my_infeasibleRows; // Set of ClAbstractVariable-s
+  protected Set my_externalRows; // Set of ClVariable-s
+  protected Set my_externalParametricVars; // Set of ClVariable-s
 
 }
