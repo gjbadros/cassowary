@@ -347,15 +347,17 @@ AM_CONDITIONAL(HAVE_JAVA, test "true" = "$HAVE_JAVA")
 AC_OUTPUT(
 	Makefile \
 	c++/Makefile \
-	java/Makefile \
-	java/demos/Makefile \
-	java/cda/Makefile \
 	guile/Makefile \
-	wrappers/Makefile \
 	docs/Makefile \
 	cassowary.spec \
 	GTL.spec \
 	)
+
+#	java/Makefile \
+#	java/demos/Makefile \
+#	java/cda/Makefile \
+#	wrappers/Makefile \
+
 
 # Not create config-inline.h for the C++ header files to include
 # (needed in case another package uses autoconf and includes the Cassowary
