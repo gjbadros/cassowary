@@ -108,12 +108,18 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
   // try to make the marker variable basic if it isn't already
   assert( it_marker != my_markerVars.end() );
   const ClAbstractVariable &marker = *((*it_marker).second);
+#ifndef NO_TRACE
+  cerr << "Looking to remove var " << marker << endl;
+#endif
   if (rowExpression(marker) == NULL )
     { // not in the basis, so need to do some work
     // first choose which variable to move out of the basis
     // only consider restricted basic variables
     set<const ClAbstractVariable *> &col = my_columns[&marker];
     set<const ClAbstractVariable *>::iterator it_col = col.begin();
+#ifndef NO_TRACE
+    cerr << "Must pivot -- columns are " << col << endl;
+#endif
 
     const ClAbstractVariable *pexitVar = NULL;
     double minRatio = 0.0;
@@ -125,6 +131,10 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
 	const ClLinearExpression *pexpr = rowExpression(*pv);
 	assert(pexpr != NULL );
 	Number coeff = pexpr->coefficientFor(marker);
+#ifndef NO_TRACE
+	cerr << "Marker " << marker << "'s coefficient in " << *pexpr << " is "
+	     << coeff << endl;
+#endif
 	// only consider negative coefficients
 	if (coeff < 0.0) 
 	  {
@@ -148,6 +158,9 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
     // non-negativity restriction on the marker variable.)
     if (pexitVar == NULL ) 
       {
+#ifndef NO_TRACE
+      cerr << "pexitVar is still NULL" << endl;
+#endif
       it_col = col.begin();
       for ( ; it_col != col.end(); ++it_col) 
 	{
@@ -157,7 +170,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
 	  const ClLinearExpression *pexpr = rowExpression(*pv);
 	  assert(pexpr != NULL);
 	  Number coeff = pexpr->coefficientFor(marker);
-	  Number r = - pexpr->constant() / coeff;
+	  Number r = pexpr->constant() / coeff;
 	  if (pexitVar == NULL || r < minRatio)
 	    {
 	    minRatio = r;
@@ -1070,7 +1083,7 @@ ClSimplexSolver::printOn(ostream &xo) const
      << my_rows << endl;
   xo << "Columns:\n" 
      << my_columns << endl;
-  xo << "Infeasible rows:" << my_infeasibleRows << endl;
+  xo << "Infeasible rows: " << my_infeasibleRows << endl;
 
   xo << "my_editPlusErrorVars: "
      << my_editPlusErrorVars << endl;
