@@ -1017,12 +1017,14 @@ addDelSolvers(const int nCns = 900, const int nResolves = 10000,
   timer.Stop();
   tmEndEdit = timer.ElapsedTime();
 
+  int mspersec = 1000;
+
   cout << nCns << "," << nSolvers << "," << nResolves << "," << testNum << "," 
-       << tmAdd << "," << tmEdit << "," << tmResolve << "," << tmEndEdit << ","
-       << tmAdd/nCns/nSolvers << ","
-       << tmEdit/nSolvers/2 << ","
-       << tmResolve/nResolves/nSolvers << ","
-       << tmEndEdit/nSolvers/2 << endl;
+       << tmAdd*mspersec << "," << tmEdit*mspersec << "," << tmResolve*mspersec << "," << tmEndEdit*mspersec << ","
+       << tmAdd/nCns/nSolvers*mspersec << ","
+       << tmEdit/nSolvers/2*mspersec << ","
+       << tmResolve/nResolves/nSolvers*mspersec << ","
+       << tmEndEdit/nSolvers/2*mspersec << endl;
   
   return true;
 }
@@ -1066,8 +1068,8 @@ main( int argc, char **argv )
 
     if (argc > 1) testNum = atoi(argv[1]);
     if (argc > 2) cns = atoi(argv[2]);
-    if (argc > 3) resolves = atoi(argv[3]);
-    if (argc > 4) solvers = atoi(argv[4]);
+    if (argc > 3) solvers = atoi(argv[3]);
+    if (argc > 4) resolves = atoi(argv[4]);
 
 #if 0
     if (cns > 0) 
