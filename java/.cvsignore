@@ -1,3 +1,4 @@
+CN.class
 ClAbstractVariable.class
 ClConstraint.class
 ClDummyVariable.class
@@ -9,6 +10,7 @@ ClLinearExpression.class
 ClLinearInequality.class
 ClObjectiveVariable.class
 ClPoint.class
+ClSimplexSolver.class
 ClSlackVariable.class
 ClStayConstraint.class
 ClStrength.class
