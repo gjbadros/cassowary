@@ -242,7 +242,7 @@ an integer before returning the value. */
   }
 
   ClVariable *pclv = PclvFromScm(clv);
-  return gh_double2scm(pclv->IntValue());
+  return gh_int2scm(pclv->IntValue());
 }
 #undef FUNC_NAME
 
