@@ -62,12 +62,10 @@ class ClSymbolicWeight {
   double asDouble() const
     {
     vector<double>::const_reverse_iterator i = my_values.rbegin();
-    if (i == my_values.rend())
-      return 0;
-    double sum  = *i;
+    double sum  = 0;
     double factor = 1;
     double multiplier = 1000;
-    for (++i; i != my_values.rend(); ++i) 
+    for ( ; i != my_values.rend(); ++i) 
       {
       sum += *i * factor;
       factor *= multiplier;
