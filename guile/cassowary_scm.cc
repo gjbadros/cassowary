@@ -1152,6 +1152,8 @@ share constraint variable objects. */
   SCM_SETCDR(answer, (SCM) psolver);
   SCM_ALLOW_INTS;
 
+  psolver->setPv(PvFromScm(answer));
+
   return answer;
 }
 #undef FUNC_NAME
