@@ -30,7 +30,7 @@ PYTHON_INCLUDE = /uns/include/python1.5
 CPPFLAGS = -g -DCL_NO_TRACE -DNO_SOLVER_STATS -DCL_SOLVER_CHECK_INTEGRITY -Wall -pedantic -W #-DUSE_GC
 #CPPFLAGS = -g -Wall -pedantic -W
 
-OTHER_LIBS =
+OTHER_LIBS = creader.o
 # OTHER_LIBS = ../../gc/gc.a
 
 #LIB=cassowary-optimized
@@ -65,6 +65,7 @@ TEST_OBJS = test-ClConstraint.o    \
 	ClTests.o                  \
 	ClBug1.o                  \
 	ClLeakTest.o		   \
+	ClParseTest.o              \
 	ClSubgraphTest.o           \
 	ClTestColumns.o
 
@@ -77,7 +78,7 @@ TEST_SRCS = $(TEST_OBJS:.o=.cc)
 NT_SOURCES = $(OBJS:.o=.cpp) $(TEST_OBJS:.o=.cpp)
 
 TESTS = test-ClStrength test-ClVariable test-ClLinearExpression test-ClConstraint \
-	test-ClSimplexSolver ClTests ClBug1 ClLeakTest ClSubgraphTest
+	test-ClSimplexSolver ClTests ClBug1 ClLeakTest ClSubgraphTest ClParseTest
 
 HEADERS = Cassowary.h \
 	Cl.h \
