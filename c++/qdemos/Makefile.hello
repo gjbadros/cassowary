@@ -8,7 +8,7 @@ INCDIR = /scratch/gjb/qt-1.32/include
 CFLAGS = -pg -O2 -fno-strength-reduce -Wall -W -I/usr/X11R6/include -I.. -DCL_NO_TRACE
 LIBCFLAGS = -fPIC
 YACCCFLAGS = -Wno-unused -Wno-parentheses
-LFLAGS = -pg -L$(EGCSDIR)/lib -L/scratch/gjb/qt-1.32/lib -lqt -L.. -lCl
+LFLAGS = -pg -L$(EGCSDIR)/lib -L/scratch/gjb/qt-1.32/lib -lqt -L.. -lcassowary
 CC = g++
 MOC = /scratch/gjb/qt-1.32/bin/moc
 SHELL =	/bin/sh
@@ -41,6 +41,9 @@ TARGET	=	hello
 .SUFFIXES: .cpp .c
 
 .cpp.o:
+	$(CC) -c $(CFLAGS) -I$(INCDIR) -o $@ $<
+
+.cc.o:
 	$(CC) -c $(CFLAGS) -I$(INCDIR) -o $@ $<
 
 .c.o:
