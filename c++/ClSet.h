@@ -8,12 +8,12 @@
 //
 // ClSet.h
 // Define a set templated type, either as a hash_set or as a regular set
-// depending on makefile cpp flag USE_HASH_MAP_AND_SET
+// depending on makefile cpp flag CL_USE_HASH_MAP_AND_SET
 
 #ifndef CL_SET_H
 #define CL_SET_H
 
-#ifdef USE_HASH_MAP_AND_SET
+#ifdef CL_USE_HASH_MAP_AND_SET
 #include <hash_set>
 #define ClSet hash_set
 #else

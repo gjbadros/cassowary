@@ -12,7 +12,7 @@
 #ifndef Cassowary_H
 #define Cassowary_H
 
-#ifdef USE_HASH_MAP_AND_SET
+#ifdef CL_USE_HASH_MAP_AND_SET
 
 #include <hash_map>
 #include <hash_set>
@@ -50,7 +50,7 @@ struct hash<const ClConstraint *>
 };
 #endif
 
-#endif /* USE_HASH_MAP_AND_SET */
+#endif /* CL_USE_HASH_MAP_AND_SET */
 
 #ifdef USE_GC
 #include "../../gc/gc_cpp.h"

@@ -18,6 +18,7 @@
 #endif
 #undef CL_SOLVER_STATS
 #undef CL_DEBUG_FAILURES
+#undef CL_TRACE_VERBOSE
 #endif
 
 #include "ClVariable.h"

@@ -8,12 +8,12 @@
 //
 // ClMap.h
 // Define a map templated type, either as a hash_map or as a regular map
-// depending on makefile cpp flag USE_HASH_MAP_AND_SET
+// depending on makefile cpp flag CL_USE_HASH_MAP_AND_SET
 
 #ifndef CL_MAP_H
 #define CL_MAP_H
 
-#ifdef USE_HASH_MAP_AND_SET
+#ifdef CL_USE_HASH_MAP_AND_SET
 #include <hash_map>
 #define ClMap hash_map
 #else

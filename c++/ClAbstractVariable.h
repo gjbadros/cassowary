@@ -12,7 +12,7 @@
 #ifndef ClAbstractVariable_H
 #define ClAbstractVariable_H
 
-#include <stdio.h>
+#include <stdio.h> /* for sprintf */
 #include "Cassowary.h"
 #include "auto_ptr.h"
 
