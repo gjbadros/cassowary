@@ -28,42 +28,42 @@ addDelete1()
    ClVariable x("x");
    ClSimplexSolver solver;
 
-   solver.addConstraint( ClLinearEquation( x, 100, clsWeak() ) );
+   solver.AddConstraint( ClLinearEquation( x, 100, ClsWeak() ) );
     
    ClLinearInequality c10(x,cnLEQ,10.0);
    ClLinearInequality c20(x,cnLEQ,20.0);
     
    solver
-     .addConstraint(c10)
-     .addConstraint(c20);
+     .AddConstraint(c10)
+     .AddConstraint(c20);
 
-   fOkResult = fOkResult && clApprox(x,10.0);
-   cout << "x == " << x.value() << endl;
+   fOkResult = fOkResult && ClApprox(x,10.0);
+   cout << "x == " << x.Value() << endl;
 
-   solver.removeConstraint(c10);
-   fOkResult = fOkResult && clApprox(x,20.0);
-   cout << "x == " << x.value() << endl;
+   solver.RemoveConstraint(c10);
+   fOkResult = fOkResult && ClApprox(x,20.0);
+   cout << "x == " << x.Value() << endl;
 
-   solver.removeConstraint(c20);
-   fOkResult = fOkResult && clApprox(x,100.0);
-   cout << "x == " << x.value() << endl;
+   solver.RemoveConstraint(c20);
+   fOkResult = fOkResult && ClApprox(x,100.0);
+   cout << "x == " << x.Value() << endl;
 
    ClLinearInequality c10again(x,cnLEQ,10.0);
 
    solver
-     .addConstraint(c10)
-     .addConstraint(c10again);
+     .AddConstraint(c10)
+     .AddConstraint(c10again);
 
-   fOkResult = fOkResult && clApprox(x,10.0);
-   cout << "x == " << x.value() << endl;
+   fOkResult = fOkResult && ClApprox(x,10.0);
+   cout << "x == " << x.Value() << endl;
     
-   solver.removeConstraint(c10);
-   fOkResult = fOkResult && clApprox(x,10.0);
-   cout << "x == " << x.value() << endl;
+   solver.RemoveConstraint(c10);
+   fOkResult = fOkResult && ClApprox(x,10.0);
+   cout << "x == " << x.Value() << endl;
 
-   solver.removeConstraint(c10again);
-   fOkResult = fOkResult && clApprox(x,100.0);
-   cout << "x == " << x.value() << endl;
+   solver.RemoveConstraint(c10again);
+   fOkResult = fOkResult && ClApprox(x,100.0);
+   cout << "x == " << x.Value() << endl;
 
    return(fOkResult);
    } 

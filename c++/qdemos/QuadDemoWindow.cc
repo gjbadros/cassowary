@@ -42,63 +42,63 @@ QuadDemoWindow::QuadDemoWindow( QWidget *parent, const char *name )
        
  double weight = .5 ;
   solver
-    .addPointStay(db[0].CenterPt(),weight *= 2)
-    .addPointStay(db[1].CenterPt(),weight *= 2)
-    .addPointStay(db[2].CenterPt(),weight *= 2)
-    .addPointStay(db[3].CenterPt(),weight *= 2)
+    .AddPointStay(db[0].CenterPt(),weight *= 2)
+    .AddPointStay(db[1].CenterPt(),weight *= 2)
+    .AddPointStay(db[2].CenterPt(),weight *= 2)
+    .AddPointStay(db[3].CenterPt(),weight *= 2)
     ;
     
   // keep midpoints at midpoints
   solver
-    .addConstraint(new ClLinearEquation(mp[0].X(), (db[0].X() + db[1].X())/2))
-    .addConstraint(new ClLinearEquation(mp[0].Y(), (db[0].Y() + db[1].Y())/2))
-    .addConstraint(new ClLinearEquation(mp[1].X(), (db[1].X() + db[2].X())/2))
-    .addConstraint(new ClLinearEquation(mp[1].Y(), (db[1].Y() + db[2].Y())/2))
-    .addConstraint(new ClLinearEquation(mp[2].X(), (db[2].X() + db[3].X())/2))
-    .addConstraint(new ClLinearEquation(mp[2].Y(), (db[2].Y() + db[3].Y())/2))
-    .addConstraint(new ClLinearEquation(mp[3].X(), (db[3].X() + db[0].X())/2))
-    .addConstraint(new ClLinearEquation(mp[3].Y(), (db[3].Y() + db[0].Y())/2))
+    .AddConstraint(new ClLinearEquation(mp[0].X(), (db[0].X() + db[1].X())/2))
+    .AddConstraint(new ClLinearEquation(mp[0].Y(), (db[0].Y() + db[1].Y())/2))
+    .AddConstraint(new ClLinearEquation(mp[1].X(), (db[1].X() + db[2].X())/2))
+    .AddConstraint(new ClLinearEquation(mp[1].Y(), (db[1].Y() + db[2].Y())/2))
+    .AddConstraint(new ClLinearEquation(mp[2].X(), (db[2].X() + db[3].X())/2))
+    .AddConstraint(new ClLinearEquation(mp[2].Y(), (db[2].Y() + db[3].Y())/2))
+    .AddConstraint(new ClLinearEquation(mp[3].X(), (db[3].X() + db[0].X())/2))
+    .AddConstraint(new ClLinearEquation(mp[3].Y(), (db[3].Y() + db[0].Y())/2))
     ;
 
 
   // keep from turning inside out
   solver
-    .addConstraint(new ClLinearInequality(db[0].X() + 10, cnLEQ, db[2].X()))
-    .addConstraint(new ClLinearInequality(db[0].X() + 10, cnLEQ, db[3].X()))
-    .addConstraint(new ClLinearInequality(db[1].X() + 10, cnLEQ, db[2].X()))
-    .addConstraint(new ClLinearInequality(db[1].X() + 10, cnLEQ, db[3].X()))
+    .AddConstraint(new ClLinearInequality(db[0].X() + 10, cnLEQ, db[2].X()))
+    .AddConstraint(new ClLinearInequality(db[0].X() + 10, cnLEQ, db[3].X()))
+    .AddConstraint(new ClLinearInequality(db[1].X() + 10, cnLEQ, db[2].X()))
+    .AddConstraint(new ClLinearInequality(db[1].X() + 10, cnLEQ, db[3].X()))
 
-    .addConstraint(new ClLinearInequality(db[0].Y() + 10, cnLEQ, db[1].Y()))
-    .addConstraint(new ClLinearInequality(db[0].Y() + 10, cnLEQ, db[2].Y()))
-    .addConstraint(new ClLinearInequality(db[3].Y() + 10, cnLEQ, db[1].Y()))
-    .addConstraint(new ClLinearInequality(db[3].Y() + 10, cnLEQ, db[2].Y()))
+    .AddConstraint(new ClLinearInequality(db[0].Y() + 10, cnLEQ, db[1].Y()))
+    .AddConstraint(new ClLinearInequality(db[0].Y() + 10, cnLEQ, db[2].Y()))
+    .AddConstraint(new ClLinearInequality(db[3].Y() + 10, cnLEQ, db[1].Y()))
+    .AddConstraint(new ClLinearInequality(db[3].Y() + 10, cnLEQ, db[2].Y()))
     ;
 
   int MaxX = 450;
   int MaxY = 450;
   solver
-    .addConstraint(new ClLinearInequality(db[0].X(), cnGEQ, 0))
-    .addConstraint(new ClLinearInequality(db[1].X(), cnGEQ, 0))
-    .addConstraint(new ClLinearInequality(db[2].X(), cnGEQ, 0))
-    .addConstraint(new ClLinearInequality(db[3].X(), cnGEQ, 0))
-    .addConstraint(new ClLinearInequality(db[0].Y(), cnGEQ, 0))
-    .addConstraint(new ClLinearInequality(db[1].Y(), cnGEQ, 0))
-    .addConstraint(new ClLinearInequality(db[2].Y(), cnGEQ, 0))
-    .addConstraint(new ClLinearInequality(db[3].Y(), cnGEQ, 0))
-    .addConstraint(new ClLinearInequality(db[0].X(), cnLEQ, MaxX))
-    .addConstraint(new ClLinearInequality(db[1].X(), cnLEQ, MaxX))
-    .addConstraint(new ClLinearInequality(db[2].X(), cnLEQ, MaxX))
-    .addConstraint(new ClLinearInequality(db[3].X(), cnLEQ, MaxX))
-    .addConstraint(new ClLinearInequality(db[0].Y(), cnLEQ, MaxY))
-    .addConstraint(new ClLinearInequality(db[1].Y(), cnLEQ, MaxY))
-    .addConstraint(new ClLinearInequality(db[2].Y(), cnLEQ, MaxY))
-    .addConstraint(new ClLinearInequality(db[3].Y(), cnLEQ, MaxY));
+    .AddConstraint(new ClLinearInequality(db[0].X(), cnGEQ, 0))
+    .AddConstraint(new ClLinearInequality(db[1].X(), cnGEQ, 0))
+    .AddConstraint(new ClLinearInequality(db[2].X(), cnGEQ, 0))
+    .AddConstraint(new ClLinearInequality(db[3].X(), cnGEQ, 0))
+    .AddConstraint(new ClLinearInequality(db[0].Y(), cnGEQ, 0))
+    .AddConstraint(new ClLinearInequality(db[1].Y(), cnGEQ, 0))
+    .AddConstraint(new ClLinearInequality(db[2].Y(), cnGEQ, 0))
+    .AddConstraint(new ClLinearInequality(db[3].Y(), cnGEQ, 0))
+    .AddConstraint(new ClLinearInequality(db[0].X(), cnLEQ, MaxX))
+    .AddConstraint(new ClLinearInequality(db[1].X(), cnLEQ, MaxX))
+    .AddConstraint(new ClLinearInequality(db[2].X(), cnLEQ, MaxX))
+    .AddConstraint(new ClLinearInequality(db[3].X(), cnLEQ, MaxX))
+    .AddConstraint(new ClLinearInequality(db[0].Y(), cnLEQ, MaxY))
+    .AddConstraint(new ClLinearInequality(db[1].Y(), cnLEQ, MaxY))
+    .AddConstraint(new ClLinearInequality(db[2].Y(), cnLEQ, MaxY))
+    .AddConstraint(new ClLinearInequality(db[3].Y(), cnLEQ, MaxY));
     
 }
 
 QuadDemoWindow::~QuadDemoWindow()
 {
-  solver.removeAllEditVars();
+  solver.RemoveAllEditVars();
 }
 
 void QuadDemoWindow::mousePressEvent( QMouseEvent *e )
@@ -122,9 +122,9 @@ void QuadDemoWindow::mousePressEvent( QMouseEvent *e )
     {
     imbUsed = e->button();
     solver
-      .addEditVar(db[idbDragging].X())
-      .addEditVar(db[idbDragging].Y())
-      .beginEdit();
+      .AddEditVar(db[idbDragging].X())
+      .AddEditVar(db[idbDragging].Y())
+      .BeginEdit();
     }
 }
 
@@ -140,11 +140,11 @@ void QuadDemoWindow::mouseReleaseEvent( QMouseEvent *e )
         // that we initiated the drag with is released
         idbDragging = -1;
         solver
-          .endEdit();
+          .EndEdit();
         repaint();
         }
 #ifdef QUAD_DEMO_SHOW_INTERNAL_INFO
-      solver.printInternalInfo(cerr);
+      solver.PrintInternalInfo(cerr);
       cerr << endl;
 #endif
       }
@@ -167,9 +167,9 @@ void QuadDemoWindow::mouseMoveEvent( QMouseEvent *e )
   if (idbDragging != -1)
     {
     solver
-      .suggestValue(db[idbDragging].X(),e->x())
-      .suggestValue(db[idbDragging].Y(),e->y())
-      .resolve();
+      .SuggestValue(db[idbDragging].X(),e->x())
+      .SuggestValue(db[idbDragging].Y(),e->y())
+      .Resolve();
 
     repaint();
     }
