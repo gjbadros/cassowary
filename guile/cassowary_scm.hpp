@@ -155,6 +155,33 @@ inline SCM ScmMakeClLinearInequality(const ClLinearInequality *pineq) {
   return answer;
 }
 
+
+//// ClStayConstraint wrapper
+class ClStayConstraint;
+
+#undef SCMTYPEID
+#define SCMTYPEID scm_tc16_cl_stay_constraint
+
+extern long SCMTYPEID;
+
+inline bool FIsClStayConstraintScm(SCM scm) 
+{ return SCM_NIMP(scm) && SCM_CAR(scm) == (SCM) SCMTYPEID; }
+
+inline ClStayConstraint *PstaycnFromScm(SCM scm)
+{ return (ClStayConstraint *)(SCM_CDR(scm)); }
+
+inline SCM ScmMakeClStayConstraint(const ClStayConstraint *pstaycn) {
+  SCM answer;
+  
+  SCM_DEFER_INTS;
+  SCM_NEWCELL(answer);
+  SCM_SETCAR(answer, (SCM) SCMTYPEID);
+  SCM_SETCDR(answer, (SCM) pstaycn);
+  SCM_ALLOW_INTS;
+
+  return answer;
+}
+
 //// cl-constraint -- a wrapper for cl-equation and cl-inequality
 /// NOT a new SMOB type, just for convenience
 class ClConstraint;
@@ -165,6 +192,7 @@ inline bool FIsClConstraintScm(SCM scm) {
 
   if (car == (SCM) scm_tc16_cl_equation) return true;
   if (car == (SCM) scm_tc16_cl_inequality) return true;
+  if (car == (SCM) scm_tc16_cl_stay_constraint) return true;
 
   return false;
 }

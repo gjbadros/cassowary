@@ -857,6 +857,84 @@ arbitrary constraints. */
 #undef FUNC_NAME
 
 
+//// ClStayConstraint wrapper
+#undef SCMTYPEID
+#define SCMTYPEID scm_tc16_cl_stay_constraint
+
+long SCMTYPEID;
+
+SCM
+mark_cl_stay_constraint(SCM scm)
+{
+  SCM_SETGC8MARK(scm);
+  return SCM_BOOL_F;
+}
+
+size_t
+free_cl_stay_constraint(SCM scm)
+{
+  ClConstraint *pcn = PcnFromScm(scm);
+  delete pcn;
+  return 0;
+}
+
+int
+print_cl_stay_constraint(SCM scm, SCM port, scm_print_state *pstate)
+{
+  strstream ss;
+  ClConstraint *pcn = PcnFromScm(scm);
+  ss << "#<cl-stay-constraint " << *pcn << ">" << ends;
+  scm_puts(ss.str(), port);
+  return 1;
+}
+
+SCWM_PROC(cl_stay_constraint_p, "cl-stay-constraint?", 1, 0, 0,
+           (SCM obj))
+  /** Return #t if OBJ is a stay constraint object, #t otherwise.
+Stay constraints also respond #t to `cl-constraint?' queries,
+since they are also constraint objects. */
+#define FUNC_NAME s_cl_stay_constraint_p
+{
+  return SCM_BOOL_FromF(FIsClStayConstraintScm(obj));
+}
+#undef FUNC_NAME
+
+
+SCWM_PROC(make_cl_stay_constraint, "make-cl-stay-constraint", 1, 2, 0,
+           (SCM cl_var, SCM strength, SCM factor))
+  /** Return a stay constraint for CL-VAR to stay at its current value.
+Weight the constraint according to STRENGTH and FACTOR.  Use
+`cl-add-constraint' to add the resulting constraint into a solver,
+or use the `cl-add-stay' convenience function instead. */
+#define FUNC_NAME s_make_cl_stay_constraint
+{
+  if (!FIsClVariableScm(cl_var)) {
+    scm_wrong_type_arg(FUNC_NAME,1,cl_var);
+  }
+  ClVariable *pclv = PclvFromScm(cl_var);
+
+  const ClStrength *pcls = &clsWeak();
+  if (FIsClStrengthScm(strength)) {
+    pcls = PclsFromScm(strength);
+  } else if (!FUnsetSCM(strength)) {
+    scm_wrong_type_arg(FUNC_NAME,2,strength);
+  }
+
+  double nWeight = 1.0;
+  if (gh_number_p(factor)) {
+    nWeight = gh_scm2double(factor);
+  } else if (!FUnsetSCM(factor)) {
+    scm_wrong_type_arg(FUNC_NAME,3,factor);
+  }
+
+  SCM answer = ScmMakeClStayConstraint(new ClStayConstraint(*pclv, *pcls, nWeight));
+  return answer;
+}
+#undef FUNC_NAME
+
+
+
+
 //// cl-constraint -- a wrapper for cl-equation and cl-inequality
 /// NOT a new SMOB type, just for convenience
 
@@ -1121,33 +1199,55 @@ object, the preceding arguments will have already been removed. */
 
 
 // FIXGJB: add strength argument
-SCWM_PROC(cl_add_editvar, "cl-add-editvar", 1, 0, 1,
-           (SCM solver, SCM args))
-  /** Add edit constraints on variables in ARGS to SOLVER.
-ARGS are cl-variable objects that you wish to permit to change under
+SCWM_PROC(cl_add_editvar, "cl-add-editvar", 2, 2, 0,
+           (SCM solver, SCM cl_vars, SCM strength, SCM factor))
+  /** Add edit constraints on variables CL-VARS to SOLVER.
+CL-VARS is a or a list of cl-variable object(s) that you wish to permit to change under
 the solver's control.  An edit-constraint for each cl-variable object
-is added in turn.  If any of ARGS is not a cl-variable, an error is
-thrown (after the preceding objects have been handled).  After
+is added in turn.   Each of the stay constraints will have strength
+STRENGTH (#f for default of cls-weak) and weight FACTOR (#f for
+default of 1).  If any element of CL-VARS is not a cl-variable, an error is
+thrown (after the preceding variables have been handled).  After
 selecting the edit variables with this procedure, you must call
 `cl-begin-edit' before using `cl-suggest-value'.  To remove the edit
 variables, use `cl-end-edit' when done changing the variables'
 values. */
 #define FUNC_NAME s_cl_add_editvar
 {
-  int iarg = 1;
-
   if (!FIsClSimplexSolverScm(solver)) {
-    scm_wrong_type_arg(FUNC_NAME,iarg++,solver);
+    scm_wrong_type_arg(FUNC_NAME,1,solver);
   }
   ClSimplexSolver *psolver = PsolverFromScm(solver);
 
+  const ClStrength *pcls = &clsWeak();
+  if (FIsClStrengthScm(strength)) {
+    pcls = PclsFromScm(strength);
+  } else if (!FUnsetSCM(strength)) {
+    scm_wrong_type_arg(FUNC_NAME,3,strength);
+  }
+
+  double nWeight = 1.0;
+  if (gh_number_p(factor)) {
+    nWeight = gh_scm2double(factor);
+  } else if (!FUnsetSCM(factor)) {
+    scm_wrong_type_arg(FUNC_NAME,4,factor);
+  }
+
   try {
-    for (int i = 0; SCM_NNULLP (args); args = SCM_CDR (args), ++i) {
-      SCM var = SCM_CAR(args);
-      if (!FIsClVariableScm(var)) {
-        scm_wrong_type_arg(FUNC_NAME,iarg,args);
+    if (gh_list_p(cl_vars)) {
+      for (int i = 0; SCM_NNULLP (cl_vars); cl_vars = SCM_CDR (cl_vars), ++i) {
+        SCM var = SCM_CAR(cl_vars);
+        if (!FIsClVariableScm(var)) {
+          scm_wrong_type_arg(FUNC_NAME,2,cl_vars);
+        }
+        ClVariable *pclv = PclvFromScm(var);
+        psolver->addEditVar(*pclv);
       }
-      ClVariable *pclv = PclvFromScm(var);
+    } else {
+      if (!FIsClVariableScm(cl_vars)) {
+        scm_wrong_type_arg(FUNC_NAME,2,cl_vars);
+      }
+      ClVariable *pclv = PclvFromScm(cl_vars);
       psolver->addEditVar(*pclv);
     }
   } catch (const ExCLEditMisuse &e) {
@@ -1159,35 +1259,59 @@ values. */
 #undef FUNC_NAME
 
 
-SCWM_PROC(cl_add_stay, "cl-add-stay", 1, 0, 1,
-           (SCM solver, SCM args))
-  /** Add stay constraints on variables in ARGS to SOLVER.
+SCWM_PROC(cl_add_stay, "cl-add-stay", 2, 2, 0,
+           (SCM solver, SCM cl_vars, SCM strength, SCM factor))
+  /** Add stay constraints on variables CL-VARS to SOLVER.
 
-ARGS are cl-variable objects that you wish to remain (i.e., stay) at
+CL-VARS is a or list of cl-variable(s) that you wish to remain (i.e., stay) at
 their current values unless another constraint forces them to change.
 In normal uses of the solver, all variables should have stay
 constraints added on them before they are used in a constraint added
-to the solver.  Future versions of the solver may add the stay
+to the solver.  Each of the stay constraints will have strength
+STRENGTH (#f for default of cls-weak) and weight FACTOR (#f for
+default of 1).
+
+Future versions of the solver may add the stay
 constraint implicitly upon a variable's first use.  Until then,
 though, be sure to add stay constraints on all the cl-variable objects
 you intend to use with the given SOLVER. */
 #define FUNC_NAME s_cl_add_stay
 {
-  int iarg = 1;
-
   if (!FIsClSimplexSolverScm(solver)) {
-    scm_wrong_type_arg(FUNC_NAME,iarg++,solver);
+    scm_wrong_type_arg(FUNC_NAME,1,solver);
   }
   ClSimplexSolver *psolver = PsolverFromScm(solver);
 
+  const ClStrength *pcls = &clsWeak();
+  if (FIsClStrengthScm(strength)) {
+    pcls = PclsFromScm(strength);
+  } else if (!FUnsetSCM(strength)) {
+    scm_wrong_type_arg(FUNC_NAME,3,strength);
+  }
+
+  double nWeight = 1.0;
+  if (gh_number_p(factor)) {
+    nWeight = gh_scm2double(factor);
+  } else if (!FUnsetSCM(factor)) {
+    scm_wrong_type_arg(FUNC_NAME,4,factor);
+  }
+
   try {
-    for (int i = 0; SCM_NNULLP (args); args = SCM_CDR (args), ++i) {
-      SCM var = SCM_CAR(args);
-      if (!FIsClVariableScm(var)) {
-        scm_wrong_type_arg(FUNC_NAME,iarg,args);
+    if (gh_list_p(cl_vars)) {
+      for (int i = 0; SCM_NNULLP (cl_vars); cl_vars = SCM_CDR (cl_vars), ++i) {
+        SCM var = SCM_CAR(cl_vars);
+        if (!FIsClVariableScm(var)) {
+          scm_wrong_type_arg(FUNC_NAME,2,cl_vars);
+        }
+        ClVariable *pclv = PclvFromScm(var);
+        psolver->addStay(*pclv,*pcls,nWeight);
       }
-      ClVariable *pclv = PclvFromScm(var);
-      psolver->addStay(*pclv);
+    } else {
+      if (!FIsClVariableScm(cl_vars)) {
+        scm_wrong_type_arg(FUNC_NAME,2,cl_vars);
+      }
+      ClVariable *pclv = PclvFromScm(cl_vars);
+      psolver->addStay(*pclv,*pcls,nWeight);
     }
   } catch (const ExCLError &e) {
     scm_misc_error(FUNC_NAME, e.description(), SCM_EOL);
@@ -1196,6 +1320,7 @@ you intend to use with the given SOLVER. */
   return SCM_UNDEFINED;
 }
 #undef FUNC_NAME
+
 
 
 
@@ -1418,6 +1543,7 @@ MAKE_SMOBFUNS(cl_strength);
 MAKE_SMOBFUNS(cl_expression);
 MAKE_SMOBFUNS(cl_equation);
 MAKE_SMOBFUNS(cl_inequality);
+MAKE_SMOBFUNS(cl_stay_constraint);
 MAKE_SMOBFUNS(cl_solver);
 
 static SCM scm_cls_weak;
@@ -1434,6 +1560,7 @@ init_cassowary_scm()
   REGISTER_SMOBFUNS(cl_expression);
   REGISTER_SMOBFUNS(cl_equation);
   REGISTER_SMOBFUNS(cl_inequality);
+  REGISTER_SMOBFUNS(cl_stay_constraint);
   REGISTER_SMOBFUNS(cl_solver);
 
   SCM_DEFER_INTS;
