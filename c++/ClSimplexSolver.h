@@ -23,6 +23,8 @@ class ClVariable;
 typedef pair<ClVariable,ClVariable> ClPoint;
 
 class ClSimplexSolver : public ClTableau {
+ protected: typedef ClTableau super;
+
  public:
 
   // Constructor

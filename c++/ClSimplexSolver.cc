@@ -62,7 +62,6 @@ ClSimplexSolver::addPointStays(const vector<const ClPoint *> &listOfPoints)
 {
 #ifndef NO_TRACE
   Tracer TRACER(__FUNCTION__);
-  cerr << "(" << "FIXGJB" << ")" << endl;
 #endif
 
   vector<const ClPoint *>::const_iterator it = listOfPoints.begin();
@@ -334,11 +333,7 @@ ClSimplexSolver::resolve(const vector<double> &newEditConstants)
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << "newEditConstants" << newEditConstants << ")" << endl;
 #endif
-  // FIXGJB is there a better way to empty it?
-  while (!my_infeasibleRows.empty())
-    {
-    my_infeasibleRows.erase(my_infeasibleRows.begin());
-    }
+  my_infeasibleRows.clear();
   resetStayConstants();
   resetEditConstants(newEditConstants);
   dualOptimize();
@@ -976,7 +971,7 @@ ClSimplexSolver::resetEditConstants(const vector<Number> &newEditConstants)
 {
 #ifndef NO_TRACE
   Tracer TRACER(__FUNCTION__);
-  cerr << "(" << "newEditConstants" /* FIXGJB */ << ")" << endl;
+  cerr << "(" << newEditConstants << ")" << endl;
 #endif
   if (newEditConstants.size() != my_editPlusErrorVars.size())
     { // number of edit constants doesn't match the number of edit error variables
@@ -1115,12 +1110,7 @@ ostream &operator<<(ostream &xo, const vector<const ClAbstractVariable *> &varli
 ostream &
 ClSimplexSolver::printOn(ostream &xo) const
 {
-  // FIXGJB duplicated from tableau printer
-  xo << "Tableau:\n" 
-     << my_rows << endl;
-  xo << "Columns:\n" 
-     << my_columns << endl;
-  xo << "Infeasible rows: " << my_infeasibleRows << endl;
+  super::printOn(xo);
 
   xo << "my_editPlusErrorVars: "
      << my_editPlusErrorVars << endl;
