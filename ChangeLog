@@ -1,3 +1,9 @@
+Mon Sep  6 21:40:58 1999    <gjb@cs.washington.edu>
+
+	* cassowary.spec.in: Use install-strip target to remove debug
+	symbols and save disk space.  Remove %{prefix}/doc/* from the
+	%files list as they are in the %doc listing already.
+
 Mon Sep  6 12:25:14 1999   Greg J. Badros  <gjb@cs.washington.edu>
 
 	* cassowary.spec.in: Use --host=alpha-linux on that platform
