@@ -312,8 +312,8 @@ class ClSimplexSolver extends ClTableau
        throws ExCLInternalError
   {
     Vector vals = new Vector(2);
-    vals.addElement(new Double(x));
-    vals.addElement(new Double(y));
+    vals.addElement(new ClDouble(x));
+    vals.addElement(new ClDouble(y));
     resolve(vals);
   }
 
@@ -408,7 +408,7 @@ class ClSimplexSolver extends ClTableau
     
     for (Enumeration e = terms.keys(); e.hasMoreElements() ; ) {
       final ClAbstractVariable v = (ClAbstractVariable) e.nextElement();
-      final double c = ((Double) terms.get(v)).doubleValue();
+      final double c = ((ClDouble) terms.get(v)).doubleValue();
       
       if (foundUnrestricted){
 	if (!v.isRestricted()) {
@@ -440,7 +440,7 @@ class ClSimplexSolver extends ClTableau
     
     for (Enumeration e = terms.keys(); e.hasMoreElements() ;) {
       final ClAbstractVariable v = (ClAbstractVariable) e.nextElement();
-      final double c = ((Double) terms.get(v)).doubleValue();
+      final double c = ((ClDouble) terms.get(v)).doubleValue();
       if (!v.isDummy())
 	return null; // nope, no luck
       if (!columnsHasKey(v)) {
@@ -514,7 +514,7 @@ class ClSimplexSolver extends ClTableau
 	  Hashtable terms = expr.terms();
 	  for (Enumeration e = terms.keys(); e.hasMoreElements() ; ) {
 	    ClAbstractVariable v = (ClAbstractVariable) e.nextElement();
-	    double c = ((Double)terms.get(v)).doubleValue();
+	    double c = ((ClDouble)terms.get(v)).doubleValue();
 	    if (c > 0.0 && v.isPivotable()) {
 	      double zc = zRow.coefficientFor(v);
 	      r = zc/c; // FIXGJB r:= zc/c or zero, as ClSymbolicWeight-s
@@ -549,7 +549,7 @@ class ClSimplexSolver extends ClTableau
     final Hashtable cnTerms = cnExpr.terms();
     for (Enumeration en = cnTerms.keys(); en.hasMoreElements(); ) {
       final ClAbstractVariable v = (ClAbstractVariable) en.nextElement();
-      double c = ((Double) cnTerms.get(v)).doubleValue();
+      double c = ((ClDouble) cnTerms.get(v)).doubleValue();
       final ClLinearExpression e = rowExpression(v);
       if (e == null)
 	expr.addVariable(v,c);
@@ -610,7 +610,7 @@ class ClSimplexSolver extends ClTableau
 	else if (cn.isEditConstraint()) {
 	  my_editPlusErrorVars.addElement(eplus);
 	  my_editMinusErrorVars.addElement(eminus);
-	  my_prevEditConstants.addElement(new Double(cnExpr.constant()));
+	  my_prevEditConstants.addElement(new ClDouble(cnExpr.constant()));
 	}
       }
     }
@@ -637,7 +637,7 @@ class ClSimplexSolver extends ClTableau
       Hashtable terms = zRow.terms();
       for (Enumeration e = terms.keys(); e.hasMoreElements() ; ) {
 	ClAbstractVariable v = (ClAbstractVariable) e.nextElement();
-	double c = ((Double) terms.get(v)).doubleValue();
+	double c = ((ClDouble) terms.get(v)).doubleValue();
 	if (v.isPivotable() && c < objectiveCoeff) {
 	  objectiveCoeff = c;
 	  entryVar = v;
@@ -656,6 +656,7 @@ class ClSimplexSolver extends ClTableau
 	if (v.isPivotable()) {
 	  final ClLinearExpression expr = rowExpression(v);
 	  double coeff = expr.coefficientFor(entryVar);
+	  traceprint("pivotable, coeff = " + coeff);
 	  if (coeff < 0.0) {
 	    r = - expr.constant() / coeff;
 	    if (r < minRatio) {
@@ -702,8 +703,8 @@ class ClSimplexSolver extends ClTableau
     }
 
     for (int i = 0 ; i < newEditConstants.size(); i++) {
-      double delta = (((Double)newEditConstants.elementAt(i)).doubleValue() - 
-		      ((Double)my_prevEditConstants.elementAt(i)).doubleValue());
+      double delta = (((ClDouble)newEditConstants.elementAt(i)).doubleValue() - 
+		      ((ClDouble)my_prevEditConstants.elementAt(i)).doubleValue());
       my_prevEditConstants.setElementAt(newEditConstants.elementAt(i),i);
       deltaEditConstant(delta, 
 			(ClAbstractVariable) my_editPlusErrorVars.elementAt(i),

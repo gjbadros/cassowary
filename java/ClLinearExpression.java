@@ -22,54 +22,54 @@ class ClLinearExpression extends CL
 
   public ClLinearExpression(double num)
     {
-      my_constant = new Double(num);
+      my_constant = new ClDouble(num);
       my_terms = new Hashtable();
     }
 
   public ClLinearExpression()
     {
-      my_constant = new Double(0);
+      my_constant = new ClDouble(0);
       my_terms = new Hashtable();
     }
 
 
   public ClLinearExpression(ClAbstractVariable clv, double value, double constant)
     {
-      my_constant = new Double(constant);
+      my_constant = new ClDouble(constant);
       my_terms = new Hashtable();
-      my_terms.put(clv,new Double(value));
+      my_terms.put(clv,new ClDouble(value));
     }
 
   public ClLinearExpression(ClAbstractVariable clv, double value)
     {
-      my_constant = new Double(0);
+      my_constant = new ClDouble(0);
       my_terms = new Hashtable();
-      my_terms.put(clv,new Double(value));
+      my_terms.put(clv,new ClDouble(value));
     }
 
   public ClLinearExpression(ClAbstractVariable clv)
     {
-      my_constant = new Double(0);
+      my_constant = new ClDouble(0);
       my_terms = new Hashtable();
-      my_terms.put(clv,new Double(1));
+      my_terms.put(clv,new ClDouble(1));
     }
 
 
-  public ClLinearExpression(Double constant, Hashtable terms)
+  public ClLinearExpression(ClDouble constant, Hashtable terms)
     {
-      my_constant = new Double(constant.doubleValue());
+      my_constant = new ClDouble(constant.doubleValue());
       my_terms = (Hashtable) terms.clone();
     }
 
 
   public ClLinearExpression multiplyMe(double x)
     {
-      my_constant = new Double(my_constant.doubleValue() * x);
+      my_constant.setValue(my_constant.doubleValue() * x);
       
       for (Enumeration e = my_terms.keys() ; e.hasMoreElements(); ) {
         ClAbstractVariable clv = (ClAbstractVariable) e.nextElement();
-	double coeff = ((Double) my_terms.get(clv)).doubleValue();
-	my_terms.put( clv, new Double((coeff * x)));
+	ClDouble cld = (ClDouble) my_terms.get(clv);
+	cld.setValue(cld.doubleValue() * x);
       } 
       return  this;
     }
@@ -164,7 +164,7 @@ class ClLinearExpression extends CL
       
       for (Enumeration e = expr.terms().keys() ; e.hasMoreElements(); ) {
 	ClAbstractVariable clv = (ClAbstractVariable) e.nextElement();
- 	double coeff = ((Double) expr.terms().get(clv)).doubleValue();
+ 	double coeff = ((ClDouble) expr.terms().get(clv)).doubleValue();
  	addVariable(clv,coeff*n, subject, solver);
       }
       return this;
@@ -176,7 +176,7 @@ class ClLinearExpression extends CL
       
       for (Enumeration e = expr.terms().keys() ; e.hasMoreElements(); ) {
         ClAbstractVariable clv = (ClAbstractVariable) e.nextElement();
-	double coeff = ((Double) expr.terms().get(clv)).doubleValue();
+	double coeff = ((ClDouble) expr.terms().get(clv)).doubleValue();
 	addVariable(clv,coeff*n);
       }
       return this;
@@ -191,18 +191,18 @@ class ClLinearExpression extends CL
     { // body largely duplicated below
       fnenterprint("addVariable:" + v + ", " + c);
 
-      Double coeff = (Double) my_terms.get(v);
+      ClDouble coeff = (ClDouble) my_terms.get(v);
       if (coeff != null) {
 	double new_coefficient = coeff.doubleValue() + c;
-	if (CL.approx(new_coefficient,0)) {
+	if (CL.approx(new_coefficient,0.0)) {
 	  my_terms.remove(v);
 	}
 	else {
-	  my_terms.put(v,new Double(new_coefficient));  // ASKCSK
+	  coeff.setValue(new_coefficient);
 	}
       } else {
 	if (!CL.approx(c,0.0)) {
-	  my_terms.put(v,new Double(c));
+	  my_terms.put(v,new ClDouble(c));
 	}
       }
       return this;
@@ -215,7 +215,12 @@ class ClLinearExpression extends CL
   public final ClLinearExpression setVariable(ClAbstractVariable v, double c)
     { 
       //assert(c != 0.0);  
-      my_terms.put(v,new Double(c)); return this;
+      ClDouble coeff = (ClDouble) my_terms.get(v);
+      if (coeff != null) 
+	coeff.setValue(c);
+      else
+	my_terms.put(v,new ClDouble(c)); 
+      return this;
     }
 
   public final ClLinearExpression addVariable(ClAbstractVariable v, double c,
@@ -223,25 +228,25 @@ class ClLinearExpression extends CL
      { // body largely duplicated above
        fnenterprint("addVariable:" + v + ", " + c + ", " + subject + ", ...");
 
-       Double coeff = (Double) my_terms.get(v);
+       ClDouble coeff = (ClDouble) my_terms.get(v);
        if (coeff != null) 
  	{
  	double new_coefficient = coeff.doubleValue() + c;
- 	if (CL.approx(new_coefficient,0))
+ 	if (CL.approx(new_coefficient,0.0))
  	  {
  	  solver.noteRemovedVariable(v,subject);
  	  my_terms.remove(v);
  	  }
  	else 
  	  {
- 	  my_terms.put(v, new Double( new_coefficient));
+ 	  coeff.setValue(new_coefficient);
  	  }
  	}
        else
  	{
  	if (!CL.approx(c,0.0))
  	  {
- 	  my_terms.put(v,new Double(c));
+ 	  my_terms.put(v,new ClDouble(c));
  	  solver.noteAddedVariable(v,subject);
  	  }
  	}
@@ -263,25 +268,25 @@ class ClLinearExpression extends CL
     fnenterprint("CLE:substituteOut: " + var + ", " + expr + ", " + subject + ", ...");
     traceprint("this = " + this);
 
-    double multiplier = ((Double) my_terms.remove(var)).doubleValue();
+    double multiplier = ((ClDouble) my_terms.remove(var)).doubleValue();
     incrementConstant(multiplier * expr.constant());
     
     for (Enumeration e = expr.terms().keys(); e.hasMoreElements(); ) {
       ClAbstractVariable clv = (ClAbstractVariable) e.nextElement();
-      double coeff = ((Double) expr.terms().get(clv)).doubleValue();
-      Double d_old_coeff = (Double) my_terms.get(clv);
+      double coeff = ((ClDouble) expr.terms().get(clv)).doubleValue();
+      ClDouble d_old_coeff = (ClDouble) my_terms.get(clv);
       if (d_old_coeff != null) {
-	double old_coeff = ((Double) d_old_coeff).doubleValue();
+	double old_coeff = d_old_coeff.doubleValue();
 	double newCoeff = old_coeff + multiplier * coeff;
 	if (CL.approx(newCoeff,0.0)) {
 	  solver.noteRemovedVariable(clv,subject);
 	  my_terms.remove(clv);
 	} else {
-	  my_terms.put(clv,new Double(newCoeff));
+	  d_old_coeff.setValue(newCoeff);
 	}
       } else {
 	// did not have that variable already
-	my_terms.put(clv,new Double(multiplier * coeff));
+	my_terms.put(clv,new ClDouble(multiplier * coeff));
 	solver.noteAddedVariable(clv,subject);
       }
     }
@@ -290,13 +295,17 @@ class ClLinearExpression extends CL
   
   public final void changeSubject(ClAbstractVariable old_subject, ClAbstractVariable new_subject)
     {
-      my_terms.put(old_subject,new Double(newSubject(new_subject)));
+      ClDouble cld = (ClDouble) my_terms.get(old_subject);
+      if (cld != null)
+	cld.setValue(newSubject(new_subject));
+      else
+	my_terms.put(old_subject,new ClDouble(newSubject(new_subject)));
     }
   
   public final double newSubject(ClAbstractVariable subject)
     {
       fnenterprint("newSubject:" + subject);
-      Double coeff = (Double) my_terms.remove(subject);
+      ClDouble coeff = (ClDouble) my_terms.remove(subject);
       double reciprocal = 1.0 / coeff.doubleValue();
       multiplyMe(-reciprocal);
       return reciprocal;
@@ -304,7 +313,7 @@ class ClLinearExpression extends CL
 
   public final double coefficientFor(ClAbstractVariable var)
     { 
-      Double coeff = (Double) my_terms.get(var);
+      ClDouble coeff = (ClDouble) my_terms.get(var);
       if (coeff != null)
 	return coeff.doubleValue();
       else
@@ -315,13 +324,13 @@ class ClLinearExpression extends CL
     { return my_constant.doubleValue(); }
 
   public final void set_constant(double c)
-    { my_constant = new Double(c); }
+    { my_constant.setValue(c); }
 
   public final Hashtable terms()
     { return my_terms; }
 
   public final void incrementConstant(double c)
-    { my_constant = new Double(my_constant.doubleValue() + c); }
+    { my_constant.setValue(my_constant.doubleValue() + c); }
 
   public final boolean isConstant()
     { return my_terms.size() == 0; }
@@ -342,13 +351,13 @@ class ClLinearExpression extends CL
 	  return bstr.toString();
 	  }
 	ClAbstractVariable clv = (ClAbstractVariable) e.nextElement();
-	Double coeff = (Double) my_terms.get(clv);
+	ClDouble coeff = (ClDouble) my_terms.get(clv);
 	bstr.append(coeff.toString() + "*" + clv.toString());
 	}
       for (; e.hasMoreElements(); )
 	{
 	ClAbstractVariable clv = (ClAbstractVariable) e.nextElement();
-	Double coeff = (Double) my_terms.get(clv);
+	ClDouble coeff = (ClDouble) my_terms.get(clv);
 	bstr.append(" + " + coeff.toString() + "*" + clv.toString());
 	}
       return bstr.toString();
@@ -371,7 +380,7 @@ class ClLinearExpression extends CL
   public final static boolean FEquals(ClLinearExpression e1, ClLinearExpression e2)
     { return e1 == e2; }
 
-  private Double my_constant;
-  private Hashtable my_terms;
+  private ClDouble my_constant;
+  private Hashtable my_terms; // from ClVariable to ClDouble
   
 }
