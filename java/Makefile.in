@@ -4,18 +4,16 @@
 # Original Smalltalk Implementation by Alan Borning
 # This Java Implementation by Greg J. Badros, <gjb@cs.washington.edu>
 # http://www.cs.washington.edu/homes/gjb
-# (C) 1998 Alan Borning and Greg Badros
+# (C) 1998, 1999 Alan Borning and Greg Badros
 # See ../LICENSE for legal details regarding this software
 
 # Makefile for cassowary, java version
 
 JAVAC = javac
-JAVAC_FLAGS = -g
-#JAVAC_FLAGS = -O
+JAVAC_FLAGS = @JAVACFLAGS@
 
 
 CLASSES = ./classes
-CLASSES_TESTS = ./classes
 
 TESTS = test-ClStrength test-ClVariable test-ClLinearExpression test-ClConstraint \
 	test-ClSimplexSolver ClTests ClTestColumns
@@ -61,33 +59,35 @@ TESTFILES = \
 	ClTests.java \
 	ClTestColumns.java
 
-CLASSFILES = $(JAVAFILES:%.java=$(CLASSES)/%.class)
+JAVAFILES_INPARENT = $(JAVAFILES:%.java=../%.java)
+TESTFILES_INPARENT = $(TESTFILES:%.java=../%.java)
 
-TESTCLASSFILES = $(TESTFILES:%.java=$(CLASSES_TESTS)/%.class)
-
-$(CLASSES)/%.class: .built-package
-
-$(CLASSES_TESTS)/%.class: .built-test
-
-all:	.built-package .built-test
+all:	.built-package .built-test .built-cda .built-demos
 
 install:
 	echo "*****Copy class files to appropriate place"
 
 .built-package: $(JAVAFILES)
-	$(JAVAC) -d $(CLASSES) $(JAVAC_FLAGS) $(JAVAFILES)
+	cd $(CLASSES); $(JAVAC) -d . $(JAVAC_FLAGS) $(JAVAFILES_INPARENT)
 	touch $@
 
 .built-test: .built-package $(TESTFILES)
-	$(JAVAC) -d $(CLASSES_TESTS) $(JAVAC_FLAGS) $(TESTFILES)
+	cd $(CLASSES); $(JAVAC) -d . $(JAVAC_FLAGS) $(TESTFILES_INPARENT)
 	touch $@
 
+.built-cda: 
+	cd cda && make
+
+.built-demos:
+	cd demos && make
+
 clean:	
-	rm -f *.class .built-*
+	rm -f .built-package .built-test
 
 TAGS: $(JAVAFILES)
 	jtags $^
 
 tags: TAGS
 
-.PHONY:	all cassowary-tests lib tags install
+.PHONY:	all install clean tags
+
