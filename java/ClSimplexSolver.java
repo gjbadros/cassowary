@@ -276,6 +276,9 @@ class ClSimplexSolver extends ClTableau
 	}
 	if (i != my_editPlusErrorVars.size()) {
 	  // found it
+          // the plus error vars (ep*) are the markers, so they get removed
+          // elsewhere, but we need to be sure to remove the minus error vars (em*)
+          removeColumn( (ClAbstractVariable) my_editMinusErrorVars.elementAt(i));
 	  my_editPlusErrorVars.removeElementAt(i);
 	  my_editMinusErrorVars.removeElementAt(i);
 	  my_prevEditConstants.removeElementAt(i);
