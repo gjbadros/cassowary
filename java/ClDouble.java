@@ -47,5 +47,17 @@ class ClDouble extends Number
   public final String toString()
     { return java.lang.Double.toString(value); }
 
+  public final boolean equals(Object o)
+    { 
+      try {
+	return value == ((ClDouble) o).value;
+      } catch (Exception err) {
+	return false;
+      } 
+    }
+
+  public final int hashCode()
+    { return (int) java.lang.Double.doubleToLongBits(value); }
+
   private double value;
 }
