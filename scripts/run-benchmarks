@@ -11,7 +11,7 @@ case "$WHICH" in
 pushd c++
 for i in $CXX_SIZES; do
   echo "ClTests $i $i $RESOLVES"
-  ./ClTests $i $i $RESOLVES | grep "^time per"
+  ./ClTests $i $i $RESOLVES | grep "^\(time per\|done adding\)"
   echo
 done
 popd
@@ -29,7 +29,7 @@ export CLASSPATH=/home/gjb/java-jar/java_cup-10k-b2.jar:/home/gjb/cassowary/java
 export PATH=/usr/java/jdk1.3/bin:$PATH
 for i in $JAVA_SIZES; do
   echo "java EDU.Washington.grad.gjb.cassowary.ClTests $i $i $RESOLVES"
-  java EDU.Washington.grad.gjb.cassowary.ClTests $i $i $RESOLVES | grep "^time per"
+  java EDU.Washington.grad.gjb.cassowary.ClTests $i $i $RESOLVES | grep "^\(time per\|done adding\)"
   echo
 done
 popd
