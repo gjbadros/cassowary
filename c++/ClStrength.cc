@@ -9,6 +9,7 @@
 // ClStrength.cc
 
 #include "ClStrength.h"
+#include <assert.h>
 
 // Use the singleton pattern for the strength objects
 ClStrength &clsRequired()

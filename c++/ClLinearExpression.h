@@ -13,18 +13,18 @@
 
 #include <map.h>
 #include "ClAbstractVariable.h"
-#include "ClVariable.h"
 //#include "ClLinearEquation.h"
 
 class ClSimplexSolver;
 
 class ClLinearExpression  {
  public:
-  ClLinearExpression(void);
+  // convert Number-s into ClLinearExpression-s
+  ClLinearExpression(Number num = 0.0);
 
-  // Convert from ClVariable to a ClLinearExpression
-  // this replaces ClVariable::asLinearExpression
-  ClLinearExpression(const ClVariable &clv);
+  // Convert from ClAbstractVariable to a ClLinearExpression
+  // this replaces ClAbstractVariable::asLinearExpression
+  ClLinearExpression(const ClAbstractVariable &clv);
 
   virtual ~ClLinearExpression();
 
@@ -71,15 +71,19 @@ class ClLinearExpression  {
   // Add a term c*v to this expression.  If the expression already
   // contains a term involving v, add c to the existing coefficient.
   // If the new coefficient is approximately 0, delete v.
-  ClLinearExpression &addVariable(const ClVariable &v, Number c);
+  ClLinearExpression &addVariable(const ClAbstractVariable &v, Number c);
 
   // Add a term c*v to this expression.  If the expression already
   // contains a term involving v, add c to the existing coefficient.
   // If the new coefficient is approximately 0, delete v.  Notify the
   // solver if v appears or disappears from this expression.
-  ClLinearExpression &addVariable(const ClVariable &v, Number c,
+  ClLinearExpression &addVariable(const ClAbstractVariable &v, Number c,
 				  const ClAbstractVariable &subject,
 				  const ClSimplexSolver &solver);
+
+  // Return a variable in this expression.  (It is an error if this
+  // expression is constant -- signal ExCLInternalError in that case).
+  const ClAbstractVariable &anyVariable() const;
 
   // Replace var with a symbolic expression expr that is equal to it.
   // If a variable has been added to this expression that wasn't there
@@ -87,14 +91,10 @@ class ClLinearExpression  {
   // because it now has a coefficient of 0, inform the solver.
   // PRECONDITIONS:
   //   var occurs with a non-zero coefficient in this expression.
-  void substituteOut(const ClVariable &v, 
+  void substituteOut(const ClAbstractVariable &v, 
 		     const ClLinearExpression &expr,
 		     const ClAbstractVariable &subject,
 		     const ClSimplexSolver &solver);
-
-  // Return a variable in this expression.  (It is an error if this
-  // expression is constant -- signal ExCLInternalError in that case).
-  const ClAbstractVariable &anyVariable() const;
 
 #ifdef FIXGJB_OLD_SMALLTALK_WAY
   ClLinearExpression asLinearExpression() const 
@@ -140,7 +140,7 @@ class ClLinearExpression  {
   // Return the coefficient corresponding to variable var, i.e.,
   // the 'ci' corresponding to the 'vi' that var is:
   //     v1*c1 + v2*c2 + .. + vn*cn + c
-  Number coefficientFor(const ClVariable &var)
+  Number coefficientFor(const ClAbstractVariable &var)
     { return my_terms[var]; }
 
   Number constant() const
@@ -160,16 +160,32 @@ class ClLinearExpression  {
   friend ostream &operator<<(ostream &xo,const ClLinearExpression &cle)
     { cle.printOn(xo); return xo; }
 
+  friend ClLinearExpression operator+(const ClLinearExpression &e1,
+				      const ClLinearExpression &e2)
+    { return e1.plus(e2); }
+
+  friend ClLinearExpression operator-(const ClLinearExpression &e1,
+				      const ClLinearExpression &e2)
+    { return e1.minus(e2); }
+
+  friend ClLinearExpression operator*(const ClLinearExpression &e1,
+				      const ClLinearExpression &e2)
+    { return e1.times(e2); }
+
+
+  friend ClLinearExpression operator/(const ClLinearExpression &e1,
+				      const ClLinearExpression &e2)
+    { return e1.divide(e2); }
 
 
 #ifdef FIXGJB_OLD_SMALLTALK_WAY
-  /// Below cnFoo functions are virtually duplicated in ClVariable, also
+  /// Below cnFoo functions are virtually duplicated in ClAbstractVariable, also
 
   // Return a linear constraint self=expr with given strength and weight
   ClLinearEquation cnEqual(const ClLinearExpression &expr, 
 			   const ClStrength &strength,
 			   double weight = 1.0);
-  ClLinearEquation cnEqual(const ClVariable &expr,
+  ClLinearEquation cnEqual(const ClAbstractVariable &expr,
 			   const ClStrength &strength,
 			   double weight = 1.0);
   ClLinearEquation cnEqual(Number expr,
@@ -180,7 +196,7 @@ class ClLinearExpression  {
   ClLinearInequality cnGEQ(const ClLinearExpression &expr, 
 			   const ClStrength &strength,
 			   double weight = 1.0);
-  ClLinearInequality cnGEQ(const ClVariable &expr,
+  ClLinearInequality cnGEQ(const ClAbstractVariable &expr,
 			   const ClStrength &strength,
 			   double weight = 1.0);
   ClLinearInequality cnGEQ(Number expr,
@@ -192,7 +208,7 @@ class ClLinearExpression  {
   ClLinearInequality cnLEQ(const ClLinearExpression &expr, 
 			   const ClStrength &strength,
 			   double weight = 1.0);
-  ClLinearInequality cnLEQ(const ClVariable &expr,
+  ClLinearInequality cnLEQ(const ClAbstractVariable &expr,
 			   const ClStrength &strength,
 			   double weight = 1.0);
   ClLinearInequality cnLEQ(Number expr,
@@ -202,12 +218,14 @@ class ClLinearExpression  {
 
  private:
 
+  ClLinearExpression &ClLinearExpression::multiplyMe(Number x);
+
   // Initialize this linear expression to 0.
   // I think ctr obviates need for this --01/09/98 gjb
   // void initialize();
 
   Number my_constant;
-  map<ClVariable,Number> my_terms;
+  map<ClAbstractVariable,Number> my_terms;
 
 };
 

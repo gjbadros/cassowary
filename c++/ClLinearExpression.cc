@@ -12,15 +12,16 @@
 #include "ClLinearExpression.h"
 #include "ClErrors.h"
 
-ClLinearExpression::ClLinearExpression(void) :
-    my_constant(0.0)
+ClLinearExpression::ClLinearExpression(Number num) :
+    my_constant(num)
 { }
 
-  // Convert from ClVariable to a ClLinearExpression
-  // this replaces ClVariable::asLinearExpression
-ClLinearExpression::ClLinearExpression(const ClVariable &clv) :
+// Convert from ClAbstractVariable to a ClLinearExpression
+// this replaces ClVariable::asLinearExpression
+ClLinearExpression::ClLinearExpression(const ClAbstractVariable &clv) :
   my_constant(0.0)
 {
+  assert(clv.isCLVar());
   my_terms[clv] = 1.0;
 }
 
@@ -31,7 +32,7 @@ ostream &
 ClLinearExpression::printOn(ostream &xo) const
 {
   xo << my_constant;
-  map<ClVariable,Number>::const_iterator i = my_terms.begin();
+  map<ClAbstractVariable,Number>::const_iterator i = my_terms.begin();
   for ( ; i != my_terms.end(); ++i)
     {
     xo << " + " << (*i).first << "*" << (*i).second;
@@ -40,20 +41,29 @@ ClLinearExpression::printOn(ostream &xo) const
 }
 
 
+
+// Destructively multiply self by x.
+// (private memfn)
+ClLinearExpression &
+ClLinearExpression::multiplyMe(Number x)
+{
+  my_constant *= x;
+
+  map<ClAbstractVariable,Number>::const_iterator i = my_terms.begin();
+  for ( ; i != my_terms.end(); ++i)
+    {
+    my_terms[(*i).first] = (*i).second * x;
+    }
+  return *this;
+}
+
 // Return a new linear expression formed by multiplying self by x.
 // (Note that this result must be linear.)
 ClLinearExpression 
 ClLinearExpression::times(Number x) const
 {
-  ClLinearExpression result;
-  result.my_constant = my_constant * x;
-
-  map<ClVariable,Number>::const_iterator i = my_terms.begin();
-  for ( ; i != my_terms.end(); ++i)
-    {
-    result.my_terms[(*i).first] = (*i).second * x;
-    }
-  return result;
+  ClLinearExpression result = *this;
+  return result.multiplyMe(x);
 }
 
 // Return a new linear expression formed by multiplying self by x.
@@ -149,7 +159,7 @@ ClLinearExpression::addExpression(const ClLinearExpression &expr, Number n)
 {
   incrementConstant(n*expr.constant());
 
-  map<ClVariable,Number>::const_iterator i = expr.my_terms.begin();
+  map<ClAbstractVariable,Number>::const_iterator i = expr.my_terms.begin();
   for ( ; i != expr.my_terms.end(); ++i)
     {
     addVariable((*i).first, n * (*i).second);
@@ -167,7 +177,7 @@ ClLinearExpression::addExpression(const ClLinearExpression &expr, Number n,
 {
   incrementConstant(n*expr.constant());
 
-  map<ClVariable,Number>::const_iterator i = expr.my_terms.begin();
+  map<ClAbstractVariable,Number>::const_iterator i = expr.my_terms.begin();
   for ( ; i != expr.my_terms.end(); ++i)
     {
     addVariable((*i).first, n * (*i).second, subject, solver);
@@ -179,9 +189,9 @@ ClLinearExpression::addExpression(const ClLinearExpression &expr, Number n,
 // contains a term involving v, add c to the existing coefficient.
 // If the new coefficient is approximately 0, delete v.
 ClLinearExpression &
-ClLinearExpression::addVariable(const ClVariable &v, Number c)
-{
-  map<ClVariable,Number>::iterator i = my_terms.find(v);
+ClLinearExpression::addVariable(const ClAbstractVariable &v, Number c)
+{ // body largely duplicated below
+  map<ClAbstractVariable,Number>::iterator i = my_terms.find(v);
   if (i != my_terms.end())
     {
     // expression already contains that variable, so add to it
@@ -212,29 +222,36 @@ ClLinearExpression::addVariable(const ClVariable &v, Number c)
 // If the new coefficient is approximately 0, delete v.  Notify the
 // solver if v appears or disappears from this expression.
 ClLinearExpression &
-ClLinearExpression::addVariable(const ClVariable &v, Number c,
+ClLinearExpression::addVariable(const ClAbstractVariable &v, Number c,
 				const ClAbstractVariable &subject,
 				const ClSimplexSolver &solver)
-{
-  addVariable(v,c);
-  // FIXGJB: still need to handle subject, solver params
-  assert(false);
+{ // body largely duplicated above
+  map<ClAbstractVariable,Number>::iterator i = my_terms.find(v);
+  if (i != my_terms.end())
+    {
+    // expression already contains that variable, so add to it
+    Number new_coefficient = 0;
+    new_coefficient = (*i).second + c;
+    if (clApprox(new_coefficient,0.0))
+      {
+      // new coefficient is zero, so erase it
+      my_terms.erase(i);
+      //FIXGJB: solver.noteRemovedVariable(v,subject);
+      }
+    else
+      {
+      (*i).second = new_coefficient;
+      }
+    }
+  else // expression did not contain that variable
+    {
+    if (!clApprox(c,0.0))
+      {
+      my_terms[v] = c;
+      //FIXGJB: solver.noteAddedVariable(v,subject);
+      }
+    }
   return *this;
-}
-
-// Replace var with a symbolic expression expr that is equal to it.
-// If a variable has been added to this expression that wasn't there
-// before, or if a variable has been dropped from this expression
-// because it now has a coefficient of 0, inform the solver.
-// PRECONDITIONS:
-//   var occurs with a non-zero coefficient in this expression.
-void 
-ClLinearExpression::substituteOut(const ClVariable &v, 
-				  const ClLinearExpression &expr,
-				  const ClAbstractVariable &subject,
-				  const ClSimplexSolver &solver)
-{
-  assert(false);
 }
 
 // Return a variable in this expression.  (It is an error if this
@@ -247,6 +264,24 @@ ClLinearExpression::anyVariable() const
     throw new ExCLInternalError();
     }
   return (*my_terms.begin()).first;
+}
+
+// Replace var with a symbolic expression expr that is equal to it.
+// If a variable has been added to this expression that wasn't there
+// before, or if a variable has been dropped from this expression
+// because it now has a coefficient of 0, inform the solver.
+// PRECONDITIONS:
+//   var occurs with a non-zero coefficient in this expression.
+void 
+ClLinearExpression::substituteOut(const ClAbstractVariable &v, 
+				  const ClLinearExpression &expr,
+				  const ClAbstractVariable &subject,
+				  const ClSimplexSolver &solver)
+{
+  map<ClAbstractVariable,Number>::iterator pv = my_terms.find(v);
+  assert(pv != my_terms.end() && !clApprox((*pv).second,0.0));
+
+  assert(false);
 }
 
 // This linear expression currently represents the equation
@@ -264,11 +299,20 @@ ClLinearExpression::anyVariable() const
 //   The new equation will be
 //        newSubject = -c/a + oldSubject/a - (a1/a)*v1 - ... - (an/a)*vn.
 //   Note that the term involving newSubject has been dropped.
+// 
+// Basically, we consider the expression to be an equation with oldSubject
+// equal to the expression, then resolve the equation for newSubject,
+// and destructively make the expression what newSubject is then equal to
 void 
 ClLinearExpression::changeSubject(const ClAbstractVariable &oldSubject,
 				  const ClAbstractVariable &newSubject)
 {
-  assert(false);
+  map<ClAbstractVariable,Number>::iterator pnewSubject = my_terms.find(newSubject);
+  assert(pnewSubject != my_terms.end());
+  Number reciprocal = 1.0 / (*pnewSubject).second;
+  my_terms.erase(pnewSubject);
+  multiplyMe(-reciprocal);
+  my_terms[oldSubject] = reciprocal;
 }
 
 // This linear expression currently represents the equation self=0.  Destructively modify it so 

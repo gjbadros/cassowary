@@ -11,6 +11,7 @@
 #ifndef ClEditOrStayConstraint_H
 #define ClEditOrStayConstraint_H
 
+#include "ClAbstractVariable.h"
 
 class ClEditOrStayConstraint {
  public:
@@ -18,20 +19,17 @@ class ClEditOrStayConstraint {
   ClExpression *new_expression()
     { ClLinearExpression *pe = new ClLinearExpression(my_variable,-1.0); return pe; }
 
-  ClVariable variable() const
+  ClAbstractVariable variable() const
     { return my_variable; }
 
  private:
 
-  void setVariable( const ClVariable &v)
+  void setVariable( const ClAbstractVariable &v)
     { my_variable = v; }
-
 
   /// instance variables
 
-  ClVariable my_variable;
-
-
-}
+  ClAbstractVariable my_variable;
+};
 
 #endif

@@ -12,17 +12,53 @@
 #define ClAbstractVariable_H
 
 #include <iostream.h>
+#include <stdio.h>
+#include <assert.h>
 #include "Cassowary.h"
+
+typedef enum { CLAbstractVar, CLSlackVar, CLObjectiveVar, CLDummyVar, CLVar } ClVariableKind;
 
 class ClAbstractVariable {
 public:
-  ClAbstractVariable() :
-    my_name(String("None"))
-    { }
+  ClAbstractVariable(ClVariableKind kind = CLAbstractVar, String name = "", Number value = 0.0) :
+    my_kind(kind),
+    my_name(name),
+    my_value(value),
+    my_fDummy(false),
+    my_fExternal(false),
+    my_fPivotable(false),
+    my_fRestricted(false)
+    { 
+    if (name.length() == 0)
+      {
+      char sz[16];
+      sprintf(sz,"%ld",iVariableNumber++);
+      my_name = String(sz);
+      }
+    switch (kind)
+      {
+      case CLAbstractVar:
+	break;
+      case CLSlackVar:
+	my_fPivotable = true;
+	my_fRestricted = true;
+	break;
+      case CLObjectiveVar:
+	break;
+      case CLDummyVar:
+	my_fDummy = true;
+	my_fRestricted = true;
+	break;
+      case CLVar:
+	my_fExternal = true;
+	break;
+      }
+    assert (isCLVar() || my_value == 0.0);
+    }
 
-  virtual ~ClAbstractVariable()
-    { }
-
+  bool isCLVar() const
+    { return my_kind == CLVar; }
+    
   // Return the name of the variable
   String name() const
     { return my_name; }
@@ -34,20 +70,23 @@ public:
   // Return true if this a dummy variable (used as a marker variable
   // for required equality constraints).  Such variables aren't
   // allowed to enter the basis when pivoting.
-  virtual bool isDummy() const
-    { return false; }
+  bool isDummy() const
+    { return my_fDummy; }
 
   // Return true if this a variable known outside the solver.  
   // (We need to give such variables a value after solving is complete.)
-  virtual bool isExternal() const = 0;
+  bool isExternal() const
+    { return my_fExternal; }
 
   // Return true if we can pivot on this variable.
-  virtual bool isPivotable() const = 0;
+  bool isPivotable() const
+    { return my_fPivotable; }
 
   // Return true if this is a restricted (or slack) variable.  Such
   // variables are constrained to be non-negative and occur only
   // internally to the simplex solver.
-  virtual bool isRestricted() const = 0;
+  bool isRestricted() const
+    { return my_fRestricted; }
 
   // Prints a semi-descriptive representation to the stream, using the
   // name if there is one, and otherwise the hash number of this
@@ -56,11 +95,35 @@ public:
   //	  x[10.0]		-- w/ name
   //	  x[0.0,100]		-- w/ name, bounds but no value yet
   //	  CV#345(10.0)		-- w/o name
-  virtual ostream &printOn(ostream &xo) const
-    {  xo << "CV#" << my_name << endl;  return xo; }
+  ostream &printOn(ostream &xo) const
+  {  
+    xo << "[" << my_name << ":" << my_value << "]";
+    return xo;
+  }
+  
+  // Return the current value I hold.
+  Number value() const
+    { assert(isCLVar()); return my_value; }
+
+  void set_value(Number const &value)
+    { assert(isCLVar()); my_value = value; }
+
+  friend ostream& operator<<(ostream &xos, const ClAbstractVariable &clv)
+    { clv.printOn(xos); return xos; }
+
+  friend bool operator<(const ClAbstractVariable &cl1, const ClAbstractVariable &cl2)
+    { return cl1.my_name < cl2.my_name; }
 
 private:
+  ClVariableKind my_kind;
   String my_name;
+  Number my_value;
+  bool my_fDummy;
+  bool my_fExternal;
+  bool my_fPivotable;
+  bool my_fRestricted;
+  
+  static long iVariableNumber;
 };
 
 #endif
