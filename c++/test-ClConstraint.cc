@@ -27,7 +27,7 @@ main( char **argv, int argc )
   ClStayConstraint cn(w);
   cout << cn << endl;
 
-  cerr << (*(cn.variable()) == w? "yup" : "nope") << endl;
-  cerr << (*(cn.variable()) == a? "yup" : "nope") << endl;
+  cerr << (cn.variable() == w? "yup" : "nope") << endl;
+  cerr << (cn.variable() == a? "yup" : "nope") << endl;
 
 }
