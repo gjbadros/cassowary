@@ -27,13 +27,15 @@ class ClLinearInequality : public ClLinearConstraint {
  private: typedef ClLinearConstraint super;
 
  public:
- // Constructor
+ //// Constructors
+ // ClLinearInequality(expr,...)  is expr >= 0
  ClLinearInequality(const ClLinearExpression &cle,
 		    const ClStrength strength = clsRequired(),
 		    double weight = 1.0) :
    ClLinearConstraint(cle,strength, weight)
    { }
 
+ // ClLinearInequality(var,OP,expr) is  var >= expr
  ClLinearInequality(const ClAbstractVariable &clv,
 		    ClInequalityOperator op,
 		    const ClLinearExpression &cle,
@@ -52,6 +54,7 @@ class ClLinearInequality : public ClLinearConstraint {
      }
    }
 
+ // ClLinearInequality(expr,OP,expr) is  expr >= expr
  ClLinearInequality(const ClLinearExpression &cle1,
 		    ClInequalityOperator op,
 		    const ClLinearExpression &cle2,
