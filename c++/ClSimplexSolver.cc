@@ -633,6 +633,7 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
   delete pav;
   // remove the temporary objective function
   delete removeRow(*paz);
+  delete paz;
   return true;
 }
 

@@ -15,7 +15,11 @@
 #include "Cassowary.h"
 #include <vector>
 
+#ifdef USE_GC_WEIGHT
+class ClSymbolicWeight : public gc {
+#else
 class ClSymbolicWeight {
+#endif
  public:
   ClSymbolicWeight() 
     { }

@@ -19,7 +19,7 @@ class ClTableau;
 class ClSimplexSolver;
 
 
-class ClSlackVariable: public ClAbstractVariable {
+class ClSlackVariable : public ClAbstractVariable {
 protected:
   friend ClTableau;
   friend ClSimplexSolver;

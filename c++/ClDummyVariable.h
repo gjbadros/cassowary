@@ -18,7 +18,7 @@
 class ClTableau;
 class ClSimplexSolver;
 
-class ClDummyVariable: public ClAbstractVariable {
+class ClDummyVariable : public ClAbstractVariable {
 protected:
   friend ClTableau;
   friend ClSimplexSolver;

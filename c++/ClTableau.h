@@ -42,6 +42,10 @@ class ClTableau {
     ClTableauVarSet::const_iterator it = _columns[&v].find(&subject);
     assert(it != _columns[&v].end());
     _columns[&v].erase(it);
+#if 0
+    cerr << "v = " << v << " and columns[&v].size() = "
+         << _columns[&v].size() << endl;
+#endif
     if (_columns[&v].size() == 0)
       {
       const ClVariable *pclv = static_cast<const ClVariable *>(&v);  
@@ -69,6 +73,47 @@ class ClTableau {
   ostream &printOn(ostream &xo) const;
 
   virtual void gdb_print() const { printOn(cerr); }
+
+  // Check integrity of the tableau
+  // not complete, yet, but a start, at least
+  // Guard calls to AssertValid with CL_SOLVER_CHECK_INTEGRITY,
+  // since this is expensive
+  virtual void AssertValid() const {
+#ifndef NDEBUG
+    // all external basic variables are in _externalRows
+    // and all external parametric variables are in _externalParametricVars
+    ClTableauRowsMap::const_iterator itRow = _rows.begin();
+    for (; itRow != _rows.end(); ++itRow)
+      {
+      const ClAbstractVariable *pclv = (*itRow).first;
+      if (pclv->isExternal())
+        {
+        const ClVariable *pv = dynamic_cast<const ClVariable *>(pclv);
+        if (_externalRows.find(pv) == _externalRows.end()) 
+          {
+          cerr << "External basic variable " << *pclv
+               << " is not in _externalRows" << endl;
+          }
+        }
+      const ClLinearExpression *pcle = rowExpression(*pclv);
+      assert(pcle);
+      ClVarToNumberMap::const_iterator it = pcle->terms().begin();
+      for (; it != pcle->terms().end(); ++it)
+        {
+        const ClAbstractVariable *pclv = (*it).first;
+        if (pclv->isExternal()) 
+          {
+          const ClVariable *pv = dynamic_cast<const ClVariable *>(pclv);
+          if (_externalParametricVars.find(pv) == _externalParametricVars.end())
+            {
+            cerr << "External parametric variable " << *pclv 
+                 << " is not in _externalParametricVars" << endl;
+            }
+          }
+        }
+      }
+#endif
+  }
 
   ostream &printInternalInfo(ostream &xo) const;
   

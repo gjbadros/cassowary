@@ -16,7 +16,12 @@
 #include <string.h>
 #include <stdexcept>
 
+#ifdef USE_GC
+class ExCLError : public exception, public gc {
+#else
 class ExCLError : public exception {
+#endif
+
  public:
   ExCLError() : _msg(NULL) { }
   virtual char *description() const

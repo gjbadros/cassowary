@@ -22,7 +22,11 @@ const ClStrength &clsStrong();
 const ClStrength &clsMedium();
 const ClStrength &clsWeak();
 
+#ifdef USE_GC_STRENGTH
+class ClStrength : public gc {
+#else
 class ClStrength {
+#endif
  public:
 
   ClStrength(const string &name, const ClSymbolicWeight &symbolicWeight) :

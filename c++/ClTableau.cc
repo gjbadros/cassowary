@@ -98,10 +98,11 @@ ClTableau::removeColumn(const ClAbstractVariable &var)
     ClVarToNumberMap &terms = _rows[pv]->terms();
     terms.erase(terms.find(&var));
     }
+  const ClVariable *pclv = static_cast<const ClVariable *>(&var);
   if (var.isExternal())
     {
-    _externalRows.erase(static_cast<const ClVariable *>(&var));
-    _externalParametricVars.erase(static_cast<const ClVariable *>(&var));
+    _externalRows.erase(pclv);
+    _externalParametricVars.erase(pclv);
     }
   _columns.erase(it_var);
   return &var;
@@ -139,6 +140,7 @@ ClTableau::removeRow(const ClAbstractVariable &var)
     _externalRows.erase(static_cast<const ClVariable *>(&var));
     _externalParametricVars.erase(static_cast<const ClVariable *>(&var));
     }
+
   _rows.erase(it);
 #ifndef CL_NO_TRACE
   cerr << "- returning " << *pexpr << endl;

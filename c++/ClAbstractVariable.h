@@ -16,7 +16,11 @@
 #include "Cassowary.h"
 #include "auto_ptr.h"
 
+#ifdef USE_GC
+class ClAbstractVariable : public gc {
+#else
 class ClAbstractVariable {
+#endif
 public:
   ClAbstractVariable(string name = "") :
     _name(name)

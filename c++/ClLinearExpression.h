@@ -30,7 +30,11 @@ typedef const ClAbstractVariable *PconstClAbstractVariable;
 
 
 template <class T>
+#ifdef USE_GC_EXP
+class ClGenericLinearExpression : public gc {
+#else
 class ClGenericLinearExpression  {
+#endif
  public:
   typedef map<PconstClAbstractVariable,class T> ClVarToCoeffMap;
 
@@ -216,7 +220,7 @@ class ClGenericLinearExpression  {
 
   virtual ostream &printOn(ostream &xo) const;
 
-  virtual void gdb_print() const { printOn(cerr); };
+  virtual void gdb_print() const { printOn(cerr); cerr << endl; };
 
   friend ostream &operator<<(ostream &xo,const ClGenericLinearExpression<T> &cle)
     { return cle.printOn(xo); }

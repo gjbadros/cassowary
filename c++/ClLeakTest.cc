@@ -31,11 +31,10 @@ leakTest()
    ClSimplexSolver solver;
 
    ClLinearEquation eq(x,y+0.0);
-#if 0
+   solver.setAutosolve(false);
    solver.addStay(x);
    solver.addStay(y);
-#endif
-   for (int i = 0; i < 10000; ++i) {
+   for (int i = 0; i < 100000; ++i) {
 #ifdef DEBUG_ADD_REMOVE
      cerr << "i = " << i << endl;
      cerr << "before add: " << solver << "\n" << endl;
@@ -49,6 +48,7 @@ leakTest()
      cerr << "---------------------------" << "\n\n" << endl;
 #endif
    }
+   solver.solve();
    fOkResult = (x.value() == y.value());
    return fOkResult;
    } 
@@ -62,6 +62,17 @@ leakTest()
    cerr << "Unknown exception" << endl;
    return(false);
    }
+}
+
+bool
+leakTest2()
+{
+  for (int i=0; i<100; ++i)
+    {
+    ClVariable *pclv = new ClVariable();
+    }
+  GC_gcollect();
+  return true;
 }
 
 
@@ -82,6 +93,12 @@ main( int , char ** )
     if (!fResult) cout << "Failed!" << endl;
 
     RUN_TEST(leakTest);
+    //    RUN_TEST(leakTest2);
+
+#ifdef USE_GC
+    GC_gcollect();
+    cerr << "Num Collects = " << GC_gc_no << endl;
+#endif
 #undef RUN_TEST
     return (fAllOkResult? 0 : 255);
     

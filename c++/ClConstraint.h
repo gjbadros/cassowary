@@ -16,8 +16,11 @@
 #include "ClLinearExpression.h"
 #include "ClStrength.h"
 
-
+#ifdef USE_GC_CONSTRAINT
+class ClConstraint : public gc {
+#else
 class ClConstraint {
+#endif
 public:
 
   ClConstraint(const ClStrength &strength = clsRequired(), double weight = 1.0 ) :

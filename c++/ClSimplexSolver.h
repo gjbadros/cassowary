@@ -235,7 +235,10 @@ class ClSimplexSolver : public ClTableau {
   // to explicitly call solve() before accessing variables
   // values
   ClSimplexSolver &solve()
-    { 
+    {
+#ifdef CL_SOLVER_CHECK_INTEGRITY
+    AssertValid();
+#endif
     if (_fNeedsSolving) 
       {
       optimize(_objective);
