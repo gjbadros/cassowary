@@ -38,7 +38,7 @@ template <class T>
 ostream &
 ClGenericLinearExpression<T>::printOn(ostream &xo) const
 {
-  ClVarToCoeffMap::const_iterator i = _terms.begin();
+  typename ClVarToCoeffMap::const_iterator i = _terms.begin();
 
   if (!clApprox(_constant,0.0) || i == _terms.end())
     {
@@ -68,7 +68,7 @@ ClGenericLinearExpression<T>::multiplyMe(T x)
 {
   _constant *= x;
 
-  ClVarToCoeffMap::const_iterator i = _terms.begin();
+  typename ClVarToCoeffMap::const_iterator i = _terms.begin();
   for ( ; i != _terms.end(); ++i)
     {
     _terms[(*i).first] = (*i).second * x;
@@ -174,7 +174,7 @@ ClGenericLinearExpression<T>::addExpression(const ClGenericLinearExpression<T> &
 {
   incrementConstant(expr.constant()*n);
 
-  ClVarToCoeffMap::const_iterator i = expr._terms.begin();
+  typename ClVarToCoeffMap::const_iterator i = expr._terms.begin();
   for ( ; i != expr._terms.end(); ++i)
     {
     addVariable(*((*i).first), (*i).second * n);
@@ -193,7 +193,7 @@ ClGenericLinearExpression<T>::addExpression(const ClGenericLinearExpression<T> &
 {
   incrementConstant(expr.constant() * n);
 
-  ClVarToCoeffMap::const_iterator i = expr._terms.begin();
+  typename ClVarToCoeffMap::const_iterator i = expr._terms.begin();
   for ( ; i != expr._terms.end(); ++i)
     {
     addVariable(*((*i).first), (*i).second * n, subject, solver);
@@ -212,7 +212,7 @@ ClGenericLinearExpression<T>::addVariable(const ClAbstractVariable &v, T c)
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << v << ", " << c << ")" << endl;
 #endif
-  ClVarToCoeffMap::iterator i = _terms.find(&v);
+  typename ClVarToCoeffMap::iterator i = _terms.find(&v);
   if (i != _terms.end())
     {
     // expression already contains that variable, so add to it
@@ -252,7 +252,7 @@ ClGenericLinearExpression<T>::addVariable(const ClAbstractVariable &v, T c,
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << v << ", " << c << ", " << subject << ", ...)" << endl;
 #endif
-  ClVarToCoeffMap::iterator i = _terms.find(&v);
+  typename ClVarToCoeffMap::iterator i = _terms.find(&v);
   if (i != _terms.end())
     {
     // expression already contains that variable, so add to it
@@ -292,7 +292,7 @@ ClGenericLinearExpression<T>::anyPivotableVariable() const
     {
     throw ExCLInternalError("(ExCLInternalError) No pivotable variables in constant expression");
     }
-  ClVarToCoeffMap::const_iterator i = _terms.begin();
+  typename ClVarToCoeffMap::const_iterator i = _terms.begin();
   for ( ; i != _terms.end(); ++i)
     {
     if (((*i).first)->isPivotable())
@@ -322,7 +322,7 @@ ClGenericLinearExpression<T>::substituteOut(const ClAbstractVariable &var,
   cerr << "*this == " << *this << endl;
 #endif
 
-  ClVarToCoeffMap::iterator pv = _terms.find(&var);
+  typename ClVarToCoeffMap::iterator pv = _terms.find(&var);
 
 #ifndef NDEBUG
   if (pv == _terms.end())
@@ -339,12 +339,12 @@ ClGenericLinearExpression<T>::substituteOut(const ClAbstractVariable &var,
   T multiplier = (*pv).second;
   _terms.erase(pv);
   incrementConstant(multiplier * expr._constant);
-  ClVarToCoeffMap::const_iterator i = expr._terms.begin();
+  typename ClVarToCoeffMap::const_iterator i = expr._terms.begin();
   for ( ; i != expr._terms.end(); ++i)
     {
     const ClAbstractVariable *pv = (*i).first;
     T c = (*i).second;
-    ClVarToCoeffMap::iterator poc = _terms.find(pv);
+    typename ClVarToCoeffMap::iterator poc = _terms.find(pv);
     if (poc != _terms.end())
       { // if oldCoeff is not nil
 #ifndef CL_NO_TRACE
@@ -431,7 +431,7 @@ ClGenericLinearExpression<T>::newSubject(const ClAbstractVariable &subject)
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << subject << ")" << endl;
 #endif
-  ClVarToCoeffMap::iterator pnewSubject = _terms.find(&subject);
+  typename ClVarToCoeffMap::iterator pnewSubject = _terms.find(&subject);
   assert(pnewSubject != _terms.end());
   //  assert(!clApprox((*pnewSubject).second,0.0));
   T reciprocal = ReciprocalOf((*pnewSubject).second);
@@ -445,7 +445,7 @@ T
 ClGenericLinearExpression<T>::evaluate() const
 {
   T answer = _constant;
-  ClVarToCoeffMap::const_iterator i = _terms.begin();
+  typename ClVarToCoeffMap::const_iterator i = _terms.begin();
 
   for ( ; i != _terms.end(); ++i)
     {

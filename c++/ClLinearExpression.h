@@ -32,7 +32,7 @@ typedef const ClAbstractVariable *PconstClAbstractVariable;
 template <class T>
 class ClGenericLinearExpression  {
  public:
-  typedef map<PconstClAbstractVariable,T> ClVarToCoeffMap;
+  typedef map<PconstClAbstractVariable,class T> ClVarToCoeffMap;
 
   // convert Number-s into ClLinearExpression-s
   ClGenericLinearExpression(T num = 0.0);
@@ -190,7 +190,7 @@ class ClGenericLinearExpression  {
   //     v1*c1 + v2*c2 + .. + vn*cn + c
   T coefficientFor(const ClAbstractVariable &var) const
     { 
-    ClVarToCoeffMap::const_iterator it = _terms.find(&var);
+    typename ClVarToCoeffMap::const_iterator it = _terms.find(&var);
     if (it != _terms.end())
       return (*it).second;
     return 0.0;
