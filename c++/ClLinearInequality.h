@@ -36,7 +36,7 @@ class ClLinearInequality : public ClLinearConstraint {
    { }
 
  // ClLinearInequality(var,OP,expr) is  var >= expr
- ClLinearInequality(const ClAbstractVariable &clv,
+ ClLinearInequality(const ClVariable &clv,
 		    ClInequalityOperator op,
 		    const ClLinearExpression &cle,
 		    const ClStrength strength = clsRequired(),
@@ -54,10 +54,11 @@ class ClLinearInequality : public ClLinearConstraint {
      }
    }
 
- // ClLinearInequality(var,OP,expr) is  var >= expr
+#ifdef FIXGJB_AMBIGUOUS
+ // ClLinearInequality(expr,OP,var) is  var ?<>? expr
  ClLinearInequality(const ClLinearExpression &cle,
 		    ClInequalityOperator op,
-		    const ClAbstractVariable &clv,
+		    const ClVariable &clv,
 		    const ClStrength strength = clsRequired(),
 		    double weight = 1.0) :
    ClLinearConstraint( cle, strength, weight)
@@ -72,6 +73,7 @@ class ClLinearInequality : public ClLinearConstraint {
      my_expression.addVariable(clv,-1.0);
      }
    }
+#endif
 
  // ClLinearInequality(expr,OP,expr) is  expr >= expr
  ClLinearInequality(const ClLinearExpression &cle1,
@@ -92,7 +94,8 @@ class ClLinearInequality : public ClLinearConstraint {
      }
    }
 
- // ClLinearInequality(expr,OP,expr) is  expr >= expr
+#ifdef FIXGJB_AMBIGUOUS
+ // ClLinearInequality(var,OP,var) is  var ?<>? var
  ClLinearInequality(const ClVariable &clv1,
 		    ClInequalityOperator op,
 		    const ClVariable &clv2,
@@ -103,13 +106,14 @@ class ClLinearInequality : public ClLinearConstraint {
    if (op == cnGEQ)
      {
      my_expression.multiplyMe(-1.0);
-     my_expression.addVariable(clv1);
+     my_expression.addVariable(clv1,1.0);
      }
    else // op == cnLEQ
      {
      my_expression.addVariable(clv1,-1.0);
      }
    }
+#endif
 
  
  // Return true if this is an inequality constraint and
