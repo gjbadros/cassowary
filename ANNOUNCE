@@ -13,8 +13,6 @@ Computer Science and Engineering
 26-June-1998
 
 with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
-and wrapper for Python Interface by Tessa Lau <tlau@cs.washington.edu>
-
 
 Cassowary is an incremental constraint solving toolkit that efficiently
 solves systems of linear equalities and inequalities.  Constraints may
