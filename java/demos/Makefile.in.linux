@@ -1,0 +1,41 @@
+# $Id$
+#
+# Cassowary Incremental Constraint Solver
+# Original Smalltalk Implementation by Alan Borning
+# This Java Implementation by Greg J. Badros, <gjb@cs.washington.edu>
+# http://www.cs.washington.edu/homes/gjb
+#
+# (C) 1998, 1999 Greg J. Badros and Alan Borning.
+# See ../../LICENSE for legal details regarding this software
+#
+# Makefile for cassowary, java version
+
+JAVAC = javac
+JAVAC_FLAGS = @JAVACFLAGS@
+
+TESTS = test-ClStrength test-ClVariable test-ClLinearExpression test-ClConstraint \
+	test-ClSimplexSolver ClTests
+
+JAVAFILES = \
+	DraggableBox.java QuadDemo.java
+
+CLASSFILES = $(JAVAFILES:.java=.class)
+
+all:	$(CLASSFILES)
+
+%.class: $(JAVAFILES)
+	$(JAVAC) $(JAVAC_FLAGS) $(JAVAFILES)
+
+run:
+	appletviewer quaddemo.htm
+
+test:	$(TESTCLASSFILES)
+
+clean:	
+
+TAGS: $(JAVAFILES)
+	jtags $^
+
+tags: TAGS
+
+.PHONY:	all tags test run
