@@ -131,7 +131,7 @@ class ClSimplexSolver : public ClTableau {
     }
 
   // endEdit should be called after editing has finished
-  // for now, it just removes all edit variables
+  // for now, it just removes edit variables added from before the last beginEdit
   ClSimplexSolver &endEdit()
     {
       assert(_editVarMap.size() != 0);

@@ -233,12 +233,11 @@ private:
 // Remove the constraint cn from the tableau
 // Also remove any error variable associated with cn
 ClSimplexSolver &
-ClSimplexSolver::removeConstraint(const ClConstraint *const pcnconst)
+ClSimplexSolver::removeConstraint(const ClConstraint *const pcn)
 {
-  const ClConstraint &cnconst = *pcnconst;
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
-  cerr << "(" << cnconst << ")" << endl;
+  cerr << "(" << *pcn << ")" << endl;
 #endif
 
   // We are about to remove a constraint.  There may be some stay
@@ -246,9 +245,6 @@ ClSimplexSolver::removeConstraint(const ClConstraint *const pcnconst)
   // removed the constraint these could come into play.  Instead,
   // reset all of the stays so that things should stay where they are
   // at the moment.
-
-  ClConstraint &cn = const_cast<ClConstraint &>(cnconst);
-
   _fNeedsSolving = true;
 
   resetStayConstants();
@@ -261,7 +257,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint *const pcnconst)
 #endif
 
   ClConstraintToVarSetMap::iterator 
-    it_eVars = _errorVars.find(&cn);
+    it_eVars = _errorVars.find(pcn);
   bool fFoundErrorVar = (it_eVars != _errorVars.end());
 
   if (fFoundErrorVar)
@@ -273,19 +269,19 @@ ClSimplexSolver::removeConstraint(const ClConstraint *const pcnconst)
       const ClLinearExpression *pexpr = rowExpression(*it);
       if (pexpr == NULL )
 	{
-	pzRow->addVariable(*it,-1.0 * cnconst.strength().symbolicWeight().asDouble(),
+	pzRow->addVariable(*it,-1.0 * pcn->strength().symbolicWeight().asDouble(),
 			   _objective,*this);
 	}
       else
 	{ // the error variable was in the basis
-	pzRow->addExpression(*pexpr,-1.0 * cnconst.strength().symbolicWeight().asDouble(),
+	pzRow->addExpression(*pexpr,-1.0 * pcn->strength().symbolicWeight().asDouble(),
 			     _objective,*this);
 	}
       }
     }
 
   ClConstraintToVarMap::iterator 
-    it_marker = _markerVars.find(&cn);
+    it_marker = _markerVars.find(pcn);
   if (it_marker == _markerVars.end())
     { // could not find the constraint
     throw ExCLConstraintNotFound();
@@ -417,7 +413,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint *const pcnconst)
       }
     }
 
-  if (cn.isStayConstraint())
+  if (pcn->isStayConstraint())
     {
     // iterate over the stay{Plus,Minus}ErrorVars and remove those
     // variables v in those vectors that are also in set eVars
@@ -434,22 +430,20 @@ ClSimplexSolver::removeConstraint(const ClConstraint *const pcnconst)
                _stayMinusErrorVars.end());
       }
     }
-  else if (cn.isEditConstraint())
+  else if (pcn->isEditConstraint())
     {
-    const ClEditConstraint *pcnEdit = dynamic_cast<const ClEditConstraint *>(&cn);
+    const ClEditConstraint *pcnEdit = dynamic_cast<const ClEditConstraint *>(pcn);
     const ClVariable clv = pcnEdit->variable();
     ClEditInfo *pcei = _editVarMap[clv];
     assert(pcei);
     ClVariable clvEditMinus = pcei->_clvEditMinus;
-    removeColumn(clvEditMinus);  // FIXNOWGJB: just added this
-    // because the Java version did it --02/16/99 gjb
+    removeColumn(clvEditMinus);  // clvEditPlus is a marker var and gets removed later
     delete pcei;
     _editVarMap.erase(clv);
     }
 
   if (fFoundErrorVar)
     {
-    // FIXGJB
     // This code is not needed since the variables are deleted
     // when they are removed from the row --
     // leaving it in results in double deletions
@@ -1383,8 +1377,10 @@ ClSimplexSolver::setExternalVariables()
   for ( ; itParVars != _externalParametricVars.end(); ++itParVars )
     {
     ClVariable v = *itParVars;
-    // skip it if it is basic -- change_value is virtual
-    // so don't want to call it twice
+#ifndef NDEBUG
+    // defensively skip it if it is basic -- change_value is virtual
+    // so don't want to call it twice;  this should never
+    // happen
     if (FIsBasicVar(v))
       {
 #ifndef CL_NO_IO
@@ -1395,6 +1391,7 @@ ClSimplexSolver::setExternalVariables()
 #endif
       continue;
       }
+#endif
     ChangeClv(v,0.0);
     }
 

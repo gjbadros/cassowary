@@ -676,33 +676,35 @@ addDel(const int nCns = 900, const int nVars = 900, const int nResolves = 10000)
   int e1Index = int(UniformRandom()*nVars);
   int e2Index = int(UniformRandom()*nVars);
 
-  ClEditConstraint edit1(*(rgpclv[e1Index]),clsStrong());
-  ClEditConstraint edit2(*(rgpclv[e2Index]),clsStrong());
+  ClEditConstraint *pedit1 = new ClEditConstraint(*(rgpclv[e1Index]),clsStrong());
+  ClEditConstraint *pedit2 = new ClEditConstraint(*(rgpclv[e2Index]),clsStrong());
+
+  ClVariable e1 = *(rgpclv[e1Index]);
+  ClVariable e2 = *(rgpclv[e2Index]);
 
   solver
-    .addConstraint(edit1)
-    .addConstraint(edit2);
+    .addEditVar(e1)
+    .addEditVar(e2);
 
   cout << "done creating edit constraints -- about to start resolves" << endl;
   cout << "time = " << timer.ElapsedTime() << "\n" << endl;
   timer.Start();
 
+  solver.beginEdit();
   // FIXGJB start = Timer.now();
-  for (int m = 0; m < nResolves; m++)
+  for (int m = 0; m < nResolves; ++m)
     {
-    vector<Number> vals;
-    vals.push_back(rgpclv[e1Index]->value() * 1.001);
-    vals.push_back(rgpclv[e2Index]->value() * 1.001);
-    solver.resolve(vals);
+    solver
+      .suggestValue(e1,e1->value()*1.001)
+      .suggestValue(e2,e2->value()*1.001)
+      .resolve();
     }
-
+  solver.endEdit();
   // cout << "run time: " <<
 
   cout << "done resolves -- now removing constraints" << endl;
   cout << "time = " << timer.ElapsedTime() << "\n" <<endl;
   cout << "time per resolve = " << timer.ElapsedTime()/nResolves << "\n" <<endl;
-  solver.removeConstraint(edit1);
-  solver.removeConstraint(edit2);
   
   timer.Start();
 
