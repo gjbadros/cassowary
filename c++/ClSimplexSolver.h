@@ -34,13 +34,13 @@ class ExCLRequiredFailureWithExplanation;
 class ClSimplexSolver : public ClTableau {
  protected: typedef ClTableau super;
   class ClEditInfo;
-  typedef ClMap<ClVariable, ClEditInfo *> ClVarToEditInfoMap;
+  typedef ClMap<const ClVariable *, ClEditInfo *> ClVarToEditInfoMap;
 
  public:
 
   // Constructor
   ClSimplexSolver() :
-    _objective(ClVariable(new ClObjectiveVariable("Z"))),
+    _objective(*(new ClObjectiveVariable("Z"))),
     _slackCounter(0),
     _artificialCounter(0),
 #ifdef CL_FIND_LEAK
@@ -55,65 +55,53 @@ class ClSimplexSolver : public ClTableau {
     _pfnResolveCallback(NULL),
     _pfnCnSatCallback(NULL)
     { 
-    _rows[_objective] = new ClLinearExpression(); 
+    _rows[&_objective] = new ClLinearExpression(); 
     // start out with no edit variables
     _stkCedcns.push(0);
 #ifdef CL_TRACE
-    cerr << "objective row new@ " << _rows[_objective] << endl;
+    cerr << "objective row new@ " << _rows[&_objective] << endl;
 #endif
     }
 
   virtual ~ClSimplexSolver();
   
   // Add constraints so that lower<=var<=upper.  (nil means no  bound.)
-  ClSimplexSolver &addLowerBound(ClVariable v, Number lower)
+  ClSimplexSolver &addLowerBound(const ClAbstractVariable &v, Number lower)
     { 
     ClLinearInequality *pcn = new ClLinearInequality(ClLinearExpression(v - lower));
-    return addConstraint(pcn);
+    return addConstraint(*pcn);
     }
-  ClSimplexSolver &addUpperBound(ClVariable v, Number upper)
+  ClSimplexSolver &addUpperBound(const ClAbstractVariable &v, Number upper)
     {
     ClLinearInequality *pcn = new ClLinearInequality(ClLinearExpression(upper - v));
-    return addConstraint(pcn);
+    return addConstraint(*pcn);
     }
-  ClSimplexSolver &addBounds(ClVariable v, Number lower, Number upper)
+  ClSimplexSolver &addBounds(const ClAbstractVariable &v, Number lower, Number upper)
     { addLowerBound(v,lower); addUpperBound(v,upper); return *this; }
 
   // Add the constraint cn to the tableau
-  ClSimplexSolver &addConstraint(const ClConstraint *const pcn);
+  ClSimplexSolver &addConstraint(const ClConstraint &cn);
 
-#ifndef CL_NO_DEPRECATED
-  // Deprecated! --02/19/99 gjb
-  ClSimplexSolver &addConstraint(const ClConstraint &cn) 
-    { return addConstraint(&cn); }
-#endif
 
   // Same as above, but returns false if the constraint cannot be solved
   // (i.e., the resulting system would be unsatisfiable)
   // The above function "addConstraint" throws an exception in that case
   // which may be inconvenient
-  bool addConstraintNoException(const ClConstraint *const pcn);
-
-#ifndef CL_NO_DEPRECATED
-  // Deprecated --02/22/99 gjb
-  bool addConstraintNoException(const ClConstraint &cn)
-    { return addConstraintNoException(&cn); }
-#endif
-
+  bool addConstraintNoException(const ClConstraint &cn);
 
   // Add an edit constraint for "v" with given strength
   ClSimplexSolver &addEditVar(const ClVariable &v, const ClStrength &strength = clsStrong(),
                               double weight = 1.0 )
     { 
       ClEditConstraint *pedit = new ClEditConstraint(v, strength, weight);
-      return addConstraint(pedit);
+      return addConstraint(*pedit);
     }
 
-  ClSimplexSolver &removeEditVar(ClVariable v)
+  ClSimplexSolver &removeEditVar(const ClVariable &v)
     {
-      const ClEditInfo *pcei = _editVarMap[v];
+      const ClEditInfo *pcei = _editVarMap[&v];
       const ClConstraint *pcnEdit = pcei->_pconstraint;
-      removeConstraint(pcnEdit);
+      removeConstraint(*pcnEdit);
       delete pcnEdit;
       return *this;
     }
@@ -169,30 +157,17 @@ class ClSimplexSolver : public ClTableau {
 			   const ClStrength &strength = clsWeak(), double weight = 1.0 )
     {
     ClStayConstraint *pcn = new ClStayConstraint(v,strength,weight); 
-    return addConstraint(pcn); 
+    return addConstraint(*pcn); 
     }
 
   // Remove the constraint cn from the tableau
   // Also remove any error variable associated with cn
-  ClSimplexSolver &removeConstraint(const ClConstraint *const pcn);
-
-#ifndef CL_NO_DEPRECATED
-  // Deprecated! --02/19/99 gjb
-  ClSimplexSolver &removeConstraint(const ClConstraint &cn) 
-    { return removeConstraint(&cn); }
-#endif
-
+  ClSimplexSolver &removeConstraint(const ClConstraint &cn);
 
   // Same as above, but returns false if the constraint dne
   // The above function "removeConstraint" throws an exception in that case
   // which may be inconvenient
-  bool removeConstraintNoException(const ClConstraint *const pcn);
-
-#ifndef CL_NO_DEPRECATED
-  // Deprecated --02/22/99 gjb
-  bool removeConstraintNoException(const ClConstraint &cn)
-    { return removeConstraintNoException(&cn); }
-#endif
+  bool removeConstraintNoException(const ClConstraint &cn);
 
 
   // Re-initialize this solver from the original constraints, thus
@@ -280,7 +255,7 @@ class ClSimplexSolver : public ClTableau {
     {
     if (!FContainsVariable(v))
       {
-      ChangeClv(v,n);
+      ChangeClv(&v,n);
       return *this;
       }
 
@@ -309,7 +284,7 @@ class ClSimplexSolver : public ClTableau {
         }
       return *this; }
 
-  typedef void (*PfnChangeClvCallback)(ClVariable clv, ClSimplexSolver *psolver);
+  typedef void (*PfnChangeClvCallback)(ClVariable *pclv, ClSimplexSolver *psolver);
 
   void SetChangeClvCallback(PfnChangeClvCallback pfn)
     { _pfnChangeClvCallback = pfn; }
@@ -343,11 +318,7 @@ class ClSimplexSolver : public ClTableau {
   const ClVarToConstraintMap &MarkerMap() const
     { return _constraintsMarked; }
 
-  bool FIsConstraintSatisfied(const ClConstraint *const pcn) const;
-
-  // DEPRECATED
-  bool FIsConstraintSatisfied(const ClConstraint &pcn) const
-    { return FIsConstraintSatisfied(&pcn); }
+  bool FIsConstraintSatisfied(const ClConstraint &cn) const;
 
   void setPv(void *pv)
     { _pv = pv; }
@@ -372,11 +343,11 @@ class ClSimplexSolver : public ClTableau {
     // and addEditVar/removeEditVar pair or the client code owns
     // the constraint object
     ClEditInfo(const ClEditConstraint *pconstraint, 
-               ClVariable eplus, ClVariable eminus,
+               ClSlackVariable *peplus, ClSlackVariable *peminus,
                Number prevEditConstant,
                int index)
         :_pconstraint(pconstraint),
-         _clvEditPlus(eplus), _clvEditMinus(eminus),
+         _pclvEditPlus(peplus), _pclvEditMinus(peminus),
          _prevEditConstant(prevEditConstant),
          _index(index)
       { }
@@ -385,8 +356,8 @@ class ClSimplexSolver : public ClTableau {
       { }
   private:
     const ClConstraint *_pconstraint;
-    ClVariable _clvEditPlus;
-    ClVariable _clvEditMinus;
+    ClSlackVariable *_pclvEditPlus;
+    ClSlackVariable *_pclvEditMinus;
     Number _prevEditConstant;
     int _index;
   };
@@ -409,7 +380,7 @@ class ClSimplexSolver : public ClTableau {
   // is, everything for which the variables in the equation are markers.
   // Thanks to Steve Wolfman for the implementation of the explanation feature
   void buildExplanation(ExCLRequiredFailureWithExplanation & e, 
-                        ClVariable av,
+                        const ClAbstractVariable * pav,
                         const ClLinearExpression * pcle);
 
   // We are trying to add the constraint expr=0 to the appropriate
@@ -436,7 +407,7 @@ class ClSimplexSolver : public ClTableau {
   // ignore whether a variable occurs in the objective function, since
   // new slack variables are added to the objective function by
   // 'newExpression:', which is called before this method.
-  ClVariable chooseSubject(ClLinearExpression &pexpr);
+  const ClAbstractVariable *chooseSubject(ClLinearExpression &pexpr);
   
   // Each of the non-required edits will be represented by an equation
   // of the form
@@ -454,7 +425,7 @@ class ClSimplexSolver : public ClTableau {
   // (This comment was for resetEditConstants(), but that is now
   // gone since it was part of the screwey vector-based interface
   // to resolveing. --02/15/99 gjb)
-  void deltaEditConstant(Number delta, ClVariable pv1, ClVariable pv2);
+  void deltaEditConstant(Number delta, const ClAbstractVariable &pv1, const ClAbstractVariable &pv2);
   
   // We have set new values for the constants in the edit constraints.
   // Re-optimize using the dual simplex algorithm.
@@ -466,17 +437,18 @@ class ClSimplexSolver : public ClTableau {
   // the constraint is non-required give its error variables an
   // appropriate weight in the objective function.
   ClLinearExpression *newExpression(const ClConstraint &cn,
-                                    ClVariable &clvEplus,
-                                    ClVariable &clvEminus,
+                                    ClSlackVariable *&pclvEplus,
+                                    ClSlackVariable *&pclvEminus,
                                     Number &prevEConstant);
 
   // Minimize the value of the objective.  (The tableau should already
   // be feasible.)
-  void optimize(ClVariable zVar);
+  template <class T>
+  void optimize(const ClObjectiveVariable &zVar, ClGenericLinearExpression<T> *pzRow);
 
   // Do a pivot.  Move entryVar into the basis (i.e. make it a basic variable),
   // and move exitVar out of the basis (i.e., make it a parametric variable)
-  void pivot(ClVariable entryVar, ClVariable exitVar);
+  void pivot(const ClAbstractVariable &pentryVar, const ClAbstractVariable &pexitVar);
 
   // Each of the non-required stays will be represented by an equation
   // of the form
@@ -505,10 +477,11 @@ class ClSimplexSolver : public ClTableau {
   // them.
   void setExternalVariables();
 
-  void ChangeClv(ClVariable clv, Number n) {
-    clv.change_value(n); 
+  void ChangeClv(ClVariable *pclv, Number n) {
+    assert(pclv);
+    pclv->change_value(n); 
     if (_pfnChangeClvCallback) 
-      _pfnChangeClvCallback(clv,this);
+      _pfnChangeClvCallback(pclv,this);
   }
 
   /// instance variables
@@ -530,7 +503,7 @@ class ClSimplexSolver : public ClTableau {
   // for each marker variable (used when building failure explanations)
   ClVarToConstraintMap _constraintsMarked;
 
-  ClVariable _objective;
+  ClObjectiveVariable &_objective;
 
   // Map edit variables to their constraints, errors, and prior
   // values

@@ -1,0 +1,86 @@
+Differences between the two implementations of
+the Cassowary Constraint Solver
+(Casso = implementation in C++ by Badros,
+ QOCA  = implementation in C++ by Finlay and Chok)
+
+Performance (on bowman):
+ Casso:
+	17 ms for add
+	1.3 ms for resolve
+	1.3 ms for remove
+ QOCA:
+	14 ms for add
+	3.3 ms for resolve
+	4.3 ms for remove
+
+Prefix:
+ Casso: Cl == Constraint Library (on both filenames and classes)
+ QOCA: Qc (on filenames only, not classes)
+
+Naming convention:
+ Casso: mixed initial caps (original are lowercase), often Hungarian
+ QOCA: Initial caps on all fns.
+
+Top level include:
+ Casso: "Cl.h"
+ QOCA: "QcCassSolver.h"
+
+
+Casso: ClVariable x(NAME, VALUE) among others
+QOCA: CFloatHandle x(stay_weight, edit_weight, desired_value)
+-> Casso's weights are attached to constraints, not variables!
+
+Casso: Must addStay-s explicitly
+QOCA: stay strength implicit in creation of the variable via CFloatHandle ctr,
+      and stay is added when variable is registered (either when first
+      encountered or by AddVar call).
+
+
+Casso: ClSimplexSolver solver;
+QOCA: CassSolver solver;
+
+
+Casso: addEditVar
+QOCA: SetEditVar
+
+
+Casso: solver.suggestValue(x,100)
+QOCA: x.SuggestValue(100) // vars know which solver they're in
+
+
+Casso: value()
+QOCA: GetValue()
+
+
+Casso: ClConstraint()
+QOCA: ConstraintHandle
+
+
+Casso: ClLinearExpression
+QOCA: LinPoly
+-> LinPoly does *not* have a constant built into it -- only appears when you make a constraint
+
+
+Casso: ClLinearEquation, ClLinearInequality
+QOCA: ConstraintHandle(expr), ConstraintHandle(expr, LE)
+
+
+Casso's makefile is more sophisticated, configurable than QOCA's
+
+
+Casso permits chaining of calls by returning reference to solver.
+
+
+QOCA uses operator-overloading to build constraints.
+
+
+Casso has resolve() call implicit in an endEdit();
+
+
+Casso has solve() implicit in addConstraint, removeConstraint;  QOCA
+must call Solve() explicitly.
+
+
+QOCA seg-faults when an unknown variable is encountered-- it'd be nice
+if it threw an exception instead.
+

@@ -62,10 +62,10 @@ class ClPoint {
     : clv_x(x), clv_y(y)
     { }
 
-  ClVariable &X()
+  ClVariable X()
     { return clv_x; }
 
-  ClVariable &Y()
+  ClVariable Y()
     { return clv_y; }
 
   Number Xvalue() const
@@ -79,10 +79,10 @@ class ClPoint {
 class ClStrength {
 };
 
-ClStrength &clsRequired();
-ClStrength &clsStrong();
-ClStrength &clsMedium();
-ClStrength &clsWeak();
+const ClStrength &clsRequired();
+const ClStrength &clsStrong();
+const ClStrength &clsMedium();
+const ClStrength &clsWeak();
 
 %except(python) {
 	try{
@@ -103,12 +103,12 @@ class ClLinearEquation : public ClConstraint {
  ClLinearEquation(const ClLinearExpression &cle,
 		  const ClStrength strength,
 		  double weight = 1.0);
- %name(ClLinearEquation1) ClLinearEquation(const ClVariable &clv,
+ %name(ClLinearEquation1) ClLinearEquation(ClVariable clv,
 		  const ClLinearExpression &cle,
 		  const ClStrength strength,
 		  double weight = 1.0);
  %name(ClLinearEquation2) ClLinearEquation(const ClLinearExpression &cle,
- 		const ClVariable &clv, const ClStrength strength,
+ 		ClVariable clv, const ClStrength strength,
 		double weight = 1.0);
 };
 
@@ -120,7 +120,7 @@ class ClLinearInequality : public ClConstraint {
  // Constructor
  ClLinearInequality(const ClLinearExpression &cle,
  		    const ClStrength strength, double weight = 1.0);
- %name(ClLinearInequality1) ClLinearInequality(const ClVariable &clv,
+ %name(ClLinearInequality1) ClLinearInequality(ClVariable clv,
   		    ClInequalityOperator op,
 		    const ClLinearExpression &cle,
 		    const ClStrength strength,
@@ -137,7 +137,7 @@ class ClLinearExpression  {
 
   // Convert from ClVariable to a ClLinearExpression
   // this replaces ClVariable::asLinearExpression
-  ClLinearExpression(const ClVariable &clv, Number value = 1.0,
+  ClLinearExpression(ClVariable clv, Number value = 1.0,
 	  Number constant = 0.0);
   %name(ClLinearExpressionNum) ClLinearExpression(Number num = 0.0);
 
@@ -184,32 +184,32 @@ class ClLinearExpression  {
   // expression.
   %name(addExpression1) ClLinearExpression
   	&addExpression(const ClLinearExpression &expr, Number n,
-				    const ClVariable &subject,
+				    ClVariable subject,
 				    ClSimplexSolver &solver);
 
   // Add a term c*v to this expression.  If the expression already
   // contains a term involving v, add c to the existing coefficient.
   // If the new coefficient is approximately 0, delete v.
-  ClLinearExpression &addVariable(const ClVariable &v, Number c);
+  ClLinearExpression &addVariable(ClVariable v, Number c);
 
   // Add a term c*v to this expression.  If the expression already
   // contains a term involving v, add c to the existing coefficient.
   // If the new coefficient is approximately 0, delete v.  Notify the
   // solver if v appears or disappears from this expression.
-  %name(addVariable1) ClLinearExpression &addVariable(const ClVariable &v,
+  %name(addVariable1) ClLinearExpression &addVariable(ClVariable v,
 				  Number c,
-				  const ClVariable &subject,
+				  ClVariable subject,
 				  ClSimplexSolver &solver);
 
   // Add a term c*v to this expression.  If the expression already
   // contains a term involving v, add c to the existing coefficient.
   // If the new coefficient is approximately 0, delete v.
-  ClLinearExpression &setVariable(const ClVariable &v, Number c)
+  ClLinearExpression &setVariable(ClVariable v, Number c)
     {assert(c != 0.0);  my_terms[&v] = c; return *this; }
 
   // Return a variable in this expression.  (It is an error if this
   // expression is constant -- signal ExCLInternalError in that case).
-  const ClVariable *anyVariable() const;
+  ClVariable anyPivotableVariable() const;
 };
 
 class ClSimplexSolver {
@@ -222,11 +222,11 @@ class ClSimplexSolver {
   ~ClSimplexSolver();
   
   // Add constraints so that lower<=var<=upper.  (nil means no  bound.)
-  ClSimplexSolver &addLowerBound(const ClVariable &v, Number lower);
+  ClSimplexSolver &addLowerBound(ClVariable v, Number lower);
 
-  ClSimplexSolver &addUpperBound(const ClVariable &v, Number upper);
+  ClSimplexSolver &addUpperBound(ClVariable v, Number upper);
 
-  ClSimplexSolver &addBounds(const ClVariable &v, Number lower,
+  ClSimplexSolver &addBounds(ClVariable v, Number lower,
   	Number upper);
 
   // Add the constraint cn to the tableau
@@ -241,11 +241,11 @@ class ClSimplexSolver {
 
   ClSimplexSolver &addPointStay(const ClPoint &clp, Number weight);
 
-  %name(addPointStayXY) ClSimplexSolver &addPointStay(const ClVariable &vx,
-  	const ClVariable &vy, Number weight);
+  %name(addPointStayXY) ClSimplexSolver &addPointStay(ClVariable vx,
+  	ClVariable vy, Number weight);
 
   // Add a stay of the given strength (default to weak) of v to the tableau
-  ClSimplexSolver &addStay(const ClVariable &v,
+  ClSimplexSolver &addStay(ClVariable v,
 			   const ClStrength &strength, Number weight =
 			   1.0 );
 
@@ -271,7 +271,7 @@ class ClSimplexSolver {
 class ClEditConstraint : public ClConstraint {
  public:
   
-  ClEditConstraint(const ClVariable &var,
+  ClEditConstraint(ClVariable var,
 		   const ClStrength &strength, Number weight = 1.0 );
 };
 
