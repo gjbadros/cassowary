@@ -23,6 +23,7 @@
 #include <GTL/topsort.h>
 #include <pair.h>
 #include <math.h>
+#include <stdarg.h>
 
 static int fDebugFDSolve;
 
