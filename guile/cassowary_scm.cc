@@ -21,6 +21,7 @@
 #include <guile/gh.h>
 
 #include "ClVariable.h"
+#include "ClSymbolicWeight.h"
 #include "ClLinearExpression.h"
 #include "ClLinearEquation.h"
 #include "ClLinearInequality.h"
@@ -167,6 +168,86 @@ SCWM_PROC (cl_int_value, "cl-int-value", 1, 0, 0,
 
 
 //// ClSymbolicWeight wrapper
+#undef SCMTYPEID
+#define SCMTYPEID scm_tc16_cl_weight
+
+long SCMTYPEID;
+
+inline bool FIsClSymbolicWeightSCM(SCM scm) 
+{ return SCM_NIMP(scm) && SCM_CAR(scm) == (SCM) SCMTYPEID; }
+
+inline ClSymbolicWeight *PclswFromScm(SCM scm)
+{ return (ClSymbolicWeight *)(SCM_CDR(scm)); }
+
+SCM
+mark_cl_weight(SCM scm)
+{
+  SCM_SETGC8MARK(scm);
+  return SCM_BOOL_F;
+}
+
+size_t
+free_cl_weight(SCM scm)
+{
+  ClSymbolicWeight *pclsw = PclswFromScm(scm);
+  delete pclsw;
+  return 0;
+}
+
+int
+print_cl_weight(SCM scm, SCM port, scm_print_state *pstate)
+{
+  strstream ss;
+  ClSymbolicWeight *pclsw = PclswFromScm(scm);
+  ss << "#<cl-weight" << *pclsw << ">" << ends;
+  scm_puts(ss.str(), port);
+  return 1;
+}
+
+SCWM_PROC (cl_weight_p, "cl-weight?", 1, 0, 0,
+           (SCM scm))
+#define FUNC_NAME s_cl_weight_p
+{
+  return SCM_BOOL_FromF(FIsClSymbolicWeightSCM(scm));
+}
+#undef FUNC_NAME
+
+SCWM_PROC (make_cl_weight, "make-cl-weight", 3, 0, 0,
+           (SCM w1, SCM w2, SCM w3))
+#define FUNC_NAME s_make_cl_weight
+{
+  int iarg = 1;
+
+  if (!gh_number_p(w1)) scm_wrong_type_arg(FUNC_NAME, iarg++, w1);
+  if (!gh_number_p(w2)) scm_wrong_type_arg(FUNC_NAME, iarg++, w2);
+  if (!gh_number_p(w3)) scm_wrong_type_arg(FUNC_NAME, iarg++, w3);
+
+  ClSymbolicWeight *pclsw = new ClSymbolicWeight(gh_scm2double(w1),
+                                                 gh_scm2double(w2),
+                                                 gh_scm2double(w3));
+
+  SCM answer;
+
+  SCM_DEFER_INTS;
+  SCM_NEWCELL(answer);
+  SCM_SETCAR(answer, (SCM) SCMTYPEID);
+  SCM_SETCDR(answer, (SCM) pclsw);
+  SCM_ALLOW_INTS;
+
+  return answer;
+}
+#undef FUNC_NAME
+
+#if 0 // FUNCTION_TEMPLATE
+SCWM_PROC (, , 0, 0, 0,
+           ())
+#define FUNC_NAME s_
+{
+  return SCM_UNDEFINED;
+}
+#undef FUNC_NAME
+#endif
+
 
 
 
@@ -706,6 +787,7 @@ SCWM_PROC (cl_add_editvar, "cl-add-editvar", 2, 0, 0,
 //// cassowary_scm initialization
 
 MAKE_SMOBFUNS(cl_variable);
+MAKE_SMOBFUNS(cl_weight);
 MAKE_SMOBFUNS(cl_expression);
 MAKE_SMOBFUNS(cl_equation);
 MAKE_SMOBFUNS(cl_inequality);
@@ -715,6 +797,7 @@ void
 init_cassowary_scm()
 {
   REGISTER_SMOBFUNS(cl_variable);
+  REGISTER_SMOBFUNS(cl_weight);
   REGISTER_SMOBFUNS(cl_expression);
   REGISTER_SMOBFUNS(cl_equation);
   REGISTER_SMOBFUNS(cl_inequality);
