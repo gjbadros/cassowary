@@ -1,3 +1,7 @@
+* Add operator= on solver for saving solver state
+
+* Make more obvious that variables contain their values, and you don't have to query the solver for the variable's value (similarly, variables must stay in scope throughout the solver's lifetime)
+
 * Specifying constraints interactively
 ** metaphor
 ** toolbox
