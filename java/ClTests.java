@@ -795,7 +795,12 @@ public class ClTests extends CL {
     } 
     catch (Exception err)
       {
-        System.err.println("Exception: " + err);
+        ExCLError myerr = (ExCLError) err;
+        if (null != myerr) {
+          System.err.println("Exception: " + myerr + ": " + myerr.description());
+        } else {
+          System.err.println("Exception: " + err);
+        }
       }
   }
   
