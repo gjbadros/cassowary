@@ -1,3 +1,27 @@
+Tue Feb 23 08:55:28 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile: Fix build rules for bison/flex parser so
+	dependencies are correct.  Added new targets, all-notests,
+	all-tests, make 'lib' the default target, and all really build
+	everything.
+
+	* c++/creader.h, c++/creader.l, c++/creader.y: Take address of
+	ClVariable-s from the map's values (cannot use ClVariable in the
+	union directly because union members cannot have constructors).
+	#include ClVariable.h instead of fwd decl of ClVariable so that we 
+	get the StringToVarMap typedef, too.
+
+Mon Feb 22 16:33:16 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile: Use CL_LIBRARY, not LIB_FILE, throughout. Use
+	flags for maximum performance.
+
+	* c++/ClVariable.h, c++/ClConstraintHash.h, c++/Cassowary.h:
+ 	Divide pointer address by CL_PTR_HASH_DIVISOR in hash functions
+
+	* c++/ClTests.cc:  Added CL_SHOW_CNS_IN_BENCHMARK guard protecting 
+	new displaying of constraints and listing of inconsistent constraints.
+
 Mon Feb 22 12:18:53 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* c++/ClTests.cc (inconsistent3): Drop extra redundant
