@@ -26,7 +26,7 @@
 ** bugs
 
 * predicting behaviour
-** user studies on expected behaviour
+** user studies on expected behaviour -- Jeff -- Java applets for this?
 ** dynamically changing stay constraint weights to make last moved point least likely to move again
 ** Resetting of stay constraints -- maybe have last set of stay constraints at a lesser strength makes sense
 ** Hidden state -> make visible somehow
@@ -34,6 +34,9 @@
 *** if not, it's bad, and need some what to see and manipulate that state
 
 * Compound constraints (x,y for a point satisfied together)
+** avoid stay-constraints on x & y of decreasing weight hack
+** only count the cns as satisfied if the conjunction is satisfied
+
 
 * Disjunctions
 
@@ -47,6 +50,8 @@
 
 * Detect and remove redundant constraints for efficiency
 ** especially web application, where constraints are more static
+** easy for stay constraints
+** relationship to implication operator
 
 * callbacks for internal happenings
 ** variables set, value changed
@@ -68,8 +73,6 @@
 * Implementation details
 
 ** Use ClSymbolicWeights for coefficients on zRow (the objective)
-
-** compound constraints to avoid stay-constraints on x & y of decreasing weight hack
 
 ** user-controllable selection of better solutions
 *** e.g., mouse button to control pivots

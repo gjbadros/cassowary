@@ -6,6 +6,11 @@ Cassowary/C++ needs to be compiled using a modern C++ compiler.
 At one time or another, it has compiled using:
   o egcs-1.0.1
   o egcs-1.0.3a
+  o egcs-1.1b with some modifications:
+      comment out last line of ClLinearExpression.cc:
+      // template class ClGenericLinearExpression<ClSymbolicWeight>;
+
+      and remove -pedantic from the Makefile's CPPFLAGS variable
   o gcc-2.8.1 (needs libstdc++-2.8.x, too)
   o Visual C++ 5.0
 
