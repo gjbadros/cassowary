@@ -1,5 +1,5 @@
 Cassowary Constraint Solver for Smalltalk, C++, and Java
-Version 0.32
+Version 0.4
 
 Web Page: http://www.cs.washington.edu/research/constraints/cassowary
 Contact: cassowary@cs.washington.edu
@@ -9,7 +9,7 @@ Alan Borning <borning@cs.washington.edu>
 University of Washington
 Computer Science and Engineering
 Seattle, WA 98195-2350
-10-March-1999
+17-March-1999
 
 with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
 
@@ -59,8 +59,8 @@ See also the Scwm (Scheme Constraints Window Manager) web page:
 
 http://vicarious-existence.mit.edu/scwm/
 
-Scwm, also by Greg Badros, is the most substantial application using
-this toolkit that we are aware of.
+Scwm, also by Greg Badros (and Maciej Stachowiak), is the most
+substantial application using this toolkit that we are aware of.
 
 ------------------------------------------------------------------
 
@@ -73,12 +73,13 @@ means that you may be able to just:
 ./configure
 make
 
-and everything will work.  Alternatively, you can "cd" into the
-directories of interest and try "make -f Makefile.linux all".  See the
-file "INSTALL" for more details about autoconf support and the options
-that the "configure" takes.
+and everything will work.  See the file "INSTALL" for more details about
+autoconf support and the options that the "configure" takes.  You can
+also do "./configure --help" for the list of the options that configure
+accepts. 
 
-Note that the included Makefiles depend upon features of GNU Make.  See:
+Note that the generated Makefiles may depend upon features of GNU Make
+(please let me know if they do).  See:
 
 ftp://ftp.gnu.org/pub/gnu/
 
