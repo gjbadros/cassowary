@@ -1,3 +1,11 @@
+Sun Sep  6 13:19:01 1998  Greg Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSimplexSolver.h: Added _pv field, and Pv() setPv() getter
+	and setter
+	
+	* guile/cassowary_scm.cc: Use solver's _pv field to point
+	ClSimplexSolver back at the scheme object that wraps it
+
 Fri Sep  4 18:52:50 1998  Greg Badros  <gjb@cs.washington.edu>
 
 	* guile/cassowary_scm.hpp, guile/cassowary_scm.cc: Added PvFromScm 
