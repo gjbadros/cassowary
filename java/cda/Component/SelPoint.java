@@ -20,6 +20,8 @@ import java.awt.Rectangle;
 import java.awt.Color;
 import java.util.Vector;
 
+import EDU.Washington.grad.gjb.cassowary.*;
+
 public class SelPoint implements Cloneable {
   public   int     x, y;
   public   boolean isHighlighted;
@@ -405,6 +407,9 @@ public class SelPoint implements Cloneable {
 
 /*
  * $Log$
+ * Revision 1.2  1998/05/09 00:30:22  gjb
+ * Remove cr-s
+ *
  * Revision 1.1  1998/05/09 00:10:57  gjb
  * Added
  *

@@ -29,6 +29,8 @@ import java.util.Vector;
 import java.util.Enumeration;
 import java.awt.image.*;
 
+import EDU.Washington.grad.gjb.cassowary.*;
+
 class DrawPanel extends Panel {
   DPMouseMotionListener drawPanelMML;
   DPKeyListener drawPanelKL;
@@ -1674,6 +1676,9 @@ class DrawPanel extends Panel {
 
 /*
  * $Log$
+ * Revision 1.3  1998/05/14 22:34:22  gjb
+ * Print full solver information upon "i" keystroke
+ *
  * Revision 1.2  1998/05/09 00:30:32  gjb
  * Remove cr-s
  *

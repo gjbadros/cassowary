@@ -10,6 +10,8 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Color;
 
+import EDU.Washington.grad.gjb.cassowary.*;
+
 public class CircleCC extends ConstrComponent {
   // Constrainable parts are the edge points
   protected SelPoint upperLeft, lowerRight;
@@ -94,6 +96,9 @@ public class CircleCC extends ConstrComponent {
 
 /* 
  * $Log$
+ * Revision 1.2  1998/05/09 00:30:19  gjb
+ * Remove cr-s
+ *
  * Revision 1.1  1998/05/09 00:10:55  gjb
  * Added
  *

@@ -12,6 +12,8 @@ import java.awt.Color;
 import java.util.Vector;
 import CDA_G;
 
+import EDU.Washington.grad.gjb.cassowary.*;
+
 public class BelowConstraint extends AdjacencyConstraint {
 
   public BelowConstraint(ClSimplexSolver solver, ConstrComponent srcCC,
@@ -96,6 +98,9 @@ public class BelowConstraint extends AdjacencyConstraint {
 
 /*
  * $Log$
+ * Revision 1.2  1998/05/09 00:30:26  gjb
+ * Remove cr-s
+ *
  * Revision 1.1  1998/05/09 00:11:01  gjb
  * Added
  *

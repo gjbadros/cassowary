@@ -25,6 +25,8 @@ import java.awt.Rectangle;
 import java.awt.Color;
 import java.util.Vector;
 
+import EDU.Washington.grad.gjb.cassowary.*;
+
 public abstract class ConstrComponent {
   // Reference to the solver
   public ClSimplexSolver solver;
@@ -453,6 +455,9 @@ public abstract class ConstrComponent {
 
 /*
  * $Log$
+ * Revision 1.2  1998/05/09 00:30:19  gjb
+ * Remove cr-s
+ *
  * Revision 1.1  1998/05/09 00:10:55  gjb
  * Added
  *

@@ -10,6 +10,8 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Color;
 
+import EDU.Washington.grad.gjb.cassowary.*;
+
 public class RectangleCC extends ConstrComponent {
   // Constrainable parts are the corners
   public SelPoint c1, c2, c3, c4;
@@ -195,6 +197,9 @@ public class RectangleCC extends ConstrComponent {
   
 /* 
  * $Log$
+ * Revision 1.2  1998/05/09 00:30:21  gjb
+ * Remove cr-s
+ *
  * Revision 1.1  1998/05/09 00:10:57  gjb
  * Added
  *

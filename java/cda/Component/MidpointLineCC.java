@@ -10,6 +10,8 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Color;
 
+import EDU.Washington.grad.gjb.cassowary.*;
+
 public class MidpointLineCC extends ConstrComponent {
   // Constrainable parts are the endpoints and midpoint
   public SelPoint p1, p2, mp;
@@ -162,6 +164,9 @@ public class MidpointLineCC extends ConstrComponent {
     
 /*
  * $Log$
+ * Revision 1.2  1998/05/09 00:30:21  gjb
+ * Remove cr-s
+ *
  * Revision 1.1  1998/05/09 00:10:56  gjb
  * Added
  *

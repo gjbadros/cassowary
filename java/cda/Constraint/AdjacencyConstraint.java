@@ -14,6 +14,8 @@ import java.awt.Color;
 import java.util.Vector;
 import CDA_G;
 
+import EDU.Washington.grad.gjb.cassowary.*;
+
 public abstract class AdjacencyConstraint extends Constraint {
 
   // Vector of ClLinearInequality constraints upon the target's SelPoints
@@ -190,6 +192,9 @@ public abstract class AdjacencyConstraint extends Constraint {
 
 /*
  * $Log$
+ * Revision 1.2  1998/05/09 00:30:25  gjb
+ * Remove cr-s
+ *
  * Revision 1.1  1998/05/09 00:10:59  gjb
  * Added
  *

@@ -14,6 +14,8 @@ import java.awt.Rectangle;
 import java.util.Vector;
 import CDA_G;
 
+import EDU.Washington.grad.gjb.cassowary.*;
+
 public class AlignmentConstraint extends Constraint {
 
   // Vector of ClLinearEquation constraints upon the appropriate edge of
@@ -453,6 +455,9 @@ public class AlignmentConstraint extends Constraint {
 
 /*
  * $Log$
+ * Revision 1.2  1998/05/09 00:30:25  gjb
+ * Remove cr-s
+ *
  * Revision 1.1  1998/05/09 00:11:00  gjb
  * Added
  *

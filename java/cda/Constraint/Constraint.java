@@ -20,6 +20,8 @@ import java.awt.Point;
 import java.util.Vector;
 import java.awt.Rectangle;
 
+import EDU.Washington.grad.gjb.cassowary.*;
+
 public abstract class Constraint {
   public   int     x, y;
 
@@ -172,6 +174,9 @@ public abstract class Constraint {
 
 /*
  * $Log$
+ * Revision 1.2  1998/05/09 00:30:27  gjb
+ * Remove cr-s
+ *
  * Revision 1.1  1998/05/09 00:11:01  gjb
  * Added
  *

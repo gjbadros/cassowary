@@ -9,6 +9,8 @@
 import java.util.Vector;
 import java.awt.Point;
 
+import EDU.Washington.grad.gjb.cassowary.*;
+
 public class EditConstantList {
   // Vector of edit constants (ClDouble instances)
   Vector ec;
@@ -115,6 +117,9 @@ public class EditConstantList {
 
 /*
  * $Log$
+ * Revision 1.2  1998/05/09 00:30:20  gjb
+ * Remove cr-s
+ *
  * Revision 1.1  1998/05/09 00:10:56  gjb
  * Added
  *

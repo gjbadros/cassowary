@@ -8,6 +8,8 @@
 import java.awt.Graphics;
 import java.awt.Color;
 
+import EDU.Washington.grad.gjb.cassowary.*;
+
 public class AnchorConstraint extends Constraint {
   ClStayConstraint stayConstrX, stayConstrY;
 
@@ -137,6 +139,9 @@ public class AnchorConstraint extends Constraint {
 
 /*
  * $Log$
+ * Revision 1.2  1998/05/09 00:30:26  gjb
+ * Remove cr-s
+ *
  * Revision 1.1  1998/05/09 00:11:00  gjb
  * Added
  *

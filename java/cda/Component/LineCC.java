@@ -9,6 +9,8 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Color;
 
+import EDU.Washington.grad.gjb.cassowary.*;
+
 public class LineCC extends ConstrComponent {
   // Constrainable parts are the endpoints, which are also selectable
   public SelPoint p1, p2;
@@ -94,6 +96,9 @@ public class LineCC extends ConstrComponent {
   
 /*
  * $Log$
+ * Revision 1.2  1998/05/09 00:30:20  gjb
+ * Remove cr-s
+ *
  * Revision 1.1  1998/05/09 00:10:56  gjb
  * Added
  *
