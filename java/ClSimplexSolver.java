@@ -19,11 +19,8 @@ public class ClSimplexSolver extends ClTableau
   // Ctr initializes the fields, and creates the objective row
   public ClSimplexSolver()
   {
-    _editMinusErrorVars = new Vector();
-    _editPlusErrorVars = new Vector();
     _stayMinusErrorVars = new Vector();
     _stayPlusErrorVars = new Vector();
-    _prevEditConstants = new Vector();
     _errorVars = new Hashtable();
     _markerVars = new Hashtable();
 
@@ -86,9 +83,12 @@ public class ClSimplexSolver extends ClTableau
        throws ExCLRequiredFailure, ExCLInternalError
   {
     if (fTraceOn) fnenterprint("addConstraint: " + cn);
-    
-    ClLinearExpression expr = newExpression(cn);
-  
+
+    Vector eplus_eminus = new Vector(2);
+    ClDouble prevEConstant = new ClDouble();
+    ClLinearExpression expr = newExpression(cn, /* output to: */
+                                            eplus_eminus,
+                                            prevEConstant);
     boolean fAddedOkDirectly = false;
 
     try {
@@ -110,9 +110,14 @@ public class ClSimplexSolver extends ClTableau
     _fNeedsSolving = true;
 
     if (cn.isEditConstraint()) {
-      int i = _prevEditConstants.size() - 1;
+      int i = _editVarMap.size();
       ClEditConstraint cnEdit = (ClEditConstraint) cn;
-      _editVarMap.put(cnEdit.variable(), new ClConstraintAndIndex(cnEdit,i));
+      ClSlackVariable clvEplus = (ClSlackVariable) eplus_eminus.elementAt(0);
+      ClSlackVariable clvEminus = (ClSlackVariable) eplus_eminus.elementAt(1);
+      _editVarMap.put(cnEdit.variable(), 
+                      new ClEditInfo(cnEdit,clvEplus,clvEminus,
+                                     prevEConstant.doubleValue(),
+                                     i));
     }
 
     if (_fOptimizeAutomatically) {
@@ -166,8 +171,8 @@ public class ClSimplexSolver extends ClTableau
   public final ClSimplexSolver removeEditVar(ClVariable v)
     throws ExCLInternalError, ExCLConstraintNotFound
   {
-    ClConstraintAndIndex cai = (ClConstraintAndIndex) _editVarMap.get(v);
-    ClConstraint cn = cai.Constraint();
+    ClEditInfo cei = (ClEditInfo) _editVarMap.get(v);
+    ClConstraint cn = cei.Constraint();
     removeConstraint(cn);
     return this;
   }
@@ -409,25 +414,14 @@ public class ClSimplexSolver extends ClTableau
       }
     } else if (cn.isEditConstraint()) {
       assert(eVars != null);
-      for (Enumeration e = eVars.elements(); e.hasMoreElements(); ) {
-	final ClAbstractVariable var = (ClAbstractVariable) e.nextElement();
-	int i = 0;
-	for ( ; i < _editPlusErrorVars.size(); i++) {
-	  if ( _editPlusErrorVars.elementAt(i) == var) break;
-	}
-	if (i != _editPlusErrorVars.size()) {
-	  // found it
-          // the plus error vars (ep*) are the markers, so they get removed
-          // elsewhere, but we need to be sure to remove the minus error vars (em*)
-          removeColumn( (ClAbstractVariable) _editMinusErrorVars.elementAt(i));
-	  _editPlusErrorVars.removeElementAt(i);
-	  _editMinusErrorVars.removeElementAt(i);
-	  _prevEditConstants.removeElementAt(i);
-	  break;
-	}
-      }
       ClEditConstraint cnEdit = (ClEditConstraint) cn;
-      _editVarMap.remove(cnEdit.variable());
+      ClVariable clv = cnEdit.variable();
+      ClEditInfo cei = (ClEditInfo) _editVarMap.get(clv);
+      ClSlackVariable clvEditMinus = cei.ClvEditMinus();
+      //      ClSlackVariable clvEditPlus = cei.ClvEditPlus();
+      // the clvEditPlus is a marker variable that is removed elsewhere
+      removeColumn( clvEditMinus );
+      _editVarMap.remove(clv);
     }
 
     // FIXGJB do the remove at top
@@ -460,11 +454,19 @@ public class ClSimplexSolver extends ClTableau
        throws ExCLInternalError
   {
     if (fTraceOn) fnenterprint("resolve" + newEditConstants);
-    _infeasibleRows.clear();
-    resetStayConstants();
-    resetEditConstants(newEditConstants);
-    dualOptimize();
-    setExternalVariables();
+    for (Enumeration e = _editVarMap.keys(); e.hasMoreElements() ; ) {
+      ClVariable v = (ClVariable) e.nextElement();
+      ClEditInfo cei = (ClEditInfo) _editVarMap.get(v);
+      int i = cei.Index();
+      try {
+        if (i < newEditConstants.size())
+          suggestValue(v,((ClDouble) newEditConstants.elementAt(i))
+                       .doubleValue());
+      } catch (ExCLError err) {
+        throw new ExCLInternalError();
+      }
+    }
+    resolve();
   }
 
   // Convenience function for resolve-s of two variables
@@ -498,17 +500,17 @@ public class ClSimplexSolver extends ClTableau
     throws ExCLError
   {
     if (fTraceOn) fnenterprint("suggestValue(" + v + ", " + x + ")");
-    ClConstraintAndIndex cai = (ClConstraintAndIndex) _editVarMap.get(v);
-    if (cai == null) {
+    ClEditInfo cei = (ClEditInfo) _editVarMap.get(v);
+    if (cei == null) {
       System.err.println("suggestValue for variable " + v + ", but var is not an edit variable\n");
       throw new ExCLError();
     }
-    int i = cai.Index();
-    double delta = x - ((ClDouble) _prevEditConstants.elementAt(i)).doubleValue();
-    _prevEditConstants.setElementAt(new ClDouble(x),i);
-    deltaEditConstant(delta,
-                      (ClAbstractVariable) _editPlusErrorVars.elementAt(i),
-                      (ClAbstractVariable) _editMinusErrorVars.elementAt(i));
+    int i = cei.Index();
+    ClSlackVariable clvEditPlus = cei.ClvEditPlus();
+    ClSlackVariable clvEditMinus = cei.ClvEditMinus();
+    double delta = x - cei.PrevEditConstant();
+    cei.SetPrevEditConstant(x);
+    deltaEditConstant(delta, clvEditPlus, clvEditMinus);
     return this;
   }
 
@@ -589,15 +591,10 @@ public class ClSimplexSolver extends ClTableau
   public final String getInternalInfo() {
     StringBuffer retstr = new StringBuffer(super.getInternalInfo());
     retstr.append("\nSolver info:\n");
-    retstr.append("Edit Error Variables: ");
-    retstr.append(_editPlusErrorVars.size() + _editMinusErrorVars.size());
-    retstr.append(" (" + _editPlusErrorVars.size() + " +, ");
-    retstr.append(_editMinusErrorVars.size() + " -)\n");
     retstr.append("Stay Error Variables: ");
     retstr.append(_stayPlusErrorVars.size() + _stayMinusErrorVars.size());
     retstr.append(" (" + _stayPlusErrorVars.size() + " +, ");
     retstr.append(_stayMinusErrorVars.size() + " -)\n");
-    retstr.append("Edit Constants: " + _prevEditConstants.size());
     retstr.append("Edit Variables: " + _editVarMap.size());
     retstr.append("\n");
     return retstr.toString();
@@ -613,18 +610,10 @@ public class ClSimplexSolver extends ClTableau
   public final String toString()
   { 
     StringBuffer bstr = new StringBuffer(super.toString());
-    bstr.append("_editPlusErrorVars: ");
-    bstr.append(_editPlusErrorVars);
-    bstr.append("\n_editMinusErrorVars: ");
-    bstr.append(_editMinusErrorVars);
-
     bstr.append("\n_stayPlusErrorVars: ");
     bstr.append(_stayPlusErrorVars);
     bstr.append("\n_stayMinusErrorVars: ");
     bstr.append(_stayMinusErrorVars);
-
-    bstr.append("\n_prevEditConstants: ");
-    bstr.append(_prevEditConstants);
 
     bstr.append("\n");
     return bstr.toString();
@@ -788,6 +777,22 @@ public class ClSimplexSolver extends ClTableau
     return subject;
   }
   
+  // Each of the non-required edits will be represented by an equation
+  // of the form
+  //    v = c + eplus - eminus 
+  // where v is the variable with the edit, c is the previous edit
+  // value, and eplus and eminus are slack variables that hold the
+  // error in satisfying the edit constraint.  We are about to change
+  // something, and we want to fix the constants in the equations
+  // representing the edit constraints.  If one of eplus and eminus is
+  // basic, the other must occur only in the expression for that basic
+  // error variable.  (They can't both be basic.)  Fix the constant in
+  // this expression.  Otherwise they are both nonbasic.  Find all of
+  // the expressions in which they occur, and fix the constants in
+  // those.  See the UIST paper for details.
+  // (This comment was for resetEditConstants(), but that is now
+  // gone since it was part of the screwey vector-based interface
+  // to resolveing. --02/16/99 gjb)
   protected final void deltaEditConstant(double delta, 
                                          ClAbstractVariable plusErrorVar, 
                                          ClAbstractVariable minusErrorVar)
@@ -871,7 +876,9 @@ public class ClSimplexSolver extends ClTableau
   // Normalize if necessary so that the constant is non-negative.  If
   // the constraint is non-required give its error variables an
   // appropriate weight in the objective function.
-  protected final ClLinearExpression newExpression(ClConstraint cn)
+  protected final ClLinearExpression newExpression(ClConstraint cn,
+                                                   Vector eplus_eminus,
+                                                   ClDouble prevEConstant)
   {
     if (fTraceOn) fnenterprint("newExpression: " + cn);
     if (fTraceOn) traceprint("cn.isInequality() == " + cn.isInequality());
@@ -945,9 +952,9 @@ public class ClSimplexSolver extends ClTableau
 	  _stayMinusErrorVars.addElement(eminus);
 	}
 	else if (cn.isEditConstraint()) {
-	  _editPlusErrorVars.addElement(eplus);
-	  _editMinusErrorVars.addElement(eminus);
-	  _prevEditConstants.addElement(new ClDouble(cnExpr.constant()));
+          eplus_eminus.addElement(eplus);
+          eplus_eminus.addElement(eminus);
+          prevEConstant.setValue(cnExpr.constant());
 	}
       }
     }
@@ -1034,42 +1041,6 @@ public class ClSimplexSolver extends ClTableau
     addRow(entryVar, pexpr);
   }
   
-  // Each of the non-required edits will be represented by an equation
-  // of the form
-  //    v = c + eplus - eminus 
-  // where v is the variable with the edit, c is the previous edit
-  // value, and eplus and eminus are slack variables that hold the
-  // error in satisfying the edit constraint.  We are about to change
-  // something, and we want to fix the constants in the equations
-  // representing the edit constraints.  If one of eplus and eminus is
-  // basic, the other must occur only in the expression for that basic
-  // error variable.  (They can't both be basic.)  Fix the constant in
-  // this expression.  Otherwise they are both nonbasic.  Find all of
-  // the expressions in which they occur, and fix the constants in
-  // those.  See the UIST paper for details.  void
-  protected final void resetEditConstants(Vector newEditConstants)
-       throws ExCLInternalError
-  {
-    if (fTraceOn) fnenterprint("resetEditConstants:" + newEditConstants);
-
-    if (newEditConstants.size() != _editPlusErrorVars.size()) {
-      // number of edit constants doesn't match the number of edit error variables
-      System.err.println("newEditConstants == " + newEditConstants.toString());
-      System.err.println("_editPlusErrorVars == " + _editPlusErrorVars.toString());
-      System.err.println("sizes don't match");
-      throw new ExCLInternalError();
-    }
-
-    for (int i = 0 ; i < newEditConstants.size(); i++) {
-      double delta = (((ClDouble)newEditConstants.elementAt(i)).doubleValue() - 
-		      ((ClDouble)_prevEditConstants.elementAt(i)).doubleValue());
-      _prevEditConstants.setElementAt(((ClDouble)newEditConstants.elementAt(i)).clone(),i);
-      deltaEditConstant(delta, 
-			(ClAbstractVariable) _editPlusErrorVars.elementAt(i),
-			(ClAbstractVariable) _editMinusErrorVars.elementAt(i));
-    }
-  }
-  
   // Each of the non-required stays will be represented by an equation
   // of the form
   //     v = c + eplus - eminus
@@ -1149,22 +1120,10 @@ public class ClSimplexSolver extends ClTableau
 
   //// BEGIN PRIVATE INSTANCE FIELDS
 
-  // the arrays of positive and negative error vars for the edit constraints
-  // (need both positive and negative since they have only non-negative values)
-  private Vector _editMinusErrorVars;
-  private Vector _editPlusErrorVars;
-
-
   // the arrays of positive and negative error vars for the stay constraints
   // (need both positive and negative since they have only non-negative values)
   private Vector _stayMinusErrorVars;
   private Vector _stayPlusErrorVars;
-
-
-  // The array of constants for the edit constraints on the previous
-  // iteration.  These must be in the same order as editPlusErrorVars
-  // and editMinusErrorVars
-  private Vector _prevEditConstants;
 
   // give error variables for a non required constraint,
   // maps to ClSlackVariable-s
@@ -1177,9 +1136,12 @@ public class ClSimplexSolver extends ClTableau
 
   private ClObjectiveVariable _objective;
 
-  // Map edit variables to their constraints and the index into
-  // the parallel vectors for error vars and constants, above
-  private Hashtable _editVarMap; // map ClVariable to a ConstraintAndIndex
+  // Map edit variables to ClEditInfo-s. 
+  // ClEditInfo instances contain all the information for an
+  // edit constraint (the edit plus/minus vars, the index [for old-style
+  // resolve(Vector...) interface], and the previous value.
+  // (ClEditInfo replaces the parallel vectors from the Smalltalk impl.)
+  private Hashtable _editVarMap; // map ClVariable to a ClEditInfo
 
   private long _slackCounter;
   private long _artificialCounter;
@@ -1191,18 +1153,4 @@ public class ClSimplexSolver extends ClTableau
 
   boolean _fOptimizeAutomatically;
   boolean _fNeedsSolving;
-}
-
-class ClConstraintAndIndex {
-  public ClConstraintAndIndex(ClConstraint cn_, int i_)
-  { cn = cn_; i = i_; }
-
-  public int Index()
-  { return i; }
-
-  public ClConstraint Constraint()
-  { return cn; }
-
-  private ClConstraint cn;
-  private int i;
 }
