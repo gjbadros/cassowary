@@ -10,15 +10,52 @@
 // ClTests.cc
 
 #include "Cl.h"
+//#include "ClTimedSimplexSolver.h"
 #include <stdlib.h>
 #include "timer.h"
 #include <iostream>
+#include <fstream>
 #include <iomanip>
+#include <string>
+
+#ifndef NO_RANDOMS_FROM_FILE
+int iRandom = 0;
+int cRandom = 0;
+vector<double> vRandom;
+
+void InitializeRandoms() {
+  iRandom=0;
+  ifstream in("randoms.txt");
+  string s;
+  // skip over comment
+  getline(in,s);
+  // skip over number of randoms
+  getline(in,s);
+  double f;
+  while (in >> f) {
+    vRandom.push_back(f);
+    ++cRandom;
+  }
+}
+
+inline 
+double UniformRandom()
+{ 
+  if (iRandom >= cRandom) {
+    throw new string("Out of random numbers");
+  }
+  //  cerr << "returning value = " << vRandom[iRandom] << endl;
+  return vRandom[iRandom++]; 
+}
+
+
+#else
 
 inline 
 double UniformRandom()
 { return double(rand())/RAND_MAX; }
 
+#endif
 
 bool
 simple1()
@@ -678,6 +715,8 @@ addDel(const int nCns = 900, const int nVars = 900, const int nResolves = 10000)
   static const double ineqProb = 0.12;
   static const int maxVars = 3;
 
+  InitializeRandoms();
+
   cout << "starting timing test. nCns = " << nCns
        << ", nVars = " << nVars << ", nResolves = " << nResolves << endl;
 
@@ -692,15 +731,19 @@ addDel(const int nCns = 900, const int nVars = 900, const int nResolves = 10000)
     solver.AddStay(*rgpclv[i]);
     }
 
-  ClConstraint **rgpcns = new PClConstraint[nCns];
+  int nCnsMade = nCns*2;
+
+  ClConstraint **rgpcns = new PClConstraint[nCnsMade];
+  ClConstraint **rgpcnsAdded = new PClConstraint[nCns];
   int nvs = 0;
   int k;
   int j;
   double coeff;
-  for (j = 0; j < nCns; j++)
+  for (j = 0; j < nCnsMade; ++j)
     {
     // number of variables in this constraint
     nvs = int(UniformRandom()*maxVars) + 1;
+    //    cerr << "Using nvs = " << nvs << endl;
     ClLinearExpression expr = UniformRandom()*20.0 - 10.0;
     for (k = 0; k < nvs; k++)
        {
@@ -719,56 +762,65 @@ addDel(const int nCns = 900, const int nVars = 900, const int nResolves = 10000)
     cout << "Cn[" << j << "]: " << *rgpcns[j] << endl;
 #endif
     }
-
+  timer.Stop();
   cout << "done building data structures" << endl;
   cout << "time = " << timer.ElapsedTime() << "\n" << endl;
-  timer.Start();
+
+  timer.Reset(); timer.Start();
   int cExceptions = 0;
 #ifdef CL_SHOW_CNS_IN_BENCHMARK
   cout << "Exceptions on: ";
 #endif
-  for (j = 0; j < nCns; j++)
+  int cCns = 0;
+  for (j = 0; j < nCnsMade && cCns < nCns; ++j)
     {
     // Add the constraint -- if it's incompatible, just ignore it
     try
       {
       solver.AddConstraint(rgpcns[j]);
+      // count the constraint as having been added
+      rgpcnsAdded[cCns++] = rgpcns[j];
+#ifdef CL_SHOW_CNS_IN_BENCHMARK
+      cout << "added cn: " << *rgpcns[j] << endl;
+#endif
       }
     catch (ExCLRequiredFailure &)
       {
       cExceptions++;
-      rgpcns[j] = NULL;
 #ifdef CL_SHOW_CNS_IN_BENCHMARK
-      cout << j << " ";
+      cout << "could not add cn: " << *rgpcns[j] << endl;
 #endif
+      rgpcns[j] = NULL;
       }
     }
 #ifdef CL_SHOW_CNS_IN_BENCHMARK
   cout << "\n" << endl;
 #endif
   solver.Solve();
-  cout << "done adding constraints [" << cExceptions << " exceptions]" << endl;
+  timer.Stop();
+  cout << "done adding " << cCns << " constraints ["
+       << j << " attempted, "
+       << cExceptions << " exceptions]" << endl;
   cout << "time = " << timer.ElapsedTime() << "\n" << endl;
-  cout << "time per cn = " << timer.ElapsedTime()/nCns << "\n" << endl;
-  cout << "time per actual cn = " << timer.ElapsedTime()/(nCns - cExceptions) << "\n" <<endl;
-  timer.Start();
+  cout << "time per Add cn = " << timer.ElapsedTime()/cCns << "\n" <<endl;
 
   int e1Index = int(UniformRandom()*nVars);
   int e2Index = int(UniformRandom()*nVars);
 
+  cout << "Editing vars with indices " << e1Index << ", " << e2Index << endl;
+  
   ClVariable e1 = *(rgpclv[e1Index]);
   ClVariable e2 = *(rgpclv[e2Index]);
+
+  cout << "about to start resolves" << endl;
+  timer.Reset();
+  timer.Start();
 
   solver
     .AddEditVar(e1)
     .AddEditVar(e2);
 
-  cout << "done creating edit constraints -- about to start resolves" << endl;
-  cout << "time = " << timer.ElapsedTime() << "\n" << endl;
-  timer.Start();
-
   solver.BeginEdit();
-  // FIXGJB start = Timer.now();
   for (int m = 0; m < nResolves; ++m)
     {
     solver
@@ -777,36 +829,42 @@ addDel(const int nCns = 900, const int nVars = 900, const int nResolves = 10000)
       .Resolve();
     }
   solver.EndEdit();
-  // cout << "run time: " <<
+
+  timer.Stop();
+
+#if 0
+  cout << "nResolves = " << solver._cResolve
+       << " over " << solver.GetResolveTimer().ElapsedTime()
+       << endl;
+#endif
 
   cout << "done resolves -- now removing constraints" << endl;
   cout << "time = " << timer.ElapsedTime() << "\n" <<endl;
   cout << "time per Resolve = " << timer.ElapsedTime()/nResolves << "\n" <<endl;
-  
+
+  timer.Reset();
   timer.Start();
 
-  for (j = 0; j < nCns; j++)
+  for (j = 0; j < cCns; j++)
     {
-    if (rgpcns[j])
-      {
-      solver.RemoveConstraint(rgpcns[j]);
-      }
+      solver.RemoveConstraint(rgpcnsAdded[j]);
     }
+  solver.Solve();
+  timer.Stop();
 
   // FIXGJB end = Timer.now();
   // cout << "Total remove time: " 
   //      << "remove time per cn"
   cout << "done removing constraints and addDel timing test" << endl;
   cout << "time = " << timer.ElapsedTime() << "\n" <<endl;
-  cout << "time per cn = " << timer.ElapsedTime()/nCns << "\n" <<endl;
-  cout << "time per actual cn = " << timer.ElapsedTime()/(nCns - cExceptions) << "\n" <<endl;
+  cout << "time per Remove cn = " << timer.ElapsedTime()/cCns << "\n" <<endl;
 
   for (int i = 0; i < nVars; i++)
     {
     delete rgpclv[i];
     }
 
-  for (int j = 0; j < nCns; j++)
+  for (int j = 0; j < nCnsMade; j++)
     {
     delete rgpcns[j];
     }
@@ -877,8 +935,8 @@ main( int argc, char **argv )
     return (fAllOkResult? 0 : 255);
     
     } 
-  catch (...) 
+  catch (ExCLError &e) 
     {
-    cerr << "exception!" << endl;
+      cerr << "exception:" << e.description() << endl;
     }
 }
