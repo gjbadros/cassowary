@@ -5,13 +5,14 @@ The University of Washington is making the Cassowary Constraint Solving
 Toolkit (Software) available to you (the End User) without charge and
 under the terms below.
 
+
 Grant
 -----
 The University of Washington grants, and the End User accepts a
 non-exclusive, non-transferable, royalty-free, perpetual license to
-display, perform, and otherwise use the Software for End Users research
+display, perform, and otherwise use the Software for End User's research
 purposes. End User may create modifications and derivative works of the
-Software for End Users research purposes. The University of Washington
+Software for End User's research purposes. The University of Washington
 grants End User the right to distribute the underlying Software in
 modifications and derivative works based upon the Software (Modifications)
 only on terms consistent with this license in the underlying Software and
@@ -19,19 +20,21 @@ if the End User follows the conditions set forth below in Notices. All
 rights not expressly granted to End User are reserved by the University of
 Washington.
 
+
 Notices
 -------
+
 End User shall respect and not remove, obliterate, or cancel from view
 any copyright, trademark, confidentiality or other proprietary notice,
 mark, or legend appearing on any of the Software and shall reproduce and
 include same on each copy of the Software made. In the event End User
 creates Modifications that End User wishes to distribute, End User shall
 indicate the general nature of Modifications in the legend appearing on
-the Modifications using a Notice of the following form: This software is
-based upon experimental software originally developed at the University
-of Washington by Greg J. Badros and Alan Borning, it has been modified
-by ____________________ in the following ways: [then lists all the
-modifications].
+the Modifications using a Notice of the following form: "This software
+is based upon experimental software developed at the University of
+Washington by Greg J. Badros and Alan Borning, it has been modified by
+____________________ in the following ways: [list all the modifications]."
+
 
 No Support
 ----------
