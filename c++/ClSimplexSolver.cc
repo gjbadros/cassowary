@@ -163,7 +163,7 @@ ClSimplexSolver::addPointStays(const vector<const ClPoint *> &listOfPoints)
   vector<const ClPoint *>::const_iterator it = listOfPoints.begin();
   double weight = 1.0;
   static const double multiplier = 2.0;
-  for ( ; it != listOfPoints.end(); it++ )
+  for ( ; it != listOfPoints.end(); ++it )
     {
     addPointStay((*it)->X(),(*it)->Y(),weight);
     weight *= multiplier;
@@ -581,6 +581,10 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr,
   // the artificial objective is av, which we know is equal to expr
   // (which contains only parametric variables)
 
+#ifdef CL_FIND_LEAK
+  cerr << "aC = " << _artificialCounter
+       << "\nDeletes = " << _cArtificialVarsDeleted << endl;
+#endif
 #ifndef CL_NO_TRACE
   cerr << __FUNCTION__ << " before addRow-s:\n"
        << (*this) << endl;
@@ -647,7 +651,10 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr,
       delete removeRow(*pav);
       // remove the temporary objective function
       // FIXGJB may need this too: delete removeRow(*paz);
-      // FIXGJB: maybe should be deleting pav here
+      delete pav;
+#ifdef CL_FIND_LEAK
+      ++_cArtificialVarsDeleted;
+#endif
       return true;
       }
     const ClAbstractVariable *pentryVar = pe->anyPivotableVariable();
@@ -663,6 +670,9 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr,
   assert(rowExpression(*pav) == NULL);
   removeColumn(*pav);
   delete pav;
+#ifdef CL_FIND_LEAK
+  ++_cArtificialVarsDeleted;
+#endif
   // remove the temporary objective function
   delete removeRow(*paz);
   delete paz;
@@ -674,8 +684,8 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr,
 // implicates all constraints used to construct the equation. That
 // is, everything for which the variables in the equation are markers.
 void ClSimplexSolver::buildExplanation(ExCLRequiredFailureWithExplanation & e,
-                                       const ClAbstractVariable * pav, 
-                                       const ClLinearExpression * pcle)
+                                       const ClAbstractVariable *pav, 
+                                       const ClLinearExpression *pcle)
 {
   ClVarToConstraintMap::iterator it_cn;
   if (pav != NULL) 

@@ -25,7 +25,10 @@ public:
   ClAbstractVariable(string name = "") :
     _name(name)
     { 
-    iVariableNumber++;
+    ++iVariableNumber;
+#ifdef CL_FIND_LEAK
+    ++cAbstractVariables;
+#endif
     if (name.length() == 0)
       {
       char sz[16];
@@ -38,12 +41,21 @@ public:
     {
     auto_ptr<char> pch (new char[16+strlen(prefix)]);
     iVariableNumber++;
+#ifdef CL_FIND_LEAK
+    ++cAbstractVariables;
+#endif
     sprintf(pch.get(),"%s%ld",prefix,varnumber);
     _name = string(pch.get());
     }
 
   virtual ~ClAbstractVariable()
-    { }
+#ifdef CL_FIND_LEAK
+  { --cAbstractVariables; }
+
+  static long cAbstractVariables;
+#else
+  { }
+#endif
 
   // Return the name of the variable
   string name() const
@@ -85,7 +97,8 @@ public:
 
   friend ostream& operator<<(ostream &xos, const ClAbstractVariable &clv)
     { clv.printOn(xos); return xos; }
-#endif
+
+#endif // CL_NO_IO
 
   friend bool operator<(const ClAbstractVariable &cl1, const ClAbstractVariable &cl2)
     { return &cl1 < &cl2; }

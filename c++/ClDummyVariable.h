@@ -19,17 +19,35 @@ class ClTableau;
 class ClSimplexSolver;
 
 class ClDummyVariable : public ClAbstractVariable {
+
+public:
+
+#ifdef CL_FIND_LEAK
+  ~ClDummyVariable() { --cDummyVariables; };
+
+  static long cDummyVariables;
+
+#endif
+
 protected:
   friend ClTableau;
   friend ClSimplexSolver;
 
   ClDummyVariable(string name = "") :
     ClAbstractVariable(name)
-    { }
+    { 
+#ifdef CL_FIND_LEAK
+      ++cDummyVariables; 
+#endif
+    }
 
   ClDummyVariable(long number, char *prefix) :
     ClAbstractVariable(number,prefix)
-    { }
+    { 
+#ifdef CL_FIND_LEAK
+      ++cDummyVariables; 
+#endif
+    }
 
 #ifndef CL_NO_IO
   virtual ostream &printOn(ostream &xo) const

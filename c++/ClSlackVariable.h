@@ -20,17 +20,32 @@ class ClSimplexSolver;
 
 
 class ClSlackVariable : public ClAbstractVariable {
+public:
+#ifdef CL_FIND_LEAK
+  ~ClSlackVariable() { --cSlackVariables; };
+
+  static long cSlackVariables;
+#endif
+
 protected:
   friend ClTableau;
   friend ClSimplexSolver;
 
   ClSlackVariable(string name = "") :
     ClAbstractVariable(name)
-    { }
+    {
+#ifdef CL_FIND_LEAK
+      ++cSlackVariables; 
+#endif
+    }
 
   ClSlackVariable(long number, char *prefix) :
     ClAbstractVariable(number,prefix)
-    { }
+    { 
+#ifdef CL_FIND_LEAK
+      ++cSlackVariables; 
+#endif
+    }
 
 #ifndef CL_NO_IO
   virtual ostream &printOn(ostream &xo) const

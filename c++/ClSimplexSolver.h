@@ -83,6 +83,9 @@ class ClSimplexSolver : public ClTableau {
     _objective(*(new ClObjectiveVariable("Z"))),
     _slackCounter(0),
     _artificialCounter(0),
+#ifdef CL_FIND_LEAK
+    _cArtificialVarsDeleted(0),
+#endif
     _dummyCounter(0),
     _epsilon(1e-8),
     _fOptimizeAutomatically(true),
@@ -509,6 +512,9 @@ class ClSimplexSolver : public ClTableau {
 
   int _slackCounter;
   int _artificialCounter;
+#ifdef CL_FIND_LEAK
+  int _cArtificialVarsDeleted;
+#endif
   int _dummyCounter;
   const double _epsilon;
 
