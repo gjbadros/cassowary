@@ -129,7 +129,7 @@ pkginclude_HEADERS = \
 	ClMap.h \
 	ClSet.h \
 	ClPoint.h \
-	auto_ptr.h \
+	cl_auto_ptr.h \
 	config-inline.h \
 	debug.h
 
