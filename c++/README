@@ -11,11 +11,10 @@ At one time or another, it has compiled using:
 
 In particular, Cassowary will *not* build with gcc-2.7.x.x!
 
-Note that with egcs version later than 1.0.1, the following warning is
-ok to ignore:
+Note that with egcs version later than 1.0.1 and gcc-2.8.1, the
+following warning is ok to ignore:
 
-/uns/share/egcs-1.03a/include/g++/std/bastring.h:76: warning: inline
-function `static void
+.../include/g++/std/bastring.h:76: warning: inline function `static void
 basic_string<char,string_char_traits<char>,__default_alloc_template<false,0>
 >::Rep::operator delete(void *)' called before definition
 
