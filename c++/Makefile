@@ -34,6 +34,7 @@ CPPFLAGS = -g -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W
 #LIB=cassowary-trace
 LIB=cassowary-debug
 #LIB=cassowary
+LIB_FILE=lib$(LIB).a
 
 LDLIBS = -l$(LIB)
 
@@ -118,7 +119,7 @@ $(CL_LIBRARY): $(OBJS)
 	ar ruv $@ $(OBJS)
 
 clean:	
-	rm -f $(TESTS) *.o $(CL_LIBRARY) Makefile.dependencies
+	rm -f $(TESTS) *.o $(CL_LIBRARY)
 	@echo "Consider doing a \`make depend'"
 
 TAGS: $(SOURCES)
@@ -126,28 +127,28 @@ TAGS: $(SOURCES)
 
 cassowary-tests: $(TESTS)
 
-ClTests: ClTests.o
+ClTests: ClTests.o $(LIB_FILE)
 	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-ClTestColumns: ClTestColumns.o
+ClTestColumns: ClTestColumns.o $(LIB_FILE)
 	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-test-ClStrength: test-ClStrength.o ClStrength.o ClSymbolicWeight.o
+test-ClStrength: test-ClStrength.o ClStrength.o ClSymbolicWeight.o $(LIB_FILE)
 	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-test-ClLinearExpression: test-ClLinearExpression.o
+test-ClLinearExpression: test-ClLinearExpression.o $(LIB_FILE)
 	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-test-ClVariable: test-ClVariable.o
+test-ClVariable: test-ClVariable.o $(LIB_FILE)
 	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-test-ClConstraint: test-ClConstraint.o
+test-ClConstraint: test-ClConstraint.o $(LIB_FILE)
 	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-test-ClBounds: test-ClBounds.o
+test-ClBounds: test-ClBounds.o $(LIB_FILE)
 	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-test-ClSimplexSolver: test-ClSimplexSolver.o
+test-ClSimplexSolver: test-ClSimplexSolver.o $(LIB_FILE)
 	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 cassowary-test:	$(TEST_OBJS)
@@ -178,6 +179,6 @@ ntsources: $(NT_SOURCES)
 # -------------------------
 depend: $(TEST_SRCS) $(SOURCES) $(HEADERS)
 	rm -f Makefile.dependencies
-	$(CPP) -M $(TEST_SRCS) >> Makefile.dependencies
+	$(CPP) -M $(TEST_SRCS) $(SOURCES) >> Makefile.dependencies
 
 -include Makefile.dependencies
