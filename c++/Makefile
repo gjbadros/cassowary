@@ -118,40 +118,13 @@ TAGS: $(SOURCES) $(HEADERS)
 
 cassowary-tests: $(TESTS)
 
-ClTests: ClTests.o $(LIB_FILE) $(OTHER_LIBS)
-	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
-
-ClBug1: ClBug1.o $(LIB_FILE) $(OTHER_LIBS)
-	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
-
-ClLeakTest: ClLeakTest.o $(LIB_FILE) $(OTHER_LIBS)
-	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
-
-ClSubgraphTest: ClSubgraphTest.o $(LIB_FILE) $(OTHER_LIBS)
-	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
-
-ClTestColumns: ClTestColumns.o $(LIB_FILE) $(OTHER_LIBS)
-	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
-
-test-ClStrength: test-ClStrength.o ClStrength.o ClSymbolicWeight.o $(LIB_FILE) $(OTHER_LIBS)
-	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
-
-test-ClLinearExpression: test-ClLinearExpression.o $(LIB_FILE) $(OTHER_LIBS)
-	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
-
-test-ClVariable: test-ClVariable.o $(LIB_FILE) $(OTHER_LIBS)
-	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
-
-test-ClConstraint: test-ClConstraint.o $(LIB_FILE) $(OTHER_LIBS)
-	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
-
-test-ClBounds: test-ClBounds.o $(LIB_FILE) $(OTHER_LIBS)
-	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
-
-test-ClSimplexSolver: test-ClSimplexSolver.o $(LIB_FILE) $(OTHER_LIBS)
+%: %.o $(LIB_FILE) $(OTHER_LIBS)
 	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 cassowary-test:	$(TEST_OBJS)
+
+creader.cc: creader.y
+	bison --output-file $@ $^
 
 libcassowary.a:	
 
