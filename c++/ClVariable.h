@@ -36,7 +36,7 @@ public:
     if (name.length() == 0)
       {
       char sz[16];
-      sprintf(sz,"%ld",iVariableNumber++);
+      sprintf(sz,"v%ld",iVariableNumber++);
       my_name = String(sz);
       }
     initializeFor(kind);

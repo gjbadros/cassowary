@@ -62,8 +62,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
   resetStayConstants();
 
   // remove any error variables from the objective function
-  const ClVariable &zRow = my_objective;
-  ClLinearExpression &obj = rowExpression(zRow);
+  ClLinearExpression &zRow = rowExpression(my_objective);
   map<ClConstraint *, set<ClVariable> >::iterator 
     it_eVars = my_errorVars.find(&cn);
   if (it_eVars != my_errorVars.end())
@@ -75,11 +74,11 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
       const ClLinearExpression &expr = rowExpression((*it));
       if (expr == cleNil() )
 	{
-	obj.addVariable((*it),-1.0,zRow,*this);
+	zRow.addVariable((*it),-1.0,my_objective,*this);
 	}
       else
 	{ // the error variable was in the basis
-	obj.addExpression(expr,-1.0,zRow,*this);
+	zRow.addExpression(expr,-1.0,my_objective,*this);
 	}
       }
     my_errorVars.erase(it_eVars);
@@ -250,7 +249,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
       }
     }
 
-  optimize(zRow);
+  optimize(my_objective);
   setExternalVariables();
 }
 
@@ -289,7 +288,7 @@ ClSimplexSolver::resolve(const vector<double> &newEditConstants)
 void 
 ClSimplexSolver::addWithArtificialVariable(const ClLinearExpression &expr)
 {
-  ClVariable av(++artificialCounter,"a",CLSlackVar);
+  ClVariable av(++my_artificialCounter,"a",CLSlackVar);
   ClVariable az("az",CLObjectiveVar);
   ClLinearExpression azRow(expr);
   // FIXGJB: Why is azRow a duplicate of expr?
@@ -622,14 +621,14 @@ ClSimplexSolver::makeExpression(ClLinearConstraint &cn)
     //    expr-slackVar+errorVar=0.
     // Since both of these variables are newly created we can just add
     // them to the expression (they can't be basic).
-    ++slackCounter;
+    ++my_slackCounter;
     ClVariable &slackVar = *(new ClVariable("s",CLSlackVar));
     expr.addVariable(slackVar,-1);
     // index the constraint under its slack variable
     my_markerVars[&cn] = slackVar;
     if (!cn.isRequired())
       {
-      ++slackCounter;
+      ++my_slackCounter;
       ClVariable &eminus = *(new ClVariable("em",CLSlackVar));
       expr.addVariable(eminus,1.0);
       // add emnius to the objective function with the appropriate weight
@@ -648,7 +647,7 @@ ClSimplexSolver::makeExpression(ClLinearConstraint &cn)
       // Add a dummy variable to the expression to serve as a marker
       // for this constraint.  The dummy variable is never allowed to
       // enter the basis when pivoting.
-      ++dummyCounter;
+      ++my_dummyCounter;
       ClVariable &dummyVar = *(new ClVariable("d",CLDummyVar));
       expr.addVariable(dummyVar,1.0);
       my_markerVars[&cn] = dummyVar;
@@ -659,7 +658,7 @@ ClSimplexSolver::makeExpression(ClLinearConstraint &cn)
       // error variable, making the resulting constraint 
       //       expr = eplus - eminus, 
       // in other words:  expr-eplus+eminus=0
-      ++slackCounter;
+      ++my_slackCounter;
       ClVariable &eplus = *(new ClVariable("ep",CLSlackVar));
       ClVariable &eminus = *(new ClVariable("em",CLSlackVar));
       expr.addVariable(eplus,-1.0);
@@ -704,6 +703,9 @@ ClSimplexSolver::makeExpression(ClLinearConstraint &cn)
 void 
 ClSimplexSolver::optimize(const ClVariable &zVar)
 {
+#ifndef NCLDEBUG
+  cerr << zVar << endl; // DEBUG
+#endif
   assert(zVar.isCLObjective());
   ClLinearExpression &zRow = rowExpression(zVar);
   assert(zRow != cleNil());

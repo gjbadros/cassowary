@@ -26,10 +26,11 @@ class ClSimplexSolver : public ClTableau {
 
   // Constructor
   ClSimplexSolver() :
-    slackCounter(0),
-    artificialCounter(0),
-    dummyCounter(0)
-    { }
+    my_objective("z",CLObjectiveVar),
+    my_slackCounter(0),
+    my_artificialCounter(0),
+    my_dummyCounter(0)
+    { my_rows[my_objective] = *(new ClLinearExpression()); }
   
   // Add constraints so that lower<=var<=upper.  (nil means no  bound.)
   void addLowerBound(const ClVariable &v, Number lower)
@@ -198,9 +199,9 @@ class ClSimplexSolver : public ClTableau {
   ClVariable my_objective;
 
 
-  int slackCounter;
-  int artificialCounter;
-  int dummyCounter;
+  int my_slackCounter;
+  int my_artificialCounter;
+  int my_dummyCounter;
 
 };
 
