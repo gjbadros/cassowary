@@ -27,6 +27,19 @@ class ExCLInternalError : public ExCLError {
     { return "(ExCLInternalError) An internal error has occurred"; }
 };
 
+class ExCLBadResolve : public ExCLError {
+ public:
+  virtual char *description() const
+    { return "(ExCLBadResolve) Number of resolve values did not match number of edit vars"; }
+};
+
+class ExCLEditMisuse : public ExCLError {
+ public:
+  virtual char *description() const
+    { return "(ExCLEditMisuse) Edit protocol usage violation"; }
+};
+
+
 class ExCLTooDifficult : public ExCLError {
  public:
   virtual char *description() const
