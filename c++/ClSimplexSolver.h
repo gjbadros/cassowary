@@ -118,6 +118,8 @@ class ClSimplexSolver : public ClTableau {
     {
       assert(my_editVarMap.size() != 0);
       // may later want to do more in here
+      my_infeasibleRows.clear();
+      resetStayConstants();
       return *this;
     }
 

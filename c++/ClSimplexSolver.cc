@@ -453,10 +453,10 @@ ClSimplexSolver::resolve()
 #ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
 #endif
-  my_infeasibleRows.clear();
-  resetStayConstants();
   dualOptimize();
   setExternalVariables();
+  my_infeasibleRows.clear();
+  resetStayConstants();
 }
 
 ClSimplexSolver &
