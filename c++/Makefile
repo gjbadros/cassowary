@@ -37,7 +37,7 @@ CPPFLAGS += -DCL_SOLVER_CHECK_INTEGRITY
 #CPPFLAGS += -O2
 CPPFLAGS += -g
 
-CPPFLAGS += -DCL_USE_HASH_MAP_AND_SET
+#CPPFLAGS += -DCL_USE_HASH_MAP_AND_SET
 
 #CPPFLAGS += -DCL_TRACE
 
@@ -71,6 +71,7 @@ OBJS = 	ClAbstractVariable.o \
 	ClSymbolicWeight.o \
 	ClTableau.o \
 	ClVariable.o \
+	ClFloatVariable.o \
 	ClSlackVariable.o \
 	ClDummyVariable.o
 
@@ -107,20 +108,30 @@ HEADERS = Cassowary.h \
 	ClObjectiveVariable.h \
 	ClSlackVariable.h \
 	ClConstraint.h \
+	ClConstraintHash.h \
 	ClEditConstraint.h \
 	ClEditOrStayConstraint.h \
 	ClErrors.h \
 	ClLinearConstraint.h \
 	ClLinearEquation.h \
 	ClLinearExpression.h \
+	ClLinearExpression_fwd.h \
 	ClLinearInequality.h \
 	ClSimplexSolver.h \
 	ClStayConstraint.h \
 	ClStrength.h \
 	ClSymbolicWeight.h \
 	ClTableau.h \
+	ClFloatVariable.h \
 	ClVariable.h \
-	ClPoint.h
+	ClTypedefs.h \
+	ClMap.h \
+	ClSet.h \
+	ClPoint.h \
+	auto_ptr.h \
+	debug.h \
+	timer.h \
+	creader.h
 
 all:	lib ClTests ClLeakTest ClTestColumns ClSubgraphTest $(bugtests)
 

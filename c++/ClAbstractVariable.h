@@ -114,6 +114,19 @@ public:
   virtual Number value() const { return 0; }
   virtual int intValue() const { return 0; }
 
+  virtual void set_value(Number) 
+    { assert(false); }
+
+  virtual void change_value(Number)
+    { assert(false); }
+
+  virtual void setPv(void *)
+    { assert(false); }
+
+  virtual void *Pv() const
+    { assert(false); }
+
+
 private:
   string _name;
 
