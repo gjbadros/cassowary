@@ -17,7 +17,7 @@
 
 import java.util.*;
 
-class ClLinearExpression
+class ClLinearExpression extends CL
 {
 
   public ClLinearExpression(double num)
@@ -67,7 +67,7 @@ class ClLinearExpression
       my_constant = new Double(my_constant.doubleValue() * x);
       
       for (Enumeration e = my_terms.keys() ; e.hasMoreElements(); ) {
-        ClVariable clv = (ClVariable) e.nextElement();
+        ClAbstractVariable clv = (ClAbstractVariable) e.nextElement();
 	double coeff = ((Double) my_terms.get(clv)).doubleValue();
 	my_terms.put( clv, new Double((coeff * x)));
       } 
@@ -163,7 +163,7 @@ class ClLinearExpression
       incrementConstant(n * expr.constant());
       
       for (Enumeration e = expr.terms().keys() ; e.hasMoreElements(); ) {
-	ClVariable clv = (ClVariable) e.nextElement();
+	ClAbstractVariable clv = (ClAbstractVariable) e.nextElement();
  	double coeff = ((Double) expr.terms().get(clv)).doubleValue();
  	addVariable(clv,coeff*n, subject, solver);
       }
@@ -175,7 +175,7 @@ class ClLinearExpression
       incrementConstant(n * expr.constant());
       
       for (Enumeration e = expr.terms().keys() ; e.hasMoreElements(); ) {
-        ClVariable clv = (ClVariable) e.nextElement();
+        ClAbstractVariable clv = (ClAbstractVariable) e.nextElement();
 	double coeff = ((Double) expr.terms().get(clv)).doubleValue();
 	addVariable(clv,coeff*n);
       }
@@ -189,10 +189,7 @@ class ClLinearExpression
 
   public ClLinearExpression addVariable(ClAbstractVariable v, double c)
     { // body largely duplicated below
-      //#ifndef CL_NO_TRACE
-      //Tracer TRACER(__FUNCTION__);
-      //System.err.println("(" + String.valueOf(v) + ", " + String.valueOf(c) + ")");
-      //#endif
+      fnenterprint("addVariable:" + v + ", " + c);
 
       Double coeff = (Double) my_terms.get(v);
       if (coeff != null) 
@@ -226,10 +223,8 @@ class ClLinearExpression
   public ClLinearExpression addVariable(ClAbstractVariable v, double c,
  					ClAbstractVariable subject, ClTableau solver)
      { // body largely duplicated above
-       //#ifndef CL_NO_TRACE
-       // Tracer TRACER(__FUNCTION__);
-       // System.err.println("(" + String.valueOf(v) + ", " + String.valueOf(c) + ", " + String.valueOf(subject) + ", ...)");
-       // #endif
+       fnenterprint("addVariable:" + v + ", " + c + ", " + subject + ", ...");
+
        Double coeff = (Double) my_terms.get(v);
        if (coeff != null) 
  	{
@@ -267,18 +262,14 @@ class ClLinearExpression
   public void substituteOut(ClAbstractVariable var, ClLinearExpression expr, 
  			    ClAbstractVariable subject, ClTableau solver)
   {
-    //#ifndef CL_NO_TRACE
-    //System.err.print("* ClLinearExpression::");
-    //Tracer TRACER(__FUNCTION__);
-    //System.err.print("(" + String.valueOf(var) + ", " + String.valueOf(expr) + ", " + String.valueOf(subject) + ", ");
-    //System.err.println("*this == " + String.valueOf(*this));
-    //#endif
+    fnenterprint("CLE:substituteOut: " + var + ", " + expr + ", " + subject + ", ...");
+    traceprint("this = " + this);
 
     double multiplier = ((Double) my_terms.remove(var)).doubleValue();
     incrementConstant(multiplier * expr.constant());
     
     for (Enumeration e = expr.terms().keys(); e.hasMoreElements(); ) {
-      ClVariable clv = (ClVariable) e.nextElement();
+      ClAbstractVariable clv = (ClAbstractVariable) e.nextElement();
       double coeff = ((Double) expr.terms().get(clv)).doubleValue();
       Double d_old_coeff = (Double) my_terms.get(clv);
       if (d_old_coeff != null) {
@@ -288,7 +279,7 @@ class ClLinearExpression
 	  solver.noteRemovedVariable(clv,subject);
 	  my_terms.remove(clv);
 	} else {
-	  expr.terms().put(clv,new Double(newCoeff));
+	  my_terms.put(clv,new Double(newCoeff));
 	}
       } else {
 	// did not have that variable already
@@ -296,6 +287,7 @@ class ClLinearExpression
 	solver.noteAddedVariable(clv,subject);
       }
     }
+    traceprint("Now this is " + this);
   }
   
   public void changeSubject(ClAbstractVariable old_subject, ClAbstractVariable new_subject)
@@ -305,12 +297,8 @@ class ClLinearExpression
   
   public double newSubject(ClAbstractVariable subject)
     {
-      //#ifndef CL_NO_TRACE
-      //Tracer TRACER(__FUNCTION__);
-      //System.err.println("(" + String.valueOf(subject) + ")");
-      //#endif
+      fnenterprint("newSubject:" + subject);
       Double coeff = (Double) my_terms.remove(subject);
-      // assert(coeff != null);
       double reciprocal = 1.0 / coeff.doubleValue();
       multiplyMe(-reciprocal);
       return reciprocal;
@@ -355,13 +343,13 @@ class ClLinearExpression
 	  {
 	  return bstr.toString();
 	  }
-	ClVariable clv = (ClVariable) e.nextElement();
+	ClAbstractVariable clv = (ClAbstractVariable) e.nextElement();
 	Double coeff = (Double) my_terms.get(clv);
 	bstr.append(coeff.toString() + "*" + clv.toString());
 	}
       for (; e.hasMoreElements(); )
 	{
-	ClVariable clv = (ClVariable) e.nextElement();
+	ClAbstractVariable clv = (ClAbstractVariable) e.nextElement();
 	Double coeff = (Double) my_terms.get(clv);
 	bstr.append(" + " + coeff.toString() + "*" + clv.toString());
 	}

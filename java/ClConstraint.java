@@ -51,7 +51,8 @@ abstract class ClConstraint
     { return my_weight; }
 
   public String toString()
-    { return " {" + weight() + "} (" + expression().toString(); }
+    { return my_strength.toString() +
+	" {" + weight() + "} (" + expression(); }
 
   private void setStrength(ClStrength strength)
     { my_strength = strength; }

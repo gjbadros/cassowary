@@ -52,6 +52,19 @@ class Set {
 
   public Enumeration elements()
     { return hash.elements(); }
+
+  public String toString()
+  { 
+    StringBuffer bstr = new StringBuffer("{ ");
+    Enumeration e = hash.keys();
+    if (e.hasMoreElements())
+      bstr.append(e.nextElement().toString());
+    while ( e.hasMoreElements() ) {
+      bstr.append(", " + e.nextElement());
+    }
+    bstr.append(" }\n");
+    return bstr.toString();
+  }
   
   private Hashtable hash;
 }

@@ -16,162 +16,136 @@
 
 class ClTests {
   public static boolean justStay1()
+       throws ExCLInternalError, ExCLRequiredFailure
   {
-    try
-      {
-      boolean fOkResult = true;
-      ClVariable x = new ClVariable(5);
-      ClVariable y = new ClVariable(10);
-      ClSimplexSolver solver = new ClSimplexSolver();
+    boolean fOkResult = true;
+    ClVariable x = new ClVariable(5);
+    ClVariable y = new ClVariable(10);
+    ClSimplexSolver solver = new ClSimplexSolver();
       
-      solver.addStay(x);
-      solver.addStay(y);
-      fOkResult = fOkResult && ClVariable.clApprox(x,5);
-      fOkResult = fOkResult && ClVariable.clApprox(y,10);
-      System.out.println("x == " + x.value());
-      System.out.println("y == " + y.value());
-      return(fOkResult);
-      } 
-    catch (ExCLError error) 
-      {
-      System.out.println("Exception! " + error.description());
-      return(false);
-      }
+    solver.addStay(x);
+    solver.addStay(y);
+    fOkResult = fOkResult && ClVariable.clApprox(x,5);
+    fOkResult = fOkResult && ClVariable.clApprox(y,10);
+    System.out.println("x == " + x.value());
+    System.out.println("y == " + y.value());
+    return(fOkResult);
   }
   
   public static boolean addDelete1()
+       throws ExCLInternalError, ExCLRequiredFailure, ExCLConstraintNotFound
   {
-    try 
-      {
-      boolean fOkResult = true; 
-      ClVariable x = new ClVariable("x");
-      ClSimplexSolver solver = new ClSimplexSolver();
+    boolean fOkResult = true; 
+    ClVariable x = new ClVariable("x");
+    ClSimplexSolver solver = new ClSimplexSolver();
       
-      solver.addConstraint( new ClLinearEquation( x, 100, ClStrength.clsWeak ) );
+    solver.addConstraint( new ClLinearEquation( x, 100, ClStrength.clsWeak ) );
       
-      ClLinearInequality c10 = new ClLinearInequality(x,CN.LEQ,10.0);
-      ClLinearInequality c20 = new ClLinearInequality(x,CN.LEQ,20.0);
+    ClLinearInequality c10 = new ClLinearInequality(x,CN.LEQ,10.0);
+    ClLinearInequality c20 = new ClLinearInequality(x,CN.LEQ,20.0);
       
-      solver
-	.addConstraint(c10)
-	.addConstraint(c20);
+    solver
+      .addConstraint(c10)
+      .addConstraint(c20);
       
-      fOkResult = fOkResult && ClVariable.clApprox(x,10.0);
-      System.out.println("x == " + x.value());
+    fOkResult = fOkResult && ClVariable.clApprox(x,10.0);
+    System.out.println("x == " + x.value());
       
-      solver.removeConstraint(c10);
-      fOkResult = fOkResult && ClVariable.clApprox(x,20.0);
-      System.out.println("x == " + x.value());
+    solver.removeConstraint(c10);
+    fOkResult = fOkResult && ClVariable.clApprox(x,20.0);
+    System.out.println("x == " + x.value());
 
-      solver.removeConstraint(c20);
-      fOkResult = fOkResult && ClVariable.clApprox(x,100.0);
-      System.out.println("x == " + x.value());
+    solver.removeConstraint(c20);
+    fOkResult = fOkResult && ClVariable.clApprox(x,100.0);
+    System.out.println("x == " + x.value());
 
-      ClLinearInequality c10again = new ClLinearInequality(x,CN.LEQ,10.0);
+    ClLinearInequality c10again = new ClLinearInequality(x,CN.LEQ,10.0);
 
-      solver
-	.addConstraint(c10)
-	.addConstraint(c10again);
+    solver
+      .addConstraint(c10)
+      .addConstraint(c10again);
       
-      fOkResult = fOkResult && ClVariable.clApprox(x,10.0);
-      System.out.println("x == " + x.value());
+    fOkResult = fOkResult && ClVariable.clApprox(x,10.0);
+    System.out.println("x == " + x.value());
     
-      solver.removeConstraint(c10);
-      fOkResult = fOkResult && ClVariable.clApprox(x,10.0);
-      System.out.println("x == " + x.value());
+    solver.removeConstraint(c10);
+    fOkResult = fOkResult && ClVariable.clApprox(x,10.0);
+    System.out.println("x == " + x.value());
 
-      solver.removeConstraint(c10again);
-      fOkResult = fOkResult && ClVariable.clApprox(x,100.0);
-      System.out.println("x == " + x.value());
+    solver.removeConstraint(c10again);
+    fOkResult = fOkResult && ClVariable.clApprox(x,100.0);
+    System.out.println("x == " + x.value());
 
-      return(fOkResult);
-      } 
-    catch (ExCLError error) 
-      {
-      System.out.println("Exception! " + error.description());
-      return(false);
-      }
+    return(fOkResult);
   } 
 
   public static boolean addDelete2()
+       throws ExCLInternalError, ExCLRequiredFailure, 
+	 ExCLConstraintNotFound, ExCLNonlinearExpression
   {
-    try 
-      {
-      boolean fOkResult = true; 
-      ClVariable x = new ClVariable("x");
-      ClVariable y = new ClVariable("y");
-      ClSimplexSolver solver = new ClSimplexSolver();
+    boolean fOkResult = true; 
+    ClVariable x = new ClVariable("x");
+    ClVariable y = new ClVariable("y");
+    ClSimplexSolver solver = new ClSimplexSolver();
 
-      solver
-	.addConstraint( new ClLinearEquation(x, 100.0, ClStrength.clsWeak))
-	.addConstraint( new ClLinearEquation(y, 120.0, ClStrength.clsStrong));
+    solver
+      .addConstraint( new ClLinearEquation(x, 100.0, ClStrength.clsWeak))
+      .addConstraint( new ClLinearEquation(y, 120.0, ClStrength.clsStrong));
       
-      ClLinearInequality c10 = new ClLinearInequality(x,CN.LEQ,10.0);
-      ClLinearInequality c20 = new ClLinearInequality(x,CN.LEQ,20.0);
+    ClLinearInequality c10 = new ClLinearInequality(x,CN.LEQ,10.0);
+    ClLinearInequality c20 = new ClLinearInequality(x,CN.LEQ,20.0);
       
-      solver
-	.addConstraint(c10)
-	.addConstraint(c20);
-      fOkResult = fOkResult && ClVariable.clApprox(x,10.0) && ClVariable.clApprox(y,120.0);
-      System.out.println("x == " + x.value() + ", y == " + y.value());
+    solver
+      .addConstraint(c10)
+      .addConstraint(c20);
+    fOkResult = fOkResult && ClVariable.clApprox(x,10.0) && ClVariable.clApprox(y,120.0);
+    System.out.println("x == " + x.value() + ", y == " + y.value());
 
-      solver.removeConstraint(c10);
-      fOkResult = fOkResult && ClVariable.clApprox(x,20.0) && ClVariable.clApprox(y,120.0);
-      System.out.println("x == " + x.value() + ", y == " + y.value());
+    solver.removeConstraint(c10);
+    fOkResult = fOkResult && ClVariable.clApprox(x,20.0) && ClVariable.clApprox(y,120.0);
+    System.out.println("x == " + x.value() + ", y == " + y.value());
    
-      ClLinearEquation cxy = new ClLinearEquation( CL.Times(2.0,x), y);
-      solver.addConstraint(cxy);
-      fOkResult = fOkResult && ClVariable.clApprox(x,20.0) && ClVariable.clApprox(y,40.0);
-      System.out.println("x == " + x.value() + ", y == " + y.value());
+    ClLinearEquation cxy = new ClLinearEquation( CL.Times(2.0,x), y);
+    solver.addConstraint(cxy);
+    fOkResult = fOkResult && ClVariable.clApprox(x,20.0) && ClVariable.clApprox(y,40.0);
+    System.out.println("x == " + x.value() + ", y == " + y.value());
 
-      solver.removeConstraint(c20);
-      fOkResult = fOkResult && ClVariable.clApprox(x,60.0) && ClVariable.clApprox(y,120.0);
-      System.out.println("x == " + x.value() + ", y == " + y.value());
+    solver.removeConstraint(c20);
+    fOkResult = fOkResult && ClVariable.clApprox(x,60.0) && ClVariable.clApprox(y,120.0);
+    System.out.println("x == " + x.value() + ", y == " + y.value());
 
-      solver.removeConstraint(cxy);
-      fOkResult = fOkResult && ClVariable.clApprox(x,100.0) && ClVariable.clApprox(y,120.0);
-      System.out.println("x == " + x.value() + ", y == " + y.value());
+    solver.removeConstraint(cxy);
+    fOkResult = fOkResult && ClVariable.clApprox(x,100.0) && ClVariable.clApprox(y,120.0);
+    System.out.println("x == " + x.value() + ", y == " + y.value());
       
-      return(fOkResult);
-      } 
-    catch (ExCLError error) 
-      {
-      System.out.println("Exception! " + error.description());
-      return(false);
-      }
-  }
+    return(fOkResult);
+  } 
 
   public static boolean casso1()
+       throws ExCLInternalError, ExCLRequiredFailure
   {
-    try 
-      {
-      boolean fOkResult = true; 
-      ClVariable x = new ClVariable("x");
-      ClVariable y = new ClVariable("y");
-      ClSimplexSolver solver = new ClSimplexSolver();
+    boolean fOkResult = true; 
+    ClVariable x = new ClVariable("x");
+    ClVariable y = new ClVariable("y");
+    ClSimplexSolver solver = new ClSimplexSolver();
 
-      solver
-	.addConstraint( new ClLinearInequality(x,CN.LEQ,y) )
-	.addConstraint( new ClLinearEquation(y, CL.Plus(x,3.0)) )
-	.addConstraint( new ClLinearEquation(x,10.0,ClStrength.clsWeak) )
-	.addConstraint( new ClLinearEquation(y,10.0,ClStrength.clsWeak) )
-	;
+    solver
+      .addConstraint( new ClLinearInequality(x,CN.LEQ,y) )
+      .addConstraint( new ClLinearEquation(y, CL.Plus(x,3.0)) )
+      .addConstraint( new ClLinearEquation(x,10.0,ClStrength.clsWeak) )
+      .addConstraint( new ClLinearEquation(y,10.0,ClStrength.clsWeak) )
+      ;
    
-      fOkResult = fOkResult && 
-	( ClVariable.clApprox(x,10.0) && ClVariable.clApprox(y,13.0) ||
-	  ClVariable.clApprox(x,7.0) && ClVariable.clApprox(y,10.0) );
+    fOkResult = fOkResult && 
+      ( ClVariable.clApprox(x,10.0) && ClVariable.clApprox(y,13.0) ||
+	ClVariable.clApprox(x,7.0) && ClVariable.clApprox(y,10.0) );
       
-      System.out.println("x == " + x.value() + ", y == " + y.value());
-      return(fOkResult);
-      } 
-    catch (ExCLError error) 
-      {
-      System.out.println("Exception! " + error.description());
-      return(false);
-      }
-    }
+    System.out.println("x == " + x.value() + ", y == " + y.value());
+    return(fOkResult);
+  } 
 
   public static boolean inconsistent1()
+       throws ExCLInternalError, ExCLRequiredFailure
   {
     try 
       {
@@ -191,14 +165,10 @@ class ClTests {
       System.out.println("Success -- got the exception");
       return(true);
       }
-    catch (ExCLError error) 
-      {
-      System.out.println("Exception! " + error.description());
-      return(false);
-      }
   }
 
   public static boolean inconsistent2()
+       throws ExCLInternalError, ExCLRequiredFailure
   {
     try 
       {
@@ -217,11 +187,6 @@ class ClTests {
       // we want this exception to get thrown
       System.out.println("Success -- got the exception");
       return(true);
-      }
-    catch (ExCLError error) 
-      {
-      System.out.println("Exception! " + error.description());
-      return(false);
       }
   }
 
@@ -347,8 +312,10 @@ class ClTests {
 
 
   public static final void main( String[] args )
+       throws ExCLInternalError, ExCLNonlinearExpression,
+	 ExCLRequiredFailure, ExCLConstraintNotFound
   {
-    try 
+    //    try 
       {
       boolean fAllOkResult = true;
       boolean fResult;
@@ -382,9 +349,9 @@ class ClTests {
       //     if (!fResult) System.out.println("Failed!");
       
       } 
-    catch (Exception err)
-      {
-      System.err.println("Random exception!" + err);
-      }
+    //    catch (Exception err)
+    //      {
+    //      System.err.println("Exception: " + err);
+    //      }
   }
 }

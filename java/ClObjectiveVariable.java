@@ -27,6 +27,7 @@ class ClObjectiveVariable extends ClAbstractVariable
     }
   
   public String toString()
+       //    { return "[" + name() + ":obj:" + hashCode() + "]"; }
     { return "[" + name() + ":obj]"; }
 
   public boolean isExternal()

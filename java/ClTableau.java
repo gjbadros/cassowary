@@ -16,16 +16,21 @@
 
 import java.util.*;
 
-class ClTableau
+class ClTableau extends CL
 {
+
+  public ClTableau()
+  {
+    my_columns = new Hashtable();
+    my_rows = new Hashtable();
+    my_infeasibleRows = new Set();
+    my_externalRows = new Set();
+    my_externalParametricVars = new Set();
+  }
 
   public void noteRemovedVariable(ClAbstractVariable v, ClAbstractVariable subject)
     { 
-      //#ifndef CL_NO_TRACE
-      //Tracer TRACER(__FUNCTION__);
-      /** @c2j++ Replacement from cerr << "(" << v << ", " << subject << ")" << endl; */
-      //System.err.println("(" + String.valueOf(v) + ", " + String.valueOf(subject) + ")");
-      //#endif
+      fnenterprint("noteRemovedVariable: " + v + ", " + subject);
       if (subject != null) {
 	((Set) my_columns.get(v)).remove(subject);
       }
@@ -33,10 +38,7 @@ class ClTableau
 
   public void noteAddedVariable(ClAbstractVariable v, ClAbstractVariable subject)
     { 
-      //#ifndef CL_NO_TRACE
-      //Tracer TRACER(__FUNCTION__);
-      // System.err.println("(" + String.valueOf(v) + ", " + String.valueOf(subject) + ")");
-      //#endif
+      fnenterprint("noteAddedVariable: " + v + ", " + subject);
       if (subject != null) {
 	insertColVar(v,subject);
       }
@@ -47,16 +49,16 @@ class ClTableau
       StringBuffer bstr = new StringBuffer("Tableau:\n");
       bstr.append(my_rows.toString());
 
-      bstr.append("Columns:\n");
+      bstr.append("\nColumns:\n");
       bstr.append(my_columns.toString());
       
-      bstr.append("Infeasible rows:\n");
+      bstr.append("\nInfeasible rows: ");
       bstr.append(my_infeasibleRows.toString());
 
-      bstr.append("External basic variables:\n");
+      bstr.append("External basic variables: ");
       bstr.append(my_externalRows.toString());
 
-      bstr.append("External parametric variables:\n");
+      bstr.append("External parametric variables: ");
       bstr.append(my_externalParametricVars.toString());
       
       return bstr.toString();
@@ -73,40 +75,33 @@ class ClTableau
 
   protected void addRow(ClAbstractVariable var, ClLinearExpression expr)
     {
-      //#ifndef CL_NO_TRACE
-      // Tracer TRACER(__FUNCTION__);
-      // System.err.println("(" + String.valueOf(var) + ", " + String.valueOf(expr) + ")");
-      //#endif
+      fnenterprint("addRow: " + var + ", " + expr);
 
       // for each variable in expr, add var to the set of rows which
       // have that variable in their expression
-
+      my_rows.put(var,expr);
+      
       for (Enumeration e = expr.terms().keys() ; e.hasMoreElements(); ) {
-        ClVariable clv = (ClVariable) e.nextElement();
+        ClAbstractVariable clv = (ClAbstractVariable) e.nextElement();
 	insertColVar(clv,var);
       }
       if (var.isExternal()) {
 	my_externalRows.insert(var);
       }
-      //#ifndef CL_NO_TRACE
-      //System.err.println(String.valueOf(*this));
-      //#endif
+      traceprint(this.toString());
     }
 
   protected void removeColumn(ClAbstractVariable var)
     {
-      //#ifndef CL_NO_TRACE
-      //Tracer TRACER(__FUNCTION__);
-      //System.err.println("(" + String.valueOf(var) + ")");
-      //#endif
+      fnenterprint("removeColumn:" + var);
       // remove the rows with the variables in varset
 
       Set rows = (Set) my_columns.remove(var);
 
       for (Enumeration e = rows.elements() ; e.hasMoreElements(); ) {
-        ClVariable clv = (ClVariable) e.nextElement();
+        ClAbstractVariable clv = (ClAbstractVariable) e.nextElement();
 	ClLinearExpression expr = (ClLinearExpression) my_rows.get(clv);
-	expr.terms().remove(clv);
+	expr.terms().remove(var);
       }
       
       if (var.isExternal()) {
@@ -116,38 +111,37 @@ class ClTableau
     }
 
   protected ClLinearExpression removeRow(ClAbstractVariable var)
+       throws ExCLInternalError
     {
-      //#ifndef CL_NO_TRACE
-      //  Tracer TRACER(__FUNCTION__);
-      //System.err.println("(" + var.toString() + ")");
-      //#endif
+      fnenterprint("removeRow:" + var);
 
-      ClLinearExpression expr = (ClLinearExpression) my_rows.remove(var);
+      ClLinearExpression expr = (ClLinearExpression) my_rows.get(var);
+      assert(expr != null);
 
+      // For each variable in this expression, update
+      // the column mapping and remove the variable from the list
+      // of rows it is known to be in
       for (Enumeration e = expr.terms().keys() ; e.hasMoreElements(); ) {
-        ClVariable clv = (ClVariable) e.nextElement();
-	((Set)my_columns.get(clv)).remove(var);
-	my_infeasibleRows.remove(var);
+        ClAbstractVariable clv = (ClAbstractVariable) e.nextElement();
+	Set varset = (Set) my_columns.get(clv);
+	if (varset != null)
+	  varset.remove(var);
       }
+      
+      my_infeasibleRows.remove(var);
 
-      if (var.isExternal())
-	{
+      if (var.isExternal()) {
 	my_externalRows.remove(var);
-	}
-      //#ifndef CL_NO_TRACE
-      //System.err.println("- returning " + expr.toString());
-      //#endif
+      }
+      my_rows.remove(var);
+      fnexitprint("returning " + expr);
       return expr;
     }
 
   protected void substituteOut(ClAbstractVariable oldVar, ClLinearExpression expr)
     {
-      //#ifndef CL_NO_TRACE
-      //System.err.print("* ClTableau::");
-      //Tracer TRACER(__FUNCTION__);
-      //System.err.println("(" + String.valueOf(oldVar) + ", " + String.valueOf(expr) + ")");
-      //System.err.println(String.valueOf((*this)));
-      //#endif
+      fnenterprint("substituteOut:" + oldVar + ", " + expr);
+      traceprint(this.toString());
       
       Set varset = (Set) my_columns.get(oldVar);
       for (Enumeration e = varset.elements(); e.hasMoreElements(); ) {
@@ -179,6 +173,7 @@ class ClTableau
 
   protected ClLinearExpression rowExpression(ClAbstractVariable v)
     {
+      // fnenterprint("rowExpression:" + v);
       return (ClLinearExpression) my_rows.get(v);
     }
 

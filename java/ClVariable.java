@@ -31,13 +31,11 @@ class ClVariable extends ClAbstractVariable
 
   public ClVariable(double value)
     {
-      super("");
       my_value = value;
     }
 
   public ClVariable()
     {
-      super("");
       my_value = 0.0;
     }
 
