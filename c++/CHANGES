@@ -1,0 +1,14 @@
+List of changes in C++ implementation
+
+* Eliminated the ClAbstractVariable hierarchy in favor of a simpler
+  ClVariable class with member variables containing the state
+ - behaviour wasn't changing for subclasses
+ - con: all ClVariable kinds have a `Number value' field, so some space
+   is wasted
+
+* Expressions don't convert themselves into constraints via cnEqual,
+etc., instead constraints can be constructed using expressions
+ - otherwise had a problem with header file inclusion, since I'm trying
+   to do as much as possible by value, and avoiding pointers and
+   references for efficiency and simplicity
+
