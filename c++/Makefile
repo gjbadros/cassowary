@@ -15,7 +15,7 @@ CXX = $(CPP)
 # -falt-external-templates
 LDFLAGS = -L/uns/lib/egcs
 
-TEST_OBJS = ClStrength.o ClSymbolicWeight.o ClLinearExpression.o ClVariable.o ClConstraint.o
+TEST_OBJS = ClStrength.o ClSymbolicWeight.o ClLinearExpression.o ClVariable.o ClConstraint.o ClTableau.o
 TEST_SRCS = $(OBJS:.o=.cc)
 TESTS = test-ClStrength test-ClVariable test-ClLinearExpression test-ClConstraint
 

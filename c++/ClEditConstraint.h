@@ -11,16 +11,27 @@
 #ifndef ClEditConstraint_H
 #define ClEditConstraint_H
 
+#include <iostream.h>
+#include "Cassowary.h"
+#include "ClEditOrStayConstraint.h"
 
-class ClEditConstraint {
+class ClEditConstraint : public ClEditOrStayConstraint {
  public:
   
+  ClEditConstraint(const ClVariable &var,
+		   const ClStrength &strength = clsStrong(), double weight = 1.0 ) :
+    ClEditOrStayConstraint(var,strength,weight)
+    { }
+
   // Returns true if this is an edit constraint
   virtual bool isEditConstraint() const
-    { return false; }
+    { return true; }
+
+  virtual ostream &printOn(ostream &xo) const 
+    { xo << "edit" << variable(); return xo; }
 
  private:
 
-}
+};
 
 #endif

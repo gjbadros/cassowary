@@ -12,3 +12,10 @@
 #include <assert.h>
 
 long ClVariable::iVariableNumber = 0;
+
+ClVariable &
+clvNil()
+{
+  static ClVariable nil_variable("Nil", CLDummyVar);
+  return nil_variable;
+}

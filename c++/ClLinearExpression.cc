@@ -10,13 +10,20 @@
 
 #include <assert.h>
 #include "ClLinearExpression.h"
+#include "ClTableau.h"
 #include "ClErrors.h"
+
+ClLinearExpression &cleNil()
+{
+  static ClLinearExpression nil_expression(clvNil());
+  return nil_expression;
+}
 
 ClLinearExpression::ClLinearExpression(Number num) :
     my_constant(num)
 { }
 
-// Convert from ClAbstractVariable to a ClLinearExpression
+// Convert from ClVariable to a ClLinearExpression
 // this replaces ClVariable::asLinearExpression
 ClLinearExpression::ClLinearExpression(const ClVariable &clv) :
   my_constant(0.0)
@@ -173,7 +180,7 @@ ClLinearExpression::addExpression(const ClLinearExpression &expr, Number n)
 ClLinearExpression &
 ClLinearExpression::addExpression(const ClLinearExpression &expr, Number n,
 				  const ClVariable &subject,
-				  const ClSimplexSolver &solver)
+				  ClSimplexSolver &solver)
 {
   incrementConstant(n*expr.constant());
 
@@ -224,7 +231,7 @@ ClLinearExpression::addVariable(const ClVariable &v, Number c)
 ClLinearExpression &
 ClLinearExpression::addVariable(const ClVariable &v, Number c,
 				const ClVariable &subject,
-				const ClSimplexSolver &solver)
+				ClSimplexSolver &solver)
 { // body largely duplicated above
   map<ClVariable,Number>::iterator i = my_terms.find(v);
   if (i != my_terms.end())
@@ -235,7 +242,7 @@ ClLinearExpression::addVariable(const ClVariable &v, Number c,
     if (clApprox(new_coefficient,0.0))
       {
       // new coefficient is zero, so erase it
-      //FIXGJB: solver.noteRemovedVariable((*i).first,subject);
+      solver.noteRemovedVariable((*i).first,subject);
       my_terms.erase(i);
       }
     else
@@ -248,7 +255,7 @@ ClLinearExpression::addVariable(const ClVariable &v, Number c,
     if (!clApprox(c,0.0))
       {
       my_terms[v] = c;
-      //FIXGJB: solver.noteAddedVariable(v,subject);
+      solver.noteAddedVariable(v,subject);
       }
     }
   return *this;
@@ -276,7 +283,7 @@ void
 ClLinearExpression::substituteOut(const ClVariable &v, 
 				  const ClLinearExpression &expr,
 				  const ClVariable &subject,
-				  const ClSimplexSolver &solver)
+				  ClSimplexSolver &solver)
 {
   map<ClVariable,Number>::iterator pv = my_terms.find(v);
   assert(pv != my_terms.end() && !clApprox((*pv).second,0.0));
@@ -294,7 +301,7 @@ ClLinearExpression::substituteOut(const ClVariable &v,
       Number newCoeff = (*poc).second + (multiplier*(*i).second);
       if (clApprox(newCoeff,0.0))
 	{
-	// FIXGJB: solver.noteRemovedVariable((*poc).first,subject)
+	solver.noteRemovedVariable((*poc).first,subject);
 	my_terms.erase(poc);
 	}
       else
@@ -305,7 +312,7 @@ ClLinearExpression::substituteOut(const ClVariable &v,
     else
       { // did not have that variable already
       my_terms[(*i).first] = multiplier * (*i).second;
-      // FIXGJB: solver.noteAddedVariable((*i).first,subject)
+      solver.noteAddedVariable((*i).first,subject);
       }
     }
 }

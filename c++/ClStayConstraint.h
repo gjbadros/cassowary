@@ -11,14 +11,25 @@
 #ifndef ClStayConstraint_H
 #define ClStayConstraint_H
 
+#include <iostream.h>
 #include "Cassowary.h"
-#include "ClConstraint.h"
+#include "ClEditOrStayConstraint.h"
 
+class ClStayConstraint : public ClEditOrStayConstraint {
+ public:
 
-class ClStayConstraint : public ClConstraint {
-public:
+  ClStayConstraint(const ClVariable &var,
+		   const ClStrength &strength = clsWeak(), double weight = 1.0 ) :
+    ClEditOrStayConstraint(var,strength,weight)
+    { }
+
   virtual bool isStayConstraint() const
     { return true; }
+  
+  virtual ostream &printOn(ostream &xo) const 
+    { xo << "stay" << variable(); return xo; }
+  
+ private:
 };
 
 #endif

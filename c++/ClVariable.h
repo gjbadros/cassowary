@@ -18,6 +18,10 @@
 
 typedef enum { CLAbstractVar, CLSlackVar, CLObjectiveVar, CLDummyVar, CLVar } ClVariableKind;
 
+class ClVariable;
+
+ClVariable &clvNil();
+
 class ClVariable {
 public:
   ClVariable(String name = "", ClVariableKind kind = CLVar, Number value = 0.0) :
@@ -35,24 +39,22 @@ public:
       sprintf(sz,"%ld",iVariableNumber++);
       my_name = String(sz);
       }
-    switch (kind)
-      {
-      case CLAbstractVar:
-	break;
-      case CLSlackVar:
-	my_fPivotable = true;
-	my_fRestricted = true;
-	break;
-      case CLObjectiveVar:
-	break;
-      case CLDummyVar:
-	my_fDummy = true;
-	my_fRestricted = true;
-	break;
-      case CLVar:
-	my_fExternal = true;
-	break;
-      }
+    initializeFor(kind);
+    assert (isCLVar() || my_value == 0.0);
+    }
+
+  ClVariable(long number, char *prefix, ClVariableKind kind = CLVar, Number value = 0.0) :
+    my_kind(kind),
+    my_value(value),
+    my_fDummy(false),
+    my_fExternal(false),
+    my_fPivotable(false),
+    my_fRestricted(false)
+    { 
+    char sz[32];
+    sprintf(sz,"%s%ld",prefix,number);
+    my_name = String(sz);
+    initializeFor(kind);
     assert (isCLVar() || my_value == 0.0);
     }
 
@@ -115,6 +117,28 @@ public:
     { return cl1.my_name < cl2.my_name; }
 
 private:
+  void initializeFor(ClVariableKind kind)
+    {
+    switch (kind)
+      {
+      case CLAbstractVar:
+	break;
+      case CLSlackVar:
+	my_fPivotable = true;
+	my_fRestricted = true;
+	break;
+      case CLObjectiveVar:
+	break;
+      case CLDummyVar:
+	my_fDummy = true;
+	my_fRestricted = true;
+	break;
+      case CLVar:
+	my_fExternal = true;
+	break;
+      }
+    }
+
   ClVariableKind my_kind;
   String my_name;
   Number my_value;

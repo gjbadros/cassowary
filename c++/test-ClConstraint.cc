@@ -2,6 +2,7 @@
 #include "Cassowary.h"
 #include "ClLinearEquation.h"
 #include "ClLinearInequality.h"
+#include "ClStayConstraint.h"
 
 int
 main( char **argv, int argc )
@@ -21,5 +22,8 @@ main( char **argv, int argc )
   cout << constraint2 << endl;
 
   cout << constraint2.expression() << endl;
+
+  ClStayConstraint cn(w);
+  cout << cn << endl;
 
 }
