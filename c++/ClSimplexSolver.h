@@ -113,9 +113,6 @@ class ClSimplexSolver : public ClTableau {
   // Re-optimize using the dual simplex algorithm.
   void dualOptimize();
 
-  // find the index in editPlusErrorVars of one of the variables in eVars
-  int findEditErrorIndex(const vector<ClVariable> &rgvar);
-
   // Make a new linear expression representing the constraint cn,
   // replacing any basic variables with their defining expressions.
   // Normalize if necessary so that the constant is non-negative.  If
@@ -192,11 +189,11 @@ class ClSimplexSolver : public ClTableau {
 
   // give error variables for a non required constraint,
   // maps to ClSlackVariable-s
-  map<ClConstraint &, ClVariable> my_errorVars;
+  map<ClConstraint *, set<ClVariable> > my_errorVars;
 
   // Return a lookup table giving the marker variable for each
   // constraint (used when deleting a constraint).
-  map<ClConstraint &, ClVariable> my_markerVars;
+  map<ClConstraint *, ClVariable> my_markerVars;
 
   ClVariable my_objective;
 

@@ -106,12 +106,6 @@ class ClLinearExpression  {
 		     const ClVariable &subject,
 		     ClTableau &solver);
 
-#ifdef FIXGJB_OLD_SMALLTALK_WAY
-  ClLinearExpression asLinearExpression() const 
-    { return this; }
-#endif
-
-
   // This linear expression currently represents the equation
   // oldSubject=self.  Destructively modify it so that it represents
   // the equation newSubject=self.
@@ -194,45 +188,6 @@ class ClLinearExpression  {
   friend bool operator==(const ClLinearExpression &e1,
 			 const ClLinearExpression &e2)
     { return &e1 == &e2; }
-
-
-#ifdef FIXGJB_OLD_SMALLTALK_WAY
-  /// Below cnFoo functions are virtually duplicated in ClVariable, also
-
-  // Return a linear constraint self=expr with given strength and weight
-  ClLinearEquation cnEqual(const ClLinearExpression &expr, 
-			   const ClStrength &strength,
-			   double weight = 1.0);
-  ClLinearEquation cnEqual(const ClVariable &expr,
-			   const ClStrength &strength,
-			   double weight = 1.0);
-  ClLinearEquation cnEqual(Number expr,
-			   const ClStrength &strength,
-			   double weight = 1.0);
-
-  // Return a linear constraint self>=expr with given strength and weight
-  ClLinearInequality cnGEQ(const ClLinearExpression &expr, 
-			   const ClStrength &strength,
-			   double weight = 1.0);
-  ClLinearInequality cnGEQ(const ClVariable &expr,
-			   const ClStrength &strength,
-			   double weight = 1.0);
-  ClLinearInequality cnGEQ(Number expr,
-			   const ClStrength &strength,
-			   double weight = 1.0);
-
-
-  // Return a linear constraint self<=expr with given strength and weight
-  ClLinearInequality cnLEQ(const ClLinearExpression &expr, 
-			   const ClStrength &strength,
-			   double weight = 1.0);
-  ClLinearInequality cnLEQ(const ClVariable &expr,
-			   const ClStrength &strength,
-			   double weight = 1.0);
-  ClLinearInequality cnLEQ(Number expr,
-			   const ClStrength &strength,
-			   double weight = 1.0);
-#endif
 
  private:
 

@@ -51,8 +51,203 @@ ClSimplexSolver::addPointStays(const vector<ClPoint> &listOfPoints)
 void 
 ClSimplexSolver::removeConstraint(const ClConstraint &cn)
 {
-  // FIXGJB
-  assert(false);
+  // We are about to remove a constraint.  There may be some stay
+  // constraints that were unsatisfied previously -- if we just
+  // removed the constraint these could come into play.  Instead,
+  // reset all of the stays so that things should stay where they are
+  // at the moment.
+  
+  resetStayConstants();
+
+  // remove any error variables from the objective function
+  const ClVariable &zRow = my_objective;
+  const ClLinearExpression &obj = rowExpression(zRow);
+  map<ClConstraint *, set<ClVariable> >::iterator it_eVars = my_errorVars.find(&cn);
+  if (it_eVars != my_errorVars.end())
+    {
+    set<ClVariable> &eVars = (*it_eVars).second;
+    set<ClVariable>::iterator it = eVars.begin();
+    for ( ; it != eVars.end(); ++it )
+      {
+      const ClLinearExpression &expr = rowExpression((*it));
+      if (expr == cleNil() )
+	{
+	obj.addVariable((*it),-1.0,zRow,*this);
+	}
+      else
+	{ // the error variable was in the basis
+	obj.addExpression(expr,-1.0,zRow,*this);
+	}
+      }
+    my_errorVars.erase(it_eVars);
+    }
+
+  map<ClConstraint *, ClVariable>::iterator it_marker = my_markerVars.find(&cn);
+  // try to make the marker variable basic if it isn't already
+  assert( it_marker != my_markerVars.end() );
+  const ClVariable &marker = (*it_marker).second;
+  if (rowExpression(marker) == cleNil() )
+    { // not in the basis, so need to do some work
+    // first choose which variable to move out of the basis
+    // only consider restricted basic variables
+    set<ClVariable> &col = my_columns[marker];
+    set<ClVariable>::iterator it_col = col.begin();
+
+    ClVariable &exitVar = clvNil();
+    double minRatio = 0.0;
+    for ( ; it_col != col.end(); ++it_col) 
+      {
+      ClVariable &v = *it_col;
+      if (v.isRestricted() )
+	{
+	const ClLinearExpression &expr = rowExpression(v);
+	assert(expr != cleNil() );
+	Number coeff = expr.coefficientFor(marker);
+	// only consider negative coefficients
+	if (coeff < 0.0) 
+	  {
+	  Number r = - expr.constant() / coeff;
+	  if (exitVar == clvNil() || r < minRatio)
+	    {
+	    minRatio = r;
+	    exitVar = v;
+	    }
+	  }
+	}
+      }
+    // if exitVar is still nil at this point, then either the marker
+    // variable has a positive coefficient in all equations, or it
+    // only occurs in equations for unrestricted variables.  If it
+    // does occur in an equation for a restricted variable, pick the
+    // equation that gives the smallest ratio.  (The row with the
+    // marker variable will become infeasible, but all the other rows
+    // will still be feasible; and we will be dropping the row with
+    // the marker variable.  In effect we are removing the
+    // non-negativity restriction on the marker variable.)
+    if (exitVar == clvNil() ) 
+      {
+      it_col = col.begin();
+      for ( ; it_col != col.end(); ++it_col) 
+	{
+	ClVariable &v = *it_col;
+	if (v.isRestricted() )
+	  {
+	  const ClLinearExpression &expr = rowExpression(v);
+	  assert(expr != cleNil() );
+	  Number coeff = expr.coefficientFor(marker);
+	  Number r = - expr.constant() / coeff;
+	  if (exitVar == clvNil() || r < minRatio)
+	    {
+	    minRatio = r;
+	    exitVar = v;
+	    }
+	  }
+	}
+      }
+
+    if (exitVar == clvNil() )
+      { // exitVar is still nil
+      // If col is empty, then exitVar doesn't occur in any equations,
+      // so just remove it.  Otherwise pick an exit var from among the
+      // unrestricted variables whose equation involves the marker var
+      if (col.size() == 0)
+	{
+	removeParametricVar(marker);
+	}
+      else
+	{
+	exitVar = *(col.begin());
+	}
+      }
+    
+    if (exitVar != clvNil() )
+      {
+      pivot(marker,exitVar);
+      }
+    }
+  
+  if (rowExpression(marker) != cleNil() )
+    {
+    removeRow(marker);
+    }
+
+  // Delete any error variables.  If cn is an inequality, it also
+  // contains a slack variable; but we use that as the marker variable
+  // and so it has been deleted when we removed its row.
+  if (it_eVars != my_errorVars.end())
+    {
+    set<ClVariable> &eVars = (*it_eVars).second;
+    set<ClVariable>::iterator it = eVars.begin();
+    for ( ; it != eVars.end(); ++it )
+      {
+      ClVariable &v = (*it);
+      if (v != marker)
+	{
+	removeParametricVar(v);
+	}
+      }
+    }
+
+  if (cn.isStayConstraint())
+    {
+    // iterate over the stay{Plus,Minus}ErrorVars and remove those
+    // variables v in those vectors that are also in set eVars
+    if (it_eVars != my_errorVars.end())
+      {
+      set<ClVariable> &eVars = (*it_eVars).second;
+      vector<ClVariable>::iterator itStayPlusErrorVars = my_stayPlusErrorVars.begin();
+      vector<ClVariable>::iterator itStayMinusErrorVars = my_stayMinusErrorVars.begin();
+      for (; itStayMinusErrorVars != my_stayMinusErrorVars.end();
+	   ++itStayPlusErrorVars, ++itStayMinusErrorVars)
+	{
+	if (eVars.find(*itStayPlusErrorVars) != eVars.end())
+	  {
+	  my_stayMinusErrorVars.erase(itStayPlusErrorVars);
+	  }
+	if (eVars.find(*itStayMinusErrorVars) != eVars.end())
+	  {
+	  my_stayMinusErrorVars.erase(itStayMinusErrorVars);
+	  }
+	}
+      }
+    }
+  else if (cn.isEditConstraint())
+    {
+    // remove the error variable for this constraint
+    // need to update my_editPlusErrorVars,
+    //                my_editMinusErrorVars, and
+    //                my_prevEditConstants
+    assert(it_eVars != my_errorVars.end());
+    set<ClVariable> &eVars = (*it_eVars).second;
+    set<ClVariable>::iterator it_v = eVars.begin();
+    for ( ; it_v != eVars.end(); ++it_v)
+      {
+      const ClVariable &var = *it_v;
+      // find var in my_editPlusErrorVars
+      vector<ClVariable>::iterator 
+	itEditPlusErrorVars = my_editPlusErrorVars.begin();
+      for ( ; itEditPlusErrorVars != my_editPlusErrorVars.end(); ++itEditPlusErrorVars )
+	{
+	if (*itEditPlusErrorVars == var) break;
+	}
+      if (itEditPlusErrorVars != my_editPlusErrorVars.end())
+	{ // found it
+	int index = itEditPlusErrorVars - my_editPlusErrorVars.begin();
+	vector<ClVariable>::iterator 
+	  itEditMinusErrorVars = my_editMinusErrorVars.begin() + index;
+	vector<Number>::iterator 
+	  itPrevEditConstants = my_prevEditConstants.begin() + index;
+	my_editPlusErrorVars.erase(itEditPlusErrorVars);
+	my_editMinusErrorVars.erase(itEditMinusErrorVars);
+	my_prevEditConstants.erase(itPrevEditConstants);
+	// done -- can exit the iteration
+	break;
+	}
+      }
+    }
+
+  optimize(zRow);
+  setExternalVariables();
 }
 
 // Re-initialize this solver from the original constraints, thus
@@ -71,7 +266,10 @@ ClSimplexSolver::reset()
 void 
 ClSimplexSolver::resolve(const vector<double> &newEditConstants)
 {
-  my_infeasibleRows.empty();
+  while (!my_infeasibleRows.empty())
+    {
+    my_infeasibleRows.erase(my_infeasibleRows.begin());
+    }
   resetStayConstants();
   resetEditConstants(newEditConstants);
   dualOptimize();
@@ -87,10 +285,10 @@ ClSimplexSolver::resolve(const vector<double> &newEditConstants)
 void 
 ClSimplexSolver::addWithArtificialVariable(const ClLinearExpression &expr)
 {
-  ClVariable &av = *(new ClVariable(++artificialCounter,"a",CLSlackVar));
-  ClVariable &az = *(new ClVariable("az",CLObjectiveVar));
-  ClLinearExpression &azRow = *(new ClLinearExpression(expr));
-  // FIXGJBMEM
+  ClVariable av(++artificialCounter,"a",CLSlackVar);
+  ClVariable az("az",CLObjectiveVar);
+  ClLinearExpression azRow(expr);
+  // FIXGJB: Why is azRow a duplicate of expr?
 
   // the artificial objective is av, which we know is equal to expr
   // (which contains only parametric variables)
@@ -125,12 +323,8 @@ ClSimplexSolver::addWithArtificialVariable(const ClLinearExpression &expr)
   // now av should be parametric
   assert(rowExpression(av) == cleNil() );
   removeParametricVar(av);
-  // remove teh temporary objective function
+  // remove the temporary objective function
   removeRow(az);
-
-  delete &av;
-  delete &az;
-  // FIXGJB: what about azRow?
 }
 
 // We are trying to add the constraint expr=0 to the appropriate
@@ -191,14 +385,6 @@ ClSimplexSolver::deltaEditConstant(Number delta, const ClVariable &v1, const ClV
 // Re-optimize using the dual simplex algorithm.
 void 
 ClSimplexSolver::dualOptimize()
-{
-  // FIXGJB
-  assert(false);
-}
-
-// find the index in editPlusErrorVars of one of the variables in eVars
-int 
-ClSimplexSolver::findEditErrorIndex(const vector<ClVariable> &rgvar)
 {
   // FIXGJB
   assert(false);
