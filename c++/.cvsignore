@@ -1,5 +1,7 @@
 ClTests
+ClTests-good
 Makefile.dependencies
+gmon.out
 output
 test-ClConstraint
 test-ClLinearExpression
