@@ -65,7 +65,9 @@ VARIOUS IMPLEMENTATION NOTES
 
 Cassowary/C++ needs to be compiled using a modern C++ compiler.
 At one time or another, it has compiled using:
-  o egcs-1.0.1, egcs-1.0.3   (likely will work with gcc-2.8.1)
+  o egcs-1.0.1
+  o egcs-1.0.3a
+  o gcc-2.8.1 (needs libstdc++-2.8.x, too)
   o Visual C++ 5.0
 
 See c++/README for more details about building the C++ version.
@@ -117,3 +119,17 @@ and keep the outer quadrilateral from turning "inside out."
 The user is able to select points (draggable boxes) and move them around 
 within the window (both midpoints and endpoints can be selected, of
 course).  The solver updates the figure, and redraws.
+
+
+------------------------------------------------------------------
+
+FUNDING ACKNOWLEDGEMENTS
+
+This work has been funded in part by the National Science Foundation under
+Grants IRI-9302249 and CCR-9402551, by Object Technology International, and
+by a Fulbright Award from the Australian-American Educational
+Foundation.
+
+Additionally, Greg Badros is supported by a National Science Foundation
+Graduate Research Fellowship.  Parts of this material are based upon
+work supported under that fellowship.
