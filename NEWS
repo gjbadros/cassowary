@@ -11,6 +11,24 @@ Seattle, WA 98195-2350
 
 with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
 
+10-Mar-1999: Changes since Cassowary v0.31 (for release v0.32)
+* Added automake/autoconf support.  Old Makefiles are now
+Makefile.linux.  This is not yet fully tested or correct, but I need to
+make a release now for the bug fixes.  Consider compiling with "make -f
+Makefile.linux all" if you have problems running autoconf and/or
+automake.
+
+* Changes to C++
+** Bug fix for problem Anthony Beurivé noticed regarding removing non-1
+weight stay constraints.
+** Minor bug fix for parser.  Also renamed the creader files to ClReader.
+
+* Changes to Java
+** Bug fix for problem Emmanuel Pietriga reported regarding edit
+constraints.
+** Improved debugging support a bit by adding descriptions to
+ExCLInternalError-s and assert()s
+
 1-Mar-1999: Changes since Cassowary v0.3 (for release v0.31)
 * Changes to C++
 ** Some bug fixes -- pass ClVariable-s around by value instead of const
