@@ -13,6 +13,11 @@ your $CLASSPATH.  My CLASSPATH looks like this:
 
 Then you can just use `make all' (GNU Make) to build the .class files.
 
+Try running ClTests after the build completes.  Be sure your CLASSPATH
+is set correctly (as discussed above) and do:
+
+java ClTests
+
 
 The demos/ subdirectory contains the quadrilateral demo;  `make run'
 should run it using the appletviewer after building it.
