@@ -14,8 +14,6 @@ Copyright: Copyright (C) 1999 University of Passau
 Packager: Greg J. Badros <gjb@cs.washington.edu>
 URL: http://www.fmi.uni-passau.de/Graphlet/GTL/
 
-Docdir: %{prefix}/doc
-
 %description
 
 There are some basic data structures and algorithms that are frequently
@@ -56,9 +54,10 @@ make
 
 %install
 make prefix=$RPM_BUILD_ROOT%{prefix} install
+libtool --finish %prefix/lib
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+#rm -rf $RPM_BUILD_ROOT
 
 %post
 
@@ -67,8 +66,6 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-, root, root)
 
-%{prefix}/lib/libGTL*
-%{prefix}/bin/*
-%{prefix}/include/GTL/*
-
-%doc README doc/*
+%{prefix}/lib/*
+%{prefix}/include/*
+%doc %{prefix}/share/GTL/*
