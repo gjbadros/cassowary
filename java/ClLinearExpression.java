@@ -93,8 +93,7 @@ class ClLinearExpression extends CL
 
   public final ClLinearExpression times(double x)
     {
-      ClLinearExpression result = (ClLinearExpression) clone();
-      return result.multiplyMe(x);
+      return ((ClLinearExpression) clone()).multiplyMe(x);
     }
 
   public final ClLinearExpression times(ClLinearExpression expr) 
@@ -113,32 +112,24 @@ class ClLinearExpression extends CL
 
   public final ClLinearExpression plus(ClLinearExpression expr)
     {
-      ClLinearExpression result = (ClLinearExpression) clone();
-      result.addExpression(expr,1.0);
-      return result;
+      return ((ClLinearExpression) clone()).addExpression(expr,1.0);
     }
 
   public final ClLinearExpression plus(ClVariable var) 
     throws ExCLNonlinearExpression
     { 
-      ClLinearExpression result = (ClLinearExpression) clone();
-      result.addVariable(var,1.0); 
-      return result;
+      return ((ClLinearExpression) clone()).addVariable(var,1.0);
     }
 
   public final ClLinearExpression minus(ClLinearExpression expr)
     {
-      ClLinearExpression result = (ClLinearExpression) clone();
-      result.addExpression(expr,-1.0);
-      return result;
+      return ((ClLinearExpression) clone()).addExpression(expr,-1.0);
     }
 
   public final ClLinearExpression minus(ClVariable var) 
        throws ExCLNonlinearExpression
     { 
-      ClLinearExpression result = (ClLinearExpression) clone();
-      result.addVariable(var,-1.0);
-      return result;
+      return ((ClLinearExpression) clone()).addVariable(var,-1.0);
     }
 
 
@@ -176,8 +167,8 @@ class ClLinearExpression extends CL
     { return expr.minus( this); }
 
   public final ClLinearExpression addExpression(ClLinearExpression expr, double n,
- 					  ClAbstractVariable subject, 
- 					  ClTableau solver)
+						ClAbstractVariable subject, 
+						ClTableau solver)
     {
       incrementConstant(n * expr.constant());
       
