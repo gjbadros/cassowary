@@ -1,3 +1,19 @@
+* test independent subgraph efficiency question
+
+* read thing lab thesis, esp. chap 4 on "paths"
+
+* warning for two suggestValue-s on same variable in a row w/o intervening resolve.
+
+* use an addVariable hook to add implicit stays
+** is there a better way to represent implicit stays
+** better debug-printout where stay constraints rows are omitted?
+
+* squashing and exploding aliased variables when equality constrained
+
+
+
+* Consider going back to virtual function and normal subclassing with slightly more complicated wrapping of variables for scwm
+
 * Add operator= on solver for saving solver state
 
 * Make more obvious that variables contain their values, and you don't have to query the solver for the variable's value (similarly, variables must stay in scope throughout the solver's lifetime)
@@ -23,16 +39,23 @@
 
 * Disjunctions
 
-* implementation issues
-** automatic stays on variables? automatic weighting
-** variables connected to a solver
+* automatic weighting, clustering of variables that should prefer to be changed together
+
+* assertion function to check global state of tableau
+
+* better memory management
+
+* Revise to keep variables connected to a specific solver?
 
 * Detect and remove redundant constraints for efficiency
 ** especially web application, where constraints are more static
 
 * callbacks for internal happenings
-** pivoting
 ** variables set, value changed
+** constraint satisfied, unsatisfied
+** start changes (before setExternalVariables runs)
+** end changes (after setExternalVariables runs)
+** pivoting
 
 * user-control of choosing alternate solutions
 ** direct control over, e.g., pivoting
@@ -40,6 +63,7 @@
 * Web page under CVS control
 
 * Parser for constraints
+** Steve's?  Andrew's?
 
 * Meet with Michael re: CDA details
 
