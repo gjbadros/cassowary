@@ -5,6 +5,9 @@ JAVAFILES = DraggableBox.java QuadDemo.java
 
 if HAVE_JAVA
 java_JAVA = $(JAVAFILES)
+else
+classjava.stamp:
+	echo timestamp > classjava.stamp
 endif
 
 EXTRA_DIST=$(JAVAFILES)

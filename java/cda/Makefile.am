@@ -29,6 +29,9 @@ COMPONENT_FILES = \
 if HAVE_JAVA
 java_JAVA = \
   $(INTERFACE_FILES) $(COMPONENT_FILES)
+else
+classjava.stamp:
+	echo timestamp > classjava.stamp
 endif
 
 ICON_BMPS = \

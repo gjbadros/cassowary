@@ -293,9 +293,9 @@ ACE_ARG_PATH(java-class-path,
 AC_SUBST(JAVA_CLASS_PATH)
 
 if test -d ${JAVA_CLASS_PATH}; then
-  HAVE_JAVA=yes
+  HAVE_JAVA=true
 else
-  HAVE_JAVA=no
+  HAVE_JAVA=false
 fi
 
 AC_ARG_ENABLE(cflags,
@@ -335,11 +335,11 @@ AC_ARG_ENABLE(javac-flags,
 ,[JAVACFLAGS="$enableval"])
 AC_SUBST(JAVACFLAGS)
 
-HAVA_JAVA="false"
+HAVE_JAVA="false"
 AC_ARG_ENABLE(java_build, [ --enable-java-build  Build java version of Cassowary ],
 		enable_java_build=yes, enable_java_build=no)
-if ! test x"$enable_java_build" = x"no"; then
-    which javac && HAVE_JAVA="true"
+if test x"$enable_java_build" = x"yes"; then
+    which javac >/dev/null 2>&1 && HAVE_JAVA="true"
 fi
 AM_CONDITIONAL(HAVE_JAVA, test "true" = "$HAVE_JAVA")
 
