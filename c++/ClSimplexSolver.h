@@ -196,9 +196,11 @@ class ClSimplexSolver : public ClTableau {
 
   friend ostream &operator<<(ostream &xo, const ClSimplexSolver &tableau);
   ostream &printOn(ostream &xo) const;
-
+  
   ostream &printInternalInfo(ostream &xo) const;
 
+  ostream &printDebugInfo(ostream &xo) const 
+    { printOn(xo); printInternalInfo(xo); xo << endl; return xo; }
 
  protected:
   // Add the constraint expr=0 to the inequality tableau using an
