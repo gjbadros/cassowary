@@ -1,3 +1,15 @@
+Wed Nov 24 15:40:27 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSimplexSolver.cc: Fix typo in a throw message.
+
+	* c++/ClLinearInequality.h: Throw an editmisuse when a
+	ClLinearInequality is created w/o an inequality operator.
+
+Tue Nov 23 16:54:05 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* configure.in: Use guile's pkglibdir, not pkgdatadir, for
+	choosing cassoguiledir.
+
 Tue Nov 16 17:35:54 1999  Greg J. Badros  <gjb@cs.washington.edu>
 
 	* java/ClReader.lex, java/ClReader.cup: Added -- code by Will

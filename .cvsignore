@@ -1,10 +1,11 @@
+ANNOUNCE
 GTL.spec
 Makefile
 Makefile.in
 aclocal.m4
 cassowary-*.tar.gz
-cassowary-nofd-*.tar.gz
 cassowary-config
+cassowary-nofd-*.tar.gz
 cassowary-nofd.spec
 cassowary-nofd.spec2
 cassowary.spec
