@@ -20,10 +20,10 @@ ClLinearExpression::ClLinearExpression(Number num) :
 
 // Convert from ClVariable to a ClLinearExpression
 // this replaces ClVariable::asLinearExpression
-ClLinearExpression::ClLinearExpression(const ClAbstractVariable &clv) :
+ClLinearExpression::ClLinearExpression(const ClAbstractVariable &clv, Number value) :
   my_constant(0.0)
 {
-  my_terms[&clv] = 1.0;
+  my_terms[&clv] = value;
 }
 
 ClLinearExpression::~ClLinearExpression()

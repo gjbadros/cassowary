@@ -29,7 +29,7 @@ class ClLinearExpression  {
 
   // Convert from ClVariable to a ClLinearExpression
   // this replaces ClVariable::asLinearExpression
-  ClLinearExpression(const ClAbstractVariable &clv);
+  ClLinearExpression(const ClAbstractVariable &clv, Number value = 1.0);
 
   // copy ctr
   ClLinearExpression(const ClLinearExpression &expr) :
