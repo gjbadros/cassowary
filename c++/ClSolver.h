@@ -18,6 +18,7 @@
 #endif
 
 #include "Cassowary.h"
+#include "ClVariable.h"
 #include "ClErrors.h"
 #include "ClTypedefs.h"
 #include <list>

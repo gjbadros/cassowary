@@ -20,9 +20,10 @@
 #include "debug.h"
 
 #include "Cassowary.h"
-#include "ClLinearExpression.h"
 #include "ClStrength.h"
 #include "ClTypedefs.h"
+#include "ClVariable.h"
+#include "ClLinearExpression.h"
 #include <string>
 
 class ClSimplexSolver;

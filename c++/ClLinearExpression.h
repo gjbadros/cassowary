@@ -17,10 +17,10 @@
 #define CONFIG_INLINE_H_INCLUDED
 #endif
 
-#include "ClMap.h"
 #include "Cassowary.h"
 #include "debug.h"
 #include "ClVariable.h"
+#include "ClMap.h"
 #include "ClLinearExpression_fwd.h"
 
 using namespace std;
