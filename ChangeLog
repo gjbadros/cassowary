@@ -1,3 +1,39 @@
+Sat Jan 29 17:45:32 2000  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* configure.in (CASSOWARY_VERSION): Bump to 0.55.
+
+Sat Jan 29 17:43:05 2000  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSimplexSolver.cc (Resolve): Do not comment out
+	"ResetStayConstants()" as Beurivé had done.  This was resulting in 
+	quirky behaviour whereby the windows were "rubber-banding" back to 
+	where they were at the start of an interaction (e.g., if I push a
+	window out of the way to the left with another window, as I move
+	the pushing window back to the right, the other window comes back
+	to the right with the pushing window).  Maybe that's desirable
+	behaviour in some instances, but it's not the behaviour we
+	document and sure feels weird to me.
+
+Sat Jan 29 17:38:43 2000  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* java/sym.java, java/parser.java, java/Yylex.java: Added -- these 
+	are created by JavaCUP which I don't want to be necessary for
+	building.
+
+Mon Jan 24 09:34:20 2000  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSymbolicWeight.h: Set SymbolicWeight multiplier to
+	1000000, not 10000 (A.Beurivé)
+
+	* c++/ClSimplexSolver.h, c++/ClSimplexSolver.cc: Added
+ 	ChangeStrength, ChangeStrengthAndWeight, ChangeWeight,
+ 	DisplayObjective, ExternalResetStayConstants fns.
+	(RemoveConstraintInternal) Avoid picking the objective row when
+	removing a constraint.  (Optimize) Pick any negative row to avoid
+	unending pivots [I think this is a work-around to avoid having to
+	implement Bland's anti-cycling rule... maybe I should just do
+	that, though].  (A.Beurivé)
+
 Thu Dec 16 11:12:34 1999  Greg J. Badros  <gjb@cs.washington.edu>
 
 	* configure.in: Version bumped to 0.54a
