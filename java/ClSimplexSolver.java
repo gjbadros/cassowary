@@ -1,12 +1,19 @@
-
-/*
- * class ClSimplexSolver
- * 
- * This code has been generated using C2J++
- * C2J++ is based on Chris Laffra's C2J (laffra@ms.com)
- * Read general disclaimer distributed with C2J++ before using this code
- * For information about C2J++, send mail to Ilya_Tilevich@ibi.com
- */
+// $Id$
+//
+// Cassowary Incremental Constraint Solver
+// Original Smalltalk Implementation by Alan Borning
+// This Java Implementation by Greg J. Badros, <gjb@cs.washington.edu>
+// http://www.cs.washington.edu/homes/gjb
+// (C) 1998, All Rights Reserved.
+//
+// (c) 1998 Alan Borning and Greg Badros.  This code is provided for use by
+// students for course projects in the course CSE 595 in the Department of
+// Computer Science and Engineering, University of Washington, during winter
+// quarter 1998.  Any other use requires written permission from the copyright
+// holders.
+//
+// ClSimplexSolver
+// 
 
 class ClSimplexSolver extends ClTableau
 {
@@ -147,11 +154,11 @@ ClSimplexSolver& addPointStays(>& listOfPoints)
   static static final double multiplier = 2.0;
   for ( ; it != listOfPoints.end(); it++ )
     {
-/* @c2j++: "addPointStay((*it)->first,(*it)->second,weight);" replacement: * to " " */
-/* @c2j++: "addPointStay(( it)->first,(*it)->second,weight);" replacement: * to " " */
-/* @c2j++: "addPointStay(( it)->first,( it)->second,weight);" replacement: -> to . */
-/* @c2j++: "addPointStay(( it).first,( it)->second,weight);" replacement: -> to . */
-    addPointStay(( it).first,( it).second,weight);
+/* @c2j++: "addPointStay((*it)->X(),(*it)->Y(),weight);" replacement: * to " " */
+/* @c2j++: "addPointStay(( it)->X(),(*it)->Y(),weight);" replacement: * to " " */
+/* @c2j++: "addPointStay(( it)->X(),( it)->Y(),weight);" replacement: -> to . */
+/* @c2j++: "addPointStay(( it).X(),( it)->Y(),weight);" replacement: -> to . */
+    addPointStay(( it).X(),( it).Y(),weight);
 /* @c2j++: "weight *= multiplier;" replacement: * to " " */
     weight  = multiplier;
     }
@@ -167,10 +174,25 @@ ClSimplexSolver& addPointStays(>& listOfPoints)
 * @return ClSimplexSolver &
 */
 public
-/* @c2j++: "ClSimplexSolver & addPointStay(ClAbstractVariable& vx, ClAbstractVariable& vy, double weight)" replacement:  &  to " " */
-ClSimplexSolver addPointStay(ClAbstractVariable& vx, ClAbstractVariable& vy, double weight)
+/* @c2j++: "ClSimplexSolver & addPointStay(ClVariable& vx, ClVariable& vy, double weight)" replacement:  &  to " " */
+ClSimplexSolver addPointStay(ClVariable& vx, ClVariable& vy, double weight)
 /* @c2j++: "{ addStay(vx,clsWeak(),weight); addStay(vy,clsWeak(),weight); return *this; }" replacement: * to " " */
 { addStay(vx,clsWeak(),weight); addStay(vy,clsWeak(),weight); return  this; }
+
+/**
+* addPointStay
+* @param clp
+* @param weight
+* @return ClSimplexSolver&
+*/
+public
+ClSimplexSolver& addPointStay(ClPoint& clp, double weight)
+{ 
+  addStay(clp.X(),clsWeak(),weight);
+  addStay(clp.Y(),clsWeak(),weight);
+/* @c2j++: "return *this;" replacement: * to " " */
+  return  this;
+}
 
 /**
 * addStay
@@ -224,18 +246,22 @@ System.err.println("(" + String.valueOf(cnconst) + ")");
 /* @c2j++: "if (pexpr == NULL )" replacement: NULL to null */
       if (pexpr == null )
 	{
-/* @c2j++: "pzRow->addVariable(*(*it),-1.0,my_objective,*this);" replacement: * to " " */
-/* @c2j++: "pzRow->addVariable( (*it),-1.0,my_objective,*this);" replacement: * to " " */
-/* @c2j++: "pzRow->addVariable( ( it),-1.0,my_objective,*this);" replacement: * to " " */
-/* @c2j++: "pzRow->addVariable( ( it),-1.0,my_objective, this);" replacement: -> to . */
-	pzRow.addVariable( ( it),-1.0,my_objective, this);
+/* @c2j++: "pzRow->addVariable(*(*it),-1.0 * cnconst.strength().symbolicWeight().asDouble()," replacement: * to " " */
+/* @c2j++: "pzRow->addVariable( (*it),-1.0 * cnconst.strength().symbolicWeight().asDouble()," replacement: * to " " */
+/* @c2j++: "pzRow->addVariable( ( it),-1.0 * cnconst.strength().symbolicWeight().asDouble()," replacement: * to " " */
+/* @c2j++: "pzRow->addVariable( ( it),-1.0   cnconst.strength().symbolicWeight().asDouble()," replacement: -> to . */
+	pzRow.addVariable( ( it),-1.0   cnconst.strength().symbolicWeight().asDouble(),
+/* @c2j++: "my_objective,*this);" replacement: * to " " */
+			   my_objective, this);
 	}
       else
 	{ // the error variable was in the basis
-/* @c2j++: "pzRow->addExpression(*pexpr,-1.0,my_objective,*this);" replacement: * to " " */
-/* @c2j++: "pzRow->addExpression( pexpr,-1.0,my_objective,*this);" replacement: * to " " */
-/* @c2j++: "pzRow->addExpression( pexpr,-1.0,my_objective, this);" replacement: -> to . */
-	pzRow.addExpression( pexpr,-1.0,my_objective, this);
+/* @c2j++: "pzRow->addExpression(*pexpr,-1.0 * cnconst.strength().symbolicWeight().asDouble()," replacement: * to " " */
+/* @c2j++: "pzRow->addExpression( pexpr,-1.0 * cnconst.strength().symbolicWeight().asDouble()," replacement: * to " " */
+/* @c2j++: "pzRow->addExpression( pexpr,-1.0   cnconst.strength().symbolicWeight().asDouble()," replacement: -> to . */
+	pzRow.addExpression( pexpr,-1.0   cnconst.strength().symbolicWeight().asDouble(),
+/* @c2j++: "my_objective,*this);" replacement: * to " " */
+			     my_objective, this);
 	}
       }
     }
@@ -463,18 +489,11 @@ pv = null;
 
   if (it_eVars != my_errorVars.end())
     {
-/* @c2j++: "ClTableauVarSet::const_iterator it_set = (it_eVars->second).begin();" replacement: -> to . */
-    ClTableauVarSet::const_iterator it_set = (it_eVars.second).begin();
-/* @c2j++: "for ( ; it_set != (it_eVars->second).end(); ++it_set)" replacement: -> to . */
-    for ( ; it_set != (it_eVars.second).end(); ++it_set)
-      {
-/** @c2j++ Replacement from delete *it_set; */
-*it_set = null;
-      }
     my_errorVars.erase(it_eVars);
     }
 /** @c2j++ Replacement from delete &marker; */
 &marker = null;
+
   optimize(my_objective);
   setExternalVariables();
 /* @c2j++: "return *this;" replacement: * to " " */
@@ -513,6 +532,20 @@ System.err.println("(" + String.valueOf(newEditConstants) + ")");
   dualOptimize();
   setExternalVariables();
 }
+
+/**
+* resolve
+* @param x
+* @param y
+*/
+public
+void resolve(Number x, Number y)
+{
+    vector<Number> vals;
+    vals.push_back(x);
+    vals.push_back(y);
+    resolve(vals);
+    }
 
 /**
 * <
@@ -641,10 +674,10 @@ removeRow(*paz) = null;
 /**
 * tryAddingDirectly
 * @param expr
-* @return bool
+* @return boolean
 */
 protected
-bool tryAddingDirectly(ClLinearExpression& expr)
+boolean tryAddingDirectly(ClLinearExpression& expr)
 {
 #ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -699,9 +732,9 @@ System.err.println("(" + String.valueOf(expr) + ")");
 /* @c2j++: "static final ClAbstractVariable  psubject = NULL; // the current best subject, if any" replacement: NULL to null */
   static final ClAbstractVariable  psubject = null; // the current best subject, if any
 
-  bool foundUnrestricted = false; 
+  boolean foundUnrestricted = false; 
 
-  bool foundNewRestricted = false;
+  boolean foundNewRestricted = false;
 
 /* @c2j++: "const ClVarToNumberMap &terms = expr.terms();" replacement: const  to static final  */
   static final ClVarToNumberMap &terms = expr.terms();
@@ -1066,6 +1099,8 @@ System.err.print("adding " + String.valueOf(*peplus) + " and " + String.valueOf(
       pzRow.setVariable( peminus,swCoeff);
 /* @c2j++: "noteAddedVariable(*peminus,my_objective);" replacement: * to " " */
       noteAddedVariable( peminus,my_objective);
+      my_errorVars[&cn].insert(peminus.get());
+      my_errorVars[&cn].insert(peplus.get());
       if (cn.isStayConstraint()) 
 	{
 	my_stayPlusErrorVars.push_back(peplus.get());
@@ -1308,7 +1343,8 @@ System.err.println("()");
 /* @c2j++: "pexpr = rowExpression( (*itStayMinusErrorVars));" replacement: * to " " */
       pexpr = rowExpression( ( itStayMinusErrorVars));
       }
-    else
+/* @c2j++: "if (pexpr != NULL)" replacement: NULL to null */
+    if (pexpr != null)
       {
 /* @c2j++: "pexpr->set_constant(0.0);" replacement: -> to . */
       pexpr.set_constant(0.0);
@@ -1371,11 +1407,8 @@ int my_artificialCounter;
 int my_dummyCounter;
 
 /*@c2j++ The following variable used to be declared global */
-typedef pair < ClVariable , ClVariable > ClPoint ; 
-
-/*@c2j++ The following variable used to be declared global */
-/* @c2j++: "typedef map < static final ClConstraint * , ClTableauVarSet > ClConstraintToVarSetMap ;" replacement: * to " " */
-typedef map < static final ClConstraint   , ClTableauVarSet > ClConstraintToVarSetMap ; 
+/* @c2j++: "ClPoint ; typedef map < static final ClConstraint * , ClTableauVarSet > ClConstraintToVarSetMap ;" replacement: * to " " */
+ClPoint ; typedef map < static final ClConstraint   , ClTableauVarSet > ClConstraintToVarSetMap ; 
 
 /*@c2j++ The following variable used to be declared global */
 /* @c2j++: "typedef map < static final ClConstraint * , static final ClAbstractVariable * > ClConstraintToVarMap ;" replacement: * to " " */

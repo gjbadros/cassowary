@@ -1,154 +1,59 @@
+// $Id$
+//
+// Cassowary Incremental Constraint Solver
+// Original Smalltalk Implementation by Alan Borning
+// This Java Implementation by Greg J. Badros, <gjb@cs.washington.edu>
+// http://www.cs.washington.edu/homes/gjb
+// (C) 1998, All Rights Reserved.
+//
+// (c) 1998 Alan Borning and Greg Badros.  This code is provided for use by
+// students for course projects in the course CSE 595 in the Department of
+// Computer Science and Engineering, University of Washington, during winter
+// quarter 1998.  Any other use requires written permission from the copyright
+// holders.
+//
+// ClAbstractVariable
 
-/*
- * class ClAbstractVariable
- * 
- * This code has been generated using C2J++
- * C2J++ is based on Chris Laffra's C2J (laffra@ms.com)
- * Read general disclaimer distributed with C2J++ before using this code
- * For information about C2J++, send mail to Ilya_Tilevich@ibi.com
- */
+import java.lang.*;
 
-class ClAbstractVariable
+abstract class ClAbstractVariable
 {
-
-/**
-* ClAbstractVariable
-*/
-public
-ClAbstractVariable()
-{
- my_name = name;
-	 
-    iVariableNumber++;
-    if (name.length() == 0)
+  public ClAbstractVariable(String name)
+    {
+      my_name = name;
+      
+      iVariableNumber++;
+      if (name.length() == 0)
       {
-      char sz[16];
-      sprintf(sz,"v%ld",iVariableNumber++);
-      my_name = string(sz);
+	my_name = "v" + iVariableNumber;
       }
     }
 
-/**
-* ClAbstractVariable
-* @param varnumber
-* @param prefix
-*/
-public
-/* @c2j++: "ClAbstractVariable(long varnumber, char* prefix)" replacement: char*  to String  */
-ClAbstractVariable(long varnumber, String prefix)
-{
-    auto_ptr<char> pch (new char[16+strlen(prefix)]);
-    iVariableNumber++;
-    sprintf(pch.get(),"%s%ld",prefix,varnumber);
-    my_name = string(pch.get());
+  public ClAbstractVariable(long varnumber, String prefix)
+    {
+      my_name = prefix + varnumber;
+      iVariableNumber++;
     }
 
-/**
-* ClAbstractVariable
-*/
-public
-~ClAbstractVariable()
-{ }
+  public String name()
+    { return my_name; }
+  
+  public void setName(String name)
+    { my_name = name; }
+  
+  public boolean isDummy()
+    { return false; }
+  
+  public abstract boolean isExternal();
 
-/**
-* name
-* @return string
-*/
-public
-string name()
-{ return my_name; }
+  public abstract boolean isPivotable();
 
-/**
-* setName
-* @param name
-*/
-public
-void setName(const& name)
-{ my_name = name; }
+  public abstract boolean isRestricted();
 
-/**
-* isDummy
-* @return bool
-*/
-public
-bool isDummy()
-{ return false; }
+  public abstract String printString();
 
-/**
-* isExternal
+  private String my_name;
 
-public
-
-
-/**
-* isPivotable
-
-public
-
-
-/**
-* isRestricted
-
-public
-
-
-/**
-* printOn
-
-public
-
-
-/**
-* <
-* @param xos
-* @param clv
-* @return <
-*/
-public
-< <(ostream& xos, ClAbstractVariable& clv)
-{ clv.printOn(xos); return xos; }
-
-/**
-* <
-* @param cl1
-* @param cl2
-* @return operator
-*/
-public
-operator <(ClAbstractVariable& cl1, ClAbstractVariable& cl2)
-{ return &cl1 < &cl2; }
-
-/**
-* =
-* @param cl1
-* @param cl2
-* @return =
-*/
-public
-= =(ClAbstractVariable& cl1, ClAbstractVariable& cl2)
-{ 
-    return &cl1 == &cl2;
-    }
-
-/**
-* =
-* @param cl1
-* @param cl2
-* @return =
-*/
-public
-= =(ClAbstractVariable& cl1, ClAbstractVariable& cl2)
-{ 
-    return &cl1 == &cl2;
-    }
-string my_name;
-long iVariableNumber;
-
-/*@c2j++ The following variable used to be declared global */
-/* @c2j++: "typedef ClAbstractVariable * PClAbstractVariable ;" replacement: * to " " */
-typedef ClAbstractVariable   PClAbstractVariable ; 
-
-/*@c2j++ The following variable used to be declared global */
-long ClAbstractVariable : : iVariableNumber = 0 ; 
+  private static long iVariableNumber;
 
 }

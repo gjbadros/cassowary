@@ -1,316 +1,145 @@
+// $Id$
+//
+// Cassowary Incremental Constraint Solver
+// Original Smalltalk Implementation by Alan Borning
+// This Java Implementation by Greg J. Badros, <gjb@cs.washington.edu>
+// http://www.cs.washington.edu/homes/gjb
+// (C) 1998, All Rights Reserved.
+//
+// (c) 1998 Alan Borning and Greg Badros.  This code is provided for use by
+// students for course projects in the course CSE 595 in the Department of
+// Computer Science and Engineering, University of Washington, during winter
+// quarter 1998.  Any other use requires written permission from the copyright
+// holders.
+//
+// ClSymbolicWeight
 
-/*
- * class ClSymbolicWeight
- * 
- * This code has been generated using C2J++
- * C2J++ is based on Chris Laffra's C2J (laffra@ms.com)
- * Read general disclaimer distributed with C2J++ before using this code
- * For information about C2J++, send mail to Ilya_Tilevich@ibi.com
- */
+import java.util.*;
 
 class ClSymbolicWeight
 {
 
-/**
-* ClSymbolicWeight
-*/
-public
-ClSymbolicWeight()
-{ }
-
-/**
-* ClSymbolicWeight
-
-public
-
-
-/**
-* ClSymbolicWeight
-
-public
-
-
-/**
-* ClSymbolicWeight
-* @param weights
-*/
-public
-ClSymbolicWeight(>& weights)
-{
- my_values = weights;
-	 }
-
-/**
-* zero
-* @return ClSymbolicWeight&
-*/
-public
-ClSymbolicWeight& zero()
-{
-  static ClSymbolicWeight Zero(0.0, 0.0, 0.0);
-  return Zero;
-}
-
-/**
-* times
-* @param n
-* @return ClSymbolicWeight
-*/
-public
-ClSymbolicWeight times(Number n)
-{
-  ClSymbolicWeight clsw(0);
-  vector<double>::const_iterator i = my_values.begin();
-  for (; i != my_values.end(); ++i)
-    {
-/* @c2j++: "clsw.push_back(*i * n);" replacement: * to " " */
-/* @c2j++: "clsw.push_back( i * n);" replacement: * to " " */
-    clsw.push_back( i   n);
+  public ClSymbolicWeight(int cLevels)
+    { 
+      my_values = new Vector(cLevels);
     }
-  return clsw;
-}
 
-/**
-* divideBy
-* @param n
-* @return ClSymbolicWeight
-*/
-public
-ClSymbolicWeight divideBy(Number n)
-{
-  assert(n!=0);
-  ClSymbolicWeight clsw(0);
-  vector<double>::const_iterator i = my_values.begin();
-  for (; i != my_values.end(); ++i)
-    {
-/* @c2j++: "clsw.push_back(*i / n);" replacement: * to " " */
-    clsw.push_back( i / n);
+  public ClSymbolicWeight(double w1, double w2, double w3)
+    { 
+      my_values = new Vector(3);
+      my_values.addElement( new Double(w1));
+      my_values.addElement( new Double(w2));
+      my_values.addElement( new Double(w3));
     }
-  return clsw;
-}
 
-/**
-* add
-* @param cl
-* @return ClSymbolicWeight
-*/
-public
-ClSymbolicWeight add(ClSymbolicWeight& cl)
-{
-  assert(cl.cLevels() == cLevels());
-
-  ClSymbolicWeight clsw(0);
-  vector<double>::const_iterator i1 = my_values.begin();
-  vector<double>::const_iterator i2 = cl.my_values.begin();
-  for (; i1 != my_values.end(); ++i1, ++i2)
-    {
-/* @c2j++: "clsw.push_back(*i1 + *i2);" replacement: * to " " */
-/* @c2j++: "clsw.push_back( i1 + *i2);" replacement: * to " " */
-    clsw.push_back( i1 +  i2);
+  public ClSymbolicWeight(Vector weights)
+    { 
+      my_values = (Vector) weights.clone();
     }
-  return clsw;
-}
 
-/**
-* subtract
-* @param cl
-* @return ClSymbolicWeight
-*/
-public
-ClSymbolicWeight subtract(ClSymbolicWeight& cl)
-{
-  assert(cl.cLevels() == cLevels());
+  public static final ClSymbolicWeight clsZero = new ClSymbolicWeight(0.0, 0.0, 0.0);
 
-  ClSymbolicWeight clsw(0);
-  vector<double>::const_iterator i1 = my_values.begin();
-  vector<double>::const_iterator i2 = cl.my_values.begin();
-  for (; i1 != my_values.end(); ++i1, ++i2)
+  public Object clone()
     {
-/* @c2j++: "clsw.push_back(*i1 - *i2);" replacement: * to " " */
-/* @c2j++: "clsw.push_back( i1 - *i2);" replacement: * to " " */
-    clsw.push_back( i1 -  i2);
+      return new ClSymbolicWeight(my_values);
     }
-  return clsw;
-}
 
-/**
-* lessThan
-* @param cl
-* @return bool
-*/
-public
-bool lessThan(ClSymbolicWeight& cl)
-{
-  return my_values < cl.my_values;
-}
-
-/**
-* lessThanOrEqual
-* @param cl
-* @return bool
-*/
-public
-bool lessThanOrEqual(ClSymbolicWeight& cl)
-{
-  return my_values <= cl.my_values;
-}
-
-/**
-* equal
-* @param cl
-* @return bool
-*/
-public
-bool equal(ClSymbolicWeight& cl)
-{
-  return my_values == cl.my_values;
-}
-
-/**
-* greaterThan
-* @param cl
-* @return bool
-*/
-public
-bool greaterThan(ClSymbolicWeight& cl)
-{
-  return my_values > cl.my_values;
-}
-
-/**
-* greaterThanOrEqual
-* @param cl
-* @return bool
-*/
-public
-bool greaterThanOrEqual(ClSymbolicWeight& cl)
-{
-  return my_values >= cl.my_values;
-}
-
-/**
-* isNegative
-* @return bool
-*/
-public
-bool isNegative()
-{
-  return my_values < zero().my_values;
-}
-
-/**
-* =
-* @param cl1
-* @param cl2
-* @return =
-*/
-public
-= =(ClSymbolicWeight& cl1, ClSymbolicWeight& cl2)
-{ return cl1.equal(cl2); }
-
-/**
-* =
-* @param cl1
-* @param cl2
-* @return =
-*/
-public
-= =(ClSymbolicWeight& cl1, ClSymbolicWeight& cl2)
-{ return cl1.equal(cl2); }
-
-/**
-* <
-* @param cl1
-* @param cl2
-* @return operator
-*/
-public
-operator <(ClSymbolicWeight& cl1, ClSymbolicWeight& cl2)
-{ return cl1.lessThan(cl2); }
-
-/**
-* >
-* @param cl1
-* @param cl2
-* @return operator
-*/
-public
-operator >(ClSymbolicWeight& cl1, ClSymbolicWeight& cl2)
-{ return (cl2 < cl1); }
-
-/**
-* asDouble
-* @return double
-*/
-public
-double asDouble()
-{
-    vector<double>::const_reverse_iterator i = my_values.rbegin();
-    if (i == my_values.rend())
-      return 0;
-/* @c2j++: "double sum  = *i;" replacement: * to " " */
-    double sum  =  i;
-    double factor = 1;
-    double multiplier = 1000;
-    for (++i; i != my_values.rend(); ++i) 
-      {
-/* @c2j++: "sum += *i * factor;" replacement: * to " " */
-/* @c2j++: "sum +=  i * factor;" replacement: * to " " */
-      sum +=  i   factor;
-/* @c2j++: "factor *= multiplier;" replacement: * to " " */
-      factor  = multiplier;
+  public ClSymbolicWeight times(double n)
+    {
+      ClSymbolicWeight clsw = (ClSymbolicWeight) clone();
+      for (int i = 0; i < my_values.size(); i++) {
+        clsw.my_values.setElementAt( new Double(
+	  ((Double) my_values.elementAt(i)).doubleValue() * n),i);
       }
-    return sum;
+      return clsw;
     }
 
-/**
-* printOn
-* @param xo
-* @return ostream &
-*/
-public
-/* @c2j++: "ostream & printOn(ostream& xo)" replacement:  &  to " " */
-ostream printOn(ostream& xo)
-{ 
-    vector<double>::const_iterator i = my_values.begin();
-    if (i == my_values.end())
-      return xo;
-
-/* @c2j++: "xo << *i;" replacement: * to " " */
-    xo <<  i;
-    for (++i; i != my_values.end(); ++i) 
-      {
-/* @c2j++: "xo << "," << *i;" replacement: * to " " */
-      xo << "," <<  i;
+  public ClSymbolicWeight divideBy(double n)
+    {
+      // assert(n != 0);
+      ClSymbolicWeight clsw = (ClSymbolicWeight) clone();
+      for (int i = 0; i < my_values.size(); i++) {
+        clsw.my_values.setElementAt(new Double(
+	   ((Double) my_values.elementAt(i)).doubleValue() / n),i);
       }
-    return xo;
+      return clsw;
     }
 
-/**
-* cLevels
-* @return int
-*/
-public
-int cLevels()
-{ return my_values.size(); }
+  public ClSymbolicWeight add(ClSymbolicWeight cl)
+    {
+      // assert(cl.cLevels() == cLevels());
+      
+      ClSymbolicWeight clsw = (ClSymbolicWeight) clone();
+      for (int i = 0; i < my_values.size(); i++) {
+        clsw.my_values.setElementAt((Double) clsw.my_values.elementAt(i) 
+				    + (Double) cl.my_values.elementAt(i), i);
+      }
+      return clsw;
+    }
 
-/**
-* <
-* @param xos
-* @param clsw
-* @return <
-*/
-public
-< <(ostream& xos, ClSymbolicWeight& clsw)
-{ clsw.printOn(xos); return xos; }
-> my_values;
+  public ClSymbolicWeight subtract(ClSymbolicWeight cl)
+    {
+      // assert(cl.cLevels() == cLevels());
 
-/**
-* push_back
-* @param d
-*/
-private
-void push_back(double d)
-{ my_values.push_back(d); }
+      ClSymbolicWeight clsw = (ClSymbolicWeight) clone();
+      for (int i = 0; i < my_values.size(); i++) {
+        clsw.my_values.setElementAt((Double) clsw.my_values.elementAt(i)
+				    - (Double) cl.my_values.elementAt(i),i);
+      }
+      return clsw;
+    }
+
+  public boolean lessThan(ClSymbolicWeight cl)
+    {
+      return my_values < cl.my_values;
+    }
+  
+  public boolean lessThanOrEqual(ClSymbolicWeight cl)
+    {
+      return my_values <= cl.my_values;
+    }
+  
+  public
+    boolean equal(ClSymbolicWeight cl)
+    {
+      return my_values == cl.my_values;
+    }
+
+  public boolean greaterThan(ClSymbolicWeight cl)
+    {
+      return my_values > cl.my_values;
+    }
+
+  public boolean greaterThanOrEqual(ClSymbolicWeight cl)
+    {
+      return my_values >= cl.my_values;
+    }
+  
+  public boolean isNegative()
+    {
+      return my_values < zero().my_values;
+    }
+
+  public double asDouble()
+    {
+      ClSymbolicWeight clsw = clone();
+      double sum  =  i;
+      double factor = 1;
+      double multiplier = 1000;
+      for (int i = my_values.size(); i >= 0; i--) 
+        {
+	sum += i *  factor;
+	factor *= multiplier;
+	}
+      return sum;
+    }
+  
+  public String toString()
+    { return my_values.toString(); }
+
+  public int cLevels()
+    { return my_values.size(); }
+
+  private Vector my_values;
 
 }

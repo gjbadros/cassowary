@@ -1,126 +1,65 @@
+// $Id$
+//
+// Cassowary Incremental Constraint Solver
+// Original Smalltalk Implementation by Alan Borning
+// This Java Implementation by Greg J. Badros, <gjb@cs.washington.edu>
+// http://www.cs.washington.edu/homes/gjb
+// (C) 1998, All Rights Reserved.
+//
+// (c) 1998 Alan Borning and Greg Badros.  This code is provided for use by
+// students for course projects in the course CSE 595 in the Department of
+// Computer Science and Engineering, University of Washington, during winter
+// quarter 1998.  Any other use requires written permission from the copyright
+// holders.
+//
+// ClConstraint
+//
 
-/*
- * class ClConstraint
- * 
- * This code has been generated using C2J++
- * C2J++ is based on Chris Laffra's C2J (laffra@ms.com)
- * Read general disclaimer distributed with C2J++ before using this code
- * For information about C2J++, send mail to Ilya_Tilevich@ibi.com
- */
+import java.lang.*;
 
-class ClConstraint
+
+abstract class ClConstraint
 {
 
-/**
-* ClConstraint
-*/
-public
-ClConstraint()
-{ }
+  public ClConstraint(ClStrength strength, double weight)
+    { my_strength = strength; my_weight = weight; }
 
-/**
-* ClConstraint
-*/
-public
-ClConstraint()
-{ }
+  public ClConstraint(ClStrength strength)
+    { my_strength = strength; my_weight = 1.0; }
 
-/**
-* expression
+  public ClConstraint()
+    { my_strength = clsRequired; my_weight = 1.0; }
+  
+  public abstract ClLinearExpression expression();
 
-public
+  public boolean isEditConstraint()
+    { return false; }
 
+  public boolean isInequality()
+    { return false; }
 
-/**
-* isEditConstraint
-* @return bool
-*/
-public
-bool isEditConstraint()
-{ return false; }
+  public boolean isRequired()
+    { return my_strength.isRequired(); }
 
-/**
-* isInequality
-* @return bool
-*/
-public
-bool isInequality()
-{ return false; }
+  public boolean isStayConstraint()
+    { return false; }
 
-/**
-* isRequired
-* @return bool
-*/
-public
-bool isRequired()
-{ return my_strength.isRequired(); }
+  public ClStrength strength()
+    { return my_strength; }
 
-/**
-* isStayConstraint
-* @return bool
-*/
-public
-bool isStayConstraint()
-{ return false; }
+  public double weight()
+    { return my_weight; }
 
-/**
-* strength
-* @return ClStrength
-*/
-public
-ClStrength strength()
-{ return my_strength; }
+  public String printString()
+    { return " {" + weight() + "} (" + expression().printString(); }
 
-/**
-* weight
-* @return double
-*/
-public
-double weight()
-{ return my_weight; }
+  private void setStrength(ClStrength strength)
+    { my_strength = strength; }
 
-/**
-* printOn
-* @param xo
-* @return ostream&
-*/
-public
-ostream& printOn(ostream& xo)
-{
-  xo << strength() << " {" << weight() << "} (" << expression();
-  return xo;
-}
+  private void setWeight(double weight)
+    { my_weight = weight; }
 
-/**
-* <
-* @param xos
-* @param constraint
-* @return <
-*/
-public
-< <(ostream& xos, ClConstraint& constraint)
-{ constraint.printOn(xos); return xos; }
-
-/**
-* setStrength
-* @param strength
-*/
-private
-void setStrength(ClStrength& strength)
-{ my_strength = strength; }
-
-/**
-* setWeight
-* @param weight
-*/
-private
-void setWeight(double weight)
-{ my_weight = weight; }
-ClStrength my_strength;
-double my_weight;
-
-/*@c2j++ The following variable used to be declared global */
-/* @c2j++: "typedef ClConstraint * PClConstraint ;" replacement: * to " " */
-typedef ClConstraint   PClConstraint ; 
+  private ClStrength my_strength;
+  private double my_weight;
 
 }

@@ -1,12 +1,19 @@
-
-/*
- * class ClLinearExpression
- * 
- * This code has been generated using C2J++
- * C2J++ is based on Chris Laffra's C2J (laffra@ms.com)
- * Read general disclaimer distributed with C2J++ before using this code
- * For information about C2J++, send mail to Ilya_Tilevich@ibi.com
- */
+// $Id$
+//
+// Cassowary Incremental Constraint Solver
+// Original Smalltalk Implementation by Alan Borning
+// This Java Implementation by Greg J. Badros, <gjb@cs.washington.edu>
+// http://www.cs.washington.edu/homes/gjb
+// (C) 1998, All Rights Reserved.
+//
+// (c) 1998 Alan Borning and Greg Badros.  This code is provided for use by
+// students for course projects in the course CSE 595 in the Department of
+// Computer Science and Engineering, University of Washington, during winter
+// quarter 1998.  Any other use requires written permission from the copyright
+// holders.
+//
+// ClLinearExpression
+//
 
 class ClLinearExpression
 {
@@ -480,10 +487,10 @@ void incrementConstant(Number c)
 
 /**
 * isConstant
-* @return bool
+* @return boolean
 */
 public
-bool isConstant()
+boolean isConstant()
 { return my_terms.size() == 0; }
 
 /**
@@ -573,6 +580,56 @@ ClLinearExpression e1;
 */
 public
 = =(ClLinearExpression& e1, ClLinearExpression& e2)
+{ return &e1 == &e2; }
+
+/**
+* Plus
+* @param e1
+* @param e2
+* @return ClLinearExpression
+*/
+public
+ClLinearExpression Plus(ClLinearExpression& e1, ClLinearExpression& e2)
+{ return e1.plus(e2); }
+
+/**
+* Minus
+* @param e1
+* @param e2
+* @return ClLinearExpression
+*/
+public
+ClLinearExpression Minus(ClLinearExpression& e1, ClLinearExpression& e2)
+{ return e1.minus(e2); }
+
+/**
+* Times
+* @param e1
+* @param e2
+* @return ClLinearExpression
+*/
+public
+ClLinearExpression Times(ClLinearExpression& e1, ClLinearExpression& e2)
+{ return e1.times(e2); }
+
+/**
+* Divide
+* @param e1
+* @param e2
+* @return ClLinearExpression
+*/
+public
+ClLinearExpression Divide(ClLinearExpression& e1, ClLinearExpression& e2)
+{ return e1.divide(e2); }
+
+/**
+* FEquals
+* @param e1
+* @param e2
+* @return boolean
+*/
+public
+boolean FEquals(ClLinearExpression& e1, ClLinearExpression& e2)
 { return &e1 == &e2; }
 
 /**
