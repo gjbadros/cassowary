@@ -38,12 +38,16 @@ JAVAFILES = \
 	ClParseTest.java \
 	Timer.java
 
-SUBDIRS=demos cda
+# Force prefix ordering
+SUBDIRS=. demos cda
 
 EXTRA_DIST=$(JAVAFILES) ClReader.cup ClReader.lex
 
 if HAVE_JAVA
 java_JAVA = $(JAVAFILES)
+
+demos: ../EDU
+
 
 test:
 	java EDU.Washington.grad.gjb.cassowary.ClTests
