@@ -10,9 +10,9 @@ AC_INIT(c++/ClSimplexSolver.cc)
 AC_PREREQ(2.4)
 
 dnl ## Initialize automake ##
-AM_INIT_AUTOMAKE(cassowary, 0.41)
+AM_INIT_AUTOMAKE(cassowary, 0.42)
 AM_MAINTAINER_MODE
-AM_CONFIG_HEADER(c++/cassowary/config.h)
+AM_CONFIG_HEADER(c++/config.h)
 
 dnl ## Checks for programs ##
 AC_PROG_CC
@@ -61,6 +61,16 @@ AC_ARG_ENABLE(trace,
   fi
 ])
 
+AC_ARG_ENABLE(cpp_build, [ --disable-cpp-build  Do not build C++ version ],
+		enable_cpp_build=no, enable_cpp_build=yes)
+if test x"$enable_cpp_build" = x"no" ; then
+    HAVE_CPP="false"
+else
+    HAVE_CPP="true"
+fi
+AM_CONDITIONAL(HAVE_CPP, test "true" = "$HAVE_CPP")
+
+
 
 AC_ARG_ENABLE(hash_map_and_set,
 [  --enable-hash-map-and-set  Use hash_map, hash_set for the tableau data structures]
@@ -93,12 +103,6 @@ AC_ARG_ENABLE(warnings,
 ])
 AC_SUBST(CPPEXTRAFLAGS)
 
-
-JAVACFLAGS="-g -O"
-AC_ARG_ENABLE(javac-flags,
-[  --enable-javac-flags=FLAGS Set the javac compile flags to FLAGS]
-,[JAVACFLAGS="$enableval"])
-AC_SUBST(JAVACFLAGS)
 
 
 guile_prefix=${prefix}
@@ -165,19 +169,29 @@ AC_SUBST(GUILE_INCLUDES)
 AC_SUBST(GUILE_BIN_DIR)
 AC_SUBST(GUILE_LIB_DIR)
 AC_SUBST(GUILE_PKGDATA_DIR)
+AM_CONDITIONAL(HAVE_GUILE, test "yes" = "$GUILE_CONFIG_works" -a -d "$GUILE_INCLUDES")
 
-PYTHON_HEADERS=${prefix}/python1.5
+
+PYTHON_HEADER_DIR=${prefix}/python-1.5
 
 ACE_ARG_PATH(python-headers,
 [  --with-python-headers=DIR    Expect Python headers to be installed in DIR [optional]],
 [
 	AC_MSG_CHECKING(where to find python headers)
-	PYTHON_HEADERS="${withval}"
+	PYTHON_HEADER_DIR="${withval}"
 	
 	AC_MSG_RESULT("${python_headers}")
 ])
 
-AC_SUBST(PYTHON_HEADERS)
+AC_SUBST(PYTHON_HEADER_DIR)
+
+if test -d ${PYTHON_HEADER_DIR}; then
+  HAVE_PYTHON=yes
+else
+  HAVE_PYTHON=no
+fi
+AM_CONDITIONAL(HAVE_PYTHON, test "true" = "$HAVE_PYTHON")
+
 
 
 JAVA_CLASS_PATH="./classes"
@@ -192,6 +206,29 @@ ACE_ARG_PATH(java-class-path,
 ])
 
 AC_SUBST(JAVA_CLASS_PATH)
+
+if test -d ${JAVA_CLASS_PATH}; then
+  HAVE_JAVA=yes
+else
+  HAVE_JAVA=no
+fi
+
+
+JAVACFLAGS="-g -O"
+AC_ARG_ENABLE(javac-flags,
+[  --enable-javac-flags=FLAGS Set the javac compile flags to FLAGS]
+,[JAVACFLAGS="$enableval"])
+AC_SUBST(JAVACFLAGS)
+
+AC_ARG_ENABLE(java_build, [ --disable-java-build  Do not build java ],
+		enable_java_build=no, enable_java_build=yes)
+if test x"$enable_java_build" = x"no" ; then
+    HAVE_JAVA="false"
+else
+    HAVE_JAVA="true"
+fi
+AM_CONDITIONAL(HAVE_JAVA, test "true" = "$HAVE_JAVA")
+
 
 AC_OUTPUT(
 	Makefile \
@@ -208,17 +245,17 @@ AC_OUTPUT(
 # (needed in case another package uses autoconf and includes the Cassowary
 #  header files -- w/o this hack the two config.h files and their defs would
 #  conflict and cause at least warnings, and maybe really bad things --03/18/99 gjb)
-grep '#define CL_' c++/cassowary/config.h > c++/cassowary/config-inline-check.h || true
-echo "" >> c++/cassowary/config-inline-check.h  # add a newline
+d=c++
+grep '#define CL_' $d/config.h > $d/config-inline-check.h || true
+echo "" >> $d/config-inline-check.h  # add a newline
 
 # replace config-inline.h only if the new version is different
 # (avoid rebuilding everything)
-d=c++/cassowary
 if test ! -f $d/config-inline.h; then 
    mv $d/config-inline-check.h $d/config-inline.h && echo "creating $d/config-inline.h"
 else
    if diff -q $d/config-inline-check.h $d/config-inline.h >/dev/null 2>&1; then
-      echo "$d/config-inline.h is unchanged" }
+      echo "$d/config-inline.h is unchanged"
    else
       mv -f $d/config-inline-check.h $d/config-inline.h && echo "creating $d/config-inline.h"
    fi

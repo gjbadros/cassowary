@@ -18,7 +18,7 @@ CFLAGS = -g -Wall -I../c++
 EGCSDIR = /uns/egcs
 CXX = $(CPP)
 SWIG = swig
-PYTHON_INCLUDE = @PYTHON_HEADERS@
+PYTHON_INCLUDE = @PYTHON_HEADER_DIR@
 
 LIB=cassowary
 LIB_FILE=../c++/lib$(LIB).a

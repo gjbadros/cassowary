@@ -16,9 +16,8 @@ autoheader
 # Generate configure from configure.in and aclocal.m4
 autoconf
 
-# Rrun ./config.status, if it exists,
+# Rerun ./config.status, if it exists,
 # to create new Makefiles under modules/* directories (e.g., modules/pie-menus)
 # (Note that this only is useful if builddir == scrdir, otherwise the
 #  user may need to run config.status from their builddir(s) manually)
-test -x ./config.status && ./config.status
-
+test -x ./config.status && ./config.status || true
