@@ -52,6 +52,24 @@ class ClLinearInequality : public ClLinearConstraint {
      }
    }
 
+ ClLinearInequality(const ClLinearExpression &cle1,
+		    ClInequalityOperator op,
+		    const ClLinearExpression &cle2,
+		    const ClStrength strength = clsRequired(),
+		    double weight = 1.0) :
+   ClLinearConstraint( cle2, strength, weight)
+   { 
+   if (op == cnGEQ)
+     {
+     my_expression.multiplyMe(-1.0);
+     my_expression.addExpression(cle1);
+     }
+   else // op == cnLEQ
+     {
+     my_expression.addExpression(cle1,-1.0);
+     }
+   }
+
  
  // Return true if this is an inequality constraint and
  // false if it is an equality constraint.  The default is
