@@ -1,3 +1,15 @@
+Tue Nov 16 17:34:00 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* java/ClTestColumns.java, java/ClTests.java: Put in the cassowary 
+	package, instead of importing cassowary.*;  jikes needed this
+	(discovered during testing of java-ml work).
+
+Sat Nov 13 11:43:48 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* java/Timer.java (Timer): Remove return type from Timer()
+	constructor (jikes caught the bug when I used this as a test case
+	for my java-ml work).
+
 Sun Oct 24 13:17:14 1999  Greg J. Badros  <gjb@cs.washington.edu>
 
 	* configure.in: Updated version to 0.53, generate
