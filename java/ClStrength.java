@@ -12,12 +12,12 @@
 class ClStrength
 {
   public ClStrength(String name, ClSymbolicWeight symbolicWeight)
-    {  my_name = name;	my_symbolicWeight = symbolicWeight; }
+    {  _name = name;	_symbolicWeight = symbolicWeight; }
 
   public ClStrength(String name, double w1, double w2, double w3)
     {
-      my_name = name;
-      my_symbolicWeight = new ClSymbolicWeight(w1,w2,w3);
+      _name = name;
+      _symbolicWeight = new ClSymbolicWeight(w1,w2,w3);
     }
 
   public boolean isRequired()
@@ -27,16 +27,16 @@ class ClStrength
     { return name () + (!isRequired()? (":" + symbolicWeight()) : ""); }
 
   public ClSymbolicWeight symbolicWeight()
-    { return my_symbolicWeight; }
+    { return _symbolicWeight; }
 
   public String name()
-    { return my_name; }
+    { return _name; }
 
   public void set_name(String name)
-    { my_name = name; }
+    { _name = name; }
 
   public void set_symbolicWeight(ClSymbolicWeight symbolicWeight)
-    { my_symbolicWeight = symbolicWeight; }
+    { _symbolicWeight = symbolicWeight; }
 
   public static final ClStrength required = new ClStrength("<Required>", 1000, 1000, 1000);
 
@@ -46,8 +46,8 @@ class ClStrength
 
   public static final ClStrength weak = new ClStrength("weak", 0.0, 0.0, 1.0);
 
-  private String my_name;
+  private String _name;
 
-  private ClSymbolicWeight my_symbolicWeight;
+  private ClSymbolicWeight _symbolicWeight;
   
 }

@@ -16,29 +16,29 @@ abstract class ClAbstractVariable
   public ClAbstractVariable(String name)
     {
       //hash_code = iVariableNumber;
-      my_name = name;
+      _name = name;
       iVariableNumber++;
     }
 
   public ClAbstractVariable()
     {
       //hash_code = iVariableNumber;
-      my_name = "v" + iVariableNumber;
+      _name = "v" + iVariableNumber;
       iVariableNumber++;
     }
 
   public ClAbstractVariable(long varnumber, String prefix)
     {
       //hash_code = iVariableNumber;
-      my_name = prefix + varnumber;
+      _name = prefix + varnumber;
       iVariableNumber++;
     }
 
   public String name()
-    { return my_name; }
+    { return _name; }
   
   public void setName(String name)
-    { my_name = name; }
+    { _name = name; }
   
   public boolean isDummy()
     { return false; }
@@ -57,7 +57,7 @@ abstract class ClAbstractVariable
   // for debugging
   //  public final int hashCode() { return hash_code; }
 
-  private String my_name;
+  private String _name;
 
   // for debugging
   // private int hash_code;

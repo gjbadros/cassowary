@@ -16,29 +16,29 @@ class ClSimplexSolver extends ClTableau
 {
   public ClSimplexSolver()
   {
-    my_editMinusErrorVars = new Vector();
-    my_editPlusErrorVars = new Vector();
-    my_stayMinusErrorVars = new Vector();
-    my_stayPlusErrorVars = new Vector();
-    my_prevEditConstants = new Vector();
-    my_errorVars = new Hashtable();
-    my_markerVars = new Hashtable();
+    _editMinusErrorVars = new Vector();
+    _editPlusErrorVars = new Vector();
+    _stayMinusErrorVars = new Vector();
+    _stayPlusErrorVars = new Vector();
+    _prevEditConstants = new Vector();
+    _errorVars = new Hashtable();
+    _markerVars = new Hashtable();
 
-    my_resolve_pair = new Vector(2);
-    my_resolve_pair.addElement(new ClDouble(0));
-    my_resolve_pair.addElement(new ClDouble(0));
+    _resolve_pair = new Vector(2);
+    _resolve_pair.addElement(new ClDouble(0));
+    _resolve_pair.addElement(new ClDouble(0));
 
-    my_objective = new ClObjectiveVariable("Z");
+    _objective = new ClObjectiveVariable("Z");
 
-    my_editVarMap = new Hashtable();
+    _editVarMap = new Hashtable();
 
-    my_slackCounter = 0;
-    my_artificialCounter = 0;
-    my_dummyCounter = 0;
-    my_epsilon = 1e-8;
+    _slackCounter = 0;
+    _artificialCounter = 0;
+    _dummyCounter = 0;
+    _epsilon = 1e-8;
     ClLinearExpression e = new ClLinearExpression();
-    my_rows.put(my_objective,e);
-    if (fTraceOn) traceprint("objective expr == " + rowExpression(my_objective));
+    _rows.put(_objective,e);
+    if (fTraceOn) traceprint("objective expr == " + rowExpression(_objective));
   }
 
   public final ClSimplexSolver addLowerBound(ClAbstractVariable v, double lower)
@@ -82,12 +82,12 @@ class ClSimplexSolver extends ClTableau
       // could not add directly
       addWithArtificialVariable(expr);
     }
-    optimize(my_objective);
+    optimize(_objective);
     setExternalVariables();
     if (cn.isEditConstraint()) {
-      int i = my_prevEditConstants.size() - 1;
+      int i = _prevEditConstants.size() - 1;
       ClEditConstraint cnEdit = (ClEditConstraint) cn;
-      my_editVarMap.put(cnEdit.variable(), new ClConstraintAndIndex(cnEdit,i));
+      _editVarMap.put(cnEdit.variable(), new ClConstraintAndIndex(cnEdit,i));
     }
     return  this;
   }
@@ -130,7 +130,7 @@ class ClSimplexSolver extends ClTableau
   public final ClSimplexSolver removeEditVar(ClVariable v)
     throws ExCLInternalError, ExCLConstraintNotFound
   {
-    ClConstraintAndIndex cai = (ClConstraintAndIndex) my_editVarMap.get(v);
+    ClConstraintAndIndex cai = (ClConstraintAndIndex) _editVarMap.get(v);
     ClConstraint cn = cai.Constraint();
     removeConstraint(cn);
     return this;
@@ -139,9 +139,9 @@ class ClSimplexSolver extends ClTableau
   public final ClSimplexSolver beginEdit()
     throws ExCLInternalError
   {
-    assert(my_editVarMap.size() > 0);
+    assert(_editVarMap.size() > 0);
     // may later want to do more in here
-    my_infeasibleRows.clear();
+    _infeasibleRows.clear();
     resetStayConstants();
     return this;
   }
@@ -149,7 +149,7 @@ class ClSimplexSolver extends ClTableau
   public final ClSimplexSolver endEdit()
     throws ExCLInternalError
   {
-    assert(my_editVarMap.size() > 0);
+    assert(_editVarMap.size() > 0);
     removeAllEditVars();
     // may later want to do more in here
     return this;
@@ -160,12 +160,12 @@ class ClSimplexSolver extends ClTableau
   {
     try
       {
-        for (Enumeration e = my_editVarMap.keys(); e.hasMoreElements() ; ) {
+        for (Enumeration e = _editVarMap.keys(); e.hasMoreElements() ; ) {
           ClVariable v = (ClVariable) e.nextElement();
           removeEditVar(v);
         }
         
-        my_editVarMap.clear();
+        _editVarMap.clear();
         
         return this;
       }
@@ -250,9 +250,9 @@ class ClSimplexSolver extends ClTableau
 
     resetStayConstants();
     
-    ClLinearExpression zRow = rowExpression(my_objective);
+    ClLinearExpression zRow = rowExpression(_objective);
     
-    Set eVars = (Set) my_errorVars.get(cn);
+    Set eVars = (Set) _errorVars.get(cn);
     if (fTraceOn) traceprint("eVars == " + eVars);
 
     if (eVars != null) {
@@ -262,16 +262,16 @@ class ClSimplexSolver extends ClTableau
 	if (expr == null ) {
 	  zRow.addVariable(clv, -1.0 * 
 			    cn.strength().symbolicWeight().asDouble(),
-			    my_objective, this);
+			    _objective, this);
 	} else { // the error variable was in the basis
 	  zRow.addExpression(expr, -1.0 *
 			     cn.strength().symbolicWeight().asDouble(),
-			     my_objective, this);
+			     _objective, this);
 	}
       }
     }
     
-    ClAbstractVariable marker = (ClAbstractVariable) my_markerVars.remove(cn);
+    ClAbstractVariable marker = (ClAbstractVariable) _markerVars.remove(cn);
     if (marker == null) {
       throw new ExCLConstraintNotFound();
     }
@@ -280,7 +280,7 @@ class ClSimplexSolver extends ClTableau
 
     if (rowExpression(marker) == null ) {
       // not in the basis, so need to do some work
-      Set col = (Set) my_columns.get(marker);
+      Set col = (Set) _columns.get(marker);
 
       if (fTraceOn) traceprint("Must pivot -- columns are " + col);
 
@@ -349,9 +349,9 @@ class ClSimplexSolver extends ClTableau
 
     if (cn.isStayConstraint()) {
       if (eVars != null) {
-	for (int i = 0; i < my_stayPlusErrorVars.size(); i++) {
-	  eVars.remove(my_stayPlusErrorVars.elementAt(i));
-	  eVars.remove(my_stayMinusErrorVars.elementAt(i));
+	for (int i = 0; i < _stayPlusErrorVars.size(); i++) {
+	  eVars.remove(_stayPlusErrorVars.elementAt(i));
+	  eVars.remove(_stayMinusErrorVars.elementAt(i));
 	}
       }
     } else if (cn.isEditConstraint()) {
@@ -359,31 +359,31 @@ class ClSimplexSolver extends ClTableau
       for (Enumeration e = eVars.elements(); e.hasMoreElements(); ) {
 	final ClAbstractVariable var = (ClAbstractVariable) e.nextElement();
 	int i = 0;
-	for ( ; i < my_editPlusErrorVars.size(); i++) {
-	  if ( my_editPlusErrorVars.elementAt(i) == var) break;
+	for ( ; i < _editPlusErrorVars.size(); i++) {
+	  if ( _editPlusErrorVars.elementAt(i) == var) break;
 	}
-	if (i != my_editPlusErrorVars.size()) {
+	if (i != _editPlusErrorVars.size()) {
 	  // found it
           // the plus error vars (ep*) are the markers, so they get removed
           // elsewhere, but we need to be sure to remove the minus error vars (em*)
-          removeColumn( (ClAbstractVariable) my_editMinusErrorVars.elementAt(i));
-	  my_editPlusErrorVars.removeElementAt(i);
-	  my_editMinusErrorVars.removeElementAt(i);
-	  my_prevEditConstants.removeElementAt(i);
+          removeColumn( (ClAbstractVariable) _editMinusErrorVars.elementAt(i));
+	  _editPlusErrorVars.removeElementAt(i);
+	  _editMinusErrorVars.removeElementAt(i);
+	  _prevEditConstants.removeElementAt(i);
 	  break;
 	}
       }
       ClEditConstraint cnEdit = (ClEditConstraint) cn;
-      my_editVarMap.remove(cnEdit.variable());
+      _editVarMap.remove(cnEdit.variable());
     }
 
     // FIXGJB do the remove at top
     if (eVars != null) {
-      my_errorVars.remove(eVars);
+      _errorVars.remove(eVars);
     }
     marker = null;
 
-    optimize(my_objective);
+    optimize(_objective);
     setExternalVariables();
     return  this;
   }
@@ -399,7 +399,7 @@ class ClSimplexSolver extends ClTableau
        throws ExCLInternalError
   {
     if (fTraceOn) fnenterprint("resolve" + newEditConstants);
-    my_infeasibleRows.clear();
+    _infeasibleRows.clear();
     resetStayConstants();
     resetEditConstants(newEditConstants);
     dualOptimize();
@@ -409,9 +409,9 @@ class ClSimplexSolver extends ClTableau
   public final void resolve(double x, double y)
        throws ExCLInternalError
   {
-    ((ClDouble) my_resolve_pair.elementAt(0)).setValue(x);
-    ((ClDouble) my_resolve_pair.elementAt(1)).setValue(y);
-    resolve(my_resolve_pair);
+    ((ClDouble) _resolve_pair.elementAt(0)).setValue(x);
+    ((ClDouble) _resolve_pair.elementAt(1)).setValue(y);
+    resolve(_resolve_pair);
   }
 
   public final void resolve()
@@ -420,7 +420,7 @@ class ClSimplexSolver extends ClTableau
     if (fTraceOn) fnenterprint("resolve()");
     dualOptimize();
     setExternalVariables();
-    my_infeasibleRows.clear();
+    _infeasibleRows.clear();
     resetStayConstants();
   }
 
@@ -428,17 +428,17 @@ class ClSimplexSolver extends ClTableau
     throws ExCLError
   {
     if (fTraceOn) fnenterprint("suggestValue(" + v + ", " + x + ")");
-    ClConstraintAndIndex cai = (ClConstraintAndIndex) my_editVarMap.get(v);
+    ClConstraintAndIndex cai = (ClConstraintAndIndex) _editVarMap.get(v);
     if (cai == null) {
       System.err.println("suggestValue for variable " + v + ", but var is not an edit variable\n");
       throw new ExCLError();
     }
     int i = cai.Index();
-    double delta = x - ((ClDouble) my_prevEditConstants.elementAt(i)).doubleValue();
-    my_prevEditConstants.setElementAt(new ClDouble(x),i);
+    double delta = x - ((ClDouble) _prevEditConstants.elementAt(i)).doubleValue();
+    _prevEditConstants.setElementAt(new ClDouble(x),i);
     deltaEditConstant(delta,
-                      (ClAbstractVariable) my_editPlusErrorVars.elementAt(i),
-                      (ClAbstractVariable) my_editMinusErrorVars.elementAt(i));
+                      (ClAbstractVariable) _editPlusErrorVars.elementAt(i),
+                      (ClAbstractVariable) _editMinusErrorVars.elementAt(i));
     return this;
   }
 
@@ -447,15 +447,15 @@ class ClSimplexSolver extends ClTableau
     StringBuffer retstr = new StringBuffer(super.getInternalInfo());
     retstr.append("\nSolver info:\n");
     retstr.append("Edit Error Variables: ");
-    retstr.append(my_editPlusErrorVars.size() + my_editMinusErrorVars.size());
-    retstr.append(" (" + my_editPlusErrorVars.size() + " +, ");
-    retstr.append(my_editMinusErrorVars.size() + " -)\n");
+    retstr.append(_editPlusErrorVars.size() + _editMinusErrorVars.size());
+    retstr.append(" (" + _editPlusErrorVars.size() + " +, ");
+    retstr.append(_editMinusErrorVars.size() + " -)\n");
     retstr.append("Stay Error Variables: ");
-    retstr.append(my_stayPlusErrorVars.size() + my_stayMinusErrorVars.size());
-    retstr.append(" (" + my_stayPlusErrorVars.size() + " +, ");
-    retstr.append(my_stayMinusErrorVars.size() + " -)\n");
-    retstr.append("Edit Constants: " + my_prevEditConstants.size());
-    retstr.append("Edit Variables: " + my_editVarMap.size());
+    retstr.append(_stayPlusErrorVars.size() + _stayMinusErrorVars.size());
+    retstr.append(" (" + _stayPlusErrorVars.size() + " +, ");
+    retstr.append(_stayMinusErrorVars.size() + " -)\n");
+    retstr.append("Edit Constants: " + _prevEditConstants.size());
+    retstr.append("Edit Variables: " + _editVarMap.size());
     retstr.append("\n");
     return retstr.toString();
   }
@@ -470,18 +470,18 @@ class ClSimplexSolver extends ClTableau
   public final String toString()
   { 
     StringBuffer bstr = new StringBuffer(super.toString());
-    bstr.append("my_editPlusErrorVars: ");
-    bstr.append(my_editPlusErrorVars);
-    bstr.append("\nmy_editMinusErrorVars: ");
-    bstr.append(my_editMinusErrorVars);
+    bstr.append("_editPlusErrorVars: ");
+    bstr.append(_editPlusErrorVars);
+    bstr.append("\n_editMinusErrorVars: ");
+    bstr.append(_editMinusErrorVars);
 
-    bstr.append("\nmy_stayPlusErrorVars: ");
-    bstr.append(my_stayPlusErrorVars);
-    bstr.append("\nmy_stayMinusErrorVars: ");
-    bstr.append(my_stayMinusErrorVars);
+    bstr.append("\n_stayPlusErrorVars: ");
+    bstr.append(_stayPlusErrorVars);
+    bstr.append("\n_stayMinusErrorVars: ");
+    bstr.append(_stayMinusErrorVars);
 
-    bstr.append("\nmy_prevEditConstants: ");
-    bstr.append(my_prevEditConstants);
+    bstr.append("\n_prevEditConstants: ");
+    bstr.append(_prevEditConstants);
 
     bstr.append("\n");
     return bstr.toString();
@@ -492,7 +492,7 @@ class ClSimplexSolver extends ClTableau
   {
     if (fTraceOn) fnenterprint("addWithArtificialVariable: " + expr);
   
-    ClSlackVariable av = new ClSlackVariable(++my_artificialCounter,"a");
+    ClSlackVariable av = new ClSlackVariable(++_artificialCounter,"a");
     ClObjectiveVariable az = new ClObjectiveVariable("az");
     ClLinearExpression azRow = (ClLinearExpression) expr.clone();
 
@@ -578,9 +578,9 @@ class ClSimplexSolver extends ClTableau
 	// we haven't found an restricted variable yet
 	if (v.isRestricted()) {
 	  if (!foundNewRestricted && !v.isDummy() && c < 0.0) {
-	    final Set col = (Set) my_columns.get(v);
+	    final Set col = (Set) _columns.get(v);
 	    if (col == null || 
-		( col.size() == 1 && columnsHasKey(my_objective) ) ) {
+		( col.size() == 1 && columnsHasKey(_objective) ) ) {
 	    subject = v;
 	    foundNewRestricted = true;
 	    }
@@ -627,7 +627,7 @@ class ClSimplexSolver extends ClTableau
       exprPlus.incrementConstant(delta);
       
       if (exprPlus.constant() < 0.0) {
-	my_infeasibleRows.insert(plusErrorVar);
+	_infeasibleRows.insert(plusErrorVar);
       }
       return;
     }
@@ -636,12 +636,12 @@ class ClSimplexSolver extends ClTableau
     if (exprMinus != null) {
       exprMinus.incrementConstant(-delta);
       if (exprMinus.constant() < 0.0) {
-	my_infeasibleRows.insert(minusErrorVar);
+	_infeasibleRows.insert(minusErrorVar);
       }
       return;
     }
 
-    Set columnVars = (Set) my_columns.get(minusErrorVar);
+    Set columnVars = (Set) _columns.get(minusErrorVar);
     
     for (Enumeration e = columnVars.elements(); e.hasMoreElements() ; ) {
       final ClAbstractVariable basicVar = (ClAbstractVariable) e.nextElement();
@@ -650,7 +650,7 @@ class ClSimplexSolver extends ClTableau
       final double c = expr.coefficientFor(minusErrorVar);
       expr.incrementConstant(c * delta);
       if (basicVar.isRestricted() && expr.constant() < 0.0) {
-	my_infeasibleRows.insert(basicVar);
+	_infeasibleRows.insert(basicVar);
       }
     }
   }
@@ -659,11 +659,11 @@ class ClSimplexSolver extends ClTableau
        throws ExCLInternalError
   {
     if (fTraceOn) fnenterprint("dualOptimize:");
-    final ClLinearExpression zRow = rowExpression(my_objective);
-    while (!my_infeasibleRows.isEmpty()) {
+    final ClLinearExpression zRow = rowExpression(_objective);
+    while (!_infeasibleRows.isEmpty()) {
       ClAbstractVariable exitVar = 
-	(ClAbstractVariable) my_infeasibleRows.elements().nextElement();
-      my_infeasibleRows.remove(exitVar);
+	(ClAbstractVariable) _infeasibleRows.elements().nextElement();
+      _infeasibleRows.remove(exitVar);
       ClAbstractVariable entryVar = null;
       ClLinearExpression expr = rowExpression(exitVar);
       if (expr != null ) {
@@ -717,38 +717,38 @@ class ClSimplexSolver extends ClTableau
     }
 
     if (cn.isInequality()) {
-      ++my_slackCounter;
-      slackVar = new ClSlackVariable (my_slackCounter, "s");
+      ++_slackCounter;
+      slackVar = new ClSlackVariable (_slackCounter, "s");
       expr.setVariable(slackVar,-1);
-      my_markerVars.put(cn,slackVar);
+      _markerVars.put(cn,slackVar);
       if (!cn.isRequired()) {
-	++my_slackCounter;
-	eminus = new ClSlackVariable(my_slackCounter, "em");
+	++_slackCounter;
+	eminus = new ClSlackVariable(_slackCounter, "em");
 	expr.setVariable(eminus,1.0);
-	ClLinearExpression zRow = rowExpression(my_objective);
+	ClLinearExpression zRow = rowExpression(_objective);
 	ClSymbolicWeight sw = cn.strength().symbolicWeight().times(cn.weight());
 	zRow.setVariable( eminus,sw.asDouble());
 	insertErrorVar(cn,eminus);
-	noteAddedVariable(eminus,my_objective);
+	noteAddedVariable(eminus,_objective);
       }
     }
     else {
       // cn is an equality
       if (cn.isRequired()) {
-	++my_dummyCounter;
-	dummyVar = new ClDummyVariable(my_dummyCounter, "d");
+	++_dummyCounter;
+	dummyVar = new ClDummyVariable(_dummyCounter, "d");
 	expr.setVariable(dummyVar,1.0);
-	my_markerVars.put(cn,dummyVar);
-	if (fTraceOn) traceprint("Adding dummyVar == d" + my_dummyCounter);
+	_markerVars.put(cn,dummyVar);
+	if (fTraceOn) traceprint("Adding dummyVar == d" + _dummyCounter);
       } else {
-	++my_slackCounter;
-	eplus = new ClSlackVariable (my_slackCounter, "ep");
-	eminus = new ClSlackVariable (my_slackCounter, "em");
+	++_slackCounter;
+	eplus = new ClSlackVariable (_slackCounter, "ep");
+	eminus = new ClSlackVariable (_slackCounter, "em");
 
 	expr.setVariable( eplus,-1.0);
 	expr.setVariable( eminus,1.0);
-	my_markerVars.put(cn,eplus);
-	ClLinearExpression zRow = rowExpression(my_objective);
+	_markerVars.put(cn,eplus);
+	ClLinearExpression zRow = rowExpression(_objective);
 	ClSymbolicWeight sw = cn.strength().symbolicWeight().times(cn.weight());
 	double swCoeff = sw.asDouble();
 	if (swCoeff == 0) {
@@ -757,19 +757,19 @@ class ClSimplexSolver extends ClTableau
 	  if (fTraceOn) traceprint("adding " + eplus + " and " + eminus + " with swCoeff == " + swCoeff);
 	}
 	zRow.setVariable(eplus,swCoeff);
-	noteAddedVariable(eplus,my_objective);
+	noteAddedVariable(eplus,_objective);
 	zRow.setVariable(eminus,swCoeff);
-	noteAddedVariable(eminus,my_objective);
+	noteAddedVariable(eminus,_objective);
 	insertErrorVar(cn,eminus);
 	insertErrorVar(cn,eplus);
 	if (cn.isStayConstraint()) {
-	  my_stayPlusErrorVars.addElement(eplus);
-	  my_stayMinusErrorVars.addElement(eminus);
+	  _stayPlusErrorVars.addElement(eplus);
+	  _stayMinusErrorVars.addElement(eminus);
 	}
 	else if (cn.isEditConstraint()) {
-	  my_editPlusErrorVars.addElement(eplus);
-	  my_editMinusErrorVars.addElement(eminus);
-	  my_prevEditConstants.addElement(new ClDouble(cnExpr.constant()));
+	  _editPlusErrorVars.addElement(eplus);
+	  _editMinusErrorVars.addElement(eminus);
+	  _prevEditConstants.addElement(new ClDouble(cnExpr.constant()));
 	}
       }
     }
@@ -802,12 +802,12 @@ class ClSimplexSolver extends ClTableau
 	  entryVar = v;
 	}
       }
-      if (objectiveCoeff >= -my_epsilon || entryVar == null)
+      if (objectiveCoeff >= -_epsilon || entryVar == null)
 	return;
       if (fTraceOn) traceprint("entryVar == " + entryVar + ", objectiveCoeff == " + objectiveCoeff);
 
       double minRatio = Double.MAX_VALUE;
-      Set columnVars = (Set) my_columns.get(entryVar);
+      Set columnVars = (Set) _columns.get(entryVar);
       double r = 0.0;
       for (Enumeration e = columnVars.elements(); e.hasMoreElements() ; ) {
 	ClAbstractVariable v = (ClAbstractVariable) e.nextElement();
@@ -853,21 +853,21 @@ class ClSimplexSolver extends ClTableau
   {
     if (fTraceOn) fnenterprint("resetEditConstants:" + newEditConstants);
 
-    if (newEditConstants.size() != my_editPlusErrorVars.size()) {
+    if (newEditConstants.size() != _editPlusErrorVars.size()) {
       // number of edit constants doesn't match the number of edit error variables
       System.err.println("newEditConstants == " + newEditConstants.toString());
-      System.err.println("my_editPlusErrorVars == " + my_editPlusErrorVars.toString());
+      System.err.println("_editPlusErrorVars == " + _editPlusErrorVars.toString());
       System.err.println("sizes don't match");
       throw new ExCLInternalError();
     }
 
     for (int i = 0 ; i < newEditConstants.size(); i++) {
       double delta = (((ClDouble)newEditConstants.elementAt(i)).doubleValue() - 
-		      ((ClDouble)my_prevEditConstants.elementAt(i)).doubleValue());
-      my_prevEditConstants.setElementAt(((ClDouble)newEditConstants.elementAt(i)).clone(),i);
+		      ((ClDouble)_prevEditConstants.elementAt(i)).doubleValue());
+      _prevEditConstants.setElementAt(((ClDouble)newEditConstants.elementAt(i)).clone(),i);
       deltaEditConstant(delta, 
-			(ClAbstractVariable) my_editPlusErrorVars.elementAt(i),
-			(ClAbstractVariable) my_editMinusErrorVars.elementAt(i));
+			(ClAbstractVariable) _editPlusErrorVars.elementAt(i),
+			(ClAbstractVariable) _editMinusErrorVars.elementAt(i));
     }
   }
   
@@ -875,11 +875,11 @@ class ClSimplexSolver extends ClTableau
   {
     if (fTraceOn) fnenterprint("resetStayConstants");
 
-    for (int i = 0; i < my_stayPlusErrorVars.size(); i++) {
+    for (int i = 0; i < _stayPlusErrorVars.size(); i++) {
       ClLinearExpression expr = 
-	rowExpression((ClAbstractVariable) my_stayPlusErrorVars.elementAt(i) );
+	rowExpression((ClAbstractVariable) _stayPlusErrorVars.elementAt(i) );
       if (expr == null )
-	expr = rowExpression((ClAbstractVariable) my_stayMinusErrorVars.elementAt(i));
+	expr = rowExpression((ClAbstractVariable) _stayMinusErrorVars.elementAt(i));
       if (expr != null)
 	expr.set_constant(0.0);
     }
@@ -890,13 +890,13 @@ class ClSimplexSolver extends ClTableau
     if (fTraceOn) fnenterprint("setExternalVariables:");
     if (fTraceOn) traceprint(this.toString());
     
-    for (Enumeration e = my_externalParametricVars.elements(); 
+    for (Enumeration e = _externalParametricVars.elements(); 
 	 e.hasMoreElements() ; ) {
       ClVariable v = (ClVariable) e.nextElement();
       v.set_value(0.0);
     }
     
-    for (Enumeration e = my_externalRows.elements(); e.hasMoreElements(); ) {
+    for (Enumeration e = _externalRows.elements(); e.hasMoreElements(); ) {
       ClVariable v = (ClVariable) e.nextElement();
       ClLinearExpression expr = rowExpression(v);
       if (fTraceOn) debugprint("v == " + v);
@@ -909,34 +909,34 @@ class ClSimplexSolver extends ClTableau
   { 
     if (fTraceOn) fnenterprint("insertErrorVar:" + cn + ", " + var);
 
-    Set cnset = (Set) my_errorVars.get(var);
+    Set cnset = (Set) _errorVars.get(var);
     if (cnset == null)
-      my_errorVars.put(cn,cnset = new Set());
+      _errorVars.put(cn,cnset = new Set());
     cnset.insert(var);
   }
 
 
-  private Vector my_editMinusErrorVars;
-  private Vector my_editPlusErrorVars;
-  private Vector my_stayMinusErrorVars;
-  private Vector my_stayPlusErrorVars;
-  private Vector my_prevEditConstants;
-  private Hashtable my_errorVars; // map ClConstraint to Set (of ClVariable)
-  private Hashtable my_markerVars; // map ClConstraint to ClVariable
+  private Vector _editMinusErrorVars;
+  private Vector _editPlusErrorVars;
+  private Vector _stayMinusErrorVars;
+  private Vector _stayPlusErrorVars;
+  private Vector _prevEditConstants;
+  private Hashtable _errorVars; // map ClConstraint to Set (of ClVariable)
+  private Hashtable _markerVars; // map ClConstraint to ClVariable
 
-  private ClObjectiveVariable my_objective;
+  private ClObjectiveVariable _objective;
 
   // Map edit variables to their constraints and the index into
   // the parallel vectors for error vars and constants, above
-  private Hashtable my_editVarMap; // map ClVariable to a ConstraintAndIndex
+  private Hashtable _editVarMap; // map ClVariable to a ConstraintAndIndex
 
-  private long my_slackCounter;
-  private long my_artificialCounter;
-  private long my_dummyCounter;
+  private long _slackCounter;
+  private long _artificialCounter;
+  private long _dummyCounter;
 
-  private Vector my_resolve_pair;
+  private Vector _resolve_pair;
 
-  private double my_epsilon;
+  private double _epsilon;
 }
 
 class ClConstraintAndIndex {

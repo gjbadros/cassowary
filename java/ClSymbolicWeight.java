@@ -16,27 +16,27 @@ class ClSymbolicWeight
 
   public ClSymbolicWeight(int cLevels)
     { 
-      my_values = new double[cLevels];
+      _values = new double[cLevels];
       // FIXGJB: ok to assume these get initialized to 0?
 //       for (int i = 0; i < cLevels; i++) {
-// 	my_values[i] = 0;
+// 	_values[i] = 0;
 //       }
     }
 
   public ClSymbolicWeight(double w1, double w2, double w3)
     { 
-      my_values = new double[3];
-      my_values[0] = w1;
-      my_values[1] = w2;
-      my_values[2] = w3;
+      _values = new double[3];
+      _values[0] = w1;
+      _values[1] = w2;
+      _values[2] = w3;
     }
 
   public ClSymbolicWeight(double[] weights)
     { 
       final int cLevels = weights.length;
-      my_values = new double[cLevels];
+      _values = new double[cLevels];
       for (int i = 0; i < cLevels; i++) {
-	my_values[i] = weights[i];
+	_values[i] = weights[i];
       }
     }
 
@@ -44,14 +44,14 @@ class ClSymbolicWeight
 
   public Object clone()
     {
-      return new ClSymbolicWeight(my_values);
+      return new ClSymbolicWeight(_values);
     }
 
   public ClSymbolicWeight times(double n)
     {
       ClSymbolicWeight clsw = (ClSymbolicWeight) clone();
-      for (int i = 0; i < my_values.length; i++) {
-        clsw.my_values[i] *= n;
+      for (int i = 0; i < _values.length; i++) {
+        clsw._values[i] *= n;
       }
       return clsw;
     }
@@ -60,8 +60,8 @@ class ClSymbolicWeight
     {
       // assert(n != 0);
       ClSymbolicWeight clsw = (ClSymbolicWeight) clone();
-      for (int i = 0; i < my_values.length; i++) {
-        clsw.my_values[i] /= n;
+      for (int i = 0; i < _values.length; i++) {
+        clsw._values[i] /= n;
       }
       return clsw;
     }
@@ -71,8 +71,8 @@ class ClSymbolicWeight
       // assert(cl.cLevels() == cLevels());
       
       ClSymbolicWeight clsw = (ClSymbolicWeight) clone();
-      for (int i = 0; i < my_values.length; i++) {
-        clsw.my_values[i] += cl.my_values[i];
+      for (int i = 0; i < _values.length; i++) {
+        clsw._values[i] += cl._values[i];
       }
       return clsw;
     }
@@ -82,8 +82,8 @@ class ClSymbolicWeight
       // assert(cl.cLevels() == cLevels());
 
       ClSymbolicWeight clsw = (ClSymbolicWeight) clone();
-      for (int i = 0; i < my_values.length; i++) {
-        clsw.my_values[i] -= cl.my_values[i];
+      for (int i = 0; i < _values.length; i++) {
+        clsw._values[i] -= cl._values[i];
       }
       return clsw;
     }
@@ -91,10 +91,10 @@ class ClSymbolicWeight
   public boolean lessThan(ClSymbolicWeight cl)
     {
       // assert cl.cLevels() == cLevels()
-      for (int i = 0; i < my_values.length; i++) {
-	if (my_values[i] < cl.my_values[i])
+      for (int i = 0; i < _values.length; i++) {
+	if (_values[i] < cl._values[i])
 	  return true;
-	else if (my_values[i] > cl.my_values[i])
+	else if (_values[i] > cl._values[i])
 	  return false;
       }
       return false; // they are equal
@@ -103,10 +103,10 @@ class ClSymbolicWeight
   public boolean lessThanOrEqual(ClSymbolicWeight cl)
     {
       // assert cl.cLevels() == cLevels()
-      for (int i = 0; i < my_values.length; i++) {
-	if (my_values[i] < cl.my_values[i])
+      for (int i = 0; i < _values.length; i++) {
+	if (_values[i] < cl._values[i])
 	  return true;
-	else if (my_values[i] > cl.my_values[i])
+	else if (_values[i] > cl._values[i])
 	  return false;
       }
       return true; // they are equal
@@ -115,8 +115,8 @@ class ClSymbolicWeight
   public
     boolean equal(ClSymbolicWeight cl)
     {
-      for (int i = 0; i < my_values.length; i++) {
-	if (my_values[i] != cl.my_values[i])
+      for (int i = 0; i < _values.length; i++) {
+	if (_values[i] != cl._values[i])
 	  return false;
       }
       return true; // they are equal
@@ -143,9 +143,9 @@ class ClSymbolicWeight
       double sum  =  0;
       double factor = 1;
       double multiplier = 1000;
-      for (int i = my_values.length - 1; i >= 0; i--) 
+      for (int i = _values.length - 1; i >= 0; i--) 
         {
-	sum += my_values[i] * factor;
+	sum += _values[i] * factor;
 	factor *= multiplier;
 	}
       return sum;
@@ -154,18 +154,18 @@ class ClSymbolicWeight
   public String toString()
     { 
       StringBuffer bstr = new StringBuffer("[");
-      for (int i = 0; i < my_values.length-1; i++) {
-	bstr.append(my_values[i]);
+      for (int i = 0; i < _values.length-1; i++) {
+	bstr.append(_values[i]);
 	bstr.append(",");
       }
-      bstr.append(my_values[my_values.length-1]);
+      bstr.append(_values[_values.length-1]);
       bstr.append("]");
       return bstr.toString();
     }
 
   public int cLevels()
-    { return my_values.length; }
+    { return _values.length; }
 
-  private double[] my_values;
+  private double[] _values;
 
 }

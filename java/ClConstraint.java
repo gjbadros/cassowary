@@ -17,13 +17,13 @@ abstract class ClConstraint
 {
 
   public ClConstraint(ClStrength strength, double weight)
-    { my_strength = strength; my_weight = weight; }
+    { _strength = strength; _weight = weight; }
 
   public ClConstraint(ClStrength strength)
-    { my_strength = strength; my_weight = 1.0; }
+    { _strength = strength; _weight = 1.0; }
 
   public ClConstraint()
-    { my_strength = ClStrength.required; my_weight = 1.0; }
+    { _strength = ClStrength.required; _weight = 1.0; }
   
   public abstract ClLinearExpression expression();
 
@@ -34,28 +34,28 @@ abstract class ClConstraint
     { return false; }
 
   public boolean isRequired()
-    { return my_strength.isRequired(); }
+    { return _strength.isRequired(); }
 
   public boolean isStayConstraint()
     { return false; }
 
   public ClStrength strength()
-    { return my_strength; }
+    { return _strength; }
 
   public double weight()
-    { return my_weight; }
+    { return _weight; }
 
   public String toString()
-    { return my_strength.toString() +
+    { return _strength.toString() +
 	" {" + weight() + "} (" + expression(); }
 
   private void setStrength(ClStrength strength)
-    { my_strength = strength; }
+    { _strength = strength; }
 
   private void setWeight(double weight)
-    { my_weight = weight; }
+    { _weight = weight; }
 
-  private ClStrength my_strength;
-  private double my_weight;
+  private ClStrength _strength;
+  private double _weight;
 
 }

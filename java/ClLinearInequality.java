@@ -40,10 +40,10 @@ class ClLinearInequality extends ClLinearConstraint
   {
     super(new ClLinearExpression(clv2),strength,weight);
     if (op_enum == CL.GEQ) {
-      my_expression.multiplyMe(-1.0);
-      my_expression.addVariable(clv1);
+      _expression.multiplyMe(-1.0);
+      _expression.addVariable(clv1);
     } else if (op_enum == CL.LEQ) {
-      my_expression.addVariable(clv1,-1.0);
+      _expression.addVariable(clv1,-1.0);
     } else // the operator was invalid
       throw new ExCLInternalError();
   }
@@ -75,10 +75,10 @@ class ClLinearInequality extends ClLinearConstraint
   {
     super(new ClLinearExpression(val),strength,weight);
     if (op_enum == CL.GEQ) {
-      my_expression.multiplyMe(-1.0);
-      my_expression.addVariable(clv);
+      _expression.multiplyMe(-1.0);
+      _expression.addVariable(clv);
     } else if (op_enum == CL.LEQ) {
-      my_expression.addVariable(clv,-1.0);
+      _expression.addVariable(clv,-1.0);
     } else // the operator was invalid
       throw new ExCLInternalError();
   }
@@ -109,10 +109,10 @@ class ClLinearInequality extends ClLinearConstraint
   {
     super(((ClLinearExpression) cle2.clone()),strength,weight);
     if (op_enum == CL.GEQ) {
-      my_expression.multiplyMe(-1.0);
-      my_expression.addExpression(cle1);
+      _expression.multiplyMe(-1.0);
+      _expression.addExpression(cle1);
     } else if (op_enum == CL.LEQ) {
-      my_expression.addExpression(cle1,-1.0);
+      _expression.addExpression(cle1,-1.0);
     } else // the operator was invalid
       throw new ExCLInternalError();
   }
@@ -144,10 +144,10 @@ class ClLinearInequality extends ClLinearConstraint
   {
     super(((ClLinearExpression) cle.clone()),strength,weight);
     if (op_enum == CL.GEQ) {
-      my_expression.multiplyMe(-1.0);
-      my_expression.addVariable(clv);
+      _expression.multiplyMe(-1.0);
+      _expression.addVariable(clv);
     } else if (op_enum == CL.LEQ) {
-      my_expression.addVariable(clv,-1.0);
+      _expression.addVariable(clv,-1.0);
     } else // the operator was invalid
       throw new ExCLInternalError();
   }
@@ -179,10 +179,10 @@ class ClLinearInequality extends ClLinearConstraint
   {
     super(((ClLinearExpression) cle.clone()),strength,weight);
     if (op_enum == CL.LEQ) {
-      my_expression.multiplyMe(-1.0);
-      my_expression.addVariable(clv);
+      _expression.multiplyMe(-1.0);
+      _expression.addVariable(clv);
     } else if (op_enum == CL.GEQ) {
-      my_expression.addVariable(clv,-1.0);
+      _expression.addVariable(clv,-1.0);
     } else // the operator was invalid
       throw new ExCLInternalError();
   }

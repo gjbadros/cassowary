@@ -18,27 +18,27 @@ class ClLinearConstraint extends ClConstraint
 			    double weight)
   { 
     super(strength,weight);
-    my_expression = cle;
+    _expression = cle;
   }
 
   public ClLinearConstraint(ClLinearExpression cle,
 			    ClStrength strength)
   { 
     super(strength,1.0);
-    my_expression = cle;
+    _expression = cle;
   }
 
   public ClLinearConstraint(ClLinearExpression cle)
   { 
     super(ClStrength.required,1.0);
-    my_expression = cle;
+    _expression = cle;
   }
 
   public ClLinearExpression expression()
-  { return my_expression; }
+  { return _expression; }
 
   protected void setExpression(ClLinearExpression expr)
-  { my_expression = expr; }
+  { _expression = expr; }
 
-  protected ClLinearExpression my_expression;
+  protected ClLinearExpression _expression;
 }

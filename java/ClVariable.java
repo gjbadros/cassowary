@@ -15,36 +15,36 @@ class ClVariable extends ClAbstractVariable
   public ClVariable(String name, double value)
     {
       super(name);
-      my_value = value;
+      _value = value;
     }
 
   public ClVariable(String name)
     {
       super(name);
-      my_value = 0.0;
+      _value = 0.0;
     }
 
   public ClVariable(double value)
     {
-      my_value = value;
+      _value = value;
     }
 
   public ClVariable()
     {
-      my_value = 0.0;
+      _value = 0.0;
     }
 
  
   public ClVariable(long number, String prefix, double value )
     {
       super(number,prefix);
-      my_value = value;
+      _value = value;
     }
 
   public ClVariable(long number, String prefix )
     {
       super(number,prefix);
-      my_value = 0.0;
+      _value = 0.0;
     }
 
   public boolean isDummy()
@@ -61,14 +61,14 @@ class ClVariable extends ClAbstractVariable
 
   public String toString()
     {  
-      return "[" + name() + ":" + my_value + "]";
+      return "[" + name() + ":" + _value + "]";
     }
 
   public double value()
-    { return my_value; }
+    { return _value; }
 
   public void set_value(double value)
-    { my_value = value; }
+    { _value = value; }
 
-  private double my_value;
+  private double _value;
 }

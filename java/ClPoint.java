@@ -14,31 +14,31 @@ class ClPoint
 {
   public ClPoint(double x, double y)
     {
-      my_clv_x = new ClVariable(x);
-      my_clv_y = new ClVariable(y);
+      _clv_x = new ClVariable(x);
+      _clv_y = new ClVariable(y);
     }
 
   public ClPoint(double x, double y, int a)
     {
-      my_clv_x = new ClVariable("x"+a,x);
-      my_clv_y = new ClVariable("y"+a,y);
+      _clv_x = new ClVariable("x"+a,x);
+      _clv_y = new ClVariable("y"+a,y);
     }
 
   public ClPoint(ClVariable clv_x, ClVariable clv_y)
-    { my_clv_x = clv_x; my_clv_y = clv_y; }
+    { _clv_x = clv_x; _clv_y = clv_y; }
 
   public ClVariable X()
-    { return my_clv_x; }
+    { return _clv_x; }
 
   public ClVariable Y()
-    { return my_clv_y; }
+    { return _clv_y; }
 
   // use only before adding into the solver
   public void SetXY(double x, double y)
-    { my_clv_x.set_value(x); my_clv_y.set_value(y); }
+    { _clv_x.set_value(x); _clv_y.set_value(y); }
 
   public void SetXY(ClVariable clv_x, ClVariable clv_y)
-    { my_clv_x = clv_x; my_clv_y = clv_y; }
+    { _clv_x = clv_x; _clv_y = clv_y; }
 
   public double Xvalue()
     { return X().value(); }
@@ -48,11 +48,11 @@ class ClPoint
 
   public String toString()
     {
-      return "(" + my_clv_x.toString() + ", " + my_clv_y.toString() + ")";
+      return "(" + _clv_x.toString() + ", " + _clv_y.toString() + ")";
     }
 
-  private ClVariable my_clv_x;
+  private ClVariable _clv_x;
 
-  private ClVariable my_clv_y;
+  private ClVariable _clv_y;
 
 }

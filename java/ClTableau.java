@@ -16,18 +16,18 @@ class ClTableau extends CL
 
   public ClTableau()
   {
-    my_columns = new Hashtable();
-    my_rows = new Hashtable();
-    my_infeasibleRows = new Set();
-    my_externalRows = new Set();
-    my_externalParametricVars = new Set();
+    _columns = new Hashtable();
+    _rows = new Hashtable();
+    _infeasibleRows = new Set();
+    _externalRows = new Set();
+    _externalParametricVars = new Set();
   }
 
   public final void noteRemovedVariable(ClAbstractVariable v, ClAbstractVariable subject)
     { 
       if (fTraceOn) fnenterprint("noteRemovedVariable: " + v + ", " + subject);
       if (subject != null) {
-	((Set) my_columns.get(v)).remove(subject);
+	((Set) _columns.get(v)).remove(subject);
       }
     }
 
@@ -42,13 +42,13 @@ class ClTableau extends CL
   // from Michael Noth <noth@cs>
   public String getInternalInfo() {
     StringBuffer retstr = new StringBuffer("Tableau Information:\n");
-    retstr.append("Rows: " + my_rows.size());
-    retstr.append(" (= " + (my_rows.size() - 1) + " constraints)");
-    retstr.append("\nColumns: " + my_columns.size());
-    retstr.append("\nInfeasible Rows: " + my_infeasibleRows.size());
-    retstr.append("\nExternal basic variables: " + my_externalRows.size());
+    retstr.append("Rows: " + _rows.size());
+    retstr.append(" (= " + (_rows.size() - 1) + " constraints)");
+    retstr.append("\nColumns: " + _columns.size());
+    retstr.append("\nInfeasible Rows: " + _infeasibleRows.size());
+    retstr.append("\nExternal basic variables: " + _externalRows.size());
     retstr.append("\nExternal parametric variables: ");
-    retstr.append(my_externalParametricVars.size());
+    retstr.append(_externalParametricVars.size());
     retstr.append("\n");
     
     return retstr.toString();
@@ -57,9 +57,9 @@ class ClTableau extends CL
   public String toString()
     { 
       StringBuffer bstr = new StringBuffer("Tableau:\n");
-      for (Enumeration e = my_rows.keys(); e.hasMoreElements(); ) {
+      for (Enumeration e = _rows.keys(); e.hasMoreElements(); ) {
 	ClAbstractVariable clv = (ClAbstractVariable) e.nextElement();
-	ClLinearExpression expr = (ClLinearExpression) my_rows.get(clv);
+	ClLinearExpression expr = (ClLinearExpression) _rows.get(clv);
 	bstr.append(clv.toString());
 	bstr.append(" <==> ");
 	bstr.append(expr.toString());
@@ -67,16 +67,16 @@ class ClTableau extends CL
       }
 
       bstr.append("\nColumns:\n");
-      bstr.append(my_columns.toString());
+      bstr.append(_columns.toString());
       
       bstr.append("\nInfeasible rows: ");
-      bstr.append(my_infeasibleRows.toString());
+      bstr.append(_infeasibleRows.toString());
 
       bstr.append("External basic variables: ");
-      bstr.append(my_externalRows.toString());
+      bstr.append(_externalRows.toString());
 
       bstr.append("External parametric variables: ");
-      bstr.append(my_externalParametricVars.toString());
+      bstr.append(_externalParametricVars.toString());
       
       return bstr.toString();
     }
@@ -84,9 +84,9 @@ class ClTableau extends CL
   private final void insertColVar(ClAbstractVariable param_var, 
 			    ClAbstractVariable rowvar)
   { 
-    Set rowset = (Set) my_columns.get(param_var);
+    Set rowset = (Set) _columns.get(param_var);
     if (rowset == null)
-      my_columns.put(param_var,rowset = new Set());
+      _columns.put(param_var,rowset = new Set());
     rowset.insert(rowvar);
   }
 
@@ -96,14 +96,14 @@ class ClTableau extends CL
 
       // for each variable in expr, add var to the set of rows which
       // have that variable in their expression
-      my_rows.put(var,expr);
+      _rows.put(var,expr);
       
       for (Enumeration e = expr.terms().keys() ; e.hasMoreElements(); ) {
         ClAbstractVariable clv = (ClAbstractVariable) e.nextElement();
 	insertColVar(clv,var);
       }
       if (var.isExternal()) {
-	my_externalRows.insert(var);
+	_externalRows.insert(var);
       }
       if (fTraceOn) traceprint(this.toString());
     }
@@ -113,21 +113,21 @@ class ClTableau extends CL
       if (fTraceOn) fnenterprint("removeColumn:" + var);
       // remove the rows with the variables in varset
 
-      Set rows = (Set) my_columns.remove(var);
+      Set rows = (Set) _columns.remove(var);
 
       if (rows != null) {
         for (Enumeration e = rows.elements() ; e.hasMoreElements(); ) {
           ClAbstractVariable clv = (ClAbstractVariable) e.nextElement();
-          ClLinearExpression expr = (ClLinearExpression) my_rows.get(clv);
+          ClLinearExpression expr = (ClLinearExpression) _rows.get(clv);
           expr.terms().remove(var);
         }
       } else {
-        if (fTraceOn) debugprint("Could not find var " + var + " in my_columns");
+        if (fTraceOn) debugprint("Could not find var " + var + " in _columns");
       }
       
       if (var.isExternal()) {
-	my_externalRows.remove(var);
-	my_externalParametricVars.remove(var);
+	_externalRows.remove(var);
+	_externalParametricVars.remove(var);
       }
     }
 
@@ -136,7 +136,7 @@ class ClTableau extends CL
     {
       if (fTraceOn) fnenterprint("removeRow:" + var);
 
-      ClLinearExpression expr = (ClLinearExpression) my_rows.get(var);
+      ClLinearExpression expr = (ClLinearExpression) _rows.get(var);
       assert(expr != null);
 
       // For each variable in this expression, update
@@ -144,19 +144,19 @@ class ClTableau extends CL
       // of rows it is known to be in
       for (Enumeration e = expr.terms().keys() ; e.hasMoreElements(); ) {
         ClAbstractVariable clv = (ClAbstractVariable) e.nextElement();
-	Set varset = (Set) my_columns.get(clv);
+	Set varset = (Set) _columns.get(clv);
 	if (varset != null) {
           if (fTraceOn) debugprint("removing from varset " + var);
 	  varset.remove(var);
         }
       }
       
-      my_infeasibleRows.remove(var);
+      _infeasibleRows.remove(var);
 
       if (var.isExternal()) {
-	my_externalRows.remove(var);
+	_externalRows.remove(var);
       }
-      my_rows.remove(var);
+      _rows.remove(var);
       if (fTraceOn) fnexitprint("returning " + expr);
       return expr;
     }
@@ -166,44 +166,44 @@ class ClTableau extends CL
       if (fTraceOn) fnenterprint("substituteOut:" + oldVar + ", " + expr);
       if (fTraceOn) traceprint(this.toString());
       
-      Set varset = (Set) my_columns.get(oldVar);
+      Set varset = (Set) _columns.get(oldVar);
       for (Enumeration e = varset.elements(); e.hasMoreElements(); ) {
 	ClAbstractVariable v = (ClAbstractVariable) e.nextElement();
-	ClLinearExpression row = (ClLinearExpression) my_rows.get(v);
+	ClLinearExpression row = (ClLinearExpression) _rows.get(v);
 	row.substituteOut(oldVar,expr,v,this);
 	if (v.isRestricted() && row.constant() < 0.0) {
-	  my_infeasibleRows.insert(v);
+	  _infeasibleRows.insert(v);
 	}
       }
 
       if (oldVar.isExternal()) {
-	my_externalRows.insert(oldVar);
-	my_externalParametricVars.remove(oldVar);
+	_externalRows.insert(oldVar);
+	_externalParametricVars.remove(oldVar);
       }
-      my_columns.remove(oldVar);
+      _columns.remove(oldVar);
     }
 
   protected final Hashtable columns()
-    { return my_columns; }
+    { return _columns; }
 
   protected final Hashtable rows()
-    { return my_rows; }
+    { return _rows; }
 
   protected final boolean columnsHasKey(ClAbstractVariable subject)
     { 
-      return my_columns.containsKey(subject);
+      return _columns.containsKey(subject);
     }
 
   protected final ClLinearExpression rowExpression(ClAbstractVariable v)
     {
       // if (fTraceOn) fnenterprint("rowExpression:" + v);
-      return (ClLinearExpression) my_rows.get(v);
+      return (ClLinearExpression) _rows.get(v);
     }
 
-  protected Hashtable my_columns; // From ClAbstractVariable to Set of variables
-  protected Hashtable my_rows;    // From ClAbstractVariable to ClLinearExpression
-  protected Set my_infeasibleRows; // Set of ClAbstractVariable-s
-  protected Set my_externalRows; // Set of ClVariable-s
-  protected Set my_externalParametricVars; // Set of ClVariable-s
+  protected Hashtable _columns; // From ClAbstractVariable to Set of variables
+  protected Hashtable _rows;    // From ClAbstractVariable to ClLinearExpression
+  protected Set _infeasibleRows; // Set of ClAbstractVariable-s
+  protected Set _externalRows; // Set of ClVariable-s
+  protected Set _externalParametricVars; // Set of ClVariable-s
 
 }
