@@ -27,7 +27,7 @@ protected:
     ClAbstractVariable(name)
     { }
 
-  ClSlackVariable(long number, char *prefix, Number value = 0.0) :
+  ClSlackVariable(long number, char *prefix) :
     ClAbstractVariable(number,prefix)
     { }
 

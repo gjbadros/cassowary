@@ -8,14 +8,20 @@
 # Makefile for cassowary
 
 CC = gcc
-CPP = egcs-g++
+CPP = g++
 CFLAGS = -g -Wall
 EGCSDIR = /uns/egcs
-#CPPFLAGS = -g -Wall -L$(EGCSDIR)/lib -I$(EGCSDIR)/include
-CPPFLAGS = -g -DCL_NO_TRACE -Wall -L$(EGCSDIR)/lib -I$(EGCSDIR)/include
 CXX = $(CPP)
-# -falt-external-templates
-LDFLAGS = -L/uns/lib/egcs
+
+#CPPFLAGS = -O6 -DCL_NO_TRACE -Wall -pedantic -W -L$(EGCSDIR)/lib -I$(EGCSDIR)/include
+CPPFLAGS = -O6 -pg -DCL_NO_TRACE -Wall -pedantic -W -L$(EGCSDIR)/lib -I$(EGCSDIR)/include
+#CPPFLAGS = -g -DCL_NO_TRACE -Wall -pedantic -W -L$(EGCSDIR)/lib -I$(EGCSDIR)/include
+#CPPFLAGS = -g -Wall -pedantic -W -L$(EGCSDIR)/lib -I$(EGCSDIR)/include
+
+LDFLAGS = -L/uns/lib/egcs -pg
+#LDFLAGS = -L/uns/lib/egcs
+
+
 CL_LIBRARY = libCl.a
 
 OBJS = 	ClAbstractVariable.o \
@@ -73,7 +79,8 @@ $(CL_LIBRARY): $(OBJS)
 	ar ruv $@ $(OBJS)
 
 clean:	
-	rm -f $(TESTS) *.o $(CL_LIBRARY)
+	rm -f $(TESTS) *.o $(CL_LIBRARY) Makefile.dependencies
+	@echo "Be sure to \`make depend'"
 
 TAGS: $(SOURCES)
 	etags $^
@@ -124,8 +131,8 @@ ntsources: $(NT_SOURCES)
 
 # How to make dependencies:
 # -------------------------
-depend: $(TEST_SRCS) $(HEADERS)
-	makedepend *.cc
+depend: $(TEST_SRCS) $(SOURCES) $(HEADERS)
+	rm -f Makefile.dependencies
+	$(CPP) -M $(TEST_SRCS) >> Makefile.dependencies
 
-# DO NOT DELETE THIS LINE -- make depend depends on it.
-
+-include Makefile.dependencies

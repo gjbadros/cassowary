@@ -8,7 +8,7 @@
 #include "ClVariable.h"
 
 int
-main( char **argv, int argc )
+main( char **, int )
 {
   ClVariable a("a",0.0);
   ClVariable b("b",0.0);

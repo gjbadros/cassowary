@@ -208,7 +208,7 @@ class ClLinearExpression  {
     { return &e1 == &e2; }
 
 
-  ClLinearExpression &ClLinearExpression::multiplyMe(Number x);
+  ClLinearExpression &multiplyMe(Number x);
 
  private:
 

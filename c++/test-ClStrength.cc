@@ -4,7 +4,7 @@
 #include "debug.h"
 
 int
-main( char **argv, int argc )
+main( char **, int  )
 {
   ClSymbolicWeight clsw(0.0,1.0,0.0);
   ClSymbolicWeight clsw2(2.0,0.5,0.5);

@@ -26,7 +26,7 @@ protected:
     ClAbstractVariable(name)
     { }
 
-  ClDummyVariable(long number, char *prefix, Number value = 0.0) :
+  ClDummyVariable(long number, char *prefix) :
     ClAbstractVariable(number,prefix)
     { }
 

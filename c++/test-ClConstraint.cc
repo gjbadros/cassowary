@@ -6,7 +6,7 @@
 #include "ClStayConstraint.h"
 
 int
-main( char **argv, int argc )
+main( char **, int )
 {
   ClVariable a("a");
   ClVariable b("b");
