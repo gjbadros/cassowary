@@ -3,8 +3,5 @@
 .built-test
 Makefile
 Makefile.in
-Yylex.java
 classjava.stamp
 java.prof
-parser.java
-sym.java

@@ -1,3 +1,33 @@
+egcs-2.91.66 --12/14/99 gjb
+starting timing test. nCns = 10000, nVars = 90, nResolves = 100
+done building data structures
+time = 0.14
+
+done adding constraints [9336 exceptions]
+time = 7.37
+
+time per cn = 0.000737
+
+time per actual cn = 0.0110994
+
+done creating edit constraints -- about to start resolves
+time = 0.01
+
+done resolves -- now removing constraints
+time = 0.02
+
+time per Resolve = 0.0002
+
+done removing constraints and addDel timing test
+time = 0.33
+
+time per cn = 3.3e-05
+
+time per actual cn = 0.000496988
+
+
+--------------
+
 -g, NO_TRACE: 3x-6x slower than w/ -O6
 addDel:
 starting timing test. nCns = 900, nVars = 900, nResolves = 10000
