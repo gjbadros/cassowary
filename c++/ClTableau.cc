@@ -16,6 +16,10 @@
 void 
 ClTableau::addRow(const ClVariable &var, const ClLinearExpression &expr)
 {
+#ifndef NO_TRACE
+  Tracer TRACER(__FUNCTION__);
+  cerr << "(" << var << ")" << endl;
+#endif
   my_rows[var] = expr;
   map<ClVariable,Number>::const_iterator it = expr.terms().begin();
   // for each variable in expr, add var to the set of rows which have that variable
@@ -34,6 +38,10 @@ ClTableau::addRow(const ClVariable &var, const ClLinearExpression &expr)
 void 
 ClTableau::removeColumn(const ClVariable &var)
 {
+#ifndef NO_TRACE
+  Tracer TRACER(__FUNCTION__);
+  cerr << "(" << var << ")" << endl;
+#endif
   map<ClVariable, set<ClVariable> >::iterator it_var = my_columns.find(var);
   set<ClVariable> &varset = (*it_var).second;
   // remove the rows with the variables in varset
@@ -49,12 +57,16 @@ ClTableau::removeColumn(const ClVariable &var)
 
 // Remove the basic variable v from the tableau row v=expr
 // Then update column cross indices
-ClLinearExpression &
+ClLinearExpression
 ClTableau::removeRow(const ClVariable &var)
 {
+#ifndef NO_TRACE
+  Tracer TRACER(__FUNCTION__);
+  cerr << "(" << var << ")" << endl;
+#endif
   map<ClVariable, ClLinearExpression>::iterator it = my_rows.find(var);
   assert(it != my_rows.end());
-  ClLinearExpression &expr = (*it).second;
+  ClLinearExpression expr = (*it).second;
   map<ClVariable,Number> &terms = expr.terms();
   map<ClVariable,Number>::iterator it_term = terms.begin();
   for (; it_term != terms.end(); ++it_term)
@@ -68,6 +80,9 @@ ClTableau::removeRow(const ClVariable &var)
     my_infeasibleRows.erase(itVar);
     }
   my_rows.erase(it);
+#ifndef NO_TRACE
+  cerr << "- returning " << expr << endl;
+#endif
   return expr;
 }
 
@@ -76,8 +91,11 @@ ClTableau::removeRow(const ClVariable &var)
 void 
 ClTableau::substituteOut(const ClVariable &oldVar, const ClLinearExpression &expr)
 {
-  cerr << __FUNCTION__ << "(" << oldVar << ", " << expr << ")" << endl;
+#ifndef NO_TRACE
+  Tracer TRACER(__FUNCTION__);
+  cerr << "(" << oldVar << ", " << expr << ")" << endl;
   cerr << (*this) << endl;
+#endif
 
   map<ClVariable, set<ClVariable> >::iterator it_oldVar = my_columns.find(oldVar);
   assert(it_oldVar != my_columns.end());
@@ -105,3 +123,41 @@ ostream &operator<<(ostream &xo, const ClTableau &clt)
   return xo;
 }
 
+
+ostream &operator<<(ostream &xo, const set<ClVariable> & varset)
+{
+  set<ClVariable>::const_iterator it = varset.begin();
+  xo << "{ ";
+  if (it != varset.end())
+    {
+    xo << (*it);
+    ++it;
+    }
+  for (; it != varset.end(); ++it) 
+    {
+    xo << ", " << (*it);
+    }
+  xo << " }" << endl;
+  return xo;
+}  
+
+
+ostream &operator<<(ostream &xo, const map<ClVariable, set<ClVariable> > & varmap)
+{
+  map<ClVariable, set<ClVariable> >::const_iterator it = varmap.begin();
+  for (; it != varmap.end(); ++it) 
+    {
+    xo << (*it).first << " -> " << (*it).second << endl;
+    }
+  return xo;
+}
+
+ostream &operator<<(ostream &xo, const map<ClVariable, ClLinearExpression > & rows)
+{
+  map<ClVariable, ClLinearExpression >::const_iterator it = rows.begin();
+  for (; it != rows.end(); ++it) 
+    {
+    xo << (*it).first << " <-=-> " << (*it).second << endl;
+    }
+  return xo;
+}

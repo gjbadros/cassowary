@@ -12,8 +12,9 @@
 #define ClErrors_H
 
 #include "Cassowary.h"
+#include <exception>
 
-class ExCLError {
+class ExCLError : public exception {
  public:
   virtual char *description() const
     { return "(ExCLError) An error has occured in CL"; }

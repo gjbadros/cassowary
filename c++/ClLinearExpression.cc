@@ -39,8 +39,19 @@ ClLinearExpression::~ClLinearExpression()
 ostream &
 ClLinearExpression::printOn(ostream &xo) const
 {
-  xo << my_constant;
   map<ClVariable,Number>::const_iterator i = my_terms.begin();
+
+  if (!clApprox(my_constant,0.0) || i == my_terms.end())
+    {
+    xo << my_constant;
+    }
+  else
+    {
+    if (i == my_terms.end())
+      return xo;
+    xo << (*i).first << "*" << (*i).second;
+    ++i;
+    }
   for ( ; i != my_terms.end(); ++i)
     {
     xo << " + " << (*i).first << "*" << (*i).second;

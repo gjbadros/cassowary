@@ -9,12 +9,18 @@
 // ClSimplexSolver.cc
 
 #include "ClSimplexSolver.h"
+#include "debug.h"
 #include "ClErrors.h"
 
 // Add the constraint cn to the tableau
 void 
 ClSimplexSolver::addConstraint(const ClConstraint &cn)
 {
+#ifndef NO_TRACE
+  Tracer TRACER(__FUNCTION__);
+  cerr << "(" << cn << ")" << endl;
+#endif
+    
   ClLinearExpression expr = cn.expression();
 
   // If possible add expr directly to the appropriate tableau by
@@ -36,6 +42,11 @@ ClSimplexSolver::addConstraint(const ClConstraint &cn)
 void 
 ClSimplexSolver::addPointStays(const vector<ClPoint> &listOfPoints)
 {
+#ifndef NO_TRACE
+  Tracer TRACER(__FUNCTION__);
+  cerr << "(" << "FIXGJB" << ")" << endl;
+#endif
+
   vector<ClPoint>::const_iterator it = listOfPoints.begin();
   double weight = 1.0;
   static const double multiplier = 2.0;
@@ -51,6 +62,11 @@ ClSimplexSolver::addPointStays(const vector<ClPoint> &listOfPoints)
 void 
 ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
 {
+#ifndef NO_TRACE
+  Tracer TRACER(__FUNCTION__);
+  cerr << "(" << cnconst << ")" << endl;
+#endif
+
   // We are about to remove a constraint.  There may be some stay
   // constraints that were unsatisfied previously -- if we just
   // removed the constraint these could come into play.  Instead,
@@ -260,6 +276,10 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
 void 
 ClSimplexSolver::reset()
 {
+#ifndef NO_TRACE
+  Tracer TRACER(__FUNCTION__);
+  cerr << "()" << endl;
+#endif
   // FIXGJB  -- can postpone writing this for a while
   assert(false);
 }
@@ -269,6 +289,10 @@ ClSimplexSolver::reset()
 void 
 ClSimplexSolver::resolve(const vector<double> &newEditConstants)
 {
+#ifndef NO_TRACE
+  Tracer TRACER(__FUNCTION__);
+  cerr << "(" << "newEditConstants" /* FIXGJB */ << ")" << endl;
+#endif
   while (!my_infeasibleRows.empty())
     {
     my_infeasibleRows.erase(my_infeasibleRows.begin());
@@ -288,15 +312,30 @@ ClSimplexSolver::resolve(const vector<double> &newEditConstants)
 void 
 ClSimplexSolver::addWithArtificialVariable(const ClLinearExpression &expr)
 {
+#ifndef NO_TRACE
+  Tracer TRACER(__FUNCTION__);
+  cerr << "(" << expr << ")" << endl;
+#endif
+  
   ClVariable av(++my_artificialCounter,"a",CLSlackVar);
   ClVariable az("az",CLObjectiveVar);
   ClLinearExpression azRow(expr);
   // FIXGJB: Why is azRow a duplicate of expr?
 
+#ifndef NO_TRACE
+  cerr << __FUNCTION__ << " before addRow-s:" << endl;
+  cerr << (*this) << endl;
+#endif
+
   // the artificial objective is av, which we know is equal to expr
   // (which contains only parametric variables)
   addRow(az,azRow);
   addRow(av,expr);
+
+#ifndef NO_TRACE
+  cerr << __FUNCTION__ << " after addRow-s:" << endl;
+  cerr << (*this) << endl;
+#endif
 
   // try to optimize av to 0
   optimize(az);
@@ -337,9 +376,16 @@ ClSimplexSolver::addWithArtificialVariable(const ClLinearExpression &expr)
 bool 
 ClSimplexSolver::tryAddingDirectly(ClLinearExpression &expr)
 {
+#ifndef NO_TRACE
+  Tracer TRACER(__FUNCTION__);
+  cerr << "(" << expr << ")" << endl;
+#endif
   const ClVariable &subject = chooseSubject(expr);
   if (subject == clvNil() )
     {
+#ifndef NO_TRACE
+    cerr << "- returning false" << endl;
+#endif
     return false;
     }
   expr.newSubject(subject);
@@ -348,6 +394,9 @@ ClSimplexSolver::tryAddingDirectly(ClLinearExpression &expr)
     substituteOut(subject,expr);
     }
   addRow(subject,expr);
+#ifndef NO_TRACE
+  cerr << "- returning true" << endl;
+#endif
   return true; // successfully added directly
 }
 
@@ -373,6 +422,10 @@ ClSimplexSolver::tryAddingDirectly(ClLinearExpression &expr)
 const ClVariable &
 ClSimplexSolver::chooseSubject(ClLinearExpression &expr)
 {
+#ifndef NO_TRACE
+  Tracer TRACER(__FUNCTION__);
+  cerr << "(" << expr << ")" << endl;
+#endif
   ClVariable &subject = clvNil(); // the current best subject, if any
 
   // true iff we have found a subject that is an unrestricted variable
@@ -480,6 +533,10 @@ ClSimplexSolver::deltaEditConstant(Number delta,
 				   const ClVariable &plusErrorVar,
 				   const ClVariable &minusErrorVar)
 {
+#ifndef NO_TRACE
+  Tracer TRACER(__FUNCTION__);
+  cerr << "(" << delta << ", " << plusErrorVar << ", " << minusErrorVar << ")" << endl;
+#endif
   // first check if the plusErrorVar is basic
   ClLinearExpression &exprPlus = rowExpression(plusErrorVar);
   if (exprPlus != cleNil() )
@@ -530,6 +587,10 @@ ClSimplexSolver::deltaEditConstant(Number delta,
 void 
 ClSimplexSolver::dualOptimize()
 {
+#ifndef NO_TRACE
+  Tracer TRACER(__FUNCTION__);
+  cerr << "()" << endl;
+#endif
   const ClLinearExpression &zRow = rowExpression(my_objective);
   // need to handle infeasible rows
   while (!my_infeasibleRows.empty())
@@ -591,6 +652,10 @@ ClSimplexSolver::dualOptimize()
 ClLinearExpression 
 ClSimplexSolver::makeExpression(ClLinearConstraint &cn)
 {
+#ifndef NO_TRACE
+  Tracer TRACER(__FUNCTION__);
+  cerr << "(" << cn << ")" << endl;
+#endif
   const ClLinearExpression &cnExpr = cn.expression();
   ClLinearExpression expr(cnExpr.constant());
   const map<ClVariable, Number> &cnTerms = cnExpr.terms();
@@ -695,6 +760,9 @@ ClSimplexSolver::makeExpression(ClLinearConstraint &cn)
     expr.set_constant(-expr.constant());
     expr.multiplyMe(-1);
     }
+#ifndef NO_TRACE
+  cerr << "- returning " << expr << endl;
+#endif
   return expr;
 }
 
@@ -703,8 +771,9 @@ ClSimplexSolver::makeExpression(ClLinearConstraint &cn)
 void 
 ClSimplexSolver::optimize(const ClVariable &zVar)
 {
-#ifndef NCLDEBUG
-  cerr << zVar << endl; // DEBUG
+#ifndef NO_TRACE
+  Tracer TRACER(__FUNCTION__);
+  cerr << "(" << zVar << ")" << endl;
 #endif
   assert(zVar.isCLObjective());
   ClLinearExpression &zRow = rowExpression(zVar);
@@ -777,10 +846,16 @@ ClSimplexSolver::optimize(const ClVariable &zVar)
 void 
 ClSimplexSolver::pivot(const ClVariable &entryVar, const ClVariable &exitVar)
 {
+#ifndef NO_TRACE
+  Tracer TRACER(__FUNCTION__);
+  cerr << "(" << entryVar << ", " << exitVar << ")" << endl;
+#endif
+  
   // expr is the expression for the exit variable (about to leave the basis) -- 
   // so that the old tableau includes the equation:
   //   exitVar = expr
   ClLinearExpression expr = removeRow(exitVar);
+
   // Compute an expression for the entry variable.  Since expr has
   // been deleted from the tableau we can destructively modify it to
   // build this expression.
@@ -806,6 +881,10 @@ ClSimplexSolver::pivot(const ClVariable &entryVar, const ClVariable &exitVar)
 void 
 ClSimplexSolver::resetEditConstants(const vector<Number> &newEditConstants)
 {
+#ifndef NO_TRACE
+  Tracer TRACER(__FUNCTION__);
+  cerr << "(" << "newEditConstants" /* FIXGJB */ << ")" << endl;
+#endif
   if (newEditConstants.size() != my_editPlusErrorVars.size())
     { // number of edit constants doesn't match the number of edit error variables
     throw ExCLInternalError();
@@ -842,6 +921,10 @@ ClSimplexSolver::resetEditConstants(const vector<Number> &newEditConstants)
 void 
 ClSimplexSolver::resetStayConstants()
 {
+#ifndef NO_TRACE
+  Tracer TRACER(__FUNCTION__);
+  cerr << "()" << endl;
+#endif
   vector<ClVariable>::const_iterator 
     itStayPlusErrorVars = my_stayPlusErrorVars.begin();
   vector<ClVariable>::const_iterator 
@@ -875,6 +958,10 @@ ClSimplexSolver::resetStayConstants()
 void 
 ClSimplexSolver::setExternalVariables()
 {
+#ifndef NO_TRACE
+  Tracer TRACER(__FUNCTION__);
+  cerr << "()" << endl;
+#endif
   map<ClVariable, ClLinearExpression>::iterator itRowVars;
   map<ClVariable, set<ClVariable> >::iterator itColumnVars;
 
