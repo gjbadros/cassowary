@@ -33,6 +33,21 @@ class ClLinearExpression
       my_terms.put(clv,new Double(value));
     }
 
+  public ClLinearExpression(ClAbstractVariable clv, double value)
+    {
+      my_constant = new Double(0);
+      my_terms = new Hashtable();
+      my_terms.put(clv,new Double(value));
+    }
+
+  public ClLinearExpression(ClAbstractVariable clv)
+    {
+      my_constant = new Double(0);
+      my_terms = new Hashtable();
+      my_terms.put(clv,new Double(1));
+    }
+
+
   public ClLinearExpression(Double constant, Hashtable terms)
     {
       my_constant = constant;
@@ -229,7 +244,7 @@ class ClLinearExpression
   // FIXGJB  
   //  public void substituteOut(ClAbstractVariable var, ClLinearExpression expr, 
   //			    ClAbstractVariable subject, ClTableau solver)
-    {
+  //    {
       //#ifndef CL_NO_TRACE
       //System.err.print("* ClLinearExpression::");
       //Tracer TRACER(__FUNCTION__);
@@ -239,7 +254,7 @@ class ClLinearExpression
 
 
       // FIXGJB write this
-    }
+  //}
   
   public void changeSubject(ClAbstractVariable old_subject, ClAbstractVariable new_subject)
     {
@@ -285,25 +300,47 @@ class ClLinearExpression
 
   public String toString()
     {
-      // FIXGJB: write this
-      return "FIXGJB";
+      StringBuffer bstr = new StringBuffer();
+      Enumeration e = my_terms.keys();
+
+      if (!ClVariable.clApprox(my_constant.doubleValue(),0.0) || my_terms.size() == 0) 
+	{
+	bstr.append(my_constant.toString());
+	}
+      else
+	{
+	if (my_terms.size() == 0)
+	  {
+	  return bstr.toString();
+	  }
+	ClVariable clv = (ClVariable) e.nextElement();
+	Double coeff = (Double) my_terms.get(clv);
+	bstr.append(coeff.toString() + "*" + clv.toString());
+	}
+      for (; e.hasMoreElements(); )
+	{
+	ClVariable clv = (ClVariable) e.nextElement();
+	Double coeff = (Double) my_terms.get(clv);
+	bstr.append(" + " + coeff.toString() + "*" + clv.toString());
+	}
+      return bstr.toString();
     }
 
-  public ClLinearExpression Plus(ClLinearExpression e1, ClLinearExpression e2)
+  public static ClLinearExpression Plus(ClLinearExpression e1, ClLinearExpression e2)
     { return e1.plus(e2); }
 
-  public ClLinearExpression Minus(ClLinearExpression e1, ClLinearExpression e2)
+  public static ClLinearExpression Minus(ClLinearExpression e1, ClLinearExpression e2)
     { return e1.minus(e2); }
 
-  public ClLinearExpression Times(ClLinearExpression e1, ClLinearExpression e2) 
+  public static ClLinearExpression Times(ClLinearExpression e1, ClLinearExpression e2) 
     throws ExCLNonlinearExpression
     { return e1.times(e2); }
 
-  public ClLinearExpression Divide(ClLinearExpression e1, ClLinearExpression e2)
+  public static ClLinearExpression Divide(ClLinearExpression e1, ClLinearExpression e2)
     throws ExCLNonlinearExpression
     { return e1.divide(e2); }
 
-  public boolean FEquals(ClLinearExpression e1, ClLinearExpression e2)
+  public static boolean FEquals(ClLinearExpression e1, ClLinearExpression e2)
     { return e1 == e2; }
 
   private Double my_constant;
