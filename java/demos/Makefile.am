@@ -13,7 +13,7 @@ install-javaJAVA:
 	echo "Not installing java .class files since Java build was disabled"
 endif
 
-EXTRA_DIST=$(JAVAFILES)
+EXTRA_DIST=$(JAVAFILES) quaddemo.htm
 
 run:
 	appletviewer quaddemo.htm

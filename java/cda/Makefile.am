@@ -55,27 +55,28 @@ install-javaJAVA:
 endif
 
 ICON_BMPS = \
-  Icons/LineCC.bmp \
-  Icons/MidLineCC.bmp \
-  Icons/RectangleCC.bmp \
-  Icons/CircleCC.bmp \
-  Icons/Anchor.bmp \
-  Icons/Colocation.bmp \
-  Icons/LeftOf.bmp \
-  Icons/RightOf.bmp \
-  Icons/Above.bmp \
-  Icons/Below.bmp \
-  Icons/LeftAlign.bmp \
-  Icons/RightAlign.bmp \
-  Icons/TopAlign.bmp \
-  Icons/BottomAlign.bmp \
-  Icons/Blank.bmp 
+  LineCC.bmp \
+  MidLineCC.bmp \
+  RectangleCC.bmp \
+  CircleCC.bmp \
+  Anchor.bmp \
+  Colocation.bmp \
+  LeftOf.bmp \
+  RightOf.bmp \
+  Above.bmp \
+  Below.bmp \
+  LeftAlign.bmp \
+  RightAlign.bmp \
+  TopAlign.bmp \
+  BottomAlign.bmp \
+  Blank.bmp 
 
-EXTRA_DIST = $(ALL_FILES) $(ICON_BMPS)
 
-ALL_ICON_FILES = $(patsubst %.bmp,Icons/%.bmp,$(ICON_BMPS))
+ALL_ICON_FILES = $(ICON_BMPS:%.bmp=Icons/%.bmp)
 
 ICON_GIFS = $(ICON_BMPS:%.bmp=classes/%.gif)
+
+EXTRA_DIST = $(ALL_FILES) $(ICON_GIFS) classes/run.html
 
 demo: all
 	tar -cf cdademo.tar $(ALL_CLASSES) $(ICON_GIFS) classes/*.htm*

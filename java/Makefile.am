@@ -40,7 +40,7 @@ JAVAFILES = \
 
 SUBDIRS=demos cda
 
-EXTRA_DIST=$(JAVAFILES)
+EXTRA_DIST=$(JAVAFILES) ClReader.cup ClReader.lex
 
 if HAVE_JAVA
 java_JAVA = $(JAVAFILES)

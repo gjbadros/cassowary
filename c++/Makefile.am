@@ -171,6 +171,3 @@ ClReader.cc.h ClReader.cc: ClReader.y ClReader.h
 	$(YACC) -d -pcl --output-file $@ $<
 
 cassowary/config-inline.h: cassowary
-
-cassowary:
-	ln -sf . cassowary
