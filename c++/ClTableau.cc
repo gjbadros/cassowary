@@ -84,7 +84,9 @@ ClTableau::removeColumn(const ClAbstractVariable &var)
   cerr << "(" << var << ")" << endl;
 #endif
   ClTableauColumnsMap::iterator it_var = _columns.find(&var);
-  assert(it_var != _columns.end());
+  if (it_var == _columns.end())
+    return &var;  // nothing to do
+
   ClTableauVarSet &varset = (*it_var).second;
   // remove the rows with the variables in varset
   ClTableauVarSet::iterator it = varset.begin();
