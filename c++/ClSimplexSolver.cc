@@ -83,7 +83,7 @@ ClSimplexSolver::addPointStays(const vector<const ClPoint *> &listOfPoints)
   static const double multiplier = 2.0;
   for ( ; it != listOfPoints.end(); it++ )
     {
-    addPointStay((*it)->Xvar(),(*it)->Yvar(),weight);
+    addPointStay((*it)->X(),(*it)->Y(),weight);
     weight *= multiplier;
     }
   return *this;
@@ -92,8 +92,8 @@ ClSimplexSolver::addPointStays(const vector<const ClPoint *> &listOfPoints)
 ClSimplexSolver &
 ClSimplexSolver::addPointStay(const ClPoint &clp, double weight)
 { 
-  addStay(clp.Xvar(),clsWeak(),weight);
-  addStay(clp.Yvar(),clsWeak(),weight);
+  addStay(clp.X(),clsWeak(),weight);
+  addStay(clp.Y(),clsWeak(),weight);
   return *this;
 }
 
