@@ -82,7 +82,7 @@ public:
 
   // change the value held -- should *not* use this if the variable is
   // in a solver -- instead use addEditVar() and suggestValue() interface
-  void set_value(Number value)
+  virtual void set_value(Number value)
     { _value = value; }
 
 private:
