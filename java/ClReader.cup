@@ -25,8 +25,8 @@ terminal String VARIABLE;
 
 non terminal constraint, equation, inequality, expr;
 
-precedence left TIMES, DIVIDE;
 precedence left PLUS, MINUS;
+precedence left TIMES, DIVIDE;
 precedence left UMINUS;
 
 constraint	::=	  equation:a 			{: RESULT = a; :}
