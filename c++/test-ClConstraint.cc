@@ -20,4 +20,6 @@ main( char **argv, int argc )
   ClLinearInequality constraint2(cle2);
   cout << constraint2 << endl;
 
+  cout << constraint2.expression() << endl;
+
 }

@@ -14,19 +14,28 @@
 // Use the singleton pattern for the strength objects
 ClStrength &clsRequired()
 {
-  static ClStrength required_strength("required", 1.0, 0.0, 0.0);
+  // required is distinct by reference equality to this static object,
+  // but I still use an especially high symbolic weight, just in case
+  static ClStrength required_strength("required", 2.0, 2.0, 2.0);
   return required_strength;
 }
 
 ClStrength &clsStrong()
 {
-  static ClStrength strong_strength("required", 0.0, 1.0, 0.0);
+  static ClStrength strong_strength("strong", 1.0, 0.0, 0.0);
   return strong_strength;
 }
 
+ClStrength &clsMedium()
+{
+  static ClStrength medium_strength("medium", 0.0, 1.0, 0.0);
+  return medium_strength;
+}
+
+
 ClStrength &clsWeak()
 {
-  static ClStrength weak_strength("required", 0.0, 0.0, 1.0);
+  static ClStrength weak_strength("weak", 0.0, 0.0, 1.0);
   return weak_strength;
 }
 
@@ -37,4 +46,3 @@ ClStrength::ClStrength(const String &name, double w1, double w2, double w3) :
   // just to be sure that this special case applies
   assert(nLevels() == 3);
 }
-

@@ -17,7 +17,9 @@
 class ClStrength;
 
 ClStrength &clsRequired();
-
+ClStrength &clsStrong();
+ClStrength &clsMedium();
+ClStrength &clsWeak();
 
 class ClStrength {
  private:

@@ -17,6 +17,7 @@ LDFLAGS = -L/uns/lib/egcs
 
 TEST_OBJS = ClStrength.o ClSymbolicWeight.o ClLinearExpression.o ClVariable.o ClConstraint.o
 TEST_SRCS = $(OBJS:.o=.cc)
+TESTS = test-ClStrength test-ClVariable test-ClLinearExpression test-ClConstraint
 
 SOURCES = $(wildcard *.cc)
 
@@ -26,10 +27,13 @@ HEADERS = Cassowary.h ClErrors.h \
 
 all:	libcassowary.a cassowary-tests
 
+clean:	
+	rm $(TESTS) *.o
+
 TAGS: $(SOURCES)
 	etags $^
 
-cassowary-tests: test-ClStrength test-ClVariable test-ClLinearExpression test-ClConstraint
+cassowary-tests: $(TESTS)
 
 test-ClStrength: test-ClStrength.o ClStrength.o ClSymbolicWeight.o
 	$(CPP) $(LDFLAGS) -o $@ $^
@@ -61,4 +65,4 @@ tags: TAGS
 	modpod2texinfo $< >$@
 
 
-.PHONY:	tags all cassowary-tests
+.PHONY:	tags all cassowary-tests tests
