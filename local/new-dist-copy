@@ -1,0 +1,7 @@
+#!/bin/sh -
+ver=$1
+scp cassowary-$ver.tar.gz dark:./ftp-constraints/code/cassowary
+scp cassowary-$ver.tar.gz dark:./www-constraints/cassowary
+scp cassowary-$ver.tar.gz dark:./ftp-gjb/code/cassowary
+echo "Be sure to edit www-constraints/cassowary/index.html"
+
