@@ -1,0 +1,20 @@
+Cassowary Constraint Solver for Smalltalk, C++, and Java
+Version 0.1
+
+Alan Borning <borning@cs.washington.edu> and
+Greg J. Badros <gjb@cs.washington.edu>
+University of Washington
+Computer Science and Engineering
+Seattle, WA 98195-2350
+19-June-1998
+
+with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
+
+http://www.cs.washington.edu/research/constraints/cassowary
+
+Contact: cassowary@cs.washington.edu
+
+See COPYRIGHT for legalese regarding use of this distribution.
+
+------------------------------------------------------------------
+
