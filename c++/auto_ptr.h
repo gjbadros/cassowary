@@ -6,6 +6,7 @@
 #ifndef AUTO_PTR_H
 #define AUTO_PTR_H
 
+// FIXGJB what is the right thing to use to test for VC++ 5.0
 #ifdef _WIN32
 #include <memory>
 template<class T>
