@@ -26,8 +26,6 @@
 #include <strstream.h>
 #include "cl-snarf.h"
 
-#include <guile/gh.h>
-
 #include "ClVariable.h"
 #include "ClSymbolicWeight.h"
 #include "ClLinearExpression.h"
@@ -1315,6 +1313,46 @@ share constraint variable objects. */
   return answer;
 }
 #undef FUNC_NAME
+
+CL_PROC(cl_set_auto_solve_x, "cl-set-auto-solve!", 2, 0, 0,
+           (SCM solver, SCM flag))
+  /** Choose whether SOLVER autosolves or not.
+FLAG should be either #t or #f. */
+#define FUNC_NAME s_cl_set_auto_solve_x
+{
+  if (!FIsClSimplexSolverScm(solver)) {
+    scm_wrong_type_arg(FUNC_NAME,1,solver);
+  }
+  bool f;
+  COPY_BOOL_OR_ERROR_DEFAULT_FALSE(f,flag,2,FUNC_NAME);
+  ClSimplexSolver *psolver = PsolverFromScm(solver);
+
+  psolver->SetAutosolve(f);
+
+  return SCM_UNSPECIFIED;
+}
+#undef FUNC_NAME
+
+CL_PROC(cl_set_auto_reset_stay_constants_x, "cl-set-auto-reset-stay-constants!", 2, 0, 0,
+           (SCM solver, SCM flag))
+  /** Choose whether SOLVER automatically resets stay constants or not.
+FLAG should be either #t or #f. */
+#define FUNC_NAME s_cl_set_auto_reset_stay_constants_x
+{
+  if (!FIsClSimplexSolverScm(solver)) {
+    scm_wrong_type_arg(FUNC_NAME,1,solver);
+  }
+  bool f;
+  COPY_BOOL_OR_ERROR_DEFAULT_FALSE(f,flag,2,FUNC_NAME);
+  ClSimplexSolver *psolver = PsolverFromScm(solver);
+
+  psolver->SetAutoResetStayConstants(f);
+
+  return SCM_UNSPECIFIED;
+}
+#undef FUNC_NAME
+
+
 
 CL_PROC(cl_add_constraint, "cl-add-constraint", 1, 0, 1,
            (SCM solver, SCM args))

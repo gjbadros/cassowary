@@ -21,9 +21,6 @@
 #include <strstream.h>
 #include "cl-snarf.h"
 
-#include <guile/gh.h>
-
-
 //// ClVariable wrapper
 class ClVariable;
 

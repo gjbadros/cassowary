@@ -65,7 +65,7 @@ class ClSimplexSolver : public ClSolver, public ClTableau {
 #endif
     _dummyCounter(0),
     _epsilon(1e-8),
-    _fOptimizeAutomatically(true),
+    _fResetStayConstantsAutomatically(true),
     _fNeedsSolving(false),
     _fExplainFailure(false),
     _pfnResolveCallback(NULL),
@@ -341,8 +341,28 @@ class ClSimplexSolver : public ClSolver, public ClTableau {
   void ChangeStrengthAndWeight(ClConstraint *pcn, const ClStrength &strength, double weight);
   void ChangeStrength(ClConstraint *pcn, const ClStrength &strength);
   void ChangeWeight(ClConstraint *pcn, double weight);
-  void DisplayObjective();
-  void ExternalResetStayConstants();
+  // void DisplayObjective();
+
+  // Each of the non-required stays will be represented by an equation
+  // of the form
+  //     v = c + eplus - eminus
+  // where v is the variable with the stay, c is the previous value of
+  // v, and eplus and eminus are slack variables that hold the error
+  // in satisfying the stay constraint.  We are about to change
+  // something, and we want to fix the constants in the equations
+  // representing the stays.  If both eplus and eminus are nonbasic
+  // they have value 0 in the current solution, meaning the previous
+  // stay was exactly satisfied.  In this case nothing needs to be
+  // changed.  Otherwise one of them is basic, and the other must
+  // occur only in the Expression for that basic error variable.
+  // Reset the Constant in this Expression to 0.
+  void ResetStayConstants();
+
+  ClSimplexSolver &SetAutoResetStayConstants(bool f)
+    { _fResetStayConstantsAutomatically = f; if (f) ResetStayConstants(); return *this; }
+
+  bool FIsAutoResetStayConstants() const
+    { return _fResetStayConstantsAutomatically; }
 
  protected:
   
@@ -476,21 +496,6 @@ class ClSimplexSolver : public ClSolver, public ClTableau {
   // and move exitVar out of the basis (i.e., make it a parametric variable)
   void Pivot(ClVariable entryVar, ClVariable exitVar);
 
-  // Each of the non-required stays will be represented by an equation
-  // of the form
-  //     v = c + eplus - eminus
-  // where v is the variable with the stay, c is the previous value of
-  // v, and eplus and eminus are slack variables that hold the error
-  // in satisfying the stay constraint.  We are about to change
-  // something, and we want to fix the constants in the equations
-  // representing the stays.  If both eplus and eminus are nonbasic
-  // they have value 0 in the current solution, meaning the previous
-  // stay was exactly satisfied.  In this case nothing needs to be
-  // changed.  Otherwise one of them is basic, and the other must
-  // occur only in the Expression for that basic error variable.
-  // Reset the Constant in this Expression to 0.
-  void ResetStayConstants();
-
   // Set the external variables known to this solver to their appropriate values.
   // Set each external basic variable to its value, and set each
   // external parametric variable to 0.  (It isn't clear that we will
@@ -546,7 +551,7 @@ class ClSimplexSolver : public ClSolver, public ClTableau {
   int _dummyCounter;
   const double _epsilon;
 
-  bool _fOptimizeAutomatically;
+  bool _fResetStayConstantsAutomatically;
   bool _fNeedsSolving;
   bool _fExplainFailure;
 

@@ -543,10 +543,8 @@ ClSimplexSolver::Resolve()
   DualOptimize();
   SetExternalVariables();
   _infeasibleRows.clear();
-  // The below was commented out by
-  // A. Beurive' Tue Jul  6 13:48:57 CEST 1999
-  // GJB:FIXME:: why, Anthony?
-  ResetStayConstants();
+  if (_fResetStayConstantsAutomatically)
+    ResetStayConstants();
 }
 
 ClSimplexSolver &
@@ -1609,7 +1607,7 @@ ClSimplexSolver::ChangeStrengthAndWeight(ClConstraint *pcn, const ClStrength &st
       cerr << "to: " << endl << *pzRow << endl;
 #endif
 
-      if (_fOptimizeAutomatically)
+      if (_fAutosolve)
 	{
 	  Optimize(_objective);
 	  SetExternalVariables();
@@ -1629,11 +1627,4 @@ void
 ClSimplexSolver::ChangeWeight(ClConstraint *pcn, double weight)
 {
   ChangeStrengthAndWeight(pcn,pcn->strength(),weight);
-}
-
-// A. Beurive' Fri Jul  9 17:34:47 CEST 1999
-void
-ClSimplexSolver::ExternalResetStayConstants()
-{
-  ResetStayConstants();
 }
