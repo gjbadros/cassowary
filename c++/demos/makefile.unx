@@ -15,7 +15,7 @@ CLDIR = ..
 PROGRAM = ClBoundedQuadDemo
 
 EGCSDIR=/uns/egcs
-CL_LDFLAGS = -L$(CLDIR) -lCl -L$(EGCSDIR)/lib
+CL_LDFLAGS = -L$(CLDIR) -lcassowary -L$(EGCSDIR)/lib
 CL_CPPFLAGS = -I$(CLDIR) -I$(EGCSDIR)/include -DCL_NO_TRACE
 
 # All common UNIX compiler flags and options are now in
