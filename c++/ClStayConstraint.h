@@ -25,7 +25,7 @@ class ClAbstractVariable;
 class ClStayConstraint : public ClEditOrStayConstraint {
  public:
 
-  ClStayConstraint(const ClAbstractVariable &var,
+  ClStayConstraint(const ClVariable &var,
 		   const ClStrength &strength = clsWeak(), double weight = 1.0 ) :
     ClEditOrStayConstraint(var,strength,weight)
     { }
