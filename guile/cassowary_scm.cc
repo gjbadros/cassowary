@@ -673,7 +673,7 @@ number.  STRENGTH defaults to cls-required, FACTOR defaults to 1. */
     scm_wrong_type_arg(FUNC_NAME, iarg++, expr);
   }
 
-  ClStrength *pcls = &clsRequired();
+  const ClStrength *pcls = &clsRequired();
   if (FIsClStrengthScm(strength)) {
     pcls = PclsFromScm(strength);
   } else if (!FUnsetSCM(strength)) {
@@ -725,7 +725,7 @@ error will be signalled. */
         FIsClLinearExpressionScm(exprB) || FIsClVariableScm(exprB))) {
     scm_misc_error(FUNC_NAME,"One of arguments must contain a variable",SCM_EOL);
   }
-  ClStrength *pcls = &clsRequired();
+  const ClStrength *pcls = &clsRequired();
   if (FIsClStrengthScm(strength)) {
     pcls = PclsFromScm(strength);
   } else if (!FUnsetSCM(strength)) {
@@ -829,7 +829,7 @@ arbitrary constraints. */
     scm_misc_error(FUNC_NAME,"One of arguments must contain a variable",SCM_EOL);
   }
 
-  ClStrength *pcls = &clsRequired();
+  const ClStrength *pcls = &clsRequired();
   if (FIsClStrengthScm(strength)) {
     pcls = PclsFromScm(strength);
   } else if (!FUnsetSCM(strength)) {
@@ -904,7 +904,7 @@ cls-required, FACTOR defaults to 1.  */
     scm_misc_error(FUNC_NAME,"One of arguments must contain a variable",SCM_EOL);
   }
 
-  ClStrength *pcls = &clsRequired();
+  const ClStrength *pcls = &clsRequired();
   if (FIsClStrengthScm(strength)) {
     pcls = PclsFromScm(strength);
   } else if (!FUnsetSCM(strength)) {
