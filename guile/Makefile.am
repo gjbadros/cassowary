@@ -3,7 +3,9 @@
 
 lib_LIBRARIES = libcassowaryguile.a
 
-INCLUDES = -I. -I../c++ -I$(prefix)/include -I$(exec_prefix)/include
+GUILE_INCLUDES = @GUILE_INCLUDES@
+
+INCLUDES = -I. -I../c++ -I$(prefix)/include -I$(exec_prefix)/include $(GUILE_INCLUDES)
 
 libcassowaryguile_a_SOURCES = \
 	cassowary_scm.cc
