@@ -1,2 +1,16 @@
 ClAbstractVariable.class
+ClConstraint.class
+ClDummyVariable.class
+ClObjectiveVariable.class
+ClPoint.class
+ClSlackVariable.class
+ClStrength.class
+ClSymbolicWeight.class
 ClVariable.class
+ExCLConstraintNotFound.class
+ExCLError.class
+ExCLInternalError.class
+ExCLNonlinearExpression.class
+ExCLNotEnoughtStays.class
+ExCLRequiredFailure.class
+ExCLTooDifficult.class
