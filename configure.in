@@ -30,7 +30,7 @@ AC_DEFUN(ACE_ARG_PATH,
     if test -z "${withval}" || test "yes" = "${withval}" || test "no" = "${withval}"; then
       AC_MSG_ERROR(missing pathname argument to --with-$1)
     elif test ! -d "${withval}"; then
-      AC_MSG_ERROR(invalid pathname argument to --with-$1: ${withval})
+      AC_MSG_ERROR(invalid pathname argument (not a dir, or does not exist) to --with-$1: ${withval})
     else
       $3
     fi],
@@ -86,9 +86,9 @@ AC_ARG_ENABLE(stats-display,
 
 CPPEXTRAFLAGS=""
 AC_ARG_ENABLE(warnings,
-[  --enable-warnings          Turn on all compiler warnings]
+[  --enable-warnings          Turn on most compiler warnings]
 ,[if test "yes" = "$enableval"; then
-   CPPEXTRAFLAGS="-Wall -W -pedantic"
+   CPPEXTRAFLAGS="-Wall -W"
   fi
 ])
 AC_SUBST(CPPEXTRAFLAGS)
@@ -167,6 +167,18 @@ AC_SUBST(GUILE_LIB_DIR)
 AC_SUBST(GUILE_PKGDATA_DIR)
 
 
+JAVA_CLASS_PATH="./classes"
+ACE_ARG_PATH(java-class-path,
+[  --with-java-class-path=DIR 
+                             Use DIR as the destination for java .class files
+                             [optional]],
+[
+	AC_MSG_CHECKING(where to install java .class files)
+	JAVA_CLASS_PATH=$withval
+	AC_MSG_RESULT("$JAVA_CLASS_PATH")
+])
+
+AC_SUBST(JAVA_CLASS_PATH)
 
 AC_OUTPUT(
 	Makefile \
