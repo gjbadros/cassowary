@@ -10,7 +10,8 @@ Fri Sep  4 18:52:50 1998  Greg Badros  <gjb@cs.washington.edu>
 Fri Sep  4 18:51:30 1998  Greg Badros  <gjb@cs.washington.edu>
 
 	* guile/Makefile: Use "perl" from path to run extract docs instead 
-	of relying on #! line
+	of relying on #! line, and generate the -procedures.txt file as
+	well as the .sgml file
 
 Wed Sep  2 17:08:14 1998  Greg Badros  <gjb@cs.washington.edu>
 
