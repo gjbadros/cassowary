@@ -1,3 +1,45 @@
+Thu Mar 18 11:05:27 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/*.h: Use #include config-inline.h incantation so that header 
+	files don't include config.h (since they may be included by
+	another package that has its own config.h)
+
+	* c++/*.cc: Use #include config.h as these are build-time-only
+	used and can thus rely on the full configure details.
+
+Thu Mar 18 10:57:08 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* guile/cassowary_scm.hpp: Use #include config-inline.h
+	incantation.
+
+	* guile/cassowary_scm.h: Drop including config.h; it's not
+	needed. 
+
+	* guile/cassowary_scm.cc: Use cassowary/config.h, not config.h
+
+Thu Mar 18 10:29:40 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile.am: Install config-inline.h, not config.h, and
+	build config-inline.h by grepping for #define CL_ in config.h.
+	This works around the problem caused by Scwm including Cassowary
+	header files which then included cassowary's config.h and
+	conflicted with Scwm's config.h.
+
+Thu Mar 18 10:11:40 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/test-*.cc: Only #include "Cl.h"
+
+Thu Mar 18 09:50:45 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* wrappers/Makefile.in (clean): use rm -f so we don't get a
+	warning if file is missing.
+
+Thu Mar 18 09:49:35 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* java/Makefile.in: Use JAVA_CLASS_PATH configure variable.  Fix
+	install target to echo a message about the install happening
+	during the build.
+
 Wed Mar 17 18:54:16 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* c++/Makefile.am: Use libtool, and added lib_LTLIBRARIES.  Put

@@ -1,8 +1,8 @@
-.deps
-*.o
-*.lo
 *.a
 *.la
+*.lo
+*.o
+.deps
 .libs
 ClBug0
 ClBug1
@@ -24,6 +24,7 @@ Makefile
 Makefile.dependencies
 Makefile.in
 QocaBench
+config-inline.h
 config.h
 creader-lex.cc
 creader.cc
