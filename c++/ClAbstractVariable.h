@@ -11,23 +11,46 @@
 #ifndef ClAbstractVariable_H
 #define ClAbstractVariable_H
 
+#include <iostream.h>
 #include "Cassowary.h"
 
 class ClAbstractVariable {
 public:
+  // Return the name of the variable
   String name() const
     { return my_name; }
-  void set_name(String const &name)
+
+  // Set the name of the variable
+  void setName(String const &name)
     { my_name = name; }
 
-  bool isDummy() const
+  // Return true if this a dummy variable (used as a marker variable
+  // for required equality constraints).  Such variables aren't
+  // allowed to enter the basis when pivoting.
+  virtual bool isDummy() const
     { return false; }
-  bool isExternal() const = 0;
-  bool isPivotable() const = 0;
-  bool isRestricted() const = 0;
 
-  ostream &printOn(ostream &xo);
-    {  xo << "CV#" << name << endl;  return xo; }
+  // Return true if this a variable known outside the solver.  
+  // (We need to give such variables a value after solving is complete.)
+  virtual bool isExternal() const = 0;
+
+  // Return true if we can pivot on this variable.
+  virtual bool isPivotable() const = 0;
+
+  // Return true if this is a restricted (or slack) variable.  Such
+  // variables are constrained to be non-negative and occur only
+  // internally to the simplex solver.
+  virtual bool isRestricted() const = 0;
+
+  // Prints a semi-descriptive representation to the stream, using the
+  // name if there is one, and otherwise the hash number of this
+  // object.
+  //	EXAMPLES
+  //	  x[10.0]		-- w/ name
+  //	  x[0.0,100]		-- w/ name, bounds but no value yet
+  //	  CV#345(10.0)		-- w/o name
+  virtual ostream &printOn(ostream &xo)
+    {  xo << "CV#" << my_name << endl;  return xo; }
 
 private:
   String my_name;

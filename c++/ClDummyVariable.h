@@ -16,13 +16,25 @@
 
 class ClDummyVariable: public ClAbstractVariable {
 public:
-  bool isDummy() const
+  // Return true if this a dummy variable (used as a marker variable
+  // for required equality constraints).  Such variables aren't
+  // allowed to enter the basis when pivoting.
+  virtual bool isDummy() const
     { return true; }
-  bool isExternal() const
+
+  // Return true if this a variable known outside the solver.  
+  // (We need to give such variables a value after solving is complete.)
+  virtual bool isExternal() const
     { return false; }
-  bool isPivotable() const
+
+  // Return true if we can pivot on this variable.
+  virtual bool isPivotable() const
     { return false; }
-  bool isRestricted() const
+
+  // Return true if this is a restricted (or slack) variable.  Such
+  // variables are constrained to be non-negative and occur only
+  // internally to the simplex solver.
+  virtual bool isRestricted() const
     { return true; }
 };
 

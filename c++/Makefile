@@ -8,6 +8,7 @@
 # Makefile for cassowary
 
 CC = gcc
+CPP = g++
 CFLAGS = -g
 
 TEST_OBJS = 
@@ -15,12 +16,16 @@ TEST_SRCS = $(OBJS:.o=.cc)
 
 HEADERS = Cassowary.h ClErrors.h \
 	  ClAbstractVariable.h ClDummyVariable.h ClObjectVariable.h \
-	  ClSlackVariable.h ClVariable.h
+	  ClSlackVariable.h ClVariable.h \
+	  ClConstraint.h ClStrength.h
 
 TAGS: $(SOURCES)
 	etags $^
 
 all:	libcassowary.a cassowary-test
+
+test-ClStrength: test-ClStrength.o ClStrength.o ClSymbolicWeight.o
+	g++ -o $@ $^
 
 cassowary-test:	$(TEST_OBJS)
 
