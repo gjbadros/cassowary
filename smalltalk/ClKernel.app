@@ -1099,6 +1099,7 @@ addConstraint: cn
 	"ACTION
 		Add the constraint cn to the tableau.
 	PARAMETERS
+#FIXGJB: cn is really just a ClConstraint, methinks
 		cn <ClLinearConstraint>
 	"
 		| expr |
@@ -1165,11 +1166,13 @@ removeConstraint: cn
 
 	"remove any error variables from the objective function"
 	eVars := self errorVars removeKey: cn ifAbsent: [#( )].
+#FIXGJB: elsewhere, zRow is the expression row, not the objective variable
 	zRow := self objective.
 	obj := self rows at: zRow.
 	eVars do: [:v | 
 		expr := self rows at: v ifAbsent: [nil].
 		expr isNil
+#FIXGJB: how does ( -1.0*cn strength symbolicWeight ) turn into a coefficient?
 			ifTrue: [obj addVariable: v coefficient: -1.0*cn strength symbolicWeight subject: zRow solver: self]
 			ifFalse: [obj addExpression: expr times: -1.0*cn strength symbolicWeight subject: zRow solver: self]].
 
@@ -1309,6 +1312,7 @@ addWithArtificialVariable: expr
 	expr terms keysAndValuesDo: [:v :c | azRow terms at: v put: c].
 	self addRow: az expr: azRow.
 	self addRow: av expr: expr.
+#FIXGJB: comment doesn't match code...
 	"try to optimize av to 0"
 	self optimize: az.
 	"Check that we were able to make the objective value 0.  If not, the original constraint was unsatisfiable."
@@ -1459,6 +1463,7 @@ dualOptimize
 				expr variablesAndCoefficientsDo: [:v :c |
 					(c>0.0 and: [v isPivotable]) ifTrue: [
 						zc := zRow terms at: v ifAbsent: [nil].
+#FIXGJB: here ClSymbolicWeight is being used as a coefficient, too
 						r := zc isNil ifTrue: [ClSymbolicWeight zero] ifFalse: [zc/c].
 						(ratio isNil or: [r < ratio]) ifTrue: [entryVar := v.  ratio := r]]].
 				ratio isNil ifTrue: [ExCLInternalError signal].
