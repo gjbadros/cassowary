@@ -6,10 +6,11 @@ EGCSDIR=/uns/egcs
 
 INCDIR = $(QTDIR)/include
 CFLAGS = -g -fno-strength-reduce -Wall -W -I/usr/X11R6/include -I.. -DCL_NO_TRACE
+# CFLAGS += -DQUAD_DEMO_SHOW_INTERNAL_INFO
 LIBCFLAGS = -fPIC
 YACCCFLAGS = -Wno-unused -Wno-parentheses
-CASSO_LIBRARY = ../libcassowary.a
-LFLAGS = -pg -L$(EGCSDIR)/lib -L$(QTDIR)/lib -lqt -L.. -lcassowary
+CL_LIBRARY = ../libcassowary.a
+LFLAGS = -pg -L$(EGCSDIR)/lib -L$(QTDIR)/lib -lqt $(CL_LIBRARY) # -L.. -lcassowary #uncomment for dynlink
 CC = g++
 MOC = $(QTDIR)/bin/moc
 SHELL =	/bin/sh
