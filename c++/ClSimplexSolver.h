@@ -165,6 +165,12 @@ class ClSimplexSolver : public ClTableau {
   // Also remove any error variable associated with cn
   ClSimplexSolver &removeConstraint(const ClConstraint &cn);
 
+  // Same as above, but returns false if the constraint dne
+  // The above function "removeConstraint" throws an exception in that case
+  // which may be inconvenient
+  bool removeConstraintNoException(const ClConstraint &cn);
+
+
   // Re-initialize this solver from the original constraints, thus
   // getting rid of any accumulated numerical problems.  (Actually, we
   // haven't definitely observed any such problems yet)
