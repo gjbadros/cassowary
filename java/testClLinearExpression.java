@@ -15,7 +15,7 @@
 // testClLinearExpression.java
 
 public class testClLinearExpression {
-  public static void main(String[] args) {
+  public final static void main(String[] args) {
     ClVariable a = new ClVariable("a");
     ClLinearExpression cle = new ClLinearExpression(a);
     System.out.println(cle.toString());

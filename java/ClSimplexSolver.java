@@ -38,7 +38,7 @@ class ClSimplexSolver extends ClTableau
     traceprint("objective expr == " + rowExpression(my_objective));
   }
 
-  public ClSimplexSolver addLowerBound(ClAbstractVariable v, double lower)
+  public final ClSimplexSolver addLowerBound(ClAbstractVariable v, double lower)
   { 
     try {
       ClLinearInequality cn = 
@@ -51,7 +51,7 @@ class ClSimplexSolver extends ClTableau
     }
   }
 
-  public ClSimplexSolver addUpperBound(ClAbstractVariable v, double upper)
+  public final ClSimplexSolver addUpperBound(ClAbstractVariable v, double upper)
   { 
     try {
       ClLinearInequality cn = 
@@ -64,11 +64,11 @@ class ClSimplexSolver extends ClTableau
     }
   }
 
-  public ClSimplexSolver addBounds(ClAbstractVariable v,
+  public final ClSimplexSolver addBounds(ClAbstractVariable v,
 				   double lower, double upper)
   { addLowerBound(v,lower); addUpperBound(v,upper); return  this; }
 
-  public ClSimplexSolver addConstraint(ClConstraint cn)
+  public final ClSimplexSolver addConstraint(ClConstraint cn)
        throws ExCLRequiredFailure, ExCLInternalError
   {
     fnenterprint("addConstraint: " + cn);
@@ -84,7 +84,7 @@ class ClSimplexSolver extends ClTableau
     return  this;
   }
 
-  public ClSimplexSolver addPointStays(Vector listOfPoints)
+  public final ClSimplexSolver addPointStays(Vector listOfPoints)
        throws ExCLRequiredFailure, ExCLInternalError
   {
     fnenterprint("addPointStays" + listOfPoints);
@@ -97,7 +97,7 @@ class ClSimplexSolver extends ClTableau
     return this;
   }
 
-  public ClSimplexSolver addPointStay(ClVariable vx, 
+  public final ClSimplexSolver addPointStay(ClVariable vx, 
 				      ClVariable vy, 
 				      double weight)
        throws ExCLRequiredFailure, ExCLInternalError
@@ -107,12 +107,12 @@ class ClSimplexSolver extends ClTableau
     return  this;
   }
 
-  public ClSimplexSolver addPointStay(ClVariable vx, 
+  public final ClSimplexSolver addPointStay(ClVariable vx, 
 				      ClVariable vy)
        throws ExCLRequiredFailure, ExCLInternalError
   { addPointStay(vx,vy,1.0); return this; }
   
-  public ClSimplexSolver addPointStay(ClPoint clp, double weight)
+  public final ClSimplexSolver addPointStay(ClPoint clp, double weight)
        throws ExCLRequiredFailure, ExCLInternalError
   { 
     addStay(clp.X(),ClStrength.weak,weight);
@@ -120,14 +120,14 @@ class ClSimplexSolver extends ClTableau
     return this;
   }
 
-  public ClSimplexSolver addPointStay(ClPoint clp)
+  public final ClSimplexSolver addPointStay(ClPoint clp)
        throws ExCLRequiredFailure, ExCLInternalError
   {
     addPointStay(clp,1.0); 
     return this;
   }
 
-  public ClSimplexSolver addStay(ClVariable v, 
+  public final ClSimplexSolver addStay(ClVariable v, 
 				 ClStrength strength,
 				 double weight)
        throws ExCLRequiredFailure, ExCLInternalError
@@ -136,21 +136,21 @@ class ClSimplexSolver extends ClTableau
     return addConstraint(cn); 
   }
 
-  public ClSimplexSolver addStay(ClVariable v, 
+  public final ClSimplexSolver addStay(ClVariable v, 
 				 ClStrength strength)
        throws ExCLRequiredFailure, ExCLInternalError
   { 
     addStay(v,strength,1.0); return this;
   }
 
-  public ClSimplexSolver addStay(ClVariable v)
+  public final ClSimplexSolver addStay(ClVariable v)
        throws ExCLRequiredFailure, ExCLInternalError
   { 
     addStay(v,ClStrength.weak,1.0); return this;
   }
 
 
-  public ClSimplexSolver removeConstraint(ClConstraint cn)
+  public final ClSimplexSolver removeConstraint(ClConstraint cn)
        throws ExCLConstraintNotFound, ExCLInternalError
   {
     fnenterprint("removeConstraint: " + cn);
@@ -290,14 +290,14 @@ class ClSimplexSolver extends ClTableau
     return  this;
   }
   
-  public void reset()
+  public final void reset()
        throws ExCLInternalError
   {
     fnenterprint("reset");
     throw new ExCLInternalError();
   }
   
-  public void resolve(Vector newEditConstants)
+  public final void resolve(Vector newEditConstants)
        throws ExCLInternalError
   { // CODE DUPLICATED BELOW
     fnenterprint("resolve" + newEditConstants);
@@ -308,7 +308,7 @@ class ClSimplexSolver extends ClTableau
     setExternalVariables();
   }
 
-  public void resolve(double x, double y)
+  public final void resolve(double x, double y)
        throws ExCLInternalError
   {
     Vector vals = new Vector(2);
@@ -317,7 +317,7 @@ class ClSimplexSolver extends ClTableau
     resolve(vals);
   }
 
-  public String toString()
+  public final String toString()
   { 
     StringBuffer bstr = new StringBuffer(super.toString());
     bstr.append("my_editPlusErrorVars: ");
@@ -337,7 +337,7 @@ class ClSimplexSolver extends ClTableau
     return bstr.toString();
   }
 
-  protected void addWithArtificialVariable(ClLinearExpression expr)
+  protected final void addWithArtificialVariable(ClLinearExpression expr)
        throws ExCLRequiredFailure, ExCLInternalError
   {
     fnenterprint("addWithArtificialVariable: " + expr);
@@ -377,7 +377,7 @@ class ClSimplexSolver extends ClTableau
     removeRow(az);
   }
 
-  protected boolean tryAddingDirectly(ClLinearExpression expr)
+  protected final boolean tryAddingDirectly(ClLinearExpression expr)
        throws ExCLRequiredFailure
   {
     fnenterprint("tryAddingDirectly: " + expr );
@@ -395,7 +395,7 @@ class ClSimplexSolver extends ClTableau
     return true; // successfully added directly
   }
 
-  protected ClAbstractVariable chooseSubject(ClLinearExpression expr)
+  protected final ClAbstractVariable chooseSubject(ClLinearExpression expr)
        throws ExCLRequiredFailure
   {
     fnenterprint("chooseSubject: " + expr);
@@ -458,7 +458,7 @@ class ClSimplexSolver extends ClTableau
     return subject;
   }
   
-  protected void deltaEditConstant(double delta, 
+  protected final void deltaEditConstant(double delta, 
 				   ClAbstractVariable plusErrorVar, 
 				   ClAbstractVariable minusErrorVar)
   {
@@ -496,7 +496,7 @@ class ClSimplexSolver extends ClTableau
     }
   }
 
-  protected void dualOptimize()
+  protected final void dualOptimize()
        throws ExCLInternalError
   {
     fnenterprint("dualOptimize:");
@@ -534,7 +534,7 @@ class ClSimplexSolver extends ClTableau
     }
   }
 
-  protected ClLinearExpression newExpression(ClConstraint cn)
+  protected final ClLinearExpression newExpression(ClConstraint cn)
   {
     fnenterprint("newExpression: " + cn);
     traceprint("cn.isInequality() == " + cn.isInequality());
@@ -622,7 +622,7 @@ class ClSimplexSolver extends ClTableau
     return expr;
   }
 
-  protected void optimize(ClObjectiveVariable zVar)
+  protected final void optimize(ClObjectiveVariable zVar)
        throws ExCLInternalError
   {
     fnenterprint("optimize: " + zVar);
@@ -675,7 +675,7 @@ class ClSimplexSolver extends ClTableau
     }
   }
 
-  protected void pivot(ClAbstractVariable entryVar, 
+  protected final void pivot(ClAbstractVariable entryVar, 
 		       ClAbstractVariable exitVar)
        throws ExCLInternalError
   {
@@ -688,7 +688,7 @@ class ClSimplexSolver extends ClTableau
     addRow(entryVar, pexpr);
   }
   
-  protected void resetEditConstants(Vector newEditConstants)
+  protected final void resetEditConstants(Vector newEditConstants)
        throws ExCLInternalError
   {
     fnenterprint("resetEditConstants:" + newEditConstants);
@@ -711,7 +711,7 @@ class ClSimplexSolver extends ClTableau
     }
   }
   
-  protected void resetStayConstants()
+  protected final void resetStayConstants()
   {
     fnenterprint("resetStayConstants");
 
@@ -725,7 +725,7 @@ class ClSimplexSolver extends ClTableau
     }
   }
 
-  protected void setExternalVariables()
+  protected final void setExternalVariables()
   {
     fnenterprint("setExternalVariables:");
     traceprint(this.toString());
@@ -745,7 +745,7 @@ class ClSimplexSolver extends ClTableau
     }
   }
 
-  private void insertErrorVar(ClConstraint cn, ClAbstractVariable var)
+  protected final void insertErrorVar(ClConstraint cn, ClAbstractVariable var)
   { 
     fnenterprint("insertErrorVar:" + cn + ", " + var);
 

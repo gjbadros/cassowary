@@ -28,7 +28,7 @@ class ClTableau extends CL
     my_externalParametricVars = new Set();
   }
 
-  public void noteRemovedVariable(ClAbstractVariable v, ClAbstractVariable subject)
+  public final void noteRemovedVariable(ClAbstractVariable v, ClAbstractVariable subject)
     { 
       fnenterprint("noteRemovedVariable: " + v + ", " + subject);
       if (subject != null) {
@@ -36,7 +36,7 @@ class ClTableau extends CL
       }
     }
 
-  public void noteAddedVariable(ClAbstractVariable v, ClAbstractVariable subject)
+  public final void noteAddedVariable(ClAbstractVariable v, ClAbstractVariable subject)
     { 
       fnenterprint("noteAddedVariable: " + v + ", " + subject);
       if (subject != null) {
@@ -64,7 +64,7 @@ class ClTableau extends CL
       return bstr.toString();
     }
 
-  private void insertColVar(ClAbstractVariable param_var, 
+  private final void insertColVar(ClAbstractVariable param_var, 
 			    ClAbstractVariable rowvar)
   { 
     Set rowset = (Set) my_columns.get(param_var);
@@ -73,7 +73,7 @@ class ClTableau extends CL
     rowset.insert(rowvar);
   }
 
-  protected void addRow(ClAbstractVariable var, ClLinearExpression expr)
+  protected final void addRow(ClAbstractVariable var, ClLinearExpression expr)
     {
       fnenterprint("addRow: " + var + ", " + expr);
 
@@ -91,7 +91,7 @@ class ClTableau extends CL
       traceprint(this.toString());
     }
 
-  protected void removeColumn(ClAbstractVariable var)
+  protected final void removeColumn(ClAbstractVariable var)
     {
       fnenterprint("removeColumn:" + var);
       // remove the rows with the variables in varset
@@ -110,7 +110,7 @@ class ClTableau extends CL
       }
     }
 
-  protected ClLinearExpression removeRow(ClAbstractVariable var)
+  protected final ClLinearExpression removeRow(ClAbstractVariable var)
        throws ExCLInternalError
     {
       fnenterprint("removeRow:" + var);
@@ -138,7 +138,7 @@ class ClTableau extends CL
       return expr;
     }
 
-  protected void substituteOut(ClAbstractVariable oldVar, ClLinearExpression expr)
+  protected final void substituteOut(ClAbstractVariable oldVar, ClLinearExpression expr)
     {
       fnenterprint("substituteOut:" + oldVar + ", " + expr);
       traceprint(this.toString());
@@ -160,18 +160,18 @@ class ClTableau extends CL
       my_columns.remove(oldVar);
     }
 
-  protected Hashtable columns()
+  protected final Hashtable columns()
     { return my_columns; }
 
-  protected Hashtable rows()
+  protected final Hashtable rows()
     { return my_rows; }
 
-  protected boolean columnsHasKey(ClAbstractVariable subject)
+  protected final boolean columnsHasKey(ClAbstractVariable subject)
     { 
       return my_columns.containsKey(subject);
     }
 
-  protected ClLinearExpression rowExpression(ClAbstractVariable v)
+  protected final ClLinearExpression rowExpression(ClAbstractVariable v)
     {
       // fnenterprint("rowExpression:" + v);
       return (ClLinearExpression) my_rows.get(v);

@@ -284,9 +284,9 @@ class ClLinearInequality extends ClLinearConstraint
   }
 
 
-  public  boolean isInequality()
+  public final boolean isInequality()
   { return true; }
 
-  public String toString()
+  public final String toString()
   { return super.toString() + " >= 0 )"; }
 }

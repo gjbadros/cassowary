@@ -74,18 +74,18 @@ class ClLinearExpression extends CL
       return  this;
     }
 
-  public Object clone()
+  public final Object clone()
     {
       return new ClLinearExpression(my_constant,my_terms);
     }
 
-  public ClLinearExpression times(double x)
+  public final ClLinearExpression times(double x)
     {
       ClLinearExpression result = (ClLinearExpression) clone();
       return result.multiplyMe(x);
     }
 
-  public ClLinearExpression times(ClLinearExpression expr) 
+  public final ClLinearExpression times(ClLinearExpression expr) 
        throws ExCLNonlinearExpression
     {
       if (isConstant())
@@ -99,34 +99,34 @@ class ClLinearExpression extends CL
       return times(expr.my_constant.doubleValue());
     }
 
-  public ClLinearExpression times(ClVariable var) 
+  public final ClLinearExpression times(ClVariable var) 
        throws ExCLNonlinearExpression
   { return times(new ClLinearExpression(var)); }
 
-  public ClLinearExpression plus(ClLinearExpression expr)
+  public final ClLinearExpression plus(ClLinearExpression expr)
     {
       ClLinearExpression result =  this;
       result.addExpression(expr,1.0);
       return result;
     }
 
-  public ClLinearExpression plus(ClVariable var) 
+  public final ClLinearExpression plus(ClVariable var) 
        throws ExCLNonlinearExpression
   { return plus(new ClLinearExpression(var)); }
 
-  public ClLinearExpression minus(ClLinearExpression expr)
+  public final ClLinearExpression minus(ClLinearExpression expr)
     {
       ClLinearExpression result =  this;
       result.addExpression(expr,-1.0);
       return result;
     }
 
-  public ClLinearExpression minus(ClVariable var) 
+  public final ClLinearExpression minus(ClVariable var) 
        throws ExCLNonlinearExpression
   { return minus(new ClLinearExpression(var)); }
 
 
-  public ClLinearExpression divide(double x) throws ExCLNonlinearExpression
+  public final ClLinearExpression divide(double x) throws ExCLNonlinearExpression
     {
       if (CL.approx(x,0.0))
 	{
@@ -135,7 +135,7 @@ class ClLinearExpression extends CL
       return times(1.0/x);
     }
 
-  public ClLinearExpression divide(ClLinearExpression expr) throws ExCLNonlinearExpression
+  public final ClLinearExpression divide(ClLinearExpression expr) throws ExCLNonlinearExpression
     {
       if (!expr.isConstant())
 	{
@@ -144,7 +144,7 @@ class ClLinearExpression extends CL
       return divide(expr.my_constant.doubleValue());
     }
 
-  public ClLinearExpression divFrom(ClLinearExpression expr) throws ExCLNonlinearExpression
+  public final ClLinearExpression divFrom(ClLinearExpression expr) throws ExCLNonlinearExpression
     {
       if (!isConstant() || CL.approx(my_constant.doubleValue(),0.0))
 	{
@@ -153,10 +153,10 @@ class ClLinearExpression extends CL
       return expr.divide(my_constant.doubleValue());
     }
 
-  public ClLinearExpression subtractFrom(ClLinearExpression expr)
+  public final ClLinearExpression subtractFrom(ClLinearExpression expr)
     { return expr.minus( this); }
 
-  public ClLinearExpression addExpression(ClLinearExpression expr, double n,
+  public final ClLinearExpression addExpression(ClLinearExpression expr, double n,
  					  ClAbstractVariable subject, 
  					  ClTableau solver)
     {
@@ -170,7 +170,7 @@ class ClLinearExpression extends CL
       return this;
     }
 
-  public ClLinearExpression addExpression(ClLinearExpression expr, double n)
+  public final ClLinearExpression addExpression(ClLinearExpression expr, double n)
     {
       incrementConstant(n * expr.constant());
       
@@ -182,12 +182,12 @@ class ClLinearExpression extends CL
       return this;
     }
 
-  public ClLinearExpression addExpression(ClLinearExpression expr)
+  public final ClLinearExpression addExpression(ClLinearExpression expr)
     {
       return addExpression(expr,1.0);
     }
 
-  public ClLinearExpression addVariable(ClAbstractVariable v, double c)
+  public final ClLinearExpression addVariable(ClAbstractVariable v, double c)
     { // body largely duplicated below
       fnenterprint("addVariable:" + v + ", " + c);
 
@@ -208,17 +208,17 @@ class ClLinearExpression extends CL
       return this;
     }
 
-  public ClLinearExpression addVariable(ClAbstractVariable v)
+  public final ClLinearExpression addVariable(ClAbstractVariable v)
   { return addVariable(v,1.0); }
 
 
-  public ClLinearExpression setVariable(ClAbstractVariable v, double c)
+  public final ClLinearExpression setVariable(ClAbstractVariable v, double c)
     { 
       //assert(c != 0.0);  
       my_terms.put(v,new Double(c)); return this;
     }
 
-  public ClLinearExpression addVariable(ClAbstractVariable v, double c,
+  public final ClLinearExpression addVariable(ClAbstractVariable v, double c,
  					ClAbstractVariable subject, ClTableau solver)
      { // body largely duplicated above
        fnenterprint("addVariable:" + v + ", " + c + ", " + subject + ", ...");
@@ -248,7 +248,7 @@ class ClLinearExpression extends CL
        return this;
      }
   
-  public ClAbstractVariable anyVariable() throws ExCLInternalError
+  public final ClAbstractVariable anyVariable() throws ExCLInternalError
     {
       if (isConstant())
 	{
@@ -257,7 +257,7 @@ class ClLinearExpression extends CL
       return (ClAbstractVariable) my_terms.keys().nextElement();
     }
 
-  public void substituteOut(ClAbstractVariable var, ClLinearExpression expr, 
+  public final void substituteOut(ClAbstractVariable var, ClLinearExpression expr, 
  			    ClAbstractVariable subject, ClTableau solver)
   {
     fnenterprint("CLE:substituteOut: " + var + ", " + expr + ", " + subject + ", ...");
@@ -288,12 +288,12 @@ class ClLinearExpression extends CL
     traceprint("Now this is " + this);
   }
   
-  public void changeSubject(ClAbstractVariable old_subject, ClAbstractVariable new_subject)
+  public final void changeSubject(ClAbstractVariable old_subject, ClAbstractVariable new_subject)
     {
       my_terms.put(old_subject,new Double(newSubject(new_subject)));
     }
   
-  public double newSubject(ClAbstractVariable subject)
+  public final double newSubject(ClAbstractVariable subject)
     {
       fnenterprint("newSubject:" + subject);
       Double coeff = (Double) my_terms.remove(subject);
@@ -302,7 +302,7 @@ class ClLinearExpression extends CL
       return reciprocal;
     }
 
-  public double coefficientFor(ClAbstractVariable var)
+  public final double coefficientFor(ClAbstractVariable var)
     { 
       Double coeff = (Double) my_terms.get(var);
       if (coeff != null)
@@ -311,22 +311,22 @@ class ClLinearExpression extends CL
 	return 0.0;
     }
 
-  public double constant()
+  public final double constant()
     { return my_constant.doubleValue(); }
 
-  public void set_constant(double c)
+  public final void set_constant(double c)
     { my_constant = new Double(c); }
 
-  public Hashtable terms()
+  public final Hashtable terms()
     { return my_terms; }
 
-  public void incrementConstant(double c)
+  public final void incrementConstant(double c)
     { my_constant = new Double(my_constant.doubleValue() + c); }
 
-  public boolean isConstant()
+  public final boolean isConstant()
     { return my_terms.size() == 0; }
 
-  public String toString()
+  public final String toString()
     {
       StringBuffer bstr = new StringBuffer();
       Enumeration e = my_terms.keys();
@@ -354,21 +354,21 @@ class ClLinearExpression extends CL
       return bstr.toString();
     }
 
-  public static ClLinearExpression Plus(ClLinearExpression e1, ClLinearExpression e2)
+  public final static ClLinearExpression Plus(ClLinearExpression e1, ClLinearExpression e2)
     { return e1.plus(e2); }
 
-  public static ClLinearExpression Minus(ClLinearExpression e1, ClLinearExpression e2)
+  public final static ClLinearExpression Minus(ClLinearExpression e1, ClLinearExpression e2)
     { return e1.minus(e2); }
 
-  public static ClLinearExpression Times(ClLinearExpression e1, ClLinearExpression e2) 
+  public final static ClLinearExpression Times(ClLinearExpression e1, ClLinearExpression e2) 
     throws ExCLNonlinearExpression
     { return e1.times(e2); }
 
-  public static ClLinearExpression Divide(ClLinearExpression e1, ClLinearExpression e2)
+  public final static ClLinearExpression Divide(ClLinearExpression e1, ClLinearExpression e2)
     throws ExCLNonlinearExpression
     { return e1.divide(e2); }
 
-  public static boolean FEquals(ClLinearExpression e1, ClLinearExpression e2)
+  public final static boolean FEquals(ClLinearExpression e1, ClLinearExpression e2)
     { return e1 == e2; }
 
   private Double my_constant;

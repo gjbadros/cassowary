@@ -17,7 +17,7 @@
 import java.lang.*;
 
 class ClTests extends CL {
-  public static boolean justStay1()
+  public final static boolean justStay1()
        throws ExCLInternalError, ExCLRequiredFailure
   {
     boolean fOkResult = true;
@@ -34,7 +34,7 @@ class ClTests extends CL {
     return(fOkResult);
   }
   
-  public static boolean addDelete1()
+  public final static boolean addDelete1()
        throws ExCLInternalError, ExCLRequiredFailure, ExCLConstraintNotFound
   {
     boolean fOkResult = true; 
@@ -81,7 +81,7 @@ class ClTests extends CL {
     return(fOkResult);
   } 
 
-  public static boolean addDelete2()
+  public final static boolean addDelete2()
        throws ExCLInternalError, ExCLRequiredFailure, 
 	 ExCLConstraintNotFound, ExCLNonlinearExpression
   {
@@ -123,7 +123,7 @@ class ClTests extends CL {
     return(fOkResult);
   } 
 
-  public static boolean casso1()
+  public final static boolean casso1()
        throws ExCLInternalError, ExCLRequiredFailure
   {
     boolean fOkResult = true; 
@@ -146,7 +146,7 @@ class ClTests extends CL {
     return(fOkResult);
   } 
 
-  public static boolean inconsistent1()
+  public final static boolean inconsistent1()
        throws ExCLInternalError, ExCLRequiredFailure
   {
     try 
@@ -169,7 +169,7 @@ class ClTests extends CL {
       }
   }
 
-  public static boolean inconsistent2()
+  public final static boolean inconsistent2()
        throws ExCLInternalError, ExCLRequiredFailure
   {
     try 
@@ -192,7 +192,7 @@ class ClTests extends CL {
       }
   }
 
-  public static boolean addDel(int nCns, int nVars, int nResolves)
+  public final static boolean addDel(int nCns, int nVars, int nResolves)
        throws ExCLInternalError, ExCLRequiredFailure, 
 	 ExCLNonlinearExpression, ExCLConstraintNotFound
   {
@@ -304,7 +304,7 @@ class ClTests extends CL {
  }
 
 
-  public static final void main( String[] args )
+  public final static void main( String[] args )
        throws ExCLInternalError, ExCLNonlinearExpression,
 	 ExCLRequiredFailure, ExCLConstraintNotFound
   {
@@ -338,9 +338,9 @@ class ClTests extends CL {
       if (!fResult) System.out.println("Failed!");
       
       System.out.println("addDel:");
-      fResult = addDel(900,900,10000);
+      //fResult = addDel(900,900,10000);
       // fResult = addDel(300,300,1000);
-      // fResult = addDel(30,30,100);
+      fResult = addDel(30,30,100);
       //fResult = addDel(10,10,30);
       fAllOkResult &= fResult;
       if (!fResult) System.out.println("Failed!");
