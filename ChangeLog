@@ -1,3 +1,18 @@
+Wed Apr 14 15:51:43 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* configure.in: Bump to .43.
+
+	* cassowary.spec: Added, for building rpms
+
+	* c++/gdbinit-cassowary: Added a bunch of guile debugging macros.
+
+	* c++/Makefile.am: Added ClC.cc to libcassowary_a_SOURCES
+
+	* c++/ClReader.y: Turn off parser debugging messages by default
+
+	* c++/ClC.h, c++/ClC.cc: Added CL_ConstraintPrint, CL_FIsSatisfied
+ 	protos
+
 Wed Mar 31 17:23:18 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* wrappers/Makefile.in: Rename PYTHON_HEADERS to PYTHON_HEADER_DIR 
