@@ -20,6 +20,8 @@
 
 import java.awt.Graphics;
 
+import EDU.Washington.grad.gjb.cassowary.*;
+
 public class DraggableBox {
   ClPoint center; 
   int    sx, sy;        // Screen x, y of center
