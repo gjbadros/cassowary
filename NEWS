@@ -11,6 +11,10 @@ Seattle, WA 98195-2350
 
 with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
 
+12-March-2000: Version 0.60 released.
+* Changed license to LGPL!!!
+* Added SetAutoResetStayConstants(), FIsAutoResetStayConstants(), make ResetStayConstants() public
+
 29-Jan-2000: Version 0.55 released.
 * Some bug fixes
 * Added ClSimplexSolver::{ChangeStrength,ChangeStrengthAndWeight,ChangeWeight,

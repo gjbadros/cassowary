@@ -1,69 +1,18 @@
-Cassowary Copyright and Licensing Information 
-(Applies to everything *except* the Smalltalk implementation in
- smalltalk/ sub-directory -- see smalltalk/REAMDE for its license)
-26-June-1998, Revised with Scwm Exception 23-October-1999
+Cassowary Constraint Solving Toolkit
+Copyright (C) 1998-200 Greg J. Badros
 
-The University of Washington is making the Cassowary Constraint Solving
-Toolkit (Software) available to you (the End User) without charge and
-under the terms below.
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
 
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
 
-Grant
------
-The University of Washington grants, and the End User accepts a
-non-exclusive, non-transferable, royalty-free, perpetual license to
-display, perform, and otherwise use the Software for End User's research
-purposes. End User may create modifications and derivative works of the
-Software for End User's research purposes. The University of Washington
-grants End User the right to distribute the underlying Software in
-modifications and derivative works based upon the Software (Modifications)
-only on terms consistent with this license in the underlying Software and
-if the End User follows the conditions set forth below in Notices. All
-rights not expressly granted to End User are reserved by the University of
-Washington.
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-As a special exception, a binary version of this library can be used
-for any purposes under the conditions of the GNU Public License if it is 
-linked against the Scheme Constraints Window Manager by Greg J. Badros.
-
-
-Notices
--------
-
-End User shall respect and not remove, obliterate, or cancel from view
-any copyright, trademark, confidentiality or other proprietary notice,
-mark, or legend appearing on any of the Software and shall reproduce and
-include same on each copy of the Software made. In the event End User
-creates Modifications that End User wishes to distribute, End User shall
-indicate the general nature of Modifications in the legend appearing on
-the Modifications using a Notice of the following form: "This software
-is based upon experimental software developed at the University of
-Washington by Greg J. Badros and Alan Borning, it has been modified by
-____________________ in the following ways: [list all the modifications]."
-
-
-No Support
-----------
-The Software is experimental in nature and is supplied AS IS, without
-obligation by the University of Washington to provide accompanying
-services or support. No support for the Software is being provided under
-this License.
-
-Disclaimer of Warranty
-The University of Washington warrants that it has the right to grant the
-license specified hereunder.  THE EXPRESS WARRANTY STATED IMMEDIATELY
-ABOVE IS GIVEN IN LIEU OF ALL OTHER WARRANTIES, EITHER EXPRESS OR IMPLIED,
-INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS FOR A PARTICULAR PURPOSE.  The University of Washington makes no
-representation that the Software does not infringe third party patent,
-copyright, trademark, or other proprietary rights.  The University does
-not warrant that the Software is fit for any use or are error-free.
-
-Limitation of Liability
-As a condition of use, the End User agrees that the University of
-Washington shall not be liable for any costs, damages, fees, or other
-liability, nor for any direct, indirect, special, incidental, or
-consequential damages with respect to any claim by the End User or any
-third party on account of or arising from this Agreement or use of (or
-inability to use) the Software.
-
+See COPYING.LGPL
