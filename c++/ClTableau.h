@@ -41,7 +41,14 @@ class ClTableau {
 #endif
     ClTableauVarSet::const_iterator it = _columns[&v].find(&subject);
     assert(it != _columns[&v].end());
-    _columns[&v].erase(it); 
+    _columns[&v].erase(it);
+    if (_columns[&v].size() == 0)
+      {
+      const ClVariable *pclv = static_cast<const ClVariable *>(&v);  
+      _columns.erase(pclv);
+      _externalRows.erase(pclv);
+      _externalParametricVars.erase(pclv);
+      }
     }
 
   // v has been added to the linear expression for subject
@@ -61,6 +68,8 @@ class ClTableau {
 
   ostream &printOn(ostream &xo) const;
 
+  virtual void gdb_print() const { printOn(cerr); }
+
   ostream &printInternalInfo(ostream &xo) const;
   
  protected:
@@ -68,7 +77,7 @@ class ClTableau {
   ClTableau()
     { }
 
-  ~ClTableau();
+  virtual ~ClTableau();
 
   // Add v=expr to the tableau, update column cross indices
   // v becomes a basic variable

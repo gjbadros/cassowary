@@ -126,7 +126,10 @@ ClTableau::removeRow(const ClAbstractVariable &var)
     const ClAbstractVariable *pv = (*it_term).first;
     _columns[pv].erase(&var);
     if (_columns[pv].size() == 0)
+      {
       _columns.erase(pv);
+      _externalParametricVars.erase(static_cast<const ClVariable *>(pv));
+      }
     }
 
   _infeasibleRows.erase(&var);
@@ -134,6 +137,7 @@ ClTableau::removeRow(const ClAbstractVariable &var)
   if (var.isExternal())
     {
     _externalRows.erase(static_cast<const ClVariable *>(&var));
+    _externalParametricVars.erase(static_cast<const ClVariable *>(&var));
     }
   _rows.erase(it);
 #ifndef CL_NO_TRACE
@@ -173,12 +177,15 @@ ClTableau::substituteOut(const ClAbstractVariable &oldVar, const ClLinearExpress
       _infeasibleRows.insert(pv);
       }
     }
+  _columns.erase(it_oldVar);
   if (oldVar.isExternal())
     {
-    _externalRows.insert(static_cast<const ClVariable *>(&oldVar));
+    if (_columns[static_cast<const ClVariable *>(&oldVar)].size() > 0) 
+      {
+      _externalRows.insert(static_cast<const ClVariable *>(&oldVar));
+      }
     _externalParametricVars.erase(static_cast<const ClVariable *>(&oldVar));
     }
-  _columns.erase(it_oldVar);
 }
 
 

@@ -216,6 +216,8 @@ class ClGenericLinearExpression  {
 
   virtual ostream &printOn(ostream &xo) const;
 
+  virtual void gdb_print() const { printOn(cerr); };
+
   friend ostream &operator<<(ostream &xo,const ClGenericLinearExpression<T> &cle)
     { return cle.printOn(xo); }
 

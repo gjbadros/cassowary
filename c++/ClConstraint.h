@@ -69,6 +69,8 @@ public:
 
   virtual bool FIsSatisfied() const { return false; }
 
+  virtual void gdb_print() const { printOn(cerr); };
+
 private:
 
   void setStrength( const ClStrength &strength )

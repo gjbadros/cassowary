@@ -76,6 +76,8 @@ public:
   //	  CV#345(10.0)		-- w/o name
   virtual ostream &printOn(ostream &xo) const = 0;
 
+  virtual void gdb_print() const { printOn(cerr); };
+
   friend ostream& operator<<(ostream &xos, const ClAbstractVariable &clv)
     { clv.printOn(xos); return xos; }
 
