@@ -120,19 +120,20 @@ class ClLinearExpression
   public ClLinearExpression subtractFrom(ClLinearExpression expr)
     { return expr.minus( this); }
 
-  public ClLinearExpression addExpression(ClLinearExpression expr, double n,
-					  ClAbstractVariable subject, 
-					  ClTableau solver)
-    {
-      incrementConstant(n * expr.constant());
+  // FIXGJB
+//   public ClLinearExpression addExpression(ClLinearExpression expr, double n,
+// 					  ClAbstractVariable subject, 
+// 					  ClTableau solver)
+//     {
+//       incrementConstant(n * expr.constant());
       
-      for (Enumeration e = expr.terms().keys() ; e.hasMoreElements(); ) {
-        ClVariable clv = (ClVariable) e.nextElement();
-	Double coeff = (Double) expr.terms().get(clv).doubleValue();
-	addVariable(clv,coeff*n, subject, solver);
-      }
-      return this;
-    }
+//       for (Enumeration e = expr.terms().keys() ; e.hasMoreElements(); ) {
+//         ClVariable clv = (ClVariable) e.nextElement();
+// 	double coeff = ((Double) expr.terms().get(clv)).doubleValue();
+// 	addVariable(clv,coeff*n, subject, solver);
+//       }
+//       return this;
+//     }
 
   public ClLinearExpression addExpression(ClLinearExpression expr, double n)
     {
@@ -140,7 +141,7 @@ class ClLinearExpression
       
       for (Enumeration e = expr.terms().keys() ; e.hasMoreElements(); ) {
         ClVariable clv = (ClVariable) e.nextElement();
-	Double coeff = (Double) expr.terms().get(clv).doubleValue();
+	double coeff = ((Double) expr.terms().get(clv)).doubleValue();
 	addVariable(clv,coeff*n);
       }
       return this;
@@ -154,24 +155,24 @@ class ClLinearExpression
       //System.err.println("(" + String.valueOf(v) + ", " + String.valueOf(c) + ")");
       //#endif
 
-      Double coeff = (ClVariable) my_terms.get(v);
+      Double coeff = (Double) my_terms.get(v);
       if (coeff != null) 
 	{
 	double new_coefficient = coeff.doubleValue() + c;
-	if (clApprox(new_coefficient,0))
+	if (ClVariable.clApprox(new_coefficient,0))
 	  {
 	  my_terms.remove(v);
 	  }
 	else 
 	  {
-	  my_terms.put(v,(Double) new_coefficient);
+	  my_terms.put(v,new Double(new_coefficient));
 	  }
 	}
       else
 	{
-	if (!clApprox(c,0.0))
+	if (!ClVariable.clApprox(c,0.0))
 	  {
-	  my_terms.put(v,(Double) c);
+	  my_terms.put(v,new Double(c));
 	  }
 	}
       return this;
@@ -180,52 +181,54 @@ class ClLinearExpression
   public ClLinearExpression setVariable(ClAbstractVariable v, double c)
     { 
       //assert(c != 0.0);  
-      my_terms.put(v,c); return this;
+      my_terms.put(v,new Double(c)); return this;
     }
+
+  // FIXGJB  
+//   public ClLinearExpression addVariable(ClAbstractVariable v, double c,
+// 					ClAbstractVariable subject, ClTableau solver)
+//     { // body largely duplicated above
+//       //#ifndef CL_NO_TRACE
+//       // Tracer TRACER(__FUNCTION__);
+//       // System.err.println("(" + String.valueOf(v) + ", " + String.valueOf(c) + ", " + String.valueOf(subject) + ", ...)");
+//       // #endif
+//       Double coeff = (Double) my_terms.get(v);
+//       if (coeff != null) 
+// 	{
+// 	double new_coefficient = coeff.doubleValue() + c;
+// 	if (ClVariable.clApprox(new_coefficient,0))
+// 	  {
+// 	  solver.noteRemovedVariable(v,subject);
+// 	  my_terms.remove(v);
+// 	  }
+// 	else 
+// 	  {
+// 	  my_terms.put(v, new Double( new_coefficient));
+// 	  }
+// 	}
+//       else
+// 	{
+// 	if (!ClVariable.clApprox(c,0.0))
+// 	  {
+// 	  my_terms.put(v,new Double(c));
+// 	  solver.noteAddedVariable(v,subject);
+// 	  }
+// 	}
+//       return this;
+//     }
   
-  public ClLinearExpression addVariable(ClAbstractVariable v, double c,
-					ClAbstractVariable subject, ClTableau solver)
-    { // body largely duplicated above
-      //#ifndef CL_NO_TRACE
-      // Tracer TRACER(__FUNCTION__);
-      // System.err.println("(" + String.valueOf(v) + ", " + String.valueOf(c) + ", " + String.valueOf(subject) + ", ...)");
-      // #endif
-      Double coeff = (ClVariable) my_terms.get(v);
-      if (coeff != null) 
-	{
-	double new_coefficient = coeff.doubleValue() + c;
-	if (clApprox(new_coefficient,0))
-	  {
-	  solver.noteRemovedVariable(v,subject);
-	  my_terms.remove(v);
-	  }
-	else 
-	  {
-	  my_terms.put(v,(Double) new_coefficient);
-	  }
-	}
-      else
-	{
-	if (!clApprox(c,0.0))
-	  {
-	  my_terms.put(v,(Double) c);
-	  solver.noteAddedVariable(v,subject);
-	  }
-	}
-      return this;
-    }
-  
-  public ClAbstractVariable  anyVariable()
+  public ClAbstractVariable  anyVariable() throws ExCLInternalError
     {
       if (isConstant())
 	{
-	throw ExCLInternalError();
+	throw new ExCLInternalError();
 	}
-      return ( my_terms.begin()).first;
+      return (ClAbstractVariable) my_terms.keys().nextElement();
     }
-  
-  public void substituteOut(ClAbstractVariable var, ClLinearExpression expr, 
-			    ClAbstractVariable subject, ClTableau solver)
+
+  // FIXGJB  
+  //  public void substituteOut(ClAbstractVariable var, ClLinearExpression expr, 
+  //			    ClAbstractVariable subject, ClTableau solver)
     {
       //#ifndef CL_NO_TRACE
       //System.err.print("* ClLinearExpression::");
@@ -240,7 +243,7 @@ class ClLinearExpression
   
   public void changeSubject(ClAbstractVariable old_subject, ClAbstractVariable new_subject)
     {
-      my_terms.put(old_subject,newSubject(new_subject));
+      my_terms.put(old_subject,new Double(newSubject(new_subject)));
     }
   
   public double newSubject(ClAbstractVariable subject)
@@ -266,16 +269,16 @@ class ClLinearExpression
     }
 
   public double constant()
-    { return my_constant; }
+    { return my_constant.doubleValue(); }
 
   public void set_constant(double c)
-    { my_constant = c; }
+    { my_constant = new Double(c); }
 
-  public ClVarToNumberMap terms()
+  public Hashtable terms()
     { return my_terms; }
 
   public void incrementConstant(double c)
-    { my_constant += c; }
+    { my_constant = new Double(my_constant.doubleValue() + c); }
 
   public boolean isConstant()
     { return my_terms.size() == 0; }
@@ -283,7 +286,7 @@ class ClLinearExpression
   public String toString()
     {
       // FIXGJB: write this
-
+      return "FIXGJB";
     }
 
   public ClLinearExpression Plus(ClLinearExpression e1, ClLinearExpression e2)
@@ -292,10 +295,12 @@ class ClLinearExpression
   public ClLinearExpression Minus(ClLinearExpression e1, ClLinearExpression e2)
     { return e1.minus(e2); }
 
-  public ClLinearExpression Times(ClLinearExpression e1, ClLinearExpression e2)
+  public ClLinearExpression Times(ClLinearExpression e1, ClLinearExpression e2) 
+    throws ExCLNonlinearExpression
     { return e1.times(e2); }
 
   public ClLinearExpression Divide(ClLinearExpression e1, ClLinearExpression e2)
+    throws ExCLNonlinearExpression
     { return e1.divide(e2); }
 
   public boolean FEquals(ClLinearExpression e1, ClLinearExpression e2)
