@@ -14,8 +14,14 @@ CPP = g++
 CFLAGS = -g -Wall
 EGCSDIR = /uns/egcs
 CXX = $(CPP)
+FLEX = flex
+BISON = bison
 SWIG = swig
 PYTHON_INCLUDE = /uns/include/python1.5
+
+FLEX_FLAGS = -d
+#FLEX_FLAGS = 
+
 
 ## NOTE: the egcs-1.1b release's g++ will get a parse error
 ## with -pedantic -- just remove that option for compilation
@@ -30,7 +36,7 @@ PYTHON_INCLUDE = /uns/include/python1.5
 CPPFLAGS = -g -DCL_NO_TRACE -DNO_SOLVER_STATS -DCL_SOLVER_CHECK_INTEGRITY -Wall -pedantic -W #-DUSE_GC
 #CPPFLAGS = -g -Wall -pedantic -W
 
-OTHER_LIBS = creader.o
+OTHER_LIBS = 
 # OTHER_LIBS = ../../gc/gc.a
 
 #LIB=cassowary-optimized
@@ -125,7 +131,13 @@ cassowary-tests: $(TESTS)
 cassowary-test:	$(TEST_OBJS)
 
 creader.cc: creader.y
-	bison --output-file $@ $^
+	$(BISON) -d -pcl --output-file $@ $^
+
+creader-lex.cc: creader.l
+	$(FLEX) $(FLEX_FLAGS) -Pcl -o$@ $^ 
+
+ClParseTest: $(LIB_FILE) $(OTHER_LIBS) ClParseTest.o creader-lex.o creader.o
+	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS) -lfl
 
 libcassowary.a:	
 
