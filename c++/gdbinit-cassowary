@@ -270,3 +270,5 @@ document xgctyp16
 Print the GCTYP16 of $
 end
 handle SIGUSR2 stop nopass
+
+directory $HOME/guile-core/libguile

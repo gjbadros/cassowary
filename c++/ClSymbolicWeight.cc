@@ -22,7 +22,9 @@
 
 ClSymbolicWeight::ClSymbolicWeight(int CLevels, double value) :
   _values(CLevels, value)
-{ }
+{ 
+  assert(_values.size() == CLevels);
+}
 
 ClSymbolicWeight::ClSymbolicWeight(double w1, double w2, double w3)
 {
