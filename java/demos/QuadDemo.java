@@ -69,82 +69,47 @@ public class QuadDemo extends Applet {
       cle = new ClLinearExpression(db[0].X());
       cle = (cle.plus(db[1].X())).divide(2);
       cleq = new ClLinearEquation(mp[0].X(), cle);
-      System.out.println("Adding " + cleq);
+      // System.out.println("Adding " + cleq);
       solver.addConstraint(cleq);
       cle = new ClLinearExpression(db[0].Y());
       cle = (cle.plus(db[1].Y())).divide(2);
       cleq = new ClLinearEquation(mp[0].Y(), cle);
-      System.out.println("Adding " + cleq);
+      // System.out.println("Adding " + cleq);
       solver.addConstraint(cleq);
 
       cle = new ClLinearExpression(db[1].X());
       cle = (cle.plus(db[2].X())).divide(2);
       cleq = new ClLinearEquation(mp[1].X(), cle);
-      System.out.println("Adding " + cleq);
+      // System.out.println("Adding " + cleq);
       solver.addConstraint(cleq);
       cle = new ClLinearExpression(db[1].Y());
       cle = (cle.plus(db[2].Y())).divide(2);
       cleq = new ClLinearEquation(mp[1].Y(), cle);
-      System.out.println("Adding " + cleq);
+      // System.out.println("Adding " + cleq);
       solver.addConstraint(cleq);
 
       cle = new ClLinearExpression(db[2].X());
       cle = (cle.plus(db[3].X())).divide(2);
       cleq = new ClLinearEquation(mp[2].X(), cle);
-      System.out.println("Adding " + cleq);
+      // System.out.println("Adding " + cleq);
       solver.addConstraint(cleq);
       cle = new ClLinearExpression(db[2].Y());
       cle = (cle.plus(db[3].Y())).divide(2);
       cleq = new ClLinearEquation(mp[2].Y(), cle);
-      System.out.println("Adding " + cleq);
+      // System.out.println("Adding " + cleq);
       solver.addConstraint(cleq);
 
       cle = new ClLinearExpression(db[3].X());
       cle = (cle.plus(db[0].X())).divide(2);
       cleq = new ClLinearEquation(mp[3].X(), cle);
-      System.out.println("Adding " + cleq);
+      // System.out.println("Adding " + cleq);
       solver.addConstraint(cleq);
       cle = new ClLinearExpression(db[3].Y());
       cle = (cle.plus(db[0].Y())).divide(2);
       cleq = new ClLinearEquation(mp[3].Y(), cle);
-      System.out.println("Adding " + cleq);
+      // System.out.println("Adding " + cleq);
       solver.addConstraint(cleq);
 
-
-      // keep window from turning inside out
-//       ClLinearInequality clie;
-
-//       cle = CL.Plus(db[0].X(),10);
-//       clie = new ClLinearInequality(cle,CL.LEQ,db[2].X());
-//       solver.addConstraint(clie);
-//       System.err.println(clie.toString());
-//       clie = new ClLinearInequality(cle,CL.LEQ,db[3].X());
-//       solver.addConstraint(clie);
-//       System.err.println(clie.toString());
-
-//       cle = CL.Plus(db[1].X(),10);
-//       clie = new ClLinearInequality(cle,CL.LEQ,db[2].X());
-//       solver.addConstraint(clie);
-//       System.err.println(clie.toString());
-//       clie = new ClLinearInequality(cle,CL.LEQ,db[3].X());
-//       solver.addConstraint(clie);
-//       System.err.println(clie.toString());
-
-//       cle = CL.Plus(db[0].Y(),10);
-//       clie = new ClLinearInequality(cle,CL.LEQ,db[1].Y());
-//       solver.addConstraint(clie);
-//       System.err.println(clie.toString());
-//       clie = new ClLinearInequality(cle,CL.LEQ,db[2].Y());
-//       solver.addConstraint(clie);
-//       System.err.println(clie.toString());
-
-//       cle = CL.Plus(db[3].Y(),10);
-//       clie = new ClLinearInequality(cle,CL.LEQ,db[1].Y());
-//       solver.addConstraint(clie);
-//       System.err.println(clie.toString());
-//       clie = new ClLinearInequality(cle,CL.LEQ,db[2].Y());
-//       solver.addConstraint(clie);
-//       System.err.println(clie.toString());
 
        cle = CL.Plus(db[0].X(),10);
        solver
@@ -206,7 +171,7 @@ public class QuadDemo extends Applet {
     for ( int a = 0; a < db.length; a++ ) {
       if ( db[a].Contains(x, y) ) {
         dbDragging = a;
-	System.err.println("dragging " + a);
+	// System.err.println("dragging " + a);
         break;
       }
     }
