@@ -1,0 +1,40 @@
+package edu.washington.grad.will;
+
+import java_cup.runtime.*;
+
+parser code
+{:
+	public static void main(String args[]) throws Exception
+	{
+		new parser(new Yylex(System.in)).parse();
+	}
+:}
+
+terminal GEQ, GT, LEQ, LT, EQ, PLUS, MINUS, UMINUS, TIMES, DIVIDE, LPAREN, RPAREN;
+terminal Double NUMBER;
+terminal VARIABLE;
+
+non terminal constraint, equation, inequality, expr;
+
+precedence left TIMES, DIVIDE;
+precedence left PLUS, MINUS;
+precedence left UMINUS;
+
+constraint	::=	  equation:a			{: RESULT = a;						:}
+			| inequality:a			{: RESULT = a;						:};
+
+equation	::=	  expr:a EQ expr:b		{: RESULT = new ClLinearEquation(a, b);			:};
+
+inequality	::=	  expr:a GEQ expr:b		{: RESULT = new ClLinearInequality(a, CL.GEQ, b); 	:}
+			| expr:a LEQ expr:b		{: RESULT = new ClLinearInequality(a, CL.LEQ, b); 	:}
+			| expr:a LT  expr:b		{: RESULT = new ClLinearInequality(a, CL.LT,  b); 	:}
+			| expr:a GT  expr:b		{: RESULT = new ClLinearInequality(a, CL.GT,  b);	:};
+
+expr		::=	  NUMBER:a			{: RESULT = new ClLinearExpression(a);			:}
+			| VARIABLE:a			{: RESULT = new ClLinearExpression(a);			:}
+			| expr:a PLUS expr:b		{: RESULT = new ClLinearExpression(CL.Plus(a, b));	:}
+			| expr:a MINUS expr:b		{: RESULT = new ClLinearExpression(CL.Minus(a, b));	:}
+			| expr:a TIMES expr:b		{: RESULT = new ClLinearExpression(CL.Times(a, b));	:}
+			| expr:a DIVIDE expr:b		{: RESULT = new ClLinearExpression(CL.Divide(a, b));	:}
+			| MINUS expr:a			{: RESULT = new ClLinearExpression(CL.Times(-1, a);	:} %prec UMINUS
+			| LPAREN expr:a RPAREN		{: RESULT = a;						:};
