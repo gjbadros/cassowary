@@ -12,6 +12,14 @@ Seattle, WA 98195-2350
 with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
 
 
+30-Jan-1999, Changes since Cassowary v0.22 (for release v0.23)
+* Bug fix
+
+
+23-Jan-1999, Changes since Cassowary v0.21 (for release v0.22)
+* Minor code cleanup, additions of comments.
+
+
 14-Sep-98, Changes since Cassowary v0.2 (for release v0.21)
 
 * Make compile cleanly using egcs-1.1b -- use typename, and drop
