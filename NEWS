@@ -11,6 +11,11 @@ Seattle, WA 98195-2350
 
 with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
 
+20-Mar-1999: Version 0.41 released.
+* Fixed bug in autoconf support -- config.sub, config.guess to the
+distribution so configure should actually work (they were symlinks
+before, in error).
+
 18-Mar-1999: Version 0.4 released.
 
 18-Mar-1999: Changes since Cassowary v0.32 (for release v0.4)

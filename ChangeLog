@@ -1,3 +1,12 @@
+Sat Mar 20 19:19:37 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* Release v0.41.
+
+Sat Mar 20 19:19:13 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* Added config.sub and config.guess to the repo -- they were
+	symlinks before which broke the distribution.
+
 Thu Mar 18 15:20:51 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* Release v0.4.
