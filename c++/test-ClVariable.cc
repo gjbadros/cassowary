@@ -1,4 +1,3 @@
-#include <iostream>
 #include "ClVariable.h"
 
 int
