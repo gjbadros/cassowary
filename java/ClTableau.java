@@ -44,6 +44,21 @@ class ClTableau extends CL
       }
     }
   
+  // from Michael Noth <noth@cs>
+  public String getInternalInfo() {
+    StringBuffer retstr = new StringBuffer("Tableau Information:\n");
+    retstr.append("Rows: " + my_rows.size());
+    retstr.append(" (= " + (my_rows.size() - 1) + " constraints)");
+    retstr.append("\nColumns: " + my_columns.size());
+    retstr.append("\nInfeasible Rows: " + my_infeasibleRows.size());
+    retstr.append("\nExternal basic variables: " + my_externalRows.size());
+    retstr.append("\nExternal parametric variables: ");
+    retstr.append(my_externalParametricVars.size());
+    retstr.append("\n");
+    
+    return retstr.toString();
+  }
+
   public String toString()
     { 
       StringBuffer bstr = new StringBuffer("Tableau:\n");

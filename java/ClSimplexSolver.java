@@ -321,6 +321,23 @@ class ClSimplexSolver extends ClTableau
     resolve(my_resolve_pair);
   }
 
+  // from Michael Noth <noth@cs>
+  public final String getInternalInfo() {
+    StringBuffer retstr = new StringBuffer(super.getInternalInfo());
+    retstr.append("\nSolver info:\n");
+    retstr.append("Edit Error Variables: ");
+    retstr.append(my_editPlusErrorVars.size() + my_editMinusErrorVars.size());
+    retstr.append(" (" + my_editPlusErrorVars.size() + " +, ");
+    retstr.append(my_editMinusErrorVars.size() + " -)\n");
+    retstr.append("Stay Error Variables: ");
+    retstr.append(my_stayPlusErrorVars.size() + my_stayMinusErrorVars.size());
+    retstr.append(" (" + my_stayPlusErrorVars.size() + " +, ");
+    retstr.append(my_stayMinusErrorVars.size() + " -)\n");
+    retstr.append("Edit Constants: " + my_prevEditConstants.size());
+    retstr.append("\n");
+    return retstr.toString();
+  }
+
   public final String toString()
   { 
     StringBuffer bstr = new StringBuffer(super.toString());
