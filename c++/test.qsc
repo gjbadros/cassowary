@@ -1,0 +1,16 @@
+qoca_addvar a:{2}
+qoca_addvar b:{3}
+qoca_addvar c:{4}
+qoca_seteditvar {2}
+qoca_seteditvar {3}
+qoca_seteditvar {4}
+qoca_beginedit
+qoca_suggestvalue {2} 100
+qoca_suggestvalue {3} 220
+qoca_suggestvalue {4} 14.1421
+qoca_resolve
+qoca_suggestvalue {2} 100
+qoca_suggestvalue {3} 220
+qoca_suggestvalue {4} 14.1421
+qoca_resolve
+qoca_endedit
