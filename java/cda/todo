@@ -1,0 +1,85 @@
+/*
+ * To-Do list
+ *
+ * $Id$
+ *
+ */
+
+* Menu
+* Select, remove constraint objects
+  * Aggregate remove on 1 March
+* Group-related functionality
+  * Part/subpart relationships
+  * Copies vs references
+  * Ungrouping groups
+* Snap-To-SelPoint mouse movement
+
+* Build midpoint line ConstrComponent
+  Done 2:45 AM 16 Feb
+* Integrate Cassowary solver
+  * Correlate ConstrComponent internals with solver
+    Done 3:30 AM 15 Feb
+  * Determine stylized way of writing new ConstrComponent subclasses
+  * Build constraint objects
+    Anchor, colocation done 17 Feb
+* Double-Buffering
+  Done 17 Feb
+* Add rubber-band selection box
+  Done 17 Feb
+* Button icons/labels
+  Icon capability added 13 Feb
+* Button bar functionality
+  Hooks added 13 Feb
+  LineCC, MidpointLineCC added 16 Feb
+* Remove CC's
+  * Aggregate remove on 1 March
+  * Individual remove done
+* Interface for above/below/left/right constraints
+  * Hooks added 26 Mar
+  * Done 2 April
+* Additional types of CC's
+  * Rectangle
+    * Added 
+  * Polyline
+    * Omitted 7 April
+  * Circle
+  * Oval
+    Done 7 April
+* Group-related functionality
+  * Simple part aggregation
+    Started 24 Feb
+  * Optimizations related to making groups
+    Started 24 Feb
+
+
+/*
+ * $Log$
+ * Revision 1.9  1998/04/08 05:47:19  Michael
+ * Latest changes
+ *
+ * Revision 1.8  1998/03/27 06:25:57  Michael
+ * Latest changes
+ *
+ * Revision 1.7  1998/03/02 06:46:44  Michael
+ * Latest changes
+ *
+ * Revision 1.6  1998/02/25 10:42:15  Michael
+ * Latest update
+ *
+ * Revision 1.5  1998/02/22 05:00:01  Michael
+ * Removed debugging print statements
+ *
+ * Revision 1.4  1998/02/17 08:24:04  Michael
+ * Latest changes
+ *
+ * Revision 1.3  1998/02/16 10:38:04  Michael
+ * Latest updates
+ *
+ * Revision 1.2  1998/02/15 11:37:56  Michael
+ * Added midpoint line needs and reported progress
+ *
+ * Revision 1.1  1998/02/09 02:30:44  Michael
+ * Initial To-Do list
+ *
+ * 
+ */
