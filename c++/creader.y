@@ -117,7 +117,7 @@ int yylex(YYSTYPE *lvalp, void *YYLEX_PARAM)
       // Lookup the variable name
       StringToVarMap::iterator it = pclpd->_mapVars.find(token);
       if (it != pclpd->_mapVars.end()) {
-        lvalp->pclv = it->second;
+        lvalp->pclv = &it->second;
         return VAR;
       } else {
         string szErr = "Unrecognized identifier: '";

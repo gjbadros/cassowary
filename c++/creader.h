@@ -16,14 +16,11 @@
 
 #include <string>
 #include <map>
-
-class istream;
-class ClConstraint;
-class ClVariable;
-
+#include "ClVariable.h"
 #include "ClLinearExpression_fwd.h"
 
-typedef map<string,const ClVariable *> StringToVarMap;
+class ClConstraint;
+class istream;
 
 // Attempts to read a constraint of input stream in
 // Returns constraint (freshly allocated, client responsibility to deallocate)

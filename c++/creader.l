@@ -55,7 +55,7 @@ ws [ \t\n]+
       ClParseData *pclpd = ((ClParseData *) YYLEX_PARAM);
       StringToVarMap::iterator it = pclpd->_mapVars.find(yytext);
       if (it != pclpd->_mapVars.end()) {
-        lvalp->pclv = it->second;
+        lvalp->pclv = &it->second;
         return VAR;
       } else {
         string szErr = "Unrecognized identifier: '";
