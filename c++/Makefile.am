@@ -1,7 +1,9 @@
 ## $Id$
 ## Process this file with automake to create Makefile.in
 
+if CL_BUILD_STATIC_LIBRARY
 lib_LIBRARIES = libcassowary.a
+endif
 lib_LTLIBRARIES = libcassowary.la
 
 libcassowary_la_LDFLAGS = -version-info 0:1:0
