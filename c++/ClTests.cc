@@ -585,7 +585,7 @@ blackboxsat()
 }
 
 bool
-addDel(int nCns = 900, int nVars = 900, int nResolves = 10000)
+addDel(const int nCns = 900, const int nVars = 900, const int nResolves = 10000)
 //addDel(int nCns = 300, int nVars = 300, int nResolves = 1000)
 //addDel(int nCns = 30, int nVars = 30, int nResolves = 100)
 {
@@ -706,7 +706,15 @@ addDel(int nCns = 900, int nVars = 900, int nResolves = 10000)
   cout << "time per cn = " << timer.ElapsedTime()/nCns << "\n" <<endl;
   cout << "time per actual cn = " << timer.ElapsedTime()/(nCns - cExceptions) << "\n" <<endl;
 
-  timer.Start();
+  for (int i = 0; i < nVars; i++)
+    {
+    delete rgpclv[i];
+    }
+
+  for (int j = 0; j < nCns; j++)
+    {
+    delete rgpcns[j];
+    }
 
   return true;
 }
@@ -759,6 +767,9 @@ main( int argc, char **argv )
       }
       
 #undef RUN_TEST
+
+    ClAbstractVariable::leakageSummary(cout);
+
     return (fAllOkResult? 0 : 255);
     
     } 
