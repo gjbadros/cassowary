@@ -1,3 +1,29 @@
+Tue Sep  7 23:34:49 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* configure.in, Makefile.am: use cassowary-nofd.spec2.in
+
+	* cassowary-nofd.spec2.in: Renamed from cassowary-nofd.spec.in,
+	since having two *.spec files in the top level upsets rpm (it cats 
+	them together and then gets confused by the double .spec file).
+
+	* cassowary-both.spec.in: Added-- rpm doesn't support two %build
+	tags (one for a subpackage), but if it did, this is what the
+	corresponding .spec file might look like.
+
+Tue Sep  7 23:02:26 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* Makefile.am: Added cassowary-nofd.spec to EXTRA_DIST,
+	bin_SCRIPTS = cassowary-config.  Added dist-nofd target, and
+	supporting targets.
+
+	* cassowary.spec.in: Bump to 7, provide virtual package, install
+	%{prefix}/bin/* (for cassowary-config script).
+
+	* configure.in: Added CASSOWARY_VERSION variable, create
+	cassowary-config, cassowary-nofd.spec
+
+	* cassowary-config.in, cassowary-nofd.spec.in: Added
+
 Mon Sep  6 21:40:58 1999    <gjb@cs.washington.edu>
 
 	* cassowary.spec.in: Use install-strip target to remove debug
