@@ -380,14 +380,23 @@ class ClSimplexSolver extends ClTableau
     if (fTraceOn) traceprint("azTableauRow.constant() == " + azTableauRow.constant());
     
     if (!CL.approx(azTableauRow.constant(),0.0)) {
+      removeRow(az);
+      removeColumn(av);
       throw new ExCLRequiredFailure();
     }
 
+    // See if av is a basic variable
     final ClLinearExpression e = rowExpression(av);
 
     if (e != null ) {
+      // find another variable in this row and pivot,
+      // so that av becomes parametric
       if (e.isConstant()) {
+        // if there isn't another variable in the row
+        // then the tableau contains the equation av=0 --
+        // just delete av's row
 	removeRow(av);
+	removeRow(az);
 	return;
       }
       ClAbstractVariable entryVar = e.anyVariable();
@@ -664,7 +673,7 @@ class ClSimplexSolver extends ClTableau
 	  entryVar = v;
 	}
       }
-      if (objectiveCoeff >= my_epsilon || entryVar == null)
+      if (objectiveCoeff >= -my_epsilon || entryVar == null)
 	return;
       if (fTraceOn) traceprint("entryVar == " + entryVar + ", objectiveCoeff == " + objectiveCoeff);
 
