@@ -65,6 +65,26 @@ class ClLinearExpression  {
   // (Note that this result must be linear.)
   ClLinearExpression divide(Number x) const;
 
+
+
+  // Return a new linear expression formed by multiplying self by x.
+  // (Note that this result must be linear.)
+  ClLinearExpression *p_times(Number x) const
+    { return new ClLinearExpression(times(x)); }
+
+  // Return a new linear expression formed by adding x to self.
+  ClLinearExpression *p_plus(const ClLinearExpression &expr) const
+    { return new ClLinearExpression(plus(expr)); }
+
+  // Return a new linear expression formed by subtracting x from self.
+  ClLinearExpression *p_minus(const ClLinearExpression &expr) const
+    { return new ClLinearExpression(minus(expr)); }
+
+  // Return a new linear expression formed by dividing self by x.
+  // (Note that this result must be linear.)
+  ClLinearExpression *p_divide(Number x) const
+    { return new ClLinearExpression(divide(x)); }
+
   // Return a new linear expression formed by dividing self by x.
   // (Note that this result must be linear.)
   ClLinearExpression divide(const ClLinearExpression &expr) const;
@@ -230,9 +250,26 @@ class ClLinearExpression  {
     { return e1.times(e2); }
 
 
-  friend ClLinearExpression Divide(const ClLinearExpression &e1,
+  friend ClLinearExpression *Divide(const ClLinearExpression &e1,
 				   const ClLinearExpression &e2)
-    { return e1.divide(e2); }
+    { return new ClLinearExpression(e1.divide(e2)); }
+
+  friend ClLinearExpression *p_Plus(const ClLinearExpression &e1,
+				   const ClLinearExpression &e2)
+    { return new ClLinearExpression(e1.plus(e2)); }
+
+  friend ClLinearExpression *p_Minus(const ClLinearExpression &e1,
+				    const ClLinearExpression &e2)
+    { return new ClLinearExpression(e1.minus(e2)); }
+
+  friend ClLinearExpression *p_Times(const ClLinearExpression &e1,
+				    const ClLinearExpression &e2)
+    { return new ClLinearExpression(e1.times(e2)); }
+
+  friend ClLinearExpression *p_Divide(const ClLinearExpression &e1,
+				     const ClLinearExpression &e2)
+    { return new ClLinearExpression(e1.divide(e2)); }
+
 
   // FIXGJB -- this may be wrong -- should test underlying expression for equality
   friend bool FEquals(const ClLinearExpression &e1,
