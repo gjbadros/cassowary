@@ -32,10 +32,8 @@ simple1()
    ClSimplexSolver solver;
 
    ClLinearEquation eq(x,y+0.0);
-#if 0
    solver.addStay(x);
    solver.addStay(y);
-#endif
    solver.addConstraint(eq);
    cout << "x = " << x.value() << endl
         << "y = " << y.value() << endl;

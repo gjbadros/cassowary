@@ -39,11 +39,11 @@ CPPFLAGS += -g
 
 #CPPFLAGS += -DCL_USE_HASH_MAP_AND_SET
 
-#CPPFLAGS += -DCL_TRACE
+CPPFLAGS += -DCL_TRACE
 
-#CPPFLAGS += -DCL_SOLVER_STATS
+CPPFLAGS += -DCL_SOLVER_STATS
 
-#CPPFLAGS += -DCL_NO_IO
+#CPPFLAGS += -DCL_NO_IO   # The tests will not work if I/O is disabled (by enabling this define)
 
 OTHER_LIBS = 
 #OTHER_LIBS = ../../gc/gc.a

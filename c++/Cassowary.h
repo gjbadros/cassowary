@@ -13,34 +13,8 @@
 #define Cassowary_H
 
 #ifdef CL_USE_HASH_MAP_AND_SET
-
 #include <hash_map>
 #include <hash_set>
-
-#ifndef HASH_CONST_CLABSTRACTVARIABLE_STAR
-#define HASH_CONST_CLABSTRACTVARIABLE_STAR
-class ClAbstractVariable;
-struct hash<const ClAbstractVariable *>
-{
-  size_t operator()(const ClAbstractVariable * const p) const {
-    return (size_t)p;
-  }
-};
-#endif
-
-#ifndef HASH_CONST_CLVARIABLE_STAR
-#define HASH_CONST_CLVARIABLE_STAR
-class ClVariable;
-struct hash<const ClVariable *>
-{
-  size_t operator()(const ClVariable * const p) const {
-    return (size_t)p;
-  }
-};
-#endif
-
-#ifndef HASH_CONST_CLCONSTRAINT_STAR
-#define HASH_CONST_CLCONSTRAINT_STAR
 class ClConstraint;
 struct hash<const ClConstraint *>
 {
@@ -48,8 +22,12 @@ struct hash<const ClConstraint *>
     return (size_t)p;
   }
 };
-#endif
-
+struct hash<ClConstraint *>
+{
+  size_t operator()(ClConstraint * const p) const {
+    return (size_t)p;
+  }
+};
 #endif /* CL_USE_HASH_MAP_AND_SET */
 
 #ifdef USE_GC

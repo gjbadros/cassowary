@@ -83,12 +83,7 @@ public:
 
   // Round the value to an integer and return it
   int intValue() const
-    { int i = int(_value + 0.5); 
-#ifdef CL_TRACE_VERBOSE
-    cerr << "intValue() returning i = " << i << endl;
-#endif
-    return i;
-    }
+    { return int(_value + 0.5); }
 
   // change the value held -- should *not* use this if the variable is
   // in a solver -- instead use addEditVar() and suggestValue() interface
@@ -139,6 +134,13 @@ private:
 class ClVariable;
 typedef map<string,ClVariable> StringToVarMap;
 
+#ifdef CL_USE_HASH_MAP_AND_SET
+struct hash<ClVariable>
+{ 
+  size_t operator()(ClVariable v) const;
+};
+#endif
+
 class ClVariable {
   ClAbstractVariable *pclv;
 public:
@@ -152,11 +154,15 @@ public:
   ClVariable(long number, char *prefix, Number value = 0.0)
       : pclv(new ClVariableRep(number,prefix,value)) { }
   ClAbstractVariable *operator->() { return pclv; }
-  bool isExternal() const { return pclv->isExternal(); }
   bool isDummy() const { return pclv->isDummy(); }
+  bool isExternal() const { return pclv->isExternal(); }
   bool isPivotable() const { return pclv->isPivotable(); }
   bool isRestricted() const { return pclv->isRestricted(); }
+
+  string name() const { return pclv->name(); }
+
   Number value() const { return pclv->value(); }
+  int intValue() const { return pclv->intValue(); }
   void set_value(Number value) { 
     ClVariableRep *p = dynamic_cast<ClVariableRep *>(pclv); assert(p);
     p->set_value(value); 
@@ -165,27 +171,48 @@ public:
     ClVariableRep *p = dynamic_cast<ClVariableRep *>(pclv); assert(p);
     p->change_value(value); 
   }
+  void setPv(void *pv) { 
+    ClVariableRep *p = dynamic_cast<ClVariableRep *>(pclv); assert(p);
+    p->setPv(pv); 
+  }
+  void *Pv() const { 
+    ClVariableRep *p = dynamic_cast<ClVariableRep *>(pclv); assert(p);
+    return p->Pv(); 
+  }
+
+  void setName(string const &name) { pclv->setName(name); }
+
   ClAbstractVariable *get_pclv() const { return pclv; } 
+  bool isNil() const { return pclv == NULL; }
 
   static void SetVarMap(StringToVarMap *pmap) { pmapSzPclv = pmap; }
   static StringToVarMap *VarMap() { return pmapSzPclv; }
   static StringToVarMap *pmapSzPclv;
+#ifndef CL_NO_IO
   ostream &printOn(ostream &xo) const
     { return pclv->printOn(xo); }
+#endif
 
   friend bool operator<(ClVariable cl1, ClVariable cl2)
-    { return *cl1.pclv < *cl2.pclv; }
+    { return cl1.pclv < cl2.pclv; }
 
   friend bool operator==(ClVariable cl1, ClVariable cl2)
-    { return *cl1.pclv == *cl2.pclv; }
+    { return cl1.pclv == cl2.pclv; }
 
   friend bool operator!=(ClVariable cl1, ClVariable cl2)
-    { return !(*cl1.pclv == *cl2.pclv); }
+    { return !(cl1 == cl2); }
 
 };
 
+#ifndef CL_NO_IO
 inline ostream &operator<<(ostream &xo, const ClVariable &clv)
 { return clv.printOn(xo); }
+#endif
+
+#ifdef CL_USE_HASH_MAP_AND_SET
+size_t hash<ClVariable>::operator()(ClVariable v) const
+{ return size_t(v.get_pclv());  }
+#endif
 
 
 #include <math.h>
@@ -212,5 +239,7 @@ inline bool clApprox(double a, ClVariable clv)
 {
   return clApprox(a,clv->value());
 }
+
+extern ClVariable clvNil;
 
 #endif

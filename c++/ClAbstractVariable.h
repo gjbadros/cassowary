@@ -112,6 +112,7 @@ public:
     }
 
   virtual Number value() const { return 0; }
+  virtual int intValue() const { return 0; }
 
 private:
   string _name;

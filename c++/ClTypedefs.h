@@ -18,7 +18,6 @@
 #include <set> // Since ClTableauVarSet is always a set (never a hash_set)
 #include <vector>
 
-class ClAbstractVariable;
 class ClVariable;
 class ClConstraint;
 class ClEditInfo;

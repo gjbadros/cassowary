@@ -19,6 +19,7 @@ inline
 double UniformRandom()
 { return double(rand())/RAND_MAX; }
 
+typedef ClVariable *PClVariable;
 
 bool
 addDelSubpart(int csolver = 1, int nCns = 900, int nVars = 900, int nResolves = 10000)

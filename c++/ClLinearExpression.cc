@@ -301,7 +301,7 @@ ClGenericLinearExpression<T>::anyPivotableVariable() const
     if (v.isPivotable())
       return v;
     }
-  return NULL;
+  return clvNil;
 }
 
 // Replace var with a symbolic expression expr that is equal to it.
@@ -354,7 +354,7 @@ ClGenericLinearExpression<T>::substituteOut(ClVariable var,
     if (poc != _terms.end())
       { // if oldCoeff is not nil
 #ifdef CL_TRACE
-      cerr << "Considering (*poc) == " << (*poc).second << "*" << *(*poc).first << endl;
+      cerr << "Considering (*poc) == " << (*poc).second << "*" << (*poc).first << endl;
 #endif
       // found it, so new coefficient is old one plus what is in *i
       T newCoeff = (*poc).second + (multiplier*c);
@@ -371,7 +371,7 @@ ClGenericLinearExpression<T>::substituteOut(ClVariable var,
     else
       { // did not have that variable already (oldCoeff == nil)
 #ifdef CL_TRACE
-      cerr << "Adding (*i) == " << (*i).second << "*" << *(*i).first << endl;
+      cerr << "Adding (*i) == " << (*i).second << "*" << (*i).first << endl;
 #endif
       _terms[v] = multiplier * c;
       solver.noteAddedVariable(v,subject);

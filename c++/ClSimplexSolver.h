@@ -40,7 +40,7 @@ class ClSimplexSolver : public ClTableau {
 
   // Constructor
   ClSimplexSolver() :
-    _objective(*(new ClObjectiveVariable("Z"))),
+    _objective(ClVariable(new ClObjectiveVariable("Z"))),
     _slackCounter(0),
     _artificialCounter(0),
 #ifdef CL_FIND_LEAK
@@ -55,7 +55,7 @@ class ClSimplexSolver : public ClTableau {
     _pfnResolveCallback(NULL),
     _pfnCnSatCallback(NULL)
     { 
-    _rows[ClVariable(&_objective)] = new ClLinearExpression(); 
+    _rows[_objective] = new ClLinearExpression(); 
     // start out with no edit variables
     _stkCedcns.push(0);
 #ifdef CL_TRACE
@@ -443,7 +443,7 @@ class ClSimplexSolver : public ClTableau {
 
   // Minimize the value of the objective.  (The tableau should already
   // be feasible.)
-  void optimize(ClAbstractVariable &pzVar);
+  void optimize(ClVariable zVar);
 
   // Do a pivot.  Move entryVar into the basis (i.e. make it a basic variable),
   // and move exitVar out of the basis (i.e., make it a parametric variable)
@@ -501,7 +501,7 @@ class ClSimplexSolver : public ClTableau {
   // for each marker variable (used when building failure explanations)
   ClVarToConstraintMap _constraintsMarked;
 
-  ClAbstractVariable &_objective;
+  ClVariable _objective;
 
   // Map edit variables to their constraints, errors, and prior
   // values
