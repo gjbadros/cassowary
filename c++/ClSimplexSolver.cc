@@ -580,7 +580,7 @@ ClSimplexSolver::suggestValue(ClVariable &v, Number x)
 // Add the constraint expr=0 to the inequality tableau using an
 // artificial variable.  To do this, create an artificial variable
 // av and add av=expr to the inequality tableau, then make av be 0.
-// (Raise an exception if we can't attain av=0.)
+// (Raise an exception if we can't attain av=0 -- and prepare explanation)
 bool
 ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr,
                                            ExCLRequiredFailureWithExplanation &e)
