@@ -59,6 +59,12 @@ CONSTRAINT_CLASSES = $(CONSTRAINT_FILES:%.java=classes/%.class)
 ALL_CONSTRAINT_FILES = \
   $(patsubst %.java,Constraint/%.java,$(CONSTRAINT_FILES))
 
+ALL_JAVA_FILES = \
+	$(ALL_CONSTRAINT_FILES) \
+	$(ALL_COMPONENT_FILES) \
+	$(ALL_INTERFACE_FILES) \
+	$(ALL_MAIN_FILES)
+
 ALL_CLASSES = \
   $(COMPONENT_CLASSES) \
   $(CONSTRAINT_CLASSES) \
@@ -91,6 +97,7 @@ JFLAGS = -g -d $(CLASSES) -classpath $(CLASSES):$(CASSOWARY_CLASSES):$(JAVA_CLAS
 default:  all
 
 all: $(ALL_CLASSES) $(ICON_GIFS)
+	javac $(JFLAGS) $(ALL_JAVA_FILES)
 
 .java.class:  
 	javac $(JFLAGS) $<
