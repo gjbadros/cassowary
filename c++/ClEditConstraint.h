@@ -21,6 +21,7 @@
 #include "ClEditOrStayConstraint.h"
 
 class ClEditConstraint : public ClEditOrStayConstraint {
+     typedef ClEditOrStayConstraint super;
  public:
   
   ClEditConstraint(const ClVariable &var,
@@ -33,7 +34,7 @@ class ClEditConstraint : public ClEditOrStayConstraint {
     { return true; }
 
   virtual ostream &printOn(ostream &xo) const 
-    { xo << "edit" << variable(); return xo; }
+    { xo << "edit "; return super::printOn(xo); }
 
  private:
 

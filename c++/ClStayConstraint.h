@@ -23,6 +23,7 @@
 class ClAbstractVariable;
 
 class ClStayConstraint : public ClEditOrStayConstraint {
+     typedef ClEditOrStayConstraint super;
  public:
 
   ClStayConstraint(const ClVariable &var,
@@ -34,7 +35,7 @@ class ClStayConstraint : public ClEditOrStayConstraint {
     { return true; }
   
   virtual ostream &printOn(ostream &xo) const 
-    { xo << "stay" << variable(); return xo; }
+    { xo << "stay "; return super::printOn(xo); }
   
  private:
 };

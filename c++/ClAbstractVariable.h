@@ -30,7 +30,7 @@ public:
     if (name.length() == 0)
       {
       char sz[16];
-      sprintf(sz,"v%ld",iVariableNumber++);
+      sprintf(sz,"v%ld",iVariableNumber);
       my_name = string(sz);
       }
     }

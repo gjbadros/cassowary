@@ -862,7 +862,7 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
 	my_stayPlusErrorVars.push_back(peplus.get());
 	my_stayMinusErrorVars.push_back(peminus.get());
 	}
-      if (cn.isEditConstraint())
+      else if (cn.isEditConstraint())
 	{
 	my_editPlusErrorVars.push_back(peplus.get());
 	my_editMinusErrorVars.push_back(peminus.get());
@@ -1142,7 +1142,7 @@ printTo(ostream &xo, const ClVarVector &varlist)
     {
     xo << ", " << *(*it);
     }
-  xo << " ]" << endl;
+  xo << " ]";
   return xo;
 }
 
@@ -1157,14 +1157,14 @@ ClSimplexSolver::printOn(ostream &xo) const
   super::printOn(xo);
 
   xo << "my_editPlusErrorVars: "
-     << my_editPlusErrorVars << endl;
+     << my_editPlusErrorVars;
   xo << "my_editMinusErrorVars: "
-     << my_editMinusErrorVars << endl;
+     << my_editMinusErrorVars;
 
   xo << "my_stayPlusErrorVars: "
-     << my_stayPlusErrorVars << endl;
+     << my_stayPlusErrorVars;
   xo << "my_stayMinusErrorVars: "
-     << my_stayMinusErrorVars << endl;
+     << my_stayMinusErrorVars;
 
   xo << "my_prevEditConstants: " 
      << my_prevEditConstants << endl;
