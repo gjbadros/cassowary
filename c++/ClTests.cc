@@ -236,6 +236,8 @@ inconsistent2()
 
 bool
 addDel(int nCns = 900, int nVars = 900, int nResolves = 10000)
+//addDel(int nCns = 300, int nVars = 300, int nResolves = 1000)
+//addDel(int nCns = 30, int nVars = 30, int nResolves = 100)
 {
   Timer timer;
   // FIXGJB: from where did .12 come?
@@ -321,7 +323,6 @@ addDel(int nCns = 900, int nVars = 900, int nResolves = 10000)
   // FIXGJB start = Timer.now();
   for (int m = 0; m < nResolves; m++)
     {
-    // FIXGJB: this is slow, too!
     vector<Number> vals;
     vals.push_back(rgpclv[e1Index]->value() * 1.001);
     vals.push_back(rgpclv[e2Index]->value() * 1.001);
@@ -347,7 +348,9 @@ addDel(int nCns = 900, int nVars = 900, int nResolves = 10000)
   //      << "remove time per cn"
   cout << "done removing constraints and addDel timing test" << endl;
   cout << "time = " << timer.ElapsedTime() << "\n" <<endl;
+
   timer.Start();
+
   return true;
 }
 
@@ -370,7 +373,7 @@ main( char **, int  )
     RUN_TEST(casso1);
     RUN_TEST(inconsistent1);
     RUN_TEST(inconsistent2);
-    //  RUN_TEST(addDel);
+    RUN_TEST(addDel);
   
 #undef RUN_TEST
     return (fAllOkResult? 0 : 255);

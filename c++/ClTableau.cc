@@ -51,6 +51,10 @@ ClTableau::addRow(const ClAbstractVariable &var, const ClLinearExpression &expr)
     const ClAbstractVariable *pv = (*it).first;
     my_columns[pv].insert(&var);
     }
+  if (var.isExternal())
+    {
+    my_externalRows.insert(static_cast<const ClVariable *>(&var));
+    }
 #ifndef CL_NO_TRACE
   cerr << *this << endl;
 #endif
@@ -77,6 +81,11 @@ ClTableau::removeColumn(const ClAbstractVariable &var)
     ClVarToNumberMap &terms = my_rows[pv]->terms();
     terms.erase(terms.find(&var));
     }
+  if (var.isExternal())
+    {
+    my_externalRows.erase(static_cast<const ClVariable *>(&var));
+    my_externalParametricVars.erase(static_cast<const ClVariable *>(&var));
+    }
   my_columns.erase(it_var);
 }
 
@@ -99,10 +108,12 @@ ClTableau::removeRow(const ClAbstractVariable &var)
     const ClAbstractVariable *pv = (*it_term).first;
     my_columns[pv].erase(&var);
     }
-  ClTableauVarSet::iterator itVar = my_infeasibleRows.find(&var);
-  if (itVar != my_infeasibleRows.end())
+
+  my_infeasibleRows.erase(&var);
+
+  if (var.isExternal())
     {
-    my_infeasibleRows.erase(itVar);
+    my_externalRows.erase(static_cast<const ClVariable *>(&var));
     }
   my_rows.erase(it);
 #ifndef CL_NO_TRACE
@@ -139,24 +150,14 @@ ClTableau::substituteOut(const ClAbstractVariable &oldVar, const ClLinearExpress
       my_infeasibleRows.insert(pv);
       }
     }
+  if (oldVar.isExternal())
+    {
+    my_externalRows.insert(static_cast<const ClVariable *>(&oldVar));
+    my_externalParametricVars.erase(static_cast<const ClVariable *>(&oldVar));
+    }
   my_columns.erase(it_oldVar);
 }
 
-
-ostream &
-ClTableau::printOn(ostream &xo) const
-{
-  xo << "Tableau:\n" 
-     << my_rows << endl;
-  xo << "Columns:\n" 
-     << my_columns << endl;
-  xo << "Infeasible rows: " 
-     << my_infeasibleRows << endl;
-  return xo;
-}
-
-ostream &operator<<(ostream &xo, const ClTableau &clt)
-{ return clt.printOn(xo); }
 
 ostream &
 printTo(ostream &xo, const ClTableauVarSet & varset)
@@ -177,6 +178,27 @@ printTo(ostream &xo, const ClTableauVarSet & varset)
 }  
 
 ostream &operator<<(ostream &xo, const ClTableauVarSet & varset)
+{ return printTo(xo,varset); }
+
+ostream &
+printTo(ostream &xo, const ClExternalVarSet & varset)
+{
+  ClExternalVarSet::const_iterator it = varset.begin();
+  xo << "{ ";
+  if (it != varset.end())
+    {
+    xo << *(*it);
+    ++it;
+    }
+  for (; it != varset.end(); ++it) 
+    {
+    xo << ", " << *(*it);
+    }
+  xo << " }";
+  return xo;
+}  
+
+ostream &operator<<(ostream &xo, const ClExternalVarSet & varset)
 { return printTo(xo,varset); }
 
 
@@ -212,3 +234,23 @@ printTo(ostream &xo, const ClTableauRowsMap & rows)
 
 ostream &operator<<(ostream &xo, const ClTableauRowsMap & rows)
 { return printTo(xo,rows); }
+
+ostream &
+ClTableau::printOn(ostream &xo) const
+{
+  xo << "Tableau:\n" 
+     << my_rows << endl;
+  xo << "Columns:\n" 
+     << my_columns << endl;
+  xo << "Infeasible rows: " 
+     << my_infeasibleRows << endl;
+  xo << "External basic variables: "
+     << my_externalRows << endl;
+  xo << "External parametric variables: "
+     << my_externalParametricVars << endl;
+  return xo;
+}
+
+ostream &operator<<(ostream &xo, const ClTableau &clt)
+{ return clt.printOn(xo); }
+

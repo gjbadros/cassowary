@@ -15,8 +15,10 @@
 #include <set>
 #include "Cassowary.h"
 #include "ClLinearExpression.h"
+#include "ClVariable.h"
 
 typedef set<const ClAbstractVariable *> ClTableauVarSet;
+typedef set<const ClVariable *> ClExternalVarSet;
 typedef map<const ClAbstractVariable *, ClTableauVarSet > ClTableauColumnsMap;
 typedef map<const ClAbstractVariable *, ClLinearExpression *> ClTableauRowsMap;
 
@@ -50,6 +52,10 @@ class ClTableau {
     cerr << "(" << v << ", " << subject << ")" << endl;
 #endif
     my_columns[&v].insert(&subject); 
+    if (v.isExternal())
+      {
+      my_externalParametricVars.insert(static_cast<const ClVariable *>(&v));
+      }
     }
 
   ostream &printOn(ostream &xo) const;
@@ -117,6 +123,14 @@ class ClTableau {
   // the ordered collection of basic variables that have infeasible rows
   // (used when reoptimizing)
   ClTableauVarSet my_infeasibleRows;
+
+  // the set of rows where the basic variable is external
+  // this was added to the C++ version to reduce time in setExternalVariables()
+  ClExternalVarSet my_externalRows;
+
+  // the set of external variables which are parametric
+  // this was added to the C++ version to reduce time in setExternalVariables()
+  ClExternalVarSet my_externalParametricVars;
 
 };
 

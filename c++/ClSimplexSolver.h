@@ -32,7 +32,7 @@ class ClSimplexSolver : public ClTableau {
 
   // Constructor
   ClSimplexSolver() :
-    my_objective(*(new ClObjectiveVariable("z"))),
+    my_objective(*(new ClObjectiveVariable("Z"))),
     my_slackCounter(0),
     my_artificialCounter(0),
     my_dummyCounter(0)

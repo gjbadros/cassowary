@@ -848,9 +848,7 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
     pexpr->multiplyMe(-1);
     }
 #ifndef CL_NO_TRACE
-  // FIXGJB instrument new and delete instead of trying to
-  // output msgs everwhere I use them!
-  cerr << "- returning " << *pexpr << " new@ " << pexpr.get() << endl;
+  cerr << "- returning " << *pexpr << endl;
 #endif
   // Terrible name -- release() does *not* delete the object,
   // only makes sure that the destructor won't delete the object
@@ -1078,37 +1076,26 @@ ClSimplexSolver::setExternalVariables()
   cerr << "()" << endl;
   cerr << *this << endl;
 #endif
-  ClTableauRowsMap::iterator itRowVars;
-  ClTableauColumnsMap::iterator itColumnVars;
 
-  itRowVars = my_rows.begin();
-  for ( ; itRowVars != my_rows.end() ; ++itRowVars )
+  // FIXGJB -- oughta check some invariants here
+
+  // Set external parametric variables first
+  // in case I've screwed up
+  ClExternalVarSet::iterator itParVars = my_externalParametricVars.begin();
+  for ( ; itParVars != my_externalParametricVars.end(); ++itParVars )
     {
-    ClAbstractVariable *pvar = const_cast<ClAbstractVariable *>((*itRowVars).first);
-    ClLinearExpression *pexpr = (*itRowVars).second;
-    if (pvar->isExternal())
-      {
-      // This is a static cast since only ClVariable-s are external
-      ClVariable *pv = static_cast<ClVariable *>(pvar);
-      pv->set_value(pexpr->constant());
-      }
+    ClVariable *pv = const_cast<ClVariable *>(*itParVars);
+    pv->set_value(0.0);
     }
 
-  // FIXGJB: revisit this --
-  // perhaps I should keep a list of ClVariable-s that aren't basic
-#ifndef NO_SET_EXTERNAL_PARAMETRIC_VARIABLES
-  itColumnVars = my_columns.begin();
-  for ( ; itColumnVars != my_columns.end(); ++itColumnVars )
+  // Only iterate over the rows w/ external variables
+  ClExternalVarSet::iterator itRowVars = my_externalRows.begin();
+  for ( ; itRowVars != my_externalRows.end() ; ++itRowVars )
     {
-    ClAbstractVariable *pvar = const_cast<ClAbstractVariable *>((*itColumnVars).first);
-    if (pvar->isExternal())
-      {
-      // This is a static cast since only ClVariable-s are external
-      ClVariable *pv = static_cast<ClVariable *>(pvar);
-      pv->set_value(0.0);
-      }
+    ClVariable *pv = const_cast<ClVariable *>(*itRowVars);
+    ClLinearExpression *pexpr = rowExpression(*pv);
+    pv->set_value(pexpr->constant());
     }
-#endif
 }
 
 ostream &
