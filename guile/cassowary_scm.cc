@@ -17,6 +17,7 @@
 
 #define CASSOWARY_SCM_IMPLEMENTATION
 #include "cassowary_scm.h"
+#include "cassowary_scm.hpp"
 
 #include <guile/gh.h>
 
@@ -71,25 +72,6 @@ inline bool FUnsetSCM(SCM scm) { return (scm == SCM_UNDEFINED || scm == SCM_BOOL
 #define SCMTYPEID scm_tc16_cl_variable
 
 long SCMTYPEID;
-
-inline bool FIsClVariableScm(SCM scm) 
-{ return SCM_NIMP(scm) && SCM_CAR(scm) == (SCM) SCMTYPEID; }
-
-inline ClVariable *PclvFromScm(SCM scm)
-{ return (ClVariable *)(SCM_CDR(scm)); }
-
-inline SCM ScmMakeClVariable(const ClVariable *pclv) {
-  SCM answer;
-  
-  SCM_DEFER_INTS;
-  SCM_NEWCELL(answer);
-  SCM_SETCAR(answer, (SCM) SCMTYPEID);
-  SCM_SETCDR(answer, (SCM) pclv);
-  SCM_ALLOW_INTS;
-
-  return answer;
-}
-
 
 SCM mark_cl_variable(SCM scm)
 {
@@ -206,12 +188,6 @@ an integer before returning the value. */
 
 long SCMTYPEID;
 
-inline bool FIsClSymbolicWeightScm(SCM scm) 
-{ return SCM_NIMP(scm) && SCM_CAR(scm) == (SCM) SCMTYPEID; }
-
-inline ClSymbolicWeight *PclswFromScm(SCM scm)
-{ return (ClSymbolicWeight *)(SCM_CDR(scm)); }
-
 SCM
 mark_cl_weight(SCM scm)
 {
@@ -286,12 +262,6 @@ cl-strength object given the sequence of numbers directly. */
 #define SCMTYPEID scm_tc16_cl_strength
 
 long SCMTYPEID;
-
-inline bool FIsClStrengthScm(SCM scm) 
-{ return SCM_NIMP(scm) && SCM_CAR(scm) == (SCM) SCMTYPEID; }
-
-inline ClStrength *PclsFromScm(SCM scm)
-{ return (ClStrength *)(SCM_CDR(scm)); }
 
 SCM
 mark_cl_strength(SCM scm)
@@ -416,12 +386,6 @@ object. */
 
 long SCMTYPEID;
 
-inline bool FIsClLinearExpressionScm(SCM scm) 
-{ return SCM_NIMP(scm) && SCM_CAR(scm) == (SCM) SCMTYPEID; }
-
-inline ClLinearExpression *PexprFromScm(SCM scm)
-{ return (ClLinearExpression *)(SCM_CDR(scm)); }
-
 SCM
 mark_cl_expression(SCM scm)
 {
@@ -476,15 +440,8 @@ this procedure can be used to force building a simple expression. */
     pexpr = new ClLinearExpression(gh_scm2double(clv));
   }
 
-  SCM answer;
 
-  SCM_DEFER_INTS;
-  SCM_NEWCELL(answer);
-  SCM_SETCAR(answer, (SCM) SCMTYPEID);
-  SCM_SETCDR(answer, (SCM) pexpr);
-  SCM_ALLOW_INTS;
-
-  return answer;
+  return ScmMakeClLinearExpression(pexpr);
 }
 #undef FUNC_NAME
 
@@ -664,24 +621,6 @@ cl-variable), an error will result. */
 
 long SCMTYPEID;
 
-inline bool FIsClLinearEquationScm(SCM scm) 
-{ return SCM_NIMP(scm) && SCM_CAR(scm) == (SCM) SCMTYPEID; }
-
-inline ClLinearEquation *PeqFromScm(SCM scm)
-{ return (ClLinearEquation *)(SCM_CDR(scm)); }
-
-inline SCM ScmMakeClLinearEquation(const ClLinearEquation *peq) {
-  SCM answer;
-  
-  SCM_DEFER_INTS;
-  SCM_NEWCELL(answer);
-  SCM_SETCAR(answer, (SCM) SCMTYPEID);
-  SCM_SETCDR(answer, (SCM) peq);
-  SCM_ALLOW_INTS;
-
-  return answer;
-}
-
 SCM
 mark_cl_equation(SCM scm)
 {
@@ -823,25 +762,6 @@ error will be signalled. */
 
 long SCMTYPEID;
 
-inline bool FIsClLinearInequalityScm(SCM scm) 
-{ return SCM_NIMP(scm) && SCM_CAR(scm) == (SCM) SCMTYPEID; }
-
-inline ClLinearInequality *PineqFromScm(SCM scm)
-{ return (ClLinearInequality *)(SCM_CDR(scm)); }
-
-inline SCM ScmMakeClLinearInequality(const ClLinearInequality *pineq) {
-  SCM answer;
-  
-  SCM_DEFER_INTS;
-  SCM_NEWCELL(answer);
-  SCM_SETCAR(answer, (SCM) SCMTYPEID);
-  SCM_SETCDR(answer, (SCM) pineq);
-  SCM_ALLOW_INTS;
-
-  return answer;
-}
-
-
 SCM
 mark_cl_inequality(SCM scm)
 {
@@ -940,19 +860,6 @@ arbitrary constraints. */
 //// cl-constraint -- a wrapper for cl-equation and cl-inequality
 /// NOT a new SMOB type, just for convenience
 
-inline bool FIsClConstraintScm(SCM scm) {
-  if (!SCM_NIMP(scm)) return false; 
-  SCM car = SCM_CAR(scm);
-
-  if (car == (SCM) scm_tc16_cl_equation) return true;
-  if (car == (SCM) scm_tc16_cl_inequality) return true;
-
-  return false;
-}
-
-inline ClConstraint *PcnFromScm(SCM scm)
-{ return (ClConstraint *)(SCM_CDR(scm)); }
-
 SCWM_PROC(cl_constraint_p, "cl-constraint?", 1, 0, 0,
            (SCM obj))
   /** Return #t if OBJ is some kind of constraint object, #f otherwise.
@@ -1043,12 +950,6 @@ cls-required, FACTOR defaults to 1.  */
 #define SCMTYPEID scm_tc16_cl_solver
 
 long SCMTYPEID;
-
-inline bool FIsClSimplexSolverScm(SCM scm) 
-{ return SCM_NIMP(scm) && SCM_CAR(scm) == (SCM) SCMTYPEID; }
-
-inline ClSimplexSolver *PsolverFromScm(SCM scm)
-{ return (ClSimplexSolver *)(SCM_CDR(scm)); }
 
 SCM
 mark_cl_solver(SCM scm)
@@ -1338,6 +1239,26 @@ any edit variables that have been added via `cl-add-editvar'. */
   return SCM_UNDEFINED;
 }
 #undef FUNC_NAME
+
+
+SCWM_PROC (cl_is_constraint_satisfied_p, "cl-is-constraint-satisfied?", 2, 0, 0,
+           (SCM solver, SCM cn))
+  /** Return #t if CN is satisfied in SOLVER, #f otherwise. */
+#define FUNC_NAME s_cl_is_constraint_satisfied_p
+{
+  int iarg = 1;
+  if (!FIsClSimplexSolverScm(solver)) {
+    scm_wrong_type_arg(FUNC_NAME,iarg++,solver);
+  }
+  if (!FIsClConstraintScm(cn)) {
+    scm_wrong_type_arg(FUNC_NAME,iarg++,cn);
+  }
+  ClSimplexSolver *psolver = PsolverFromScm(solver);
+  ClConstraint *pcn = PcnFromScm(cn);
+  return gh_bool2scm(psolver->FIsConstraintSatisfied(*pcn));
+}
+#undef FUNC_NAME
+
 
 
 SCWM_PROC(cl_suggest_value, "cl-suggest-value", 3, 0, 0,

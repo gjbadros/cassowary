@@ -91,6 +91,18 @@ inline bool FIsClLinearExpressionScm(SCM scm)
 inline ClLinearExpression *PexprFromScm(SCM scm)
 { return (ClLinearExpression *)(SCM_CDR(scm)); }
 
+inline SCM ScmMakeClLinearExpression(const ClLinearExpression *pexpr) {
+  SCM answer;
+  
+  SCM_DEFER_INTS;
+  SCM_NEWCELL(answer);
+  SCM_SETCAR(answer, (SCM) SCMTYPEID);
+  SCM_SETCDR(answer, (SCM) pexpr);
+  SCM_ALLOW_INTS;
+
+  return answer;
+}
+
 //// ClLinearEquation wrapper
 class ClLinearEquation;
 
@@ -104,6 +116,18 @@ inline bool FIsClLinearEquationScm(SCM scm)
 
 inline ClLinearEquation *PeqFromScm(SCM scm)
 { return (ClLinearEquation *)(SCM_CDR(scm)); }
+
+inline SCM ScmMakeClLinearEquation(const ClLinearEquation *peq) {
+  SCM answer;
+  
+  SCM_DEFER_INTS;
+  SCM_NEWCELL(answer);
+  SCM_SETCAR(answer, (SCM) SCMTYPEID);
+  SCM_SETCDR(answer, (SCM) peq);
+  SCM_ALLOW_INTS;
+
+  return answer;
+}
 
 //// ClLinearInequality wrapper
 class ClLinearInequality;
@@ -119,8 +143,21 @@ inline bool FIsClLinearInequalityScm(SCM scm)
 inline ClLinearInequality *PineqFromScm(SCM scm)
 { return (ClLinearInequality *)(SCM_CDR(scm)); }
 
+inline SCM ScmMakeClLinearInequality(const ClLinearInequality *pineq) {
+  SCM answer;
+  
+  SCM_DEFER_INTS;
+  SCM_NEWCELL(answer);
+  SCM_SETCAR(answer, (SCM) SCMTYPEID);
+  SCM_SETCDR(answer, (SCM) pineq);
+  SCM_ALLOW_INTS;
+
+  return answer;
+}
+
 //// cl-constraint -- a wrapper for cl-equation and cl-inequality
 /// NOT a new SMOB type, just for convenience
+class ClConstraint;
 
 inline bool FIsClConstraintScm(SCM scm) {
   if (!SCM_NIMP(scm)) return false; 
