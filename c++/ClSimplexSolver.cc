@@ -49,7 +49,22 @@ ClSimplexSolver::addConstraint(const ClConstraint &cn)
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << cn << ")" << endl;
 #endif
-    
+  
+  if (cn.isEditConstraint())
+    {
+    const ClEditConstraint *pcnEdit = dynamic_cast<const ClEditConstraint *>(&cn);
+    const ClVariable &v = pcnEdit->variable();
+    if (!v.isExternal() ||
+        (!FIsBasicVar(v) && !columnsHasKey(v)))
+      {
+      // we could try to make this case work,
+      // but it'd be unnecessarily inefficient --
+      // and probably easier for the client application
+      // to deal with
+      throw ExCLEditMisuse("(ExCLEditMisuse) Edit constaint on variable not in tableau.");
+      }
+    }
+
   ClLinearExpression *pexpr = newExpression(cn);
   bool fAddedOkDirectly = false;
 
@@ -226,7 +241,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
 #ifndef CL_NO_TRACE
   cerr << "Looking to remove var " << marker << endl;
 #endif
-  if (rowExpression(marker) == NULL )
+  if (!FIsBasicVar(marker))
     { // not in the basis, so need to do some work
     // first choose which variable to move out of the basis
     // only consider restricted basic variables
@@ -316,7 +331,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
       }
     }
   
-  if (rowExpression(marker) != NULL )
+  if (FIsBasicVar(marker))
     {
     ClLinearExpression *pexpr = removeRow(marker);
 #ifndef CL_NO_TRACE
@@ -1276,11 +1291,12 @@ ClSimplexSolver::setExternalVariables()
     ClVariable *pv = const_cast<ClVariable *>(*itParVars);
     // skip it if it is basic -- change_value is virtual
     // so don't want to call it twice
-    if (rowExpression(*pv)) 
+    if (FIsBasicVar(*pv))
       {
       // WARNING
       cerr << __FUNCTION__ << "Error: variable " << *pv 
            << " in _externalParametricVars is basic" << endl;
+      cerr << "Row is: " << *rowExpression(*pv) << endl;
       continue;
       }
     ChangeClv(pv,0.0);

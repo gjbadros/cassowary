@@ -53,6 +53,43 @@ simple1()
    }
 }
 
+
+/* add an edit variable to an empty solver */
+bool
+simple2()
+{
+ try
+   {
+   bool fOkResult = true;
+   ClVariable x(167);
+   ClSimplexSolver solver;
+
+   solver.addEditVar(x);
+   solver.beginEdit();
+   solver.suggestValue(x,100);
+   solver.endEdit();
+
+   cout << "x = " << x.value() << endl;
+   cerr << "Should have gotten an exception!" << endl;
+   return false;
+   } 
+ catch (ExCLEditMisuse &error)
+   {
+   cout << "Success: got the exception" << endl;
+   }
+ catch (ExCLError &error) 
+   {
+   cerr << "Exception! " << error.description() << endl;
+   return(false);
+   } 
+ catch (...) 
+   {
+   cerr << "Unknown exception" << endl;
+   return(false);
+   }
+}
+
+
 bool
 justStay1()
 {
@@ -571,6 +608,7 @@ main( int argc, char **argv )
     if (!fResult) cout << "Failed!" << endl;
 
     RUN_TEST(simple1);
+    RUN_TEST(simple2);
     RUN_TEST(justStay1);
     RUN_TEST(addDelete1);
     RUN_TEST(addDelete2);

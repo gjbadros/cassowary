@@ -65,7 +65,8 @@ class ClSimplexSolver : public ClTableau {
     _fOptimizeAutomatically(true),
     _fNeedsSolving(false),
     _pfnChangeClvCallback(NULL),
-    _pfnResolveCallback(NULL)
+    _pfnResolveCallback(NULL),
+    _pfnCnSatCallback(NULL)
     { 
     _rows[&_objective] = new ClLinearExpression(); 
 #ifndef CL_NO_TRACE
@@ -280,6 +281,12 @@ class ClSimplexSolver : public ClTableau {
   void SetResolveCallback(PfnResolveCallback pfn)
     { _pfnResolveCallback = pfn; }
 
+  typedef void (*PfnCnSatCallback)(ClSimplexSolver *psolver, 
+                                   ClConstraint *pcn, bool fSatisfied);
+
+  void SetCnSatCallback(PfnCnSatCallback pfn)
+    { _pfnCnSatCallback = pfn; }
+
   friend ostream &operator<<(ostream &xo, const ClSimplexSolver &tableau);
   ostream &printOn(ostream &xo) const;
   
@@ -391,6 +398,7 @@ class ClSimplexSolver : public ClTableau {
       _pfnChangeClvCallback(pclv,this);
   }
 
+protected:
   /// instance variables
 
   // the arrays of positive and negative error vars for the edit constraints
@@ -432,6 +440,7 @@ class ClSimplexSolver : public ClTableau {
 
   PfnChangeClvCallback _pfnChangeClvCallback;
   PfnResolveCallback _pfnResolveCallback;
+  PfnCnSatCallback _pfnCnSatCallback;
 
 };
 

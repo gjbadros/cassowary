@@ -53,7 +53,7 @@ class ClTableau {
     cerr << "(" << v << ", " << subject << ")" << endl;
 #endif
     _columns[&v].insert(&subject); 
-    if (v.isExternal())
+    if (v.isExternal() && !FIsBasicVar(v))
       {
       _externalParametricVars.insert(static_cast<const ClVariable *>(&v));
       }
@@ -115,6 +115,9 @@ class ClTableau {
     else
       return NULL;
     }
+
+  bool FIsBasicVar(const ClAbstractVariable &v)
+    { return rowExpression(v) != NULL; }
 
   // private: FIXGJB: can I improve the encapsulation?
 
