@@ -172,7 +172,7 @@ ClGenericLinearExpression<T>::divFrom(const ClGenericLinearExpression<T> &expr) 
 // Add n*expr to this expression for another expression expr.
 template <class T>
 ClGenericLinearExpression<T> &
-ClGenericLinearExpression<T>::addExpression(const ClGenericLinearExpression<T> &expr, const T &n)
+ClGenericLinearExpression<T>::addExpression(const ClGenericLinearExpression<T> &expr, Number n)
 {
   incrementConstant(expr.constant()*n);
 
