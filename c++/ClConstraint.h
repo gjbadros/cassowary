@@ -15,6 +15,7 @@
 #include "ClLinearExpression.h"
 #include "ClStrength.h"
 
+
 class ClConstraint {
 private:
 

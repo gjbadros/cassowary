@@ -48,11 +48,12 @@ class ClSymbolicWeight {
   ostream &printOn(ostream &xo) const
     { 
     vector<double>::const_iterator i = my_values.begin();
-    cout << *i;
+    xo << *i;
     for (++i; i != my_values.end(); ++i) 
       {
-      cout << "," << *i;
+      xo << "," << *i;
       }
+    return xo;
     }
 
   int cLevels() const

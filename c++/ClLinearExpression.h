@@ -14,16 +14,19 @@
 #include <map.h>
 #include "ClAbstractVariable.h"
 #include "ClVariable.h"
-#include "ClSimplexSolver.h"
-#include "ClLinearEquation.h"
+//#include "ClLinearEquation.h"
+
+class ClSimplexSolver;
 
 class ClLinearExpression  {
  public:
-  ClLinearExpression();
+  ClLinearExpression(void);
 
   // Convert from ClVariable to a ClLinearExpression
   // this replaces ClVariable::asLinearExpression
-  ClLinearExpression(const ClVariable &);
+  ClLinearExpression(const ClVariable &clv);
+
+  virtual ~ClLinearExpression();
 
   // Return a new linear expression formed by multiplying self by x.
   // (Note that this result must be linear.)
@@ -82,7 +85,7 @@ class ClLinearExpression  {
 
   // Return a variable in this expression.  (It is an error if this
   // expression is constant -- signal ExCLInternalError in that case).
-  ClAbstractVariable *anyVariable() const;
+  const ClAbstractVariable &anyVariable() const;
 
 #ifdef FIXGJB_OLD_SMALLTALK_WAY
   ClLinearExpression asLinearExpression() const 
@@ -125,6 +128,32 @@ class ClLinearExpression  {
   // Note that the term involving subject has been dropped.
   void newSubject(const ClAbstractVariable &subject);
 
+  // Return the coefficient corresponding to variable var, i.e.,
+  // the 'ci' corresponding to the 'vi' that var is:
+  //     v1*c1 + v2*c2 + .. + vn*cn + c
+  Number coefficientFor(const ClVariable &var)
+    { return my_terms[var]; }
+
+  Number constant()
+    { return my_constant; }
+
+  void set_constant(Number c)
+    { my_constant = c; }
+
+  void incrementConstant(Number c)
+    { my_constant += c; }
+
+  bool isConstant() const
+    { return my_terms.size() == 0; }
+
+  virtual ostream &printOn(ostream &xo) const;
+
+  friend ostream &operator<<(ostream &xo,const ClLinearExpression &cle)
+    { cle.printOn(xo); return xo; }
+
+
+
+#ifdef FIXGJB_OLD_SMALLTALK_WAY
   /// Below cnFoo functions are virtually duplicated in ClVariable, also
 
   // Return a linear constraint self=expr with given strength and weight
@@ -160,33 +189,16 @@ class ClLinearExpression  {
   ClLinearInequality cnLEQ(Number expr,
 			   const ClStrength &strength,
 			   double weight = 1.0);
-
-  // Return the coefficient corresponding to variable var, i.e.,
-  // the 'ci' corresponding to the 'vi' that var is:
-  //     v1*c1 + v2*c2 + .. + vn*cn + c
-  Number coefficientFor(const ClVariable &var);
-
-  Number constant()
-    { return my_constant; }
-
-  void set_constant(Number c)
-    { my_constant = c; }
-
-
-  void incrementConstant(Number c)
-    { my_constant += c; }
-
-  bool isConstant();
-
-  virtual ostream &printOn(ostream &xo);
+#endif
 
  private:
 
   // Initialize this linear expression to 0.
-  void initialize();
+  // I think ctr obviates need for this --01/09/98 gjb
+  // void initialize();
 
   Number my_constant;
-  map< ClVariable,Number,less<Number> > my_terms;
+  map< ClVariable,Number,less<ClVariable> > my_terms;
 
 };
 

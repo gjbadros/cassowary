@@ -16,12 +16,9 @@
 #include "ClLinearExpression.h"
 
 class ClLinearConstraint : public ClConstraint {
- private:
-  ClLinearExpression my_expression;
-
  public:
 
-  // Ctr
+  // Constructor
   ClLinearConstraint()
   
   // Return my linear expression.  (For linear equations, this
@@ -31,6 +28,8 @@ class ClLinearConstraint : public ClConstraint {
     { return my_expression; }
 
  private:
+
+  ClLinearExpression my_expression;
 
   virtual void setExpression( const ClLinearExpression &expr)
     { my_expression = expr; }

@@ -17,15 +17,14 @@
 #include "ClLinearExpression.h"
 
 class ClLinearEquation : public ClLinearConstraint {
- private:
-  ClLinearExpression my_expression;
-
  public:
   
-  virtual ostream &printOn(ostream &xo)
+  virtual ostream &printOn(ostream &xo) const
     {  xo << strength() << "(" << expression() << "=0)"; }
 
  private:
+
+  ClLinearExpression my_expression;
 
   virtual void setExpression( const ClLinearExpression &expr)
     { my_expression = expr; }

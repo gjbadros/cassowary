@@ -35,6 +35,9 @@ class ClStrength {
   // special case for when nLevels = 3, should assert nLevels() == 3
   ClStrength(const String &name, double w1, double w2, double w3);
 
+  virtual ~ClStrength()
+    { }
+
   // Return the number of non-required strengths
   static int nLevels()
     { return 3; }
@@ -43,7 +46,7 @@ class ClStrength {
     { return (this == &clsRequired()); }
 
   virtual ostream &printOn(ostream &xo) const
-    { xo << name() << ":" << symbolicWeight(); }
+    { xo << name() << ":" << symbolicWeight(); return xo; }
 
   virtual ClSymbolicWeight symbolicWeight() const
     { return my_symbolicWeight; }

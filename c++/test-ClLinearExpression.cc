@@ -5,5 +5,11 @@
 int
 main( char **argv, int argc )
 {
-  ClLinearExpression cle;
+  ClVariable a("a");
+  ClLinearExpression cle(a);
+  cout << cle << endl;
+  ClVariable b("b");
+  cle.addVariable(b,2);
+  cout << cle << endl;
+  cout << cle.times(2) << endl;
 }

@@ -23,7 +23,7 @@ class ClLinearInequality : public ClLinearConstraint {
   virtual bool isInequality() const
     { return true; }
 
-  virtual ostream &printOn(ostream &xo)
+  virtual ostream &printOn(ostream &xo) const
     { xo << strength() << "(" << expression() << ">=0)"; return xo; }
 
  private:

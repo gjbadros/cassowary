@@ -16,6 +16,13 @@
 
 class ClAbstractVariable {
 public:
+  ClAbstractVariable() :
+    my_name(String("None"))
+    { }
+
+  virtual ~ClAbstractVariable()
+    { }
+
   // Return the name of the variable
   String name() const
     { return my_name; }
@@ -49,7 +56,7 @@ public:
   //	  x[10.0]		-- w/ name
   //	  x[0.0,100]		-- w/ name, bounds but no value yet
   //	  CV#345(10.0)		-- w/o name
-  virtual ostream &printOn(ostream &xo)
+  virtual ostream &printOn(ostream &xo) const
     {  xo << "CV#" << my_name << endl;  return xo; }
 
 private:

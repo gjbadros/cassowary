@@ -13,7 +13,7 @@
 #include <assert.h>
 
 // Help g++ out, tell it to instantiate this
-template vector<double> &vector<double>::operator =(const vector<double> &);
+//template vector<double> &vector<double>::operator =(const vector<double> &);
 
 ClSymbolicWeight::ClSymbolicWeight(int cLevels, double value) :
   my_values(cLevels, value)

@@ -27,6 +27,14 @@ public:
     my_value(value)
     { } 
 
+  ClVariable() :
+    my_name(String("<NO_NAME>")),
+    my_value(0.0)
+    { } 
+
+  virtual ~ClVariable()
+    { }
+
   // Return true if this a variable known outside the solver.  
   // (We need to give such variables a value after solving is complete.)
   bool isExternal() const
@@ -42,9 +50,9 @@ public:
   bool isRestricted() const
     { return false; }
 
-  ostream &printOn(ostream &xo)
+  ostream &printOn(ostream &xo) const
   {  
-    xo << "[" << my_name << ":" << my_value << "]" << endl;
+    xo << "[" << my_name << ":" << my_value << "]";
     return xo;
   }
   
@@ -53,6 +61,13 @@ public:
     { return my_value; }
   void set_value(Number const &value)
     { my_value = value; }
+
+  friend ostream& operator<<(ostream &xos, const ClVariable &clv)
+    { clv.printOn(xos); return xos; }
+
+  friend bool operator<(const ClVariable &cl1, const ClVariable &cl2)
+    { return cl1.my_name < cl2.my_name; }
+
 
 #ifdef FIXGJB_OLD_SMALLTALK_WAY
   // These get replaced by a conversion from ClVariable to ClLinearExpression
