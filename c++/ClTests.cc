@@ -17,8 +17,9 @@
 #include <fstream>
 #include <iomanip>
 #include <string>
+#include <time.h>
 
-#ifndef NO_RANDOMS_FROM_FILE
+#ifdef RANDOMS_FROM_FILE
 int iRandom = 0;
 int cRandom = 0;
 vector<double> vRandom;
@@ -51,11 +52,24 @@ double UniformRandom()
 
 #else
 
+void InitializeRandoms() {
+  srand(long(time(NULL)));
+}
+
 inline 
 double UniformRandom()
 { return double(rand())/RAND_MAX; }
 
 #endif
+
+inline
+double GrainedUniformRandom()
+{
+  static const double grain = 1.0e-4;
+  double r = int(UniformRandom()/grain) * grain;
+  return r;
+}
+
 
 bool
 simple1()
@@ -873,6 +887,147 @@ addDel(const int nCns = 900, const int nVars = 900, const int nResolves = 10000)
 }
 
 
+bool
+addDelSolvers(const int nCns = 900, const int nResolves = 10000, 
+              const int nSolvers = 10, const int testNum = 1)
+{
+  Timer timer;
+  // FIXGJB: from where did .12 come?
+  static const double ineqProb = 0.12;
+  static const int maxVars = 3;
+  static const int nVars = nCns;
+
+  InitializeRandoms();
+
+  double tmAdd, tmEdit, tmResolve, tmEndEdit;
+  timer.Start();
+
+  typedef ClSimplexSolver *PClSimplexSolver;
+  ClSimplexSolver **rgpsolver = new PClSimplexSolver[nSolvers];
+  for (int is = 0; is < nSolvers; ++is) {
+    rgpsolver[is] = new ClSimplexSolver;
+    rgpsolver[is]->SetAutosolve(false);
+  }
+    
+  ClVariable **rgpclv = new PClVariable[nVars];
+  for (int i = 0; i < nVars; i++) {
+    rgpclv[i] = new ClVariable(i,"x");
+    for (int is = 0; is < nSolvers; ++is) {
+      rgpsolver[is]->AddStay(*rgpclv[i]);
+    }
+  }
+    
+  int nCnsMade = nCns*2;
+
+  ClConstraint **rgpcns = new PClConstraint[nCnsMade];
+  ClConstraint **rgpcnsAdded = new PClConstraint[nCns];
+  int nvs = 0;
+  int k;
+  int j;
+  double coeff;
+  for (j = 0; j < nCnsMade; ++j) {
+    // number of variables in this constraint
+    nvs = int(UniformRandom()*maxVars) + 1;
+    //    cerr << "Using nvs = " << nvs << endl;
+    ClLinearExpression expr = GrainedUniformRandom()*20.0 - 10.0;
+    for (k = 0; k < nvs; k++) {
+      coeff = GrainedUniformRandom()*10 - 5;
+      expr.AddExpression(*(rgpclv[int(UniformRandom()*nVars)]) * coeff);
+    }
+    if (UniformRandom() < ineqProb) {
+      rgpcns[j] = new ClLinearInequality(expr);
+    } else {  
+      rgpcns[j] = new ClLinearEquation(expr);
+    }
+#ifdef CL_SHOW_CNS_IN_BENCHMARK
+    cout << "Cn[" << j << "]: " << *rgpcns[j] << endl;
+#endif
+  }
+  timer.Stop();
+  cerr << "done building data structures" << endl;
+  
+  timer.Reset(); timer.Start();
+  int cExceptions = 0;
+  int cCns = 0;
+  for (int is = 0; is < nSolvers; ++is) {
+    for (j = 0; j < nCnsMade && cCns < nCns; ++j) {
+      // Add the constraint -- if it's incompatible, just ignore it
+      try {
+        rgpsolver[is]->AddConstraint(rgpcns[j]);
+        // count the constraint as having been added
+        cCns++;
+      } 
+      catch (ExCLRequiredFailure &) {
+        cExceptions++;
+      }
+    }
+    rgpsolver[is]->Solve();
+  }
+  timer.Stop();
+  cerr << "done adding " << cCns << " constraints ["
+       << j << " attempted, "
+       << cExceptions << " exceptions]" << endl;
+
+  tmAdd = timer.ElapsedTime();
+  
+  int e1Index = int(UniformRandom()*nVars);
+  int e2Index = int(UniformRandom()*nVars);
+  
+  cerr << "Editing vars with indices " << e1Index << ", " << e2Index << endl;
+  
+  ClVariable e1 = *(rgpclv[e1Index]);
+  ClVariable e2 = *(rgpclv[e2Index]);
+  
+  timer.Reset();
+  timer.Start();
+  
+  for (int is = 0; is < nSolvers; ++is) {
+    rgpsolver[is]->AddEditVar(e1);
+    rgpsolver[is]->AddEditVar(e2);
+  }
+  timer.Stop();
+  tmEdit = timer.ElapsedTime();
+
+  cerr << "done add edits, starting resolve" << endl;
+  timer.Reset();
+  timer.Start();
+  
+  for (int is = 0; is < nSolvers; ++is) {
+    ClSimplexSolver &solver = *rgpsolver[is];
+    solver.BeginEdit();
+    for (int m = 0; m < nResolves; ++m) {
+      solver
+        .SuggestValue(e1,e1->Value()*1.001)
+        .SuggestValue(e2,e2->Value()*1.001)
+        .Resolve();
+    }
+  }
+  timer.Stop();
+  tmResolve = timer.ElapsedTime();
+
+  cerr << "done resolves -- now ending edits" << endl;
+  timer.Reset();
+  timer.Start();
+  
+  for (int is = 0; is < nSolvers; ++is) {
+    rgpsolver[is]->EndEdit();
+  }
+  
+  cerr << "done removing edit constraints" << endl;
+  timer.Stop();
+  tmEndEdit = timer.ElapsedTime();
+
+  cout << nCns << "," << nSolvers << "," << nResolves << "," << testNum << "," 
+       << tmAdd << "," << tmEdit << "," << tmResolve << "," << tmEndEdit << ","
+       << tmAdd/nCns/nSolvers << ","
+       << tmEdit/nSolvers/2 << ","
+       << tmResolve/nResolves/nSolvers << ","
+       << tmEndEdit/nSolvers/2 << endl;
+  
+  return true;
+}
+  
+
 int
 main( int argc, char **argv )
 {
@@ -884,13 +1039,15 @@ main( int argc, char **argv )
     // seed the random number generator for reproducible results
     srand(123456789);
 
-    cout << "Cassowary version: " << szCassowaryVersion << endl;
+    cerr << "Cassowary version: " << szCassowaryVersion
+         << ", $Id$" << endl;
 
 #define RUN_TEST(x) \
     cout << #x << ":" << endl; \
     fResult = x(); fAllOkResult &= fResult; \
     if (!fResult) cout << "Failed!" << endl;
 
+#if 0
     RUN_TEST(simple1);
     RUN_TEST(simple2);
     RUN_TEST(justStay1);
@@ -903,18 +1060,16 @@ main( int argc, char **argv )
     RUN_TEST(multiedit);
     RUN_TEST(multiedit2);
     // RUN_TEST(blackboxsat);
+#endif
 
-    int cns = 90, vars = 90, resolves = 100;
+    int testNum = 1, cns = 90, resolves = 100, solvers=10;
 
-    if (argc > 1)
-      cns = atoi(argv[1]);
+    if (argc > 1) testNum = atoi(argv[1]);
+    if (argc > 2) cns = atoi(argv[2]);
+    if (argc > 3) resolves = atoi(argv[3]);
+    if (argc > 4) solvers = atoi(argv[4]);
 
-    if (argc > 2)
-      vars = atoi(argv[2]);
-
-    if (argc > 3)
-      resolves = atoi(argv[3]);
-
+#if 0
     if (cns > 0) 
       {
       cout << "addDel" << ":" << endl;
@@ -930,8 +1085,10 @@ main( int argc, char **argv )
          << "\nClSlackVariables: " << ClSlackVariable::cSlackVariables
          << endl;
 #endif
+#endif
 
-    
+    addDelSolvers(cns,resolves,solvers,testNum);
+
     return (fAllOkResult? 0 : 255);
     
     } 
