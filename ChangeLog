@@ -1,3 +1,9 @@
+Tue Nov 16 17:35:54 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* java/ClReader.lex, java/ClReader.cup: Added -- code by Will
+	Portnoy for adding a parser to the Java implementation.  Untested, 
+	and an early version that he emailed me.
+
 Tue Nov 16 17:34:00 1999  Greg J. Badros  <gjb@cs.washington.edu>
 
 	* java/ClTestColumns.java, java/ClTests.java: Put in the cassowary 
