@@ -286,13 +286,19 @@ ClGenericLinearExpression<T>::addVariable(const ClAbstractVariable &v, T c,
 // expression is constant -- signal ExCLInternalError in that case).
 template <class T>
 const ClAbstractVariable *
-ClGenericLinearExpression<T>::anyVariable() const
+ClGenericLinearExpression<T>::anyPivotableVariable() const
 {
   if (isConstant())
     {
     throw ExCLInternalError();
     }
-  return (*_terms.begin()).first;
+  ClVarToCoeffMap::const_iterator i = _terms.begin();
+  for ( ; i != _terms.end(); ++i)
+    {
+    if (((*i).first)->isPivotable())
+      return (*i).first;
+    }
+  return NULL;
 }
 
 // Replace var with a symbolic expression expr that is equal to it.

@@ -125,9 +125,10 @@ class ClGenericLinearExpression  {
 				  const ClAbstractVariable &subject,
 				  ClTableau &solver);
 
-  // Return a variable in this expression.  (It is an error if this
-  // expression is constant -- signal ExCLInternalError in that case).
-  const ClAbstractVariable *anyVariable() const;
+  // Return a pivotable variable in this expression.  (It is an error
+  // if this expression is constant -- signal ExCLInternalError in
+  // that case).  Return NULL if no pivotable variables
+  const ClAbstractVariable *anyPivotableVariable() const;
 
   // Replace var with a symbolic expression expr that is equal to it.
   // If a variable has been added to this expression that wasn't there
