@@ -47,7 +47,7 @@ class ClTableau {
 
   // Remove the basic variable v from the tableau row v=expr
   // Then update column cross indices
-  void removeRow(const ClVariable &v);
+  ClLinearExpression &removeRow(const ClVariable &v);
 
   // Replace all occurrences of oldVar with expr, and update column cross indices
   // oldVar should now be a basic variable

@@ -509,8 +509,16 @@ ClSimplexSolver::optimize(const ClVariable &zVar)
 void 
 ClSimplexSolver::pivot(const ClVariable &entryVar, const ClVariable &exitVar)
 {
-  // FIXGJB
-  assert(false);
+  // expr is the expression for the exit variable (about to leave the basis) -- 
+  // so that the old tableau includes the equation:
+  //   exitVar = expr
+  ClLinearExpression expr = removeRow(exitVar);
+  // Compute an expression for the entry variable.  Since expr has
+  // been deleted from the tableau we can destructively modify it to
+  // build this expression.
+  expr.changeSubject(exitVar,entryVar);
+  substituteOut(entryVar,expr);
+  addRow(entryVar,expr);
 }
 
 

@@ -48,7 +48,7 @@ ClTableau::removeColumn(const ClVariable &var)
 
 // Remove the basic variable v from the tableau row v=expr
 // Then update column cross indices
-void 
+ClLinearExpression &
 ClTableau::removeRow(const ClVariable &var)
 {
   map<ClVariable, ClLinearExpression>::iterator it = my_rows.find(var);
@@ -63,6 +63,7 @@ ClTableau::removeRow(const ClVariable &var)
     }
   my_infeasibleRows.erase(my_infeasibleRows.find(var));
   my_rows.erase(it);
+  return expr;
 }
 
 // Replace all occurrences of oldVar with expr, and update column cross indices
