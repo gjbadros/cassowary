@@ -1,0 +1,14 @@
+#!/bin/sh -
+ln -sf . ./c++/cassowary
+ln -sf ../../../EDU/ ./java/cda/classes/EDU
+ln -sf ../../EDU ./java/demos/EDU
+ln -sf ../uist97/eepic.sty ./papers/cassowary-tr/eepic.sty
+ln -sf ../uist97/epic.sty ./papers/cassowary-tr/epic.sty
+ln -sf ../uist97/psfig.sty ./papers/cassowary-tr/psfig.sty
+ln -sf ../uist97/constraints.eepic ./papers/cassowary-tr/constraints.eepic
+ln -sf ../uist97/qoca.eepic ./papers/cassowary-tr/qoca.eepic
+ln -sf ../uist97/quasi.eepic ./papers/cassowary-tr/quasi.eepic
+ln -sf ../uist97/uist96.cls ./papers/cassowary-tr/uist96.cls
+ln -sf ../uist97/abb1.tex ./papers/cassowary-tr/abb1.tex
+ln -sf ../bib/constraints.bib ./papers/cassowary-tr/constraints.bib
+ln -sf ../bib/constraints.bib ./papers/uist97/constraints.bib
