@@ -1,3 +1,5 @@
 *.class
+.built-package
+.built-test
 classes
 java.prof
