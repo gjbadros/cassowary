@@ -56,7 +56,7 @@ cassowarycmodule.so: cassowary_wrap.o $(CL_LIBRARY)
 	$(CPP) $(CFLAGS) -shared -o $@ $^
 
 install:
-	echo "Copy cassowary.py and cassowarycmodule.so to appropriate places"
+	echo "*****Copy cassowary.py and cassowarycmodule.so to appropriate places"
 
 clean: 
 	rm cassowary.py cassowary_wrap.c cassowary_wrap.doc cassowary_wrap.o cassowarycmodule.so
