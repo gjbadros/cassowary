@@ -1141,7 +1141,7 @@ brief summary of the contents of the solver. */
   
   strstream ss;
   ClSimplexSolver *psolver = PsolverFromScm(solver);
-  psolver->printDebugInfo(ss);
+  psolver->printOnVerbose(ss);
   ss << ends;
   scm_puts(ss.str(), port);
   return SCM_UNDEFINED;
@@ -1439,7 +1439,7 @@ CL_PROC (cl_is_constraint_satisfied_p, "cl-is-constraint-satisfied?", 2, 0, 0,
   }
   ClSimplexSolver *psolver = PsolverFromScm(solver);
   ClConstraint *pcn = PcnFromScm(cn);
-  return gh_bool2scm(psolver->FIsConstraintSatisfied(*pcn));
+  return gh_bool2scm(psolver->FIsConstraintSatisfied(pcn));
 }
 #undef FUNC_NAME
 
@@ -1560,8 +1560,7 @@ directly) will be listed. */
 
   const ClConstraintToVarMap mapCns = psolver->ConstraintMap();
 
-  map<const ClConstraint *, const ClAbstractVariable *>::const_iterator 
-    it_marker = mapCns.begin();
+  ClConstraintToVarMap::const_iterator it_marker = mapCns.begin();
 
   for ( ; it_marker != mapCns.end() ; ++it_marker) {
     const ClConstraint *pcn = (*it_marker).first;
