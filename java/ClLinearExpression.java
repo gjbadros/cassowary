@@ -78,7 +78,8 @@ class ClLinearExpression
       return result.multiplyMe(x);
     }
 
-  public ClLinearExpression times(ClLinearExpression expr) throws ExCLNonlinearExpression
+  public ClLinearExpression times(ClLinearExpression expr) 
+       throws ExCLNonlinearExpression
     {
       if (isConstant())
 	{

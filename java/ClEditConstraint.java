@@ -18,8 +18,17 @@
 class ClEditConstraint extends ClEditOrStayConstraint
 {
   
-  public ClEditConstraint()
-  { }
+  public ClEditConstraint(ClVariable clv,
+			  ClStrength strength,
+			  double weight)
+  { super(clv,strength,weight); }
+
+  public ClEditConstraint(ClVariable clv,
+			  ClStrength strength)
+  { super(clv,strength); }
+
+  public ClEditConstraint(ClVariable clv)
+  { super(clv); }
 
   public boolean isEditConstraint()
   { return true; }
