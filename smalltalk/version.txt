@@ -1,6 +1,0 @@
-Ultraviolet version
-24-Feb-97  4.16
-
-
-Cassowary with timing stuff
-9-July-97 4.38
