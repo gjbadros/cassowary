@@ -421,7 +421,7 @@ AC_OUTPUT([
 	guile/Makefile \
 	docs/Makefile \
 	cassowary.spec \
-	cassowary-nofd.spec \
+	cassowary-nofd.spec2 \
 	GTL.spec \
 	java/Makefile \
 	java/demos/Makefile \

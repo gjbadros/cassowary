@@ -10,12 +10,14 @@ SUBDIRS = \
 bin_SCRIPTS = cassowary-config
 
 EXTRA_DIST = ANNOUNCE AUTHORS COPYING IMPORTANT INSTALL LICENSE NEWS README THANKS \
-		cassowary.spec cassowary-nofd.spec
+		cassowary.spec cassowary-nofd.spec2
 
 distdir_nofd = cassowary-nofd-@VERSION@
 
 distdir-nofd:	distdir
 	mv cassowary-@VERSION@ $(distdir_nofd)
+	mv $(distdir_nofd)/cassowary-nofd.spec2 $(distdir_nofd)/cassowary-nofd.spec
+	rm -f $(distdir_nofd)/cassowary.spec
 
 dist-nofd:	distdir-nofd
 	-chmod -R a+r $(distdir_nofd)

@@ -7,7 +7,8 @@ Name: cassowary-nofd
 Summary: A Linear Arithmetic Constraint Solving Library.
 Version: %ver
 Release: %rel
-Source: http://www.cs.washington.edu/research/constraints/cassowary/cassowary-%ver.tar.gz
+# This source just has a different top-level directory name
+Source: http://www.cs.washington.edu/research/constraints/cassowary/cassowary-nofd-%ver.tar.gz
 Group: Development/Libraries
 BuildRoot: /tmp/cassowary-%ver-build
 Copyright: Copyright (C) 1998,1999 Greg J. Badros
