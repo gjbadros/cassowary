@@ -1,3 +1,19 @@
+Sat Sep 18 22:31:54 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* configure.in:  Added GUILE_LIBS setting.
+
+	* cassowary.spec.in: Use fake_root_for_install to get the
+	cassowary guile library in proper place.
+
+	* autogen.sh: Only create symlink if not already created.
+
+	* acconfig.h, c++/config.h.in: Added HAVE_SCM_MAKE_SMOB_TYPE_MFPE
+
+	* README: Added note re: enable-permissive
+
+	* guile/cassowary_scm.cc: Use new-style (guile-1.3.2 or better)
+	SMOBs conditioning on HAVE_SCM_MAKE_SMOB_TYPE_MFPE.
+
 Wed Sep  8 20:03:25 1999  Greg J. Badros  <gjb@cs.washington.edu>
 
 	* cassowary.spec.in: Bump to release 8
