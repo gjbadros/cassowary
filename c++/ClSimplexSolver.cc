@@ -1148,6 +1148,13 @@ ClSimplexSolver::pivot(const ClAbstractVariable &entryVar, const ClAbstractVaria
   // build this expression.
   pexpr->changeSubject(exitVar,entryVar);
   substituteOut(entryVar,*pexpr);
+
+  if (entryVar.isExternal())
+    {
+    // entry var is no longer a parametric variable since we're moving
+    // it into the basis
+    _externalParametricVars.erase(static_cast<const ClVariable *>(&entryVar));
+    }
   addRow(entryVar,*pexpr);
 }
 
