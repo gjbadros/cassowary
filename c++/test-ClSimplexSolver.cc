@@ -13,7 +13,7 @@ main( char **argv, int argc )
   ClVariable a("a",0.0);
   ClVariable b("b",0.0);
 
-  ClLinearExpression b_minus_a = 0- a /* = */ + 2 * b + 1;
+  ClLinearExpression b_minus_a = 0- a /* = */ + b;
   cerr << b_minus_a << endl;
   ClLinearEquation a_equals_2b(b_minus_a);
   ClEditConstraint edit_a(a);

@@ -670,7 +670,7 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
   cerr << "(" << cn << ")" << endl;
 #endif
   const ClLinearExpression &cnExpr = cn.expression();
-  ClLinearExpression expr(cnExpr.constant());
+  ClLinearExpression &expr = *(new ClLinearExpression(cnExpr.constant()));
   const map<const ClAbstractVariable *, Number> &cnTerms = cnExpr.terms();
   map<const ClAbstractVariable *,Number>::const_iterator it = cnTerms.begin();
   for ( ; it != cnTerms.end(); ++it)
@@ -701,19 +701,19 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
     // them to the expression (they can't be basic).
     ++my_slackCounter;
     ClSlackVariable &slackVar = *(new ClSlackVariable(my_slackCounter,"s"));
-    expr.addVariable(slackVar,-1);
+    expr.setVariable(slackVar,-1);
     // index the constraint under its slack variable
     my_markerVars[&cn] = &slackVar;
     if (!cn.isRequired())
       {
       ++my_slackCounter;
       ClSlackVariable &eminus = *(new ClSlackVariable(my_slackCounter,"em"));
-      expr.addVariable(eminus,1.0);
+      expr.setVariable(eminus,1.0);
       // add emnius to the objective function with the appropriate weight
       ClLinearExpression *pzRow = rowExpression(my_objective);
       // FIXGJB: pzRow->addVariable(eminus,cn.strength().symbolicWeight() * cn.weight());
       ClSymbolicWeight sw = cn.strength().symbolicWeight().times(cn.weight());
-      pzRow->addVariable(eminus,sw.asDouble());
+      pzRow->setVariable(eminus,sw.asDouble());
       my_errorVars[&cn].insert(&eminus);
       noteAddedVariable(eminus,my_objective);
       }
@@ -727,7 +727,7 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
       // enter the basis when pivoting.
       ++my_dummyCounter;
       ClDummyVariable &dummyVar = *(new ClDummyVariable(my_dummyCounter,"d"));
-      expr.addVariable(dummyVar,1.0);
+      expr.setVariable(dummyVar,1.0);
       my_markerVars[&cn] = &dummyVar;
       }
     else
@@ -739,8 +739,8 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
       ++my_slackCounter;
       ClSlackVariable &eplus = *(new ClSlackVariable(my_slackCounter,"ep"));
       ClSlackVariable &eminus = *(new ClSlackVariable(my_slackCounter,"em"));
-      expr.addVariable(eplus,-1.0);
-      expr.addVariable(eminus,1.0);
+      expr.setVariable(eplus,-1.0);
+      expr.setVariable(eminus,1.0);
       // index the constraint under one of the error variables
       my_markerVars[&cn] = &eplus;
       ClLinearExpression *pzRow = rowExpression(my_objective);
@@ -756,10 +756,10 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
 	     << " with swCoeff == " << swCoeff << endl;
 	}
 #endif      
-      pzRow->addVariable(eplus,swCoeff);
+      pzRow->setVariable(eplus,swCoeff);
       noteAddedVariable(eplus,my_objective);
       // FIXGJB: pzRow->addVariable(eminus,cn.strength().symbolicWeight() * cn.weight());
-      pzRow->addVariable(eminus,swCoeff);
+      pzRow->setVariable(eminus,swCoeff);
       noteAddedVariable(eminus,my_objective);
       if (cn.isStayConstraint()) 
 	{
@@ -779,13 +779,12 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
   // If necessary normalize the expression by multiplying by -1
   if (expr.constant() < 0)
     {
-    expr.set_constant(-expr.constant());
     expr.multiplyMe(-1);
     }
 #ifndef NO_TRACE
   cerr << "- returning " << expr << endl;
 #endif
-  return new ClLinearExpression(expr);
+  return &expr;
 }
 
 // Minimize the value of the objective.  (The tableau should already
