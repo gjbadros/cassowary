@@ -10,7 +10,7 @@ AC_INIT(c++/ClSimplexSolver.cc)
 AC_PREREQ(2.4)
 
 dnl ## Initialize automake ##
-AM_INIT_AUTOMAKE(cassowary, 0.32)
+AM_INIT_AUTOMAKE(cassowary, 0.4)
 AM_MAINTAINER_MODE
 AM_CONFIG_HEADER(config.h)
 
@@ -22,6 +22,20 @@ AM_PROG_LEX
 AC_PROG_YACC
 
 dnl ## Package options ##
+## ACE == AC-Extended -- this was SCWM_ARG_PATH
+AC_DEFUN(ACE_ARG_PATH,
+[
+  AC_ARG_WITH($1,[$2],[
+    if test -z "${withval}" || test "yes" = "${withval}" || test "no" = "${withval}"; then
+      AC_MSG_ERROR(missing pathname argument to --with-$1)
+    elif test ! -d "${withval}"; then
+      AC_MSG_ERROR(invalid pathname argument to --with-$1: ${withval})
+    else
+      $3
+    fi],
+    $4)
+])
+
 
 AC_ARG_ENABLE(check-integrity,
 [  --enable-check-integrity   Verify the integrity of solver data structures at runtime]
@@ -78,10 +92,76 @@ AC_ARG_ENABLE(warnings,
 ])
 AC_SUBST(CPPEXTRAFLAGS)
 
+
+JAVACFLAGS="-g -O"
+AC_ARG_ENABLE(javac-flags,
+[  --enable-javac-flags=FLAGS Set the javac compile flags to FLAGS]
+,[JAVACFLAGS="$enableval"])
+AC_SUBST(JAVACFLAGS)
+
+
+
+ACE_ARG_PATH(guile-prefix,
+[  --with-guile-prefix=DIR    Expect guile to be installed in DIR [optional]],
+[
+	AC_MSG_CHECKING(where to expect to find guile)
+	guile_prefix="${withval}"
+	GUILE_BIN_DIR="${guile_prefix}/bin"
+	GUILE_INCLUDES="-I${guile_prefix}/include"
+	guile_lib_path="${guile_prefix}/lib"
+	
+	AC_MSG_RESULT("${guile_prefix}")
+])
+
+ACE_ARG_PATH(guile-exec-prefix,
+[  --with-guile-exec-prefix=DIR 
+                             Expect guile binaries to be installed in DIR 
+                             [optional]],
+[
+	AC_MSG_CHECKING(where to expect to find guile binaries)
+	guile_exec_prefix="${withval}"
+	GUILE_BIN_DIR="${guile_exec_prefix}"
+	
+	AC_MSG_RESULT("${guile_exec_prefix}")
+])
+
+if test -z "${GUILE_BIN_DIR}"; then
+	AC_PATH_PROGS(GUILE_CONFIG, guile-config build-guile, no)
+else
+	AC_PATH_PROGS(GUILE_CONFIG, guile-config build-guile, no, ${GUILE_BIN_DIR})
+fi
+
+
+if test "no" != "$GUILE_CONFIG"; then
+  AC_MSG_CHECKING(whether guile-config or build-guile works)
+  if (${GUILE_CONFIG} link) >/dev/null 2>&1; then
+    GUILE_CONFIG_works=yes
+  else
+    GUILE_CONFIG_works=no
+  fi
+  AC_MSG_RESULT($GUILE_CONFIG_works)
+else
+  GUILE_CONFIG_works=no
+fi
+
+if test -z "${GUILE_BIN_DIR}"; then
+	AC_PATH_PROG(GUILE, guile, no)
+else
+	AC_PATH_PROG(GUILE, guile, no, ${GUILE_BIN_DIR})
+fi
+
+AC_SUBST(GUILE)
+AC_SUBST(GUILE_INCLUDES)
+AC_SUBST(GUILE_BIN_DIR)
+
+
+
 AC_OUTPUT(
 	Makefile \
 	c++/Makefile \
 	java/Makefile \
+	java/demos/Makefile \
+	java/cda/Makefile \
 	guile/Makefile \
 	wrappers/Makefile \
 	docs/Makefile \
