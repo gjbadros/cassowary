@@ -4,6 +4,8 @@
 lib_LIBRARIES = libcassowary.a
 lib_LTLIBRARIES = libcassowary.la
 
+libcassowary_la_LDFLAGS = -version-info 0:1:0
+
 INCLUDES = @GUILE_INCLUDES@ @GTL_INCLUDES@
 LDADD = libcassowary.a -L@prefix@/lib @GTL_LIB@
 if CL_BUILD_TESTS
