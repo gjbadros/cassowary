@@ -1,38 +1,25 @@
--g, NO_TRACE:
-
-addDel:
-starting timing test. nCns = 300, nVars = 300, nResolves = 1000
-done adding constraints [31 exceptions]
-time = 6.99
-
-done creating edit constraints -- about to start resolves
-time = 7.06
-
-done resolves -- now removing constraints
-time = 11.76
-
-done addDel timing test
-time = 15.13
-
-
-
+-g, NO_TRACE: 3x-6x slower than w/ -O6
 --------------
 
 -O6, NO_TRACE:
 
 addDel:
 starting timing test. nCns = 300, nVars = 300, nResolves = 1000
+done building data structures
+time = 0.14
+
 done adding constraints [31 exceptions]
-time = 1.95
+time = 1.96
 
 done creating edit constraints -- about to start resolves
-time = 1.98
+time = 0.03
 
 done resolves -- now removing constraints
-time = 2.96
+time = 1.01
 
-done addDel timing test
-time = 3.6
+done removing constraints and addDel timing test
+time = 0.69
+
 
 ----------------
 -O6, NO_TRACE, 900 constraints
