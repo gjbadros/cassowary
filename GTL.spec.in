@@ -49,7 +49,11 @@ algorithms are under work.
 %setup
 
 %build
+%ifarch alpha
+./configure --host=alpha-linux prefix=%prefix --enable-fsstd
+%else
 ./configure --prefix=%prefix --enable-fsstd
+%endif
 make
 
 %install
