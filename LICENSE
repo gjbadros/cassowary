@@ -1,4 +1,6 @@
-Cassowary Copyright and Licensing Information
+Cassowary Copyright and Licensing Information 
+(Applies to everything *except* the Smalltalk implementation in
+ smalltalk/ sub-directory -- see smalltalk/REAMDE for its license)
 26-June-1998
 
 The University of Washington is making the Cassowary Constraint Solving

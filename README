@@ -1,5 +1,5 @@
 Cassowary Constraint Solver for Smalltalk, C++, and Java
-Version 0.42
+Version 0.43
 
 Web Page: http://www.cs.washington.edu/research/constraints/cassowary
 Contact: cassowary@cs.washington.edu
@@ -9,7 +9,7 @@ Alan Borning <borning@cs.washington.edu>
 University of Washington
 Computer Science and Engineering
 Seattle, WA 98195-2350
-20-March-1999
+20-April-1999
 
 with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
 
@@ -17,6 +17,8 @@ See ANNOUNCE for a brief description and announcement of this distribution.
 See NEWS for a history of user-visible changes.
 See ChangeLog for a detailed listing of the changes to each source file.
 See LICENSE for legalese regarding use of this distribution.
+
+The Smalltalk implementation is in the public domain -- see smalltalk/README.
 
 Please send bug reports to cassowary@cs.washington.edu
 Also, send mail to cassowary@cs.washington.edu if you would like to be

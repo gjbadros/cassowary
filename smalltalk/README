@@ -1,5 +1,7 @@
 This directory contains files for a Smalltalk implementation of Cassowary.  
 
+This Smalltalk implementation is released to the public domain.
+
 A990112.dat is a configuration map for Version 4.46 of Cassowary 
 (12 January 1999).  If you are using OTI Smalltalk use this.
 
