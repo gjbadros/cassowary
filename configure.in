@@ -166,6 +166,19 @@ AC_SUBST(GUILE_BIN_DIR)
 AC_SUBST(GUILE_LIB_DIR)
 AC_SUBST(GUILE_PKGDATA_DIR)
 
+PYTHON_HEADERS=${prefix}/python1.5
+
+ACE_ARG_PATH(python-headers,
+[  --with-python-headers=DIR    Expect Python headers to be installed in DIR [optional]],
+[
+	AC_MSG_CHECKING(where to find python headers)
+	PYTHON_HEADERS="${withval}"
+	
+	AC_MSG_RESULT("${python_headers}")
+])
+
+AC_SUBST(PYTHON_HEADERS)
+
 
 JAVA_CLASS_PATH="./classes"
 ACE_ARG_PATH(java-class-path,

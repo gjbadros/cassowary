@@ -37,6 +37,7 @@ and everything will work.  A more complex, but realistic example is:
 
 ./configure --with-prefix=/usr/contrib \
             --with-guile-prefix=/usr/contrib \
+            --with-python-headers=/usr/include/python1.5 \
             --with-java-class-path=/usr/contrib/share/java/site \
             --enable-warnings
 make -k
