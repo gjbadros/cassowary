@@ -335,6 +335,7 @@ addDel(int nCns = 900, int nVars = 900, int nResolves = 10000)
     // add the constraint -- if it's incompatible, just ignore it
     // FIXGJB: exceptions are extra expensive in C++, so this might not
     // be particularly fair
+#ifndef NO_CATCH_EXCEPTIONS_HERE
     try
       {
       solver.addConstraint(*(rgpcns[j]));
@@ -344,6 +345,10 @@ addDel(int nCns = 900, int nVars = 900, int nResolves = 10000)
       cExceptions++;
       rgpcns[j] = NULL;
       }
+#else
+    solver.addConstraintNoException(*(rgpcns[j]));
+#endif
+    
     }
   // FIXGJB end = Timer.now();
   cout << "done adding constraints [" << cExceptions << " exceptions]" << endl;
