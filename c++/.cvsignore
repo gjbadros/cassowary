@@ -3,6 +3,9 @@ ClTests-good
 ClTests-setExtOpt
 ClTests-trace
 Makefile.dependencies
+cassowary.py
+cassowary_wrap.c
+cassowary_wrap.doc
 gmon.out
 gmon.out-setExtOpt
 output
