@@ -97,9 +97,13 @@ class CL {
     throws ExCLNonlinearExpression
     { return (new ClLinearExpression(e1)).times(new ClLinearExpression(e2)); }
 
-  public static ClLinearExpression Times(double e1, ClVariable e2) 
+  public static ClLinearExpression Times(double n, ClVariable clv) 
     throws ExCLNonlinearExpression
-    { return (new ClLinearExpression(e1)).times(e2); }
+    { return (new ClLinearExpression(clv,n)); }
+
+  public static ClLinearExpression Times( ClVariable clv, double n) 
+    throws ExCLNonlinearExpression
+    { return (new ClLinearExpression(clv,n)); }
 
   public static ClLinearExpression Divide(ClLinearExpression e1, ClLinearExpression e2)
     throws ExCLNonlinearExpression
