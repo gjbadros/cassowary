@@ -571,7 +571,6 @@ main( int argc, char **argv )
     if (!fResult) cout << "Failed!" << endl;
 
     RUN_TEST(simple1);
-    exit (0);
     RUN_TEST(justStay1);
     RUN_TEST(addDelete1);
     RUN_TEST(addDelete2);
