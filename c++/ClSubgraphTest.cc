@@ -170,8 +170,11 @@ addDelSubpart(int csolver = 1, int nCns = 900, int nVars = 900, int nResolves = 
   int e1Index = int(UniformRandom()*(nVars/2));
   int e2Index = int(UniformRandom()*(nVars/2));
 
-  ClEditConstraint editA1(*(rgpclvA[e1Index]),clsStrong());
-  ClEditConstraint editA2(*(rgpclvA[e2Index]),clsStrong());
+  ClVariable &clvEA1 = *(rgpclvA[e1Index]);
+  ClVariable &clvEA2 = *(rgpclvA[e2Index]);
+  
+  ClEditConstraint editA1(clvEA1,clsStrong());
+  ClEditConstraint editA2(clvEA2,clsStrong());
 
   (*psolverA)
     .addConstraint(editA1)
@@ -180,10 +183,13 @@ addDelSubpart(int csolver = 1, int nCns = 900, int nVars = 900, int nResolves = 
   // FIXGJB start = Timer.now();
   for (int m = 0; m < nResolves/2; m++)
     {
-    vector<Number> vals;
-    vals.push_back(rgpclvA[e1Index]->value() * 1.001);
-    vals.push_back(rgpclvA[e2Index]->value() * 1.001);
-    psolverA->resolve(vals);
+    Number n1 = rgpclvA[e1Index]->value() * 1.001;
+    Number n2 = rgpclvA[e2Index]->value() * 1.001;
+
+    psolverA->
+      suggestValue(clvEA1,n1)
+      .suggestValue(clvEA2,n2)
+      .resolve();
     }
   psolverA->removeConstraint(editA1);
   psolverA->removeConstraint(editA2);
@@ -192,8 +198,11 @@ addDelSubpart(int csolver = 1, int nCns = 900, int nVars = 900, int nResolves = 
   e1Index = int(UniformRandom()*(nVars/2));
   e2Index = int(UniformRandom()*(nVars/2));
 
-  ClEditConstraint editB1(*(rgpclvB[e1Index]),clsStrong());
-  ClEditConstraint editB2(*(rgpclvB[e2Index]),clsStrong());
+  ClVariable &clvEB1 = *(rgpclvB[e1Index]);
+  ClVariable &clvEB2 = *(rgpclvB[e2Index]);
+  
+  ClEditConstraint editB1(clvEB1,clsStrong());
+  ClEditConstraint editB2(clvEB2,clsStrong());
 
   (*psolverB)
     .addConstraint(editB1)
@@ -201,11 +210,15 @@ addDelSubpart(int csolver = 1, int nCns = 900, int nVars = 900, int nResolves = 
 
   for (int m = 0; m < nResolves/2; m++)
     {
-    vector<Number> vals;
-    vals.push_back(rgpclvA[e1Index]->value() * 1.001);
-    vals.push_back(rgpclvA[e2Index]->value() * 1.001);
-    psolverB->resolve(vals);
+    Number n1 = rgpclvA[e1Index]->value() * 1.001;
+    Number n2 = rgpclvA[e2Index]->value() * 1.001;
+
+    psolverB->
+      suggestValue(clvEB1,n1)
+      .suggestValue(clvEB2,n2)
+      .resolve();
     }
+
   psolverB->removeConstraint(editB1);
   psolverB->removeConstraint(editB2);
 
