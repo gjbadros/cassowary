@@ -1,10 +1,11 @@
 # $Id$
-# Makefile for Quals project: Constraint-Based Drawing Application
-CDA_HOME = /scratch/gjb/cassowary/java/cda
-CASSOWARY_CLASSES = /scratch/gjb/cassowary/java
-JAVA_CLASSES = /usr/local/.licensed/jdk/lib/classes.zip
+# Makefile for Constraint-Based Drawing Application
+# By Michael Noth
+# Modified for Cassowary distribution by Greg J. Badros
 
-CLASSES = $(CDA_HOME)/classes
+CDA_HOME = /scratch/gjb/cassowary/java/cda
+
+CLASSES = ../classes
 #CLASSES = .
 
 
@@ -28,7 +29,7 @@ INTERFACE_FILES = \
   ImageButton.java \
   ImageButtonImageObserver.java
 
-INTERFACE_CLASSES = $(INTERFACE_FILES:%.java=classes/%.class)
+INTERFACE_CLASSES = $(INTERFACE_FILES:%.java=$(CLASSES)/%.class)
 ALL_INTERFACE_FILES = $(patsubst %.java,Interface/%.java,$(INTERFACE_FILES))
 
 COMPONENT_FILES = \
@@ -41,7 +42,7 @@ COMPONENT_FILES = \
   CircleCC.java \
   CDA_G.java 
 
-COMPONENT_CLASSES = $(COMPONENT_FILES:%.java=classes/%.class)
+COMPONENT_CLASSES = $(COMPONENT_FILES:%.java=$(CLASSES)/%.class)
 ALL_COMPONENT_FILES = $(patsubst %.java,Component/%.java,$(COMPONENT_FILES))
 
 CONSTRAINT_FILES = \
@@ -55,7 +56,7 @@ CONSTRAINT_FILES = \
   RightOfConstraint.java \
   AlignmentConstraint.java
 
-CONSTRAINT_CLASSES = $(CONSTRAINT_FILES:%.java=classes/%.class)
+CONSTRAINT_CLASSES = $(CONSTRAINT_FILES:%.java=$(CLASSES)/%.class)
 ALL_CONSTRAINT_FILES = \
   $(patsubst %.java,Constraint/%.java,$(CONSTRAINT_FILES))
 
@@ -91,29 +92,18 @@ ICON_BMPS = \
 ALL_ICON_FILES = $(patsubst %.bmp,Icons/%.bmp,$(ICON_BMPS))
 ICON_GIFS = $(ICON_BMPS:%.bmp=classes/%.gif)
 
-JFLAGS = -g -d $(CLASSES) -classpath $(CLASSES):$(CASSOWARY_CLASSES):$(JAVA_CLASSES)
+JFLAGS = -g -d $(CLASSES)
 # -classpath $(CLASSES)\;e:/jdk1.1.5/lib/classes.zip
 
 default:  all
 
-all: $(ALL_JAVA_FILES) $(ICON_GIFS)
+all: .built-classes
+
+.built-classes: $(ALL_JAVA_FILES) $(ICON_GIFS)
 	javac $(JFLAGS) $(ALL_JAVA_FILES)
+	touch $@
 
-.java.class:  
-	javac $(JFLAGS) $<
-
-$(MAIN_CLASSES): $(ALL_MAIN_FILES)
-	cd Main; javac $(JFLAGS) $(MAIN_FILES)
-
-$(INTERFACE_CLASSES): $(ALL_INTERFACE_FILES)
-	cd Interface; javac $(JFLAGS) $(INTERFACE_FILES)
-
-$(COMPONENT_CLASSES): $(ALL_COMPONENT_FILES) $(CONSTRAINT_CLASSES)
-	cd Component; javac $(JFLAGS) $(COMPONENT_FILES)
-
-$(CONSTRAINT_CLASSES): $(ALL_CONSTRAINT_FILES)
-	cd Constraint; javac $(JFLAGS) $(CONSTRAINT_FILES)
-
+#FIXGJB: make this work for Unices
 $(ICON_GIFS): classes/%.gif: Icons/%.bmp
 	e:\\imgalch\\alchlong.exe ---t 255 255 255 -o -g $< $@
 
@@ -122,7 +112,7 @@ clean:
 	rm -rf $(ICON_GIFS)
 
 run: all
-	CLASSPATH=$(CLASSPATH):.. appletviewer $(CLASSES)/run.html
+	appletviewer classes/run.html
 
 tar:
 	rm -f cda.tar
