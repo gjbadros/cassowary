@@ -1,0 +1,14 @@
+        Equation ::
+        @R Rule0                :: Equation >> Expression Operator Expression
+        @R Rule1                :: Operator >> =
+        @R Rule2                :: Operator >> >
+        @R Rule3                :: Operator >> <
+        @R Rule4                :: Expression >> Term
+        @R Rule5                :: Expression >> Term Plus Term
+        @R Rule6                :: Plus >> +
+        @R Rule7                :: Term >> Variable
+        @R Rule8                :: Term >> Variable Times Constant
+        @R Rule9                :: Variable >> string
+        @R Rule10               :: Times >> *
+        @R Rule11               :: Constant >> int
+        @R Rule12               :: Term >> Constant
