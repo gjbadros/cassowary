@@ -50,8 +50,8 @@ class ClLinearExpression
 
   public ClLinearExpression(Double constant, Hashtable terms)
     {
-      my_constant = constant;
-      my_terms = terms;
+      my_constant = new Double(constant.doubleValue()); //ASKCSK
+      my_terms = (Hashtable) terms.clone();
     }
 
 
@@ -174,22 +174,18 @@ class ClLinearExpression
       if (coeff != null) 
 	{
 	double new_coefficient = coeff.doubleValue() + c;
-	if (ClVariable.clApprox(new_coefficient,0))
-	  {
+	if (ClVariable.clApprox(new_coefficient,0))   {
 	  my_terms.remove(v);
-	  }
-	else 
-	  {
-	  my_terms.put(v,new Double(new_coefficient));
-	  }
 	}
-      else
-	{
-	if (!ClVariable.clApprox(c,0.0))
-	  {
+	else {
+	  my_terms.put(v,new Double(new_coefficient));  // ASKCSK
+	}
+	}
+      else {
+	if (!ClVariable.clApprox(c,0.0)) {
 	  my_terms.put(v,new Double(c));
-	  }
 	}
+      }
       return this;
     }
 
