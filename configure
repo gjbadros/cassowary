@@ -761,7 +761,7 @@ fi
 
 PACKAGE=cassowary
 
-VERSION=0.50-cvs
+VERSION=0.50
 
 if test "`cd $srcdir && pwd`" != "`pwd`" && test -f $srcdir/config.status; then
   { echo "configure: error: source directory already configured; run "make distclean" there first" 1>&2; exit 1; }
@@ -2023,16 +2023,17 @@ fi
 
 
 
+sources_for_fd_solver="ClFDSolver.cc ClFDVariable.cc ClFDConnectorVariable.cc ClFDBinaryOneWayConstraint.cc"
 
 # Check whether --enable-fd-solver or --disable-fd-solver was given.
 if test "${enable_fd_solver+set}" = set; then
   enableval="$enable_fd_solver"
   if test "yes" = "$enableval"; then
     cat >> confdefs.h <<\EOF
-#define BUILD_FD_SOLVER 1
+#define CL_BUILD_FD_SOLVER 1
 EOF
 
-    SOURCES_FOR_FD_SOLVER='$(sources_for_fd_solver)'
+    SOURCES_FOR_FD_SOLVER="$sources_for_fd_solver"
   fi
 
 fi
@@ -2056,12 +2057,12 @@ if test "${with_gtl+set}" = set; then
     else
       
 	cat >> confdefs.h <<\EOF
-#define HAVE_GTL 1
+#define CL_HAVE_GTL 1
 EOF
 
-	HAVE_GTL="yes"
+	CL_HAVE_GTL="yes"
 	echo $ac_n "checking where to expect to find GTL headers and library""... $ac_c" 1>&6
-echo "configure:2065: checking where to expect to find GTL headers and library" >&5
+echo "configure:2066: checking where to expect to find GTL headers and library" >&5
 	if test -z "${withval}" || test "yes" = "${withval}"; then
 	   echo "$ac_t"""defaulting to the prefix = ${prefix}"" 1>&6
 	   withval=${prefix}
@@ -2226,7 +2227,7 @@ if test "${with_guile_prefix+set}" = set; then
     else
       
 	echo $ac_n "checking where to expect to find guile""... $ac_c" 1>&6
-echo "configure:2230: checking where to expect to find guile" >&5
+echo "configure:2231: checking where to expect to find guile" >&5
 	guile_prefix="${withval}"
 	GUILE_BIN_DIR="${guile_prefix}/bin"
 	GUILE_INCLUDES="-I${guile_prefix}/include"
@@ -2251,7 +2252,7 @@ if test "${with_guile_exec_prefix+set}" = set; then
     else
       
 	echo $ac_n "checking where to expect to find guile binaries""... $ac_c" 1>&6
-echo "configure:2255: checking where to expect to find guile binaries" >&5
+echo "configure:2256: checking where to expect to find guile binaries" >&5
 	guile_exec_prefix="${withval}"
 	GUILE_BIN_DIR="${guile_exec_prefix}"
 	
@@ -2268,7 +2269,7 @@ do
 # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:2272: checking for $ac_word" >&5
+echo "configure:2273: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_GUILE_CONFIG'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -2310,7 +2311,7 @@ do
 # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:2314: checking for $ac_word" >&5
+echo "configure:2315: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_GUILE_CONFIG'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -2351,7 +2352,7 @@ fi
 
 if test "no" != "$GUILE_CONFIG"; then
   echo $ac_n "checking whether guile-config or build-guile works""... $ac_c" 1>&6
-echo "configure:2355: checking whether guile-config or build-guile works" >&5
+echo "configure:2356: checking whether guile-config or build-guile works" >&5
   if (${GUILE_CONFIG} link) >/dev/null 2>&1; then
     GUILE_CONFIG_works=yes
   else
@@ -2367,7 +2368,7 @@ if test -z "${GUILE_BIN_DIR}"; then
 	# Extract the first word of "guile", so it can be a program name with args.
 set dummy guile; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:2371: checking for $ac_word" >&5
+echo "configure:2372: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_GUILE'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -2404,7 +2405,7 @@ else
 	# Extract the first word of "guile", so it can be a program name with args.
 set dummy guile; ac_word=$2
 echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
-echo "configure:2408: checking for $ac_word" >&5
+echo "configure:2409: checking for $ac_word" >&5
 if eval "test \"`echo '$''{'ac_cv_path_GUILE'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -2440,7 +2441,7 @@ fi
 fi
 
 echo $ac_n "checking what the guile pkgdatadir is""... $ac_c" 1>&6
-echo "configure:2444: checking what the guile pkgdatadir is" >&5
+echo "configure:2445: checking what the guile pkgdatadir is" >&5
 GUILE_PKGDATA_DIR=`guile-config info pkgdatadir`
 echo "$ac_t""$GUILE_PKGDATA_DIR" 1>&6
 
@@ -2474,7 +2475,7 @@ if test "${with_python_headers+set}" = set; then
     else
       
 	echo $ac_n "checking where to find python headers""... $ac_c" 1>&6
-echo "configure:2478: checking where to find python headers" >&5
+echo "configure:2479: checking where to find python headers" >&5
 	PYTHON_HEADER_DIR="${withval}"
 	
 	echo "$ac_t"""${python_headers}"" 1>&6
@@ -2516,7 +2517,7 @@ if test "${with_java_class_path+set}" = set; then
     else
       
 	echo $ac_n "checking where to install java .class files""... $ac_c" 1>&6
-echo "configure:2520: checking where to install java .class files" >&5
+echo "configure:2521: checking where to install java .class files" >&5
 	JAVA_CLASS_PATH=$withval
 	echo "$ac_t"""$JAVA_CLASS_PATH"" 1>&6
 
