@@ -676,9 +676,6 @@ addDel(const int nCns = 900, const int nVars = 900, const int nResolves = 10000)
   int e1Index = int(UniformRandom()*nVars);
   int e2Index = int(UniformRandom()*nVars);
 
-  ClEditConstraint *pedit1 = new ClEditConstraint(*(rgpclv[e1Index]),clsStrong());
-  ClEditConstraint *pedit2 = new ClEditConstraint(*(rgpclv[e2Index]),clsStrong());
-
   ClVariable e1 = *(rgpclv[e1Index]);
   ClVariable e2 = *(rgpclv[e2Index]);
 
