@@ -1,3 +1,11 @@
+Wed Aug  5 16:10:56 1998  Greg Badros  <gjb@cs.washington.edu>
+
+	* ClStrength.h: Have ClStrength::symbolicWeight return a const
+	  ref, instead of by value, make clsXXX const refs.
+
+	* ClSimplexSolver.cc, ClLinearInequality.cc, ClLinearEquation.cc,
+	  ClLinearConstraint.cc: Take ClStrengths by const refs
+
 Tue Aug  4 15:22:08 1998  Greg Badros  <gjb@cs.washington.edu>
 
 	* guile/cassowary_scm.cc, cassowary_scm.hpp: Move all inline
