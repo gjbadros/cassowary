@@ -15,8 +15,7 @@
 #include <string>
 #include <assert.h>
 
-// FIXGJB what is the right thing to use to test for VC++ 5.0
-#ifdef _WIN32
+#ifdef _MSC_VER
 #include <iostream>
 #pragma warning(disable : 4786)
 using namespace std;

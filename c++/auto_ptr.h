@@ -6,8 +6,7 @@
 #ifndef AUTO_PTR_H
 #define AUTO_PTR_H
 
-// FIXGJB what is the right thing to use to test for VC++ 5.0
-#ifdef _WIN32
+#ifdef _MSC_VER
 #include <memory>
 template<class T>
 void ReinitializeAutoPtr(auto_ptr<T> &apref, T *pt)
