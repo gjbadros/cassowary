@@ -17,8 +17,9 @@
 // and `global' functions that we want easy to access
 
 class CL {
-  protected static boolean fDebugOn = false;
-  protected static boolean fTraceOn = false;
+  protected final static boolean fDebugOn = false;
+  protected final static boolean fTraceOn = false;
+  protected final static boolean fGC = false;
 
   protected void debugprint(String s)
   { if (fDebugOn) System.err.println(s); }
