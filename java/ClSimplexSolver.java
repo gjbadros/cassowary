@@ -50,27 +50,27 @@ public class ClSimplexSolver extends ClTableau
 
   // Convenience function for creating a linear inequality constraint
   public final ClSimplexSolver addLowerBound(ClAbstractVariable v, double lower)
-    throws ExCLInternalError
+    throws ExCLRequiredFailure, ExCLInternalError
   { 
     ClLinearInequality cn = 
       new ClLinearInequality(v,CL.GEQ,new ClLinearExpression(lower));
-    return this;
+    return addConstraint(cn);
   }
 
   // Convenience function for creating a linear inequality constraint
   public final ClSimplexSolver addUpperBound(ClAbstractVariable v, double upper)
-    throws ExCLInternalError
+    throws ExCLRequiredFailure, ExCLInternalError
   { 
     ClLinearInequality cn = 
       new ClLinearInequality(v,CL.LEQ,new ClLinearExpression(upper));
-    return this;
+    return addConstraint(cn);
   }
 
   // Convenience function for creating a pair of linear inequality constraint
   public final ClSimplexSolver addBounds(ClAbstractVariable v,
                                          double lower, double upper)
-    throws ExCLInternalError                                         
-  { addLowerBound(v,lower); addUpperBound(v,upper); return  this; }
+    throws ExCLRequiredFailure, ExCLInternalError
+  { addLowerBound(v,lower); addUpperBound(v,upper); return this; }
 
   // Add constraint "cn" to the solver
   public final ClSimplexSolver addConstraint(ClConstraint cn)
