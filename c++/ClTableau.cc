@@ -146,6 +146,7 @@ ClTableau::removeRow(const ClAbstractVariable &var)
 // oldVar should now be a basic variable
 // Uses the columns data structure and calls substituteOut on each
 // row that has oldVar in it
+// oldVar is leaving the basis, and becoming parametric
 void 
 ClTableau::substituteOut(const ClAbstractVariable &oldVar, const ClLinearExpression &expr)
 {
