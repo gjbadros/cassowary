@@ -14,9 +14,9 @@ EGCSDIR = /uns/egcs
 CXX = $(CPP)
 
 #CPPFLAGS = -O6 -DCL_NO_TRACE -Wall -pedantic -W -L$(EGCSDIR)/lib -I$(EGCSDIR)/include
-CPPFLAGS = -O6 -pg -DCL_NO_TRACE -Wall -pedantic -W -L$(EGCSDIR)/lib -I$(EGCSDIR)/include
+#CPPFLAGS = -O6 -pg -DCL_NO_TRACE -Wall -pedantic -W -L$(EGCSDIR)/lib -I$(EGCSDIR)/include
 #CPPFLAGS = -g -DCL_NO_TRACE -Wall -pedantic -W -L$(EGCSDIR)/lib -I$(EGCSDIR)/include
-#CPPFLAGS = -g -Wall -pedantic -W -L$(EGCSDIR)/lib -I$(EGCSDIR)/include
+CPPFLAGS = -g -Wall -pedantic -W -L$(EGCSDIR)/lib -I$(EGCSDIR)/include
 
 LDFLAGS = -L/uns/lib/egcs -pg
 #LDFLAGS = -L/uns/lib/egcs
@@ -72,7 +72,9 @@ HEADERS = Cassowary.h \
 	ClTableau.h \
 	ClVariable.h
 
-all:	libcassowary.a cassowary-tests $(CL_LIBRARY)
+all:	libcassowary.a ClTests
+
+lib:    $(CL_LIBRARY)
 
 $(CL_LIBRARY): $(OBJS)
 	rm -f $@
@@ -80,7 +82,7 @@ $(CL_LIBRARY): $(OBJS)
 
 clean:	
 	rm -f $(TESTS) *.o $(CL_LIBRARY) Makefile.dependencies
-	@echo "Be sure to \`make depend'"
+	@echo "Consider doing a \`make depend'"
 
 TAGS: $(SOURCES)
 	etags $^
@@ -124,7 +126,7 @@ ntsources: $(NT_SOURCES)
 	modpod2texinfo $< >$@
 
 
-.PHONY:	tags all cassowary-tests ntsources tests depend
+.PHONY:	all cassowary-tests lib tags ntsources tests depend
 
 %.cpp: %.cc
 	ln -s $< $@
