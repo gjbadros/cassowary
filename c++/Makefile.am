@@ -78,7 +78,7 @@ cassoinclude_HEADERS = \
 	ClSet.h \
 	ClPoint.h \
 	auto_ptr.h \
-	debug.h \
+	debug.h
 
 
 ClTests_SOURCES = ClTests.cc
