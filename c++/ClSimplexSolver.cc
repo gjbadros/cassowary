@@ -257,7 +257,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cn)
 void 
 ClSimplexSolver::reset()
 {
-  // FIXGJB
+  // FIXGJB  -- can postpone writing this for a while
   assert(false);
 }
 
