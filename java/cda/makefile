@@ -1,8 +1,11 @@
+# $Id$
 # Makefile for Quals project: Constraint-Based Drawing Application
-CDA_HOME = /quals/cda
+CDA_HOME = /scratch/gjb/cassowary/java/cda
+CASSOWARY_CLASSES = /scratch/gjb/cassowary/java
 
 CLASSES = $(CDA_HOME)/classes
 #CLASSES = .
+
 
 MAIN_FILES = \
   Main.java \
@@ -55,42 +58,7 @@ CONSTRAINT_CLASSES = $(CONSTRAINT_FILES:%.java=classes/%.class)
 ALL_CONSTRAINT_FILES = \
   $(patsubst %.java,Constraint/%.java,$(CONSTRAINT_FILES))
 
-CASSOWARY_FILES = \
-  ClDouble.java \
-  ClAbstractVariable.java \
-  ClDummyVariable.java \
-  ClObjectiveVariable.java \
-  ClSlackVariable.java \
-  ClConstraint.java \
-  ClEditConstraint.java \
-  ClEditOrStayConstraint.java \
-  ClLinearConstraint.java \
-  ClLinearEquation.java \
-  ClLinearExpression.java \
-  ClLinearInequality.java \
-  ClStayConstraint.java \
-  ClStrength.java \
-  ClSymbolicWeight.java \
-  ClVariable.java \
-  ClPoint.java \
-  ClTableau.java \
-  ClSimplexSolver.java \
-  ExCLConstraintNotFound.java \
-  ExCLError.java \
-  ExCLInternalError.java \
-  ExCLNonlinearExpression.java \
-  ExCLNotEnoughStays.java \
-  ExCLRequiredFailure.java \
-  ExCLTooDifficult.java \
-  CL.java \
-  Set.java \
-  Timer.java
-
-CASSOWARY_CLASSES = $(CASSOWARY_FILES:%.java=classes/%.class)
-ALL_CASSOWARY_FILES = $(patsubst %.java,Cassowary/%.java,$(CASSOWARY_FILES))
-
 ALL_CLASSES = \
-  $(CASSOWARY_CLASSES) \
   $(COMPONENT_CLASSES) \
   $(CONSTRAINT_CLASSES) \
   $(INTERFACE_CLASSES) \
@@ -116,7 +84,8 @@ ICON_BMPS = \
 ALL_ICON_FILES = $(patsubst %.bmp,Icons/%.bmp,$(ICON_BMPS))
 ICON_GIFS = $(ICON_BMPS:%.bmp=classes/%.gif)
 
-JFLAGS = -g -d $(CLASSES) -classpath $(CLASSES)\;e:/jdk1.1.5/lib/classes.zip
+JFLAGS = -g -d $(CLASSES) -classpath $(CLASSES):$(CASSOWARY_CLASSES):/uns/lib/jdk/lib/classes.zip
+# -classpath $(CLASSES)\;e:/jdk1.1.5/lib/classes.zip
 
 default:  all
 
@@ -124,9 +93,6 @@ all: $(ALL_CLASSES) $(ICON_GIFS)
 
 .java.class:  
 	javac $(JFLAGS) $<
-
-$(CASSOWARY_CLASSES): $(ALL_CASSOWARY_FILES)
-	cd Cassowary; javac $(JFLAGS) $(CASSOWARY_FILES)
 
 $(MAIN_CLASSES): $(ALL_MAIN_FILES)
 	cd Main; javac $(JFLAGS) $(MAIN_FILES)
@@ -152,7 +118,7 @@ run: all
 
 tar:
 	rm -f cda.tar
-	tar -cf cda.tar $(ALL_MAIN_FILES) $(ALL_INTERFACE_FILES) $(ALL_COMPONENT_FILES) $(ALL_CONSTRAINT_FILES) $(ALL_CASSOWARY_FILES) $(ALL_ICON_FILES) makefile todo classes/*.htm*
+	tar -cf cda.tar $(ALL_MAIN_FILES) $(ALL_INTERFACE_FILES) $(ALL_COMPONENT_FILES) $(ALL_CONSTRAINT_FILES) $(ALL_ICON_FILES) makefile todo classes/*.htm*
 
 icons: $(ICON_GIFS)
 
