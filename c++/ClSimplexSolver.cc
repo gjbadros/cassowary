@@ -50,15 +50,30 @@ ClSimplexSolver::addConstraint(const ClConstraint &cn)
 #endif
     
   ClLinearExpression *pexpr = newExpression(cn);
+  bool fAddedOkDirectly = false;
 
-  // If possible add expr directly to the appropriate tableau by
-  // choosing a subject for expr (a variable to become basic) from
-  // among the current variables in expr.  If this doesn't work use an
-  // artificial variable.  After adding expr re-optimize.
-  if (!tryAddingDirectly(*pexpr))
+  try 
+    {
+    // If possible add expr directly to the appropriate tableau by
+    // choosing a subject for expr (a variable to become basic) from
+    // among the current variables in expr.  If this doesn't work use an
+    // artificial variable.  After adding expr re-optimize.
+    fAddedOkDirectly = tryAddingDirectly(*pexpr);
+    }
+  catch (ExCLRequiredFailure &error)
+    {
+#ifndef CL_NO_TRACE
+    cerr << "could not add directly -- caught ExCLRequiredFailure error" << endl;
+#endif
+    removeConstraint(cn);
+    throw;
+    }
+
+  if (!fAddedOkDirectly)
     { // could not add directly
     if (!addWithArtificialVariable(*pexpr))
       {
+      removeConstraint(cn);
       throw ExCLRequiredFailure();
       }
     }
@@ -578,7 +593,7 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
 // creating an artificial variable.  Return true if successful and
 // false if not.
 bool 
-ClSimplexSolver::tryAddingDirectly(ClLinearExpression &expr)
+ClSimplexSolver::tryAddingDirectly(ClLinearExpression &expr) 
 {
 #ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -723,11 +738,7 @@ ClSimplexSolver::chooseSubject(ClLinearExpression &expr)
   // the subject negative."
   if (!clApprox(expr.constant(),0.0))
     {
-#ifdef NO_REQUIRED_EXCEPTIONS
-    return NULL;
-#else
     throw ExCLRequiredFailure();
-#endif
     }
   if (coeff > 0.0)
     {
