@@ -1,6 +1,17 @@
-Mon Aug 30 10:07:40 1999    <gjb@cs.washington.edu>
+Mon Aug 30 12:03:26 1999    <gjb@cs.washington.edu>
 
-	* c++/ClAbstractVariable.h: Use cl_auto_ptr, not auto_ptr.
+	* cassowary.spec.in: Bump to release 2
+
+	* configure.in: Drop the java/* wrappers/* from AC_OUTPUT macro--
+	this breaks java builds but make the Cassowary RPM build more
+	cleanly.  I'm going to start making a separate cassowary-java
+	distribution unless I can figure out how to make automake and Java 
+	co-exist more happily.
+
+Mon Aug 30 12:00:39 1999    <gjb@cs.washington.edu>
+
+	* c++/ClAbstractVariable.h: #include "cl_auto_ptr.h" and use
+ 	cl_auto_ptr, not auto_ptr.
 
 Mon Aug 30 10:06:50 1999    <gjb@cs.washington.edu>
 
