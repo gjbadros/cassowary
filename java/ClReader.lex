@@ -1,6 +1,6 @@
 // $Id$
 
-package edu.washington.grad.gjb.cassowary;
+package EDU.Washington.grad.gjb.cassowary;
 import java_cup.runtime.Symbol;
 
 %%
@@ -29,6 +29,7 @@ ws		= [ \t\r\n\f]+
 	// added code to lexer class
 
 	private java.util.Hashtable m_variable_name_object_hash;
+	public boolean m_debug_lex = false;
 
 	public void setVariableNameObjectHash(java.util.Hashtable variable_name_object_hash)
 	{
@@ -39,70 +40,64 @@ ws		= [ \t\r\n\f]+
 
 %%
 
-{ws}					{ /* skip white space */					}
+{ws}				{ /* skip white space */ }	
+	
+">="				{ return new Symbol(sym.GEQ); }		
+	
+"<="				{ return new Symbol(sym.LEQ); }
 
-">="					{ return new Symbol(sym.GEQ				);	}
+"="					{ return new Symbol(sym.EQ); }
 
-"<="					{ return new Symbol(sym.LEQ				);	}
+"+"					{ return new Symbol(sym.PLUS); }
 
-"="					{ return new Symbol(sym.EQ				);	}
+"-"					{ return new Symbol(sym.MINUS); }
 
-"+"					{ return new Symbol(sym.PLUS				);	}
+"*"					{ return new Symbol(sym.TIMES); }
 
-"-"					{ return new Symbol(sym.MINUS				); 	}
+"/"					{ return new Symbol(sym.DIVIDE); }
 
-"*"					{ return new Symbol(sym.TIMES				);	}
+"("					{ return new Symbol(sym.LPAREN); }
 
-"/"					{ return new Symbol(sym.DIVIDE				);	}
+")"					{ return new Symbol(sym.RPAREN); }
 
-"("					{ return new Symbol(sym.LPAREN				);	}
+{DIGIT}+("."{DIGIT}*)?|("."{DIGIT}+)	{ return new Symbol(sym.NUMBER, new Double(yytext()));	}
 
-")"					{ return new Symbol(sym.RPAREN				);	}
+{ID}				{
+					String variable_name = new String(yytext());
 
-{DIGIT}+("."{DIGIT}*)?|("."{DIGIT}+)	{ return new Symbol(sym.NUMBER	, new Double(yytext())	);	}
-
-{ID}					{
-						String variable_name = new String(yytext());
-
+					if (m_debug_lex) {
 						System.out.println("Lexical analysis found <" + variable_name + ">");
-
-						if (! m_variable_name_object_hash.containsKey(variable_name))
-						{
-							System.out.println("	Putting it in hash for the first time.");
-
-							ClVariable variable = new ClVariable();
-
-							Object return_value = m_variable_name_object_hash.put(variable_name, variable);
-
-							if (return_value != null)
-							{
-								System.out.println("Variable was already in hash!!!!!");
-							}
-
-							if (m_variable_name_object_hash.containsKey(variable_name))
-							{
-								System.out.println("	Hash table now contains object.");
-							}
-							else
-							{
-								System.out.println("	Hash table does not contain object.");
-							}
-
-							if (m_variable_name_object_hash.isEmpty())
-							{
-								System.out.println("	How can the hashtable be empty after inserting something?");
-							}
-						}
-						else
-						{
-							System.out.println("	Already in Hash.");
-						}
-
-						return new Symbol(sym.VARIABLE, variable_name);
 					}
 
-.					{ System.err.println("Illegal character: " + yytext() );		}
+					if (! m_variable_name_object_hash.containsKey(variable_name)) {
+						if (m_debug_lex) {
+							System.out.println("	Putting it in hash for the first time.");
+						}
 
+						ClVariable variable = new ClVariable();
 
-// Local Variables:
-// tab-width: 4
+						Object return_value = m_variable_name_object_hash.put(variable_name, variable);
+
+						if (return_value != null) {
+							System.err.println("Variable was already in hash!!!!!");
+						}
+
+						if (m_debug_lex) {
+							if (m_variable_name_object_hash.containsKey(variable_name)) {
+								System.out.println("	Hash table now contains object.");
+							} else { 
+								System.out.println("	Hash table does not contain object.");
+							}
+						}
+
+						if (m_variable_name_object_hash.isEmpty()) {
+							System.err.println("	How can the hashtable be empty after inserting something?");
+						}	
+					} else {
+						System.err.println("	Already in Hash.");
+					}
+
+					return new Symbol(sym.VARIABLE, variable_name);
+					}
+
+.					{ System.err.println("Illegal character: " + yytext() ); }

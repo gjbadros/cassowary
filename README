@@ -76,6 +76,9 @@ Cassowary's more const-correct usage.  You should get a message like:
 
 when running configure if you're using, e.g., gcc-2.95 or later.
 
+You need to apply GTL.h.patch to the installed GTL.h header file for
+Cassowary to compile with recent versions of egcs/gcc (e.g., gcc-2.95).
+
 Also, you may need to change libguile/gsubr.h from:
 
      extern SCM scm_make_gsubr SCM_P ((char *name, int req, int opt, 
@@ -165,8 +168,10 @@ domain subsolver to be built.  GTL is available from:
 
 http://www.fmi.uni-passau.de/Graphlet/GTL/
 
-Cassowary was tested against GTL-0.2.6;  it may work with later
-versions, but I have not tried it.
+Cassowary was tested against GTL-0.3.1;  it may work with later
+versions, but I have not tried it.  You need to apply GTL.h.patch to
+the installed GTL.h header file for Cassowary to compile with recent
+versions of egcs/gcc (e.g., gcc-2.95).
 
 Cassowary/Java was developed using Sun's JDK-1.1.x, ported to Linux
 More recent versions should work fine.

@@ -30,15 +30,31 @@ JAVAFILES = \
 	ExCLRequiredFailure.java \
 	ExCLTooDifficult.java \
 	CL.java \
+        ClTests.java \
 	Set.java \
+	parser.java \
+	sym.java \
+	Yylex.java \
+	ClParseTest.java \
 	Timer.java
 
-SUBDIRS=demos cda
+#SUBDIRS=demos cda
 
 EXTRA_DIST=$(JAVAFILES)
 
 if HAVE_JAVA
 java_JAVA = $(JAVAFILES)
+
+test:
+	java EDU.Washington.grad.gjb.cassowary.ClTests
+
+parser.java sym.java: ClReader.cup
+	java java_cup.Main < $<
+
+Yylex.java: ClReader.lex
+	java JLex.Main $< && \
+	mv ClReader.lex.java Yylex.java
+
 else
 classjava.stamp:
 	echo timestamp > classjava.stamp

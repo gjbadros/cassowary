@@ -12,7 +12,29 @@ your $CLASSPATH.  My CLASSPATH looks like this:
 
 /usr/local/.licensed/jdk/lib/classes.zip:/homes/gws/gjb/cassowary/java/classes
 
-Then you can just use `make all' (GNU Make) to build the .class files.  
+Be sure you give configure the '--enable-java-build' option if you want
+this directory to be processed. Then you can just use `make all' (GNU
+Make) to build the .class files.  
+
+If you want to use the Java parser, you need the JavaCup package:
+
+ http://www.cs.princeton.edu/~appel/modern/java/CUP/
+
+
+Be sure to get at least v10k-b2 or later. You'll also need JLex from:
+
+ http://www.cs.princeton.edu/~appel/modern/java/JLex/index.html
+
+Uncompress the JavaCUP package from a directory that is contained in
+your $CLASSPATH.  Also put JLex's single Main.class into a directory 
+in your $CLASSPATH and compile it.  Then run
+
+java java_cup.Main < ClReader.cup
+
+to create parser.java, sym.java.  (The makefile does this for you if
+JavaCUP and JLex .class files are in your $CLASSPATH as described above).
+
+Cassowary was tested with java_cup_v10k.tar.gz.
 
 Try running ClTests after the build completes.  Be sure your CLASSPATH
 is set correctly (as discussed above) and do:
