@@ -156,7 +156,9 @@ ntsources: $(NT_SOURCES)
 
 # How to make dependencies:
 # -------------------------
-depend Makefile.dependencies: $(TEST_SRCS) $(SOURCES) $(HEADERS)
+# (Can add Makefile.dependencies to the left of below colon
+#  to auto-build dependencies)
+depend: $(TEST_SRCS) $(SOURCES) $(HEADERS)
 	rm -f Makefile.dependencies
 	$(CPP) -M $(TEST_SRCS) $(SOURCES) >> Makefile.dependencies
 
