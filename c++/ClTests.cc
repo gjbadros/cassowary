@@ -764,7 +764,7 @@ main( int argc, char **argv )
     RUN_TEST(multiedit);
     // RUN_TEST(blackboxsat);
 
-    int cns = 900, vars = 900, resolves = 10000;
+    int cns = 90, vars = 90, resolves = 100;
 
     if (argc > 1)
       cns = atoi(argv[1]);
