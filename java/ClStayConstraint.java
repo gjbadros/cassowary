@@ -18,29 +18,19 @@
 class ClStayConstraint extends ClEditOrStayConstraint
 {
 
-/**
-* ClStayConstraint
-*/
-public
-ClStayConstraint()
-{ }
+  public ClStayConstraint(ClVariable var, ClStrength strength, double weight)
+    { super(var,strength,weight); }
 
-/**
-* isStayConstraint
-* @return boolean
-*/
-public
-boolean isStayConstraint()
-{ return true; }
+  public ClStayConstraint(ClVariable var, ClStrength strength)
+    { super(var,strength,1.0); }
 
-/**
-* printOn
-* @param xo
-* @return ostream &
-*/
-public
-/* @c2j++: "ostream & printOn(ostream& xo)" replacement:  &  to " " */
-ostream printOn(ostream& xo)
-{ xo << "stay" << variable(); return xo; }
+  public ClStayConstraint(ClVariable var)
+    { super(var,clsWeak,1.0); }
+
+  public boolean isStayConstraint()
+    { return true; }
+
+  public toString()
+    { return "stay" + variable().toString() }
 
 }

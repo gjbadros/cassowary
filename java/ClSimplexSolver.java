@@ -67,8 +67,8 @@ System.err.print("editMinusErrorVars " + String.valueOf(my_editMinusErrorVars.si
 * @return ClSimplexSolver &
 */
 public
-/* @c2j++: "ClSimplexSolver & addLowerBound(ClAbstractVariable& v, Number lower)" replacement:  &  to " " */
-ClSimplexSolver addLowerBound(ClAbstractVariable& v, Number lower)
+/* @c2j++: "ClSimplexSolver & addLowerBound(ClAbstractVariable v, Number lower)" replacement:  &  to " " */
+ClSimplexSolver addLowerBound(ClAbstractVariable v, Number lower)
 { 
 /* @c2j++: "ClLinearInequality *pcn = new ClLinearInequality(ClLinearExpression(lower - v));" replacement: * to " " */
     ClLinearInequality  pcn = new ClLinearInequality(ClLinearExpression(lower - v));
@@ -83,8 +83,8 @@ ClSimplexSolver addLowerBound(ClAbstractVariable& v, Number lower)
 * @return ClSimplexSolver &
 */
 public
-/* @c2j++: "ClSimplexSolver & addUpperBound(ClAbstractVariable& v, Number upper)" replacement:  &  to " " */
-ClSimplexSolver addUpperBound(ClAbstractVariable& v, Number upper)
+/* @c2j++: "ClSimplexSolver & addUpperBound(ClAbstractVariable v, Number upper)" replacement:  &  to " " */
+ClSimplexSolver addUpperBound(ClAbstractVariable v, Number upper)
 {
 /* @c2j++: "ClLinearInequality *pcn = new ClLinearInequality(ClLinearExpression(v - upper));" replacement: * to " " */
     ClLinearInequality  pcn = new ClLinearInequality(ClLinearExpression(v - upper));
@@ -100,18 +100,18 @@ ClSimplexSolver addUpperBound(ClAbstractVariable& v, Number upper)
 * @return ClSimplexSolver &
 */
 public
-/* @c2j++: "ClSimplexSolver & addBounds(ClAbstractVariable& v, Number lower, Number upper)" replacement:  &  to " " */
-ClSimplexSolver addBounds(ClAbstractVariable& v, Number lower, Number upper)
+/* @c2j++: "ClSimplexSolver & addBounds(ClAbstractVariable v, Number lower, Number upper)" replacement:  &  to " " */
+ClSimplexSolver addBounds(ClAbstractVariable v, Number lower, Number upper)
 /* @c2j++: "{ addLowerBound(v,lower); addUpperBound(v,upper); return *this; }" replacement: * to " " */
 { addLowerBound(v,lower); addUpperBound(v,upper); return  this; }
 
 /**
 * addConstraint
 * @param cn
-* @return ClSimplexSolver&
+* @return ClSimplexSolver
 */
 public
-ClSimplexSolver& addConstraint(ClConstraint& cn)
+ClSimplexSolver addConstraint(ClConstraint cn)
 {
 #ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -137,10 +137,10 @@ System.err.println("(" + String.valueOf(cn) + ")");
 /**
 * addPointStays
 * @param listOfPoints
-* @return ClSimplexSolver&
+* @return ClSimplexSolver
 */
 public
-ClSimplexSolver& addPointStays(>& listOfPoints)
+ClSimplexSolver addPointStays(>& listOfPoints)
 {
 #ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -174,8 +174,8 @@ ClSimplexSolver& addPointStays(>& listOfPoints)
 * @return ClSimplexSolver &
 */
 public
-/* @c2j++: "ClSimplexSolver & addPointStay(ClVariable& vx, ClVariable& vy, double weight)" replacement:  &  to " " */
-ClSimplexSolver addPointStay(ClVariable& vx, ClVariable& vy, double weight)
+/* @c2j++: "ClSimplexSolver & addPointStay(ClVariable vx, ClVariable vy, double weight)" replacement:  &  to " " */
+ClSimplexSolver addPointStay(ClVariable vx, ClVariable vy, double weight)
 /* @c2j++: "{ addStay(vx,clsWeak(),weight); addStay(vy,clsWeak(),weight); return *this; }" replacement: * to " " */
 { addStay(vx,clsWeak(),weight); addStay(vy,clsWeak(),weight); return  this; }
 
@@ -183,10 +183,10 @@ ClSimplexSolver addPointStay(ClVariable& vx, ClVariable& vy, double weight)
 * addPointStay
 * @param clp
 * @param weight
-* @return ClSimplexSolver&
+* @return ClSimplexSolver
 */
 public
-ClSimplexSolver& addPointStay(ClPoint& clp, double weight)
+ClSimplexSolver addPointStay(ClPoint clp, double weight)
 { 
   addStay(clp.X(),clsWeak(),weight);
   addStay(clp.Y(),clsWeak(),weight);
@@ -211,10 +211,10 @@ ClSimplexSolver addStay()
 /**
 * removeConstraint
 * @param cnconst
-* @return ClSimplexSolver&
+* @return ClSimplexSolver
 */
 public
-ClSimplexSolver& removeConstraint(ClConstraint& cnconst)
+ClSimplexSolver removeConstraint(ClConstraint cnconst)
 {
 #ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -556,10 +556,10 @@ public
 /**
 * printOn
 * @param xo
-* @return ostream&
+* @return ostream
 */
 public
-ostream& printOn(ostream& xo)
+ostream printOn(ostream xo)
 {
   super::printOn(xo);
 
@@ -584,7 +584,7 @@ ostream& printOn(ostream& xo)
 * @param expr
 */
 protected
-void addWithArtificialVariable(ClLinearExpression& expr)
+void addWithArtificialVariable(ClLinearExpression expr)
 {
 #ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -677,7 +677,7 @@ removeRow(*paz) = null;
 * @return boolean
 */
 protected
-boolean tryAddingDirectly(ClLinearExpression& expr)
+boolean tryAddingDirectly(ClLinearExpression expr)
 {
 #ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -719,8 +719,8 @@ System.err.println("- returning true");
 * @return ClAbstractVariable*
 */
 protected
-/* @c2j++: "ClAbstractVariable* chooseSubject(ClLinearExpression& expr)" replacement: * to " " */
-ClAbstractVariable  chooseSubject(ClLinearExpression& expr)
+/* @c2j++: "ClAbstractVariable* chooseSubject(ClLinearExpression expr)" replacement: * to " " */
+ClAbstractVariable  chooseSubject(ClLinearExpression expr)
 {
 #ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -827,7 +827,7 @@ System.err.println("(" + String.valueOf(expr) + ")");
 * @param minusErrorVar
 */
 protected
-void deltaEditConstant(Number delta, ClAbstractVariable& plusErrorVar, ClAbstractVariable& minusErrorVar)
+void deltaEditConstant(Number delta, ClAbstractVariable plusErrorVar, ClAbstractVariable minusErrorVar)
 {
 #ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -971,8 +971,8 @@ System.err.println("ratio == nil (DBL_MAX)");
 * @return ClLinearExpression*
 */
 protected
-/* @c2j++: "ClLinearExpression* newExpression(ClConstraint& cn)" replacement: * to " " */
-ClLinearExpression  newExpression(ClConstraint& cn)
+/* @c2j++: "ClLinearExpression* newExpression(ClConstraint cn)" replacement: * to " " */
+ClLinearExpression  newExpression(ClConstraint cn)
 {
 #ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -1137,7 +1137,7 @@ System.err.println("- returning " + String.valueOf(*pexpr));
 * @param zVar
 */
 protected
-void optimize(ClObjectiveVariable& zVar)
+void optimize(ClObjectiveVariable zVar)
 {
 #ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -1250,7 +1250,7 @@ System.err.println(String.valueOf(*this));
 * @param exitVar
 */
 protected
-void pivot(ClAbstractVariable& entryVar, ClAbstractVariable& exitVar)
+void pivot(ClAbstractVariable entryVar, ClAbstractVariable exitVar)
 {
 #ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -1422,9 +1422,9 @@ typedef vector < static final ClAbstractVariable   > ClVarVector ;
 /**
 * @param xo
 * @param varlist
-* @return ostream&
+* @return ostream
 */
-static ostream& printTo(ostream& xo, ClVarVector& varlist)
+static ostream printTo(ostream xo, ClVarVector varlist)
 {
   ClVarVector::const_iterator it = varlist.begin();
   xo << varlist.size() << ":" << "[ ";
@@ -1449,7 +1449,7 @@ static ostream& printTo(ostream& xo, ClVarVector& varlist)
 * @param varlist
 * @return <
 */
-static < <(ostream& xo, ClVarVector& varlist)
+static < <(ostream xo, ClVarVector varlist)
 {
   return printTo(xo,varlist);
 }
@@ -1458,7 +1458,7 @@ static < <(ostream& xo, ClVarVector& varlist)
 * @param clss
 * @return <
 */
-static < <(ostream& xo, ClSimplexSolver& clss)
+static < <(ostream xo, ClSimplexSolver clss)
 {
   return clss.printOn(xo);
 }

@@ -23,7 +23,7 @@ class ClTableau
 * @param subject
 */
 public
-void noteRemovedVariable(ClAbstractVariable& v, ClAbstractVariable& subject)
+void noteRemovedVariable(ClAbstractVariable v, ClAbstractVariable subject)
 { 
 #ifndef CL_NO_TRACE
     Tracer TRACER(__FUNCTION__);
@@ -41,7 +41,7 @@ System.err.println("(" + String.valueOf(v) + ", " + String.valueOf(subject) + ")
 * @param subject
 */
 public
-void noteAddedVariable(ClAbstractVariable& v, ClAbstractVariable& subject)
+void noteAddedVariable(ClAbstractVariable v, ClAbstractVariable subject)
 { 
 #ifndef CL_NO_TRACE
     Tracer TRACER(__FUNCTION__);
@@ -60,10 +60,10 @@ System.err.println("(" + String.valueOf(v) + ", " + String.valueOf(subject) + ")
 /**
 * printOn
 * @param xo
-* @return ostream&
+* @return ostream
 */
 public
-ostream& printOn(ostream& xo)
+ostream printOn(ostream xo)
 {
   xo << "Tableau:\n" 
      << my_rows << endl;
@@ -113,7 +113,7 @@ System.err.println("Deleting row  delete@ " + String.valueOf(((*it).second)));
 * @param expr
 */
 protected
-void addRow(ClAbstractVariable& var, ClLinearExpression& expr)
+void addRow(ClAbstractVariable var, ClLinearExpression expr)
 {
 #ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -148,7 +148,7 @@ System.err.println(String.valueOf(*this));
 * @param var
 */
 protected
-void removeColumn(ClAbstractVariable& var)
+void removeColumn(ClAbstractVariable var)
 {
 #ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -187,8 +187,8 @@ System.err.println("(" + String.valueOf(var) + ")");
 * @return ClLinearExpression*
 */
 protected
-/* @c2j++: "ClLinearExpression* removeRow(ClAbstractVariable& var)" replacement: * to " " */
-ClLinearExpression  removeRow(ClAbstractVariable& var)
+/* @c2j++: "ClLinearExpression* removeRow(ClAbstractVariable var)" replacement: * to " " */
+ClLinearExpression  removeRow(ClAbstractVariable var)
 {
 #ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -234,7 +234,7 @@ System.err.println("- returning " + String.valueOf(*pexpr));
 * @param expr
 */
 protected
-void substituteOut(ClAbstractVariable& oldVar, ClLinearExpression& expr)
+void substituteOut(ClAbstractVariable oldVar, ClLinearExpression expr)
 {
 #ifndef CL_NO_TRACE
 /** @c2j++ Replacement from cerr << "* ClTableau::"; */
@@ -304,7 +304,7 @@ ClTableauRowsMap rows()
 * @return boolean
 */
 protected
-boolean columnsHasKey(ClAbstractVariable& subject)
+boolean columnsHasKey(ClAbstractVariable subject)
 { 
     ClTableauColumnsMap::const_iterator i = my_columns.find(&subject);
     return (i != my_columns.end());
@@ -316,8 +316,8 @@ boolean columnsHasKey(ClAbstractVariable& subject)
 * @return ClLinearExpression *
 */
 protected
-/* @c2j++: "ClLinearExpression * rowExpression(ClAbstractVariable& v)" replacement: * to " " */
-ClLinearExpression   rowExpression(ClAbstractVariable& v)
+/* @c2j++: "ClLinearExpression * rowExpression(ClAbstractVariable v)" replacement: * to " " */
+ClLinearExpression   rowExpression(ClAbstractVariable v)
 {
     ClTableauRowsMap::const_iterator i = my_rows.find(&v);
     if (i != my_rows.end())
@@ -353,9 +353,9 @@ typedef map < static final ClAbstractVariable   , ClLinearExpression   > ClTable
 /**
 * @param xo
 * @param varset
-* @return ostream&
+* @return ostream
 */
-static ostream& printTo(ostream& xo, ClTableauVarSet& varset)
+static ostream printTo(ostream xo, ClTableauVarSet varset)
 {
   ClTableauVarSet::const_iterator it = varset.begin();
   xo << "{ ";
@@ -380,14 +380,14 @@ static ostream& printTo(ostream& xo, ClTableauVarSet& varset)
 * @param varset
 * @return <
 */
-static < <(ostream& xo, ClTableauVarSet& varset)
+static < <(ostream xo, ClTableauVarSet varset)
 { return printTo(xo,varset); }
 /**
 * @param xo
 * @param varset
-* @return ostream&
+* @return ostream
 */
-static ostream& printTo(ostream& xo, ClExternalVarSet& varset)
+static ostream printTo(ostream xo, ClExternalVarSet varset)
 {
   ClExternalVarSet::const_iterator it = varset.begin();
   xo << "{ ";
@@ -412,14 +412,14 @@ static ostream& printTo(ostream& xo, ClExternalVarSet& varset)
 * @param varset
 * @return <
 */
-static < <(ostream& xo, ClExternalVarSet& varset)
+static < <(ostream xo, ClExternalVarSet varset)
 { return printTo(xo,varset); }
 /**
 * @param xo
 * @param varmap
-* @return ostream&
+* @return ostream
 */
-static ostream& printTo(ostream& xo, ClTableauColumnsMap& varmap)
+static ostream printTo(ostream xo, ClTableauColumnsMap varmap)
 {
   ClTableauColumnsMap::const_iterator it = varmap.begin();
   for (; it != varmap.end(); ++it) 
@@ -437,14 +437,14 @@ static ostream& printTo(ostream& xo, ClTableauColumnsMap& varmap)
 * @param varmap
 * @return <
 */
-static < <(ostream& xo, ClTableauColumnsMap& varmap)
+static < <(ostream xo, ClTableauColumnsMap varmap)
 { return printTo(xo,varmap); }
 /**
 * @param xo
 * @param rows
-* @return ostream&
+* @return ostream
 */
-static ostream& printTo(ostream& xo, ClTableauRowsMap& rows)
+static ostream printTo(ostream xo, ClTableauRowsMap rows)
 {
   ClTableauRowsMap::const_iterator it = rows.begin();
   for (; it != rows.end(); ++it) 
@@ -472,13 +472,13 @@ static ostream& printTo(ostream& xo, ClTableauRowsMap& rows)
 * @param rows
 * @return <
 */
-static < <(ostream& xo, ClTableauRowsMap& rows)
+static < <(ostream xo, ClTableauRowsMap rows)
 { return printTo(xo,rows); }
 /**
 * @param xo
 * @param clt
 * @return <
 */
-static < <(ostream& xo, ClTableau& clt)
+static < <(ostream xo, ClTableau clt)
 { return clt.printOn(xo); }
 }

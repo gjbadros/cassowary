@@ -15,44 +15,21 @@
 // ClEditOrStayConstraint
 //
 
-class ClEditOrStayConstraint extends ClConstraint
+abstract class ClEditOrStayConstraint extends ClConstraint
 {
 
-/**
-* ClEditOrStayConstraint
-*/
-public
-ClEditOrStayConstraint()
-{ }
+  public ClEditOrStayConstraint()
+    { }
 
-/**
-* variable
-* @return ClVariable &
-*/
-public
-/* @c2j++: "ClVariable & variable()" replacement:  &  to " " */
-ClVariable variable()
-/* @c2j++: "{ return *my_pvariable; }" replacement: * to " " */
-{ return  my_pvariable; }
+  public ClVariable variable()
+    { return  my_variable; }
 
-/**
-* expression
-* @return ClLinearExpression
-*/
-public
-ClLinearExpression expression()
-/* @c2j++: "{ return ClLinearExpression(*my_pvariable,-1,my_pvariable->value()); }" replacement: * to " " */
-/* @c2j++: "{ return ClLinearExpression( my_pvariable,-1,my_pvariable->value()); }" replacement: -> to . */
-{ return ClLinearExpression( my_pvariable,-1,my_pvariable.value()); }
+  public ClLinearExpression expression()
+    { return ClLinearExpression( my_variable,-1,my_variable.value()); }
 
-/**
-* setVariable
-* @param v
-*/
-private
-void setVariable(ClVariable& v)
-{ my_pvariable = &v; }
-/* @c2j++: "ClVariable * my_pvariable;" replacement: * to " " */
-ClVariable   my_pvariable;
+  private void setVariable(ClVariable v)
+    { my_variable = v; }
+
+  ClVariable   my_variable;
 
 }
