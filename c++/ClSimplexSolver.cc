@@ -82,10 +82,6 @@ ClSimplexSolver::addConstraint(const ClConstraint &cn)
 // (i.e., the resulting system would be unsatisfiable)
 // The above function "addConstraint" throws an exception in that case
 // which may be inconvenient
-// Note that we duplicate the code instead of using a try block
-// since one reason for avoiding the exception might be performance
-// (exceptions are not usually optimized for speed since they are
-// supposed to be exceptional)
 bool
 ClSimplexSolver::addConstraintNoException(const ClConstraint &cn)
 {
@@ -93,28 +89,16 @@ ClSimplexSolver::addConstraintNoException(const ClConstraint &cn)
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << cn << ")" << endl;
 #endif
-  ClLinearExpression *pexpr = newExpression(cn);
-
-  // If possible add expr directly to the appropriate tableau by
-  // choosing a subject for expr (a variable to become basic) from
-  // among the current variables in expr.  If this doesn't work use an
-  // artificial variable.  After adding expr re-optimize.
-  if (!tryAddingDirectly(*pexpr))
-    { // could not add directly
-    if (!addWithArtificialVariable(*pexpr))
-      return false;
-    }
-  optimize(my_objective);
-  setExternalVariables();
-  if (cn.isEditConstraint())
+  try 
     {
-    int i = my_prevEditConstants.size() - 1;
-    const ClEditConstraint *pcnEdit = dynamic_cast<const ClEditConstraint *>(&cn);
-    my_editVarMap[&pcnEdit->variable()] = new ClConstraintAndIndex(&cn,i);
+    addConstraint(cn);
+    return true;
     }
-  return true;
+  catch (const ExCLRequiredFailure &e)
+    {
+    return false;
+    }
 }
-
 
 // Add weak stays to the x and y parts of each point. These have
 // increasing weights so that the solver will try to satisfy the x
@@ -848,9 +832,6 @@ ClSimplexSolver::dualOptimize()
 	  }
 	if (ratio == DBL_MAX)
 	  {
-          cerr << *this << endl;
-          this->printInternalInfo(cerr);
-          cerr << endl;
 	  cerr << "ratio == nil (DBL_MAX)" << endl;
 	  throw ExCLInternalError();
 	  }
@@ -1090,9 +1071,6 @@ ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
     // application.
     if (minRatio == DBL_MAX)
       {
-      cerr << *this << endl;
-      this->printInternalInfo(cerr);
-      cerr << endl;
       cerr << "objective function is unbounded!" << endl;
       throw ExCLInternalError();
       }
@@ -1149,9 +1127,6 @@ ClSimplexSolver::resetEditConstants(const vector<Number> &newEditConstants)
 #endif
   if (newEditConstants.size() != my_editPlusErrorVars.size())
     { // number of edit constants doesn't match the number of edit error variables
-    cerr << *this << endl;
-    this->printInternalInfo(cerr);
-    cerr << endl;
     cerr << "newEditConstants == " << newEditConstants << endl
 	 << "my_editPlusErrorVars == " << my_editPlusErrorVars << endl
 	 << "Sizes don't match!" << endl;
