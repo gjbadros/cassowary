@@ -315,7 +315,11 @@ if test "no" != "$GUILE_CONFIG"; then
   GUILE_PKGDATA_DIR=`${GUILE_CONFIG} info pkgdatadir`
   AC_MSG_RESULT($GUILE_PKGDATA_DIR)
   GUILE_PKGDATA_DIR=${fake_root_for_install}${GUILE_PKGDATA_DIR}
-  cassoguiledir=$GUILE_PKGDATA_DIR/site/cassowary
+  AC_MSG_CHECKING(what the guile pkglibdir is)
+  GUILE_PKGLIB_DIR=`${GUILE_CONFIG} info pkglibdir`
+  AC_MSG_RESULT($GUILE_PKGLIB_DIR)
+  GUILE_PKGLIB_DIR=${fake_root_for_install}${GUILE_PKGLIB_DIR}
+  cassoguiledir=$GUILE_PKGLIB_DIR/site/cassowary
 fi
 
 if test "yes" = "$GUILE_CONFIG_works"; then
