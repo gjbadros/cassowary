@@ -1262,12 +1262,13 @@ ClSimplexSolver::setExternalVariables()
   for ( ; itParVars != _externalParametricVars.end(); ++itParVars )
     {
     ClVariable *pv = const_cast<ClVariable *>(*itParVars);
-    // skip it if it is basic -- not needed since we set basic-s below
-#if 0
-    if (rowExpression(*pv))
+    // skip it if it is basic -- change_value is virtual
+    // so don't want to call it twice
+    if (rowExpression(*pv)) {
+      cerr << __FUNCTION__ << "Error: a variable in _externalParametricVars is basic" << endl;
       continue;
-#endif
-    pv->set_value(0.0);
+    }
+    pv->change_value(0.0);
     }
 
   // Only iterate over the rows w/ external variables
@@ -1276,7 +1277,7 @@ ClSimplexSolver::setExternalVariables()
     {
     ClVariable *pv = const_cast<ClVariable *>(*itRowVars);
     ClLinearExpression *pexpr = rowExpression(*pv);
-    pv->set_value(pexpr->constant());
+    pv->change_value(pexpr->constant());
     }
 
   _fNeedsSolving = false;
