@@ -1,4 +1,5 @@
 test-ClConstraint
 test-ClLinearExpression
-test-ClVariable
+test-ClSimplexSolver
 test-ClStrength
+test-ClVariable

@@ -15,6 +15,14 @@ etc., instead constraints can be constructed from expressions
    to do as much as possible by value, and avoiding pointers and
    references for efficiency and simplicity
 
+* errorVars is implemented as a map from constraints to a set of ClVariables:
+    map<ClConstraint &, set<ClVariable> > my_errorVars;
+  values were Arrays;  note that a pair of ClVariable-s may suffice, instead
+
+* eliminated findEditErrorIndex from ClSimplexSolver
+ - it's sole use was to find the element to remove from
+   the edit variables vectors, which is easier done w/ iterators in C++
+
 
 Possible Changes
  - implicit stays, add ClStrength to ClVariable -- see p.20 of TR
