@@ -17,18 +17,20 @@
 // and `global' functions that we want easy to access
 
 class CL {
+  protected static boolean fDebugOn = false;
+  protected static boolean fTraceOn = false;
+
   protected void debugprint(String s)
   { if (fDebugOn) System.err.println(s); }
 
-  protected void traceprint(String s)
+  protected static void traceprint(String s)
   { if (fTraceOn) System.err.println(s); }
 
-  protected void fnenterprint(String s)
+  protected static void fnenterprint(String s)
   { if (fTraceOn) System.err.println("* " + s); }
 
-  protected void fnexitprint(String s)
+  protected static void fnexitprint(String s)
   { if (fTraceOn) System.err.println("- " + s); }
-
 
   protected void assert(boolean f) throws ExCLInternalError
   { 
@@ -36,10 +38,6 @@ class CL {
       System.err.println("Assertion failed!"); throw new ExCLInternalError(); 
     }
   }
-
-  protected static final boolean fDebugOn = true;
-  protected static final boolean fTraceOn = true;
-
 
   public static final byte GEQ = 1;
   public static final byte LEQ = 2;
