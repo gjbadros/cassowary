@@ -221,7 +221,8 @@ CLV CL_ClvLookupTrim(const char *szNameConst)
 /* Return a clvariable with the given name, or NULL if not found */
 CLV CL_ClvLookup(const char *szName)
 {
-  assert(varmap);
+  if (!varmap)
+    return NULL;
   StringToVarMap::iterator it = varmap->find(szName);
   if (it == varmap->end())
     return NULL;
