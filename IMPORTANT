@@ -1,6 +1,6 @@
 Cassowary/C++ needs to be compiled using a modern C++ compiler.
 At one time or another, it has compiled using:
-  o egcs-1.0.1, egcs-1.0.3, gcc-2.8.1
+  o egcs-1.0.1, egcs-1.0.3, egcs-1.1b, gcc-2.8.1
   o Visual C++ 5.0
 
 Cassowary/Java was developed using Sun's JDK-1.1.3, ported to Linux
@@ -22,5 +22,4 @@ http://www.troll.no/dl/qtfree-dl.html
 See also the SCWM (Scheme Constraints Window Manager) web page for a use 
 of Cassowary in a substantial application:
 
-http://web.mit.edu/mstachow/www/scwm.html
-
+http://huis-clos.mit.edu/scwm/

@@ -6,17 +6,18 @@ Cassowary/C++ needs to be compiled using a modern C++ compiler.
 At one time or another, it has compiled using:
   o egcs-1.0.1
   o egcs-1.0.3a
-  o egcs-1.1b with some modifications:
+  o egcs-1.1b
+      (v0.2 required some modifications:
       comment out last line of ClLinearExpression.cc:
       // template class ClGenericLinearExpression<ClSymbolicWeight>;
 
-      and remove -pedantic from the Makefile's CPPFLAGS variable
+      and remove -pedantic from the Makefile's CPPFLAGS variable)
   o gcc-2.8.1 (needs libstdc++-2.8.x, too)
   o Visual C++ 5.0
 
 In particular, Cassowary will *not* build with gcc-2.7.x.x!
 
-Note that with egcs version later than 1.0.1 and gcc-2.8.1, the
+Note that with egcs versions between 1.0.1 - 1.0.3 and gcc-2.8.1, the
 following warning is ok to ignore:
 
 .../include/g++/std/bastring.h:76: warning: inline function `static void

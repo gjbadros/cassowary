@@ -1,5 +1,5 @@
 Cassowary Constraint Solver for Smalltalk, C++, and Java
-Version 0.2
+Version 0.21
 
 Web Page: http://www.cs.washington.edu/research/constraints/cassowary
 Contact: cassowary@cs.washington.edu
@@ -9,7 +9,7 @@ Alan Borning <borning@cs.washington.edu>
 University of Washington
 Computer Science and Engineering
 Seattle, WA 98195-2350
-06-August-1998
+14-September-1998
 
 with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
 
@@ -49,7 +49,7 @@ own project(s).
 
 See also the SCWM (Scheme Constraints Window Manager) web page:
 
-http://web.mit.edu/mstachow/www/scwm.html
+http://huis-clos.mit.edu/scwm/
 
 SCWM, also by Greg Badros, is the most substantial application using
 this toolkit that we are aware of.
@@ -82,11 +82,12 @@ Cassowary/C++ needs to be compiled using a modern C++ compiler.
 At one time or another, it has compiled using:
   o egcs-1.0.1
   o egcs-1.0.3a
-  o egcs-1.1b with some modifications:
+  o egcs-1.1b
+     (v0.2 required with some modifications:
       comment out last line of ClLinearExpression.cc:
       // template class ClGenericLinearExpression<ClSymbolicWeight>;
 
-      and remove -pedantic from the Makefile's CPPFLAGS variable
+      and remove -pedantic from the Makefile's CPPFLAGS variable)
   o gcc-2.8.1 (needs libstdc++-2.8.x, too)
   o Visual C++ 5.0
 

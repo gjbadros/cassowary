@@ -12,9 +12,29 @@ Seattle, WA 98195-2350
 with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
 
 
+14-Sep-98, Changes since Cassowary v0.2 (for release v0.21)
+
+* Make compile cleanly using egcs-1.1b -- use typename, and drop
+  unused templated instantiation
+
+* Improved guile interface: add a void pointer to the solver objects,
+  and let the guile wrapper use it to keep a pointer to the scheme-level
+  object;  also added clv-attach! and clv-attached-object for attaching
+  an object to a cl-variable (somewhat redundant with guile's
+  object properties)
+
+* Wrap ClStayConstraints so they can be managed explicitly
+
+* cl-add-stay, cl-add-editvar now take strength and factor arguments,
+  instead  of a list of cl-vars
+
+* Added weight option to addEditVar
+
+
+
 6-Aug-98, Changes since Cassowary v0.1:
 
-* Changes to the distribution
+* Changes to the distribution for release v0.2
 
 ** added guile/scheme wrapper of C++ version
 
