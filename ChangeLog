@@ -1,3 +1,19 @@
+Wed Mar 17 07:39:10 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/Cassowary.h, c++/ClSimplexSolver.cc: Switch back to
+	including config.h (now ../config.h) from Cassowary.h, instead of
+	from ClSimplexSolver.cc.   
+
+Tue Mar 16 19:56:02 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* acconfig.h: Fix missing comment closer */
+
+	* c++/Makefile.am: Added AM_CPPFLAGS = $(CPPEXTRAFLAGS)
+
+	* configure.in: Use config.h, not c++/config.h, and permit
+	--enable-warnings option to turn on compile-time warnings (uses
+	AM_CPPFLAGS in Makefile.am)
+
 Tue Mar 16 19:26:23 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* configure.in, acconfig.h: Better autoconf support, including
