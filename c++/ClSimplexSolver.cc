@@ -16,6 +16,7 @@
 #include "ClObjectiveVariable.h"
 #include "ClDummyVariable.h"
 #include "auto_ptr.h"
+#include <float.h>
 
 // Need to delete all expressions
 // and all slack and dummy variables
@@ -682,7 +683,7 @@ ClSimplexSolver::dualOptimize()
       // make sure the row is still not feasible
       if (pexpr->constant() < 0.0)
 	{
-	double ratio = MAXDOUBLE;
+	double ratio = DBL_MAX;
 	double r;
 	map<const ClAbstractVariable *,Number> &terms = pexpr->terms();
 	map<const ClAbstractVariable *,Number>::iterator it = terms.begin();
@@ -701,9 +702,9 @@ ClSimplexSolver::dualOptimize()
 	      }
 	    }
 	  }
-	if (ratio == MAXDOUBLE)
+	if (ratio == DBL_MAX)
 	  {
-	  cerr << "ratio == nil (MAXDOUBLE)" << endl;
+	  cerr << "ratio == nil (DBL_MAX)" << endl;
 	  throw ExCLInternalError();
 	  }
 	pivot(*pentryVar,*pexitVar);
@@ -761,14 +762,15 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
     // Since both of these variables are newly created we can just add
     // them to the expression (they can't be basic).
     ++my_slackCounter;
-    pslackVar.reset(new ClSlackVariable(my_slackCounter,"s"));
-    pexpr->setVariable(*pslackVar,-1);
+    auto_ptr < ClSlackVariable > p (new ClSlackVariable (my_slackCounter, "s"));
+    pslackVar = p;		// transfer ownership to other auto_ptr
     // index the constraint under its slack variable
     my_markerVars[&cn] = pslackVar.get();
     if (!cn.isRequired())
       {
       ++my_slackCounter;
-      peminus.reset(new ClSlackVariable(my_slackCounter,"em"));
+      auto_ptr < ClSlackVariable > p (new ClSlackVariable (my_slackCounter, "em"));
+      peminus = p;
       pexpr->setVariable(*peminus,1.0);
       // add emnius to the objective function with the appropriate weight
       ClLinearExpression *pzRow = rowExpression(my_objective);
@@ -787,7 +789,8 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
       // for this constraint.  The dummy variable is never allowed to
       // enter the basis when pivoting.
       ++my_dummyCounter;
-      pdummyVar.reset(new ClDummyVariable(my_dummyCounter,"d"));
+      auto_ptr < ClDummyVariable > p (new ClDummyVariable (my_dummyCounter, "d"));
+      pdummyVar = p;
       pexpr->setVariable(*pdummyVar,1.0);
       my_markerVars[&cn] = pdummyVar.get();
 #ifndef CL_NO_TRACE
@@ -801,8 +804,11 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
       //       expr = eplus - eminus, 
       // in other words:  expr-eplus+eminus=0
       ++my_slackCounter;
-      peplus.reset(new ClSlackVariable(my_slackCounter,"ep"));
-      peminus.reset(new ClSlackVariable(my_slackCounter,"em"));
+      auto_ptr < ClSlackVariable > p1 (new ClSlackVariable (my_slackCounter, "ep"));
+      peplus = p1;
+      auto_ptr < ClSlackVariable > p2 (new ClSlackVariable (my_slackCounter, "em"));
+      peminus = p2;
+	  
       pexpr->setVariable(*peplus,-1.0);
       pexpr->setVariable(*peminus,1.0);
       // index the constraint under one of the error variables
@@ -906,7 +912,7 @@ ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
     // choose which variable to move out of the basis
     // Only consider pivotable basic variables
     // (i.e. restricted, non-dummy variables)
-    double minRatio = MAXDOUBLE;
+    double minRatio = DBL_MAX;
     set<const ClAbstractVariable *> &columnVars = my_columns[pentryVar];
     set<const ClAbstractVariable *>::iterator it_rowvars = columnVars.begin();
     Number r = 0.0;
@@ -939,7 +945,7 @@ ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
     // objective function is unbounded, i.e. it can become
     // arbitrarily negative.  This should never happen in this
     // application.
-    if (minRatio == MAXDOUBLE)
+    if (minRatio == DBL_MAX)
       {
       cerr << "objective function is unbounded!" << endl;
       throw ExCLInternalError();

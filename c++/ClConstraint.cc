@@ -8,7 +8,6 @@
 //
 // ClConstraint.cc
 
-
 #include "ClConstraint.h"
 
 ostream &

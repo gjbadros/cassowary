@@ -21,7 +21,7 @@ class ClSymbolicWeight {
 
   ClSymbolicWeight(int cLevels, double value = 0.0);
 
-  ClSymbolicWeight(double w1 = 0.0, double w2 = 0.0, double w3 = 0.0);
+  ClSymbolicWeight(double w1, double w2 = 0.0, double w3 = 0.0);
 
   ClSymbolicWeight(const vector<double> &weights);
 
@@ -29,8 +29,8 @@ class ClSymbolicWeight {
 
   ClSymbolicWeight times(Number n) const;
   ClSymbolicWeight divideBy(Number n) const;
-  ClSymbolicWeight plus(const ClSymbolicWeight &cl) const;
-  ClSymbolicWeight minus(const ClSymbolicWeight &cl) const;
+  ClSymbolicWeight add(const ClSymbolicWeight &cl) const;
+  ClSymbolicWeight subtract(const ClSymbolicWeight &cl) const;
 
   bool lessThan(const ClSymbolicWeight &cl) const;
   bool lessThanOrEqual(const ClSymbolicWeight &cl) const;
@@ -39,11 +39,17 @@ class ClSymbolicWeight {
   bool greaterThanOrEqual(const ClSymbolicWeight &cl) const;
   bool isNegative() const;
 
-  friend operator==(const ClSymbolicWeight &cl1, const ClSymbolicWeight &cl2)
+  friend bool operator==(const ClSymbolicWeight &cl1, const ClSymbolicWeight &cl2)
     { return cl1.equal(cl2); }
 
-  friend operator<(const ClSymbolicWeight &cl1, const ClSymbolicWeight &cl2)
+  friend bool operator!=(const ClSymbolicWeight &cl1, const ClSymbolicWeight &cl2)
+    { return !(cl1 == cl2); }
+
+  friend bool operator<(const ClSymbolicWeight &cl1, const ClSymbolicWeight &cl2)
     { return cl1.lessThan(cl2); }
+
+  friend bool operator>(const ClSymbolicWeight &cl1, const ClSymbolicWeight &cl2)
+  { return (cl2 < cl1); }
 
   // function.h provides operator>, >=, <= from operator<
 

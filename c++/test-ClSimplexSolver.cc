@@ -48,4 +48,6 @@ main( char **argv, int argc )
     cerr << "Exception " << error.description() << endl;
     exit(-1);
     }
+
+  return 0;
 }

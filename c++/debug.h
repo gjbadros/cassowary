@@ -1,6 +1,7 @@
 #ifndef CASSOWARY_DEBUG_H_
 #define CASSOWARY_DEBUG_H_
 
+#include "Cassowary.h"
 #include <map>
 #include <set>
 #include <vector>

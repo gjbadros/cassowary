@@ -8,12 +8,10 @@
 //
 // ClLinearExpression.cc
 
-#include <assert.h>
 #include "ClLinearExpression.h"
 #include "ClVariable.h"
 #include "ClTableau.h"
 #include "ClErrors.h"
-#include "debug.h"
 
 ClLinearExpression::ClLinearExpression(Number num) :
     my_constant(num)
@@ -90,15 +88,12 @@ ClLinearExpression::times(const ClLinearExpression &expr) const
     {
     return expr.times(my_constant);
     }
-  else if (expr.isConstant())
-    {
-    return times(expr.my_constant);
-    }
-  else
+  else if (!expr.isConstant())
     {
     // neither are constants, so we'd introduce non-linearity
     throw ExCLNonlinearExpression();
-    }
+    }	
+  return times(expr.my_constant);
 }
 
 
@@ -129,10 +124,7 @@ ClLinearExpression::divide(Number x) const
     {
     throw ExCLNonlinearExpression();
     }
-  else
-    {
-    return times(1.0/x);
-    }
+  return times(1.0/x);
 }
 
 // Return a new linear expression formed by dividing self by x.
@@ -144,10 +136,7 @@ ClLinearExpression::divide(const ClLinearExpression &expr) const
     {
     throw ExCLNonlinearExpression();
     }
-  else
-    {
-    return divide(expr.my_constant);
-    }
+  return divide(expr.my_constant);
 }
 
 
@@ -160,10 +149,7 @@ ClLinearExpression::divFrom(const ClLinearExpression &expr) const
     {
     throw ExCLNonlinearExpression();
     }
-  else
-    {
-    return expr.divide(my_constant);
-    }
+  return expr.divide(my_constant);
 }
 
 // Add n*expr to this expression for another expression expr.

@@ -17,10 +17,10 @@ main( char **argv, int argc )
   ClStrength cls2(string("cls2"),clsw.times(2));
   cout << cls2 << endl;
 
-  ClStrength cls3(string("cls3"),clsw.plus(clsw2));
+  ClStrength cls3(string("cls3"),clsw.add(clsw2));
   cout << cls3 << endl;
 
-  ClStrength cls4(string("cls4"),clsw.minus(clsw2));
+  ClStrength cls4(string("cls4"),clsw.subtract(clsw2));
   cout << cls4 << endl;
 
   ClStrength cls5(string("cls5"),clsw.divideBy(2));
@@ -41,4 +41,5 @@ main( char **argv, int argc )
   cout << clsw2 << (clsw2 > clsw3? ">" : "!>") << clsw3 << endl;
   cout << clsw3 << (clsw3 > clsw4? ">" : "!>") << clsw4 << endl;
 
+  return 0;
 }

@@ -12,6 +12,7 @@
 #define ClLinearExpression_H
 
 #include <map>
+#include "Cassowary.h"
 #include "debug.h"
 #include "ClAbstractVariable.h"
 

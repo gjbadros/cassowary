@@ -30,4 +30,6 @@ main( char **argv, int argc )
   cout << cleNew << endl;
   cle2.substituteOut(a,cleNew,c,solver);
   cout << cle2 << endl;
+
+  return 0;
 }

@@ -10,7 +10,6 @@
 
 #include "Cassowary.h"
 #include "ClSymbolicWeight.h"
-#include <assert.h>
 
 // Help g++ out, tell it to instantiate this
 //template vector<double> &vector<double>::operator =(const vector<double> &);
@@ -66,7 +65,7 @@ ClSymbolicWeight::divideBy(Number n) const
 }
 
 ClSymbolicWeight 
-ClSymbolicWeight::plus(const ClSymbolicWeight &cl) const
+ClSymbolicWeight::add(const ClSymbolicWeight &cl) const
 {
   assert(cl.cLevels() == cLevels());
 
@@ -81,7 +80,7 @@ ClSymbolicWeight::plus(const ClSymbolicWeight &cl) const
 }
 
 ClSymbolicWeight 
-ClSymbolicWeight::minus(const ClSymbolicWeight &cl) const
+ClSymbolicWeight::subtract(const ClSymbolicWeight &cl) const
 {
   assert(cl.cLevels() == cLevels());
 

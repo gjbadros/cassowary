@@ -32,4 +32,5 @@ main( char **argv, int argc )
 
   cerr << "constraint is " << constraint.isRequired() << endl;
 
+  return 0;
 }

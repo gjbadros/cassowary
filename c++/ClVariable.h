@@ -11,9 +11,8 @@
 #ifndef ClVariable_H
 #define ClVariable_H
 
-#include <iostream.h>
+#include <iostream>
 #include <stdio.h>
-#include <assert.h>
 #include "Cassowary.h"
 #include "ClAbstractVariable.h"
 
@@ -81,7 +80,7 @@ private:
 // Compare two double-s approximately, since equality is no good
 inline bool clApprox(double a, double b)
 {
-  float epsilon = 1.0e-8;
+  double epsilon = 1.0e-8;
   if (a == 0.0) {
     return (fabs(b) < epsilon);
   } else if (b == 0.0) {

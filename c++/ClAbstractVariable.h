@@ -12,8 +12,9 @@
 #define ClAbstractVariable_H
 
 #include <stdio.h>
-#include <iostream.h>
+#include <iostream>
 #include "Cassowary.h"
+#include "auto_ptr.h"
 
 class ClAbstractVariable {
 public:
@@ -30,11 +31,11 @@ public:
     }
 
   ClAbstractVariable(long varnumber, char *prefix)
-    { 
+    {
+    auto_ptr<char> pch (new char[16+strlen(prefix)]);
     iVariableNumber++;
-    char sz[16+strlen(prefix)];
-    sprintf(sz,"%s%ld",prefix,varnumber);
-    my_name = string(sz);
+    sprintf(pch.get(),"%s%ld",prefix,varnumber);
+    my_name = string(pch.get());
     }
 
   virtual ~ClAbstractVariable()
@@ -86,10 +87,15 @@ public:
     return &cl1 == &cl2;
     }
 
+  friend bool operator!=(const ClAbstractVariable &cl1, const ClAbstractVariable &cl2)
+    { 
+    return !(cl1 == cl2);
+    }
+
 private:
   string my_name;
 
-  static long iVariableNumber = 0;
+  static long iVariableNumber;
 };
 
 #endif

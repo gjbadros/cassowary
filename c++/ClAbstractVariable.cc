@@ -9,6 +9,5 @@
 // ClAbstractVariable.cc
 
 #include "ClAbstractVariable.h"
-#include <assert.h>
 
 long ClAbstractVariable::iVariableNumber = 0;

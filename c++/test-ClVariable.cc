@@ -1,4 +1,4 @@
-#include <iostream.h>
+#include <iostream>
 #include "ClVariable.h"
 
 int
@@ -8,4 +8,6 @@ main( char **argv, int argc )
   ClVariable clv2("clv2",2.4);
   cout << clv1 << endl;
   cout << clv2 << endl;
+
+  return 0;
 }

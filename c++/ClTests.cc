@@ -183,7 +183,7 @@ inconsistent1()
    // no exception, we failed!
    return(false);
    } 
- catch (ExCLRequiredFailure &error)
+ catch (ExCLRequiredFailure)
    {
    // we want this exception to get thrown
    cout << "Success -- got the exception" << endl;
@@ -216,7 +216,7 @@ inconsistent2()
    // no exception, we failed!
    return(false);
    } 
- catch (ExCLRequiredFailure &error)
+ catch (ExCLRequiredFailure &)
    {
    // we want this exception to get thrown
    cout << "Success -- got the exception" << endl;
@@ -234,6 +234,9 @@ inconsistent2()
    }
 }
 
+typedef ClVariable *PClVariable;
+typedef ClConstraint *PClConstraint;
+
 bool
 addDel(int nCns = 900, int nVars = 900, int nResolves = 10000)
 {
@@ -248,14 +251,14 @@ addDel(int nCns = 900, int nVars = 900, int nResolves = 10000)
   timer.Start();
   ClSimplexSolver solver;
 
-  ClVariable *rgpclv[nVars];
+  ClVariable **rgpclv = new PClVariable[nVars];
   for (int i = 0; i < nVars; i++)
     {
     rgpclv[i] = new ClVariable(i,"x");
     solver.addStay(*rgpclv[i]);
     }
 
-  ClConstraint *rgpcns[nCns];
+  ClConstraint **rgpcns = new PClConstraint[nCns];
   int nvs = 0;
   int k;
   int j;
@@ -293,7 +296,7 @@ addDel(int nCns = 900, int nVars = 900, int nResolves = 10000)
       {
       solver.addConstraint(*(rgpcns[j]));
       }
-    catch (ExCLRequiredFailure &error)
+    catch (ExCLRequiredFailure &)
       {
       cExceptions++;
       rgpcns[j] = NULL;
@@ -372,5 +375,5 @@ if (!fResult) cout << "Failed!" << endl;
   
 #undef RUN_TEST
 
-  exit (fAllOkResult? 0 : 255);
+  return (fAllOkResult? 0 : 255);
 }

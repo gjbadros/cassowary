@@ -39,6 +39,8 @@ SOURCES = $(OBJS:.o=.cc)
 
 TEST_SRCS = $(TEST_OBJS:.o=.cc)
 
+NT_SOURCES = $(OBJS:.o=.cpp) $(TEST_OBJS:.o=.cpp)
+
 TESTS = test-ClStrength test-ClVariable test-ClLinearExpression test-ClConstraint \
 	test-ClSimplexSolver ClTests
 
@@ -102,6 +104,7 @@ libcassowary.a:
 
 tags: TAGS
 
+ntsources: $(NT_SOURCES)
 
 # Perl-related targets
 .man: .pm
@@ -114,9 +117,10 @@ tags: TAGS
 	modpod2texinfo $< >$@
 
 
-.PHONY:	tags all cassowary-tests tests depend
+.PHONY:	tags all cassowary-tests ntsources tests depend
 
-
+%.cpp: %.cc
+	ln -s $< $@
 
 # How to make dependencies:
 # -------------------------
