@@ -366,7 +366,12 @@ public class ClSimplexSolver extends ClTableau
 	  if (fTraceOn) traceprint("Marker " + marker + "'s coefficient in " + expr + " is " + coeff);
 	  if (coeff < 0.0) {
 	    double r = -expr.constant() / coeff;
-	    if (exitVar == null || r < minRatio) {
+            // Bland's anti-cycling rule:
+            // if multiple variables are about the same,
+            // always pick the lowest via some total
+            // ordering -- I use their hash codes
+	    if (exitVar == null || r < minRatio ||
+                (CL.approx(r,minRatio) && v.hashCode() < exitVar.hashCode())) {
 	      minRatio = r;
 	      exitVar = v;
 	    }
