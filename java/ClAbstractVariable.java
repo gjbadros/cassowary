@@ -17,21 +17,21 @@ public abstract class ClAbstractVariable
 {
   public ClAbstractVariable(String name)
     {
-      //hash_code = iVariableNumber;
+      hash_code = iVariableNumber;
       _name = name;
       iVariableNumber++;
     }
 
   public ClAbstractVariable()
     {
-      //hash_code = iVariableNumber;
+      hash_code = iVariableNumber;
       _name = "v" + iVariableNumber;
       iVariableNumber++;
     }
 
   public ClAbstractVariable(long varnumber, String prefix)
     {
-      //hash_code = iVariableNumber;
+      hash_code = iVariableNumber;
       _name = prefix + varnumber;
       iVariableNumber++;
     }
@@ -56,13 +56,11 @@ public abstract class ClAbstractVariable
   public static int numCreated() 
     { return iVariableNumber; }
 
-  // for debugging
-  //  public final int hashCode() { return hash_code; }
+  public final int hashCode() { return hash_code; }
 
   private String _name;
 
-  // for debugging
-  // private int hash_code;
+  private int hash_code;
 
   private static int iVariableNumber;
 
