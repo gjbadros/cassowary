@@ -19,26 +19,25 @@ CPP = g++
 CFLAGS = -g -Wall
 EGCSDIR = /uns/egcs
 CXX = $(CPP)
+SWIG = swig
 
 #CPPFLAGS = -O6 -DCL_NO_TRACE -DNO_SOLVER_STATS -DNDEBUG -Wall -pedantic -W
-#CPPFLAGS = -O6 -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W
+CPPFLAGS = -O6 -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W
 #CPPFLAGS = -O6 -pg -DCL_NO_TRACE -Wall -pedantic -W
 #CPPFLAGS = -g -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W
-CPPFLAGS = -g -Wall -pedantic -W
+#CPPFLAGS = -g -Wall -pedantic -W
 
-#LIB=cassowary-optimized
+LIB=cassowary-optimized
 #LIB=cassowary-notrace
 #LIB=cassowary-trace
-LIB=cassowary
+#LIB=cassowary
 
 LDLIBS = -l$(LIB)
 
 #LDFLAGS = -L. -pg
 LDFLAGS = -L.
 
-
-
-CL_LIBRARY = libcassowary.a
+CL_LIBRARY = lib$(LIB).a
 
 OBJS = 	ClAbstractVariable.o \
 	ClConstraint.o \
@@ -94,6 +93,9 @@ all:	lib ClTests
 
 lib:    $(CL_LIBRARY)
 
+swig: cassowary.i
+	$(SWIG) -c++ -python -shadow cassowary.i
+
 $(CL_LIBRARY): $(OBJS)
 	rm -f $@
 	ar ruv $@ $(OBJS)
@@ -147,7 +149,7 @@ ntsources: $(NT_SOURCES)
 	modpod2texinfo $< >$@
 
 
-.PHONY:	all cassowary-tests lib tags ntsources tests depend
+.PHONY:	all cassowary-tests lib tags ntsources tests depend swig
 
 %.cpp: %.cc
 	ln -s $< $@
