@@ -1264,10 +1264,12 @@ ClSimplexSolver::setExternalVariables()
     ClVariable *pv = const_cast<ClVariable *>(*itParVars);
     // skip it if it is basic -- change_value is virtual
     // so don't want to call it twice
-    if (rowExpression(*pv)) {
-      cerr << __FUNCTION__ << "Error: a variable in _externalParametricVars is basic" << endl;
+    if (rowExpression(*pv)) 
+      {
+      cerr << __FUNCTION__ << "Error: variable " << *pv 
+           << " in _externalParametricVars is basic" << endl;
       continue;
-    }
+      }
     pv->change_value(0.0);
     }
 
