@@ -12,12 +12,11 @@
 // quarter 1998.  Any other use requires written permission from the copyright
 // holders.
 //
-// cn.java
-// (Just the enumerations from ClLinearInequality)
+// CN.java
+// The enumerations from ClLinearInequality,
+// (obsoleted -- use CL)
 
 class CN {
   public static final byte GEQ = 1;
   public static final byte LEQ = 2;
 }
-
-  
