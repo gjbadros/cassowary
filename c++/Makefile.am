@@ -94,7 +94,7 @@ pkginclude_HEADERS = \
 	ClSet.h \
 	ClPoint.h \
 	auto_ptr.h \
-	config.h \
+	config-inline.h \
 	debug.h
 
 
@@ -134,3 +134,7 @@ ClReader.cc: ClReader.y ClReader.h
 	$(YACC) -d -pcl --output-file $@ $<
 
 ClReader.cc.h: ClReader.cc
+
+
+config-inline.h: config.h
+	grep '#define CL_' $^ > $@ || true
