@@ -26,7 +26,7 @@ protected:
     ClAbstractVariable(name)
     { }
 
-  ClObjectiveVariable(long number, char *prefix, Number value = 0.0) :
+  ClObjectiveVariable(long number, char *prefix) :
     ClAbstractVariable(number,prefix)
     { }
 
