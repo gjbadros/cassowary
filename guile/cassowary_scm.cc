@@ -35,6 +35,8 @@
 #include "ClSimplexSolver.h"
 #include "ClErrors.h"
 
+#include <vector>
+
 #define MAKE_SMOBFUNS(T) \
 static scm_smobfuns T ## _smobfuns = { \
   &mark_ ## T, \
@@ -61,7 +63,7 @@ inline bool FUnsetSCM(SCM scm) { return (scm == SCM_UNDEFINED || scm == SCM_BOOL
 
 long SCMTYPEID;
 
-inline bool FIsClVariableSCM(SCM scm) 
+inline bool FIsClVariableScm(SCM scm) 
 { return SCM_NIMP(scm) && SCM_CAR(scm) == (SCM) SCMTYPEID; }
 
 inline ClVariable *PclvFromScm(SCM scm)
@@ -93,7 +95,7 @@ SCWM_PROC (cl_variable_p, "cl-variable?", 1, 0, 0,
            (SCM scm))
 #define FUNC_NAME s_cl_variable_p
 {
-  return SCM_BOOL_FromF(FIsClVariableSCM(scm));
+  return SCM_BOOL_FromF(FIsClVariableScm(scm));
 }
 #undef FUNC_NAME
 
@@ -149,7 +151,7 @@ SCWM_PROC (cl_value, "cl-value", 1, 0, 0,
 #define FUNC_NAME s_cl_value
 {
   int iarg = 1;
-  if (!FIsClVariableSCM(scmVar)) {
+  if (!FIsClVariableScm(scmVar)) {
     scm_wrong_type_arg(FUNC_NAME, iarg++, scmVar);
   }
 
@@ -163,7 +165,7 @@ SCWM_PROC (cl_int_value, "cl-int-value", 1, 0, 0,
 #define FUNC_NAME s_cl_int_value
 {
   int iarg = 1;
-  if (!FIsClVariableSCM(scmVar)) {
+  if (!FIsClVariableScm(scmVar)) {
     scm_wrong_type_arg(FUNC_NAME, iarg++, scmVar);
   }
 
@@ -180,7 +182,7 @@ SCWM_PROC (cl_int_value, "cl-int-value", 1, 0, 0,
 
 long SCMTYPEID;
 
-inline bool FIsClSymbolicWeightSCM(SCM scm) 
+inline bool FIsClSymbolicWeightScm(SCM scm) 
 { return SCM_NIMP(scm) && SCM_CAR(scm) == (SCM) SCMTYPEID; }
 
 inline ClSymbolicWeight *PclswFromScm(SCM scm)
@@ -215,7 +217,7 @@ SCWM_PROC (cl_weight_p, "cl-weight?", 1, 0, 0,
            (SCM scm))
 #define FUNC_NAME s_cl_weight_p
 {
-  return SCM_BOOL_FromF(FIsClSymbolicWeightSCM(scm));
+  return SCM_BOOL_FromF(FIsClSymbolicWeightScm(scm));
 }
 #undef FUNC_NAME
 
@@ -252,7 +254,7 @@ SCWM_PROC (make_cl_weight, "make-cl-weight", 3, 0, 0,
 
 long SCMTYPEID;
 
-inline bool FIsClStrengthSCM(SCM scm) 
+inline bool FIsClStrengthScm(SCM scm) 
 { return SCM_NIMP(scm) && SCM_CAR(scm) == (SCM) SCMTYPEID; }
 
 inline ClStrength *PclsFromScm(SCM scm)
@@ -287,7 +289,7 @@ SCWM_PROC (cl_strength_p, "cl-strength?", 1, 0, 0,
            (SCM scm))
 #define FUNC_NAME s_cl_strength_p
 {
-  return SCM_BOOL_FromF(FIsClStrengthSCM(scm));
+  return SCM_BOOL_FromF(FIsClStrengthScm(scm));
 }
 #undef FUNC_NAME
 
@@ -300,7 +302,7 @@ SCWM_PROC (make_cl_strength, "make-cl-strength", 2, 0, 0,
   if (!gh_string_p(name))
     scm_wrong_type_arg(FUNC_NAME,iarg++,name);
 
-  if (!FIsClSymbolicWeightSCM(weight))
+  if (!FIsClSymbolicWeightScm(weight))
     scm_wrong_type_arg(FUNC_NAME,iarg++,weight);
   
   char *szName = gh_scm2newstr(name,NULL);
@@ -360,7 +362,7 @@ SCWM_PROC (make_cl_strength_3, "make-cl-strength-3", 4, 0, 0,
 
 long SCMTYPEID;
 
-inline bool FIsClLinearExpressionSCM(SCM scm) 
+inline bool FIsClLinearExpressionScm(SCM scm) 
 { return SCM_NIMP(scm) && SCM_CAR(scm) == (SCM) SCMTYPEID; }
 
 inline ClLinearExpression *PexprFromScm(SCM scm)
@@ -395,7 +397,7 @@ SCWM_PROC (cl_expression_p, "cl-expression?", 1, 0, 0,
            (SCM scm))
 #define FUNC_NAME s_cl_expression_p
 {
-  return SCM_BOOL_FromF(FIsClLinearExpressionSCM(scm));
+  return SCM_BOOL_FromF(FIsClLinearExpressionScm(scm));
 }
 #undef FUNC_NAME
 
@@ -406,10 +408,10 @@ SCWM_PROC (make_cl_expression, "make-cl-expression", 1, 0, 0,
   int iarg = 1;
   ClLinearExpression *pexpr = NULL;
 
-  if (!FIsClVariableSCM(scmClv) && !gh_number_p(scmClv)) {
+  if (!FIsClVariableScm(scmClv) && !gh_number_p(scmClv)) {
     scm_wrong_type_arg(FUNC_NAME, iarg++, scmClv);
   } 
-  if (FIsClVariableSCM(scmClv)) {
+  if (FIsClVariableScm(scmClv)) {
     pexpr = new ClLinearExpression(*PclvFromScm(scmClv));
   } else {
     pexpr = new ClLinearExpression(gh_scm2double(scmClv));
@@ -433,10 +435,10 @@ PexprNewConvertSCM(SCM scm)
   if (gh_number_p(scm)) {
     return new ClLinearExpression(gh_scm2double(scm));
   }
-  if (FIsClVariableSCM(scm)) {
+  if (FIsClVariableScm(scm)) {
     return new ClLinearExpression(*PclvFromScm(scm));
   }
-  if (FIsClLinearExpressionSCM(scm)) {
+  if (FIsClLinearExpressionScm(scm)) {
     return new ClLinearExpression(*PexprFromScm(scm));
   }
   return NULL;
@@ -587,7 +589,7 @@ SCWM_PROC (cl_divide, "cl-divide", 2, 0, 0,
 
 long SCMTYPEID;
 
-inline bool FIsClLinearEquationSCM(SCM scm) 
+inline bool FIsClLinearEquationScm(SCM scm) 
 { return SCM_NIMP(scm) && SCM_CAR(scm) == (SCM) SCMTYPEID; }
 
 inline ClConstraint *PcnFromScm(SCM scm)
@@ -625,7 +627,7 @@ SCWM_PROC (cl_equation_p, "cl-equation?", 1, 0, 0,
            (SCM scm))
 #define FUNC_NAME s_cl_equation_p
 {
-  return SCM_BOOL_FromF(FIsClLinearEquationSCM(scm));
+  return SCM_BOOL_FromF(FIsClLinearEquationScm(scm));
 }
 #undef FUNC_NAME
 
@@ -636,13 +638,13 @@ SCWM_PROC (make_cl_equation, "make-cl-equation", 1, 0, 0,
   int iarg = 1;
   ClLinearExpression *pexpr = NULL;
 
-  if (!FIsClLinearExpressionSCM(scmExpr) && !FIsClVariableSCM(scmExpr)) {
+  if (!FIsClLinearExpressionScm(scmExpr) && !FIsClVariableScm(scmExpr)) {
     scm_wrong_type_arg(FUNC_NAME, iarg++, scmExpr);
   }
-  if (FIsClLinearExpressionSCM(scmExpr)) {
+  if (FIsClLinearExpressionScm(scmExpr)) {
     pexpr = PexprFromScm(scmExpr);
   }
-  if (FIsClVariableSCM(scmExpr)) {
+  if (FIsClVariableScm(scmExpr)) {
     pexpr = new ClLinearExpression(*PclvFromScm(scmExpr));
   }
 
@@ -661,21 +663,21 @@ SCWM_PROC (make_cl_equation, "make-cl-equation", 1, 0, 0,
 #undef FUNC_NAME
 
 SCWM_PROC (make_cl_equality, "make-cl-equality", 2, 0, 0,
-           (SCM scmExprA, SCM scmExprB))
+           (SCM var_or_expression, SCM expression))
 #define FUNC_NAME s_make_cl_equation
 {
   int iarg = 1;
   ClLinearExpression *pexprA = NULL;
   ClLinearExpression *pexprB = NULL;
 
-  if (!FIsClLinearExpressionSCM(scmExprA)) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, scmExprA);
+  if (NULL == (pexprA = PexprNewConvertSCM(var_or_expression))) {
+    scm_wrong_type_arg(FUNC_NAME, iarg++, var_or_expression);
   }
-  if (NULL == (pexprB = PexprNewConvertSCM(scmExprB))) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, scmExprB);
+  if (!FIsClLinearExpressionScm(expression)) {
+    scm_wrong_type_arg(FUNC_NAME, iarg++, expression);
   }
 
-  pexprA = PexprFromScm(scmExprA);
+  pexprB = PexprFromScm(expression);
 
   ClLinearEquation *peq = new ClLinearEquation(*pexprA,*pexprB);
 
@@ -700,8 +702,18 @@ SCWM_PROC (make_cl_equality, "make-cl-equality", 2, 0, 0,
 
 long SCMTYPEID;
 
-inline bool FIsClLinearInequalitySCM(SCM scm) 
+inline bool FIsClLinearInequalityScm(SCM scm) 
 { return SCM_NIMP(scm) && SCM_CAR(scm) == (SCM) SCMTYPEID; }
+
+inline bool FIsClConstraintScm(SCM scm) {
+  if (!SCM_NIMP(scm)) return false; 
+  SCM car = SCM_CAR(scm);
+
+  if (car == (SCM) scm_tc16_cl_equation) return true;
+  if (car == (SCM) scm_tc16_cl_inequality) return true;
+
+  return false;
+}
 
 inline ClLinearInequality *PineqFromScm(SCM scm)
 { return (ClLinearInequality *)(SCM_CDR(scm)); }
@@ -735,7 +747,7 @@ SCWM_PROC (cl_inequality_p, "cl-inequality?", 1, 0, 0,
            (SCM scm))
 #define FUNC_NAME s_cl_inequality_p
 {
-  return SCM_BOOL_FromF(FIsClLinearInequalitySCM(scm));
+  return SCM_BOOL_FromF(FIsClLinearInequalityScm(scm));
 }
 #undef FUNC_NAME
 
@@ -747,7 +759,7 @@ SCWM_PROC (make_cl_inequality, "make-cl-inequality", 1, 0, 0,
 
   ClLinearExpression *pexpr = NULL;
 
-  if (!FIsClLinearExpressionSCM(scmExpr)) {
+  if (!FIsClLinearExpressionScm(scmExpr)) {
     scm_wrong_type_arg(FUNC_NAME, iarg++, scmExpr);
   }
   pexpr = PexprFromScm(scmExpr);
@@ -774,7 +786,7 @@ SCWM_PROC (make_cl_inequality, "make-cl-inequality", 1, 0, 0,
 
 long SCMTYPEID;
 
-inline bool FIsClSimplexSolverSCM(SCM scm) 
+inline bool FIsClSimplexSolverScm(SCM scm) 
 { return SCM_NIMP(scm) && SCM_CAR(scm) == (SCM) SCMTYPEID; }
 
 inline ClSimplexSolver *PsolverFromScm(SCM scm)
@@ -813,7 +825,7 @@ SCWM_PROC (cl_solver_debug_print, "cl-solver-debug-print", 1, 1, 0,
 #define FUNC_NAME s_cl_solver_debug_print
 {
   int iarg = 1;
-  if (!FIsClSimplexSolverSCM(solver))
+  if (!FIsClSimplexSolverScm(solver))
     scm_wrong_type_arg(FUNC_NAME,iarg++,solver);
   if (scm_output_port_p(port) == SCM_BOOL_F)
     scm_wrong_type_arg(FUNC_NAME,iarg++,port);
@@ -831,7 +843,7 @@ SCWM_PROC (cl_solver_p, "cl-solver?", 1, 0, 0,
            (SCM scm))
 #define FUNC_NAME s_cl_solver_p
 {
-  return SCM_BOOL_FromF(FIsClSimplexSolverSCM(scm));
+  return SCM_BOOL_FromF(FIsClSimplexSolverScm(scm));
 }
 #undef FUNC_NAME
 
@@ -855,21 +867,20 @@ SCWM_PROC (make_cl_solver, "make-cl-solver", 0, 0, 0,
 
 // FIXGJB: add strength argument
 SCWM_PROC (cl_add_constraint, "cl-add-constraint", 2, 0, 0,
-           (SCM scmSolver, SCM scmConstraint))
+           (SCM solver, SCM constraint))
 #define FUNC_NAME s_cl_add_constraint
 {
   int iarg = 1;
 
-  if (!FIsClSimplexSolverSCM(scmSolver)) {
-    scm_wrong_type_arg(FUNC_NAME,iarg++,scmSolver);
+  if (!FIsClSimplexSolverScm(solver)) {
+    scm_wrong_type_arg(FUNC_NAME,iarg++,solver);
   }
-  if (!FIsClLinearInequalitySCM(scmConstraint) &&
-      !FIsClLinearEquationSCM(scmConstraint)) {
-    scm_wrong_type_arg(FUNC_NAME,iarg++,scmConstraint);
+  if (!FIsClConstraintScm(constraint)) {
+    scm_wrong_type_arg(FUNC_NAME,iarg++,constraint);
   }
 
-  ClSimplexSolver *psolver = PsolverFromScm(scmSolver);
-  ClConstraint *pconstraint = PcnFromScm(scmConstraint);
+  ClSimplexSolver *psolver = PsolverFromScm(solver);
+  ClConstraint *pconstraint = PcnFromScm(constraint);
 
   try {
     psolver->addConstraint(*pconstraint);
@@ -881,32 +892,190 @@ SCWM_PROC (cl_add_constraint, "cl-add-constraint", 2, 0, 0,
 }
 #undef FUNC_NAME
 
+// FIXGJB: add strength argument
+SCWM_PROC (cl_remove_constraint, "cl-remove-constraint", 2, 0, 0,
+           (SCM solver, SCM constraint))
+#define FUNC_NAME s_cl_remove_constraint
+{
+  int iarg = 1;
+
+  if (!FIsClSimplexSolverScm(solver)) {
+    scm_wrong_type_arg(FUNC_NAME,iarg++,solver);
+  }
+  if (!FIsClConstraintScm(constraint)) {
+    scm_wrong_type_arg(FUNC_NAME,iarg++,constraint);
+  }
+
+  ClSimplexSolver *psolver = PsolverFromScm(solver);
+  ClConstraint *pconstraint = PcnFromScm(constraint);
+
+  try {
+    psolver->addConstraint(*pconstraint);
+  } catch (const ExCLConstraintNotFound &e) {
+    return SCM_BOOL_F;
+  }
+
+  return SCM_BOOL_T;
+}
+#undef FUNC_NAME
+
 
 // FIXGJB: add strength argument
-SCWM_PROC (cl_add_editvar, "cl-add-editvar", 2, 0, 0,
-           (SCM scmSolver, SCM scmVar))
+SCWM_PROC (cl_add_editvar, "cl-add-editvar", 1, 0, 1,
+           (SCM solver, SCM args))
 #define FUNC_NAME s_cl_add_editvar
 {
   int iarg = 1;
 
-  if (!FIsClSimplexSolverSCM(scmSolver)) {
-    scm_wrong_type_arg(FUNC_NAME,iarg++,scmSolver);
+  if (!FIsClSimplexSolverScm(solver)) {
+    scm_wrong_type_arg(FUNC_NAME,iarg++,solver);
   }
-  if (!FIsClVariableSCM(scmVar)) {
-    scm_wrong_type_arg(FUNC_NAME,iarg++,scmVar);
-  }
-
-  ClSimplexSolver *psolver = PsolverFromScm(scmSolver);
-  ClVariable *pclv = PclvFromScm(scmVar);
+  ClSimplexSolver *psolver = PsolverFromScm(solver);
 
   try {
-    psolver->addEditVar(*pclv);
-  } catch (const ExCLInternalError &e) {
-    scm_misc_error(FUNC_NAME, "Internal solver error", SCM_EOL);
+    for (int i = 0; SCM_NNULLP (args); args = SCM_CDR (args), ++i) {
+      SCM var = SCM_CAR(args);
+      if (!FIsClVariableScm(var)) {
+        scm_wrong_type_arg(FUNC_NAME,iarg-1,args);
+      }
+      ClVariable *pclv = PclvFromScm(var);
+      psolver->addEditVar(*pclv);
+    }
+  } catch (const ExCLError &e) {
+    scm_misc_error(FUNC_NAME, "Solver error", SCM_EOL);
   }
 
   return SCM_UNDEFINED;
 }
+#undef FUNC_NAME
+
+
+SCWM_PROC (cl_add_stay, "cl-add-stay", 1, 0, 1,
+           (SCM solver, SCM args))
+#define FUNC_NAME s_cl_add_editvar
+{
+  int iarg = 1;
+
+  if (!FIsClSimplexSolverScm(solver)) {
+    scm_wrong_type_arg(FUNC_NAME,iarg++,solver);
+  }
+  ClSimplexSolver *psolver = PsolverFromScm(solver);
+
+  try {
+    for (int i = 0; SCM_NNULLP (args); args = SCM_CDR (args), ++i) {
+      SCM var = SCM_CAR(args);
+      if (!FIsClVariableScm(var)) {
+        scm_wrong_type_arg(FUNC_NAME,iarg-1,args);
+      }
+      ClVariable *pclv = PclvFromScm(var);
+      psolver->addEditVar(*pclv);
+    }
+  } catch (const ExCLError &e) {
+    scm_misc_error(FUNC_NAME, "Solver error", SCM_EOL);
+  }
+
+  return SCM_UNDEFINED;
+}
+#undef FUNC_NAME
+
+
+
+SCWM_PROC (cl_begin_edit, "cl-begin-edit", 1, 0, 0,
+           (SCM solver))
+#define FUNC_NAME s_cl_begin_edit
+{
+  int iarg = 1;
+  if (!FIsClSimplexSolverScm(solver)) {
+    scm_wrong_type_arg(FUNC_NAME,iarg++,solver);
+  }
+  ClSimplexSolver *psolver = PsolverFromScm(solver);
+
+  psolver->beginEdit();
+
+  return SCM_UNDEFINED;
+}
+#undef FUNC_NAME
+
+SCWM_PROC (cl_end_edit, "cl-end-edit", 1, 0, 0,
+           (SCM solver))
+#define FUNC_NAME s_cl_end_edit
+{
+  int iarg = 1;
+  if (!FIsClSimplexSolverScm(solver)) {
+    scm_wrong_type_arg(FUNC_NAME,iarg++,solver);
+  }
+  ClSimplexSolver *psolver = PsolverFromScm(solver);
+
+  psolver->endEdit();
+
+  return SCM_UNDEFINED;
+}
+#undef FUNC_NAME
+
+
+SCWM_PROC (cl_suggest_value, "cl-suggest-value", 3, 0, 0,
+           (SCM solver, SCM variable, SCM value))
+     /**
+      */
+#define FUNC_NAME s_cl_suggest_value
+{
+  int iarg = 1;
+  if (!FIsClSimplexSolverScm(solver)) {
+    scm_wrong_type_arg(FUNC_NAME,iarg++,solver);
+  }
+  if (!FIsClVariableScm(variable)) {
+    scm_wrong_type_arg(FUNC_NAME,iarg++,variable);
+  }
+  if (!gh_number_p(value)) {
+    scm_wrong_type_arg(FUNC_NAME,iarg++,value);
+  }
+  ClSimplexSolver *psolver = PsolverFromScm(solver);
+  ClVariable *pclv = PclvFromScm(variable);
+  double n = gh_scm2double(value);
+
+  psolver->suggestValue(*pclv,n);
+  return SCM_UNDEFINED;
+}
+#undef FUNC_NAME
+
+
+SCWM_PROC (cl_resolve, "cl-resolve", 1, 0, 1,
+           (SCM solver, SCM args))
+     /**
+      */
+#define FUNC_NAME s_cl_resolve
+{
+  int iarg = 1;
+  if (!FIsClSimplexSolverScm(solver)) {
+    scm_wrong_type_arg(FUNC_NAME,iarg++,solver);
+  }
+  ClSimplexSolver *psolver = PsolverFromScm(solver);
+
+  if (FUnsetSCM(args)) {
+    psolver->resolve();
+    return SCM_UNDEFINED;
+  }
+
+  vector<double> rgval;
+
+  for (int i = 0; SCM_NNULLP (args); args = SCM_CDR (args), ++i) {
+    SCM val = SCM_CAR(args);
+    if (!gh_number_p(val)) {
+      scm_wrong_type_arg(FUNC_NAME,iarg-1,args);
+    }
+    rgval.push_back(gh_scm2double(val));
+  }
+
+  try {
+    psolver->resolve(rgval);
+  } catch (const ExCLBadResolve &e) {
+    scm_misc_error(FUNC_NAME, "Resolve protocol misused", SCM_EOL);
+  }
+  
+  return SCM_UNDEFINED;
+}
+#undef FUNC_NAME
+
 
 
 
