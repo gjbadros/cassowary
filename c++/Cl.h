@@ -20,3 +20,4 @@
 #include "ClLinearInequality.h"
 #include "ClErrors.h"
 #include "ClEditConstraint.h"
+#include "ClStayConstraint.h"
