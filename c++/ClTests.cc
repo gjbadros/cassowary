@@ -383,7 +383,6 @@ addDel(int nCns = 900, int nVars = 900, int nResolves = 10000)
     {
     if (rgpcns[j])
       {
-      cerr << "removing " << j << endl;
       solver.removeConstraint(*(rgpcns[j]));
       }
     }
