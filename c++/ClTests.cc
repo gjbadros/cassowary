@@ -471,6 +471,87 @@ multiedit()
 }
 
 
+bool
+multiedit2()
+{
+ try
+   {
+   bool fOkResult = true;
+
+   ClVariable x("x",0);
+   ClVariable y("y",0);
+   ClVariable w("w",0);
+   ClVariable h("h",0);
+   ClSimplexSolver solver;
+
+   solver
+     .AddStay(x)
+     .AddStay(y)
+     .AddStay(w)
+     .AddStay(h);
+
+   solver
+     .AddEditVar(x)
+     .AddEditVar(y)
+     .BeginEdit();
+
+   solver
+     .SuggestValue(x,10)
+     .SuggestValue(y,20)
+     .Resolve();
+
+   cout << "x = " << x.Value() << "; y = " << y.Value() << endl
+        << "w = " << w.Value() << "; h = " << h.Value() << endl;
+
+   fOkResult = fOkResult &&
+     ClApprox(x,10) && ClApprox(y,20) && ClApprox(w,0) && ClApprox(h,0);
+
+   solver
+     .AddEditVar(x)
+     .AddEditVar(y)
+     .AddEditVar(w)
+     .AddEditVar(h)
+     .BeginEdit();
+
+   solver
+     .SuggestValue(w,30)
+     .SuggestValue(h,40)
+     .EndEdit();
+
+   cout << "x = " << x.Value() << "; y = " << y.Value() << endl
+        << "w = " << w.Value() << "; h = " << h.Value() << endl;
+
+   fOkResult = fOkResult &&
+     ClApprox(x,10) && ClApprox(y,20) && ClApprox(w,30) && ClApprox(h,40);
+
+   solver
+     .SuggestValue(x,50)
+     .SuggestValue(y,60)
+     .EndEdit();
+
+   cout << "x = " << x.Value() << "; y = " << y.Value() << endl
+        << "w = " << w.Value() << "; h = " << h.Value() << endl;
+
+   fOkResult = fOkResult &&
+     ClApprox(x,50) && ClApprox(y,60) && ClApprox(w,30) && ClApprox(h,40);
+
+   return fOkResult;
+   } 
+ catch (ExCLError &error) 
+   {
+   cerr << "Exception! " << error.description() << endl;
+   return(false);
+   } 
+ catch (...) 
+   {
+   cerr << "Unknown exception" << endl;
+   return(false);
+   }
+ cerr << "Should have gotten an exception!" << endl;
+ return false;
+}
+
+
 // From a bug report from Steve Wolfman on his
 // SAT project using "blackbox"
 bool
@@ -762,6 +843,7 @@ main( int argc, char **argv )
     RUN_TEST(inconsistent2);
     RUN_TEST(inconsistent3);
     RUN_TEST(multiedit);
+    RUN_TEST(multiedit2);
     // RUN_TEST(blackboxsat);
 
     int cns = 90, vars = 90, resolves = 100;

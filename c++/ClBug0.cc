@@ -6,6 +6,10 @@
    Replaced the parallel vectors for edit constraints
    (the errorPlus..., errorMinus..., prevEditConstants vectors)
    with a ClEditInfo class that is the Value of the _editVarMap map.
+   
+   Later I realized that I need to go to a _editVars list so that
+   multiple edits on the same variable that nest are handled properly.
+   --09/19/99 gjb
 */
 
 int main()
