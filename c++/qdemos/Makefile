@@ -71,3 +71,12 @@ moc_QuadDemoWindow.cc: QuadDemoWindow.h
 QuadDemoWindow.o: QuadDemoWindow.cc QuadDemoWindow.h DraggableBox.h
 
 QuadDemo.o: QuadDemo.cc QuadDemoWindow.h DraggableBox.h
+
+
+TAGS:
+	etags *.cc *.h
+
+tags: TAGS
+
+
+.PHONY: all clean moc tags
