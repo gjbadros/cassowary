@@ -1,4 +1,9 @@
 .deps
+*.o
+*.lo
+*.a
+*.la
+.libs
 ClBug0
 ClBug1
 ClBug2
