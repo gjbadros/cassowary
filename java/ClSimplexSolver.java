@@ -979,7 +979,10 @@ public class ClSimplexSolver extends ClTableau
        throws ExCLInternalError
   {
     if (fTraceOn) fnenterprint("pivot: " + entryVar + ", " + exitVar);
-    assert(entryVar.isPivotable());
+
+    // the entryVar might be non-pivotable if we're doing a removeConstraint --
+    // otherwise it should be a pivotable variable -- enforced at call sites,
+    // hopefully
 
     ClLinearExpression  pexpr = removeRow(exitVar);
 

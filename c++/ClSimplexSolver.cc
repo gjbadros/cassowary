@@ -1133,7 +1133,10 @@ ClSimplexSolver::pivot(const ClAbstractVariable &entryVar, const ClAbstractVaria
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << entryVar << ", " << exitVar << ")" << endl;
 #endif
-  assert(entryVar.isPivotable());
+
+  // the entryVar might be non-pivotable if we're doing a removeConstraint --
+  // otherwise it should be a pivotable variable -- enforced at call sites,
+  // hopefully
   
   // expr is the expression for the exit variable (about to leave the basis) -- 
   // so that the old tableau includes the equation:
