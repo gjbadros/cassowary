@@ -20,6 +20,8 @@
 
 class ClAbstractVariable;
 
+#ifndef CL_NO_IO
+
 ostream &operator<<(ostream &xo, const ClSet<const ClAbstractVariable *> & varset);
 
 ostream &operator<<(ostream &xo, const ClMap<const ClAbstractVariable *, ClSet<const ClAbstractVariable *> > & varmap);
@@ -35,5 +37,7 @@ class Tracer {
  private:
   const char *const sz_;
 };
+
+#endif
 
 #endif

@@ -51,15 +51,19 @@ class ClPoint {
   ClVariable _clv_x;
   ClVariable _clv_y;
 
+#ifndef CL_NO_IO
   friend ostream &operator<<(ostream &xo, const ClPoint &clp);
+#endif
   
 };
 
+#ifndef CL_NO_IO
 inline ostream &
 operator<<(ostream &xo, const ClPoint &clp)
 {
   xo << "(" << clp._clv_x << ", " << clp._clv_y << ")";
   return xo;
 }
+#endif
 
 #endif

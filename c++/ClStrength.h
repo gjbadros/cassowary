@@ -42,6 +42,7 @@ class ClStrength {
   virtual bool isRequired() const
     { return (_symbolicWeight == clsRequired()._symbolicWeight); }
 
+#ifndef CL_NO_IO
   virtual ostream &printOn(ostream &xo) const
     { 
     xo << name(); 
@@ -49,6 +50,11 @@ class ClStrength {
       xo << ":" << symbolicWeight(); 
     return xo; 
     }
+
+  friend ostream& operator<<(ostream &xos, const ClStrength &cls)
+    { cls.printOn(xos); return xos; }
+
+#endif
 
   virtual const ClSymbolicWeight &symbolicWeight() const
     { return _symbolicWeight; }
@@ -68,9 +74,6 @@ class ClStrength {
 
   void set_symbolicWeight(const ClSymbolicWeight &symbolicWeight)
     { _symbolicWeight = symbolicWeight; }
-
-  friend ostream& operator<<(ostream &xos, const ClStrength &cls)
-    { cls.printOn(xos); return xos; }
 
   // instance variables
   string _name;

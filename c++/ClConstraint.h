@@ -59,10 +59,13 @@ public:
   virtual double weight() const
     { return _weight; }
 
+#ifndef CL_NO_IO
   virtual ostream &printOn(ostream &xo) const = 0;
 
   friend ostream& operator<<(ostream &xos, const ClConstraint &constraint)
     { constraint.printOn(xos); return xos; }
+#endif
+
 
   void setPv(void *pv)
     { _pv = pv; }
@@ -72,7 +75,9 @@ public:
 
   virtual bool FIsSatisfied() const { return false; }
 
+#ifndef CL_NO_IO
   virtual void gdb_print() const { printOn(cerr); };
+#endif
 
 private:
 

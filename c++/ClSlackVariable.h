@@ -32,11 +32,13 @@ protected:
     ClAbstractVariable(number,prefix)
     { }
 
+#ifndef CL_NO_IO
   virtual ostream &printOn(ostream &xo) const
   {  
     xo << "[" << name() << ":slack]";
     return xo;
   }
+#endif
 
   virtual bool isExternal() const
     { return false; }

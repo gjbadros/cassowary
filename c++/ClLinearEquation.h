@@ -55,9 +55,11 @@ class ClLinearEquation : public ClLinearConstraint {
 		  double weight = 1.0) :
    ClLinearConstraint(cle1,strength,weight)
    { _expression.addExpression(cle2,-1.0); }
- 
+
+#ifndef CL_NO_IO 
  virtual ostream &printOn(ostream &xo) const
    {  super::printOn(xo); xo << " = 0 )"; return xo; }
+#endif
 
   virtual bool FIsSatisfied() const
     { return (_expression.evaluate() == 0); }

@@ -27,7 +27,7 @@
 // See newExpression -- all allocation is done in there
 ClSimplexSolver::~ClSimplexSolver()
 {
-#ifndef NO_SOLVER_STATS
+#ifdef CL_SOLVER_STATS
   cerr << "_slackCounter == " << _slackCounter
        << "\n_artificialCounter == " << _artificialCounter
        << "\n_dummyCounter == " << _dummyCounter << endl;
@@ -91,7 +91,7 @@ ClSimplexSolver::addConstraint(const ClConstraint &cn)
     ExCLRequiredFailureWithExplanation e;
     if (!addWithArtificialVariable(*pexpr, e))
       {
-#ifdef DEBUG_FAILURES
+#ifdef CL_DEBUG_FAILURES
       cerr << "Failed solve! Could not add constraint.\n"
            << *this << endl;
 #endif
@@ -559,13 +559,20 @@ ClSimplexSolver::suggestValue(ClVariable &v, Number x)
   ClVarToConstraintAndIndexMap::const_iterator itEditVarMap = _editVarMap.find(&v);
   if (itEditVarMap == _editVarMap.end())
     {
+#ifndef CL_NO_IO
     strstream ss;
     ss << "suggestValue for variable " << v << ", but var is not an edit variable" << ends;
     throw ExCLEditMisuse(ss.str());
+#else
+    throw ExCLEditMisuse(v.name().c_str());
+#endif
     }
   const ClConstraintAndIndex *pcai = (*itEditVarMap).second;
-  int i = pcai->index;
+  unsigned int i = pcai->index;
 
+  assert(i < _editPlusErrorVars.size());
+  assert(i < _editMinusErrorVars.size());
+  assert(i < _prevEditConstants.size());
   const ClAbstractVariable *pvarErrorPlus = _editPlusErrorVars[i];
   const ClAbstractVariable *pvarErrorMinus = _editMinusErrorVars[i];
 
@@ -872,7 +879,7 @@ ClSimplexSolver::chooseSubject(ClLinearExpression &expr)
   // the subject negative."
   if (!clApprox(expr.constant(),0.0))
     {
-#ifdef DEBUG_FAILURES
+#ifdef CL_DEBUG_FAILURES
     cerr << "required failure in choose subject:\n"
          << *this << endl;
 #endif
@@ -1309,11 +1316,15 @@ ClSimplexSolver::resetEditConstants(const vector<Number> &newEditConstants)
 #endif
   if (newEditConstants.size() != _editPlusErrorVars.size())
     { // number of edit constants doesn't match the number of edit error variables
+#ifndef CL_NO_IO
     strstream ss;
     ss << "newEditConstants == " << newEditConstants
        << "; _editPlusErrorVars == " << _editPlusErrorVars
-       << ": Sizes don't match!" << ends;
+       << ": Sizes do not match!" << ends;
     throw ExCLBadResolve(ss.str());
+#else
+    throw ExCLBadResolve("Sizes do not match");
+#endif
     }
   vector<Number>::const_iterator itNew = newEditConstants.begin();
   vector<Number>::iterator itPrev = _prevEditConstants.begin();
@@ -1402,10 +1413,12 @@ ClSimplexSolver::setExternalVariables()
     // so don't want to call it twice
     if (FIsBasicVar(*pv))
       {
+#ifndef CL_NO_IO
       // WARNING
       cerr << __FUNCTION__ << "Error: variable " << *pv 
            << " in _externalParametricVars is basic" << endl;
       cerr << "Row is: " << *rowExpression(*pv) << endl;
+#endif
       continue;
       }
     ChangeClv(pv,0.0);
@@ -1425,6 +1438,7 @@ ClSimplexSolver::setExternalVariables()
     _pfnResolveCallback(this);
 }
 
+#ifndef CL_NO_IO
 ostream &
 printTo(ostream &xo, const ClVarVector &varlist)
 {
@@ -1443,10 +1457,12 @@ printTo(ostream &xo, const ClVarVector &varlist)
   return xo;
 }
 
+
 ostream &operator<<(ostream &xo, const ClVarVector &varlist)
 {
   return printTo(xo,varlist);
 }
+
 
 ostream &
 ClSimplexSolver::printOn(ostream &xo) const
@@ -1483,6 +1499,8 @@ ostream &operator<<(ostream &xo, const ClSimplexSolver &clss)
   return clss.printOn(xo);
 }
 
+#endif
+
 bool 
 ClSimplexSolver::FIsConstraintSatisfied(const ClConstraint &cn) const
 {
@@ -1492,7 +1510,9 @@ ClSimplexSolver::FIsConstraintSatisfied(const ClConstraint &cn) const
     throw ExCLConstraintNotFound();
     }
 
+#ifndef CL_NO_IO
   bool fCnsays = cn.FIsSatisfied();
+#endif
 
   ClConstraintToVarSetMap::const_iterator it_eVars = _errorVars.find(&cn);
 
@@ -1505,14 +1525,18 @@ ClSimplexSolver::FIsConstraintSatisfied(const ClConstraint &cn) const
       const ClLinearExpression *pexpr = rowExpression(*(*it));
       if (pexpr != NULL && !clApprox(pexpr->constant(),0.0))
         {
+#ifndef CL_NO_IO
         if (fCnsays)
           cerr << __FUNCTION__ << ": constraint says satisfiable, but solver does not" << endl;
+#endif
         return false;
         }
       }
     }
 
+#ifndef CL_NO_IO
   if (!fCnsays)
     cerr << __FUNCTION__ << ": solver says satisfiable, but constraint does not" << endl;
+#endif
   return true;
 }

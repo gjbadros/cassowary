@@ -27,14 +27,16 @@ FLEX_FLAGS =
 ## with -pedantic -- just remove that option for compilation
 ## with egcs-1.1b, until they fix the problem (bug was reported --09/06/98 gjb)
 
-#CPPFLAGS = -O6 -DCL_NO_TRACE -DNO_SOLVER_STATS -DNDEBUG -Wall -pedantic -W
-#CPPFLAGS = -O6 -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W
+#CPPFLAGS = -O6 -DCL_NO_TRACE -DCL_NO_IO -DNDEBUG -Wall -pedantic -W
+#CPPFLAGS = -O6 -DCL_NO_TRACE -DNDEBUG -Wall -pedantic -W
+#CPPFLAGS = -O6 -DCL_NO_TRACE -Wall -pedantic -W
 #CPPFLAGS = -O6 -DNO_REQUIRED_EXCEPTIONS -DCL_NO_TRACE -Wall -pedantic -W
-#CPPFLAGS = -O6 -pg -DCL_NO_TRACE -Wall -pedantic -W
-#CPPFLAGS = -g -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W
-#CPPFLAGS = -g -DCL_NO_TRACE -DUSE_HASH_MAP_AND_SET -DNO_SOLVER_STATS -DCL_SOLVER_CHECK_INTEGRITY -Wall -pedantic -W #-DUSE_GC
-CPPFLAGS = -g -DCL_NO_TRACE -DNO_SOLVER_STATS -DCL_SOLVER_CHECK_INTEGRITY -Wall -pedantic -W #-DUSE_GC
-#CPPFLAGS = -g -Wall -pedantic -W
+#CPPFLAGS = -O6 -pg -DCL_NO_TRACE -DCL_SOLVER_STATS -Wall -pedantic -W
+#CPPFLAGS = -g -DCL_NO_TRACE -Wall -pedantic -W
+#CPPFLAGS = -g -DCL_NO_TRACE -DUSE_HASH_MAP_AND_SET -DCL_SOLVER_CHECK_INTEGRITY -Wall -pedantic -W #-DUSE_GC
+#CPPFLAGS = -g -DCL_NO_TRACE -DCL_NO_IO -DCL_SOLVER_CHECK_INTEGRITY -Wall -pedantic -W #-DUSE_GC
+CPPFLAGS = -g -DCL_NO_TRACE -DCL_SOLVER_CHECK_INTEGRITY -Wall -pedantic -W #-DUSE_GC
+#CPPFLAGS = -g -DCL_SOLVER_CHECK_INTEGRITY -Wall -pedantic -W #-DUSE_GC
 
 OTHER_LIBS = 
 # OTHER_LIBS = ../../gc/gc.a
@@ -70,6 +72,7 @@ TEST_OBJS = test-ClConstraint.o    \
 	test-ClVariable.o	   \
 	test-ClBounds.o	           \
 	ClTests.o                  \
+	ClBug0.o                  \
 	ClBug1.o                  \
 	ClLeakTest.o		   \
 	ClParseTest.o              \
@@ -85,7 +88,7 @@ TEST_SRCS = $(TEST_OBJS:.o=.cc)
 NT_SOURCES = $(OBJS:.o=.cpp) $(TEST_OBJS:.o=.cpp)
 
 TESTS = test-ClStrength test-ClVariable test-ClLinearExpression test-ClConstraint \
-	test-ClSimplexSolver ClTests ClBug1 ClLeakTest ClSubgraphTest ClParseTest
+	test-ClSimplexSolver ClTests ClBug0 ClBug1 ClLeakTest ClSubgraphTest ClParseTest
 
 HEADERS = Cassowary.h \
 	Cl.h \
@@ -109,7 +112,9 @@ HEADERS = Cassowary.h \
 	ClVariable.h \
 	ClPoint.h
 
-all:	lib ClTests ClBug1 ClLeakTest ClTestColumns ClSubgraphTest
+all:	lib ClTests ClLeakTest ClTestColumns ClSubgraphTest $(bugtests)
+
+bugtests: ClBug0 ClBug1
 
 lib:    $(CL_LIBRARY)
 
@@ -157,7 +162,7 @@ ntsources: $(NT_SOURCES)
 	modpod2texinfo $< >$@
 
 
-.PHONY:	all cassowary-tests lib tags ntsources tests depend 
+.PHONY:	all bugtests cassowary-tests lib tags ntsources tests depend 
 
 %.cpp: %.cc
 	ln -s $< $@

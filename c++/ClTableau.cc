@@ -27,6 +27,7 @@ ClTableau::~ClTableau()
     }
 }
 
+#ifndef CL_NO_IO
 // Some extra debugging info
 ostream &
 ClTableau::printInternalInfo(ostream &xo) const
@@ -38,6 +39,7 @@ ClTableau::printInternalInfo(ostream &xo) const
      << "; epvars:" << _externalParametricVars.size();
   return xo;
 }
+#endif
 
 
 // Add v, update column cross indices
@@ -191,6 +193,8 @@ ClTableau::substituteOut(const ClAbstractVariable &oldVar, const ClLinearExpress
 }
 
 
+#ifndef CL_NO_IO
+
 ostream &
 printTo(ostream &xo, const ClTableauVarSet & varset)
 {
@@ -286,3 +290,4 @@ ClTableau::printOn(ostream &xo) const
 ostream &operator<<(ostream &xo, const ClTableau &clt)
 { return clt.printOn(xo); }
 
+#endif

@@ -218,12 +218,14 @@ class ClGenericLinearExpression  {
   bool isConstant() const
     { return _terms.size() == 0; }
 
+#ifndef CL_NO_IO
   virtual ostream &printOn(ostream &xo) const;
 
   virtual void gdb_print() const { printOn(cerr); cerr << endl; };
 
   friend ostream &operator<<(ostream &xo,const ClGenericLinearExpression<T> &cle)
     { return cle.printOn(xo); }
+#endif
 
   friend ClGenericLinearExpression<T> operator+(const ClGenericLinearExpression<T> &e1,
 				      const ClGenericLinearExpression<T> &e2)

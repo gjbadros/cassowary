@@ -71,6 +71,7 @@ public:
   // internally to the simplex solver.
   virtual bool isRestricted() const = 0;
 
+#ifndef CL_NO_IO
   // Prints a semi-descriptive representation to the stream, using the
   // name if there is one, and otherwise the hash number of this
   // object.
@@ -84,6 +85,7 @@ public:
 
   friend ostream& operator<<(ostream &xos, const ClAbstractVariable &clv)
     { clv.printOn(xos); return xos; }
+#endif
 
   friend bool operator<(const ClAbstractVariable &cl1, const ClAbstractVariable &cl2)
     { return &cl1 < &cl2; }

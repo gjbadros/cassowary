@@ -43,7 +43,7 @@ class ClTableau {
     ClTableauVarSet::const_iterator it = column.find(&subject);
     assert(it != column.end());
     column.erase(it);
-#if 0
+#ifdef CL_TRACE_VERBOSE
     cerr << "v = " << v << " and columns[&v].size() = "
          << column.size() << endl;
 #endif
@@ -71,9 +71,13 @@ class ClTableau {
       }
     }
 
+#ifndef CL_NO_IO
   ostream &printOn(ostream &xo) const;
 
   virtual void gdb_print() const { printOn(cerr); }
+
+  ostream &printInternalInfo(ostream &xo) const;
+#endif
 
   // Check integrity of the tableau
   // not complete, yet, but a start, at least
@@ -92,8 +96,10 @@ class ClTableau {
         const ClVariable *pv = dynamic_cast<const ClVariable *>(pclv);
         if (_externalRows.find(pv) == _externalRows.end()) 
           {
+#ifndef CL_NO_IO
           cerr << "External basic variable " << *pclv
                << " is not in _externalRows" << endl;
+#endif
           }
         }
       const ClLinearExpression *pcle = rowExpression(*pclv);
@@ -107,16 +113,17 @@ class ClTableau {
           const ClVariable *pv = dynamic_cast<const ClVariable *>(pclv);
           if (_externalParametricVars.find(pv) == _externalParametricVars.end())
             {
+#ifndef CL_NO_IO
             cerr << "External parametric variable " << *pclv 
                  << " is not in _externalParametricVars" << endl;
+#endif
             }
           }
         }
       }
-#endif
+#endif /* !NDEBUG */
   }
 
-  ostream &printInternalInfo(ostream &xo) const;
   
  protected:
   // Constructor -- want to start with empty objects so not much to do
@@ -206,6 +213,8 @@ class ClTableau {
 
 };
 
+#ifndef CL_NO_IO
 ostream &operator<<(ostream &xo, const ClTableau &clt);
+#endif
 
 #endif

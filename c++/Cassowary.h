@@ -60,12 +60,16 @@ struct hash<const ClConstraint *>
 #include <assert.h>
 
 #ifdef _MSC_VER
+#ifndef CL_NO_IO
 #include <iostream>
+#endif
 #pragma warning(disable : 4786)
 using namespace std;
 #define __FUNCTION__ "WIN"
 #else
+#ifndef CL_NO_IO
 #include <iostream.h>
+#endif
 #endif
 
 typedef double Number;

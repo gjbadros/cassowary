@@ -65,6 +65,7 @@ public:
   virtual bool isRestricted() const
     { return false; }
 
+#ifndef CL_NO_IO
   // Prints a semi-descriptive representation to the stream, using the
   // name if there is one, and otherwise the hash number of this
   // object.
@@ -77,6 +78,7 @@ public:
     xo << "[" << name() << ":" << _value << "]";
     return xo;
   }
+#endif
   
   // Return the current value I hold.
   Number value() const

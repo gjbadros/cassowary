@@ -34,6 +34,7 @@ template <class T>
 ClGenericLinearExpression<T>::~ClGenericLinearExpression()
 { }
 
+#ifndef CL_NO_IO
 template <class T>
 ostream &
 ClGenericLinearExpression<T>::printOn(ostream &xo) const
@@ -57,6 +58,7 @@ ClGenericLinearExpression<T>::printOn(ostream &xo) const
     }
   return xo;
 }
+#endif
 
 
 
@@ -327,10 +329,13 @@ ClGenericLinearExpression<T>::substituteOut(const ClAbstractVariable &var,
 #ifndef NDEBUG
   if (pv == _terms.end())
     {
+#ifndef CL_NO_IO
     cerr << "substituteOut: pv != _terms.end()" << endl;
     cerr << "(" << var << ", " << expr << ", " << subject << ", " 
          << ")" << endl;
     cerr << "*this == " << *this << endl;
+#endif
+    throw "substituteOut: pv != _terms.end()";
     }
 #endif
   assert(pv != _terms.end());

@@ -116,9 +116,11 @@ class ClLinearInequality : public ClLinearConstraint {
  // that it is not.
  virtual bool isInequality() const
    { return true; }
- 
+
+#ifndef CL_NO_IO 
  virtual ostream &printOn(ostream &xo) const
    {  super::printOn(xo); xo << " >= 0 )"; return xo; }
+#endif
 
   virtual bool FIsSatisfied() const
     { return (_expression.evaluate() >= 0); }

@@ -31,11 +31,13 @@ protected:
     ClAbstractVariable(number,prefix)
     { }
 
+#ifndef CL_NO_IO
   virtual ostream &printOn(ostream &xo) const
   {  
     xo << "[" << name() << ":obj]";
     return xo;
   }
+#endif
 
   // We don't need to give such variables a value after solving is complete.
   virtual bool isExternal() const 

@@ -256,7 +256,7 @@ class ClSimplexSolver : public ClTableau {
       {
       optimize(_objective);
       setExternalVariables();
-#if 0
+#ifdef CL_TRACE_VERBOSE
       cerr << "Manual solve actually solving." << endl;
 #endif
       }
@@ -290,7 +290,7 @@ class ClSimplexSolver : public ClTableau {
     { if (!FContainsVariable(v)) 
         {
         addStay(v); 
-#ifndef CLNO_TRACE
+#ifndef CL_NO_TRACE
         cerr << "added initial stay on " << v << endl;
 #endif
         }
@@ -312,13 +312,16 @@ class ClSimplexSolver : public ClTableau {
   void SetCnSatCallback(PfnCnSatCallback pfn)
     { _pfnCnSatCallback = pfn; }
 
+#ifndef CL_NO_IO
   friend ostream &operator<<(ostream &xo, const ClSimplexSolver &tableau);
+
   ostream &printOn(ostream &xo) const;
   
   ostream &printInternalInfo(ostream &xo) const;
 
   ostream &printDebugInfo(ostream &xo) const 
     { printOn(xo); printInternalInfo(xo); xo << endl; return xo; }
+#endif
 
   const ClConstraintToVarMap &ConstraintMap() const
     { return _markerVars; }

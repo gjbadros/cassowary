@@ -13,6 +13,7 @@
 #define ClSymbolicWeight_H
 
 #include "Cassowary.h"
+#include "ClErrors.h"
 #include <vector>
 
 #ifdef USE_GC_WEIGHT
@@ -55,14 +56,17 @@ class ClSymbolicWeight {
     { return divideBy(n); }
 
   // FIXGJB: can we express this statically?
-  ClSymbolicWeight operator*(const ClSymbolicWeight &) const
-    { assert(false); return ClSymbolicWeight(); }
-  ClSymbolicWeight &operator*=(const ClSymbolicWeight &)
-    { assert(false); }
+  ClSymbolicWeight operator*(ClSymbolicWeight &w) const
+    { throw ExCLInternalError("Multiplication of symbolic weights encountered"); 
+      return w; }
+  ClSymbolicWeight &operator*=(ClSymbolicWeight &w)
+    { throw ExCLInternalError("Multiplicative assignment of symbolic weights encountered"); 
+      return w; }
 
   // FIXGJB: can we express this statically?
   ClSymbolicWeight operator-() const
-    { assert(false); return ClSymbolicWeight(); }
+    { throw ExCLInternalError("Can not negate a symbolic weight");
+      return ClSymbolicWeight::zero(); }
 
   friend ClSymbolicWeight ReciprocalOf(const ClSymbolicWeight &);
 
@@ -110,6 +114,7 @@ class ClSymbolicWeight {
     return sum;
     }
 
+#ifndef CL_NO_IO
   ostream &printOn(ostream &xo) const
     { 
     vector<double>::const_iterator i = _values.begin();
@@ -124,12 +129,13 @@ class ClSymbolicWeight {
     return xo;
     }
 
-  int cLevels() const
-    { return _values.size(); }
-
   // FIXGJB: use a template function to generate these automatically
   friend ostream& operator<<(ostream &xos, const ClSymbolicWeight &clsw)
     { clsw.printOn(xos); return xos; }
+#endif
+
+  int cLevels() const
+    { return _values.size(); }
 
   friend bool clApprox(const ClSymbolicWeight &cl, Number n);
   friend bool clApprox(const ClSymbolicWeight &cl1, const ClSymbolicWeight &cl2);
@@ -177,6 +183,7 @@ inline bool clApprox(const ClSymbolicWeight &cl1, const ClSymbolicWeight &cl2)
 }
 
 inline ClSymbolicWeight ReciprocalOf(const ClSymbolicWeight &)
-{ assert(false); return ClSymbolicWeight::zero(); }
+{ throw(ExCLInternalError("Cannot take ReciprocalOf symbolic weight"));
+  return ClSymbolicWeight::zero(); }
 
 #endif

@@ -12,6 +12,14 @@
 #ifndef CL_H
 #define CL_H
 
+#ifdef CL_NO_IO
+#ifndef CL_NO_TRACE /* prevent re-def warning */
+#define CL_NO_TRACE
+#endif
+#undef CL_SOLVER_STATS
+#undef CL_DEBUG_FAILURES
+#endif
+
 #include "ClVariable.h"
 #include "ClSimplexSolver.h"
 #include "ClLinearEquation.h"

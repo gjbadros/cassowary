@@ -11,6 +11,8 @@
 
 #include "ClConstraint.h"
 
+#ifndef CL_NO_IO
+
 ostream &
 ClConstraint::printOn(ostream &xo) const 
 {
@@ -19,3 +21,5 @@ ClConstraint::printOn(ostream &xo) const
   xo << strength() << " {" << weight() << "} (" << expression();
   return xo;
 }
+
+#endif

@@ -31,11 +31,13 @@ protected:
     ClAbstractVariable(number,prefix)
     { }
 
+#ifndef CL_NO_IO
   virtual ostream &printOn(ostream &xo) const
   {  
     xo << "[" << name() << ":dummy]";
     return xo;
   }
+#endif
 
   // Return true if this a dummy variable (used as a marker variable
   // for required equality constraints).  Such variables aren't
