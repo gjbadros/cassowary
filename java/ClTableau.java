@@ -14,6 +14,8 @@
 //
 // ClTableau
 
+import java.util.*;
+
 class ClTableau
 {
 
@@ -24,9 +26,9 @@ class ClTableau
       /** @c2j++ Replacement from cerr << "(" << v << ", " << subject << ")" << endl; */
       //System.err.println("(" + String.valueOf(v) + ", " + String.valueOf(subject) + ")");
       //#endif
-      ClTableauVarSet::const_iterator it = my_columns[&v].find(&subject);
-      assert(it != my_columns[&v].end());
-      my_columns[&v].erase(it); 
+      if (subject != null) {
+	((Set) my_columns.get(v)).remove(subject);
+      }
     }
 
   public void noteAddedVariable(ClAbstractVariable v, ClAbstractVariable subject)
@@ -35,16 +37,14 @@ class ClTableau
       //Tracer TRACER(__FUNCTION__);
       // System.err.println("(" + String.valueOf(v) + ", " + String.valueOf(subject) + ")");
       //#endif
-      my_columns[&v].insert(&subject); 
-      if (v.isExternal())
-	{
-	my_externalParametricVars.insert(static_cast<static final ClVariable  >(&v));
-	}
+      if (subject != null) {
+	insertColVar(v,subject);
+      }
     }
   
   public String toString()
     { 
-      StringBuffer bstr("Tableau:\n");
+      StringBuffer bstr = new StringBuffer("Tableau:\n");
       bstr.append(my_rows.toString());
 
       bstr.append("Columns:\n");
@@ -62,23 +62,32 @@ class ClTableau
       return bstr.toString();
     }
 
+  private void insertColVar(ClAbstractVariable param_var, 
+			    ClAbstractVariable rowvar)
+  { 
+    Set rowset = (Set) my_columns.get(param_var);
+    if (rowset == null)
+      my_columns.put(param_var,rowset = new Set());
+    rowset.insert(rowvar);
+  }
+
   protected void addRow(ClAbstractVariable var, ClLinearExpression expr)
     {
       //#ifndef CL_NO_TRACE
       // Tracer TRACER(__FUNCTION__);
       // System.err.println("(" + String.valueOf(var) + ", " + String.valueOf(expr) + ")");
       //#endif
-      my_rows[&var] = const_cast<ClLinearExpression  >(&expr);
-      ClVarToNumberMap::const_iterator it = expr.terms().begin();
-      for (; it != expr.terms().end(); ++it)
-	{
-	static final ClAbstractVariable  pv = ( it).first;
-	my_columns[pv].insert(&var);
-	}
-      if (var.isExternal())
-	{
-	my_externalRows.insert(static_cast<static final ClVariable  >(&var));
-	}
+
+      // for each variable in expr, add var to the set of rows which
+      // have that variable in their expression
+
+      for (Enumeration e = expr.terms().keys() ; e.hasMoreElements(); ) {
+        ClVariable clv = (ClVariable) e.nextElement();
+	insertColVar(clv,var);
+      }
+      if (var.isExternal()) {
+	my_externalRows.insert(var);
+      }
       //#ifndef CL_NO_TRACE
       //System.err.println(String.valueOf(*this));
       //#endif
@@ -90,53 +99,45 @@ class ClTableau
       //Tracer TRACER(__FUNCTION__);
       //System.err.println("(" + String.valueOf(var) + ")");
       //#endif
-      ClTableauColumnsMap::iterator it_var = my_columns.find(&var);
-      ClTableauVarSet &varset = ( it_var).second;
-      ClTableauVarSet::iterator it = varset.begin();
-      for (; it != varset.end(); ++it)
-	{
-	static final ClAbstractVariable  pv = ( it);
-	ClVarToNumberMap &terms = my_rows[pv].terms();
-	terms.erase(terms.find(&var));
-	}
-      if (var.isExternal())
-	{
-	my_externalRows.erase(static_cast<static final ClVariable  >(&var));
-	my_externalParametricVars.erase(static_cast<static final ClVariable  >(&var));
-	}
-      my_columns.erase(it_var);
+      // remove the rows with the variables in varset
+
+      Set rows = (Set) my_columns.remove(var);
+
+      for (Enumeration e = rows.elements() ; e.hasMoreElements(); ) {
+        ClVariable clv = (ClVariable) e.nextElement();
+	ClLinearExpression expr = (ClLinearExpression) my_rows.get(clv);
+	expr.terms().remove(clv);
+      }
+      
+      if (var.isExternal()) {
+	my_externalRows.remove(var);
+	my_externalParametricVars.remove(var);
+      }
     }
 
   protected ClLinearExpression removeRow(ClAbstractVariable var)
     {
       //#ifndef CL_NO_TRACE
       //  Tracer TRACER(__FUNCTION__);
-      //System.err.println("(" + String.valueOf(var) + ")");
+      //System.err.println("(" + var.toString() + ")");
       //#endif
 
-      ClTableauRowsMap::iterator it = my_rows.find(&var);
+      ClLinearExpression expr = (ClLinearExpression) my_rows.remove(var);
 
-      // assert(it != my_rows.end());
-      //  ClLinearExpression  pexpr = ( it).second;
-      ClVarToNumberMap &terms = pexpr.terms();
-      ClVarToNumberMap::iterator it_term = terms.begin();
-      for (; it_term != terms.end(); ++it_term)
-	{
-	static final ClAbstractVariable  pv = ( it_term).first;
-	my_columns[pv].erase(&var);
-	}
-      
-      my_infeasibleRows.erase(&var);
-      
+      for (Enumeration e = expr.terms().keys() ; e.hasMoreElements(); ) {
+        ClVariable clv = (ClVariable) e.nextElement();
+	((Set)my_columns.get(clv)).remove(var);
+	my_infeasibleRows.remove(var);
+      }
+
       if (var.isExternal())
 	{
-	my_externalRows.erase(static_cast<static final ClVariable  >(&var));
+	my_externalRows.remove(var);
 	}
-      my_rows.erase(it);
       //#ifndef CL_NO_TRACE
-      //System.err.println("- returning " + String.valueOf(*pexpr));
+      //System.err.println("- returning " + expr.toString());
       //#endif
-      return pexpr;
+      return expr;
     }
 
   protected void substituteOut(ClAbstractVariable oldVar, ClLinearExpression expr)
@@ -147,48 +148,38 @@ class ClTableau
       //System.err.println("(" + String.valueOf(oldVar) + ", " + String.valueOf(expr) + ")");
       //System.err.println(String.valueOf((*this)));
       //#endif
+      
+      Set varset = (Set) my_columns.get(oldVar);
+      for (Enumeration e = varset.elements(); e.hasMoreElements(); ) {
+	ClAbstractVariable v = (ClAbstractVariable) e.nextElement();
+	ClLinearExpression row = (ClLinearExpression) my_rows.get(v);
+	row.substituteOut(oldVar,expr,v,this);
+	if (v.isRestricted() && row.constant() < 0.0) {
+	  my_infeasibleRows.insert(v);
+	}
+      }
 
-      ClTableauColumnsMap::iterator it_oldVar = my_columns.find(&oldVar);
-      assert(it_oldVar != my_columns.end());
-      ClTableauVarSet &varset = ( it_oldVar).second;
-      ClTableauVarSet::iterator it = varset.begin();
-      for (; it != varset.end(); ++it)
-	{
-	static final ClAbstractVariable  pv = ( it);
-	ClLinearExpression  prow = my_rows[pv];
-	prow.substituteOut(oldVar,expr, pv, this);
-	if (pv.isRestricted() && prow.constant() < 0.0)
-	  {
-	  my_infeasibleRows.insert(pv);
-	  }
-	}
-      if (oldVar.isExternal())
-	{
-	my_externalRows.insert(static_cast<static final ClVariable  >(&oldVar));
-	my_externalParametricVars.erase(static_cast<static final ClVariable  >(&oldVar));
-	}
-      my_columns.erase(it_oldVar);
+      if (oldVar.isExternal()) {
+	my_externalRows.insert(oldVar);
+	my_externalParametricVars.remove(oldVar);
+      }
+      my_columns.remove(oldVar);
     }
 
-  protected ClTableauColumnsMap columns()
+  protected Hashtable columns()
     { return my_columns; }
 
-  protected ClTableauRowsMap rows()
+  protected Hashtable rows()
     { return my_rows; }
 
   protected boolean columnsHasKey(ClAbstractVariable subject)
     { 
-      ClTableauColumnsMap::const_iterator i = my_columns.find(&subject);
-      return (i != my_columns.end());
+      return my_columns.containsKey(subject);
     }
 
   protected ClLinearExpression rowExpression(ClAbstractVariable v)
     {
-      ClTableauRowsMap::const_iterator i = my_rows.find(&v);
-      if (i != my_rows.end())
-	return ( i).second;
-      else
-	return null;
+      return (ClLinearExpression) my_rows.get(v);
     }
 
   private Hashtable my_columns; // From ClAbstractVariable to Set of variables
