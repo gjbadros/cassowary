@@ -5,6 +5,10 @@
 
 CPP = g++
 CFLAGS = -Wall -g
+
+# See SCWM distribution for the extract-docs script
+# http://web.mit.edu/mstachow/www/scwm.html
+
 EXTRACT_DOCS = ../../scwm/utilities/dev/extract-docs
 
 INCLUDES = -I. -I../c++ -I/uns/share/include -I/uns/include
@@ -17,3 +21,8 @@ cassowary_scm.x: cassowary_scm.cc
 
 cassowary_scm.sgml: cassowary_scm.cc
 	 $(EXTRACT_DOCS) $^ > $@
+
+clean:
+	rm -f cassowary_scm.o cassowary_scm.x cassowary_scm.sgml
+
+.PHONY: clean
