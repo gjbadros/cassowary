@@ -120,6 +120,7 @@ pkginclude_HEADERS = \
 	ClLinearInequality.h \
 	ClSolver.h \
 	ClSimplexSolver.h \
+	ClTimedSimplexSolver.h \
 	ClStayConstraint.h \
 	ClStrength.h \
 	ClSymbolicWeight.h \
