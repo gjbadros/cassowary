@@ -47,25 +47,26 @@ public:
 
   /// and also forward the function calls along
 
-  bool isDummy() const { return pclv->isDummy(); }
-  bool isExternal() const { return pclv->isExternal(); }
-  bool isPivotable() const { return pclv->isPivotable(); }
-  bool isRestricted() const { return pclv->isRestricted(); }
+  bool isDummy() const { assert(pclv); return pclv->isDummy(); }
+  bool isExternal() const { assert(pclv); return pclv->isExternal(); }
+  bool isPivotable() const { assert(pclv); return pclv->isPivotable(); }
+  bool isRestricted() const { assert(pclv); return pclv->isRestricted(); }
 
-  string name() const { return pclv->name(); }
+  string name() const { assert(pclv); return pclv->name(); }
 
-  Number value() const { return pclv->value(); }
-  int intValue() const { return pclv->intValue(); }
+  Number value() const { assert(pclv); return pclv->value(); }
+  int intValue() const { assert(pclv); return pclv->intValue(); }
   void set_value(Number value) 
-    { pclv->set_value(value); }
+    { assert(pclv); pclv->set_value(value); }
   void change_value(Number value) 
-    { pclv->change_value(value); }
+    { assert(pclv); pclv->change_value(value); }
   void setPv(void *pv) 
-    { pclv->setPv(pv); }
+    { assert(pclv); pclv->setPv(pv); }
   void *Pv() const 
-    { return pclv->Pv(); }
+    { assert(pclv); return pclv->Pv(); }
 
   void setName(string const &nm) {
+    assert(pclv);
     if (pmapStrPclv) {
       pmapStrPclv->erase(name());
       (*pmapStrPclv)[nm] = *this;
