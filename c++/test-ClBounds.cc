@@ -1,6 +1,16 @@
+// $Id$
+//
+// Cassowary Incremental Constraint Solver
+// Original Smalltalk Implementation by Alan Borning
+// This C++ Implementation by Greg J. Badros, <gjb@cs.washington.edu>
+// http://www.cs.washington.edu/homes/gjb
+// (C) 1998, 1999 Alan Borning and Greg Badros
+// See ../LICENSE for legal details regarding this software
+//
+// test-ClBounds.cc
+
 #include "Cl.h"
 #include <stdlib.h>
-
 
 int
 main( char **, int  )

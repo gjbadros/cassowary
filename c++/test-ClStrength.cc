@@ -10,9 +10,7 @@
 // test-ClStrength.cc
 
 #include <string>
-#include "Cassowary.h"
-#include "ClStrength.h"
-#include "debug.h"
+#include "Cl.h"
 
 int
 main( char **, int  )

@@ -10,13 +10,7 @@
 // test-ClSimplexSolver.cc
 
 #include <string>
-#include "ClErrors.h"
-#include "ClLinearEquation.h"
-#include "ClLinearInequality.h"
-#include "ClEditConstraint.h"
-#include "ClStayConstraint.h"
-#include "ClSimplexSolver.h"
-#include "ClVariable.h"
+#include "Cl.h"
 
 int
 main( char **, int )

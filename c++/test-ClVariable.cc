@@ -9,7 +9,7 @@
 //
 // test-ClVariable.cc
 
-#include "ClVariable.h"
+#include "Cl.h"
 
 int
 main( char **, int )

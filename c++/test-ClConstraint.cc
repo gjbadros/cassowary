@@ -10,11 +10,7 @@
 // test-ClConstraint.cc
 
 #include <string>
-#include "Cassowary.h"
-#include "ClVariable.h"
-#include "ClLinearEquation.h"
-#include "ClLinearInequality.h"
-#include "ClStayConstraint.h"
+#include "Cl.h"
 
 int
 main( char **, int )

@@ -10,10 +10,7 @@
 // test-ClLinearExpression.cc
 
 #include <string>
-#include "Cassowary.h"
-#include "ClVariable.h"
-#include "ClLinearExpression.h"
-#include "ClSimplexSolver.h"
+#include "Cl.h"
 
 int
 main( char **, int )
