@@ -24,7 +24,7 @@ int iRandom = 0;
 int cRandom = 0;
 vector<double> vRandom;
 
-void InitializeRandoms() {
+void InitializeRandoms(long s = 0) {
   iRandom=0;
   ifstream in("randoms.txt");
   string s;
@@ -52,8 +52,9 @@ double UniformRandom()
 
 #else
 
-void InitializeRandoms() {
-  srand(long(time(NULL)));
+void InitializeRandoms(long s) {
+  cerr << "Seed = " << s << endl;
+  srand(s);
 }
 
 inline 
@@ -897,14 +898,12 @@ addDelSolvers(const int nCns = 900, const int nResolves = 10000,
   static const int maxVars = 3;
   static const int nVars = nCns;
 
-  InitializeRandoms();
-
   double tmAdd, tmEdit, tmResolve, tmEndEdit;
   timer.Start();
 
   typedef ClSimplexSolver *PClSimplexSolver;
-  ClSimplexSolver **rgpsolver = new PClSimplexSolver[nSolvers];
-  for (int is = 0; is < nSolvers; ++is) {
+  ClSimplexSolver **rgpsolver = new PClSimplexSolver[nSolvers+1];
+  for (int is = 0; is < nSolvers+1; ++is) {
     rgpsolver[is] = new ClSimplexSolver;
     rgpsolver[is]->SetAutosolve(false);
   }
@@ -912,7 +911,7 @@ addDelSolvers(const int nCns = 900, const int nResolves = 10000,
   ClVariable **rgpclv = new PClVariable[nVars];
   for (int i = 0; i < nVars; i++) {
     rgpclv[i] = new ClVariable(i,"x");
-    for (int is = 0; is < nSolvers; ++is) {
+    for (int is = 0; is < nSolvers+1; ++is) {
       rgpsolver[is]->AddStay(*rgpclv[i]);
     }
   }
@@ -945,28 +944,49 @@ addDelSolvers(const int nCns = 900, const int nResolves = 10000,
   }
   timer.Stop();
   cerr << "done building data structures" << endl;
-  
-  timer.Reset(); timer.Start();
-  int cExceptions = 0;
+
   int cCns = 0;
-  for (int is = 0; is < nSolvers; ++is) {
-    for (j = 0; j < nCnsMade && cCns < nCns; ++j) {
-      // Add the constraint -- if it's incompatible, just ignore it
-      try {
+  int cExceptions = 0;
+  int is = nSolvers;
+  for (j = 0; j < nCnsMade && cCns < nCns; ++j) {
+    // Add the constraint -- if it's incompatible, just ignore it
+    try {
+      if (rgpcns[j]) {
         rgpsolver[is]->AddConstraint(rgpcns[j]);
         // count the constraint as having been added
         cCns++;
+      }
+    } 
+    catch (ExCLRequiredFailure &) {
+      cExceptions++;
+      rgpcns[j] = NULL;
+    }
+  }
+  
+  timer.Reset(); timer.Start();
+  for (int is = 0; is < nSolvers; ++is) {
+    int cCns = 0;
+    int cExceptions = 0;
+    for (j = 0; j < nCnsMade && cCns < nCns; ++j) {
+      // Add the constraint -- if it's incompatible, just ignore it
+      try {
+        if (rgpcns[j]) {
+          rgpsolver[is]->AddConstraint(rgpcns[j]);
+          // count the constraint as having been added
+          cCns++;
+        }
       } 
       catch (ExCLRequiredFailure &) {
         cExceptions++;
+        rgpcns[j] = NULL;
       }
     }
+    cerr << "done adding " << cCns << " constraints ["
+         << j << " attempted, "
+         << cExceptions << " exceptions]" << endl;
     rgpsolver[is]->Solve();
   }
   timer.Stop();
-  cerr << "done adding " << cCns << " constraints ["
-       << j << " attempted, "
-       << cExceptions << " exceptions]" << endl;
 
   tmAdd = timer.ElapsedTime();
   
@@ -1065,11 +1085,15 @@ main( int argc, char **argv )
 #endif
 
     int testNum = 1, cns = 90, resolves = 100, solvers=10;
-
+    long seed = time(NULL);
+    
     if (argc > 1) testNum = atoi(argv[1]);
     if (argc > 2) cns = atoi(argv[2]);
     if (argc > 3) solvers = atoi(argv[3]);
     if (argc > 4) resolves = atoi(argv[4]);
+    if (argc > 5) seed = atoi(argv[5]);
+
+    InitializeRandoms(seed);
 
 #if 0
     if (cns > 0) 
