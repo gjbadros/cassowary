@@ -30,24 +30,24 @@ class ClPoint {
     { }
 
 
-  ClVariable &Xvar()
+  ClVariable &X()
     { return clv_x; }
 
-  ClVariable &Yvar()
+  ClVariable &Y()
     { return clv_y; }
 
-  const ClVariable &Xvar() const
+  const ClVariable &X() const
     { return clv_x; }
 
-  const ClVariable &Yvar() const
+  const ClVariable &Y() const
     { return clv_y; }
 
 
-  Number X() const
-    { return Xvar().value(); }
+  Number Xvalue() const
+    { return X().value(); }
 
-  Number Y() const
-    { return Yvar().value(); }
+  Number Yvalue() const
+    { return Y().value(); }
 
  private:
   ClVariable clv_x;

@@ -37,8 +37,8 @@ class DraggableBox {
 
   void SetCenter(Number x, Number y)
     {
-    center.Xvar() = x;
-    center.Yvar() = y;
+    center.X() = x;
+    center.Y() = y;
     }
 
   void SetSize(int width_, int height_)
@@ -54,22 +54,22 @@ class DraggableBox {
     }
 
   Number CenterX() const
-    { return center.X(); }
+    { return center.Xvalue(); }
 
   Number CenterY() const
+    { return center.Yvalue(); }
+
+  ClVariable &X() 
+    { return center.X(); }
+
+  ClVariable &Y() 
     { return center.Y(); }
 
-  ClVariable &Xvar() 
-    { return center.Xvar(); }
-
-  ClVariable &Yvar() 
-    { return center.Yvar(); }
-
-  const ClVariable &Xvar() const
-    { return center.Xvar(); }
+  const ClVariable &X() const
+    { return center.X(); }
 
   const ClVariable &Yvar() const
-    { return center.Yvar(); }
+    { return center.Y(); }
 
   const ClPoint &CenterPt() const
     { return center; }
