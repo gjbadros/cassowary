@@ -295,6 +295,9 @@ class ClSimplexSolver : public ClTableau {
   ostream &printDebugInfo(ostream &xo) const 
     { printOn(xo); printInternalInfo(xo); xo << endl; return xo; }
 
+  const ClConstraintToVarMap &ConstraintMap() const
+  {  return _markerVars; }
+
  protected:
   // Add the constraint expr=0 to the inequality tableau using an
   // artificial variable.  To do this, create an artificial variable
@@ -398,7 +401,6 @@ class ClSimplexSolver : public ClTableau {
       _pfnChangeClvCallback(pclv,this);
   }
 
-protected:
   /// instance variables
 
   // the arrays of positive and negative error vars for the edit constraints

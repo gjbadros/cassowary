@@ -22,7 +22,8 @@ public:
 
   ClConstraint(const ClStrength &strength = clsRequired(), double weight = 1.0 ) :
     _strength(strength),
-    _weight(weight)
+    _weight(weight),
+    _pv(0)
     { }
 
   virtual ~ClConstraint()
@@ -60,6 +61,11 @@ public:
   friend ostream& operator<<(ostream &xos, const ClConstraint &constraint)
     { constraint.printOn(xos); return xos; }
 
+  void setPv(void *pv)
+    { _pv = pv; }
+
+  void *Pv() const
+    { return _pv; }
 
 private:
 
@@ -73,6 +79,8 @@ private:
   ClStrength _strength;
 
   double _weight;
+
+  void *_pv;
 };
 
 typedef ClConstraint *PClConstraint;

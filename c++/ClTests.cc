@@ -60,7 +60,6 @@ simple2()
 {
  try
    {
-   bool fOkResult = true;
    ClVariable x(167);
    ClSimplexSolver solver;
 
@@ -70,12 +69,11 @@ simple2()
    solver.endEdit();
 
    cout << "x = " << x.value() << endl;
-   cerr << "Should have gotten an exception!" << endl;
-   return false;
    } 
  catch (ExCLEditMisuse &error)
    {
    cout << "Success: got the exception" << endl;
+   return true;
    }
  catch (ExCLError &error) 
    {
@@ -87,6 +85,8 @@ simple2()
    cerr << "Unknown exception" << endl;
    return(false);
    }
+ cerr << "Should have gotten an exception!" << endl;
+ return false;
 }
 
 
