@@ -18,17 +18,21 @@
 #include "ClAbstractVariable.h"
 #include "ClLinearExpression_fwd.h"
 
+using namespace std;
+
 class ClSimplexSolver;
 class ClTableau;
 class ClSymbolicWeight;
 
 ClLinearExpression &cleNil();
 
+typedef const ClAbstractVariable *PconstClAbstractVariable;
+
 
 template <class T>
 class ClGenericLinearExpression  {
  public:
-  typedef map<const ClAbstractVariable *,T> ClVarToCoeffMap;
+  typedef map<PconstClAbstractVariable,T> ClVarToCoeffMap;
 
   // convert Number-s into ClLinearExpression-s
   ClGenericLinearExpression(T num = 0.0);
@@ -186,7 +190,7 @@ class ClGenericLinearExpression  {
   //     v1*c1 + v2*c2 + .. + vn*cn + c
   T coefficientFor(const ClAbstractVariable &var) const
     { 
-    map<const ClAbstractVariable *, T>::const_iterator it = _terms.find(&var);
+    ClVarToCoeffMap::const_iterator it = _terms.find(&var);
     if (it != _terms.end())
       return (*it).second;
     return 0.0;
