@@ -24,7 +24,7 @@ public class ClTests extends CL {
 
   public ClTests()
   {
-    RND = new Random(123456789);
+    RND = new Random();
   }
 
   public final static boolean simple1()
@@ -513,7 +513,8 @@ public class ClTests extends CL {
   {
     final double grain = 1.0e-4;
     double n = UniformRandomDiscretized();
-    return ((int)n/grain)*grain;
+    double answer =  ((int)(n/grain))*grain;
+    return answer;
   }
 
   public final static int RandomInRange(int low, int high)
@@ -595,6 +596,7 @@ public class ClTests extends CL {
           {
             if (null != rgpcns[j]) {
               solver.addConstraint(rgpcns[j]);
+              //              System.out.println("Added " + j + " = " + rgpcns[j]);
               ++cCns;
             }
           }
@@ -620,6 +622,7 @@ public class ClTests extends CL {
           {
             if (null != rgpcns[j]) {
               solver.addConstraint(rgpcns[j]);
+              //              System.out.println("Added " + j + " = " + rgpcns[j]);
               ++cCns;
             }
           }
@@ -706,7 +709,7 @@ public class ClTests extends CL {
        throws ExCLInternalError, ExCLNonlinearExpression,
 	 ExCLRequiredFailure, ExCLConstraintNotFound, ExCLError
   {
-    //    try 
+    try 
     {
       ClTests clt = new ClTests();
 
@@ -790,12 +793,12 @@ public class ClTests extends CL {
         
         addDelSolvers(cns,resolves,solvers,testNum);
     } 
-    //    catch (Exception err)
-    //      {
-    //      System.err.println("Exception: " + err);
-    //      }
+    catch (Exception err)
+      {
+        System.err.println("Exception: " + err);
+      }
   }
-
+  
     
 
   static private int iRandom = 0;
