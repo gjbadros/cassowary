@@ -1,0 +1,31 @@
+define dp
+call $arg0->printOn(cerr)
+echo \n
+end
+document dp
+Executes $arg0->printOn(cerr)
+end
+
+define dpv
+call $arg0->printOnVerbose(cerr)
+echo \n
+end
+document dpv
+Executes $arg0->printOnVerbose(cerr)
+end
+
+define pt
+call printTo(cerr,$arg0)
+echo \n
+end
+document pt
+Executes printTo(cerr,$arg0)
+end
+
+define ptv
+call printToVerbose(cerr,$arg0)
+echo \n
+end
+document ptv
+Executes printToVerbose(cerr,$arg0)
+end
