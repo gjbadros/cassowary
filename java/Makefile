@@ -30,6 +30,7 @@ JAVAFILES = \
 	ClSlackVariable.java \
 	ClConstraint.java \
 	ClEditConstraint.java \
+	ClEditInfo.java \
 	ClEditOrStayConstraint.java \
 	ClLinearConstraint.java \
 	ClLinearEquation.java \
