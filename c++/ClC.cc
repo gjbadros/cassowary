@@ -149,6 +149,29 @@ CL_SimplexSolverAddStay(CL_SimplexSolver solver, CLV var, double weight)
   solver->AddStay(*var,ClsWeak(),weight);
 }
 
+/* Return a clvariable with the given name, or NULL if not found;
+   be forgiving about leading/trailing whitespace in szNameConst */
+CLV CL_ClvLookupTrim(const char *szNameConst)
+{
+  char *szName = const_cast<char *>(szNameConst);
+  // skip leading ws
+  while (szName && *szName && *szName == ' ' || *szName == '\t')
+    ++szName;
+  char *pchSpace = index(szName,' ');
+  char *pchTab = index(szName,'\t');
+  char *pch = NULL;
+  char ch = '\0';
+  if (pchSpace || pchTab) {
+    pch = pchSpace;
+    if (!pch || (pchTab && pchTab < pch))
+      pch = pchTab;
+    ch = *pch;        // save the character
+    *pch = '\0';      // and terminate the string
+  }
+  CLV answer = CL_ClvLookup(szName);
+  if (pch) *pch = ch; // restore the character
+  return answer;
+}
 
 /* Return a clvariable with the given name, or NULL if not found */
 CLV CL_ClvLookup(const char *szName)

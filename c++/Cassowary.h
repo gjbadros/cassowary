@@ -45,6 +45,8 @@ using namespace std;
 
 typedef double Number;
 
+typedef long FDNumber;
+
 #define NEWVAR(x) do { cerr << "line " << __LINE__ << ": new " << x << endl; } while (0)
 #define DELVAR(x) do { cerr << "line " << __LINE__ << ": del " << x << endl; } while (0)
 

@@ -70,6 +70,14 @@ public:
   virtual void SetName(string const &Name)
     { _name = Name; }
 
+  // Return true iff this variable is a ClFloatVariable
+  virtual bool IsFloatVariable() const
+    { return false; }
+
+  // Return true iff this variable is a ClFDVariable
+  virtual bool IsFDVariable() const
+    { return false; }
+
   // Return true if this a dummy variable (used as a marker variable
   // for required equality constraints).  Such variables aren't
   // allowed to enter the basis when pivoting.
@@ -78,15 +86,18 @@ public:
 
   // Return true if this a variable known outside the solver.  
   // (We need to give such variables a Value after solving is complete.)
-  virtual bool IsExternal() const = 0;
+  virtual bool IsExternal() const
+    { return false; }
 
   // Return true if we can Pivot on this variable.
-  virtual bool IsPivotable() const = 0;
+  virtual bool IsPivotable() const
+    { assert(false); }
 
   // Return true if this is a restricted (or slack) variable.  Such
   // variables are constrained to be non-negative and occur only
   // internally to the simplex solver.
-  virtual bool IsRestricted() const = 0;
+  virtual bool IsRestricted() const
+    {assert(false); }
 
 #ifndef CL_NO_IO
   // Prints a semi-descriptive representation to the stream, using the

@@ -23,6 +23,7 @@
 #include <string>
 #include "Cassowary.h"
 #include "ClFloatVariable.h"
+#include "ClFDVariable.h"
 
 class ClVariable;
 typedef map<const string,ClVariable> StringToVarMap;
@@ -47,11 +48,18 @@ public:
   ClVariable(long number, char *prefix, Number Value = 0.0)
       : pclv(new ClFloatVariable(number,prefix,Value)) { }
 
+  // This one builds a ClFDVariable
+  ClVariable(ClFDVariable *pcfv)
+      : pclv(pcfv) { }
+
   /// permit ClVariables to be used as pointers to pclvs
   ClAbstractVariable *operator->() { return pclv; }
 
   /// and also forward the function calls along
 
+  
+  bool IsFloatVariable() const { assert(pclv); return pclv->IsFloatVariable(); }
+  bool IsFDVariable() const { assert(pclv); return pclv->IsFDVariable(); }
   bool IsDummy() const { assert(pclv); return pclv->IsDummy(); }
   bool IsExternal() const { assert(pclv); return pclv->IsExternal(); }
   bool IsPivotable() const { assert(pclv); return pclv->IsPivotable(); }

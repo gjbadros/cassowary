@@ -96,6 +96,9 @@ void CL_TableauPrintExternalVariables(CL_Tableau tableau, FILE *out);
 /* Return a clvariable with the given name, or NULL if not found */
 CLV CL_ClvLookup(const char *szName);
 
+CLV CL_ClvLookupTrim(const char *szNameConst);
+
+
 /* Return the Value of clv */
 double CL_ClvValue(const CLV clv);
 
