@@ -104,45 +104,50 @@ int print_cl_variable(SCM scm, SCM port, scm_print_state *pstate)
   return 1;
 }
 
-SCWM_PROC (cl_variable_p, "cl-variable?", 1, 0, 0,
-           (SCM scm))
+SCWM_PROC(cl_variable_p, "cl-variable?", 1, 0, 0,
+           (SCM obj))
+  /** Return #t if OBJ is a constraint variable, #f otherwise. */
 #define FUNC_NAME s_cl_variable_p
 {
-  return SCM_BOOL_FromF(FIsClVariableScm(scm));
+  return SCM_BOOL_FromF(FIsClVariableScm(obj));
 }
 #undef FUNC_NAME
 
-SCWM_PROC (make_cl_variable, "make-cl-variable", 0, 2, 0,
-           (SCM scmName, SCM scmValue))
+SCWM_PROC(make_cl_variable, "make-cl-variable", 0, 2, 0,
+           (SCM name, SCM value))
+  /** Return a newly-created constraint variable.
+The created variable has the name NAME, and an initial
+value of VALUE.  Be sure to add a stay constraint on the
+variable if you want its value to not change. */
 #define FUNC_NAME s_make_cl_variable
 {
   char *szName = NULL;
-  double value = 0;
+  double n = 0;
   int iarg = 1;
 
-  if (!FUnsetSCM(scmName)) {
-    if (!gh_string_p(scmName)) {
-      scm_wrong_type_arg(FUNC_NAME, iarg++, scmName);
+  if (!FUnsetSCM(name)) {
+    if (!gh_string_p(name)) {
+      scm_wrong_type_arg(FUNC_NAME, iarg++, name);
     } else {
-      szName = gh_scm2newstr(scmName,NULL);
+      szName = gh_scm2newstr(name,NULL);
     }
   }
 
-  if (!FUnsetSCM(scmValue)) {
-    if (!gh_number_p(scmValue)) {
-      scm_wrong_type_arg(FUNC_NAME, iarg++, scmValue);
+  if (!FUnsetSCM(value)) {
+    if (!gh_number_p(value)) {
+      scm_wrong_type_arg(FUNC_NAME, iarg++, value);
     } else {
-      value = gh_scm2double(scmValue);
+      n = gh_scm2double(value);
     }
   }
 
   ClVariable *pclv = NULL;
 
   if (szName) {
-    pclv = new ClVariable(szName, value);
+    pclv = new ClVariable(szName, n);
     FREE(szName);
   } else {
-    pclv = new ClVariable(value);
+    pclv = new ClVariable(n);
   }
 
   return ScmMakeClVariable(pclv);
@@ -151,30 +156,35 @@ SCWM_PROC (make_cl_variable, "make-cl-variable", 0, 2, 0,
 
 
 
-SCWM_PROC (cl_value, "cl-value", 1, 0, 0,
-           (SCM scmVar))
+SCWM_PROC(cl_value, "cl-value", 1, 0, 0,
+           (SCM clv))
+  /** Return the current value of the constraint variable CLV.
+The value is a double.  Use `cl-int-value' to return an integer. */
 #define FUNC_NAME s_cl_value
 {
   int iarg = 1;
-  if (!FIsClVariableScm(scmVar)) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, scmVar);
+  if (!FIsClVariableScm(clv)) {
+    scm_wrong_type_arg(FUNC_NAME, iarg++, clv);
   }
 
-  ClVariable *pclv = PclvFromScm(scmVar);
+  ClVariable *pclv = PclvFromScm(clv);
   return gh_double2scm(pclv->value());
 }
 #undef FUNC_NAME
 
-SCWM_PROC (cl_int_value, "cl-int-value", 1, 0, 0,
-           (SCM scmVar))
+SCWM_PROC(cl_int_value, "cl-int-value", 1, 0, 0,
+           (SCM clv))
+  /** Return the value of the constraint variable CLV as an integer.
+Internally, the value is a double.  This rounds that real number to
+an integer before returning the value. */
 #define FUNC_NAME s_cl_int_value
 {
   int iarg = 1;
-  if (!FIsClVariableScm(scmVar)) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, scmVar);
+  if (!FIsClVariableScm(clv)) {
+    scm_wrong_type_arg(FUNC_NAME, iarg++, clv);
   }
 
-  ClVariable *pclv = PclvFromScm(scmVar);
+  ClVariable *pclv = PclvFromScm(clv);
   return gh_double2scm(pclv->intValue());
 }
 #undef FUNC_NAME
@@ -218,16 +228,25 @@ print_cl_weight(SCM scm, SCM port, scm_print_state *pstate)
   return 1;
 }
 
-SCWM_PROC (cl_weight_p, "cl-weight?", 1, 0, 0,
-           (SCM scm))
+SCWM_PROC(cl_weight_p, "cl-weight?", 1, 0, 0,
+           (SCM obj))
+  /** Return #t if OBJ is a constraint weight object, #f otherwise */
 #define FUNC_NAME s_cl_weight_p
 {
-  return SCM_BOOL_FromF(FIsClSymbolicWeightScm(scm));
+  return SCM_BOOL_FromF(FIsClSymbolicWeightScm(obj));
 }
 #undef FUNC_NAME
 
-SCWM_PROC (make_cl_weight, "make-cl-weight", 3, 0, 0,
+SCWM_PROC(make_cl_weight, "make-cl-weight", 3, 0, 0,
            (SCM w1, SCM w2, SCM w3))
+  /** Return a newly-created constraint symbolic weight object.
+Symbolic weights are sequences of real numbers that are sorted
+in lexicographical order (e.g., 1,0,0 > 0,999,999).  cl-weight
+objects are used when creating cl-strength objects.  By convention,
+the sequences are three elements long: W1, W2, and W3.  Longer
+cl-weight objects could be supported in the future.  See also
+`make-cl-strength-3' which is a convenience procedure for building a
+cl-strength object given the sequence of numbers directly. */
 #define FUNC_NAME s_make_cl_weight
 {
   int iarg = 1;
@@ -290,11 +309,12 @@ print_cl_strength(SCM scm, SCM port, scm_print_state *pstate)
   return 1;
 }
 
-SCWM_PROC (cl_strength_p, "cl-strength?", 1, 0, 0,
-           (SCM scm))
+SCWM_PROC(cl_strength_p, "cl-strength?", 1, 0, 0,
+           (SCM obj))
+  /** Return #t if OBJ is a constraint strength, #f otherwise. */
 #define FUNC_NAME s_cl_strength_p
 {
-  return SCM_BOOL_FromF(FIsClStrengthScm(scm));
+  return SCM_BOOL_FromF(FIsClStrengthScm(obj));
 }
 #undef FUNC_NAME
 
@@ -312,8 +332,16 @@ ScmMakeClStrength(ClStrength *pcls)
   return answer;
 }
 
-SCWM_PROC (make_cl_strength, "make-cl-strength", 2, 0, 0,
+SCWM_PROC(make_cl_strength, "make-cl-strength", 2, 0, 0,
            (SCM name, SCM weight))
+  /** Return a newly-created constraint strength object.
+The object is given the name NAME, a string, and the symbolic
+strengh WEIGHT, a cl-weight.  Constraint strength objects
+are used when specifying the strength of a constraint.  There are
+several predefined cl-strenght objects: "cls-required", "cls-strong",
+"cls-medium", and "cls-weak".  These four constraint strengths
+are often enough for a suitably expressive constraint-hierarchy,
+but new strengths can be introduced if necessary. */
 #define FUNC_NAME s_make_cl_strength
 {
   int iarg = 1;
@@ -334,8 +362,14 @@ SCWM_PROC (make_cl_strength, "make-cl-strength", 2, 0, 0,
 #undef FUNC_NAME
 
 
-SCWM_PROC (make_cl_strength_3, "make-cl-strength-3", 4, 0, 0,
+SCWM_PROC(make_cl_strength_3, "make-cl-strength-3", 4, 0, 0,
            (SCM name, SCM w1, SCM w2, SCM w3))
+  /** Return a newly-created constraint strength object.
+The object is given the name NAME, a string, and a symbolic weight of
+length three with the sequence of values: W1, W2, W3.  This is a
+convenience procedure that has the same semantics as building a
+cl-weight object with the values and using that to build a cl-strength 
+object. */
 #define FUNC_NAME s_make_cl_strength_3
 {
   int iarg = 1;
@@ -404,28 +438,33 @@ print_cl_expression(SCM scm, SCM port, scm_print_state *pstate)
   return 1;
 }
 
-SCWM_PROC (cl_expression_p, "cl-expression?", 1, 0, 0,
-           (SCM scm))
+SCWM_PROC(cl_expression_p, "cl-expression?", 1, 0, 0,
+           (SCM obj))
+  /** Return #t if OBJ is a constraint expression, #f otherwise. */
 #define FUNC_NAME s_cl_expression_p
 {
-  return SCM_BOOL_FromF(FIsClLinearExpressionScm(scm));
+  return SCM_BOOL_FromF(FIsClLinearExpressionScm(obj));
 }
 #undef FUNC_NAME
 
-SCWM_PROC (make_cl_expression, "make-cl-expression", 1, 0, 0,
-           (SCM scmClv))
+SCWM_PROC(make_cl_expression, "make-cl-expression", 1, 0, 0,
+           (SCM clv))
+  /** Return a newly-create constraint expression object.
+The expression is contains just the value CLV.  Often constraint
+variables can be used interchangeably with constraint expressions, but 
+this procedure can be used to force building a simple expression. */
 #define FUNC_NAME s_make_cl_expression
 {
   int iarg = 1;
   ClLinearExpression *pexpr = NULL;
 
-  if (!FIsClVariableScm(scmClv) && !gh_number_p(scmClv)) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, scmClv);
+  if (!FIsClVariableScm(clv) && !gh_number_p(clv)) {
+    scm_wrong_type_arg(FUNC_NAME, iarg++, clv);
   } 
-  if (FIsClVariableScm(scmClv)) {
-    pexpr = new ClLinearExpression(*PclvFromScm(scmClv));
+  if (FIsClVariableScm(clv)) {
+    pexpr = new ClLinearExpression(*PclvFromScm(clv));
   } else {
-    pexpr = new ClLinearExpression(gh_scm2double(scmClv));
+    pexpr = new ClLinearExpression(gh_scm2double(clv));
   }
 
   SCM answer;
@@ -456,19 +495,22 @@ PexprNewConvertSCM(SCM scm)
 }
 
 
-SCWM_PROC (cl_plus, "cl-plus", 2, 0, 0,
-           (SCM scmA, SCM scmB))
+SCWM_PROC(cl_plus, "cl-plus", 2, 0, 0,
+           (SCM exprA, SCM exprB))
+  /** Return the cl-expression that is the sum of EXPRA and EXPRB. 
+Both EXPRA and EXPRB may be cl-expression objects or cl-variable
+objects. */
 #define FUNC_NAME s_cl_plus
 {
   int iarg = 1;
   ClLinearExpression *pexprA = NULL;
   ClLinearExpression *pexprB = NULL;
   
-  if (NULL == (pexprA = PexprNewConvertSCM(scmA))) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, scmA);
+  if (NULL == (pexprA = PexprNewConvertSCM(exprA))) {
+    scm_wrong_type_arg(FUNC_NAME, iarg++, exprA);
   }
-  if (NULL == (pexprB = PexprNewConvertSCM(scmB))) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, scmB);
+  if (NULL == (pexprB = PexprNewConvertSCM(exprB))) {
+    scm_wrong_type_arg(FUNC_NAME, iarg++, exprB);
   }
   
   pexprA->addExpression(*pexprB);
@@ -487,19 +529,22 @@ SCWM_PROC (cl_plus, "cl-plus", 2, 0, 0,
 #undef FUNC_NAME
 
 
-SCWM_PROC (cl_minus, "cl-minus", 2, 0, 0,
-           (SCM scmA, SCM scmB))
+SCWM_PROC(cl_minus, "cl-minus", 2, 0, 0,
+           (SCM exprA, SCM exprB))
+  /** Return the cl-expression that is the difference of EXPRA and EXPRB.
+Both EXPRA and EXPRB may be cl-expression objects or cl-variable
+objects. */
 #define FUNC_NAME s_cl_minus
 {
   int iarg = 1;
   ClLinearExpression *pexprA = NULL;
   ClLinearExpression *pexprB = NULL;
 
-  if (NULL == (pexprA = PexprNewConvertSCM(scmA))) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, scmA);
+  if (NULL == (pexprA = PexprNewConvertSCM(exprA))) {
+    scm_wrong_type_arg(FUNC_NAME, iarg++, exprA);
   }
-  if (NULL == (pexprB = PexprNewConvertSCM(scmB))) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, scmB);
+  if (NULL == (pexprB = PexprNewConvertSCM(exprB))) {
+    scm_wrong_type_arg(FUNC_NAME, iarg++, exprB);
   }
   
   pexprA->addExpression(*pexprB,-1);
@@ -518,19 +563,24 @@ SCWM_PROC (cl_minus, "cl-minus", 2, 0, 0,
 #undef FUNC_NAME
 
 
-SCWM_PROC (cl_times, "cl-times", 2, 0, 0,
-           (SCM scmA, SCM scmB))
+SCWM_PROC(cl_times, "cl-times", 2, 0, 0,
+           (SCM exprA, SCM exprB))
+  /** Return the cl-expression that is the product of EXPRA and EXPRB.
+Both EXPRA and EXPRB may be cl-expression objects or cl-variable
+objects.  Note that the product may not introduce non-linear terms--
+if it does (e.g., if EXPRA and EXPRB both contain the same
+cl-variable), an error will result. */
 #define FUNC_NAME s_cl_times
 {
   int iarg = 1;
   ClLinearExpression *pexprA = NULL;
   ClLinearExpression *pexprB = NULL;
 
-  if (NULL == (pexprA = PexprNewConvertSCM(scmA))) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, scmA);
+  if (NULL == (pexprA = PexprNewConvertSCM(exprA))) {
+    scm_wrong_type_arg(FUNC_NAME, iarg++, exprA);
   }
-  if (NULL == (pexprB = PexprNewConvertSCM(scmB))) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, scmB);
+  if (NULL == (pexprB = PexprNewConvertSCM(exprB))) {
+    scm_wrong_type_arg(FUNC_NAME, iarg++, exprB);
   }
 
   try {
@@ -556,19 +606,24 @@ SCWM_PROC (cl_times, "cl-times", 2, 0, 0,
 #undef FUNC_NAME
 
 
-SCWM_PROC (cl_divide, "cl-divide", 2, 0, 0,
-           (SCM scmA, SCM scmB))
+SCWM_PROC(cl_divide, "cl-divide", 2, 0, 0,
+           (SCM exprA, SCM exprB))
+  /** Return the cl-expression that is the quotient of EXPRA and EXPRB.
+Both EXPRA and EXPRB may be cl-expression objects or cl-variable
+objects. Note that the product may not introduce non-linear terms--
+if it does (e.g., if EXPRA and EXPRB both contain the same
+cl-variable), an error will result. */
 #define FUNC_NAME s_cl_divide
 {
   int iarg = 1;
   ClLinearExpression *pexprA = NULL;
   ClLinearExpression *pexprB = NULL;
 
-  if (NULL == (pexprA = PexprNewConvertSCM(scmA))) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, scmA);
+  if (NULL == (pexprA = PexprNewConvertSCM(exprA))) {
+    scm_wrong_type_arg(FUNC_NAME, iarg++, exprA);
   }
-  if (NULL == (pexprB = PexprNewConvertSCM(scmB))) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, scmB);
+  if (NULL == (pexprB = PexprNewConvertSCM(exprB))) {
+    scm_wrong_type_arg(FUNC_NAME, iarg++, exprB);
   }
 
   try {
@@ -631,28 +686,31 @@ print_cl_equation(SCM scm, SCM port, scm_print_state *pstate)
   return 1;
 }
 
-SCWM_PROC (cl_equation_p, "cl-equation?", 1, 0, 0,
-           (SCM scm))
+SCWM_PROC(cl_equation_p, "cl-equation?", 1, 0, 0,
+           (SCM obj))
+  /** Return #t if OBJ is a constraint equation, #f otherwise.
+Constraint equations also respond #t to `cl-constraint?' queries,
+since they are also constraint objects. */
 #define FUNC_NAME s_cl_equation_p
 {
-  return SCM_BOOL_FromF(FIsClLinearEquationScm(scm));
+  return SCM_BOOL_FromF(FIsClLinearEquationScm(obj));
 }
 #undef FUNC_NAME
 
-SCWM_PROC (make_cl_equation, "make-cl-equation", 1, 2, 0,
-           (SCM expression, SCM strength, SCM weight))
+SCWM_PROC(make_cl_equation, "make-cl-equation", 1, 2, 0,
+           (SCM expr, SCM strength, SCM factor))
+  /** Return a newly-created constraint equation.
+The resulting constraint is that EXPR is equal to 0.  EXPR is a
+cl-expression or cl-variable object.  The constraint is given strength
+STRENGTH, a cl-strength, and has a weight factor of FACTOR, a real
+number.  STRENGTH defaults to cls-required, FACTOR defaults to 1. */
 #define FUNC_NAME s_make_cl_equation
 {
   int iarg = 1;
   ClLinearExpression *pexpr = NULL;
 
-  if (!FIsClLinearExpressionScm(expression) && !FIsClVariableScm(expression)) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, expression);
-  }
-  if (FIsClLinearExpressionScm(expression)) {
-    pexpr = PexprFromScm(expression);
-  } else if (FIsClVariableScm(expression)) {
-    pexpr = new ClLinearExpression(*PclvFromScm(expression));
+  if (NULL == (pexpr = PexprNewConvertSCM(expr))) {
+    scm_wrong_type_arg(FUNC_NAME, iarg++, expr);
   }
 
   ClStrength *pcls = &clsRequired();
@@ -663,10 +721,10 @@ SCWM_PROC (make_cl_equation, "make-cl-equation", 1, 2, 0,
   }
 
   double nWeight = 1.0;
-  if (gh_number_p(weight)) {
-    nWeight = gh_scm2double(weight);
-  } else if (!FUnsetSCM(weight)) {
-    scm_wrong_type_arg(FUNC_NAME,iarg++,weight);
+  if (gh_number_p(factor)) {
+    nWeight = gh_scm2double(factor);
+  } else if (!FUnsetSCM(factor)) {
+    scm_wrong_type_arg(FUNC_NAME,iarg++,factor);
   }
 
   ClLinearEquation *peq = new ClLinearEquation(*pexpr,*pcls,nWeight);
@@ -683,22 +741,34 @@ SCWM_PROC (make_cl_equation, "make-cl-equation", 1, 2, 0,
 }
 #undef FUNC_NAME
 
-SCWM_PROC (make_cl_equality, "make-cl-equality", 2, 2, 0,
-           (SCM expressionA, SCM expressionB, SCM strength, SCM weight))
+SCWM_PROC(make_cl_equality, "make-cl-equality", 2, 2, 0,
+           (SCM exprA, SCM exprB, SCM strength, SCM factor))
+  /** Return a newly-created constraint equation.
+The resulting constraint is that EXPRA is equal to EXPRB.  EXPRA and
+EXPRB are cl-expression or cl-variable objects.  The constraint is
+given strength STRENGTH, a cl-strength, and has a weight factor of
+FACTOR, a real number.  STRENGTH defaults to cls-required, FACTOR
+defaults to 1.  Consider `make-cl-constraint' as a higher-level
+interface to building arbitrary constraints.
+
+This is a convenience procedure that has the same
+semantics as `make-cl-equation' with the difference of EXPRA and
+EXPRB.  Note that if neither expression contains a variable, an
+error will be signalled. */
 #define FUNC_NAME s_make_cl_equality
 {
   int iarg = 1;
   ClLinearExpression *pexprA = NULL;
   ClLinearExpression *pexprB = NULL;
 
-  if (NULL == (pexprA = PexprNewConvertSCM(expressionA))) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, expressionA);
+  if (NULL == (pexprA = PexprNewConvertSCM(exprA))) {
+    scm_wrong_type_arg(FUNC_NAME, iarg++, exprA);
   }
-  if (NULL == (pexprB = PexprNewConvertSCM(expressionB))) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, expressionB);
+  if (NULL == (pexprB = PexprNewConvertSCM(exprB))) {
+    scm_wrong_type_arg(FUNC_NAME, iarg++, exprB);
   }
-  if (!(FIsClLinearExpressionScm(expressionA) || FIsClVariableScm(expressionA) ||
-        FIsClLinearExpressionScm(expressionB) || FIsClVariableScm(expressionB))) {
+  if (!(FIsClLinearExpressionScm(exprA) || FIsClVariableScm(exprA) ||
+        FIsClLinearExpressionScm(exprB) || FIsClVariableScm(exprB))) {
     scm_misc_error(FUNC_NAME,"One of arguments must contain a variable",SCM_EOL);
   }
   ClStrength *pcls = &clsRequired();
@@ -709,10 +779,10 @@ SCWM_PROC (make_cl_equality, "make-cl-equality", 2, 2, 0,
   }
 
   double nWeight = 1.0;
-  if (gh_number_p(weight)) {
-    nWeight = gh_scm2double(weight);
-  } else if (!FUnsetSCM(weight)) {
-    scm_wrong_type_arg(FUNC_NAME,iarg++,weight);
+  if (gh_number_p(factor)) {
+    nWeight = gh_scm2double(factor);
+  } else if (!FUnsetSCM(factor)) {
+    scm_wrong_type_arg(FUNC_NAME,iarg++,factor);
   }
 
   ClLinearEquation *peq = new ClLinearEquation(*pexprA,*pexprB,*pcls,nWeight);
@@ -769,16 +839,30 @@ print_cl_inequality(SCM scm, SCM port, scm_print_state *pstate)
   return 1;
 }
 
-SCWM_PROC (cl_inequality_p, "cl-inequality?", 1, 0, 0,
-           (SCM scm))
+SCWM_PROC(cl_inequality_p, "cl-inequality?", 1, 0, 0,
+           (SCM obj))
+  /** Return #t if OBJ is a constraint inequality object, #t otherwise.
+Constraint inequalities also respond #t to `cl-constraint?' queries,
+since they are also constraint objects. */
 #define FUNC_NAME s_cl_inequality_p
 {
-  return SCM_BOOL_FromF(FIsClLinearInequalityScm(scm));
+  return SCM_BOOL_FromF(FIsClLinearInequalityScm(obj));
 }
 #undef FUNC_NAME
 
-SCWM_PROC (make_cl_inequality, "make-cl-inequality", 3, 2, 0,
-           (SCM exprA, SCM op, SCM exprB, SCM strength, SCM weight))
+SCWM_PROC(make_cl_inequality, "make-cl-inequality", 3, 2, 0,
+           (SCM exprA, SCM op, SCM exprB, SCM strength, SCM factor))
+  /** Return a newly-constructed constraint inequality object.
+
+EXPRA and EXPRB are cl-expression or cl-variable objects.  If OP is
+`<=' then the constraint is that EXPRA <= EXPRB; if OP is `>=' then
+the constraint is that EXPRA >= EXPRB.  Note that the arithmetic
+comparison procedure objects are just used for their identity. If OP
+is any other object, an error is signalled. The constraint is given
+strength STRENGTH, a cl-strength, and has a weight factor of FACTOR, a
+real number.  STRENGTH defaults to cls-required, FACTOR defaults to 1.
+Consider `make-cl-constraint' as a higher-level interface to building
+arbitrary constraints. */
 #define FUNC_NAME s_make_cl_inequality
 {
   int iarg = 1;
@@ -805,10 +889,10 @@ SCWM_PROC (make_cl_inequality, "make-cl-inequality", 3, 2, 0,
   }
 
   double nWeight = 1.0;
-  if (gh_number_p(weight)) {
-    nWeight = gh_scm2double(weight);
-  } else if (!FUnsetSCM(weight)) {
-    scm_wrong_type_arg(FUNC_NAME,iarg++,weight);
+  if (gh_number_p(factor)) {
+    nWeight = gh_scm2double(factor);
+  } else if (!FUnsetSCM(factor)) {
+    scm_wrong_type_arg(FUNC_NAME,iarg++,factor);
   }
 
   ClLinearInequality *pineq;
@@ -847,17 +931,32 @@ inline bool FIsClConstraintScm(SCM scm) {
 inline ClConstraint *PcnFromScm(SCM scm)
 { return (ClConstraint *)(SCM_CDR(scm)); }
 
-SCWM_PROC (cl_constraint_p, "cl-constraint?", 1, 0, 0,
-           (SCM scm))
+SCWM_PROC(cl_constraint_p, "cl-constraint?", 1, 0, 0,
+           (SCM obj))
+  /** Return #t if OBJ is some kind of constraint object, #f otherwise.
+There are at least two kinds of objects for which this procedure will
+return #t: "cl-inequality" and "cl-equation" objects.  Since it is
+often useful to treat either as a general constraint, this procedure
+exists to simplify that test. */
 #define FUNC_NAME s_cl_constraint_p
 {
-  return SCM_BOOL_FromF(FIsClConstraintScm(scm));
+  return SCM_BOOL_FromF(FIsClConstraintScm(obj));
 }
 #undef FUNC_NAME
 
 
-SCWM_PROC (make_cl_constraint, "make-cl-constraint", 3, 2, 0,
-           (SCM exprA, SCM op, SCM exprB, SCM strength, SCM weight))
+SCWM_PROC(make_cl_constraint, "make-cl-constraint", 3, 2, 0,
+           (SCM exprA, SCM op, SCM exprB, SCM strength, SCM factor))
+  /** Return a newly-constructed constraint object.
+
+EXPRA and EXPRB are cl-expression or cl-variable objects.  OP is one
+of `=', `<=', or `>=', anything else will signal an error.  Note that
+the arithmetic comparison procedures are just used for their identity.
+The returned object is a cl-equation constraint object if OP is `=';
+it is a cl-inequality constraint object if OP is `<=' or `>='.  The
+created constraint is given strength STRENGTH, a cl-strength, and has
+a weight factor of FACTOR, a real number.  STRENGTH defaults to
+cls-required, FACTOR defaults to 1.  */
 #define FUNC_NAME s_make_cl_constraint
 {
   int iarg = 1;
@@ -884,10 +983,10 @@ SCWM_PROC (make_cl_constraint, "make-cl-constraint", 3, 2, 0,
   }
 
   double nWeight = 1.0;
-  if (gh_number_p(weight)) {
-    nWeight = gh_scm2double(weight);
-  } else if (!FUnsetSCM(weight)) {
-    scm_wrong_type_arg(FUNC_NAME,iarg++,weight);
+  if (gh_number_p(factor)) {
+    nWeight = gh_scm2double(factor);
+  } else if (!FUnsetSCM(factor)) {
+    scm_wrong_type_arg(FUNC_NAME,iarg++,factor);
   }
 
   ClConstraint *pcn = NULL;
@@ -957,8 +1056,13 @@ print_cl_solver(SCM scm, SCM port, scm_print_state *pstate)
 }
 
 
-SCWM_PROC (cl_solver_debug_print, "cl-solver-debug-print", 1, 1, 0,
+SCWM_PROC(cl_solver_debug_print, "cl-solver-debug-print", 1, 1, 0,
            (SCM solver, SCM port))
+  /** Output a complete dump of SOLVER onto output port PORT.
+The output contains the contents of the tableau contained in SOLVER,
+as well as the other internal state.  It can be useful for debugging,
+as the printable form of constraint solver objects contains only a
+brief summary of the contents of the solver. */
 #define FUNC_NAME s_cl_solver_debug_print
 {
   int iarg = 1;
@@ -979,16 +1083,21 @@ SCWM_PROC (cl_solver_debug_print, "cl-solver-debug-print", 1, 1, 0,
 #undef FUNC_NAME
 
 
-SCWM_PROC (cl_solver_p, "cl-solver?", 1, 0, 0,
-           (SCM scm))
+SCWM_PROC(cl_solver_p, "cl-solver?", 1, 0, 0,
+           (SCM obj))
+  /** Return #t if OBJ is a constraint solver object, #f otherwise. */
 #define FUNC_NAME s_cl_solver_p
 {
-  return SCM_BOOL_FromF(FIsClSimplexSolverScm(scm));
+  return SCM_BOOL_FromF(FIsClSimplexSolverScm(obj));
 }
 #undef FUNC_NAME
 
-SCWM_PROC (make_cl_solver, "make-cl-solver", 0, 0, 0,
+SCWM_PROC(make_cl_solver, "make-cl-solver", 0, 0, 0,
            ())
+  /** Return a newly-created constraint solver object.
+Often, an application will need only one of these objects,  but
+multiple independent solvers may exist as long as they do not
+share constraint variable objects. */
 #define FUNC_NAME s_make_cl_solver
 {
   ClSimplexSolver *psolver = new ClSimplexSolver();
@@ -1005,8 +1114,18 @@ SCWM_PROC (make_cl_solver, "make-cl-solver", 0, 0, 0,
 }
 #undef FUNC_NAME
 
-SCWM_PROC (cl_add_constraint, "cl-add-constraint", 1, 0, 1,
+SCWM_PROC(cl_add_constraint, "cl-add-constraint", 1, 0, 1,
            (SCM solver, SCM args))
+  /** Add the constraints, ARGS, to the solver SOLVER.
+Each constraint given after the SOLVER argument is added to that
+solver in turn.  Once one cannot be added (e.g., due to its addition
+causing an insoluble system), this procedure will return #f without
+trying to add the remaining constraints.  If all constraints are added 
+successfully, this procedure will return #t.  (If none of the
+constraints have strength "cls-required", then the system will remain
+soluble.)  If an error is signalled because one object in the list ARGS
+is not a constraint object, the preceding arguments will have already
+been added. */
 #define FUNC_NAME s_cl_add_constraint
 {
   int iarg = 1;
@@ -1035,9 +1154,16 @@ SCWM_PROC (cl_add_constraint, "cl-add-constraint", 1, 0, 1,
 }
 #undef FUNC_NAME
 
-// FIXGJB: add strength argument
-SCWM_PROC (cl_remove_constraint, "cl-remove-constraint", 1, 0, 1,
+SCWM_PROC(cl_remove_constraint, "cl-remove-constraint", 1, 0, 1,
            (SCM solver, SCM args))
+  /** Remove the constraints, ARGS, from the solver SOLVER.
+Each constraint given after the SOLVER argument is removed from that
+solver in turn.  Once one cannot be removed (e.g., due to its never
+having been added to SOLVER), this procedure will return #f without
+trying to remove the remaining constraints.  If all constraints are
+removed successfully, this procedure will return #t.  If an error is
+signalled because one object in the list ARGS is not a constraint
+object, the preceding arguments will have already been removed. */
 #define FUNC_NAME s_cl_remove_constraint
 {
   int iarg = 1;
@@ -1068,8 +1194,17 @@ SCWM_PROC (cl_remove_constraint, "cl-remove-constraint", 1, 0, 1,
 
 
 // FIXGJB: add strength argument
-SCWM_PROC (cl_add_editvar, "cl-add-editvar", 1, 0, 1,
+SCWM_PROC(cl_add_editvar, "cl-add-editvar", 1, 0, 1,
            (SCM solver, SCM args))
+  /** Add edit constraints on variables in ARGS to SOLVER.
+ARGS are cl-variable objects that you wish to permit to change under
+the solver's control.  An edit-constraint for each cl-variable object
+is added in turn.  If any of ARGS is not a cl-variable, an error is
+thrown (after the preceding objects have been handled).  After
+selecting the edit variables with this procedure, you must call
+`cl-begin-edit' before using `cl-suggest-value'.  To remove the edit
+variables, use `cl-end-edit' when done changing the variables'
+values. */
 #define FUNC_NAME s_cl_add_editvar
 {
   int iarg = 1;
@@ -1089,7 +1224,7 @@ SCWM_PROC (cl_add_editvar, "cl-add-editvar", 1, 0, 1,
       psolver->addEditVar(*pclv);
     }
   } catch (const ExCLEditMisuse &e) {
-    scm_misc_error(FUNC_NAME, e.description, SCM_EOL);
+    scm_misc_error(FUNC_NAME, e.description(), SCM_EOL);
   }
 
   return SCM_UNDEFINED;
@@ -1097,8 +1232,18 @@ SCWM_PROC (cl_add_editvar, "cl-add-editvar", 1, 0, 1,
 #undef FUNC_NAME
 
 
-SCWM_PROC (cl_add_stay, "cl-add-stay", 1, 0, 1,
+SCWM_PROC(cl_add_stay, "cl-add-stay", 1, 0, 1,
            (SCM solver, SCM args))
+  /** Add stay constraints on variables in ARGS to SOLVER.
+
+ARGS are cl-variable objects that you wish to remain (i.e., stay) at
+their current values unless another constraint forces them to change.
+In normal uses of the solver, all variables should have stay
+constraints added on them before they are used in a constraint added
+to the solver.  Future versions of the solver may add the stay
+constraint implicitly upon a variable's first use.  Until then,
+though, be sure to add stay constraints on all the cl-variable objects
+you intend to use with the given SOLVER. */
 #define FUNC_NAME s_cl_add_stay
 {
   int iarg = 1;
@@ -1118,7 +1263,7 @@ SCWM_PROC (cl_add_stay, "cl-add-stay", 1, 0, 1,
       psolver->addStay(*pclv);
     }
   } catch (const ExCLError &e) {
-    scm_misc_error(FUNC_NAME, e.description, SCM_EOL);
+    scm_misc_error(FUNC_NAME, e.description(), SCM_EOL);
   }
 
   return SCM_UNDEFINED;
@@ -1127,8 +1272,13 @@ SCWM_PROC (cl_add_stay, "cl-add-stay", 1, 0, 1,
 
 
 
-SCWM_PROC (cl_begin_edit, "cl-begin-edit", 1, 0, 0,
+SCWM_PROC(cl_begin_edit, "cl-begin-edit", 1, 0, 0,
            (SCM solver))
+  /** Begin changing values of the edit variables of SOLVER.
+This procedure must be invoked after adding edit variables to SOLVER
+(via `cl-add-editvar') and before using `cl-suggest-values' to change
+those edit variables' values.  Every `cl-begin-edit' invocation should 
+have a matching `cl-end-edit' call. */
 #define FUNC_NAME s_cl_begin_edit
 {
   int iarg = 1;
@@ -1143,7 +1293,7 @@ SCWM_PROC (cl_begin_edit, "cl-begin-edit", 1, 0, 0,
 }
 #undef FUNC_NAME
 
-SCWM_PROC (cl_end_edit, "cl-end-edit", 1, 0, 0,
+SCWM_PROC(cl_end_edit, "cl-end-edit", 1, 0, 0,
            (SCM solver))
 #define FUNC_NAME s_cl_end_edit
 {
@@ -1160,40 +1310,64 @@ SCWM_PROC (cl_end_edit, "cl-end-edit", 1, 0, 0,
 #undef FUNC_NAME
 
 
-SCWM_PROC (cl_suggest_value, "cl-suggest-value", 3, 0, 0,
-           (SCM solver, SCM variable, SCM value))
-     /**
-      */
+SCWM_PROC(cl_suggest_value, "cl-suggest-value", 3, 0, 0,
+           (SCM solver, SCM var, SCM value))
+  /** Try to change VAR's value to VALUE within SOLVER.
+
+You may only call this procedure after using `cl-add-editvar' to add
+VAR as an edit variable for SOLVER, and after invoking `cl-begin-edit'
+on SOLVER.  After you call `cl-begin-edit', you may invoke this
+procedure on all the edit variables.  The changing of the values of
+those variables (and the affect on other variables within SOLVER) will
+not happen until after invoking `cl-resolve' on SOLVER.  Then the
+possibly changed values can be retrieved via `cl-value' or
+`cl-int-value'.  Note that the constraints that have been added to
+SOLVER may not permit changing VAR to VALUE. */
 #define FUNC_NAME s_cl_suggest_value
 {
   int iarg = 1;
   if (!FIsClSimplexSolverScm(solver)) {
     scm_wrong_type_arg(FUNC_NAME,iarg++,solver);
   }
-  if (!FIsClVariableScm(variable)) {
-    scm_wrong_type_arg(FUNC_NAME,iarg++,variable);
+  if (!FIsClVariableScm(var)) {
+    scm_wrong_type_arg(FUNC_NAME,iarg++,var);
   }
   if (!gh_number_p(value)) {
     scm_wrong_type_arg(FUNC_NAME,iarg++,value);
   }
   ClSimplexSolver *psolver = PsolverFromScm(solver);
-  ClVariable *pclv = PclvFromScm(variable);
+  ClVariable *pclv = PclvFromScm(var);
   double n = gh_scm2double(value);
 
   try {
     psolver->suggestValue(*pclv,n);
   } catch (const ExCLError &e) {
-    scm_misc_error(FUNC_NAME, e.description, SCM_EOL);
+    scm_misc_error(FUNC_NAME, e.description(), SCM_EOL);
   }
   return SCM_UNDEFINED;
 }
 #undef FUNC_NAME
 
 
-SCWM_PROC (cl_resolve, "cl-resolve", 1, 0, 1,
+SCWM_PROC(cl_resolve, "cl-resolve", 1, 0, 1,
            (SCM solver, SCM args))
-     /**
-      */
+     /** Ask SOLVER to re-solve its system using the suggested values.
+
+You may only call this procedure between invocations of
+`cl-begin-edit' and `cl-end-edit'.  After `cl-begin-edit', you may use
+`cl-suggest-value' on SOLVER to tell it the desired new values for the
+various edit variables you have added using `cl-add-editvar', and then
+call this procedure with only the first argument to have SOLVER update
+the values of all the variables in the system.
+
+Alternatively, after adding edit-variables in a particular order, you
+may call `cl-begin-edit' then this procedure with ARGS set as
+suggested values for the edit-variables.  The order of the values in
+the `cl-resolve' invocation must match the order of the variables in
+the `cl-add-editvar' invocation(s).
+
+In either case, you must invoke `cl-end-edit' to remove the edit
+variables from the solver after you are done changing their values. */
 #define FUNC_NAME s_cl_resolve
 {
   int iarg = 1;
@@ -1244,9 +1418,10 @@ MAKE_SMOBFUNS(cl_equation);
 MAKE_SMOBFUNS(cl_inequality);
 MAKE_SMOBFUNS(cl_solver);
 
-SCM scm_cls_weak;
-SCM scm_cls_strong;
-SCM scm_cls_required;
+static SCM scm_cls_weak;
+static SCM scm_cls_medium;
+static SCM scm_cls_strong;
+static SCM scm_cls_required;
 
 void
 init_cassowary_scm()
@@ -1262,6 +1437,8 @@ init_cassowary_scm()
   SCM_DEFER_INTS;
   scm_cls_weak = scm_sysintern("cls-weak",ScmMakeClStrength(&clsWeak()));
   scm_protect_object(scm_cls_weak);
+  scm_cls_strong = scm_sysintern("cls-medium",ScmMakeClStrength(&clsMedium()));
+  scm_protect_object(scm_cls_medium);
   scm_cls_strong = scm_sysintern("cls-strong",ScmMakeClStrength(&clsStrong()));
   scm_protect_object(scm_cls_strong);
   scm_cls_required = scm_sysintern("cls-required",ScmMakeClStrength(&clsRequired()));
