@@ -62,12 +62,40 @@ ClSimplexSolver::addConstraint(const ClConstraint &cn)
   // artificial variable.  After adding expr re-optimize.
   if (!tryAddingDirectly(*pexpr))
     { // could not add directly
-    addWithArtificialVariable(*pexpr);
+    if (!addWithArtificialVariable(*pexpr))
+      {
+      throw ExCLRequiredFailure();
+      }
     }
   optimize(my_objective);
   setExternalVariables();
   return *this;
 }
+
+ClSimplexSolver &
+ClSimplexSolver::addConstraintNoException(const ClConstraint &cn)
+{
+#ifndef CL_NO_TRACE
+  Tracer TRACER(__FUNCTION__);
+  cerr << "(" << cn << ")" << endl;
+#endif
+  ClLinearExpression *pexpr = newExpression(cn);
+
+  // If possible add expr directly to the appropriate tableau by
+  // choosing a subject for expr (a variable to become basic) from
+  // among the current variables in expr.  If this doesn't work use an
+  // artificial variable.  After adding expr re-optimize.
+  if (!tryAddingDirectly(*pexpr))
+    { // could not add directly
+    if (!addWithArtificialVariable(*pexpr))
+      cerr << __FUNCTION__ << ": RequiredException would be thrown" << endl;
+      return *this;
+    }
+  optimize(my_objective);
+  setExternalVariables();
+  return *this;
+}
+
 
 // Add weak stays to the x and y parts of each point. These have
 // increasing weights so that the solver will try to satisfy the x
@@ -397,7 +425,7 @@ ClSimplexSolver::resolve(const vector<Number> &newEditConstants)
 // artificial variable.  To do this, create an artificial variable
 // av and add av=expr to the inequality tableau, then make av be 0.
 // (Raise an exception if we can't attain av=0.)
-void 
+bool
 ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
 {
 #ifndef CL_NO_TRACE
@@ -446,7 +474,7 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
     {
     delete removeRow(*pav);
     delete pav;
-    throw ExCLRequiredFailure();
+    return false;
     }
 
   // see if av is a basic variable
@@ -460,7 +488,7 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
       {
       delete removeRow(*pav);
       delete pav;
-      return;
+      return true;
       }
     const ClAbstractVariable *pentryVar = pe->anyVariable();
     pivot(*pentryVar, *pav);
@@ -471,6 +499,7 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
   delete pav;
   // remove the temporary objective function
   delete removeRow(*paz);
+  return true;
 }
 
 // We are trying to add the constraint expr=0 to the appropriate
@@ -623,7 +652,11 @@ ClSimplexSolver::chooseSubject(ClLinearExpression &expr)
   // the subject negative."
   if (!clApprox(expr.constant(),0.0))
     {
+#ifdef NO_REQUIRED_EXCEPTIONS
+    return NULL;
+#else
     throw ExCLRequiredFailure();
+#endif
     }
   if (coeff > 0.0)
     {
@@ -925,7 +958,7 @@ ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
     // if all coefficients were positive (or if the objective
     // function has no pivotable variables)
     // we are at an optimum
-    if (objectiveCoeff == 0)
+    if (objectiveCoeff >= -my_epsilon)
       return;
 #ifndef CL_NO_TRACE
     cerr << "*pentryVar == " << *pentryVar << ", "
