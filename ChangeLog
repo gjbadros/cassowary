@@ -1,3 +1,23 @@
+Tue Feb 16 10:51:01 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/*: Added CL_FIND_LEAK guard and ctr/ctr counters for
+	tracking various variable kinds 
+
+Mon Feb 15 18:38:06 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClAbstractVariable.{cc,h}, ClSlackVariable.{cc,h},
+	ClDummyVariable.{cc,h}: Add counters to ctr/dtr for leakage detection.
+
+	* c++/ClSimplexSolver.{cc,h}: Replace ClConstraintAndIndex with
+	ClEditInfo, and remove ugliness of parallel vectors for edit
+	constraints. Drop _editPlusErrorVars, _editMinusErrorVars,
+	_prevEditConstants, and bundle them all up in the value end of the 
+	map attached to _editVarMap.  This fixes a bug reported in the
+	Java version by Michael Kaufmann long ago, and generally cleans
+	code up a bit.  The resolve(vector<Number>) function is
+	deprecated, and now implemented in terms of the indices stored in
+	the new ClEditInfo class.
+
 1999-02-15  Greg J Badros  <gjb@cs.washington.edu>
 
 	* c++/ClVariable.{cc,h}, c++/ClAbstractVariable.h: Added
