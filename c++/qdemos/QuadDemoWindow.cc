@@ -54,6 +54,19 @@ QuadDemoWindow::QuadDemoWindow( QWidget *parent, const char *name )
     ;
 
   setBackgroundMode(NoBackground);
+
+  s
+    .addConstraint(ClLinearInequality(db1.Xvar() + 10, cnLEQ, db3.Xvar()))
+    .addConstraint(ClLinearInequality(db1.Xvar() + 10, cnLEQ, db4.Xvar()))
+    .addConstraint(ClLinearInequality(db2.Xvar() + 10, cnLEQ, db3.Xvar()))
+    .addConstraint(ClLinearInequality(db2.Xvar() + 10, cnLEQ, db4.Xvar()))
+
+    .addConstraint(ClLinearInequality(db1.Yvar() + 10, cnLEQ, db2.Yvar()))
+    .addConstraint(ClLinearInequality(db1.Yvar() + 10, cnLEQ, db3.Yvar()))
+    .addConstraint(ClLinearInequality(db4.Yvar() + 10, cnLEQ, db2.Yvar()))
+    .addConstraint(ClLinearInequality(db4.Yvar() + 10, cnLEQ, db3.Yvar()))
+    ;
+    
 }
 
 QuadDemoWindow::~QuadDemoWindow()
