@@ -71,7 +71,9 @@ leakTest2()
     {
     ClVariable *pclv = new ClVariable();
     }
+#ifdef USE_GC
   GC_gcollect();
+#endif
   return true;
 }
 
