@@ -3,8 +3,8 @@
 // auto_ptr from More Effective C++ an earlier appendix (works w/ egcs)
 
 
-#ifndef AUTO_PTR_H
-#define AUTO_PTR_H
+#ifndef CL_AUTO_PTR_H
+#define CL_AUTO_PTR_H
 
 #ifdef _MSC_VER
 #include <memory>
@@ -14,6 +14,7 @@ void ReinitializeAutoPtr(auto_ptr<T> &apref, T *pt)
   auto_ptr<T> ap(pt);
   apref = ap;
 }
+#define cl_auto_ptr auto_ptr
 #else
 // FIXGJB: This implementation for egcs is buggy -- be careful
 // and replace ASAP

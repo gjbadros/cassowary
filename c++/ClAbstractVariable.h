@@ -46,7 +46,7 @@ public:
   ClAbstractVariable(long varnumber, char *prefix) :
     _pv(0)
     {
-    auto_ptr<char> pch (new char[16+strlen(prefix)]);
+    cl_auto_ptr<char> pch (new char[16+strlen(prefix)]);
     iVariableNumber++;
 #ifdef CL_FIND_LEAK
     ++cAbstractVariables;
