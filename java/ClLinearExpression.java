@@ -57,7 +57,7 @@ class ClLinearExpression extends CL
 
   public ClLinearExpression(ClDouble constant, Hashtable terms)
     {
-      my_constant = new ClDouble(constant.doubleValue());
+      my_constant = (ClDouble) constant.clone();
       my_terms = (Hashtable) terms.clone();
     }
 
@@ -99,34 +99,39 @@ class ClLinearExpression extends CL
       return times(expr.my_constant.doubleValue());
     }
 
-  public final ClLinearExpression times(ClVariable var) 
-       throws ExCLNonlinearExpression
-  { return times(new ClLinearExpression(var)); }
-
   public final ClLinearExpression plus(ClLinearExpression expr)
     {
-      ClLinearExpression result =  this;
+      ClLinearExpression result = (ClLinearExpression) clone();
       result.addExpression(expr,1.0);
       return result;
     }
 
   public final ClLinearExpression plus(ClVariable var) 
-       throws ExCLNonlinearExpression
-  { return plus(new ClLinearExpression(var)); }
+    throws ExCLNonlinearExpression
+    { 
+      ClLinearExpression result = (ClLinearExpression) clone();
+      result.addVariable(var,1.0); 
+      return result;
+    }
 
   public final ClLinearExpression minus(ClLinearExpression expr)
     {
-      ClLinearExpression result =  this;
+      ClLinearExpression result = (ClLinearExpression) clone();
       result.addExpression(expr,-1.0);
       return result;
     }
 
   public final ClLinearExpression minus(ClVariable var) 
        throws ExCLNonlinearExpression
-  { return minus(new ClLinearExpression(var)); }
+    { 
+      ClLinearExpression result = (ClLinearExpression) clone();
+      result.addVariable(var,-1.0);
+      return result;
+    }
 
 
-  public final ClLinearExpression divide(double x) throws ExCLNonlinearExpression
+  public final ClLinearExpression divide(double x)
+    throws ExCLNonlinearExpression
     {
       if (CL.approx(x,0.0))
 	{
@@ -135,7 +140,8 @@ class ClLinearExpression extends CL
       return times(1.0/x);
     }
 
-  public final ClLinearExpression divide(ClLinearExpression expr) throws ExCLNonlinearExpression
+  public final ClLinearExpression divide(ClLinearExpression expr)
+    throws ExCLNonlinearExpression
     {
       if (!expr.isConstant())
 	{
@@ -144,7 +150,8 @@ class ClLinearExpression extends CL
       return divide(expr.my_constant.doubleValue());
     }
 
-  public final ClLinearExpression divFrom(ClLinearExpression expr) throws ExCLNonlinearExpression
+  public final ClLinearExpression divFrom(ClLinearExpression expr) 
+    throws ExCLNonlinearExpression
     {
       if (!isConstant() || CL.approx(my_constant.doubleValue(),0.0))
 	{
@@ -382,5 +389,4 @@ class ClLinearExpression extends CL
 
   private ClDouble my_constant;
   private Hashtable my_terms; // from ClVariable to ClDouble
-  
 }
