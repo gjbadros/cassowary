@@ -26,7 +26,7 @@ constrained variables to have values that satisfy the constraints.
 
 
 %changelog
-* Sat Sept 4 1999 Greg J. Badros <gjb@cs.washington.edu)
+* Sat Sep 4 1999 Greg J. Badros <gjb@cs.washington.edu)
 - Use -fpermissive if it is available, fix --enable-warnings
 
 * Wed Aug 25 1999 Greg J. Badros <gjb@cs.washington.edu>
