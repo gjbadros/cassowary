@@ -23,7 +23,7 @@ public class testClLinearExpression {
     System.out.println(cle.toString());
     ClVariable b = new ClVariable("b");
     cle.addVariable(b,2);
-    System.out.println(cle.toString());
+    System.out.println(cle.toString()); //ASKCSK
     System.out.println(cle.times(2).toString());
     System.out.println((cle.times(2).addVariable(new ClVariable("c"),3)).times(-1).toString());
     cle = ClLinearExpression.Plus(cle,new ClLinearExpression(8));
