@@ -10,6 +10,7 @@ ClTests-hash
 ClTests-setExtOpt
 ClTests-trace
 Makefile.dependencies
+QocaBench
 creader-lex.cc
 creader.cc
 creader.cc.h
