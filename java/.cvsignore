@@ -1,6 +1,7 @@
 ClAbstractVariable.class
 ClConstraint.class
 ClDummyVariable.class
+ClLinearExpression.class
 ClObjectiveVariable.class
 ClPoint.class
 ClSlackVariable.class
