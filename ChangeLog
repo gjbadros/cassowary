@@ -1,3 +1,17 @@
+Mon Aug 30 10:07:40 1999    <gjb@cs.washington.edu>
+
+	* c++/ClAbstractVariable.h: Use cl_auto_ptr, not auto_ptr.
+
+Mon Aug 30 10:06:50 1999    <gjb@cs.washington.edu>
+
+	* c++/cl_auto_ptr.h: Change the conditional inclusion sandwich to
+	CL_AUTO_PTR_H.  Added "#define cl_auto_ptr auto_ptr" for MSVC.
+
+Thu Aug 26 22:42:50 1999    <gjb@cs.washington.edu>
+
+	* cassowary.spec.in: Require guile 1.3.2, to be safe.  Require GTL 
+	>= 0.3.1, not gtl >= 0.3.1 (note capitalization)
+
 Thu Aug 26 14:12:42 1999    <gjb@cs.washington.edu>
 
 	* c++/ClFDSolver.h, c++/ClCTest.c, c++/ClC.h, c++/ClC.cc,
