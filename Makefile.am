@@ -5,11 +5,12 @@ SUBDIRS = \
  c++ \
  guile \
  docs \
- java
+ java \
+ smalltalk
 
 bin_SCRIPTS = cassowary-config
 
-EXTRA_DIST = ANNOUNCE AUTHORS COPYING IMPORTANT INSTALL LICENSE NEWS README THANKS \
+EXTRA_DIST = ANNOUNCE AUTHORS COPYING IMPORTANT INSTALL LICENSE COPYING.GPL NEWS README THANKS \
 		cassowary.spec cassowary-nofd.spec2
 
 distdir_nofd = cassowary-nofd-@VERSION@

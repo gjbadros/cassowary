@@ -1,3 +1,23 @@
+Sun Oct 24 13:17:14 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* configure.in: Updated version to 0.53, generate
+	smalltalk/Makefile from Makefile.am.
+
+	* NEWS: Updated for 0.53 release.
+
+	* Makefile.am: Added smalltalk directory to SUBDIRS.
+
+Sat Oct 23 14:34:27 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* COPYING.GPL: Added
+
+	* LICENSE: Added Scwm exception
+	
+
+Sat Oct 23 14:33:48 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile.am: Make cassowary/ directory symlink as needed.
+
 Sun Oct  3 16:50:43 1999  Greg J. Badros  <gjb@cs.washington.edu>
 
 	* c++/ClSimplexSolver.cc: Use clvNil some places instead of NULL.

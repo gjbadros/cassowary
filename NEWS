@@ -11,6 +11,10 @@ Seattle, WA 98195-2350
 
 with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
 
+24-October-1999: Version 0.53 released.
+* Bug fixes
+* License exception for linking with Scwm.
+
 25-September-1999: Version 0.52 released.
 * Bug fix for nested edits where a later edit includes an already-being-edited variable
 

@@ -9,7 +9,7 @@ dnl ## Initialize autoconf ##
 AC_INIT(c++/ClSimplexSolver.cc)
 AC_PREREQ(2.4)
 
-CASSOWARY_VERSION=0.52post
+CASSOWARY_VERSION=0.53
 AC_SUBST(CASSOWARY_VERSION)
 
 dnl ## Initialize automake ##
@@ -448,6 +448,7 @@ AC_OUTPUT([
 	c++/Makefile \
 	guile/Makefile \
 	docs/Makefile \
+	smalltalk/Makefile \
 	cassowary.spec \
 	cassowary-nofd.spec2 \
 	GTL.spec \
