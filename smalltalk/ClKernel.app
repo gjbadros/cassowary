@@ -212,6 +212,7 @@ printOn: aStream
 		aStream <WriteStream on <String>>
 	"
 
+# FIXGJB: what is nextPutAll: message?  Comma symbol's use?
 	self name isNil
 		ifTrue: [aStream nextPutAll: 'CV#' , self basicHash printString]
 		ifFalse: [aStream nextPutAll: self name].
@@ -343,6 +344,8 @@ isRestricted
 	^true
 ! !
 
+
+#### FIXGJB: What is this?
 !ClEditConstraint class publicMethods !
 
 variable: aVariable value: aValue strength: aStrength
@@ -2028,6 +2031,8 @@ symbolicWeight: w
 	symbolicWeight := w
 ! !
 
+
+#FIXGJB: what is basicNew: message?
 !ClSymbolicWeight class publicMethods !
 
 new
