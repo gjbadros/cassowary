@@ -62,6 +62,10 @@ ClTableau::addRow(const ClAbstractVariable &var, const ClLinearExpression &expr)
     {
     const ClAbstractVariable *pv = (*it).first;
     _columns[pv].insert(&var);
+    if (pv->isExternal())
+      {
+      _externalParametricVars.insert(static_cast<const ClVariable *>(pv));
+      }
     }
   if (var.isExternal())
     {
