@@ -12,7 +12,7 @@ AC_PREREQ(2.4)
 dnl ## Initialize automake ##
 AM_INIT_AUTOMAKE(cassowary, 0.4)
 AM_MAINTAINER_MODE
-AM_CONFIG_HEADER(config.h)
+AM_CONFIG_HEADER(c++/cassowary/config.h)
 
 dnl ## Checks for programs ##
 AC_PROG_CC
@@ -20,6 +20,7 @@ AC_PROG_CXX
 AC_PROG_RANLIB
 AM_PROG_LEX
 AC_PROG_YACC
+AM_PROG_LIBTOOL
 
 dnl ## Package options ##
 ## ACE == AC-Extended -- this was SCWM_ARG_PATH
@@ -100,18 +101,23 @@ AC_ARG_ENABLE(javac-flags,
 AC_SUBST(JAVACFLAGS)
 
 
+guile_prefix=${prefix}
 
 ACE_ARG_PATH(guile-prefix,
 [  --with-guile-prefix=DIR    Expect guile to be installed in DIR [optional]],
 [
 	AC_MSG_CHECKING(where to expect to find guile)
 	guile_prefix="${withval}"
-	GUILE_BIN_DIR="${guile_prefix}/bin"
-	GUILE_INCLUDES="-I${guile_prefix}/include"
-	guile_lib_path="${guile_prefix}/lib"
 	
 	AC_MSG_RESULT("${guile_prefix}")
 ])
+
+GUILE_BIN_DIR="${guile_prefix}/bin"
+GUILE_INCLUDES="-I${guile_prefix}/include"
+GUILE_LIB_DIR="${guile_prefix}/lib"
+
+
+guile_exec_prefix=${exec_prefix}
 
 ACE_ARG_PATH(guile-exec-prefix,
 [  --with-guile-exec-prefix=DIR 
@@ -120,10 +126,10 @@ ACE_ARG_PATH(guile-exec-prefix,
 [
 	AC_MSG_CHECKING(where to expect to find guile binaries)
 	guile_exec_prefix="${withval}"
-	GUILE_BIN_DIR="${guile_exec_prefix}"
 	
 	AC_MSG_RESULT("${guile_exec_prefix}")
 ])
+GUILE_BIN_DIR="${guile_exec_prefix}"
 
 if test -z "${GUILE_BIN_DIR}"; then
 	AC_PATH_PROGS(GUILE_CONFIG, guile-config build-guile, no)
@@ -150,9 +156,15 @@ else
 	AC_PATH_PROG(GUILE, guile, no, ${GUILE_BIN_DIR})
 fi
 
+AC_MSG_CHECKING(what the guile pkgdatadir is)
+GUILE_PKGDATA_DIR=`guile-config info pkgdatadir`
+AC_MSG_RESULT($GUILE_PKGDATA_DIR)
+
 AC_SUBST(GUILE)
 AC_SUBST(GUILE_INCLUDES)
 AC_SUBST(GUILE_BIN_DIR)
+AC_SUBST(GUILE_LIB_DIR)
+AC_SUBST(GUILE_PKGDATA_DIR)
 
 
 
