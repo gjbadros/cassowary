@@ -150,10 +150,13 @@ ClSimplexSolver::addPointStay(const ClPoint &clp, double weight)
 ClSimplexSolver &
 ClSimplexSolver::removeAllEditVars()
 {
-  ClVarToConstraintAndIndexMap::const_iterator it = my_editVarMap.begin();
-  for (; it != my_editVarMap.end(); ++it)
+  while (true)
     {
+    ClVarToConstraintAndIndexMap::const_iterator it = my_editVarMap.begin();
+    if (it == my_editVarMap.end())
+      break;
     const ClConstraintAndIndex *pcai = (*it).second;
+    assert(pcai);
     const ClEditConstraint *pcnEdit = dynamic_cast<const ClEditConstraint *>(pcai->pconstraint);
     removeEditVar(pcnEdit->variable());
     }
@@ -393,6 +396,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
 	}
       }
     const ClEditConstraint *pcnEdit = dynamic_cast<const ClEditConstraint *>(&cn);
+    delete my_editVarMap[&pcnEdit->variable()];
     my_editVarMap.erase(&pcnEdit->variable());
     }
 
@@ -454,6 +458,47 @@ ClSimplexSolver::resolve(const vector<Number> &newEditConstants)
   dualOptimize();
   setExternalVariables();
 }
+
+
+// Re-solve the cuurent collection of constraints, given the new
+// values for the edit variables that have already been
+// suggested (see suggestValue() method)
+void 
+ClSimplexSolver::resolve()
+{ // CODE DUPLICATED ABOVE
+#ifndef CL_NO_TRACE
+  Tracer TRACER(__FUNCTION__);
+#endif
+  my_infeasibleRows.clear();
+  resetStayConstants();
+  dualOptimize();
+  setExternalVariables();
+}
+
+ClSimplexSolver &
+ClSimplexSolver::suggestValue(ClVariable &v, Number x)
+{
+#ifndef CL_NO_TRACE
+  Tracer TRACER(__FUNCTION__);
+#endif
+  ClVarToConstraintAndIndexMap::const_iterator itEditVarMap = my_editVarMap.find(&v);
+  if (itEditVarMap == my_editVarMap.end())
+    {
+    cerr << "suggestValue for variable " << v << ", but var is not an edit variable" << endl;
+    throw ExCLError();
+    }
+  const ClConstraintAndIndex *pcai = (*itEditVarMap).second;
+  int i = pcai->index;
+
+  const ClAbstractVariable *pvarErrorPlus = my_editPlusErrorVars[i];
+  const ClAbstractVariable *pvarErrorMinus = my_editMinusErrorVars[i];
+
+  Number delta = x - my_prevEditConstants[i];
+  my_prevEditConstants[i] = x;
+  deltaEditConstant(delta,*pvarErrorPlus,*pvarErrorMinus);
+  return *this;
+}
+
 
 //// protected
 
