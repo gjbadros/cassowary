@@ -34,8 +34,7 @@ public:
     _value(Value),
     _fSet(true),
     _desired_value(Value),
-    _plfdnInitialDomain(NULL),
-    _pv(NULL)
+    _plfdnInitialDomain(NULL)
     { }
 #endif
 
@@ -44,8 +43,7 @@ public:
     _value(Value),
     _fSet(true),
     _desired_value(Value),
-    _plfdnInitialDomain(new list<FDNumber>()),
-    _pv(NULL)
+    _plfdnInitialDomain(new list<FDNumber>())
     {
       *_plfdnInitialDomain = initial_domain;
     }
@@ -93,22 +91,13 @@ public:
   virtual void SetFIsSet(bool f)
     { _fSet = f; }
 
-  void SetPv(void *pv)
-    { _pv = pv; }
-
-  void *Pv() const
-    { return _pv; }
-
-  // Set the name of the variable
-  virtual void SetName(string const &name);
-
   virtual FDNumber DesiredValue() const
     { return _desired_value; }
 
   virtual const list<FDNumber> *PlfdnDomain() const
     { return _plfdnInitialDomain; }
 
-private:
+protected:
 
   // similar to SetValue -- see caveat above -- made private for now
   // since it's probably the wrong thing and is too easy to invoke
@@ -128,10 +117,6 @@ private:
   FDNumber _desired_value;
 
   list<FDNumber> *_plfdnInitialDomain;
-
-  // C-style extension mechanism so I
-  // don't have to wrap ScwmClVariables separately
-  void *_pv;
 };
 
 #endif

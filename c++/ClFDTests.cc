@@ -10,6 +10,7 @@
 // ClTests.cc
 
 #include "Cl.h"
+#include "ClFDConnectorVariable.h"
 #include <stdlib.h>
 #include "timer.h"
 #include <iostream>
@@ -168,6 +169,65 @@ simple3()
 }
 
 
+connect1()
+{
+ try
+   {
+   bool fOkResult = true;
+   list<FDNumber> l;
+   ClFDSolver fdsolver;
+   ClSimplexSolver solver;
+   ListPushOnto(&l,6,8,10,12,14,16,20,24,30,40,60,FDN_EOL);
+   ClVariable z("z",0);
+   ClVariable yf("yf",0);
+   ClVariable x(new ClFDVariable("x",10,l));
+   ClVariable y(new ClFDConnectorVariable("y",20,l,solver,yf));
+   cout << z << "," << yf << endl;
+   cout << x << "," << y << endl;
+   ClFDBinaryOneWayConstraint cn1(x,cnEQ,14,ClsRequired());
+   ClFDBinaryOneWayConstraint cn2(x,cnGT,y,1,0,ClsStrong());
+   ClLinearInequality cn3(z,cnGEQ,yf*2+3);
+
+   solver.AddConstraint(cn3);
+
+   // x == 14 !required
+   // x > y   !strong
+   // z >= yf*2 + 3 !required
+
+   // want: x = 14, y = 6,8,10,or 12  (copied into yf)
+   //       z = y*2 + 3  = 15 when y = 6
+
+   fdsolver.SetAutosolve(false);
+   cerr << cn1 << endl;
+   cerr << (fdsolver.AddConstraintNoException(&cn1)? "Added cn1" : "Failed adding cn1") << endl;
+   cerr << fdsolver;
+   cerr << cn2 << endl;
+   cerr << (fdsolver.AddConstraintNoException(&cn2)? "Added cn2" : "Failed adding cn2") << endl;
+   cerr << fdsolver;
+
+   fdsolver.Solve();
+
+   cout << z << "," << yf << endl;
+   cout << x << "," << y << endl;
+   
+   cerr << (fdsolver.RemoveConstraintNoException(&cn1) ? "Removed cn1" : "Failed removing cn1")
+        << endl;
+   cerr << fdsolver;
+
+   return fOkResult;
+   } 
+ catch (ExCLError &error) 
+   {
+   cerr << "Exception! " << error.description() << endl;
+   return(false);
+   } 
+ catch (...) 
+   {
+   cerr << "Unknown exception" << endl;
+   return(false);
+   }
+}
+
 
 int
 main( int /* argc */, char ** /* argv */ )
@@ -190,6 +250,7 @@ main( int /* argc */, char ** /* argv */ )
     RUN_TEST(simple1);
     RUN_TEST(simple2);
     RUN_TEST(simple3);
+    RUN_TEST(connect1);
     
     return (fAllOkResult? 0 : 255);
     

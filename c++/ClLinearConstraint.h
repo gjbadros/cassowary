@@ -43,6 +43,10 @@ class ClLinearConstraint : public ClConstraint {
   ClLinearExpression Expression() const
     { return _expression; }
 
+  // do not do this if *this is inside a solver
+  ChangeConstant(Number constant)
+    { _expression.Set_constant(constant); }
+
  protected:
 
   ClLinearExpression _expression;

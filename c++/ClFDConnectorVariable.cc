@@ -7,19 +7,23 @@
 // (C) 1998, 1999 Greg J. Badros and Alan Borning
 // See ../LICENSE for legal details regarding this software
 //
-// ClFloatVariable.cc
+// ClFDConnectorVariable.cc
 
-#include "ClFloatVariable.h"
+#include "ClFDConnectorVariable.h"
+#include "ClSolver.h" // for list<FDNumber> printing
 
 #ifdef HAVE_CONFIG_H
 #include <cassowary/config.h>
 #define CONFIG_H_INCLUDED
 #endif
 
+// Use < > for ClFDConnector-s, instead of [ ]
 #ifndef CL_NO_IO
-ostream &ClFloatVariable::PrintOn(ostream &xo) const
+ostream &ClFDConnectorVariable::PrintOn(ostream &xo) const
 {  
-  xo << "[" << Name() << ":" << _value << "]";
+  xo << "<" << Name() << "=" << Value() 
+     << "{" << _clvFloat << "}"
+     << ":" << *PlfdnDomain() << ">";
   return xo;
 }
 #endif

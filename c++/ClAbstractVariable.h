@@ -29,7 +29,7 @@ class ClAbstractVariable {
 #endif
 public:
   ClAbstractVariable(string Name = "") :
-    _name(Name)
+    _name(Name), _pv(0)
     { 
     ++iVariableNumber;
 #ifdef CL_FIND_LEAK
@@ -43,7 +43,8 @@ public:
       }
     }
 
-  ClAbstractVariable(long varnumber, char *prefix)
+  ClAbstractVariable(long varnumber, char *prefix) :
+    _pv(0)
     {
     auto_ptr<char> pch (new char[16+strlen(prefix)]);
     iVariableNumber++;
@@ -137,17 +138,20 @@ public:
   virtual void ChangeValue(Number)
     { assert(false); }
 
-  virtual void SetPv(void *)
-    { assert(false); }
+  void SetPv(void *pv)
+    { _pv = pv; }
 
-  virtual void *Pv() const
-    { assert(false); }
-
+  void *Pv() const
+    { return _pv; }
 
 private:
   string _name;
 
   static long iVariableNumber;
+
+  // C-style extension mechanism so I
+  // don't have to wrap ScwmClVariables separately
+  void *_pv;
 };
 
 typedef ClAbstractVariable *PClAbstractVariable;

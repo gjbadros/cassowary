@@ -25,10 +25,3 @@ ostream &ClFDVariable::PrintOn(ostream &xo) const
   return xo;
 }
 #endif
-
-
-void ClFDVariable::SetName(string const &name)
-{ 
-  super::SetName(name); 
-}
-

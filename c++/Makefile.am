@@ -52,6 +52,7 @@ libcassowary_a_SOURCES = \
 	ClTableau.cc \
 	ClVariable.cc \
 	ClFDVariable.cc \
+	ClFDConnectorVariable.cc \
 	ClFDBinaryOneWayConstraint.cc \
 	ClFloatVariable.cc \
 	ClSlackVariable.cc \
@@ -72,6 +73,7 @@ libcassowary_la_SOURCES = \
 	ClTableau.cc \
 	ClVariable.cc \
 	ClFDVariable.cc \
+	ClFDConnectorVariable.cc \
 	ClFDBinaryOneWayConstraint.cc \
 	ClFloatVariable.cc \
 	ClSlackVariable.cc \
@@ -108,6 +110,7 @@ pkginclude_HEADERS = \
 	ClSymbolicWeight.h \
 	ClTableau.h \
 	ClFDVariable.h \
+	ClFDConnectorVariable.h \
 	ClFloatVariable.h \
 	ClVariable.h \
 	ClReader.h \

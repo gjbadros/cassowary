@@ -231,23 +231,23 @@ ClFDSolver::ErrorForClvAtValSubjectToCn(ClFDVariable *pcldv,FDNumber value,const
   switch (rel) {
   case cnLEQ:
     if (value <= rhs) e = 0;
-    else e = value-rhs;
+    else e = 1 + value-rhs;
     break;
   case cnLT:
     if (value < rhs) e = 0;
-    else e = value-rhs;
+    else e = 1 + value-rhs;
     break;
   case cnGEQ:
     if (value >= rhs) e = 0;
-    else e = rhs-value;
+    else e = 1+ rhs-value;
     break;
   case cnGT:
     if (value > rhs) e = 0;
-    else e = rhs-value;
+    else e = 1 + rhs-value;
     break;
   case cnEQ:
     if (value == rhs) e = 0;
-    else e = fabs(rhs-value);
+    else e = 1 + fabs(rhs-value);
     break;
   case cnNEQ:
     if (value != rhs) e = 0;

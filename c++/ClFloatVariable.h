@@ -29,20 +29,17 @@ public:
 
   ClFloatVariable(string name, Number Value = 0.0) :
     ClAbstractVariable(name),
-    _value(Value),
-    _pv(NULL)
+    _value(Value)
     { }
 
   ClFloatVariable(Number Value = 0.0) :
     ClAbstractVariable(""),
-    _value(Value),
-    _pv(NULL)
+    _value(Value)
     { }
 
   ClFloatVariable(long number, char *prefix, Number Value = 0.0) :
     ClAbstractVariable(number,prefix),
-    _value(Value),
-    _pv(NULL)
+    _value(Value)
     { }
 
   virtual bool IsFloatVariable() const
@@ -98,15 +95,6 @@ public:
   virtual void ChangeValue(Number Value)
     { _value = Value; }
 
-  void SetPv(void *pv)
-    { _pv = pv; }
-
-  void *Pv() const
-    { return _pv; }
-
-  // Set the name of the variable
-  virtual void SetName(string const &name);
-
 private:
 
   // similar to SetValue -- see caveat above -- made private for now
@@ -121,9 +109,6 @@ private:
 
   Number _value;
 
-  // C-style extension mechanism so I
-  // don't have to wrap ScwmClVariables separately
-  void *_pv;
 };
 
 
