@@ -1,3 +1,7 @@
+Sat Sep 25 16:02:22 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* cassowary.spec.in, configure.in: Update to version 0.52.
+
 Fri Sep 24 18:51:42 1999  Greg J. Badros  <gjb@cs.washington.edu>
 
 	* configure.in: Remove first of redundant checks for HAVE_SCM_MAKE_SMOB_TYPE_MFPE.
