@@ -26,15 +26,15 @@
 ClSimplexSolver::~ClSimplexSolver()
 {
 #ifndef NO_SOLVER_STATS
-  cerr << "my_slackCounter == " << my_slackCounter
-       << "\nmy_artificialCounter == " << my_artificialCounter
-       << "\nmy_dummyCounter == " << my_dummyCounter << endl;
-  cerr << "editMinusErrorVars " << my_editMinusErrorVars.size() << ", "
-       << "editPlusErrorVars " << my_editPlusErrorVars.size() << ", "
-       << "stayMinusErrorVars " << my_stayMinusErrorVars.size() << ", "
-       << "stayPlusErrorVars " << my_stayPlusErrorVars.size() << ", "
-       << "errorVars " << my_errorVars.size() << ", "
-       << "markerVars " << my_markerVars.size() << endl;
+  cerr << "_slackCounter == " << _slackCounter
+       << "\n_artificialCounter == " << _artificialCounter
+       << "\n_dummyCounter == " << _dummyCounter << endl;
+  cerr << "editMinusErrorVars " << _editMinusErrorVars.size() << ", "
+       << "editPlusErrorVars " << _editPlusErrorVars.size() << ", "
+       << "stayMinusErrorVars " << _stayMinusErrorVars.size() << ", "
+       << "stayPlusErrorVars " << _stayPlusErrorVars.size() << ", "
+       << "errorVars " << _errorVars.size() << ", "
+       << "markerVars " << _markerVars.size() << endl;
 #endif
   // Cannot print *this here, since local ClVariable-s may have been
   // destructed already
@@ -62,14 +62,22 @@ ClSimplexSolver::addConstraint(const ClConstraint &cn)
       throw ExCLRequiredFailure();
       }
     }
-  optimize(my_objective);
-  setExternalVariables();
+
+  _fNeedsSolving = true;
+
   if (cn.isEditConstraint())
     {
-    int i = my_prevEditConstants.size() - 1;
+    int i = _prevEditConstants.size() - 1;
     const ClEditConstraint *pcnEdit = dynamic_cast<const ClEditConstraint *>(&cn);
-    my_editVarMap[&pcnEdit->variable()] = new ClConstraintAndIndex(&cn,i);
+    _editVarMap[&pcnEdit->variable()] = new ClConstraintAndIndex(&cn,i);
     }
+
+  if (_fOptimizeAutomatically)
+    {
+    optimize(_objective);
+    setExternalVariables();
+    }
+
   return *this;
 }
 
@@ -131,8 +139,8 @@ ClSimplexSolver::removeAllEditVars()
 {
   while (true)
     {
-    ClVarToConstraintAndIndexMap::const_iterator it = my_editVarMap.begin();
-    if (it == my_editVarMap.end())
+    ClVarToConstraintAndIndexMap::const_iterator it = _editVarMap.begin();
+    if (it == _editVarMap.end())
       break;
     const ClConstraintAndIndex *pcai = (*it).second;
     assert(pcai);
@@ -161,13 +169,15 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
 
   ClConstraint &cn = const_cast<ClConstraint &>(cnconst);
 
+  _fNeedsSolving = true;
+
   resetStayConstants();
 
   // remove any error variables from the objective function
-  ClLinearExpression *pzRow = rowExpression(my_objective);
+  ClLinearExpression *pzRow = rowExpression(_objective);
   ClConstraintToVarSetMap::iterator 
-    it_eVars = my_errorVars.find(&cn);
-  if (it_eVars != my_errorVars.end())
+    it_eVars = _errorVars.find(&cn);
+  if (it_eVars != _errorVars.end())
     {
     ClTableauVarSet &eVars = (*it_eVars).second;
     ClTableauVarSet::iterator it = eVars.begin();
@@ -177,25 +187,25 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
       if (pexpr == NULL )
 	{
 	pzRow->addVariable(*(*it),-1.0 * cnconst.strength().symbolicWeight().asDouble(),
-			   my_objective,*this);
+			   _objective,*this);
 	}
       else
 	{ // the error variable was in the basis
 	pzRow->addExpression(*pexpr,-1.0 * cnconst.strength().symbolicWeight().asDouble(),
-			     my_objective,*this);
+			     _objective,*this);
 	}
       }
     }
 
   map<const ClConstraint *, const ClAbstractVariable *>::iterator 
-    it_marker = my_markerVars.find(&cn);
-  if (it_marker == my_markerVars.end())
+    it_marker = _markerVars.find(&cn);
+  if (it_marker == _markerVars.end())
     { // could not find the constraint
     throw ExCLConstraintNotFound();
     }
   // try to make the marker variable basic if it isn't already
   const ClAbstractVariable &marker = *((*it_marker).second);
-  my_markerVars.erase(it_marker);
+  _markerVars.erase(it_marker);
   // delete &marker happens below
 #ifndef CL_NO_TRACE
   cerr << "Looking to remove var " << marker << endl;
@@ -204,7 +214,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
     { // not in the basis, so need to do some work
     // first choose which variable to move out of the basis
     // only consider restricted basic variables
-    ClTableauVarSet &col = my_columns[&marker];
+    ClTableauVarSet &col = _columns[&marker];
     ClTableauVarSet::iterator it_col = col.begin();
 #ifndef CL_NO_TRACE
     cerr << "Must pivot -- columns are " << col << endl;
@@ -302,7 +312,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
   // Delete any error variables.  If cn is an inequality, it also
   // contains a slack variable; but we use that as the marker variable
   // and so it has been deleted when we removed its row.
-  if (it_eVars != my_errorVars.end())
+  if (it_eVars != _errorVars.end())
     {
     ClTableauVarSet &eVars = (*it_eVars).second;
     ClTableauVarSet::iterator it = eVars.begin();
@@ -321,21 +331,21 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
     {
     // iterate over the stay{Plus,Minus}ErrorVars and remove those
     // variables v in those vectors that are also in set eVars
-    if (it_eVars != my_errorVars.end())
+    if (it_eVars != _errorVars.end())
       {
       ClTableauVarSet &eVars = (*it_eVars).second;
-      ClVarVector::iterator itStayPlusErrorVars = my_stayPlusErrorVars.begin();
-      ClVarVector::iterator itStayMinusErrorVars = my_stayMinusErrorVars.begin();
-      for (; itStayMinusErrorVars != my_stayMinusErrorVars.end();
+      ClVarVector::iterator itStayPlusErrorVars = _stayPlusErrorVars.begin();
+      ClVarVector::iterator itStayMinusErrorVars = _stayMinusErrorVars.begin();
+      for (; itStayMinusErrorVars != _stayMinusErrorVars.end();
 	   ++itStayPlusErrorVars, ++itStayMinusErrorVars)
 	{
 	if (eVars.find(*itStayPlusErrorVars) != eVars.end())
 	  {
-	  my_stayMinusErrorVars.erase(itStayPlusErrorVars);
+	  _stayMinusErrorVars.erase(itStayPlusErrorVars);
 	  }
 	if (eVars.find(*itStayMinusErrorVars) != eVars.end())
 	  {
-	  my_stayMinusErrorVars.erase(itStayMinusErrorVars);
+	  _stayMinusErrorVars.erase(itStayMinusErrorVars);
 	  }
 	}
       }
@@ -343,43 +353,43 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
   else if (cn.isEditConstraint())
     {
     // remove the error variable for this constraint
-    // need to update my_editPlusErrorVars,
-    //                my_editMinusErrorVars, and
-    //                my_prevEditConstants
-    assert(it_eVars != my_errorVars.end());
+    // need to update _editPlusErrorVars,
+    //                _editMinusErrorVars, and
+    //                _prevEditConstants
+    assert(it_eVars != _errorVars.end());
     ClTableauVarSet &eVars = (*it_eVars).second;
     ClTableauVarSet::iterator it_v = eVars.begin();
     for ( ; it_v != eVars.end(); ++it_v)
       {
       const ClAbstractVariable *pvar = *it_v;
-      // find var in my_editPlusErrorVars
+      // find var in _editPlusErrorVars
       ClVarVector::iterator 
-	itEditPlusErrorVars = my_editPlusErrorVars.begin();
-      for ( ; itEditPlusErrorVars != my_editPlusErrorVars.end(); ++itEditPlusErrorVars )
+	itEditPlusErrorVars = _editPlusErrorVars.begin();
+      for ( ; itEditPlusErrorVars != _editPlusErrorVars.end(); ++itEditPlusErrorVars )
 	{
 	if (*itEditPlusErrorVars == pvar) break;
 	}
-      if (itEditPlusErrorVars != my_editPlusErrorVars.end())
+      if (itEditPlusErrorVars != _editPlusErrorVars.end())
 	{ // found it
-	int index = itEditPlusErrorVars - my_editPlusErrorVars.begin();
+	int index = itEditPlusErrorVars - _editPlusErrorVars.begin();
 	ClVarVector::iterator 
-	  itEditMinusErrorVars = my_editMinusErrorVars.begin() + index;
+	  itEditMinusErrorVars = _editMinusErrorVars.begin() + index;
 	vector<Number>::iterator 
-	  itPrevEditConstants = my_prevEditConstants.begin() + index;
+	  itPrevEditConstants = _prevEditConstants.begin() + index;
         ///        removeColumn(**itEditMinusErrorVars); // FIXGJBNOW
-	my_editPlusErrorVars.erase(itEditPlusErrorVars);
-	my_editMinusErrorVars.erase(itEditMinusErrorVars);
-	my_prevEditConstants.erase(itPrevEditConstants);
+	_editPlusErrorVars.erase(itEditPlusErrorVars);
+	_editMinusErrorVars.erase(itEditMinusErrorVars);
+	_prevEditConstants.erase(itPrevEditConstants);
 	// done -- can exit the iteration
 	break;
 	}
       }
     const ClEditConstraint *pcnEdit = dynamic_cast<const ClEditConstraint *>(&cn);
-    delete my_editVarMap[&pcnEdit->variable()];
-    my_editVarMap.erase(&pcnEdit->variable());
+    delete _editVarMap[&pcnEdit->variable()];
+    _editVarMap.erase(&pcnEdit->variable());
     }
 
-  if (it_eVars != my_errorVars.end())
+  if (it_eVars != _errorVars.end())
     {
     // FIXGJB
     // This code is not needed since the variables are deleted
@@ -392,12 +402,16 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
     //      {
     //      delete *it_set;
     //      }
-    my_errorVars.erase(it_eVars);
+    _errorVars.erase(it_eVars);
     }
   delete &marker;
 
-  optimize(my_objective);
-  setExternalVariables();
+  if (_fOptimizeAutomatically)
+    {
+    optimize(_objective);
+    setExternalVariables();
+    }
+
   return *this;
 }
 
@@ -431,7 +445,7 @@ ClSimplexSolver::resolve(const vector<Number> &newEditConstants)
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << newEditConstants << ")" << endl;
 #endif
-  my_infeasibleRows.clear();
+  _infeasibleRows.clear();
   resetStayConstants();
   resetEditConstants(newEditConstants);
   dualOptimize();
@@ -450,7 +464,7 @@ ClSimplexSolver::resolve()
 #endif
   dualOptimize();
   setExternalVariables();
-  my_infeasibleRows.clear();
+  _infeasibleRows.clear();
   resetStayConstants();
 }
 
@@ -460,8 +474,8 @@ ClSimplexSolver::suggestValue(ClVariable &v, Number x)
 #ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
 #endif
-  ClVarToConstraintAndIndexMap::const_iterator itEditVarMap = my_editVarMap.find(&v);
-  if (itEditVarMap == my_editVarMap.end())
+  ClVarToConstraintAndIndexMap::const_iterator itEditVarMap = _editVarMap.find(&v);
+  if (itEditVarMap == _editVarMap.end())
     {
     cerr << "suggestValue for variable " << v << ", but var is not an edit variable" << endl;
     throw ExCLError();
@@ -469,11 +483,11 @@ ClSimplexSolver::suggestValue(ClVariable &v, Number x)
   const ClConstraintAndIndex *pcai = (*itEditVarMap).second;
   int i = pcai->index;
 
-  const ClAbstractVariable *pvarErrorPlus = my_editPlusErrorVars[i];
-  const ClAbstractVariable *pvarErrorMinus = my_editMinusErrorVars[i];
+  const ClAbstractVariable *pvarErrorPlus = _editPlusErrorVars[i];
+  const ClAbstractVariable *pvarErrorMinus = _editMinusErrorVars[i];
 
-  Number delta = x - my_prevEditConstants[i];
-  my_prevEditConstants[i] = x;
+  Number delta = x - _prevEditConstants[i];
+  _prevEditConstants[i] = x;
   deltaEditConstant(delta,*pvarErrorPlus,*pvarErrorMinus);
   return *this;
 }
@@ -497,7 +511,7 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
   // will remain in the tableau if we throw an exception,
   // and that will result in the destructor cleaning up
   // after us
-  ClSlackVariable *pav = new ClSlackVariable(++my_artificialCounter,"a");
+  ClSlackVariable *pav = new ClSlackVariable(++_artificialCounter,"a");
   ClObjectiveVariable *paz = new ClObjectiveVariable("az");
   ClLinearExpression *pazRow = new ClLinearExpression(expr);
   // the artificial objective is av, which we know is equal to expr
@@ -668,7 +682,7 @@ ClSimplexSolver::chooseSubject(ClLinearExpression &expr)
 	  const ClTableauColumnsMap &col = columns();
 	  ClTableauColumnsMap::const_iterator it_col = col.find(pv);
 	  if (it_col == col.end() || 
-	      ( col.size() == 1 && columnsHasKey(my_objective) ) )
+	      ( col.size() == 1 && columnsHasKey(_objective) ) )
 	    {
 	    psubject = pv;
 	    foundNewRestricted = true;
@@ -745,7 +759,7 @@ ClSimplexSolver::deltaEditConstant(Number delta,
     // so the row is infeasible if the constant is negative
     if (pexprPlus->constant() < 0.0)
       {
-      my_infeasibleRows.insert(&plusErrorVar);
+      _infeasibleRows.insert(&plusErrorVar);
       }
     return;
     }
@@ -756,7 +770,7 @@ ClSimplexSolver::deltaEditConstant(Number delta,
     pexprMinus->incrementConstant(-delta);
     if (pexprMinus->constant() < 0.0)
       {
-      my_infeasibleRows.insert(&minusErrorVar);
+      _infeasibleRows.insert(&minusErrorVar);
       }
     return;
     }
@@ -765,7 +779,7 @@ ClSimplexSolver::deltaEditConstant(Number delta,
   // in which they occur by finding the column for the minusErrorVar
   // (it doesn't matter whether we look for that one or for
   // plusErrorVar).  Fix the constants in these expressions.
-  ClTableauVarSet &columnVars = my_columns[&minusErrorVar];
+  ClTableauVarSet &columnVars = _columns[&minusErrorVar];
   ClTableauVarSet::iterator it = columnVars.begin();
   for (; it != columnVars.end(); ++it)
     {
@@ -776,7 +790,7 @@ ClSimplexSolver::deltaEditConstant(Number delta,
     pexpr->incrementConstant(c*delta);
     if (pbasicVar->isRestricted() && pexpr->constant() < 0.0)
       {
-      my_infeasibleRows.insert(pbasicVar);
+      _infeasibleRows.insert(pbasicVar);
       }
     }
 }
@@ -790,13 +804,13 @@ ClSimplexSolver::dualOptimize()
   Tracer TRACER(__FUNCTION__);
   cerr << "()" << endl;
 #endif
-  const ClLinearExpression *pzRow = rowExpression(my_objective);
+  const ClLinearExpression *pzRow = rowExpression(_objective);
   // need to handle infeasible rows
-  while (!my_infeasibleRows.empty())
+  while (!_infeasibleRows.empty())
     {
-    ClTableauVarSet::iterator it_exitVar = my_infeasibleRows.begin();
+    ClTableauVarSet::iterator it_exitVar = _infeasibleRows.begin();
     const ClAbstractVariable *pexitVar = *it_exitVar;
-    my_infeasibleRows.erase(it_exitVar);
+    _infeasibleRows.erase(it_exitVar);
     const ClAbstractVariable *pentryVar = NULL;
     // exitVar might have become basic after some other pivoting
     // so allow for the case of its not being there any longer
@@ -884,23 +898,23 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
     //    expr-slackVar+errorVar=0.
     // Since both of these variables are newly created we can just add
     // them to the expression (they can't be basic).
-    ++my_slackCounter;
-    ReinitializeAutoPtr(pslackVar,new ClSlackVariable (my_slackCounter, "s"));
+    ++_slackCounter;
+    ReinitializeAutoPtr(pslackVar,new ClSlackVariable (_slackCounter, "s"));
     pexpr->setVariable(*pslackVar,-1);
     // index the constraint under its slack variable
-    my_markerVars[&cn] = pslackVar.get();
+    _markerVars[&cn] = pslackVar.get();
     if (!cn.isRequired())
       {
-      ++my_slackCounter;
-      ReinitializeAutoPtr(peminus,new ClSlackVariable (my_slackCounter, "em"));
+      ++_slackCounter;
+      ReinitializeAutoPtr(peminus,new ClSlackVariable (_slackCounter, "em"));
       pexpr->setVariable(*peminus,1.0);
       // add emnius to the objective function with the appropriate weight
-      ClLinearExpression *pzRow = rowExpression(my_objective);
+      ClLinearExpression *pzRow = rowExpression(_objective);
       // FIXGJB: pzRow->addVariable(eminus,cn.strength().symbolicWeight() * cn.weight());
       ClSymbolicWeight sw = cn.strength().symbolicWeight().times(cn.weight());
       pzRow->setVariable(*peminus,sw.asDouble());
-      my_errorVars[&cn].insert(peminus.get());
-      noteAddedVariable(*peminus,my_objective);
+      _errorVars[&cn].insert(peminus.get());
+      noteAddedVariable(*peminus,_objective);
       }
     }
   else
@@ -910,12 +924,12 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
       // Add a dummy variable to the expression to serve as a marker
       // for this constraint.  The dummy variable is never allowed to
       // enter the basis when pivoting.
-      ++my_dummyCounter;
-      ReinitializeAutoPtr(pdummyVar,new ClDummyVariable (my_dummyCounter, "d"));
+      ++_dummyCounter;
+      ReinitializeAutoPtr(pdummyVar,new ClDummyVariable (_dummyCounter, "d"));
       pexpr->setVariable(*pdummyVar,1.0);
-      my_markerVars[&cn] = pdummyVar.get();
+      _markerVars[&cn] = pdummyVar.get();
 #ifndef CL_NO_TRACE
-      cerr << "Adding dummyVar == d" << my_dummyCounter << endl;
+      cerr << "Adding dummyVar == d" << _dummyCounter << endl;
 #endif
       }
     else
@@ -924,15 +938,15 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
       // error variable, making the resulting constraint 
       //       expr = eplus - eminus, 
       // in other words:  expr-eplus+eminus=0
-      ++my_slackCounter;
-      ReinitializeAutoPtr(peplus,new ClSlackVariable (my_slackCounter, "ep"));
-      ReinitializeAutoPtr(peminus,new ClSlackVariable (my_slackCounter, "em"));
+      ++_slackCounter;
+      ReinitializeAutoPtr(peplus,new ClSlackVariable (_slackCounter, "ep"));
+      ReinitializeAutoPtr(peminus,new ClSlackVariable (_slackCounter, "em"));
 
       pexpr->setVariable(*peplus,-1.0);
       pexpr->setVariable(*peminus,1.0);
       // index the constraint under one of the error variables
-      my_markerVars[&cn] = peplus.get();
-      ClLinearExpression *pzRow = rowExpression(my_objective);
+      _markerVars[&cn] = peplus.get();
+      ClLinearExpression *pzRow = rowExpression(_objective);
       // FIXGJB: pzRow->addVariable(eplus,cn.strength().symbolicWeight() * cn.weight());
       ClSymbolicWeight sw = cn.strength().symbolicWeight().times(cn.weight());
       double swCoeff = sw.asDouble();
@@ -946,22 +960,22 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
 	}
 #endif      
       pzRow->setVariable(*peplus,swCoeff);
-      noteAddedVariable(*peplus,my_objective);
+      noteAddedVariable(*peplus,_objective);
       // FIXGJB: pzRow->addVariable(eminus,cn.strength().symbolicWeight() * cn.weight());
       pzRow->setVariable(*peminus,swCoeff);
-      noteAddedVariable(*peminus,my_objective);
-      my_errorVars[&cn].insert(peminus.get());
-      my_errorVars[&cn].insert(peplus.get());
+      noteAddedVariable(*peminus,_objective);
+      _errorVars[&cn].insert(peminus.get());
+      _errorVars[&cn].insert(peplus.get());
       if (cn.isStayConstraint()) 
 	{
-	my_stayPlusErrorVars.push_back(peplus.get());
-	my_stayMinusErrorVars.push_back(peminus.get());
+	_stayPlusErrorVars.push_back(peplus.get());
+	_stayMinusErrorVars.push_back(peminus.get());
 	}
       else if (cn.isEditConstraint())
 	{
-	my_editPlusErrorVars.push_back(peplus.get());
-	my_editMinusErrorVars.push_back(peminus.get());
-	my_prevEditConstants.push_back(cnExpr.constant());
+	_editPlusErrorVars.push_back(peplus.get());
+	_editMinusErrorVars.push_back(peminus.get());
+	_prevEditConstants.push_back(cnExpr.constant());
 	}
       }
     }
@@ -1020,7 +1034,7 @@ ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
     // if all coefficients were positive (or if the objective
     // function has no pivotable variables)
     // we are at an optimum
-    if (objectiveCoeff >= -my_epsilon)
+    if (objectiveCoeff >= -_epsilon)
       return;
 #ifndef CL_NO_TRACE
     cerr << "*pentryVar == " << *pentryVar << ", "
@@ -1032,7 +1046,7 @@ ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
     // Only consider pivotable basic variables
     // (i.e. restricted, non-dummy variables)
     double minRatio = DBL_MAX;
-    ClTableauVarSet &columnVars = my_columns[pentryVar];
+    ClTableauVarSet &columnVars = _columns[pentryVar];
     ClTableauVarSet::iterator it_rowvars = columnVars.begin();
     Number r = 0.0;
     for (; it_rowvars != columnVars.end(); ++it_rowvars)
@@ -1120,19 +1134,19 @@ ClSimplexSolver::resetEditConstants(const vector<Number> &newEditConstants)
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << newEditConstants << ")" << endl;
 #endif
-  if (newEditConstants.size() != my_editPlusErrorVars.size())
+  if (newEditConstants.size() != _editPlusErrorVars.size())
     { // number of edit constants doesn't match the number of edit error variables
     cerr << "newEditConstants == " << newEditConstants << endl
-	 << "my_editPlusErrorVars == " << my_editPlusErrorVars << endl
+	 << "_editPlusErrorVars == " << _editPlusErrorVars << endl
 	 << "Sizes don't match!" << endl;
     throw ExCLInternalError();
     }
   vector<Number>::const_iterator itNew = newEditConstants.begin();
-  vector<Number>::iterator itPrev = my_prevEditConstants.begin();
+  vector<Number>::iterator itPrev = _prevEditConstants.begin();
   ClVarVector::const_iterator 
-    itEditPlusErrorVars = my_editPlusErrorVars.begin();
+    itEditPlusErrorVars = _editPlusErrorVars.begin();
   ClVarVector::const_iterator
-    itEditMinusErrorVars = my_editMinusErrorVars.begin();
+    itEditMinusErrorVars = _editMinusErrorVars.begin();
 
   for ( ; itNew != newEditConstants.end(); 
 	++itNew, ++itPrev, ++itEditPlusErrorVars, ++itEditMinusErrorVars )
@@ -1164,11 +1178,11 @@ ClSimplexSolver::resetStayConstants()
   cerr << "()" << endl;
 #endif
   ClVarVector::const_iterator 
-    itStayPlusErrorVars = my_stayPlusErrorVars.begin();
+    itStayPlusErrorVars = _stayPlusErrorVars.begin();
   ClVarVector::const_iterator 
-    itStayMinusErrorVars = my_stayMinusErrorVars.begin();
+    itStayMinusErrorVars = _stayMinusErrorVars.begin();
 
-  for ( ; itStayPlusErrorVars != my_stayPlusErrorVars.end();
+  for ( ; itStayPlusErrorVars != _stayPlusErrorVars.end();
 	++itStayPlusErrorVars, ++itStayMinusErrorVars )
     {
     ClLinearExpression *pexpr = rowExpression(*(*itStayPlusErrorVars));
@@ -1206,21 +1220,23 @@ ClSimplexSolver::setExternalVariables()
 
   // Set external parametric variables first
   // in case I've screwed up
-  ClExternalVarSet::iterator itParVars = my_externalParametricVars.begin();
-  for ( ; itParVars != my_externalParametricVars.end(); ++itParVars )
+  ClExternalVarSet::iterator itParVars = _externalParametricVars.begin();
+  for ( ; itParVars != _externalParametricVars.end(); ++itParVars )
     {
     ClVariable *pv = const_cast<ClVariable *>(*itParVars);
     pv->set_value(0.0);
     }
 
   // Only iterate over the rows w/ external variables
-  ClExternalVarSet::iterator itRowVars = my_externalRows.begin();
-  for ( ; itRowVars != my_externalRows.end() ; ++itRowVars )
+  ClExternalVarSet::iterator itRowVars = _externalRows.begin();
+  for ( ; itRowVars != _externalRows.end() ; ++itRowVars )
     {
     ClVariable *pv = const_cast<ClVariable *>(*itRowVars);
     ClLinearExpression *pexpr = rowExpression(*pv);
     pv->set_value(pexpr->constant());
     }
+
+  _fNeedsSolving = false;
 }
 
 ostream &
@@ -1251,18 +1267,18 @@ ClSimplexSolver::printOn(ostream &xo) const
 {
   super::printOn(xo);
 
-  xo << "my_editPlusErrorVars: "
-     << my_editPlusErrorVars << endl;
-  xo << "my_editMinusErrorVars: "
-     << my_editMinusErrorVars << endl;
+  xo << "_editPlusErrorVars: "
+     << _editPlusErrorVars << endl;
+  xo << "_editMinusErrorVars: "
+     << _editMinusErrorVars << endl;
 
-  xo << "my_stayPlusErrorVars: "
-     << my_stayPlusErrorVars << endl;
-  xo << "my_stayMinusErrorVars: "
-     << my_stayMinusErrorVars << endl;
+  xo << "_stayPlusErrorVars: "
+     << _stayPlusErrorVars << endl;
+  xo << "_stayMinusErrorVars: "
+     << _stayMinusErrorVars << endl;
 
-  xo << "my_prevEditConstants: " 
-     << my_prevEditConstants << endl;
+  xo << "_prevEditConstants: " 
+     << _prevEditConstants << endl;
 
   return xo;
 }
@@ -1271,7 +1287,7 @@ ostream &
 ClSimplexSolver::printInternalInfo(ostream &xo) const
 {
   super::printInternalInfo(xo);
-  xo << "Number of edit variables: " << my_editVarMap.size() << endl;
+  xo << "Number of edit variables: " << _editVarMap.size() << endl;
   return xo;
 }
 

@@ -50,15 +50,17 @@ class ClSimplexSolver : public ClTableau {
 
   // Constructor
   ClSimplexSolver() :
-    my_objective(*(new ClObjectiveVariable("Z"))),
-    my_slackCounter(0),
-    my_artificialCounter(0),
-    my_dummyCounter(0),
-    my_epsilon(1e-8)
+    _objective(*(new ClObjectiveVariable("Z"))),
+    _slackCounter(0),
+    _artificialCounter(0),
+    _dummyCounter(0),
+    _epsilon(1e-8),
+    _fOptimizeAutomatically(true),
+    _fNeedsSolving(false)
     { 
-    my_rows[&my_objective] = new ClLinearExpression(); 
+    _rows[&_objective] = new ClLinearExpression(); 
 #ifndef CL_NO_TRACE
-    cerr << "objective row new@ " << my_rows[&my_objective] << endl;
+    cerr << "objective row new@ " << _rows[&_objective] << endl;
 #endif
     }
 
@@ -96,7 +98,7 @@ class ClSimplexSolver : public ClTableau {
 
   ClSimplexSolver &removeEditVar(const ClVariable &v)
     {
-      const ClConstraintAndIndex *pcai = my_editVarMap[&v];
+      const ClConstraintAndIndex *pcai = _editVarMap[&v];
       const ClConstraint *pcnEdit = pcai->pconstraint;
       removeConstraint(*pcnEdit);
       delete pcnEdit;
@@ -111,9 +113,9 @@ class ClSimplexSolver : public ClTableau {
   // we need it later
   ClSimplexSolver &beginEdit()
     {
-      assert(my_editVarMap.size() != 0);
+      assert(_editVarMap.size() != 0);
       // may later want to do more in here
-      my_infeasibleRows.clear();
+      _infeasibleRows.clear();
       resetStayConstants();
       return *this;
     }
@@ -122,7 +124,7 @@ class ClSimplexSolver : public ClTableau {
   // for now, it just removes all edit variables
   ClSimplexSolver &endEdit()
     {
-      assert(my_editVarMap.size() != 0);
+      assert(_editVarMap.size() != 0);
       removeAllEditVars();
       // may later want to do more in here
       return *this;
@@ -133,7 +135,7 @@ class ClSimplexSolver : public ClTableau {
   ClSimplexSolver &removeAllEditVars();
 
   int numEditVars() const
-  { return my_editVarMap.size(); }
+  { return _editVarMap.size(); }
 
   // Add weak stays to the x and y parts of each point. These have
   // increasing weights so that the solver will try to satisfy the x
@@ -190,6 +192,31 @@ class ClSimplexSolver : public ClTableau {
   // after resolve() has been called
   ClSimplexSolver &suggestValue(ClVariable &v, Number x);
 
+  // Control whether optimization and setting of external variables
+  // is done automatically or not.  By default it is done
+  // automatically and solve() never needs to be explicitly
+  // called by client code; if setAutosolve is put to false,
+  // then solve() needs to be invoked explicitly before using
+  // variables' values
+  ClSimplexSolver &setAutosolve(bool f)
+    { _fOptimizeAutomatically = f; return *this; }
+
+
+  // If autosolving has been turned off, client code needs
+  // to explicitly call solve() before accessing variables
+  // values
+  ClSimplexSolver &solve()
+    { 
+    if (_fNeedsSolving) 
+      {
+      optimize(_objective);
+      setExternalVariables();
+#ifndef NDEBUG
+      cerr << "Manual solve actually solving." << endl;
+#endif
+      }
+    return *this;
+    }
 
   friend ostream &operator<<(ostream &xo, const ClSimplexSolver &tableau);
   ostream &printOn(ostream &xo) const;
@@ -299,37 +326,40 @@ class ClSimplexSolver : public ClTableau {
 
   // the arrays of positive and negative error vars for the edit constraints
   // (need both positive and negative since they have only non-negative values)
-  ClVarVector my_editMinusErrorVars;
-  ClVarVector my_editPlusErrorVars;
+  ClVarVector _editMinusErrorVars;
+  ClVarVector _editPlusErrorVars;
 
   // the arrays of positive and negative error vars for the stay constraints
   // (need both positive and negative since they have only non-negative values)
-  ClVarVector my_stayMinusErrorVars;
-  ClVarVector my_stayPlusErrorVars;
+  ClVarVector _stayMinusErrorVars;
+  ClVarVector _stayPlusErrorVars;
 
   // The array of constants for the edit constraints on the previous
   // iteration.  These must be in the same order as editPlusErrorVars
   // and editMinusErrorVars
-  vector<Number> my_prevEditConstants;
+  vector<Number> _prevEditConstants;
 
   // give error variables for a non required constraint,
   // maps to ClSlackVariable-s
-  ClConstraintToVarSetMap my_errorVars;
+  ClConstraintToVarSetMap _errorVars;
 
   // Return a lookup table giving the marker variable for each
   // constraint (used when deleting a constraint).
-  ClConstraintToVarMap my_markerVars;
+  ClConstraintToVarMap _markerVars;
 
-  ClObjectiveVariable &my_objective;
+  ClObjectiveVariable &_objective;
 
   // Map edit variables to their constraints and the index into
   // the parallel ClVarVector arrays, above
-  ClVarToConstraintAndIndexMap my_editVarMap;
+  ClVarToConstraintAndIndexMap _editVarMap;
 
-  int my_slackCounter;
-  int my_artificialCounter;
-  int my_dummyCounter;
-  const double my_epsilon;
+  int _slackCounter;
+  int _artificialCounter;
+  int _dummyCounter;
+  const double _epsilon;
+
+  bool _fOptimizeAutomatically;
+  bool _fNeedsSolving;
 
 };
 
