@@ -337,6 +337,13 @@ class ClSimplexSolver : public ClSolver, public ClTableau {
   void UpdateExternalVariables() 
     { SetExternalVariables(); }
 
+  // A. Beurive' Tue Jul  6 17:05:39 CEST 1999
+  void ChangeStrengthAndWeight(ClConstraint *pcn, const ClStrength &strength, double weight);
+  void ChangeStrength(ClConstraint *pcn, const ClStrength &strength);
+  void ChangeWeight(ClConstraint *pcn, double weight);
+  void DisplayObjective();
+  void ExternalResetStayConstants();
+
  protected:
   
   // ClEditInfo is a privately-used class

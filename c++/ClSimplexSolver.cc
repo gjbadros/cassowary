@@ -410,8 +410,20 @@ ClSimplexSolver::RemoveConstraintInternal(const ClConstraint *const pcn)
 	}
       else
 	{
-	exitVar = *(col.begin());
-        fExitVarSet = true;
+	  // A. Beurive' Tue Sep 14 18:26:05 CEST 1999
+	  // Don't pick the objective, or it will be removed!
+	  it_col = col.begin();
+	  for ( ; it_col != col.end(); ++it_col)
+	    {
+	      ClVariable v = *it_col;
+	      if (v != _objective)
+		{
+		  exitVar = v;
+		  fExitVarSet = true;
+		  break;
+		}
+	    }
+	  assert(fExitVarSet == true);
 	}
       }
     
@@ -531,7 +543,8 @@ ClSimplexSolver::Resolve()
   DualOptimize();
   SetExternalVariables();
   _infeasibleRows.clear();
-  ResetStayConstants();
+  // A. Beurive' Tue Jul  6 13:48:57 CEST 1999
+  // ResetStayConstants();
 }
 
 ClSimplexSolver &
@@ -1220,6 +1233,9 @@ ClSimplexSolver::Optimize(ClVariable zVar)
 	{
 	objectiveCoeff = c;
 	entryVar = v;
+	// A. Beurive' Tue Jul 13 23:03:05 CEST 1999 Why the most
+	// negative?  I encountered unending cycles of pivots!
+	break;
 	}
       }
     // if all coefficients were positive (or if the objective
@@ -1550,3 +1566,72 @@ ostream &operator<<(ostream &xo, const ClSimplexSolver::ClEditInfoList &listPEdi
 
 #endif
 
+// A. Beurive' Tue Jul  6 17:03:32 CEST 1999
+void
+ClSimplexSolver::ChangeStrengthAndWeight(ClConstraint *pcn, const ClStrength &strength, double weight)
+{
+  ClConstraintToVarSetMap::iterator it_eVars = _errorVars.find(pcn);
+  // Only for constraints that already have error variables (i.e. non-required constraints)
+  assert(it_eVars != _errorVars.end());
+
+  ClLinearExpression *pzRow = RowExpression(_objective);
+
+  Number old_coeff = pcn->weight() * pcn->strength().symbolicWeight().AsDouble();
+  pcn->setStrength(strength);
+  pcn->setWeight(weight);
+  Number new_coeff = pcn->weight() * pcn->strength().symbolicWeight().AsDouble();
+
+  if (new_coeff != old_coeff)
+    {
+#ifdef CL_TRACE
+      cerr << "Changing strength and/or weight for constraint: " << endl << *pcn << endl;
+      cerr << "Updating objective row from:" << endl << *pzRow << endl;
+#endif
+      ClVarSet &eVars = (*it_eVars).second;
+      ClVarSet::iterator it = eVars.begin();
+      for ( ; it != eVars.end(); ++it )
+	{
+	  const ClLinearExpression *pexpr = RowExpression(*it);
+	  if (pexpr == NULL )
+	    {
+	      pzRow->AddVariable(*it,-old_coeff,_objective,*this);
+	      pzRow->AddVariable(*it,new_coeff,_objective,*this);
+	    }
+	  else
+	    {
+	      pzRow->AddExpression(*pexpr,-old_coeff,_objective,*this);
+	      pzRow->AddExpression(*pexpr,new_coeff,_objective,*this);
+	    }
+	}
+#ifdef CL_TRACE
+      cerr << "to: " << endl << *pzRow << endl;
+#endif
+
+      if (_fOptimizeAutomatically)
+	{
+	  Optimize(_objective);
+	  SetExternalVariables();
+	}
+    }
+}
+
+// A. Beurive' Tue Jul  6 17:03:42 CEST 1999
+void
+ClSimplexSolver::ChangeStrength(ClConstraint *pcn, const ClStrength &strength)
+{
+  ChangeStrengthAndWeight(pcn,strength,pcn->weight());
+}
+
+// A. Beurive' Tue Jul  6 17:03:42 CEST 1999
+void
+ClSimplexSolver::ChangeWeight(ClConstraint *pcn, double weight)
+{
+  ChangeStrengthAndWeight(pcn,pcn->strength(),weight);
+}
+
+// A. Beurive' Fri Jul  9 17:34:47 CEST 1999
+void
+ClSimplexSolver::ExternalResetStayConstants()
+{
+  ResetStayConstants();
+}

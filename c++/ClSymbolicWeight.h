@@ -112,7 +112,8 @@ class ClSymbolicWeight {
     vector<Number>::const_reverse_iterator i = _values.rbegin();
     Number sum  = 0;
     Number factor = 1;
-    Number multiplier = 10000;
+    // A. Beurive' Wed Jul  7 11:07:47 CEST 1999
+    Number multiplier = 1000000;
     for ( ; i != _values.rend(); ++i) 
       {
       sum += *i * factor;
