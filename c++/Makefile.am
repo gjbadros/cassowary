@@ -159,17 +159,11 @@ test_ClStrength_SOURCES = test-ClStrength.cc
 test_ClVariable_SOURCES = test-ClVariable.cc
 endif
 
-ClReader-lex.cc: ClReader.l ClReader.h
+ClReader-lex.cc: ClReader.l ClReader.h ClReader.cc.h
 	$(LEX) -Pcl -o$@ $<
 
-ClReader-lex.cc: ClReader.cc.h
-
-ClReader.cc: ClReader.y ClReader.h
+ClReader.cc.h ClReader.cc: ClReader.y ClReader.h
 	$(YACC) -d -pcl --output-file $@ $<
-
-ClReader.cc.h: ClReader.cc
-
 
 config-inline.h: config.h
 	grep '#define CL_' $^ > $@ || true
-

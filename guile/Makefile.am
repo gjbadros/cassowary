@@ -1,10 +1,6 @@
 ## $Id$
 ## Process this file with automake to create Makefile.in
 
-## The module's name is (app cassowary constraints) so put it in
-## ./cassowary of somewhere off of the GUILE_LOAD_PATH
-cassoguiledir = @GUILE_PKGDATA_DIR@/site/cassowary
-
 # This gets put in with libcassowary.a
 lib_LIBRARIES = libconstraints.a
 

@@ -245,7 +245,10 @@ fi
 AC_MSG_CHECKING(what the guile pkgdatadir is)
 GUILE_PKGDATA_DIR=`guile-config info pkgdatadir`
 AC_MSG_RESULT($GUILE_PKGDATA_DIR)
+GUILE_PKGDATA_DIR=\${prefix}/${GUILE_PKGDATA_DIR##$prefix}
+cassoguiledir=$GUILE_PKGDATA_DIR/site/cassowary
 
+AC_SUBST(cassoguiledir)
 AC_SUBST(GUILE)
 AC_SUBST(GUILE_INCLUDES)
 AC_SUBST(GUILE_BIN_DIR)
