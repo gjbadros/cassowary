@@ -21,19 +21,19 @@ abstract class ClAbstractVariable
   public ClAbstractVariable(String name)
     {
       my_name = name;
-      iVariableNumber++;
+      hash_code = iVariableNumber++;
     }
 
   public ClAbstractVariable()
     {
-      iVariableNumber++;
       my_name = "v" + iVariableNumber;
+      hash_code = iVariableNumber++;
     }
 
   public ClAbstractVariable(long varnumber, String prefix)
     {
       my_name = prefix + varnumber;
-      iVariableNumber++;
+      hash_code = iVariableNumber++;
     }
 
   public String name()
@@ -53,8 +53,13 @@ abstract class ClAbstractVariable
 
   public abstract String toString();
 
+  public final int hashCode() { return hash_code; }
+
   private String my_name;
 
-  private static long iVariableNumber;
+  // FIXGJB for debugging
+  private int hash_code;
+
+  private static int iVariableNumber;
 
 }
