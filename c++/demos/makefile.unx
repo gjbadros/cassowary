@@ -16,7 +16,7 @@ PROGRAM = ClBoundedQuadDemo
 
 EGCSDIR=/uns/egcs
 CL_LDFLAGS = -L$(CLDIR) -lCl -L$(EGCSDIR)/lib
-CL_CPPFLAGS = -I$(CLDIR) -I$(EGCSDIR)/include
+CL_CPPFLAGS = -I$(CLDIR) -I$(EGCSDIR)/include -DCL_NO_TRACE
 
 # All common UNIX compiler flags and options are now in
 # this central makefile.
@@ -31,7 +31,7 @@ all:    $(OBJDIR) $(PROGRAM)$(GUISUFFIX)
 wx:
 
 motif:
-	$(MAKE) -f makefile.unx GUISUFFIX= GUI=-Dwx_motif GUISUFFIX=_motif OPT='$(OPT)' LDLIBS='$(MOTIFLDLIBS) $(CL_LDFLAGS)' WXLIB=$(WXDIR)/lib/libwx_motif.a  OPTIONS='$(OPTIONS) $(CL_CPPFLAGS)' DEBUG='$(DEBUG)' WARN='$(WARN)' XLIB='$(XLIB)' XINCLUDE='$(XINCLUDE)' XVIEW_LINK=
+	$(MAKE) -f makefile.unx GUISUFFIX= GUI=-Dwx_motif GUISUFFIX=_motif OPT='$(OPT)' LDLIBS='$(CL_LDFLAGS) $(MOTIFLDLIBS)' WXLIB=$(WXDIR)/lib/libwx_motif.a  OPTIONS='$(CL_CPPFLAGS) $(OPTIONS)' DEBUG='$(DEBUG)' WARN='$(WARN)' XLIB='$(XLIB)' XINCLUDE='$(XINCLUDE)' XVIEW_LINK=
 
 
 
