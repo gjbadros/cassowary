@@ -657,7 +657,7 @@ addVariable: v coefficient: c subject: subject solver: solver
 	(self terms includesKey: v)
 		ifTrue: [
 			newCoeff := c + (self terms at: v).
-			(newCoeff clApprox: 0.0)
+			newCoeff clApproxZero
 				ifTrue: [
 					self terms removeKey: v.
 					solver noteRemovedVariable: v subject: subject.
@@ -2293,6 +2293,17 @@ approxNonNegative
 	^true
 !
 
+clApproxZero
+	"return true if this symbolic weight is approximately zero.  Allow coefficients that are within epsilon of
+		0 to count as 0"
+		| a nepsilon |
+	nepsilon := 0.0 - ClEpsilon.
+	1 to: self size do: [:i | 
+		a := self at: i.  
+		a clApproxZero ifFalse: [^false]].
+	^true
+!
+
 isSymbolicWeight
 	^true
 !
@@ -2634,7 +2645,18 @@ clApprox: x
 	epsilon := ClSimplexSolver epsilon.
 	self = 0.0 ifTrue: [^x abs < epsilon].
 	x = 0.0 ifTrue: [^self abs < epsilon].
-	^(self - x) abs < (self abs * epsilon)! !
+	^(self - x) abs < (self abs * epsilon)!
+
+clApproxZero
+	"ACTION
+		Test whether I am approximately zero.
+
+	RETURNS
+		<Boolean>
+	"
+
+	^self clApprox: 0.0
+! !
 
 !Number publicMethods !
 
