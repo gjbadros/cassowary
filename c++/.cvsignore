@@ -36,6 +36,7 @@ gmon.out
 gmon.out-setExtOpt
 lib
 output
+randoms.txt
 stamp-h
 test-ClBounds
 test-ClConstraint
