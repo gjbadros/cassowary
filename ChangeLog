@@ -1,6 +1,39 @@
-Wed Apr 14 15:51:43 1999  Greg J Badros  <gjb@cs.washington.edu>
+Mon Apr 19 13:45:35 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* cassowary.spec: Added --with-guile-prefix
+
+Mon Apr 19 13:02:46 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClReader.l: Be a bit more careful about end of string
+	handling in YY_INPUT-- only return result = 1 if we read a
+	non-null character.  Call yy_flush_buffer() before throw-ing an
+	error, so that we start anew the next time we are asked to return
+	tokens for the parser.
+
+	* c++/ClC.h, c++/ClC.cc: Added CL_SimplexSolverAddStay. (Fix typo
+	in .cc)
+
+Fri Apr 16 16:36:24 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClTests.cc, c++/ClSimplexSolver.h, c++/ClSimplexSolver.cc, : Use "RemoveConstraintNoException", not
+	"removeConstraintNoException" (fix initial caps.)
+
+	* c++/ClReader.y: Start looking for a constraint, turn on verbose
+	warnings and DEBUG option (still need to set cldebug = 1 in
+	debugger)
+
+	* c++/ClReader.h: In operator() for the lookup proc, Return
+ 	&clvNil() if _pmapVars is still NULL
+
+	* c++/ClC.h, c++/ClC.cc: Added CL_VariableName(..), CL_VarMapDelete(..),
+	CL_RemoveConstraint(..) 
+
+
+Wed Apr 14 16:56:05 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* configure.in: Bump to .43.
+
+	* c++/ClC.cc (CL_VarMapDelete, CL_VariableName): Added new functions.
 
 	* cassowary.spec: Added, for building rpms
 
