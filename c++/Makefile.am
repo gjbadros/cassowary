@@ -4,17 +4,24 @@
 lib_LIBRARIES = libcassowary.a
 lib_LTLIBRARIES = libcassowary.la
 
-INCLUDES = @GUILE_INCLUDES@
-LDADD = libcassowary.a -L@prefix@/lib -lGTL
+INCLUDES = @GUILE_INCLUDES@ @GTL_INCLUDES@
+LDADD = libcassowary.a -L@prefix@/lib @GTL_LIB@
+if CL_BUILD_TESTS
 ClCTest_LDADD = $(LDADD) -lstdc++
+endif
 
 benchdir=$(libdir)/cassowary/bench
 bugsdir=$(libdir)/cassowary/bugs
 testdir=$(libdir)/cassowary/tests
+moretestdir=$(libdir)/cassowary/tests
 
-bench_PROGRAMS = ClTests QocaBench
+EXTRA_PROGRAMS = $(test_programs) $(bench_programs) $(bugs_programs)
 
-test_PROGRAMS = \
+## Only get built if --enable-cxx-tests is given
+bench_programs = QocaBench
+
+## Only get built if --enable-cxx-tests is given
+test_programs = \
 	ClParseTest \
 	ClSubgraphTest \
 	ClCTest \
@@ -26,18 +33,28 @@ test_PROGRAMS = \
 	test-ClStrength \
 	test-ClVariable
 
+test_PROGRAMS = ClTests
+if CL_BUILD_TESTS
+moretest_PROGRAMS = @TEST_PROGRAMS@
+bench_PROGRAMS = @BENCH_PROGRAMS@
+endif
 
+bugs_programs = \
+	ClBug0 \
+	ClBug1 \
+	ClBug2
 
-#bugs_PROGRAMS = \
-#	ClBug0 \
-#	ClBug1 \
-#	ClBug2
+ClBug0_SOURCES = ClBug0.cc
 
-#ClBug0_SOURCES = ClBug0.cc
+ClBug1_SOURCES = ClBug1.cc
 
-#ClBug1_SOURCES = ClBug1.cc
+ClBug2_SOURCES = ClBug2.cc
 
-#ClBug2_SOURCES = ClBug2.cc
+sources_for_fd_solver = \
+	ClFDSolver.cc \
+	ClFDVariable.cc \
+	ClFDConnectorVariable.cc \
+	ClFDBinaryOneWayConstraint.cc
 
 
 libcassowary_a_SOURCES = \
@@ -46,20 +63,17 @@ libcassowary_a_SOURCES = \
 	ClLinearExpression.cc \
 	ClSolver.cc \
 	ClSimplexSolver.cc \
-	ClFDSolver.cc \
 	ClStrength.cc \
 	ClSymbolicWeight.cc \
 	ClTableau.cc \
 	ClVariable.cc \
-	ClFDVariable.cc \
-	ClFDConnectorVariable.cc \
-	ClFDBinaryOneWayConstraint.cc \
 	ClFloatVariable.cc \
 	ClSlackVariable.cc \
 	ClDummyVariable.cc \
 	ClReader-lex.cc \
 	ClReader.cc \
-	ClC.cc
+	ClC.cc \
+	@SOURCES_FOR_FD_SOLVER@
 
 libcassowary_la_SOURCES = \
 	ClAbstractVariable.cc \
@@ -67,7 +81,6 @@ libcassowary_la_SOURCES = \
 	ClLinearExpression.cc \
 	ClSolver.cc \
 	ClSimplexSolver.cc \
-	ClFDSolver.cc \
 	ClStrength.cc \
 	ClSymbolicWeight.cc \
 	ClTableau.cc \
@@ -80,7 +93,8 @@ libcassowary_la_SOURCES = \
 	ClDummyVariable.cc \
 	ClReader-lex.cc \
 	ClReader.cc \
-	ClC.cc
+	ClC.cc \
+	@SOURCES_FOR_FD_SOLVER@
 
 include_HEADERS = Cl.h ClC.h
 
@@ -125,6 +139,7 @@ pkginclude_HEADERS = \
 
 ClTests_SOURCES = ClTests.cc
 
+if CL_BUILD_TESTS
 ClFDTests_SOURCES = ClFDTests.cc
 
 QocaBench_SOURCES = QocaBench.cc
@@ -144,7 +159,7 @@ test_ClSimplexSolver_SOURCES = test-ClSimplexSolver.cc
 test_ClStrength_SOURCES = test-ClStrength.cc
 
 test_ClVariable_SOURCES = test-ClVariable.cc
-
+endif
 
 ClReader-lex.cc: ClReader.l ClReader.h
 	$(LEX) -Pcl -o$@ $<

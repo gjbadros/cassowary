@@ -94,28 +94,6 @@ CLV CL_ClvNew(const char *szName, double Value, CL_SimplexSolver solver)
 }
 
 
-#include <stdarg.h>
-
-/* Return a new ClVariable containing an FD variable with name and 
-   varargs domain_values as its initial domain, terminated with FDN_EOL */
-CLV CL_CldvNew(const char *szName, ...)
-{
-  va_list ap;
-  va_start(ap, szName);
-  list<FDNumber> l;
-  FDNumber n;
-  while ( (n = va_arg(ap, FDNumber)) != FDN_EOL) {
-    l.push_back(n);
-  }
-  va_end(ap);
-
-  ClVariable *pclv = new ClVariable(new ClFDVariable(szName,0.0,l));
-#if 0
-  fprintf(stderr,"Created fd var %s @ %p\n",szName,pclv->get_pclv());
-#endif
-  return pclv;
-}
-
 
 void CL_VariableSetPv(CLV var, void *pv)
 { var->SetPv(pv); }
@@ -131,13 +109,6 @@ CL_VariableName(CLV var)
 CL_SimplexSolver CL_SimplexSolverNew()
 {
   ClSimplexSolver *psolver = new ClSimplexSolver();
-  return psolver;
-}
-
-
-CL_FDSolver CL_FDSolverNew()
-{
-  ClFDSolver *psolver = new ClFDSolver();
   return psolver;
 }
 
@@ -242,11 +213,6 @@ CL_ClvIsNil(const CLV var)
   return var->IsNil();
 }
 
-boolean CL_ClvIsFD(const CLV var)
-{
-  return var->IsFDVariable();
-}
-
 
 
 /* Return a new constraint (or NULL) from parsing the strings */
@@ -305,6 +271,42 @@ void CL_SimplexSolverSetEditedValue(CL_SimplexSolver solver, CLV var, double n)
   solver->SetEditedValue(*var,n);
 }
 
+#if defined(HAVE_GTL) && defined(BUILD_FD_SOLVER)
+
+#include <stdarg.h>
+
+/* Return a new ClVariable containing an FD variable with name and 
+   varargs domain_values as its initial domain, terminated with FDN_EOL */
+CLV CL_CldvNew(const char *szName, ...)
+{
+  va_list ap;
+  va_start(ap, szName);
+  list<FDNumber> l;
+  FDNumber n;
+  while ( (n = va_arg(ap, FDNumber)) != FDN_EOL) {
+    l.push_back(n);
+  }
+  va_end(ap);
+
+  ClVariable *pclv = new ClVariable(new ClFDVariable(szName,0.0,l));
+#if 0
+  fprintf(stderr,"Created fd var %s @ %p\n",szName,pclv->get_pclv());
+#endif
+  return pclv;
+}
+
+
+CL_FDSolver CL_FDSolverNew()
+{
+  ClFDSolver *psolver = new ClFDSolver();
+  return psolver;
+}
+
+boolean CL_ClvIsFD(const CLV var)
+{
+  return var->IsFDVariable();
+}
+
 boolean CL_FDCanConvertCn(CL_Constraint cn)
 {
   return ClFDBinaryOneWayConstraint::FCanConvertCn(*cn);
@@ -324,5 +326,6 @@ boolean CL_FCnOkayForSimplexSolver(CL_Constraint cn)
   return cn->FIsOkayForSimplexSolver();
 }
 
+#endif
 
 } /* extern "C" */

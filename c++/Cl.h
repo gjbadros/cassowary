@@ -38,8 +38,10 @@
 #include "cassowary/ClEditConstraint.h"
 #include "cassowary/ClStayConstraint.h"
 #include "cassowary/ClReader.h"
+#if defined(HAVE_GTL) && defined(BUILD_FD_SOLVER)
 #include "cassowary/ClFDBinaryOneWayConstraint.h"
 #include "cassowary/ClFDSolver.h"
+#endif
 
 extern const char *szCassowaryVersion;
 

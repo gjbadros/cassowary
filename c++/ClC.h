@@ -25,15 +25,10 @@ extern "C" {
 #include <stdio.h>
 #include <values.h>
 
-#ifndef FDN_EOL
-#define FDN_EOL MINLONG
-#endif
 
 #define boolean int
 
 typedef double Number;
-
-typedef long FDNumber;
 
 struct ClVariable;
 
@@ -46,9 +41,6 @@ typedef struct ClSolver *CL_Solver;
 
 struct ClSimplexSolver;
 typedef struct ClSimplexSolver *CL_SimplexSolver;
-
-struct ClFDSolver;
-typedef struct ClFDSolver *CL_FDSolver;
 
 struct ClTableau;
 typedef struct ClSimplexSolver *CL_Tableau; // ClSimplexSolver * on purpose
@@ -84,16 +76,7 @@ void CL_Shutdown();
    solver is non null */
 CLV CL_ClvNew(const char *szName, double Value, CL_SimplexSolver solver);
 
-/* Create a FD variable */
-CLV CL_CldvNew(const char *szName, ...);
-
-/* return true iff cn can be added to the FD solver */
-boolean CL_FDCanConvertCn(CL_Constraint cn);
-
 boolean CL_FCnOkayForSimplexSolver(CL_Constraint cn);
-
-
-CL_Constraint CL_FDCnFromCn(CL_Constraint cn);
 
 void CL_VariableSetPv(CLV var, void *pv);
 
@@ -101,9 +84,27 @@ void *CL_VariablePv(CLV var);
 
 const char *CL_VariableName(CLV var);
 
+#if defined(HAVE_GTL) && defined(BUILD_FD_SOLVER)
+#ifndef FDN_EOL
+#define FDN_EOL MINLONG
+#endif
+typedef long FDNumber;
+
+struct ClFDSolver;
+typedef struct ClFDSolver *CL_FDSolver;
 
 /* Return a new ClFDSolver object */
 CL_FDSolver CL_FDSolverNew();
+/* return true iff cn can be added to the FD solver */
+boolean CL_FDCanConvertCn(CL_Constraint cn);
+
+CL_Constraint CL_FDCnFromCn(CL_Constraint cn);
+
+/* Create a FD variable */
+CLV CL_CldvNew(const char *szName, ...);
+
+boolean CL_ClvIsFD(const CLV clv);
+#endif
 
 /* Return a new ClSimplexSolver object */
 CL_SimplexSolver CL_SimplexSolverNew();
@@ -137,8 +138,6 @@ CLV CL_ClvLookupTrim(const char *szNameConst);
 double CL_ClvValue(const CLV clv);
 
 boolean CL_ClvIsNil(const CLV clv);
-
-boolean CL_ClvIsFD(const CLV clv);
 
 /* Return a new constraint from parsing the strings */
 CL_Constraint CL_ParseConstraint(const char *szConstraintRule, const char *szConstraintStrength);
