@@ -28,7 +28,11 @@ Wed Mar 10 11:36:37 1999  Greg J Badros  <gjb@cs.washington.edu>
 	* c++/Makefile.linux:  Updated for ClBug2
 
 	* c++/demos/DraggableBox.h: Do not return references to
-	ClVariable-s -- just return by value since they are a handle class.
+	ClVariable-s -- just return by value since they are a handle
+	class.
+
+	* guile/Makefile.am: changed name of library to
+ 	libcassowaryguile.a from libconstraints.a
 
 	* java/CL.h: Added a String description argument to assert() to
 	permit easier tracking of failures.

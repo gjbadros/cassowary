@@ -29,6 +29,9 @@ constraints.
 ** Improved debugging support a bit by adding descriptions to
 ExCLInternalError-s and assert()s
 
+* Changes to guile wrapper
+** changed name of library to libcassowaryguile.a from libconstraints.a
+
 1-Mar-1999: Changes since Cassowary v0.3 (for release v0.31)
 * Changes to C++
 ** Some bug fixes -- pass ClVariable-s around by value instead of const

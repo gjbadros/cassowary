@@ -1,4 +1,5 @@
 *.class
 .built-package
 .built-test
+Makefile
 java.prof
