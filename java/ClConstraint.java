@@ -19,13 +19,13 @@ public abstract class ClConstraint
 {
 
   public ClConstraint(ClStrength strength, double weight)
-    { _strength = strength; _weight = weight; }
+    { _strength = strength; _weight = weight; _times_added = 0; }
 
   public ClConstraint(ClStrength strength)
-    { _strength = strength; _weight = 1.0; }
+    { _strength = strength; _weight = 1.0; _times_added = 0; }
 
   public ClConstraint()
-    { _strength = ClStrength.required; _weight = 1.0; }
+    { _strength = ClStrength.required; _weight = 1.0; _times_added = 0; }
   
   public abstract ClLinearExpression expression();
 
@@ -57,6 +57,22 @@ public abstract class ClConstraint
   public Object getAttachedObject()
     { return _attachedObject; }
 
+  public void changeStrength(ClStrength strength)
+    throws ExCLTooDifficult
+    { 
+      if (_times_added == 0) {
+        setStrength(strength);
+      } else {
+        throw new ExCLTooDifficult();
+      }
+    }
+
+  public void addedTo(ClSimplexSolver solver)
+    { ++_times_added; }
+
+  public void removedFrom(ClSimplexSolver solver)
+    { --_times_added; }
+
   private void setStrength(ClStrength strength)
     { _strength = strength; }
 
@@ -65,6 +81,8 @@ public abstract class ClConstraint
 
   private ClStrength _strength;
   private double _weight;
-
+  
   private Object _attachedObject;
+
+  private int _times_added;
 }

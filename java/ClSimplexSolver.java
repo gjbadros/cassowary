@@ -119,6 +119,7 @@ public class ClSimplexSolver extends ClTableau
       setExternalVariables();
     }
 
+    cn.addedTo(this);
     return  this;
   }
 
@@ -301,9 +302,17 @@ public class ClSimplexSolver extends ClTableau
   }
 
 
+  public ClSimplexSolver removeConstraint(ClConstraint cn)
+    throws ExCLConstraintNotFound, ExCLInternalError
+  {
+    removeConstraintInternal(cn);
+    cn.removedFrom(this);
+    return this;
+  }
+
   // Remove the constraint cn from the tableau
   // Also remove any error variable associated with cn
-  public final ClSimplexSolver removeConstraint(ClConstraint cn)
+  private final ClSimplexSolver removeConstraintInternal(ClConstraint cn)
        throws ExCLConstraintNotFound, ExCLInternalError
   {
     if (fTraceOn) fnenterprint("removeConstraint: " + cn);
