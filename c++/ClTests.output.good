@@ -8,9 +8,9 @@ cn.isInequality() == 0
 cn.isRequired() == 0
 * addVariable([x:0], -1)
 x addVariable exited.
-* noteAddedVariable([ep1:slack], [z:obj])
+* noteAddedVariable([ep1:slack], [Z:obj])
 x noteAddedVariable exited.
-* noteAddedVariable([em1:slack], [z:obj])
+* noteAddedVariable([em1:slack], [Z:obj])
 x noteAddedVariable exited.
 - returning 100 + -1*[ep1:slack] + 1*[em1:slack] + -1*[x:0] new@ 0x80f0c60
 x newExpression exited.
@@ -21,26 +21,26 @@ x chooseSubject exited.
 x newSubject exited.
 * addRow([x:0], 100 + -1*[ep1:slack] + 1*[em1:slack])
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
 [x:0] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [x:0] }
-[em1:slack] -> { [z:obj], [x:0] }
+[ep1:slack] -> { [Z:obj], [x:0] }
+[em1:slack] -> { [Z:obj], [x:0] }
 
 Infeasible rows: {  }
 
 x addRow exited.
 - returning true
 x tryAddingDirectly exited.
-* optimize([z:obj])
+* optimize([Z:obj])
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
 [x:0] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [x:0] }
-[em1:slack] -> { [z:obj], [x:0] }
+[ep1:slack] -> { [Z:obj], [x:0] }
+[em1:slack] -> { [Z:obj], [x:0] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -56,12 +56,12 @@ my_prevEditConstants:
 x optimize exited.
 * setExternalVariables()
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
 [x:0] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [x:0] }
-[em1:slack] -> { [z:obj], [x:0] }
+[ep1:slack] -> { [Z:obj], [x:0] }
+[em1:slack] -> { [Z:obj], [x:0] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -98,12 +98,12 @@ x tryAddingDirectly exited.
 * addWithArtificialVariable(90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s2:slack])
 addWithArtificialVariable before addRow-s:
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
 [x:100] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [x:100] }
-[em1:slack] -> { [z:obj], [x:100] }
+[ep1:slack] -> { [Z:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [x:100] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -118,13 +118,13 @@ my_prevEditConstants:
 
 * addRow([az:obj], 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s2:slack])
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
 [az:obj] <-=-> 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s2:slack]
 [x:100] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [az:obj], [x:100] }
-[em1:slack] -> { [z:obj], [az:obj], [x:100] }
+[ep1:slack] -> { [Z:obj], [az:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [az:obj], [x:100] }
 [s2:slack] -> { [az:obj] }
 
 Infeasible rows: {  }
@@ -132,14 +132,14 @@ Infeasible rows: {  }
 x addRow exited.
 * addRow([a1:slack], 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s2:slack])
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
 [a1:slack] <-=-> 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s2:slack]
 [az:obj] <-=-> 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s2:slack]
 [x:100] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [a1:slack], [az:obj], [x:100] }
-[em1:slack] -> { [z:obj], [a1:slack], [az:obj], [x:100] }
+[ep1:slack] -> { [Z:obj], [a1:slack], [az:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [a1:slack], [az:obj], [x:100] }
 [s2:slack] -> { [a1:slack], [az:obj] }
 
 Infeasible rows: {  }
@@ -147,14 +147,14 @@ Infeasible rows: {  }
 x addRow exited.
 addWithArtificialVariable after addRow-s:
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
 [a1:slack] <-=-> 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s2:slack]
 [az:obj] <-=-> 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s2:slack]
 [x:100] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [a1:slack], [az:obj], [x:100] }
-[em1:slack] -> { [z:obj], [a1:slack], [az:obj], [x:100] }
+[ep1:slack] -> { [Z:obj], [a1:slack], [az:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [a1:slack], [az:obj], [x:100] }
 [s2:slack] -> { [a1:slack], [az:obj] }
 
 Infeasible rows: {  }
@@ -170,14 +170,14 @@ my_prevEditConstants:
 
 * optimize([az:obj])
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
 [a1:slack] <-=-> 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s2:slack]
 [az:obj] <-=-> 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s2:slack]
 [x:100] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [a1:slack], [az:obj], [x:100] }
-[em1:slack] -> { [z:obj], [a1:slack], [az:obj], [x:100] }
+[ep1:slack] -> { [Z:obj], [a1:slack], [az:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [a1:slack], [az:obj], [x:100] }
 [s2:slack] -> { [a1:slack], [az:obj] }
 
 Infeasible rows: {  }
@@ -192,7 +192,7 @@ my_stayMinusErrorVars: 0:[  ]
 my_prevEditConstants: 
 
 *pentryVar == [ep1:slack], objectiveCoeff == -1
-Checking [z:obj]
+Checking [Z:obj]
 Checking [a1:slack]
 New minRatio == 90
 Checking [az:obj]
@@ -205,25 +205,25 @@ x removeRow exited.
 x newSubject exited.
 * ClTableau::* substituteOut([ep1:slack], 90 + 1*[em1:slack] + 1*[s2:slack] + -1*[a1:slack])
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
 [az:obj] <-=-> 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s2:slack]
 [x:100] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [az:obj], [x:100] }
-[em1:slack] -> { [z:obj], [az:obj], [x:100] }
+[ep1:slack] -> { [Z:obj], [az:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [az:obj], [x:100] }
 [s2:slack] -> { [az:obj] }
 
 Infeasible rows: {  }
 
-* ClLinearExpression::* substituteOut([ep1:slack], 90 + 1*[em1:slack] + 1*[s2:slack] + -1*[a1:slack], [z:obj], Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
+* ClLinearExpression::* substituteOut([ep1:slack], 90 + 1*[em1:slack] + 1*[s2:slack] + -1*[a1:slack], [Z:obj], Tableau:
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
 [az:obj] <-=-> 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s2:slack]
 [x:100] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [az:obj], [x:100] }
-[em1:slack] -> { [z:obj], [az:obj], [x:100] }
+[ep1:slack] -> { [Z:obj], [az:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [az:obj], [x:100] }
 [s2:slack] -> { [az:obj] }
 
 Infeasible rows: {  }
@@ -231,23 +231,23 @@ Infeasible rows: {  }
 *this == 1*[ep1:slack] + 1*[em1:slack]
 Considering (*poc) == 1*[em1:slack]
 Adding (*i) == 1*[s2:slack]
-* noteAddedVariable([s2:slack], [z:obj])
+* noteAddedVariable([s2:slack], [Z:obj])
 x noteAddedVariable exited.
 Adding (*i) == -1*[a1:slack]
-* noteAddedVariable([a1:slack], [z:obj])
+* noteAddedVariable([a1:slack], [Z:obj])
 x noteAddedVariable exited.
 Now (*this) is 90 + 2*[em1:slack] + 1*[s2:slack] + -1*[a1:slack]
 x substituteOut exited.
 * ClLinearExpression::* substituteOut([ep1:slack], 90 + 1*[em1:slack] + 1*[s2:slack] + -1*[a1:slack], [az:obj], Tableau:
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s2:slack] + -1*[a1:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s2:slack] + -1*[a1:slack]
 [az:obj] <-=-> 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s2:slack]
 [x:100] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [az:obj], [x:100] }
-[em1:slack] -> { [z:obj], [az:obj], [x:100] }
-[s2:slack] -> { [z:obj], [az:obj] }
-[a1:slack] -> { [z:obj] }
+[ep1:slack] -> { [Z:obj], [az:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [az:obj], [x:100] }
+[s2:slack] -> { [Z:obj], [az:obj] }
+[a1:slack] -> { [Z:obj] }
 
 Infeasible rows: {  }
 )
@@ -264,15 +264,15 @@ x noteAddedVariable exited.
 Now (*this) is 1*[a1:slack]
 x substituteOut exited.
 * ClLinearExpression::* substituteOut([ep1:slack], 90 + 1*[em1:slack] + 1*[s2:slack] + -1*[a1:slack], [x:100], Tableau:
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s2:slack] + -1*[a1:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s2:slack] + -1*[a1:slack]
 [az:obj] <-=-> 1*[a1:slack]
 [x:100] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [az:obj], [x:100] }
-[em1:slack] -> { [z:obj], [x:100] }
-[s2:slack] -> { [z:obj] }
-[a1:slack] -> { [z:obj], [az:obj] }
+[ep1:slack] -> { [Z:obj], [az:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [x:100] }
+[s2:slack] -> { [Z:obj] }
+[a1:slack] -> { [Z:obj], [az:obj] }
 
 Infeasible rows: {  }
 )
@@ -291,30 +291,30 @@ x substituteOut exited.
 x substituteOut exited.
 * addRow([ep1:slack], 90 + 1*[em1:slack] + 1*[s2:slack] + -1*[a1:slack])
 Tableau:
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s2:slack] + -1*[a1:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s2:slack] + -1*[a1:slack]
 [ep1:slack] <-=-> 90 + 1*[em1:slack] + 1*[s2:slack] + -1*[a1:slack]
 [az:obj] <-=-> 1*[a1:slack]
 [x:100] <-=-> 10 + -1*[s2:slack] + 1*[a1:slack]
 
 Columns:
-[em1:slack] -> { [z:obj], [ep1:slack] }
-[s2:slack] -> { [z:obj], [ep1:slack], [x:100] }
-[a1:slack] -> { [z:obj], [ep1:slack], [az:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [ep1:slack] }
+[s2:slack] -> { [Z:obj], [ep1:slack], [x:100] }
+[a1:slack] -> { [Z:obj], [ep1:slack], [az:obj], [x:100] }
 
 Infeasible rows: {  }
 
 x addRow exited.
 x pivot exited.
 Tableau:
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s2:slack] + -1*[a1:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s2:slack] + -1*[a1:slack]
 [ep1:slack] <-=-> 90 + 1*[em1:slack] + 1*[s2:slack] + -1*[a1:slack]
 [az:obj] <-=-> 1*[a1:slack]
 [x:100] <-=-> 10 + -1*[s2:slack] + 1*[a1:slack]
 
 Columns:
-[em1:slack] -> { [z:obj], [ep1:slack] }
-[s2:slack] -> { [z:obj], [ep1:slack], [x:100] }
-[a1:slack] -> { [z:obj], [ep1:slack], [az:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [ep1:slack] }
+[s2:slack] -> { [Z:obj], [ep1:slack], [x:100] }
+[a1:slack] -> { [Z:obj], [ep1:slack], [az:obj], [x:100] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -335,15 +335,15 @@ x removeColumn exited.
 - returning 0
 x removeRow exited.
 x addWithArtificialVariable exited.
-* optimize([z:obj])
+* optimize([Z:obj])
 Tableau:
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s2:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s2:slack]
 [ep1:slack] <-=-> 90 + 1*[em1:slack] + 1*[s2:slack]
 [x:100] <-=-> 10 + -1*[s2:slack]
 
 Columns:
-[em1:slack] -> { [z:obj], [ep1:slack] }
-[s2:slack] -> { [z:obj], [ep1:slack], [x:100] }
+[em1:slack] -> { [Z:obj], [ep1:slack] }
+[s2:slack] -> { [Z:obj], [ep1:slack], [x:100] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -359,13 +359,13 @@ my_prevEditConstants:
 x optimize exited.
 * setExternalVariables()
 Tableau:
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s2:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s2:slack]
 [ep1:slack] <-=-> 90 + 1*[em1:slack] + 1*[s2:slack]
 [x:100] <-=-> 10 + -1*[s2:slack]
 
 Columns:
-[em1:slack] -> { [z:obj], [ep1:slack] }
-[s2:slack] -> { [z:obj], [ep1:slack], [x:100] }
+[em1:slack] -> { [Z:obj], [ep1:slack] }
+[s2:slack] -> { [Z:obj], [ep1:slack], [x:100] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -395,30 +395,30 @@ x chooseSubject exited.
 x newSubject exited.
 * addRow([s3:slack], 10 + 1*[s2:slack])
 Tableau:
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s2:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s2:slack]
 [ep1:slack] <-=-> 90 + 1*[em1:slack] + 1*[s2:slack]
 [s3:slack] <-=-> 10 + 1*[s2:slack]
 [x:10] <-=-> 10 + -1*[s2:slack]
 
 Columns:
-[em1:slack] -> { [z:obj], [ep1:slack] }
-[s2:slack] -> { [z:obj], [ep1:slack], [s3:slack], [x:10] }
+[em1:slack] -> { [Z:obj], [ep1:slack] }
+[s2:slack] -> { [Z:obj], [ep1:slack], [s3:slack], [x:10] }
 
 Infeasible rows: {  }
 
 x addRow exited.
 - returning true
 x tryAddingDirectly exited.
-* optimize([z:obj])
+* optimize([Z:obj])
 Tableau:
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s2:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s2:slack]
 [ep1:slack] <-=-> 90 + 1*[em1:slack] + 1*[s2:slack]
 [s3:slack] <-=-> 10 + 1*[s2:slack]
 [x:10] <-=-> 10 + -1*[s2:slack]
 
 Columns:
-[em1:slack] -> { [z:obj], [ep1:slack] }
-[s2:slack] -> { [z:obj], [ep1:slack], [s3:slack], [x:10] }
+[em1:slack] -> { [Z:obj], [ep1:slack] }
+[s2:slack] -> { [Z:obj], [ep1:slack], [s3:slack], [x:10] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -434,14 +434,14 @@ my_prevEditConstants:
 x optimize exited.
 * setExternalVariables()
 Tableau:
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s2:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s2:slack]
 [ep1:slack] <-=-> 90 + 1*[em1:slack] + 1*[s2:slack]
 [s3:slack] <-=-> 10 + 1*[s2:slack]
 [x:10] <-=-> 10 + -1*[s2:slack]
 
 Columns:
-[em1:slack] -> { [z:obj], [ep1:slack] }
-[s2:slack] -> { [z:obj], [ep1:slack], [s3:slack], [x:10] }
+[em1:slack] -> { [Z:obj], [ep1:slack] }
+[s2:slack] -> { [Z:obj], [ep1:slack], [s3:slack], [x:10] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -461,7 +461,7 @@ x == 10
 * resetStayConstants()
 x resetStayConstants exited.
 Looking to remove var [s2:slack]
-Must pivot -- columns are { [z:obj], [ep1:slack], [s3:slack], [x:10] }
+Must pivot -- columns are { [Z:obj], [ep1:slack], [s3:slack], [x:10] }
 Marker [s2:slack]'s coefficient in 90 + 1*[em1:slack] + 1*[s2:slack] is 1
 Marker [s2:slack]'s coefficient in 10 + 1*[s2:slack] is 1
 pexitVar is still NULL
@@ -473,42 +473,42 @@ x removeRow exited.
 x newSubject exited.
 * ClTableau::* substituteOut([s2:slack], -10 + 1*[s3:slack])
 Tableau:
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s2:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s2:slack]
 [ep1:slack] <-=-> 90 + 1*[em1:slack] + 1*[s2:slack]
 [x:10] <-=-> 10 + -1*[s2:slack]
 
 Columns:
-[em1:slack] -> { [z:obj], [ep1:slack] }
-[s2:slack] -> { [z:obj], [ep1:slack], [x:10] }
+[em1:slack] -> { [Z:obj], [ep1:slack] }
+[s2:slack] -> { [Z:obj], [ep1:slack], [x:10] }
 
 Infeasible rows: {  }
 
-* ClLinearExpression::* substituteOut([s2:slack], -10 + 1*[s3:slack], [z:obj], Tableau:
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s2:slack]
+* ClLinearExpression::* substituteOut([s2:slack], -10 + 1*[s3:slack], [Z:obj], Tableau:
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s2:slack]
 [ep1:slack] <-=-> 90 + 1*[em1:slack] + 1*[s2:slack]
 [x:10] <-=-> 10 + -1*[s2:slack]
 
 Columns:
-[em1:slack] -> { [z:obj], [ep1:slack] }
-[s2:slack] -> { [z:obj], [ep1:slack], [x:10] }
+[em1:slack] -> { [Z:obj], [ep1:slack] }
+[s2:slack] -> { [Z:obj], [ep1:slack], [x:10] }
 
 Infeasible rows: {  }
 )
 *this == 90 + 2*[em1:slack] + 1*[s2:slack]
 Adding (*i) == 1*[s3:slack]
-* noteAddedVariable([s3:slack], [z:obj])
+* noteAddedVariable([s3:slack], [Z:obj])
 x noteAddedVariable exited.
 Now (*this) is 80 + 2*[em1:slack] + 1*[s3:slack]
 x substituteOut exited.
 * ClLinearExpression::* substituteOut([s2:slack], -10 + 1*[s3:slack], [ep1:slack], Tableau:
-[z:obj] <-=-> 80 + 2*[em1:slack] + 1*[s3:slack]
+[Z:obj] <-=-> 80 + 2*[em1:slack] + 1*[s3:slack]
 [ep1:slack] <-=-> 90 + 1*[em1:slack] + 1*[s2:slack]
 [x:10] <-=-> 10 + -1*[s2:slack]
 
 Columns:
-[em1:slack] -> { [z:obj], [ep1:slack] }
-[s2:slack] -> { [z:obj], [ep1:slack], [x:10] }
-[s3:slack] -> { [z:obj] }
+[em1:slack] -> { [Z:obj], [ep1:slack] }
+[s2:slack] -> { [Z:obj], [ep1:slack], [x:10] }
+[s3:slack] -> { [Z:obj] }
 
 Infeasible rows: {  }
 )
@@ -519,14 +519,14 @@ x noteAddedVariable exited.
 Now (*this) is 80 + 1*[em1:slack] + 1*[s3:slack]
 x substituteOut exited.
 * ClLinearExpression::* substituteOut([s2:slack], -10 + 1*[s3:slack], [x:10], Tableau:
-[z:obj] <-=-> 80 + 2*[em1:slack] + 1*[s3:slack]
+[Z:obj] <-=-> 80 + 2*[em1:slack] + 1*[s3:slack]
 [ep1:slack] <-=-> 80 + 1*[em1:slack] + 1*[s3:slack]
 [x:10] <-=-> 10 + -1*[s2:slack]
 
 Columns:
-[em1:slack] -> { [z:obj], [ep1:slack] }
-[s2:slack] -> { [z:obj], [ep1:slack], [x:10] }
-[s3:slack] -> { [z:obj], [ep1:slack] }
+[em1:slack] -> { [Z:obj], [ep1:slack] }
+[s2:slack] -> { [Z:obj], [ep1:slack], [x:10] }
+[s3:slack] -> { [Z:obj], [ep1:slack] }
 
 Infeasible rows: {  }
 )
@@ -539,14 +539,14 @@ x substituteOut exited.
 x substituteOut exited.
 * addRow([s2:slack], -10 + 1*[s3:slack])
 Tableau:
-[z:obj] <-=-> 80 + 2*[em1:slack] + 1*[s3:slack]
+[Z:obj] <-=-> 80 + 2*[em1:slack] + 1*[s3:slack]
 [ep1:slack] <-=-> 80 + 1*[em1:slack] + 1*[s3:slack]
 [s2:slack] <-=-> -10 + 1*[s3:slack]
 [x:10] <-=-> 20 + -1*[s3:slack]
 
 Columns:
-[em1:slack] -> { [z:obj], [ep1:slack] }
-[s3:slack] -> { [z:obj], [ep1:slack], [s2:slack], [x:10] }
+[em1:slack] -> { [Z:obj], [ep1:slack] }
+[s3:slack] -> { [Z:obj], [ep1:slack], [s2:slack], [x:10] }
 
 Infeasible rows: {  }
 
@@ -556,15 +556,15 @@ x pivot exited.
 - returning -10 + 1*[s3:slack]
 x removeRow exited.
 delete@ 0x80f11d0
-* optimize([z:obj])
+* optimize([Z:obj])
 Tableau:
-[z:obj] <-=-> 80 + 2*[em1:slack] + 1*[s3:slack]
+[Z:obj] <-=-> 80 + 2*[em1:slack] + 1*[s3:slack]
 [ep1:slack] <-=-> 80 + 1*[em1:slack] + 1*[s3:slack]
 [x:10] <-=-> 20 + -1*[s3:slack]
 
 Columns:
-[em1:slack] -> { [z:obj], [ep1:slack] }
-[s3:slack] -> { [z:obj], [ep1:slack], [x:10] }
+[em1:slack] -> { [Z:obj], [ep1:slack] }
+[s3:slack] -> { [Z:obj], [ep1:slack], [x:10] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -580,13 +580,13 @@ my_prevEditConstants:
 x optimize exited.
 * setExternalVariables()
 Tableau:
-[z:obj] <-=-> 80 + 2*[em1:slack] + 1*[s3:slack]
+[Z:obj] <-=-> 80 + 2*[em1:slack] + 1*[s3:slack]
 [ep1:slack] <-=-> 80 + 1*[em1:slack] + 1*[s3:slack]
 [x:10] <-=-> 20 + -1*[s3:slack]
 
 Columns:
-[em1:slack] -> { [z:obj], [ep1:slack] }
-[s3:slack] -> { [z:obj], [ep1:slack], [x:10] }
+[em1:slack] -> { [Z:obj], [ep1:slack] }
+[s3:slack] -> { [Z:obj], [ep1:slack], [x:10] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -606,7 +606,7 @@ x == 20
 * resetStayConstants()
 x resetStayConstants exited.
 Looking to remove var [s3:slack]
-Must pivot -- columns are { [z:obj], [ep1:slack], [x:20] }
+Must pivot -- columns are { [Z:obj], [ep1:slack], [x:20] }
 Marker [s3:slack]'s coefficient in 80 + 1*[em1:slack] + 1*[s3:slack] is 1
 pexitVar is still NULL
 * pivot([s3:slack], [ep1:slack])
@@ -617,40 +617,40 @@ x removeRow exited.
 x newSubject exited.
 * ClTableau::* substituteOut([s3:slack], -80 + 1*[ep1:slack] + -1*[em1:slack])
 Tableau:
-[z:obj] <-=-> 80 + 2*[em1:slack] + 1*[s3:slack]
+[Z:obj] <-=-> 80 + 2*[em1:slack] + 1*[s3:slack]
 [x:20] <-=-> 20 + -1*[s3:slack]
 
 Columns:
-[em1:slack] -> { [z:obj] }
-[s3:slack] -> { [z:obj], [x:20] }
+[em1:slack] -> { [Z:obj] }
+[s3:slack] -> { [Z:obj], [x:20] }
 
 Infeasible rows: {  }
 
-* ClLinearExpression::* substituteOut([s3:slack], -80 + 1*[ep1:slack] + -1*[em1:slack], [z:obj], Tableau:
-[z:obj] <-=-> 80 + 2*[em1:slack] + 1*[s3:slack]
+* ClLinearExpression::* substituteOut([s3:slack], -80 + 1*[ep1:slack] + -1*[em1:slack], [Z:obj], Tableau:
+[Z:obj] <-=-> 80 + 2*[em1:slack] + 1*[s3:slack]
 [x:20] <-=-> 20 + -1*[s3:slack]
 
 Columns:
-[em1:slack] -> { [z:obj] }
-[s3:slack] -> { [z:obj], [x:20] }
+[em1:slack] -> { [Z:obj] }
+[s3:slack] -> { [Z:obj], [x:20] }
 
 Infeasible rows: {  }
 )
 *this == 80 + 2*[em1:slack] + 1*[s3:slack]
 Adding (*i) == 1*[ep1:slack]
-* noteAddedVariable([ep1:slack], [z:obj])
+* noteAddedVariable([ep1:slack], [Z:obj])
 x noteAddedVariable exited.
 Considering (*poc) == 2*[em1:slack]
 Now (*this) is 1*[ep1:slack] + 1*[em1:slack]
 x substituteOut exited.
 * ClLinearExpression::* substituteOut([s3:slack], -80 + 1*[ep1:slack] + -1*[em1:slack], [x:20], Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
 [x:20] <-=-> 20 + -1*[s3:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj] }
-[em1:slack] -> { [z:obj] }
-[s3:slack] -> { [z:obj], [x:20] }
+[ep1:slack] -> { [Z:obj] }
+[em1:slack] -> { [Z:obj] }
+[s3:slack] -> { [Z:obj], [x:20] }
 
 Infeasible rows: {  }
 )
@@ -666,13 +666,13 @@ x substituteOut exited.
 x substituteOut exited.
 * addRow([s3:slack], -80 + 1*[ep1:slack] + -1*[em1:slack])
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
 [s3:slack] <-=-> -80 + 1*[ep1:slack] + -1*[em1:slack]
 [x:20] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [s3:slack], [x:20] }
-[em1:slack] -> { [z:obj], [s3:slack], [x:20] }
+[ep1:slack] -> { [Z:obj], [s3:slack], [x:20] }
+[em1:slack] -> { [Z:obj], [s3:slack], [x:20] }
 
 Infeasible rows: {  }
 
@@ -682,14 +682,14 @@ x pivot exited.
 - returning -80 + 1*[ep1:slack] + -1*[em1:slack]
 x removeRow exited.
 delete@ 0x80f0d10
-* optimize([z:obj])
+* optimize([Z:obj])
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
 [x:20] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [x:20] }
-[em1:slack] -> { [z:obj], [x:20] }
+[ep1:slack] -> { [Z:obj], [x:20] }
+[em1:slack] -> { [Z:obj], [x:20] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -705,12 +705,12 @@ my_prevEditConstants:
 x optimize exited.
 * setExternalVariables()
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
 [x:20] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [x:20] }
-[em1:slack] -> { [z:obj], [x:20] }
+[ep1:slack] -> { [Z:obj], [x:20] }
+[em1:slack] -> { [Z:obj], [x:20] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -746,12 +746,12 @@ x tryAddingDirectly exited.
 * addWithArtificialVariable(90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s4:slack])
 addWithArtificialVariable before addRow-s:
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
 [x:100] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [x:100] }
-[em1:slack] -> { [z:obj], [x:100] }
+[ep1:slack] -> { [Z:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [x:100] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -766,13 +766,13 @@ my_prevEditConstants:
 
 * addRow([az:obj], 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s4:slack])
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
 [az:obj] <-=-> 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s4:slack]
 [x:100] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [az:obj], [x:100] }
-[em1:slack] -> { [z:obj], [az:obj], [x:100] }
+[ep1:slack] -> { [Z:obj], [az:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [az:obj], [x:100] }
 [s4:slack] -> { [az:obj] }
 
 Infeasible rows: {  }
@@ -780,14 +780,14 @@ Infeasible rows: {  }
 x addRow exited.
 * addRow([a2:slack], 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s4:slack])
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
 [a2:slack] <-=-> 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s4:slack]
 [az:obj] <-=-> 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s4:slack]
 [x:100] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [a2:slack], [az:obj], [x:100] }
-[em1:slack] -> { [z:obj], [a2:slack], [az:obj], [x:100] }
+[ep1:slack] -> { [Z:obj], [a2:slack], [az:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [a2:slack], [az:obj], [x:100] }
 [s4:slack] -> { [a2:slack], [az:obj] }
 
 Infeasible rows: {  }
@@ -795,14 +795,14 @@ Infeasible rows: {  }
 x addRow exited.
 addWithArtificialVariable after addRow-s:
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
 [a2:slack] <-=-> 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s4:slack]
 [az:obj] <-=-> 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s4:slack]
 [x:100] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [a2:slack], [az:obj], [x:100] }
-[em1:slack] -> { [z:obj], [a2:slack], [az:obj], [x:100] }
+[ep1:slack] -> { [Z:obj], [a2:slack], [az:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [a2:slack], [az:obj], [x:100] }
 [s4:slack] -> { [a2:slack], [az:obj] }
 
 Infeasible rows: {  }
@@ -818,14 +818,14 @@ my_prevEditConstants:
 
 * optimize([az:obj])
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
 [a2:slack] <-=-> 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s4:slack]
 [az:obj] <-=-> 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s4:slack]
 [x:100] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [a2:slack], [az:obj], [x:100] }
-[em1:slack] -> { [z:obj], [a2:slack], [az:obj], [x:100] }
+[ep1:slack] -> { [Z:obj], [a2:slack], [az:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [a2:slack], [az:obj], [x:100] }
 [s4:slack] -> { [a2:slack], [az:obj] }
 
 Infeasible rows: {  }
@@ -840,7 +840,7 @@ my_stayMinusErrorVars: 0:[  ]
 my_prevEditConstants: 
 
 *pentryVar == [ep1:slack], objectiveCoeff == -1
-Checking [z:obj]
+Checking [Z:obj]
 Checking [a2:slack]
 New minRatio == 90
 Checking [az:obj]
@@ -853,25 +853,25 @@ x removeRow exited.
 x newSubject exited.
 * ClTableau::* substituteOut([ep1:slack], 90 + 1*[em1:slack] + 1*[s4:slack] + -1*[a2:slack])
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
 [az:obj] <-=-> 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s4:slack]
 [x:100] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [az:obj], [x:100] }
-[em1:slack] -> { [z:obj], [az:obj], [x:100] }
+[ep1:slack] -> { [Z:obj], [az:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [az:obj], [x:100] }
 [s4:slack] -> { [az:obj] }
 
 Infeasible rows: {  }
 
-* ClLinearExpression::* substituteOut([ep1:slack], 90 + 1*[em1:slack] + 1*[s4:slack] + -1*[a2:slack], [z:obj], Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
+* ClLinearExpression::* substituteOut([ep1:slack], 90 + 1*[em1:slack] + 1*[s4:slack] + -1*[a2:slack], [Z:obj], Tableau:
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
 [az:obj] <-=-> 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s4:slack]
 [x:100] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [az:obj], [x:100] }
-[em1:slack] -> { [z:obj], [az:obj], [x:100] }
+[ep1:slack] -> { [Z:obj], [az:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [az:obj], [x:100] }
 [s4:slack] -> { [az:obj] }
 
 Infeasible rows: {  }
@@ -879,23 +879,23 @@ Infeasible rows: {  }
 *this == 1*[ep1:slack] + 1*[em1:slack]
 Considering (*poc) == 1*[em1:slack]
 Adding (*i) == 1*[s4:slack]
-* noteAddedVariable([s4:slack], [z:obj])
+* noteAddedVariable([s4:slack], [Z:obj])
 x noteAddedVariable exited.
 Adding (*i) == -1*[a2:slack]
-* noteAddedVariable([a2:slack], [z:obj])
+* noteAddedVariable([a2:slack], [Z:obj])
 x noteAddedVariable exited.
 Now (*this) is 90 + 2*[em1:slack] + 1*[s4:slack] + -1*[a2:slack]
 x substituteOut exited.
 * ClLinearExpression::* substituteOut([ep1:slack], 90 + 1*[em1:slack] + 1*[s4:slack] + -1*[a2:slack], [az:obj], Tableau:
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s4:slack] + -1*[a2:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s4:slack] + -1*[a2:slack]
 [az:obj] <-=-> 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s4:slack]
 [x:100] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [az:obj], [x:100] }
-[em1:slack] -> { [z:obj], [az:obj], [x:100] }
-[s4:slack] -> { [z:obj], [az:obj] }
-[a2:slack] -> { [z:obj] }
+[ep1:slack] -> { [Z:obj], [az:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [az:obj], [x:100] }
+[s4:slack] -> { [Z:obj], [az:obj] }
+[a2:slack] -> { [Z:obj] }
 
 Infeasible rows: {  }
 )
@@ -912,15 +912,15 @@ x noteAddedVariable exited.
 Now (*this) is 1*[a2:slack]
 x substituteOut exited.
 * ClLinearExpression::* substituteOut([ep1:slack], 90 + 1*[em1:slack] + 1*[s4:slack] + -1*[a2:slack], [x:100], Tableau:
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s4:slack] + -1*[a2:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s4:slack] + -1*[a2:slack]
 [az:obj] <-=-> 1*[a2:slack]
 [x:100] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [az:obj], [x:100] }
-[em1:slack] -> { [z:obj], [x:100] }
-[s4:slack] -> { [z:obj] }
-[a2:slack] -> { [z:obj], [az:obj] }
+[ep1:slack] -> { [Z:obj], [az:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [x:100] }
+[s4:slack] -> { [Z:obj] }
+[a2:slack] -> { [Z:obj], [az:obj] }
 
 Infeasible rows: {  }
 )
@@ -939,30 +939,30 @@ x substituteOut exited.
 x substituteOut exited.
 * addRow([ep1:slack], 90 + 1*[em1:slack] + 1*[s4:slack] + -1*[a2:slack])
 Tableau:
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s4:slack] + -1*[a2:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s4:slack] + -1*[a2:slack]
 [ep1:slack] <-=-> 90 + 1*[em1:slack] + 1*[s4:slack] + -1*[a2:slack]
 [az:obj] <-=-> 1*[a2:slack]
 [x:100] <-=-> 10 + -1*[s4:slack] + 1*[a2:slack]
 
 Columns:
-[em1:slack] -> { [z:obj], [ep1:slack] }
-[s4:slack] -> { [z:obj], [ep1:slack], [x:100] }
-[a2:slack] -> { [z:obj], [ep1:slack], [az:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [ep1:slack] }
+[s4:slack] -> { [Z:obj], [ep1:slack], [x:100] }
+[a2:slack] -> { [Z:obj], [ep1:slack], [az:obj], [x:100] }
 
 Infeasible rows: {  }
 
 x addRow exited.
 x pivot exited.
 Tableau:
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s4:slack] + -1*[a2:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s4:slack] + -1*[a2:slack]
 [ep1:slack] <-=-> 90 + 1*[em1:slack] + 1*[s4:slack] + -1*[a2:slack]
 [az:obj] <-=-> 1*[a2:slack]
 [x:100] <-=-> 10 + -1*[s4:slack] + 1*[a2:slack]
 
 Columns:
-[em1:slack] -> { [z:obj], [ep1:slack] }
-[s4:slack] -> { [z:obj], [ep1:slack], [x:100] }
-[a2:slack] -> { [z:obj], [ep1:slack], [az:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [ep1:slack] }
+[s4:slack] -> { [Z:obj], [ep1:slack], [x:100] }
+[a2:slack] -> { [Z:obj], [ep1:slack], [az:obj], [x:100] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -983,15 +983,15 @@ x removeColumn exited.
 - returning 0
 x removeRow exited.
 x addWithArtificialVariable exited.
-* optimize([z:obj])
+* optimize([Z:obj])
 Tableau:
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s4:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s4:slack]
 [ep1:slack] <-=-> 90 + 1*[em1:slack] + 1*[s4:slack]
 [x:100] <-=-> 10 + -1*[s4:slack]
 
 Columns:
-[em1:slack] -> { [z:obj], [ep1:slack] }
-[s4:slack] -> { [z:obj], [ep1:slack], [x:100] }
+[em1:slack] -> { [Z:obj], [ep1:slack] }
+[s4:slack] -> { [Z:obj], [ep1:slack], [x:100] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -1007,13 +1007,13 @@ my_prevEditConstants:
 x optimize exited.
 * setExternalVariables()
 Tableau:
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s4:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s4:slack]
 [ep1:slack] <-=-> 90 + 1*[em1:slack] + 1*[s4:slack]
 [x:100] <-=-> 10 + -1*[s4:slack]
 
 Columns:
-[em1:slack] -> { [z:obj], [ep1:slack] }
-[s4:slack] -> { [z:obj], [ep1:slack], [x:100] }
+[em1:slack] -> { [Z:obj], [ep1:slack] }
+[s4:slack] -> { [Z:obj], [ep1:slack], [x:100] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -1043,30 +1043,30 @@ x chooseSubject exited.
 x newSubject exited.
 * addRow([s5:slack], 1*[s4:slack])
 Tableau:
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s4:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s4:slack]
 [ep1:slack] <-=-> 90 + 1*[em1:slack] + 1*[s4:slack]
 [s5:slack] <-=-> 1*[s4:slack]
 [x:10] <-=-> 10 + -1*[s4:slack]
 
 Columns:
-[em1:slack] -> { [z:obj], [ep1:slack] }
-[s4:slack] -> { [z:obj], [ep1:slack], [s5:slack], [x:10] }
+[em1:slack] -> { [Z:obj], [ep1:slack] }
+[s4:slack] -> { [Z:obj], [ep1:slack], [s5:slack], [x:10] }
 
 Infeasible rows: {  }
 
 x addRow exited.
 - returning true
 x tryAddingDirectly exited.
-* optimize([z:obj])
+* optimize([Z:obj])
 Tableau:
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s4:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s4:slack]
 [ep1:slack] <-=-> 90 + 1*[em1:slack] + 1*[s4:slack]
 [s5:slack] <-=-> 1*[s4:slack]
 [x:10] <-=-> 10 + -1*[s4:slack]
 
 Columns:
-[em1:slack] -> { [z:obj], [ep1:slack] }
-[s4:slack] -> { [z:obj], [ep1:slack], [s5:slack], [x:10] }
+[em1:slack] -> { [Z:obj], [ep1:slack] }
+[s4:slack] -> { [Z:obj], [ep1:slack], [s5:slack], [x:10] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -1082,14 +1082,14 @@ my_prevEditConstants:
 x optimize exited.
 * setExternalVariables()
 Tableau:
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s4:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s4:slack]
 [ep1:slack] <-=-> 90 + 1*[em1:slack] + 1*[s4:slack]
 [s5:slack] <-=-> 1*[s4:slack]
 [x:10] <-=-> 10 + -1*[s4:slack]
 
 Columns:
-[em1:slack] -> { [z:obj], [ep1:slack] }
-[s4:slack] -> { [z:obj], [ep1:slack], [s5:slack], [x:10] }
+[em1:slack] -> { [Z:obj], [ep1:slack] }
+[s4:slack] -> { [Z:obj], [ep1:slack], [s5:slack], [x:10] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -1109,7 +1109,7 @@ x == 10
 * resetStayConstants()
 x resetStayConstants exited.
 Looking to remove var [s4:slack]
-Must pivot -- columns are { [z:obj], [ep1:slack], [s5:slack], [x:10] }
+Must pivot -- columns are { [Z:obj], [ep1:slack], [s5:slack], [x:10] }
 Marker [s4:slack]'s coefficient in 90 + 1*[em1:slack] + 1*[s4:slack] is 1
 Marker [s4:slack]'s coefficient in 1*[s4:slack] is 1
 pexitVar is still NULL
@@ -1121,42 +1121,42 @@ x removeRow exited.
 x newSubject exited.
 * ClTableau::* substituteOut([s4:slack], 1*[s5:slack])
 Tableau:
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s4:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s4:slack]
 [ep1:slack] <-=-> 90 + 1*[em1:slack] + 1*[s4:slack]
 [x:10] <-=-> 10 + -1*[s4:slack]
 
 Columns:
-[em1:slack] -> { [z:obj], [ep1:slack] }
-[s4:slack] -> { [z:obj], [ep1:slack], [x:10] }
+[em1:slack] -> { [Z:obj], [ep1:slack] }
+[s4:slack] -> { [Z:obj], [ep1:slack], [x:10] }
 
 Infeasible rows: {  }
 
-* ClLinearExpression::* substituteOut([s4:slack], 1*[s5:slack], [z:obj], Tableau:
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s4:slack]
+* ClLinearExpression::* substituteOut([s4:slack], 1*[s5:slack], [Z:obj], Tableau:
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s4:slack]
 [ep1:slack] <-=-> 90 + 1*[em1:slack] + 1*[s4:slack]
 [x:10] <-=-> 10 + -1*[s4:slack]
 
 Columns:
-[em1:slack] -> { [z:obj], [ep1:slack] }
-[s4:slack] -> { [z:obj], [ep1:slack], [x:10] }
+[em1:slack] -> { [Z:obj], [ep1:slack] }
+[s4:slack] -> { [Z:obj], [ep1:slack], [x:10] }
 
 Infeasible rows: {  }
 )
 *this == 90 + 2*[em1:slack] + 1*[s4:slack]
 Adding (*i) == 1*[s5:slack]
-* noteAddedVariable([s5:slack], [z:obj])
+* noteAddedVariable([s5:slack], [Z:obj])
 x noteAddedVariable exited.
 Now (*this) is 90 + 2*[em1:slack] + 1*[s5:slack]
 x substituteOut exited.
 * ClLinearExpression::* substituteOut([s4:slack], 1*[s5:slack], [ep1:slack], Tableau:
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s5:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s5:slack]
 [ep1:slack] <-=-> 90 + 1*[em1:slack] + 1*[s4:slack]
 [x:10] <-=-> 10 + -1*[s4:slack]
 
 Columns:
-[em1:slack] -> { [z:obj], [ep1:slack] }
-[s4:slack] -> { [z:obj], [ep1:slack], [x:10] }
-[s5:slack] -> { [z:obj] }
+[em1:slack] -> { [Z:obj], [ep1:slack] }
+[s4:slack] -> { [Z:obj], [ep1:slack], [x:10] }
+[s5:slack] -> { [Z:obj] }
 
 Infeasible rows: {  }
 )
@@ -1167,14 +1167,14 @@ x noteAddedVariable exited.
 Now (*this) is 90 + 1*[em1:slack] + 1*[s5:slack]
 x substituteOut exited.
 * ClLinearExpression::* substituteOut([s4:slack], 1*[s5:slack], [x:10], Tableau:
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s5:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s5:slack]
 [ep1:slack] <-=-> 90 + 1*[em1:slack] + 1*[s5:slack]
 [x:10] <-=-> 10 + -1*[s4:slack]
 
 Columns:
-[em1:slack] -> { [z:obj], [ep1:slack] }
-[s4:slack] -> { [z:obj], [ep1:slack], [x:10] }
-[s5:slack] -> { [z:obj], [ep1:slack] }
+[em1:slack] -> { [Z:obj], [ep1:slack] }
+[s4:slack] -> { [Z:obj], [ep1:slack], [x:10] }
+[s5:slack] -> { [Z:obj], [ep1:slack] }
 
 Infeasible rows: {  }
 )
@@ -1187,14 +1187,14 @@ x substituteOut exited.
 x substituteOut exited.
 * addRow([s4:slack], 1*[s5:slack])
 Tableau:
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s5:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s5:slack]
 [ep1:slack] <-=-> 90 + 1*[em1:slack] + 1*[s5:slack]
 [s4:slack] <-=-> 1*[s5:slack]
 [x:10] <-=-> 10 + -1*[s5:slack]
 
 Columns:
-[em1:slack] -> { [z:obj], [ep1:slack] }
-[s5:slack] -> { [z:obj], [ep1:slack], [s4:slack], [x:10] }
+[em1:slack] -> { [Z:obj], [ep1:slack] }
+[s5:slack] -> { [Z:obj], [ep1:slack], [s4:slack], [x:10] }
 
 Infeasible rows: {  }
 
@@ -1204,15 +1204,15 @@ x pivot exited.
 - returning 1*[s5:slack]
 x removeRow exited.
 delete@ 0x80f1220
-* optimize([z:obj])
+* optimize([Z:obj])
 Tableau:
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s5:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s5:slack]
 [ep1:slack] <-=-> 90 + 1*[em1:slack] + 1*[s5:slack]
 [x:10] <-=-> 10 + -1*[s5:slack]
 
 Columns:
-[em1:slack] -> { [z:obj], [ep1:slack] }
-[s5:slack] -> { [z:obj], [ep1:slack], [x:10] }
+[em1:slack] -> { [Z:obj], [ep1:slack] }
+[s5:slack] -> { [Z:obj], [ep1:slack], [x:10] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -1228,13 +1228,13 @@ my_prevEditConstants:
 x optimize exited.
 * setExternalVariables()
 Tableau:
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s5:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s5:slack]
 [ep1:slack] <-=-> 90 + 1*[em1:slack] + 1*[s5:slack]
 [x:10] <-=-> 10 + -1*[s5:slack]
 
 Columns:
-[em1:slack] -> { [z:obj], [ep1:slack] }
-[s5:slack] -> { [z:obj], [ep1:slack], [x:10] }
+[em1:slack] -> { [Z:obj], [ep1:slack] }
+[s5:slack] -> { [Z:obj], [ep1:slack], [x:10] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -1254,7 +1254,7 @@ x == 10
 * resetStayConstants()
 x resetStayConstants exited.
 Looking to remove var [s5:slack]
-Must pivot -- columns are { [z:obj], [ep1:slack], [x:10] }
+Must pivot -- columns are { [Z:obj], [ep1:slack], [x:10] }
 Marker [s5:slack]'s coefficient in 90 + 1*[em1:slack] + 1*[s5:slack] is 1
 pexitVar is still NULL
 * pivot([s5:slack], [ep1:slack])
@@ -1265,40 +1265,40 @@ x removeRow exited.
 x newSubject exited.
 * ClTableau::* substituteOut([s5:slack], -90 + 1*[ep1:slack] + -1*[em1:slack])
 Tableau:
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s5:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s5:slack]
 [x:10] <-=-> 10 + -1*[s5:slack]
 
 Columns:
-[em1:slack] -> { [z:obj] }
-[s5:slack] -> { [z:obj], [x:10] }
+[em1:slack] -> { [Z:obj] }
+[s5:slack] -> { [Z:obj], [x:10] }
 
 Infeasible rows: {  }
 
-* ClLinearExpression::* substituteOut([s5:slack], -90 + 1*[ep1:slack] + -1*[em1:slack], [z:obj], Tableau:
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s5:slack]
+* ClLinearExpression::* substituteOut([s5:slack], -90 + 1*[ep1:slack] + -1*[em1:slack], [Z:obj], Tableau:
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1*[s5:slack]
 [x:10] <-=-> 10 + -1*[s5:slack]
 
 Columns:
-[em1:slack] -> { [z:obj] }
-[s5:slack] -> { [z:obj], [x:10] }
+[em1:slack] -> { [Z:obj] }
+[s5:slack] -> { [Z:obj], [x:10] }
 
 Infeasible rows: {  }
 )
 *this == 90 + 2*[em1:slack] + 1*[s5:slack]
 Adding (*i) == 1*[ep1:slack]
-* noteAddedVariable([ep1:slack], [z:obj])
+* noteAddedVariable([ep1:slack], [Z:obj])
 x noteAddedVariable exited.
 Considering (*poc) == 2*[em1:slack]
 Now (*this) is 1*[ep1:slack] + 1*[em1:slack]
 x substituteOut exited.
 * ClLinearExpression::* substituteOut([s5:slack], -90 + 1*[ep1:slack] + -1*[em1:slack], [x:10], Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
 [x:10] <-=-> 10 + -1*[s5:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj] }
-[em1:slack] -> { [z:obj] }
-[s5:slack] -> { [z:obj], [x:10] }
+[ep1:slack] -> { [Z:obj] }
+[em1:slack] -> { [Z:obj] }
+[s5:slack] -> { [Z:obj], [x:10] }
 
 Infeasible rows: {  }
 )
@@ -1314,13 +1314,13 @@ x substituteOut exited.
 x substituteOut exited.
 * addRow([s5:slack], -90 + 1*[ep1:slack] + -1*[em1:slack])
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
 [s5:slack] <-=-> -90 + 1*[ep1:slack] + -1*[em1:slack]
 [x:10] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [s5:slack], [x:10] }
-[em1:slack] -> { [z:obj], [s5:slack], [x:10] }
+[ep1:slack] -> { [Z:obj], [s5:slack], [x:10] }
+[em1:slack] -> { [Z:obj], [s5:slack], [x:10] }
 
 Infeasible rows: {  }
 
@@ -1330,14 +1330,14 @@ x pivot exited.
 - returning -90 + 1*[ep1:slack] + -1*[em1:slack]
 x removeRow exited.
 delete@ 0x80f11d0
-* optimize([z:obj])
+* optimize([Z:obj])
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
 [x:10] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [x:10] }
-[em1:slack] -> { [z:obj], [x:10] }
+[ep1:slack] -> { [Z:obj], [x:10] }
+[em1:slack] -> { [Z:obj], [x:10] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -1353,12 +1353,12 @@ my_prevEditConstants:
 x optimize exited.
 * setExternalVariables()
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
 [x:10] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [x:10] }
-[em1:slack] -> { [z:obj], [x:10] }
+[ep1:slack] -> { [Z:obj], [x:10] }
+[em1:slack] -> { [Z:obj], [x:10] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -1379,12 +1379,12 @@ my_artificialCounter == 2
 my_dummyCounter == 0
 editMinusErrorVars 0, editPlusErrorVars 0, stayMinusErrorVars 0, stayPlusErrorVars 0, errorVars 0, markerVars 1
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
 [x:100] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [x:100] }
-[em1:slack] -> { [z:obj], [x:100] }
+[ep1:slack] -> { [Z:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [x:100] }
 
 Infeasible rows: {  }
 
@@ -1402,9 +1402,9 @@ cn.isInequality() == 0
 cn.isRequired() == 0
 * addVariable([x:0], -1)
 x addVariable exited.
-* noteAddedVariable([ep1:slack], [z:obj])
+* noteAddedVariable([ep1:slack], [Z:obj])
 x noteAddedVariable exited.
-* noteAddedVariable([em1:slack], [z:obj])
+* noteAddedVariable([em1:slack], [Z:obj])
 x noteAddedVariable exited.
 - returning 100 + -1*[ep1:slack] + 1*[em1:slack] + -1*[x:0] new@ 0x80f0c60
 x newExpression exited.
@@ -1415,26 +1415,26 @@ x chooseSubject exited.
 x newSubject exited.
 * addRow([x:0], 100 + -1*[ep1:slack] + 1*[em1:slack])
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
 [x:0] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [x:0] }
-[em1:slack] -> { [z:obj], [x:0] }
+[ep1:slack] -> { [Z:obj], [x:0] }
+[em1:slack] -> { [Z:obj], [x:0] }
 
 Infeasible rows: {  }
 
 x addRow exited.
 - returning true
 x tryAddingDirectly exited.
-* optimize([z:obj])
+* optimize([Z:obj])
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
 [x:0] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [x:0] }
-[em1:slack] -> { [z:obj], [x:0] }
+[ep1:slack] -> { [Z:obj], [x:0] }
+[em1:slack] -> { [Z:obj], [x:0] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -1450,12 +1450,12 @@ my_prevEditConstants:
 x optimize exited.
 * setExternalVariables()
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack]
 [x:0] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [x:0] }
-[em1:slack] -> { [z:obj], [x:0] }
+[ep1:slack] -> { [Z:obj], [x:0] }
+[em1:slack] -> { [Z:obj], [x:0] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -1476,9 +1476,9 @@ cn.isInequality() == 0
 cn.isRequired() == 0
 * addVariable([y:0], -1)
 x addVariable exited.
-* noteAddedVariable([ep2:slack], [z:obj])
+* noteAddedVariable([ep2:slack], [Z:obj])
 x noteAddedVariable exited.
-* noteAddedVariable([em2:slack], [z:obj])
+* noteAddedVariable([em2:slack], [Z:obj])
 x noteAddedVariable exited.
 - returning 120 + -1*[ep2:slack] + 1*[em2:slack] + -1*[y:0] new@ 0x80f12d8
 x newExpression exited.
@@ -1489,32 +1489,32 @@ x chooseSubject exited.
 x newSubject exited.
 * addRow([y:0], 120 + -1*[ep2:slack] + 1*[em2:slack])
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack]
 [y:0] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:100] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [x:100] }
-[em1:slack] -> { [z:obj], [x:100] }
-[ep2:slack] -> { [z:obj], [y:0] }
-[em2:slack] -> { [z:obj], [y:0] }
+[ep1:slack] -> { [Z:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [x:100] }
+[ep2:slack] -> { [Z:obj], [y:0] }
+[em2:slack] -> { [Z:obj], [y:0] }
 
 Infeasible rows: {  }
 
 x addRow exited.
 - returning true
 x tryAddingDirectly exited.
-* optimize([z:obj])
+* optimize([Z:obj])
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack]
 [y:0] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:100] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [x:100] }
-[em1:slack] -> { [z:obj], [x:100] }
-[ep2:slack] -> { [z:obj], [y:0] }
-[em2:slack] -> { [z:obj], [y:0] }
+[ep1:slack] -> { [Z:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [x:100] }
+[ep2:slack] -> { [Z:obj], [y:0] }
+[em2:slack] -> { [Z:obj], [y:0] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -1530,15 +1530,15 @@ my_prevEditConstants:
 x optimize exited.
 * setExternalVariables()
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack]
 [y:0] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:100] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [x:100] }
-[em1:slack] -> { [z:obj], [x:100] }
-[ep2:slack] -> { [z:obj], [y:0] }
-[em2:slack] -> { [z:obj], [y:0] }
+[ep1:slack] -> { [Z:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [x:100] }
+[ep2:slack] -> { [Z:obj], [y:0] }
+[em2:slack] -> { [Z:obj], [y:0] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -1575,15 +1575,15 @@ x tryAddingDirectly exited.
 * addWithArtificialVariable(90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s3:slack])
 addWithArtificialVariable before addRow-s:
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:100] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [x:100] }
-[em1:slack] -> { [z:obj], [x:100] }
-[ep2:slack] -> { [z:obj], [y:120] }
-[em2:slack] -> { [z:obj], [y:120] }
+[ep1:slack] -> { [Z:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [x:100] }
+[ep2:slack] -> { [Z:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [y:120] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -1598,16 +1598,16 @@ my_prevEditConstants:
 
 * addRow([az:obj], 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s3:slack])
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack]
 [az:obj] <-=-> 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s3:slack]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:100] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [az:obj], [x:100] }
-[em1:slack] -> { [z:obj], [az:obj], [x:100] }
-[ep2:slack] -> { [z:obj], [y:120] }
-[em2:slack] -> { [z:obj], [y:120] }
+[ep1:slack] -> { [Z:obj], [az:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [az:obj], [x:100] }
+[ep2:slack] -> { [Z:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [y:120] }
 [s3:slack] -> { [az:obj] }
 
 Infeasible rows: {  }
@@ -1615,17 +1615,17 @@ Infeasible rows: {  }
 x addRow exited.
 * addRow([a1:slack], 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s3:slack])
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack]
 [a1:slack] <-=-> 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s3:slack]
 [az:obj] <-=-> 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s3:slack]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:100] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [a1:slack], [az:obj], [x:100] }
-[em1:slack] -> { [z:obj], [a1:slack], [az:obj], [x:100] }
-[ep2:slack] -> { [z:obj], [y:120] }
-[em2:slack] -> { [z:obj], [y:120] }
+[ep1:slack] -> { [Z:obj], [a1:slack], [az:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [a1:slack], [az:obj], [x:100] }
+[ep2:slack] -> { [Z:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [y:120] }
 [s3:slack] -> { [a1:slack], [az:obj] }
 
 Infeasible rows: {  }
@@ -1633,17 +1633,17 @@ Infeasible rows: {  }
 x addRow exited.
 addWithArtificialVariable after addRow-s:
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack]
 [a1:slack] <-=-> 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s3:slack]
 [az:obj] <-=-> 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s3:slack]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:100] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [a1:slack], [az:obj], [x:100] }
-[em1:slack] -> { [z:obj], [a1:slack], [az:obj], [x:100] }
-[ep2:slack] -> { [z:obj], [y:120] }
-[em2:slack] -> { [z:obj], [y:120] }
+[ep1:slack] -> { [Z:obj], [a1:slack], [az:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [a1:slack], [az:obj], [x:100] }
+[ep2:slack] -> { [Z:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [y:120] }
 [s3:slack] -> { [a1:slack], [az:obj] }
 
 Infeasible rows: {  }
@@ -1659,17 +1659,17 @@ my_prevEditConstants:
 
 * optimize([az:obj])
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack]
 [a1:slack] <-=-> 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s3:slack]
 [az:obj] <-=-> 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s3:slack]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:100] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [a1:slack], [az:obj], [x:100] }
-[em1:slack] -> { [z:obj], [a1:slack], [az:obj], [x:100] }
-[ep2:slack] -> { [z:obj], [y:120] }
-[em2:slack] -> { [z:obj], [y:120] }
+[ep1:slack] -> { [Z:obj], [a1:slack], [az:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [a1:slack], [az:obj], [x:100] }
+[ep2:slack] -> { [Z:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [y:120] }
 [s3:slack] -> { [a1:slack], [az:obj] }
 
 Infeasible rows: {  }
@@ -1684,7 +1684,7 @@ my_stayMinusErrorVars: 0:[  ]
 my_prevEditConstants: 
 
 *pentryVar == [ep1:slack], objectiveCoeff == -1
-Checking [z:obj]
+Checking [Z:obj]
 Checking [a1:slack]
 New minRatio == 90
 Checking [az:obj]
@@ -1697,31 +1697,31 @@ x removeRow exited.
 x newSubject exited.
 * ClTableau::* substituteOut([ep1:slack], 90 + 1*[em1:slack] + 1*[s3:slack] + -1*[a1:slack])
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack]
 [az:obj] <-=-> 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s3:slack]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:100] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [az:obj], [x:100] }
-[em1:slack] -> { [z:obj], [az:obj], [x:100] }
-[ep2:slack] -> { [z:obj], [y:120] }
-[em2:slack] -> { [z:obj], [y:120] }
+[ep1:slack] -> { [Z:obj], [az:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [az:obj], [x:100] }
+[ep2:slack] -> { [Z:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [y:120] }
 [s3:slack] -> { [az:obj] }
 
 Infeasible rows: {  }
 
-* ClLinearExpression::* substituteOut([ep1:slack], 90 + 1*[em1:slack] + 1*[s3:slack] + -1*[a1:slack], [z:obj], Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack]
+* ClLinearExpression::* substituteOut([ep1:slack], 90 + 1*[em1:slack] + 1*[s3:slack] + -1*[a1:slack], [Z:obj], Tableau:
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack]
 [az:obj] <-=-> 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s3:slack]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:100] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [az:obj], [x:100] }
-[em1:slack] -> { [z:obj], [az:obj], [x:100] }
-[ep2:slack] -> { [z:obj], [y:120] }
-[em2:slack] -> { [z:obj], [y:120] }
+[ep1:slack] -> { [Z:obj], [az:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [az:obj], [x:100] }
+[ep2:slack] -> { [Z:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [y:120] }
 [s3:slack] -> { [az:obj] }
 
 Infeasible rows: {  }
@@ -1729,26 +1729,26 @@ Infeasible rows: {  }
 *this == 1*[ep1:slack] + 1*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack]
 Considering (*poc) == 1*[em1:slack]
 Adding (*i) == 1*[s3:slack]
-* noteAddedVariable([s3:slack], [z:obj])
+* noteAddedVariable([s3:slack], [Z:obj])
 x noteAddedVariable exited.
 Adding (*i) == -1*[a1:slack]
-* noteAddedVariable([a1:slack], [z:obj])
+* noteAddedVariable([a1:slack], [Z:obj])
 x noteAddedVariable exited.
 Now (*this) is 90 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s3:slack] + -1*[a1:slack]
 x substituteOut exited.
 * ClLinearExpression::* substituteOut([ep1:slack], 90 + 1*[em1:slack] + 1*[s3:slack] + -1*[a1:slack], [az:obj], Tableau:
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s3:slack] + -1*[a1:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s3:slack] + -1*[a1:slack]
 [az:obj] <-=-> 90 + -1*[ep1:slack] + 1*[em1:slack] + 1*[s3:slack]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:100] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [az:obj], [x:100] }
-[em1:slack] -> { [z:obj], [az:obj], [x:100] }
-[ep2:slack] -> { [z:obj], [y:120] }
-[em2:slack] -> { [z:obj], [y:120] }
-[s3:slack] -> { [z:obj], [az:obj] }
-[a1:slack] -> { [z:obj] }
+[ep1:slack] -> { [Z:obj], [az:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [az:obj], [x:100] }
+[ep2:slack] -> { [Z:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [y:120] }
+[s3:slack] -> { [Z:obj], [az:obj] }
+[a1:slack] -> { [Z:obj] }
 
 Infeasible rows: {  }
 )
@@ -1765,18 +1765,18 @@ x noteAddedVariable exited.
 Now (*this) is 1*[a1:slack]
 x substituteOut exited.
 * ClLinearExpression::* substituteOut([ep1:slack], 90 + 1*[em1:slack] + 1*[s3:slack] + -1*[a1:slack], [x:100], Tableau:
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s3:slack] + -1*[a1:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s3:slack] + -1*[a1:slack]
 [az:obj] <-=-> 1*[a1:slack]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:100] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [az:obj], [x:100] }
-[em1:slack] -> { [z:obj], [x:100] }
-[ep2:slack] -> { [z:obj], [y:120] }
-[em2:slack] -> { [z:obj], [y:120] }
-[s3:slack] -> { [z:obj] }
-[a1:slack] -> { [z:obj], [az:obj] }
+[ep1:slack] -> { [Z:obj], [az:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [x:100] }
+[ep2:slack] -> { [Z:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [y:120] }
+[s3:slack] -> { [Z:obj] }
+[a1:slack] -> { [Z:obj], [az:obj] }
 
 Infeasible rows: {  }
 )
@@ -1796,17 +1796,17 @@ x substituteOut exited.
 * addRow([ep1:slack], 90 + 1*[em1:slack] + 1*[s3:slack] + -1*[a1:slack])
 Tableau:
 [ep1:slack] <-=-> 90 + 1*[em1:slack] + 1*[s3:slack] + -1*[a1:slack]
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s3:slack] + -1*[a1:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s3:slack] + -1*[a1:slack]
 [az:obj] <-=-> 1*[a1:slack]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:100] <-=-> 10 + -1*[s3:slack] + 1*[a1:slack]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[ep2:slack] -> { [z:obj], [y:120] }
-[em2:slack] -> { [z:obj], [y:120] }
-[s3:slack] -> { [ep1:slack], [z:obj], [x:100] }
-[a1:slack] -> { [ep1:slack], [z:obj], [az:obj], [x:100] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[ep2:slack] -> { [Z:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [y:120] }
+[s3:slack] -> { [ep1:slack], [Z:obj], [x:100] }
+[a1:slack] -> { [ep1:slack], [Z:obj], [az:obj], [x:100] }
 
 Infeasible rows: {  }
 
@@ -1814,17 +1814,17 @@ x addRow exited.
 x pivot exited.
 Tableau:
 [ep1:slack] <-=-> 90 + 1*[em1:slack] + 1*[s3:slack] + -1*[a1:slack]
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s3:slack] + -1*[a1:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s3:slack] + -1*[a1:slack]
 [az:obj] <-=-> 1*[a1:slack]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:100] <-=-> 10 + -1*[s3:slack] + 1*[a1:slack]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[ep2:slack] -> { [z:obj], [y:120] }
-[em2:slack] -> { [z:obj], [y:120] }
-[s3:slack] -> { [ep1:slack], [z:obj], [x:100] }
-[a1:slack] -> { [ep1:slack], [z:obj], [az:obj], [x:100] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[ep2:slack] -> { [Z:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [y:120] }
+[s3:slack] -> { [ep1:slack], [Z:obj], [x:100] }
+[a1:slack] -> { [ep1:slack], [Z:obj], [az:obj], [x:100] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -1845,18 +1845,18 @@ x removeColumn exited.
 - returning 0
 x removeRow exited.
 x addWithArtificialVariable exited.
-* optimize([z:obj])
+* optimize([Z:obj])
 Tableau:
 [ep1:slack] <-=-> 90 + 1*[em1:slack] + 1*[s3:slack]
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s3:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s3:slack]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:100] <-=-> 10 + -1*[s3:slack]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[ep2:slack] -> { [z:obj], [y:120] }
-[em2:slack] -> { [z:obj], [y:120] }
-[s3:slack] -> { [ep1:slack], [z:obj], [x:100] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[ep2:slack] -> { [Z:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [y:120] }
+[s3:slack] -> { [ep1:slack], [Z:obj], [x:100] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -1873,15 +1873,15 @@ x optimize exited.
 * setExternalVariables()
 Tableau:
 [ep1:slack] <-=-> 90 + 1*[em1:slack] + 1*[s3:slack]
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s3:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s3:slack]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:100] <-=-> 10 + -1*[s3:slack]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[ep2:slack] -> { [z:obj], [y:120] }
-[em2:slack] -> { [z:obj], [y:120] }
-[s3:slack] -> { [ep1:slack], [z:obj], [x:100] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[ep2:slack] -> { [Z:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [y:120] }
+[s3:slack] -> { [ep1:slack], [Z:obj], [x:100] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -1912,35 +1912,35 @@ x newSubject exited.
 * addRow([s4:slack], 10 + 1*[s3:slack])
 Tableau:
 [ep1:slack] <-=-> 90 + 1*[em1:slack] + 1*[s3:slack]
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s3:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s3:slack]
 [s4:slack] <-=-> 10 + 1*[s3:slack]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:10] <-=-> 10 + -1*[s3:slack]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[ep2:slack] -> { [z:obj], [y:120] }
-[em2:slack] -> { [z:obj], [y:120] }
-[s3:slack] -> { [ep1:slack], [z:obj], [s4:slack], [x:10] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[ep2:slack] -> { [Z:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [y:120] }
+[s3:slack] -> { [ep1:slack], [Z:obj], [s4:slack], [x:10] }
 
 Infeasible rows: {  }
 
 x addRow exited.
 - returning true
 x tryAddingDirectly exited.
-* optimize([z:obj])
+* optimize([Z:obj])
 Tableau:
 [ep1:slack] <-=-> 90 + 1*[em1:slack] + 1*[s3:slack]
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s3:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s3:slack]
 [s4:slack] <-=-> 10 + 1*[s3:slack]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:10] <-=-> 10 + -1*[s3:slack]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[ep2:slack] -> { [z:obj], [y:120] }
-[em2:slack] -> { [z:obj], [y:120] }
-[s3:slack] -> { [ep1:slack], [z:obj], [s4:slack], [x:10] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[ep2:slack] -> { [Z:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [y:120] }
+[s3:slack] -> { [ep1:slack], [Z:obj], [s4:slack], [x:10] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -1957,16 +1957,16 @@ x optimize exited.
 * setExternalVariables()
 Tableau:
 [ep1:slack] <-=-> 90 + 1*[em1:slack] + 1*[s3:slack]
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s3:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s3:slack]
 [s4:slack] <-=-> 10 + 1*[s3:slack]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:10] <-=-> 10 + -1*[s3:slack]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[ep2:slack] -> { [z:obj], [y:120] }
-[em2:slack] -> { [z:obj], [y:120] }
-[s3:slack] -> { [ep1:slack], [z:obj], [s4:slack], [x:10] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[ep2:slack] -> { [Z:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [y:120] }
+[s3:slack] -> { [ep1:slack], [Z:obj], [s4:slack], [x:10] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -1986,7 +1986,7 @@ x == 10, y == 120
 * resetStayConstants()
 x resetStayConstants exited.
 Looking to remove var [s3:slack]
-Must pivot -- columns are { [ep1:slack], [z:obj], [s4:slack], [x:10] }
+Must pivot -- columns are { [ep1:slack], [Z:obj], [s4:slack], [x:10] }
 Marker [s3:slack]'s coefficient in 90 + 1*[em1:slack] + 1*[s3:slack] is 1
 Marker [s3:slack]'s coefficient in 10 + 1*[s3:slack] is 1
 pexitVar is still NULL
@@ -1999,29 +1999,29 @@ x newSubject exited.
 * ClTableau::* substituteOut([s3:slack], -10 + 1*[s4:slack])
 Tableau:
 [ep1:slack] <-=-> 90 + 1*[em1:slack] + 1*[s3:slack]
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s3:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s3:slack]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:10] <-=-> 10 + -1*[s3:slack]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[ep2:slack] -> { [z:obj], [y:120] }
-[em2:slack] -> { [z:obj], [y:120] }
-[s3:slack] -> { [ep1:slack], [z:obj], [x:10] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[ep2:slack] -> { [Z:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [y:120] }
+[s3:slack] -> { [ep1:slack], [Z:obj], [x:10] }
 
 Infeasible rows: {  }
 
 * ClLinearExpression::* substituteOut([s3:slack], -10 + 1*[s4:slack], [ep1:slack], Tableau:
 [ep1:slack] <-=-> 90 + 1*[em1:slack] + 1*[s3:slack]
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s3:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s3:slack]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:10] <-=-> 10 + -1*[s3:slack]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[ep2:slack] -> { [z:obj], [y:120] }
-[em2:slack] -> { [z:obj], [y:120] }
-[s3:slack] -> { [ep1:slack], [z:obj], [x:10] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[ep2:slack] -> { [Z:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [y:120] }
+[s3:slack] -> { [ep1:slack], [Z:obj], [x:10] }
 
 Infeasible rows: {  }
 )
@@ -2031,39 +2031,39 @@ Adding (*i) == 1*[s4:slack]
 x noteAddedVariable exited.
 Now (*this) is 80 + 1*[em1:slack] + 1*[s4:slack]
 x substituteOut exited.
-* ClLinearExpression::* substituteOut([s3:slack], -10 + 1*[s4:slack], [z:obj], Tableau:
+* ClLinearExpression::* substituteOut([s3:slack], -10 + 1*[s4:slack], [Z:obj], Tableau:
 [ep1:slack] <-=-> 80 + 1*[em1:slack] + 1*[s4:slack]
-[z:obj] <-=-> 90 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s3:slack]
+[Z:obj] <-=-> 90 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s3:slack]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:10] <-=-> 10 + -1*[s3:slack]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[ep2:slack] -> { [z:obj], [y:120] }
-[em2:slack] -> { [z:obj], [y:120] }
-[s3:slack] -> { [ep1:slack], [z:obj], [x:10] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[ep2:slack] -> { [Z:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [y:120] }
+[s3:slack] -> { [ep1:slack], [Z:obj], [x:10] }
 [s4:slack] -> { [ep1:slack] }
 
 Infeasible rows: {  }
 )
 *this == 90 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s3:slack]
 Adding (*i) == 1*[s4:slack]
-* noteAddedVariable([s4:slack], [z:obj])
+* noteAddedVariable([s4:slack], [Z:obj])
 x noteAddedVariable exited.
 Now (*this) is 80 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s4:slack]
 x substituteOut exited.
 * ClLinearExpression::* substituteOut([s3:slack], -10 + 1*[s4:slack], [x:10], Tableau:
 [ep1:slack] <-=-> 80 + 1*[em1:slack] + 1*[s4:slack]
-[z:obj] <-=-> 80 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s4:slack]
+[Z:obj] <-=-> 80 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s4:slack]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:10] <-=-> 10 + -1*[s3:slack]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[ep2:slack] -> { [z:obj], [y:120] }
-[em2:slack] -> { [z:obj], [y:120] }
-[s3:slack] -> { [ep1:slack], [z:obj], [x:10] }
-[s4:slack] -> { [ep1:slack], [z:obj] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[ep2:slack] -> { [Z:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [y:120] }
+[s3:slack] -> { [ep1:slack], [Z:obj], [x:10] }
+[s4:slack] -> { [ep1:slack], [Z:obj] }
 
 Infeasible rows: {  }
 )
@@ -2077,16 +2077,16 @@ x substituteOut exited.
 * addRow([s3:slack], -10 + 1*[s4:slack])
 Tableau:
 [ep1:slack] <-=-> 80 + 1*[em1:slack] + 1*[s4:slack]
-[z:obj] <-=-> 80 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s4:slack]
+[Z:obj] <-=-> 80 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s4:slack]
 [s3:slack] <-=-> -10 + 1*[s4:slack]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:10] <-=-> 20 + -1*[s4:slack]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[ep2:slack] -> { [z:obj], [y:120] }
-[em2:slack] -> { [z:obj], [y:120] }
-[s4:slack] -> { [ep1:slack], [z:obj], [s3:slack], [x:10] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[ep2:slack] -> { [Z:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [y:120] }
+[s4:slack] -> { [ep1:slack], [Z:obj], [s3:slack], [x:10] }
 
 Infeasible rows: {  }
 
@@ -2096,18 +2096,18 @@ x pivot exited.
 - returning -10 + 1*[s4:slack]
 x removeRow exited.
 delete@ 0x80f13f0
-* optimize([z:obj])
+* optimize([Z:obj])
 Tableau:
 [ep1:slack] <-=-> 80 + 1*[em1:slack] + 1*[s4:slack]
-[z:obj] <-=-> 80 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s4:slack]
+[Z:obj] <-=-> 80 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s4:slack]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:10] <-=-> 20 + -1*[s4:slack]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[ep2:slack] -> { [z:obj], [y:120] }
-[em2:slack] -> { [z:obj], [y:120] }
-[s4:slack] -> { [ep1:slack], [z:obj], [x:10] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[ep2:slack] -> { [Z:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [y:120] }
+[s4:slack] -> { [ep1:slack], [Z:obj], [x:10] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -2124,15 +2124,15 @@ x optimize exited.
 * setExternalVariables()
 Tableau:
 [ep1:slack] <-=-> 80 + 1*[em1:slack] + 1*[s4:slack]
-[z:obj] <-=-> 80 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s4:slack]
+[Z:obj] <-=-> 80 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s4:slack]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:10] <-=-> 20 + -1*[s4:slack]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[ep2:slack] -> { [z:obj], [y:120] }
-[em2:slack] -> { [z:obj], [y:120] }
-[s4:slack] -> { [ep1:slack], [z:obj], [x:10] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[ep2:slack] -> { [Z:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [y:120] }
+[s4:slack] -> { [ep1:slack], [Z:obj], [x:10] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -2172,15 +2172,15 @@ x tryAddingDirectly exited.
 addWithArtificialVariable before addRow-s:
 Tableau:
 [ep1:slack] <-=-> 80 + 1*[em1:slack] + 1*[s4:slack]
-[z:obj] <-=-> 80 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s4:slack]
+[Z:obj] <-=-> 80 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s4:slack]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:20] <-=-> 20 + -1*[s4:slack]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[ep2:slack] -> { [z:obj], [y:120] }
-[em2:slack] -> { [z:obj], [y:120] }
-[s4:slack] -> { [ep1:slack], [z:obj], [x:20] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[ep2:slack] -> { [Z:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [y:120] }
+[s4:slack] -> { [ep1:slack], [Z:obj], [x:20] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -2196,16 +2196,16 @@ my_prevEditConstants:
 * addRow([az:obj], 80 + -1*[ep2:slack] + 1*[em2:slack] + 2*[s4:slack] + -1*[d1:dummy])
 Tableau:
 [ep1:slack] <-=-> 80 + 1*[em1:slack] + 1*[s4:slack]
-[z:obj] <-=-> 80 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s4:slack]
+[Z:obj] <-=-> 80 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s4:slack]
 [az:obj] <-=-> 80 + -1*[ep2:slack] + 1*[em2:slack] + 2*[s4:slack] + -1*[d1:dummy]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:20] <-=-> 20 + -1*[s4:slack]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[ep2:slack] -> { [z:obj], [az:obj], [y:120] }
-[em2:slack] -> { [z:obj], [az:obj], [y:120] }
-[s4:slack] -> { [ep1:slack], [z:obj], [az:obj], [x:20] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[ep2:slack] -> { [Z:obj], [az:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [az:obj], [y:120] }
+[s4:slack] -> { [ep1:slack], [Z:obj], [az:obj], [x:20] }
 [d1:dummy] -> { [az:obj] }
 
 Infeasible rows: {  }
@@ -2214,17 +2214,17 @@ x addRow exited.
 * addRow([a2:slack], 80 + -1*[ep2:slack] + 1*[em2:slack] + 2*[s4:slack] + -1*[d1:dummy])
 Tableau:
 [ep1:slack] <-=-> 80 + 1*[em1:slack] + 1*[s4:slack]
-[z:obj] <-=-> 80 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s4:slack]
+[Z:obj] <-=-> 80 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s4:slack]
 [a2:slack] <-=-> 80 + -1*[ep2:slack] + 1*[em2:slack] + 2*[s4:slack] + -1*[d1:dummy]
 [az:obj] <-=-> 80 + -1*[ep2:slack] + 1*[em2:slack] + 2*[s4:slack] + -1*[d1:dummy]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:20] <-=-> 20 + -1*[s4:slack]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[ep2:slack] -> { [z:obj], [a2:slack], [az:obj], [y:120] }
-[em2:slack] -> { [z:obj], [a2:slack], [az:obj], [y:120] }
-[s4:slack] -> { [ep1:slack], [z:obj], [a2:slack], [az:obj], [x:20] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[ep2:slack] -> { [Z:obj], [a2:slack], [az:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [a2:slack], [az:obj], [y:120] }
+[s4:slack] -> { [ep1:slack], [Z:obj], [a2:slack], [az:obj], [x:20] }
 [d1:dummy] -> { [a2:slack], [az:obj] }
 
 Infeasible rows: {  }
@@ -2233,17 +2233,17 @@ x addRow exited.
 addWithArtificialVariable after addRow-s:
 Tableau:
 [ep1:slack] <-=-> 80 + 1*[em1:slack] + 1*[s4:slack]
-[z:obj] <-=-> 80 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s4:slack]
+[Z:obj] <-=-> 80 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s4:slack]
 [a2:slack] <-=-> 80 + -1*[ep2:slack] + 1*[em2:slack] + 2*[s4:slack] + -1*[d1:dummy]
 [az:obj] <-=-> 80 + -1*[ep2:slack] + 1*[em2:slack] + 2*[s4:slack] + -1*[d1:dummy]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:20] <-=-> 20 + -1*[s4:slack]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[ep2:slack] -> { [z:obj], [a2:slack], [az:obj], [y:120] }
-[em2:slack] -> { [z:obj], [a2:slack], [az:obj], [y:120] }
-[s4:slack] -> { [ep1:slack], [z:obj], [a2:slack], [az:obj], [x:20] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[ep2:slack] -> { [Z:obj], [a2:slack], [az:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [a2:slack], [az:obj], [y:120] }
+[s4:slack] -> { [ep1:slack], [Z:obj], [a2:slack], [az:obj], [x:20] }
 [d1:dummy] -> { [a2:slack], [az:obj] }
 
 Infeasible rows: {  }
@@ -2260,17 +2260,17 @@ my_prevEditConstants:
 * optimize([az:obj])
 Tableau:
 [ep1:slack] <-=-> 80 + 1*[em1:slack] + 1*[s4:slack]
-[z:obj] <-=-> 80 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s4:slack]
+[Z:obj] <-=-> 80 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s4:slack]
 [a2:slack] <-=-> 80 + -1*[ep2:slack] + 1*[em2:slack] + 2*[s4:slack] + -1*[d1:dummy]
 [az:obj] <-=-> 80 + -1*[ep2:slack] + 1*[em2:slack] + 2*[s4:slack] + -1*[d1:dummy]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:20] <-=-> 20 + -1*[s4:slack]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[ep2:slack] -> { [z:obj], [a2:slack], [az:obj], [y:120] }
-[em2:slack] -> { [z:obj], [a2:slack], [az:obj], [y:120] }
-[s4:slack] -> { [ep1:slack], [z:obj], [a2:slack], [az:obj], [x:20] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[ep2:slack] -> { [Z:obj], [a2:slack], [az:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [a2:slack], [az:obj], [y:120] }
+[s4:slack] -> { [ep1:slack], [Z:obj], [a2:slack], [az:obj], [x:20] }
 [d1:dummy] -> { [a2:slack], [az:obj] }
 
 Infeasible rows: {  }
@@ -2285,7 +2285,7 @@ my_stayMinusErrorVars: 0:[  ]
 my_prevEditConstants: 
 
 *pentryVar == [ep2:slack], objectiveCoeff == -1
-Checking [z:obj]
+Checking [Z:obj]
 Checking [a2:slack]
 New minRatio == 80
 Checking [az:obj]
@@ -2299,32 +2299,32 @@ x newSubject exited.
 * ClTableau::* substituteOut([ep2:slack], 80 + 1*[em2:slack] + -1*[a2:slack] + 2*[s4:slack] + -1*[d1:dummy])
 Tableau:
 [ep1:slack] <-=-> 80 + 1*[em1:slack] + 1*[s4:slack]
-[z:obj] <-=-> 80 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s4:slack]
+[Z:obj] <-=-> 80 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s4:slack]
 [az:obj] <-=-> 80 + -1*[ep2:slack] + 1*[em2:slack] + 2*[s4:slack] + -1*[d1:dummy]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:20] <-=-> 20 + -1*[s4:slack]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[ep2:slack] -> { [z:obj], [az:obj], [y:120] }
-[em2:slack] -> { [z:obj], [az:obj], [y:120] }
-[s4:slack] -> { [ep1:slack], [z:obj], [az:obj], [x:20] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[ep2:slack] -> { [Z:obj], [az:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [az:obj], [y:120] }
+[s4:slack] -> { [ep1:slack], [Z:obj], [az:obj], [x:20] }
 [d1:dummy] -> { [az:obj] }
 
 Infeasible rows: {  }
 
-* ClLinearExpression::* substituteOut([ep2:slack], 80 + 1*[em2:slack] + -1*[a2:slack] + 2*[s4:slack] + -1*[d1:dummy], [z:obj], Tableau:
+* ClLinearExpression::* substituteOut([ep2:slack], 80 + 1*[em2:slack] + -1*[a2:slack] + 2*[s4:slack] + -1*[d1:dummy], [Z:obj], Tableau:
 [ep1:slack] <-=-> 80 + 1*[em1:slack] + 1*[s4:slack]
-[z:obj] <-=-> 80 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s4:slack]
+[Z:obj] <-=-> 80 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s4:slack]
 [az:obj] <-=-> 80 + -1*[ep2:slack] + 1*[em2:slack] + 2*[s4:slack] + -1*[d1:dummy]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:20] <-=-> 20 + -1*[s4:slack]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[ep2:slack] -> { [z:obj], [az:obj], [y:120] }
-[em2:slack] -> { [z:obj], [az:obj], [y:120] }
-[s4:slack] -> { [ep1:slack], [z:obj], [az:obj], [x:20] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[ep2:slack] -> { [Z:obj], [az:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [az:obj], [y:120] }
+[s4:slack] -> { [ep1:slack], [Z:obj], [az:obj], [x:20] }
 [d1:dummy] -> { [az:obj] }
 
 Infeasible rows: {  }
@@ -2332,28 +2332,28 @@ Infeasible rows: {  }
 *this == 80 + 2*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack] + 1*[s4:slack]
 Considering (*poc) == 1000*[em2:slack]
 Adding (*i) == -1*[a2:slack]
-* noteAddedVariable([a2:slack], [z:obj])
+* noteAddedVariable([a2:slack], [Z:obj])
 x noteAddedVariable exited.
 Considering (*poc) == 1*[s4:slack]
 Adding (*i) == -1*[d1:dummy]
-* noteAddedVariable([d1:dummy], [z:obj])
+* noteAddedVariable([d1:dummy], [Z:obj])
 x noteAddedVariable exited.
 Now (*this) is 80080 + 2*[em1:slack] + 2000*[em2:slack] + -1000*[a2:slack] + 2001*[s4:slack] + -1000*[d1:dummy]
 x substituteOut exited.
 * ClLinearExpression::* substituteOut([ep2:slack], 80 + 1*[em2:slack] + -1*[a2:slack] + 2*[s4:slack] + -1*[d1:dummy], [az:obj], Tableau:
 [ep1:slack] <-=-> 80 + 1*[em1:slack] + 1*[s4:slack]
-[z:obj] <-=-> 80080 + 2*[em1:slack] + 2000*[em2:slack] + -1000*[a2:slack] + 2001*[s4:slack] + -1000*[d1:dummy]
+[Z:obj] <-=-> 80080 + 2*[em1:slack] + 2000*[em2:slack] + -1000*[a2:slack] + 2001*[s4:slack] + -1000*[d1:dummy]
 [az:obj] <-=-> 80 + -1*[ep2:slack] + 1*[em2:slack] + 2*[s4:slack] + -1*[d1:dummy]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:20] <-=-> 20 + -1*[s4:slack]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[ep2:slack] -> { [z:obj], [az:obj], [y:120] }
-[em2:slack] -> { [z:obj], [az:obj], [y:120] }
-[a2:slack] -> { [z:obj] }
-[s4:slack] -> { [ep1:slack], [z:obj], [az:obj], [x:20] }
-[d1:dummy] -> { [z:obj], [az:obj] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[ep2:slack] -> { [Z:obj], [az:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [az:obj], [y:120] }
+[a2:slack] -> { [Z:obj] }
+[s4:slack] -> { [ep1:slack], [Z:obj], [az:obj], [x:20] }
+[d1:dummy] -> { [Z:obj], [az:obj] }
 
 Infeasible rows: {  }
 )
@@ -2374,18 +2374,18 @@ Now (*this) is 1*[a2:slack]
 x substituteOut exited.
 * ClLinearExpression::* substituteOut([ep2:slack], 80 + 1*[em2:slack] + -1*[a2:slack] + 2*[s4:slack] + -1*[d1:dummy], [y:120], Tableau:
 [ep1:slack] <-=-> 80 + 1*[em1:slack] + 1*[s4:slack]
-[z:obj] <-=-> 80080 + 2*[em1:slack] + 2000*[em2:slack] + -1000*[a2:slack] + 2001*[s4:slack] + -1000*[d1:dummy]
+[Z:obj] <-=-> 80080 + 2*[em1:slack] + 2000*[em2:slack] + -1000*[a2:slack] + 2001*[s4:slack] + -1000*[d1:dummy]
 [az:obj] <-=-> 1*[a2:slack]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:20] <-=-> 20 + -1*[s4:slack]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[ep2:slack] -> { [z:obj], [az:obj], [y:120] }
-[em2:slack] -> { [z:obj], [y:120] }
-[a2:slack] -> { [z:obj], [az:obj] }
-[s4:slack] -> { [ep1:slack], [z:obj], [x:20] }
-[d1:dummy] -> { [z:obj] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[ep2:slack] -> { [Z:obj], [az:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [y:120] }
+[a2:slack] -> { [Z:obj], [az:obj] }
+[s4:slack] -> { [ep1:slack], [Z:obj], [x:20] }
+[d1:dummy] -> { [Z:obj] }
 
 Infeasible rows: {  }
 )
@@ -2408,18 +2408,18 @@ x substituteOut exited.
 * addRow([ep2:slack], 80 + 1*[em2:slack] + -1*[a2:slack] + 2*[s4:slack] + -1*[d1:dummy])
 Tableau:
 [ep1:slack] <-=-> 80 + 1*[em1:slack] + 1*[s4:slack]
-[z:obj] <-=-> 80080 + 2*[em1:slack] + 2000*[em2:slack] + -1000*[a2:slack] + 2001*[s4:slack] + -1000*[d1:dummy]
+[Z:obj] <-=-> 80080 + 2*[em1:slack] + 2000*[em2:slack] + -1000*[a2:slack] + 2001*[s4:slack] + -1000*[d1:dummy]
 [ep2:slack] <-=-> 80 + 1*[em2:slack] + -1*[a2:slack] + 2*[s4:slack] + -1*[d1:dummy]
 [az:obj] <-=-> 1*[a2:slack]
 [y:120] <-=-> 40 + 1*[a2:slack] + -2*[s4:slack] + 1*[d1:dummy]
 [x:20] <-=-> 20 + -1*[s4:slack]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[em2:slack] -> { [z:obj], [ep2:slack] }
-[a2:slack] -> { [z:obj], [ep2:slack], [az:obj], [y:120] }
-[s4:slack] -> { [ep1:slack], [z:obj], [ep2:slack], [y:120], [x:20] }
-[d1:dummy] -> { [z:obj], [ep2:slack], [y:120] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[em2:slack] -> { [Z:obj], [ep2:slack] }
+[a2:slack] -> { [Z:obj], [ep2:slack], [az:obj], [y:120] }
+[s4:slack] -> { [ep1:slack], [Z:obj], [ep2:slack], [y:120], [x:20] }
+[d1:dummy] -> { [Z:obj], [ep2:slack], [y:120] }
 
 Infeasible rows: {  }
 
@@ -2427,18 +2427,18 @@ x addRow exited.
 x pivot exited.
 Tableau:
 [ep1:slack] <-=-> 80 + 1*[em1:slack] + 1*[s4:slack]
-[z:obj] <-=-> 80080 + 2*[em1:slack] + 2000*[em2:slack] + -1000*[a2:slack] + 2001*[s4:slack] + -1000*[d1:dummy]
+[Z:obj] <-=-> 80080 + 2*[em1:slack] + 2000*[em2:slack] + -1000*[a2:slack] + 2001*[s4:slack] + -1000*[d1:dummy]
 [ep2:slack] <-=-> 80 + 1*[em2:slack] + -1*[a2:slack] + 2*[s4:slack] + -1*[d1:dummy]
 [az:obj] <-=-> 1*[a2:slack]
 [y:120] <-=-> 40 + 1*[a2:slack] + -2*[s4:slack] + 1*[d1:dummy]
 [x:20] <-=-> 20 + -1*[s4:slack]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[em2:slack] -> { [z:obj], [ep2:slack] }
-[a2:slack] -> { [z:obj], [ep2:slack], [az:obj], [y:120] }
-[s4:slack] -> { [ep1:slack], [z:obj], [ep2:slack], [y:120], [x:20] }
-[d1:dummy] -> { [z:obj], [ep2:slack], [y:120] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[em2:slack] -> { [Z:obj], [ep2:slack] }
+[a2:slack] -> { [Z:obj], [ep2:slack], [az:obj], [y:120] }
+[s4:slack] -> { [ep1:slack], [Z:obj], [ep2:slack], [y:120], [x:20] }
+[d1:dummy] -> { [Z:obj], [ep2:slack], [y:120] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -2459,19 +2459,19 @@ x removeColumn exited.
 - returning 0
 x removeRow exited.
 x addWithArtificialVariable exited.
-* optimize([z:obj])
+* optimize([Z:obj])
 Tableau:
 [ep1:slack] <-=-> 80 + 1*[em1:slack] + 1*[s4:slack]
-[z:obj] <-=-> 80080 + 2*[em1:slack] + 2000*[em2:slack] + 2001*[s4:slack] + -1000*[d1:dummy]
+[Z:obj] <-=-> 80080 + 2*[em1:slack] + 2000*[em2:slack] + 2001*[s4:slack] + -1000*[d1:dummy]
 [ep2:slack] <-=-> 80 + 1*[em2:slack] + 2*[s4:slack] + -1*[d1:dummy]
 [y:120] <-=-> 40 + -2*[s4:slack] + 1*[d1:dummy]
 [x:20] <-=-> 20 + -1*[s4:slack]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[em2:slack] -> { [z:obj], [ep2:slack] }
-[s4:slack] -> { [ep1:slack], [z:obj], [ep2:slack], [y:120], [x:20] }
-[d1:dummy] -> { [z:obj], [ep2:slack], [y:120] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[em2:slack] -> { [Z:obj], [ep2:slack] }
+[s4:slack] -> { [ep1:slack], [Z:obj], [ep2:slack], [y:120], [x:20] }
+[d1:dummy] -> { [Z:obj], [ep2:slack], [y:120] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -2488,16 +2488,16 @@ x optimize exited.
 * setExternalVariables()
 Tableau:
 [ep1:slack] <-=-> 80 + 1*[em1:slack] + 1*[s4:slack]
-[z:obj] <-=-> 80080 + 2*[em1:slack] + 2000*[em2:slack] + 2001*[s4:slack] + -1000*[d1:dummy]
+[Z:obj] <-=-> 80080 + 2*[em1:slack] + 2000*[em2:slack] + 2001*[s4:slack] + -1000*[d1:dummy]
 [ep2:slack] <-=-> 80 + 1*[em2:slack] + 2*[s4:slack] + -1*[d1:dummy]
 [y:120] <-=-> 40 + -2*[s4:slack] + 1*[d1:dummy]
 [x:20] <-=-> 20 + -1*[s4:slack]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[em2:slack] -> { [z:obj], [ep2:slack] }
-[s4:slack] -> { [ep1:slack], [z:obj], [ep2:slack], [y:120], [x:20] }
-[d1:dummy] -> { [z:obj], [ep2:slack], [y:120] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[em2:slack] -> { [Z:obj], [ep2:slack] }
+[s4:slack] -> { [ep1:slack], [Z:obj], [ep2:slack], [y:120], [x:20] }
+[d1:dummy] -> { [Z:obj], [ep2:slack], [y:120] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -2517,7 +2517,7 @@ x == 20, y == 40
 * resetStayConstants()
 x resetStayConstants exited.
 Looking to remove var [s4:slack]
-Must pivot -- columns are { [ep1:slack], [z:obj], [ep2:slack], [y:40], [x:20] }
+Must pivot -- columns are { [ep1:slack], [Z:obj], [ep2:slack], [y:40], [x:20] }
 Marker [s4:slack]'s coefficient in 80 + 1*[em1:slack] + 1*[s4:slack] is 1
 Marker [s4:slack]'s coefficient in 80 + 1*[em2:slack] + 2*[s4:slack] + -1*[d1:dummy] is 2
 pexitVar is still NULL
@@ -2530,29 +2530,29 @@ x newSubject exited.
 * ClTableau::* substituteOut([s4:slack], -40 + 0.5*[ep2:slack] + -0.5*[em2:slack] + 0.5*[d1:dummy])
 Tableau:
 [ep1:slack] <-=-> 80 + 1*[em1:slack] + 1*[s4:slack]
-[z:obj] <-=-> 80080 + 2*[em1:slack] + 2000*[em2:slack] + 2001*[s4:slack] + -1000*[d1:dummy]
+[Z:obj] <-=-> 80080 + 2*[em1:slack] + 2000*[em2:slack] + 2001*[s4:slack] + -1000*[d1:dummy]
 [y:40] <-=-> 40 + -2*[s4:slack] + 1*[d1:dummy]
 [x:20] <-=-> 20 + -1*[s4:slack]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[em2:slack] -> { [z:obj] }
-[s4:slack] -> { [ep1:slack], [z:obj], [y:40], [x:20] }
-[d1:dummy] -> { [z:obj], [y:40] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[em2:slack] -> { [Z:obj] }
+[s4:slack] -> { [ep1:slack], [Z:obj], [y:40], [x:20] }
+[d1:dummy] -> { [Z:obj], [y:40] }
 
 Infeasible rows: {  }
 
 * ClLinearExpression::* substituteOut([s4:slack], -40 + 0.5*[ep2:slack] + -0.5*[em2:slack] + 0.5*[d1:dummy], [ep1:slack], Tableau:
 [ep1:slack] <-=-> 80 + 1*[em1:slack] + 1*[s4:slack]
-[z:obj] <-=-> 80080 + 2*[em1:slack] + 2000*[em2:slack] + 2001*[s4:slack] + -1000*[d1:dummy]
+[Z:obj] <-=-> 80080 + 2*[em1:slack] + 2000*[em2:slack] + 2001*[s4:slack] + -1000*[d1:dummy]
 [y:40] <-=-> 40 + -2*[s4:slack] + 1*[d1:dummy]
 [x:20] <-=-> 20 + -1*[s4:slack]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[em2:slack] -> { [z:obj] }
-[s4:slack] -> { [ep1:slack], [z:obj], [y:40], [x:20] }
-[d1:dummy] -> { [z:obj], [y:40] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[em2:slack] -> { [Z:obj] }
+[s4:slack] -> { [ep1:slack], [Z:obj], [y:40], [x:20] }
+[d1:dummy] -> { [Z:obj], [y:40] }
 
 Infeasible rows: {  }
 )
@@ -2568,24 +2568,24 @@ Adding (*i) == 0.5*[d1:dummy]
 x noteAddedVariable exited.
 Now (*this) is 40 + 1*[em1:slack] + 0.5*[ep2:slack] + -0.5*[em2:slack] + 0.5*[d1:dummy]
 x substituteOut exited.
-* ClLinearExpression::* substituteOut([s4:slack], -40 + 0.5*[ep2:slack] + -0.5*[em2:slack] + 0.5*[d1:dummy], [z:obj], Tableau:
+* ClLinearExpression::* substituteOut([s4:slack], -40 + 0.5*[ep2:slack] + -0.5*[em2:slack] + 0.5*[d1:dummy], [Z:obj], Tableau:
 [ep1:slack] <-=-> 40 + 1*[em1:slack] + 0.5*[ep2:slack] + -0.5*[em2:slack] + 0.5*[d1:dummy]
-[z:obj] <-=-> 80080 + 2*[em1:slack] + 2000*[em2:slack] + 2001*[s4:slack] + -1000*[d1:dummy]
+[Z:obj] <-=-> 80080 + 2*[em1:slack] + 2000*[em2:slack] + 2001*[s4:slack] + -1000*[d1:dummy]
 [y:40] <-=-> 40 + -2*[s4:slack] + 1*[d1:dummy]
 [x:20] <-=-> 20 + -1*[s4:slack]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
 [ep2:slack] -> { [ep1:slack] }
-[em2:slack] -> { [ep1:slack], [z:obj] }
-[s4:slack] -> { [ep1:slack], [z:obj], [y:40], [x:20] }
-[d1:dummy] -> { [ep1:slack], [z:obj], [y:40] }
+[em2:slack] -> { [ep1:slack], [Z:obj] }
+[s4:slack] -> { [ep1:slack], [Z:obj], [y:40], [x:20] }
+[d1:dummy] -> { [ep1:slack], [Z:obj], [y:40] }
 
 Infeasible rows: {  }
 )
 *this == 80080 + 2*[em1:slack] + 2000*[em2:slack] + 2001*[s4:slack] + -1000*[d1:dummy]
 Adding (*i) == 0.5*[ep2:slack]
-* noteAddedVariable([ep2:slack], [z:obj])
+* noteAddedVariable([ep2:slack], [Z:obj])
 x noteAddedVariable exited.
 Considering (*poc) == 2000*[em2:slack]
 Considering (*poc) == -1000*[d1:dummy]
@@ -2593,16 +2593,16 @@ Now (*this) is 40 + 2*[em1:slack] + 1000.5*[ep2:slack] + 999.5*[em2:slack] + 0.5
 x substituteOut exited.
 * ClLinearExpression::* substituteOut([s4:slack], -40 + 0.5*[ep2:slack] + -0.5*[em2:slack] + 0.5*[d1:dummy], [y:40], Tableau:
 [ep1:slack] <-=-> 40 + 1*[em1:slack] + 0.5*[ep2:slack] + -0.5*[em2:slack] + 0.5*[d1:dummy]
-[z:obj] <-=-> 40 + 2*[em1:slack] + 1000.5*[ep2:slack] + 999.5*[em2:slack] + 0.5*[d1:dummy]
+[Z:obj] <-=-> 40 + 2*[em1:slack] + 1000.5*[ep2:slack] + 999.5*[em2:slack] + 0.5*[d1:dummy]
 [y:40] <-=-> 40 + -2*[s4:slack] + 1*[d1:dummy]
 [x:20] <-=-> 20 + -1*[s4:slack]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[ep2:slack] -> { [ep1:slack], [z:obj] }
-[em2:slack] -> { [ep1:slack], [z:obj] }
-[s4:slack] -> { [ep1:slack], [z:obj], [y:40], [x:20] }
-[d1:dummy] -> { [ep1:slack], [z:obj], [y:40] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[ep2:slack] -> { [ep1:slack], [Z:obj] }
+[em2:slack] -> { [ep1:slack], [Z:obj] }
+[s4:slack] -> { [ep1:slack], [Z:obj], [y:40], [x:20] }
+[d1:dummy] -> { [ep1:slack], [Z:obj], [y:40] }
 
 Infeasible rows: {  }
 )
@@ -2620,16 +2620,16 @@ Now (*this) is 120 + -1*[ep2:slack] + 1*[em2:slack]
 x substituteOut exited.
 * ClLinearExpression::* substituteOut([s4:slack], -40 + 0.5*[ep2:slack] + -0.5*[em2:slack] + 0.5*[d1:dummy], [x:20], Tableau:
 [ep1:slack] <-=-> 40 + 1*[em1:slack] + 0.5*[ep2:slack] + -0.5*[em2:slack] + 0.5*[d1:dummy]
-[z:obj] <-=-> 40 + 2*[em1:slack] + 1000.5*[ep2:slack] + 999.5*[em2:slack] + 0.5*[d1:dummy]
+[Z:obj] <-=-> 40 + 2*[em1:slack] + 1000.5*[ep2:slack] + 999.5*[em2:slack] + 0.5*[d1:dummy]
 [y:40] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:20] <-=-> 20 + -1*[s4:slack]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[ep2:slack] -> { [ep1:slack], [z:obj], [y:40] }
-[em2:slack] -> { [ep1:slack], [z:obj], [y:40] }
-[s4:slack] -> { [ep1:slack], [z:obj], [y:40], [x:20] }
-[d1:dummy] -> { [ep1:slack], [z:obj] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[ep2:slack] -> { [ep1:slack], [Z:obj], [y:40] }
+[em2:slack] -> { [ep1:slack], [Z:obj], [y:40] }
+[s4:slack] -> { [ep1:slack], [Z:obj], [y:40], [x:20] }
+[d1:dummy] -> { [ep1:slack], [Z:obj] }
 
 Infeasible rows: {  }
 )
@@ -2649,16 +2649,16 @@ x substituteOut exited.
 * addRow([s4:slack], -40 + 0.5*[ep2:slack] + -0.5*[em2:slack] + 0.5*[d1:dummy])
 Tableau:
 [ep1:slack] <-=-> 40 + 1*[em1:slack] + 0.5*[ep2:slack] + -0.5*[em2:slack] + 0.5*[d1:dummy]
-[z:obj] <-=-> 40 + 2*[em1:slack] + 1000.5*[ep2:slack] + 999.5*[em2:slack] + 0.5*[d1:dummy]
+[Z:obj] <-=-> 40 + 2*[em1:slack] + 1000.5*[ep2:slack] + 999.5*[em2:slack] + 0.5*[d1:dummy]
 [s4:slack] <-=-> -40 + 0.5*[ep2:slack] + -0.5*[em2:slack] + 0.5*[d1:dummy]
 [y:40] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:20] <-=-> 60 + -0.5*[ep2:slack] + 0.5*[em2:slack] + -0.5*[d1:dummy]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[ep2:slack] -> { [ep1:slack], [z:obj], [s4:slack], [y:40], [x:20] }
-[em2:slack] -> { [ep1:slack], [z:obj], [s4:slack], [y:40], [x:20] }
-[d1:dummy] -> { [ep1:slack], [z:obj], [s4:slack], [x:20] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[ep2:slack] -> { [ep1:slack], [Z:obj], [s4:slack], [y:40], [x:20] }
+[em2:slack] -> { [ep1:slack], [Z:obj], [s4:slack], [y:40], [x:20] }
+[d1:dummy] -> { [ep1:slack], [Z:obj], [s4:slack], [x:20] }
 
 Infeasible rows: {  }
 
@@ -2668,18 +2668,18 @@ x pivot exited.
 - returning -40 + 0.5*[ep2:slack] + -0.5*[em2:slack] + 0.5*[d1:dummy]
 x removeRow exited.
 delete@ 0x80f13f0
-* optimize([z:obj])
+* optimize([Z:obj])
 Tableau:
 [ep1:slack] <-=-> 40 + 1*[em1:slack] + 0.5*[ep2:slack] + -0.5*[em2:slack] + 0.5*[d1:dummy]
-[z:obj] <-=-> 40 + 2*[em1:slack] + 1000.5*[ep2:slack] + 999.5*[em2:slack] + 0.5*[d1:dummy]
+[Z:obj] <-=-> 40 + 2*[em1:slack] + 1000.5*[ep2:slack] + 999.5*[em2:slack] + 0.5*[d1:dummy]
 [y:40] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:20] <-=-> 60 + -0.5*[ep2:slack] + 0.5*[em2:slack] + -0.5*[d1:dummy]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[ep2:slack] -> { [ep1:slack], [z:obj], [y:40], [x:20] }
-[em2:slack] -> { [ep1:slack], [z:obj], [y:40], [x:20] }
-[d1:dummy] -> { [ep1:slack], [z:obj], [x:20] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[ep2:slack] -> { [ep1:slack], [Z:obj], [y:40], [x:20] }
+[em2:slack] -> { [ep1:slack], [Z:obj], [y:40], [x:20] }
+[d1:dummy] -> { [ep1:slack], [Z:obj], [x:20] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -2696,15 +2696,15 @@ x optimize exited.
 * setExternalVariables()
 Tableau:
 [ep1:slack] <-=-> 40 + 1*[em1:slack] + 0.5*[ep2:slack] + -0.5*[em2:slack] + 0.5*[d1:dummy]
-[z:obj] <-=-> 40 + 2*[em1:slack] + 1000.5*[ep2:slack] + 999.5*[em2:slack] + 0.5*[d1:dummy]
+[Z:obj] <-=-> 40 + 2*[em1:slack] + 1000.5*[ep2:slack] + 999.5*[em2:slack] + 0.5*[d1:dummy]
 [y:40] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:20] <-=-> 60 + -0.5*[ep2:slack] + 0.5*[em2:slack] + -0.5*[d1:dummy]
 
 Columns:
-[em1:slack] -> { [ep1:slack], [z:obj] }
-[ep2:slack] -> { [ep1:slack], [z:obj], [y:40], [x:20] }
-[em2:slack] -> { [ep1:slack], [z:obj], [y:40], [x:20] }
-[d1:dummy] -> { [ep1:slack], [z:obj], [x:20] }
+[em1:slack] -> { [ep1:slack], [Z:obj] }
+[ep2:slack] -> { [ep1:slack], [Z:obj], [y:40], [x:20] }
+[em2:slack] -> { [ep1:slack], [Z:obj], [y:40], [x:20] }
+[d1:dummy] -> { [ep1:slack], [Z:obj], [x:20] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -2724,7 +2724,7 @@ x == 60, y == 120
 * resetStayConstants()
 x resetStayConstants exited.
 Looking to remove var [d1:dummy]
-Must pivot -- columns are { [ep1:slack], [z:obj], [x:60] }
+Must pivot -- columns are { [ep1:slack], [Z:obj], [x:60] }
 Marker [d1:dummy]'s coefficient in 40 + 1*[em1:slack] + 0.5*[ep2:slack] + -0.5*[em2:slack] + 0.5*[d1:dummy] is 0.5
 pexitVar is still NULL
 * pivot([d1:dummy], [ep1:slack])
@@ -2735,34 +2735,34 @@ x removeRow exited.
 x newSubject exited.
 * ClTableau::* substituteOut([d1:dummy], -80 + 2*[ep1:slack] + -2*[em1:slack] + -1*[ep2:slack] + 1*[em2:slack])
 Tableau:
-[z:obj] <-=-> 40 + 2*[em1:slack] + 1000.5*[ep2:slack] + 999.5*[em2:slack] + 0.5*[d1:dummy]
+[Z:obj] <-=-> 40 + 2*[em1:slack] + 1000.5*[ep2:slack] + 999.5*[em2:slack] + 0.5*[d1:dummy]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:60] <-=-> 60 + -0.5*[ep2:slack] + 0.5*[em2:slack] + -0.5*[d1:dummy]
 
 Columns:
-[em1:slack] -> { [z:obj] }
-[ep2:slack] -> { [z:obj], [y:120], [x:60] }
-[em2:slack] -> { [z:obj], [y:120], [x:60] }
-[d1:dummy] -> { [z:obj], [x:60] }
+[em1:slack] -> { [Z:obj] }
+[ep2:slack] -> { [Z:obj], [y:120], [x:60] }
+[em2:slack] -> { [Z:obj], [y:120], [x:60] }
+[d1:dummy] -> { [Z:obj], [x:60] }
 
 Infeasible rows: {  }
 
-* ClLinearExpression::* substituteOut([d1:dummy], -80 + 2*[ep1:slack] + -2*[em1:slack] + -1*[ep2:slack] + 1*[em2:slack], [z:obj], Tableau:
-[z:obj] <-=-> 40 + 2*[em1:slack] + 1000.5*[ep2:slack] + 999.5*[em2:slack] + 0.5*[d1:dummy]
+* ClLinearExpression::* substituteOut([d1:dummy], -80 + 2*[ep1:slack] + -2*[em1:slack] + -1*[ep2:slack] + 1*[em2:slack], [Z:obj], Tableau:
+[Z:obj] <-=-> 40 + 2*[em1:slack] + 1000.5*[ep2:slack] + 999.5*[em2:slack] + 0.5*[d1:dummy]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:60] <-=-> 60 + -0.5*[ep2:slack] + 0.5*[em2:slack] + -0.5*[d1:dummy]
 
 Columns:
-[em1:slack] -> { [z:obj] }
-[ep2:slack] -> { [z:obj], [y:120], [x:60] }
-[em2:slack] -> { [z:obj], [y:120], [x:60] }
-[d1:dummy] -> { [z:obj], [x:60] }
+[em1:slack] -> { [Z:obj] }
+[ep2:slack] -> { [Z:obj], [y:120], [x:60] }
+[em2:slack] -> { [Z:obj], [y:120], [x:60] }
+[d1:dummy] -> { [Z:obj], [x:60] }
 
 Infeasible rows: {  }
 )
 *this == 40 + 2*[em1:slack] + 1000.5*[ep2:slack] + 999.5*[em2:slack] + 0.5*[d1:dummy]
 Adding (*i) == 2*[ep1:slack]
-* noteAddedVariable([ep1:slack], [z:obj])
+* noteAddedVariable([ep1:slack], [Z:obj])
 x noteAddedVariable exited.
 Considering (*poc) == 2*[em1:slack]
 Considering (*poc) == 1000.5*[ep2:slack]
@@ -2770,16 +2770,16 @@ Considering (*poc) == 999.5*[em2:slack]
 Now (*this) is 1*[ep1:slack] + 1*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack]
 x substituteOut exited.
 * ClLinearExpression::* substituteOut([d1:dummy], -80 + 2*[ep1:slack] + -2*[em1:slack] + -1*[ep2:slack] + 1*[em2:slack], [x:60], Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:60] <-=-> 60 + -0.5*[ep2:slack] + 0.5*[em2:slack] + -0.5*[d1:dummy]
 
 Columns:
-[ep1:slack] -> { [z:obj] }
-[em1:slack] -> { [z:obj] }
-[ep2:slack] -> { [z:obj], [y:120], [x:60] }
-[em2:slack] -> { [z:obj], [y:120], [x:60] }
-[d1:dummy] -> { [z:obj], [x:60] }
+[ep1:slack] -> { [Z:obj] }
+[em1:slack] -> { [Z:obj] }
+[ep2:slack] -> { [Z:obj], [y:120], [x:60] }
+[em2:slack] -> { [Z:obj], [y:120], [x:60] }
+[d1:dummy] -> { [Z:obj], [x:60] }
 
 Infeasible rows: {  }
 )
@@ -2801,16 +2801,16 @@ x substituteOut exited.
 x substituteOut exited.
 * addRow([d1:dummy], -80 + 2*[ep1:slack] + -2*[em1:slack] + -1*[ep2:slack] + 1*[em2:slack])
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack]
 [d1:dummy] <-=-> -80 + 2*[ep1:slack] + -2*[em1:slack] + -1*[ep2:slack] + 1*[em2:slack]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:60] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [d1:dummy], [x:60] }
-[em1:slack] -> { [z:obj], [d1:dummy], [x:60] }
-[ep2:slack] -> { [z:obj], [d1:dummy], [y:120] }
-[em2:slack] -> { [z:obj], [d1:dummy], [y:120] }
+[ep1:slack] -> { [Z:obj], [d1:dummy], [x:60] }
+[em1:slack] -> { [Z:obj], [d1:dummy], [x:60] }
+[ep2:slack] -> { [Z:obj], [d1:dummy], [y:120] }
+[em2:slack] -> { [Z:obj], [d1:dummy], [y:120] }
 
 Infeasible rows: {  }
 
@@ -2820,17 +2820,17 @@ x pivot exited.
 - returning -80 + 2*[ep1:slack] + -2*[em1:slack] + -1*[ep2:slack] + 1*[em2:slack]
 x removeRow exited.
 delete@ 0x80f1378
-* optimize([z:obj])
+* optimize([Z:obj])
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:60] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [x:60] }
-[em1:slack] -> { [z:obj], [x:60] }
-[ep2:slack] -> { [z:obj], [y:120] }
-[em2:slack] -> { [z:obj], [y:120] }
+[ep1:slack] -> { [Z:obj], [x:60] }
+[em1:slack] -> { [Z:obj], [x:60] }
+[ep2:slack] -> { [Z:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [y:120] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -2846,15 +2846,15 @@ my_prevEditConstants:
 x optimize exited.
 * setExternalVariables()
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:60] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [x:60] }
-[em1:slack] -> { [z:obj], [x:60] }
-[ep2:slack] -> { [z:obj], [y:120] }
-[em2:slack] -> { [z:obj], [y:120] }
+[ep1:slack] -> { [Z:obj], [x:60] }
+[em1:slack] -> { [Z:obj], [x:60] }
+[ep2:slack] -> { [Z:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [y:120] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -2875,15 +2875,15 @@ my_artificialCounter == 2
 my_dummyCounter == 1
 editMinusErrorVars 0, editPlusErrorVars 0, stayMinusErrorVars 0, stayPlusErrorVars 0, errorVars 0, markerVars 2
 Tableau:
-[z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack]
+[Z:obj] <-=-> 1*[ep1:slack] + 1*[em1:slack] + 1000*[ep2:slack] + 1000*[em2:slack]
 [y:120] <-=-> 120 + -1*[ep2:slack] + 1*[em2:slack]
 [x:100] <-=-> 100 + -1*[ep1:slack] + 1*[em1:slack]
 
 Columns:
-[ep1:slack] -> { [z:obj], [x:100] }
-[em1:slack] -> { [z:obj], [x:100] }
-[ep2:slack] -> { [z:obj], [y:120] }
-[em2:slack] -> { [z:obj], [y:120] }
+[ep1:slack] -> { [Z:obj], [x:100] }
+[em1:slack] -> { [Z:obj], [x:100] }
+[ep2:slack] -> { [Z:obj], [y:120] }
+[em2:slack] -> { [Z:obj], [y:120] }
 
 Infeasible rows: {  }
 
@@ -2917,7 +2917,7 @@ x chooseSubject exited.
 x newSubject exited.
 * addRow([x:0], -1*[s1:slack] + 1*[y:0])
 Tableau:
-[z:obj] <-=-> 0
+[Z:obj] <-=-> 0
 [x:0] <-=-> -1*[s1:slack] + 1*[y:0]
 
 Columns:
@@ -2929,9 +2929,9 @@ Infeasible rows: {  }
 x addRow exited.
 - returning true
 x tryAddingDirectly exited.
-* optimize([z:obj])
+* optimize([Z:obj])
 Tableau:
-[z:obj] <-=-> 0
+[Z:obj] <-=-> 0
 [x:0] <-=-> -1*[s1:slack] + 1*[y:0]
 
 Columns:
@@ -2952,7 +2952,7 @@ my_prevEditConstants:
 x optimize exited.
 * setExternalVariables()
 Tableau:
-[z:obj] <-=-> 0
+[Z:obj] <-=-> 0
 [x:0] <-=-> -1*[s1:slack] + 1*[y:0]
 
 Columns:
@@ -2993,7 +2993,7 @@ x tryAddingDirectly exited.
 * addWithArtificialVariable(3 + -1*[s1:slack] + 1*[d1:dummy])
 addWithArtificialVariable before addRow-s:
 Tableau:
-[z:obj] <-=-> 0
+[Z:obj] <-=-> 0
 [x:0] <-=-> -1*[s1:slack] + 1*[y:0]
 
 Columns:
@@ -3013,7 +3013,7 @@ my_prevEditConstants:
 
 * addRow([az:obj], 3 + -1*[s1:slack] + 1*[d1:dummy])
 Tableau:
-[z:obj] <-=-> 0
+[Z:obj] <-=-> 0
 [az:obj] <-=-> 3 + -1*[s1:slack] + 1*[d1:dummy]
 [x:0] <-=-> -1*[s1:slack] + 1*[y:0]
 
@@ -3027,7 +3027,7 @@ Infeasible rows: {  }
 x addRow exited.
 * addRow([a1:slack], 3 + -1*[s1:slack] + 1*[d1:dummy])
 Tableau:
-[z:obj] <-=-> 0
+[Z:obj] <-=-> 0
 [az:obj] <-=-> 3 + -1*[s1:slack] + 1*[d1:dummy]
 [a1:slack] <-=-> 3 + -1*[s1:slack] + 1*[d1:dummy]
 [x:0] <-=-> -1*[s1:slack] + 1*[y:0]
@@ -3042,7 +3042,7 @@ Infeasible rows: {  }
 x addRow exited.
 addWithArtificialVariable after addRow-s:
 Tableau:
-[z:obj] <-=-> 0
+[Z:obj] <-=-> 0
 [az:obj] <-=-> 3 + -1*[s1:slack] + 1*[d1:dummy]
 [a1:slack] <-=-> 3 + -1*[s1:slack] + 1*[d1:dummy]
 [x:0] <-=-> -1*[s1:slack] + 1*[y:0]
@@ -3065,7 +3065,7 @@ my_prevEditConstants:
 
 * optimize([az:obj])
 Tableau:
-[z:obj] <-=-> 0
+[Z:obj] <-=-> 0
 [az:obj] <-=-> 3 + -1*[s1:slack] + 1*[d1:dummy]
 [a1:slack] <-=-> 3 + -1*[s1:slack] + 1*[d1:dummy]
 [x:0] <-=-> -1*[s1:slack] + 1*[y:0]
@@ -3099,7 +3099,7 @@ x removeRow exited.
 x newSubject exited.
 * ClTableau::* substituteOut([s1:slack], 3 + 1*[d1:dummy] + -1*[a1:slack])
 Tableau:
-[z:obj] <-=-> 0
+[Z:obj] <-=-> 0
 [az:obj] <-=-> 3 + -1*[s1:slack] + 1*[d1:dummy]
 [x:0] <-=-> -1*[s1:slack] + 1*[y:0]
 
@@ -3111,7 +3111,7 @@ Columns:
 Infeasible rows: {  }
 
 * ClLinearExpression::* substituteOut([s1:slack], 3 + 1*[d1:dummy] + -1*[a1:slack], [az:obj], Tableau:
-[z:obj] <-=-> 0
+[Z:obj] <-=-> 0
 [az:obj] <-=-> 3 + -1*[s1:slack] + 1*[d1:dummy]
 [x:0] <-=-> -1*[s1:slack] + 1*[y:0]
 
@@ -3132,7 +3132,7 @@ x noteAddedVariable exited.
 Now (*this) is 1*[a1:slack]
 x substituteOut exited.
 * ClLinearExpression::* substituteOut([s1:slack], 3 + 1*[d1:dummy] + -1*[a1:slack], [x:0], Tableau:
-[z:obj] <-=-> 0
+[Z:obj] <-=-> 0
 [az:obj] <-=-> 1*[a1:slack]
 [x:0] <-=-> -1*[s1:slack] + 1*[y:0]
 
@@ -3157,7 +3157,7 @@ x substituteOut exited.
 * addRow([s1:slack], 3 + 1*[d1:dummy] + -1*[a1:slack])
 Tableau:
 [s1:slack] <-=-> 3 + 1*[d1:dummy] + -1*[a1:slack]
-[z:obj] <-=-> 0
+[Z:obj] <-=-> 0
 [az:obj] <-=-> 1*[a1:slack]
 [x:0] <-=-> -3 + -1*[d1:dummy] + 1*[a1:slack] + 1*[y:0]
 
@@ -3172,7 +3172,7 @@ x addRow exited.
 x pivot exited.
 Tableau:
 [s1:slack] <-=-> 3 + 1*[d1:dummy] + -1*[a1:slack]
-[z:obj] <-=-> 0
+[Z:obj] <-=-> 0
 [az:obj] <-=-> 1*[a1:slack]
 [x:0] <-=-> -3 + -1*[d1:dummy] + 1*[a1:slack] + 1*[y:0]
 
@@ -3200,10 +3200,10 @@ x removeColumn exited.
 - returning 0
 x removeRow exited.
 x addWithArtificialVariable exited.
-* optimize([z:obj])
+* optimize([Z:obj])
 Tableau:
 [s1:slack] <-=-> 3 + 1*[d1:dummy]
-[z:obj] <-=-> 0
+[Z:obj] <-=-> 0
 [x:0] <-=-> -3 + -1*[d1:dummy] + 1*[y:0]
 
 Columns:
@@ -3225,7 +3225,7 @@ x optimize exited.
 * setExternalVariables()
 Tableau:
 [s1:slack] <-=-> 3 + 1*[d1:dummy]
-[z:obj] <-=-> 0
+[Z:obj] <-=-> 0
 [x:0] <-=-> -3 + -1*[d1:dummy] + 1*[y:0]
 
 Columns:
@@ -3253,9 +3253,9 @@ cn.isRequired() == 0
 x addVariable exited.
 * addVariable([y:0], -1)
 x addVariable exited.
-* noteAddedVariable([ep2:slack], [z:obj])
+* noteAddedVariable([ep2:slack], [Z:obj])
 x noteAddedVariable exited.
-* noteAddedVariable([em2:slack], [z:obj])
+* noteAddedVariable([em2:slack], [Z:obj])
 x noteAddedVariable exited.
 - returning 13 + 1*[d1:dummy] + -1*[ep2:slack] + 1*[em2:slack] + -1*[y:0] new@ 0x80f14e8
 x newExpression exited.
@@ -3267,26 +3267,26 @@ x newSubject exited.
 * ClTableau::* substituteOut([y:0], 13 + 1*[d1:dummy] + -1*[ep2:slack] + 1*[em2:slack])
 Tableau:
 [s1:slack] <-=-> 3 + 1*[d1:dummy]
-[z:obj] <-=-> 1*[ep2:slack] + 1*[em2:slack]
+[Z:obj] <-=-> 1*[ep2:slack] + 1*[em2:slack]
 [x:-3] <-=-> -3 + -1*[d1:dummy] + 1*[y:0]
 
 Columns:
 [d1:dummy] -> { [s1:slack], [x:-3] }
-[ep2:slack] -> { [z:obj] }
-[em2:slack] -> { [z:obj] }
+[ep2:slack] -> { [Z:obj] }
+[em2:slack] -> { [Z:obj] }
 [y:0] -> { [x:-3] }
 
 Infeasible rows: {  }
 
 * ClLinearExpression::* substituteOut([y:0], 13 + 1*[d1:dummy] + -1*[ep2:slack] + 1*[em2:slack], [x:-3], Tableau:
 [s1:slack] <-=-> 3 + 1*[d1:dummy]
-[z:obj] <-=-> 1*[ep2:slack] + 1*[em2:slack]
+[Z:obj] <-=-> 1*[ep2:slack] + 1*[em2:slack]
 [x:-3] <-=-> -3 + -1*[d1:dummy] + 1*[y:0]
 
 Columns:
 [d1:dummy] -> { [s1:slack], [x:-3] }
-[ep2:slack] -> { [z:obj] }
-[em2:slack] -> { [z:obj] }
+[ep2:slack] -> { [Z:obj] }
+[em2:slack] -> { [Z:obj] }
 [y:0] -> { [x:-3] }
 
 Infeasible rows: {  }
@@ -3307,31 +3307,31 @@ x substituteOut exited.
 * addRow([y:0], 13 + 1*[d1:dummy] + -1*[ep2:slack] + 1*[em2:slack])
 Tableau:
 [s1:slack] <-=-> 3 + 1*[d1:dummy]
-[z:obj] <-=-> 1*[ep2:slack] + 1*[em2:slack]
+[Z:obj] <-=-> 1*[ep2:slack] + 1*[em2:slack]
 [y:0] <-=-> 13 + 1*[d1:dummy] + -1*[ep2:slack] + 1*[em2:slack]
 [x:-3] <-=-> 10 + -1*[ep2:slack] + 1*[em2:slack]
 
 Columns:
 [d1:dummy] -> { [s1:slack], [y:0] }
-[ep2:slack] -> { [z:obj], [y:0], [x:-3] }
-[em2:slack] -> { [z:obj], [y:0], [x:-3] }
+[ep2:slack] -> { [Z:obj], [y:0], [x:-3] }
+[em2:slack] -> { [Z:obj], [y:0], [x:-3] }
 
 Infeasible rows: {  }
 
 x addRow exited.
 - returning true
 x tryAddingDirectly exited.
-* optimize([z:obj])
+* optimize([Z:obj])
 Tableau:
 [s1:slack] <-=-> 3 + 1*[d1:dummy]
-[z:obj] <-=-> 1*[ep2:slack] + 1*[em2:slack]
+[Z:obj] <-=-> 1*[ep2:slack] + 1*[em2:slack]
 [y:0] <-=-> 13 + 1*[d1:dummy] + -1*[ep2:slack] + 1*[em2:slack]
 [x:-3] <-=-> 10 + -1*[ep2:slack] + 1*[em2:slack]
 
 Columns:
 [d1:dummy] -> { [s1:slack], [y:0] }
-[ep2:slack] -> { [z:obj], [y:0], [x:-3] }
-[em2:slack] -> { [z:obj], [y:0], [x:-3] }
+[ep2:slack] -> { [Z:obj], [y:0], [x:-3] }
+[em2:slack] -> { [Z:obj], [y:0], [x:-3] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -3348,14 +3348,14 @@ x optimize exited.
 * setExternalVariables()
 Tableau:
 [s1:slack] <-=-> 3 + 1*[d1:dummy]
-[z:obj] <-=-> 1*[ep2:slack] + 1*[em2:slack]
+[Z:obj] <-=-> 1*[ep2:slack] + 1*[em2:slack]
 [y:0] <-=-> 13 + 1*[d1:dummy] + -1*[ep2:slack] + 1*[em2:slack]
 [x:-3] <-=-> 10 + -1*[ep2:slack] + 1*[em2:slack]
 
 Columns:
 [d1:dummy] -> { [s1:slack], [y:0] }
-[ep2:slack] -> { [z:obj], [y:0], [x:-3] }
-[em2:slack] -> { [z:obj], [y:0], [x:-3] }
+[ep2:slack] -> { [Z:obj], [y:0], [x:-3] }
+[em2:slack] -> { [Z:obj], [y:0], [x:-3] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -3380,9 +3380,9 @@ x addVariable exited.
 x addVariable exited.
 * addVariable([em2:slack], -1)
 x addVariable exited.
-* noteAddedVariable([ep3:slack], [z:obj])
+* noteAddedVariable([ep3:slack], [Z:obj])
 x noteAddedVariable exited.
-* noteAddedVariable([em3:slack], [z:obj])
+* noteAddedVariable([em3:slack], [Z:obj])
 x noteAddedVariable exited.
 - returning 3 + 1*[d1:dummy] + -1*[ep2:slack] + 1*[em2:slack] + 1*[ep3:slack] + -1*[em3:slack] new@ 0x80f1588
 x newExpression exited.
@@ -3395,16 +3395,16 @@ x tryAddingDirectly exited.
 addWithArtificialVariable before addRow-s:
 Tableau:
 [s1:slack] <-=-> 3 + 1*[d1:dummy]
-[z:obj] <-=-> 1*[ep2:slack] + 1*[em2:slack] + 1*[ep3:slack] + 1*[em3:slack]
+[Z:obj] <-=-> 1*[ep2:slack] + 1*[em2:slack] + 1*[ep3:slack] + 1*[em3:slack]
 [y:13] <-=-> 13 + 1*[d1:dummy] + -1*[ep2:slack] + 1*[em2:slack]
 [x:10] <-=-> 10 + -1*[ep2:slack] + 1*[em2:slack]
 
 Columns:
 [d1:dummy] -> { [s1:slack], [y:13] }
-[ep2:slack] -> { [z:obj], [y:13], [x:10] }
-[em2:slack] -> { [z:obj], [y:13], [x:10] }
-[ep3:slack] -> { [z:obj] }
-[em3:slack] -> { [z:obj] }
+[ep2:slack] -> { [Z:obj], [y:13], [x:10] }
+[em2:slack] -> { [Z:obj], [y:13], [x:10] }
+[ep3:slack] -> { [Z:obj] }
+[em3:slack] -> { [Z:obj] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -3420,17 +3420,17 @@ my_prevEditConstants:
 * addRow([az:obj], 3 + 1*[d1:dummy] + -1*[ep2:slack] + 1*[em2:slack] + 1*[ep3:slack] + -1*[em3:slack])
 Tableau:
 [s1:slack] <-=-> 3 + 1*[d1:dummy]
-[z:obj] <-=-> 1*[ep2:slack] + 1*[em2:slack] + 1*[ep3:slack] + 1*[em3:slack]
+[Z:obj] <-=-> 1*[ep2:slack] + 1*[em2:slack] + 1*[ep3:slack] + 1*[em3:slack]
 [az:obj] <-=-> 3 + 1*[d1:dummy] + -1*[ep2:slack] + 1*[em2:slack] + 1*[ep3:slack] + -1*[em3:slack]
 [y:13] <-=-> 13 + 1*[d1:dummy] + -1*[ep2:slack] + 1*[em2:slack]
 [x:10] <-=-> 10 + -1*[ep2:slack] + 1*[em2:slack]
 
 Columns:
 [d1:dummy] -> { [s1:slack], [az:obj], [y:13] }
-[ep2:slack] -> { [z:obj], [az:obj], [y:13], [x:10] }
-[em2:slack] -> { [z:obj], [az:obj], [y:13], [x:10] }
-[ep3:slack] -> { [z:obj], [az:obj] }
-[em3:slack] -> { [z:obj], [az:obj] }
+[ep2:slack] -> { [Z:obj], [az:obj], [y:13], [x:10] }
+[em2:slack] -> { [Z:obj], [az:obj], [y:13], [x:10] }
+[ep3:slack] -> { [Z:obj], [az:obj] }
+[em3:slack] -> { [Z:obj], [az:obj] }
 
 Infeasible rows: {  }
 
@@ -3438,7 +3438,7 @@ x addRow exited.
 * addRow([a2:slack], 3 + 1*[d1:dummy] + -1*[ep2:slack] + 1*[em2:slack] + 1*[ep3:slack] + -1*[em3:slack])
 Tableau:
 [s1:slack] <-=-> 3 + 1*[d1:dummy]
-[z:obj] <-=-> 1*[ep2:slack] + 1*[em2:slack] + 1*[ep3:slack] + 1*[em3:slack]
+[Z:obj] <-=-> 1*[ep2:slack] + 1*[em2:slack] + 1*[ep3:slack] + 1*[em3:slack]
 [a2:slack] <-=-> 3 + 1*[d1:dummy] + -1*[ep2:slack] + 1*[em2:slack] + 1*[ep3:slack] + -1*[em3:slack]
 [az:obj] <-=-> 3 + 1*[d1:dummy] + -1*[ep2:slack] + 1*[em2:slack] + 1*[ep3:slack] + -1*[em3:slack]
 [y:13] <-=-> 13 + 1*[d1:dummy] + -1*[ep2:slack] + 1*[em2:slack]
@@ -3446,10 +3446,10 @@ Tableau:
 
 Columns:
 [d1:dummy] -> { [s1:slack], [a2:slack], [az:obj], [y:13] }
-[ep2:slack] -> { [z:obj], [a2:slack], [az:obj], [y:13], [x:10] }
-[em2:slack] -> { [z:obj], [a2:slack], [az:obj], [y:13], [x:10] }
-[ep3:slack] -> { [z:obj], [a2:slack], [az:obj] }
-[em3:slack] -> { [z:obj], [a2:slack], [az:obj] }
+[ep2:slack] -> { [Z:obj], [a2:slack], [az:obj], [y:13], [x:10] }
+[em2:slack] -> { [Z:obj], [a2:slack], [az:obj], [y:13], [x:10] }
+[ep3:slack] -> { [Z:obj], [a2:slack], [az:obj] }
+[em3:slack] -> { [Z:obj], [a2:slack], [az:obj] }
 
 Infeasible rows: {  }
 
@@ -3457,7 +3457,7 @@ x addRow exited.
 addWithArtificialVariable after addRow-s:
 Tableau:
 [s1:slack] <-=-> 3 + 1*[d1:dummy]
-[z:obj] <-=-> 1*[ep2:slack] + 1*[em2:slack] + 1*[ep3:slack] + 1*[em3:slack]
+[Z:obj] <-=-> 1*[ep2:slack] + 1*[em2:slack] + 1*[ep3:slack] + 1*[em3:slack]
 [a2:slack] <-=-> 3 + 1*[d1:dummy] + -1*[ep2:slack] + 1*[em2:slack] + 1*[ep3:slack] + -1*[em3:slack]
 [az:obj] <-=-> 3 + 1*[d1:dummy] + -1*[ep2:slack] + 1*[em2:slack] + 1*[ep3:slack] + -1*[em3:slack]
 [y:13] <-=-> 13 + 1*[d1:dummy] + -1*[ep2:slack] + 1*[em2:slack]
@@ -3465,10 +3465,10 @@ Tableau:
 
 Columns:
 [d1:dummy] -> { [s1:slack], [a2:slack], [az:obj], [y:13] }
-[ep2:slack] -> { [z:obj], [a2:slack], [az:obj], [y:13], [x:10] }
-[em2:slack] -> { [z:obj], [a2:slack], [az:obj], [y:13], [x:10] }
-[ep3:slack] -> { [z:obj], [a2:slack], [az:obj] }
-[em3:slack] -> { [z:obj], [a2:slack], [az:obj] }
+[ep2:slack] -> { [Z:obj], [a2:slack], [az:obj], [y:13], [x:10] }
+[em2:slack] -> { [Z:obj], [a2:slack], [az:obj], [y:13], [x:10] }
+[ep3:slack] -> { [Z:obj], [a2:slack], [az:obj] }
+[em3:slack] -> { [Z:obj], [a2:slack], [az:obj] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -3484,7 +3484,7 @@ my_prevEditConstants:
 * optimize([az:obj])
 Tableau:
 [s1:slack] <-=-> 3 + 1*[d1:dummy]
-[z:obj] <-=-> 1*[ep2:slack] + 1*[em2:slack] + 1*[ep3:slack] + 1*[em3:slack]
+[Z:obj] <-=-> 1*[ep2:slack] + 1*[em2:slack] + 1*[ep3:slack] + 1*[em3:slack]
 [a2:slack] <-=-> 3 + 1*[d1:dummy] + -1*[ep2:slack] + 1*[em2:slack] + 1*[ep3:slack] + -1*[em3:slack]
 [az:obj] <-=-> 3 + 1*[d1:dummy] + -1*[ep2:slack] + 1*[em2:slack] + 1*[ep3:slack] + -1*[em3:slack]
 [y:13] <-=-> 13 + 1*[d1:dummy] + -1*[ep2:slack] + 1*[em2:slack]
@@ -3492,10 +3492,10 @@ Tableau:
 
 Columns:
 [d1:dummy] -> { [s1:slack], [a2:slack], [az:obj], [y:13] }
-[ep2:slack] -> { [z:obj], [a2:slack], [az:obj], [y:13], [x:10] }
-[em2:slack] -> { [z:obj], [a2:slack], [az:obj], [y:13], [x:10] }
-[ep3:slack] -> { [z:obj], [a2:slack], [az:obj] }
-[em3:slack] -> { [z:obj], [a2:slack], [az:obj] }
+[ep2:slack] -> { [Z:obj], [a2:slack], [az:obj], [y:13], [x:10] }
+[em2:slack] -> { [Z:obj], [a2:slack], [az:obj], [y:13], [x:10] }
+[ep3:slack] -> { [Z:obj], [a2:slack], [az:obj] }
+[em3:slack] -> { [Z:obj], [a2:slack], [az:obj] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -3509,7 +3509,7 @@ my_stayMinusErrorVars: 0:[  ]
 my_prevEditConstants: 
 
 *pentryVar == [ep2:slack], objectiveCoeff == -1
-Checking [z:obj]
+Checking [Z:obj]
 Checking [a2:slack]
 New minRatio == 3
 Checking [az:obj]
@@ -3524,64 +3524,64 @@ x newSubject exited.
 * ClTableau::* substituteOut([ep2:slack], 3 + 1*[d1:dummy] + 1*[em2:slack] + 1*[ep3:slack] + -1*[em3:slack] + -1*[a2:slack])
 Tableau:
 [s1:slack] <-=-> 3 + 1*[d1:dummy]
-[z:obj] <-=-> 1*[ep2:slack] + 1*[em2:slack] + 1*[ep3:slack] + 1*[em3:slack]
+[Z:obj] <-=-> 1*[ep2:slack] + 1*[em2:slack] + 1*[ep3:slack] + 1*[em3:slack]
 [az:obj] <-=-> 3 + 1*[d1:dummy] + -1*[ep2:slack] + 1*[em2:slack] + 1*[ep3:slack] + -1*[em3:slack]
 [y:13] <-=-> 13 + 1*[d1:dummy] + -1*[ep2:slack] + 1*[em2:slack]
 [x:10] <-=-> 10 + -1*[ep2:slack] + 1*[em2:slack]
 
 Columns:
 [d1:dummy] -> { [s1:slack], [az:obj], [y:13] }
-[ep2:slack] -> { [z:obj], [az:obj], [y:13], [x:10] }
-[em2:slack] -> { [z:obj], [az:obj], [y:13], [x:10] }
-[ep3:slack] -> { [z:obj], [az:obj] }
-[em3:slack] -> { [z:obj], [az:obj] }
+[ep2:slack] -> { [Z:obj], [az:obj], [y:13], [x:10] }
+[em2:slack] -> { [Z:obj], [az:obj], [y:13], [x:10] }
+[ep3:slack] -> { [Z:obj], [az:obj] }
+[em3:slack] -> { [Z:obj], [az:obj] }
 
 Infeasible rows: {  }
 
-* ClLinearExpression::* substituteOut([ep2:slack], 3 + 1*[d1:dummy] + 1*[em2:slack] + 1*[ep3:slack] + -1*[em3:slack] + -1*[a2:slack], [z:obj], Tableau:
+* ClLinearExpression::* substituteOut([ep2:slack], 3 + 1*[d1:dummy] + 1*[em2:slack] + 1*[ep3:slack] + -1*[em3:slack] + -1*[a2:slack], [Z:obj], Tableau:
 [s1:slack] <-=-> 3 + 1*[d1:dummy]
-[z:obj] <-=-> 1*[ep2:slack] + 1*[em2:slack] + 1*[ep3:slack] + 1*[em3:slack]
+[Z:obj] <-=-> 1*[ep2:slack] + 1*[em2:slack] + 1*[ep3:slack] + 1*[em3:slack]
 [az:obj] <-=-> 3 + 1*[d1:dummy] + -1*[ep2:slack] + 1*[em2:slack] + 1*[ep3:slack] + -1*[em3:slack]
 [y:13] <-=-> 13 + 1*[d1:dummy] + -1*[ep2:slack] + 1*[em2:slack]
 [x:10] <-=-> 10 + -1*[ep2:slack] + 1*[em2:slack]
 
 Columns:
 [d1:dummy] -> { [s1:slack], [az:obj], [y:13] }
-[ep2:slack] -> { [z:obj], [az:obj], [y:13], [x:10] }
-[em2:slack] -> { [z:obj], [az:obj], [y:13], [x:10] }
-[ep3:slack] -> { [z:obj], [az:obj] }
-[em3:slack] -> { [z:obj], [az:obj] }
+[ep2:slack] -> { [Z:obj], [az:obj], [y:13], [x:10] }
+[em2:slack] -> { [Z:obj], [az:obj], [y:13], [x:10] }
+[ep3:slack] -> { [Z:obj], [az:obj] }
+[em3:slack] -> { [Z:obj], [az:obj] }
 
 Infeasible rows: {  }
 )
 *this == 1*[ep2:slack] + 1*[em2:slack] + 1*[ep3:slack] + 1*[em3:slack]
 Adding (*i) == 1*[d1:dummy]
-* noteAddedVariable([d1:dummy], [z:obj])
+* noteAddedVariable([d1:dummy], [Z:obj])
 x noteAddedVariable exited.
 Considering (*poc) == 1*[em2:slack]
 Considering (*poc) == 1*[ep3:slack]
 Considering (*poc) == 1*[em3:slack]
-* noteRemovedVariable([em3:slack], [z:obj])
+* noteRemovedVariable([em3:slack], [Z:obj])
 x noteRemovedVariable exited.
 Adding (*i) == -1*[a2:slack]
-* noteAddedVariable([a2:slack], [z:obj])
+* noteAddedVariable([a2:slack], [Z:obj])
 x noteAddedVariable exited.
 Now (*this) is 3 + 1*[d1:dummy] + 2*[em2:slack] + 2*[ep3:slack] + -1*[a2:slack]
 x substituteOut exited.
 * ClLinearExpression::* substituteOut([ep2:slack], 3 + 1*[d1:dummy] + 1*[em2:slack] + 1*[ep3:slack] + -1*[em3:slack] + -1*[a2:slack], [az:obj], Tableau:
 [s1:slack] <-=-> 3 + 1*[d1:dummy]
-[z:obj] <-=-> 3 + 1*[d1:dummy] + 2*[em2:slack] + 2*[ep3:slack] + -1*[a2:slack]
+[Z:obj] <-=-> 3 + 1*[d1:dummy] + 2*[em2:slack] + 2*[ep3:slack] + -1*[a2:slack]
 [az:obj] <-=-> 3 + 1*[d1:dummy] + -1*[ep2:slack] + 1*[em2:slack] + 1*[ep3:slack] + -1*[em3:slack]
 [y:13] <-=-> 13 + 1*[d1:dummy] + -1*[ep2:slack] + 1*[em2:slack]
 [x:10] <-=-> 10 + -1*[ep2:slack] + 1*[em2:slack]
 
 Columns:
-[d1:dummy] -> { [s1:slack], [z:obj], [az:obj], [y:13] }
-[ep2:slack] -> { [z:obj], [az:obj], [y:13], [x:10] }
-[em2:slack] -> { [z:obj], [az:obj], [y:13], [x:10] }
-[ep3:slack] -> { [z:obj], [az:obj] }
+[d1:dummy] -> { [s1:slack], [Z:obj], [az:obj], [y:13] }
+[ep2:slack] -> { [Z:obj], [az:obj], [y:13], [x:10] }
+[em2:slack] -> { [Z:obj], [az:obj], [y:13], [x:10] }
+[ep3:slack] -> { [Z:obj], [az:obj] }
 [em3:slack] -> { [az:obj] }
-[a2:slack] -> { [z:obj] }
+[a2:slack] -> { [Z:obj] }
 
 Infeasible rows: {  }
 )
@@ -3605,18 +3605,18 @@ Now (*this) is 1*[a2:slack]
 x substituteOut exited.
 * ClLinearExpression::* substituteOut([ep2:slack], 3 + 1*[d1:dummy] + 1*[em2:slack] + 1*[ep3:slack] + -1*[em3:slack] + -1*[a2:slack], [y:13], Tableau:
 [s1:slack] <-=-> 3 + 1*[d1:dummy]
-[z:obj] <-=-> 3 + 1*[d1:dummy] + 2*[em2:slack] + 2*[ep3:slack] + -1*[a2:slack]
+[Z:obj] <-=-> 3 + 1*[d1:dummy] + 2*[em2:slack] + 2*[ep3:slack] + -1*[a2:slack]
 [az:obj] <-=-> 1*[a2:slack]
 [y:13] <-=-> 13 + 1*[d1:dummy] + -1*[ep2:slack] + 1*[em2:slack]
 [x:10] <-=-> 10 + -1*[ep2:slack] + 1*[em2:slack]
 
 Columns:
-[d1:dummy] -> { [s1:slack], [z:obj], [y:13] }
-[ep2:slack] -> { [z:obj], [az:obj], [y:13], [x:10] }
-[em2:slack] -> { [z:obj], [y:13], [x:10] }
-[ep3:slack] -> { [z:obj] }
+[d1:dummy] -> { [s1:slack], [Z:obj], [y:13] }
+[ep2:slack] -> { [Z:obj], [az:obj], [y:13], [x:10] }
+[em2:slack] -> { [Z:obj], [y:13], [x:10] }
+[ep3:slack] -> { [Z:obj] }
 [em3:slack] -> {  }
-[a2:slack] -> { [z:obj], [az:obj] }
+[a2:slack] -> { [Z:obj], [az:obj] }
 
 Infeasible rows: {  }
 )
@@ -3640,18 +3640,18 @@ Now (*this) is 10 + -1*[ep3:slack] + 1*[em3:slack] + 1*[a2:slack]
 x substituteOut exited.
 * ClLinearExpression::* substituteOut([ep2:slack], 3 + 1*[d1:dummy] + 1*[em2:slack] + 1*[ep3:slack] + -1*[em3:slack] + -1*[a2:slack], [x:10], Tableau:
 [s1:slack] <-=-> 3 + 1*[d1:dummy]
-[z:obj] <-=-> 3 + 1*[d1:dummy] + 2*[em2:slack] + 2*[ep3:slack] + -1*[a2:slack]
+[Z:obj] <-=-> 3 + 1*[d1:dummy] + 2*[em2:slack] + 2*[ep3:slack] + -1*[a2:slack]
 [az:obj] <-=-> 1*[a2:slack]
 [y:13] <-=-> 10 + -1*[ep3:slack] + 1*[em3:slack] + 1*[a2:slack]
 [x:10] <-=-> 10 + -1*[ep2:slack] + 1*[em2:slack]
 
 Columns:
-[d1:dummy] -> { [s1:slack], [z:obj] }
-[ep2:slack] -> { [z:obj], [az:obj], [y:13], [x:10] }
-[em2:slack] -> { [z:obj], [x:10] }
-[ep3:slack] -> { [z:obj], [y:13] }
+[d1:dummy] -> { [s1:slack], [Z:obj] }
+[ep2:slack] -> { [Z:obj], [az:obj], [y:13], [x:10] }
+[em2:slack] -> { [Z:obj], [x:10] }
+[ep3:slack] -> { [Z:obj], [y:13] }
 [em3:slack] -> { [y:13] }
-[a2:slack] -> { [z:obj], [az:obj], [y:13] }
+[a2:slack] -> { [Z:obj], [az:obj], [y:13] }
 
 Infeasible rows: {  }
 )
@@ -3677,18 +3677,18 @@ x substituteOut exited.
 * addRow([ep2:slack], 3 + 1*[d1:dummy] + 1*[em2:slack] + 1*[ep3:slack] + -1*[em3:slack] + -1*[a2:slack])
 Tableau:
 [s1:slack] <-=-> 3 + 1*[d1:dummy]
-[z:obj] <-=-> 3 + 1*[d1:dummy] + 2*[em2:slack] + 2*[ep3:slack] + -1*[a2:slack]
+[Z:obj] <-=-> 3 + 1*[d1:dummy] + 2*[em2:slack] + 2*[ep3:slack] + -1*[a2:slack]
 [ep2:slack] <-=-> 3 + 1*[d1:dummy] + 1*[em2:slack] + 1*[ep3:slack] + -1*[em3:slack] + -1*[a2:slack]
 [az:obj] <-=-> 1*[a2:slack]
 [y:13] <-=-> 10 + -1*[ep3:slack] + 1*[em3:slack] + 1*[a2:slack]
 [x:10] <-=-> 7 + -1*[d1:dummy] + -1*[ep3:slack] + 1*[em3:slack] + 1*[a2:slack]
 
 Columns:
-[d1:dummy] -> { [s1:slack], [z:obj], [ep2:slack], [x:10] }
-[em2:slack] -> { [z:obj], [ep2:slack] }
-[ep3:slack] -> { [z:obj], [ep2:slack], [y:13], [x:10] }
+[d1:dummy] -> { [s1:slack], [Z:obj], [ep2:slack], [x:10] }
+[em2:slack] -> { [Z:obj], [ep2:slack] }
+[ep3:slack] -> { [Z:obj], [ep2:slack], [y:13], [x:10] }
 [em3:slack] -> { [ep2:slack], [y:13], [x:10] }
-[a2:slack] -> { [z:obj], [ep2:slack], [az:obj], [y:13], [x:10] }
+[a2:slack] -> { [Z:obj], [ep2:slack], [az:obj], [y:13], [x:10] }
 
 Infeasible rows: {  }
 
@@ -3696,18 +3696,18 @@ x addRow exited.
 x pivot exited.
 Tableau:
 [s1:slack] <-=-> 3 + 1*[d1:dummy]
-[z:obj] <-=-> 3 + 1*[d1:dummy] + 2*[em2:slack] + 2*[ep3:slack] + -1*[a2:slack]
+[Z:obj] <-=-> 3 + 1*[d1:dummy] + 2*[em2:slack] + 2*[ep3:slack] + -1*[a2:slack]
 [ep2:slack] <-=-> 3 + 1*[d1:dummy] + 1*[em2:slack] + 1*[ep3:slack] + -1*[em3:slack] + -1*[a2:slack]
 [az:obj] <-=-> 1*[a2:slack]
 [y:13] <-=-> 10 + -1*[ep3:slack] + 1*[em3:slack] + 1*[a2:slack]
 [x:10] <-=-> 7 + -1*[d1:dummy] + -1*[ep3:slack] + 1*[em3:slack] + 1*[a2:slack]
 
 Columns:
-[d1:dummy] -> { [s1:slack], [z:obj], [ep2:slack], [x:10] }
-[em2:slack] -> { [z:obj], [ep2:slack] }
-[ep3:slack] -> { [z:obj], [ep2:slack], [y:13], [x:10] }
+[d1:dummy] -> { [s1:slack], [Z:obj], [ep2:slack], [x:10] }
+[em2:slack] -> { [Z:obj], [ep2:slack] }
+[ep3:slack] -> { [Z:obj], [ep2:slack], [y:13], [x:10] }
 [em3:slack] -> { [ep2:slack], [y:13], [x:10] }
-[a2:slack] -> { [z:obj], [ep2:slack], [az:obj], [y:13], [x:10] }
+[a2:slack] -> { [Z:obj], [ep2:slack], [az:obj], [y:13], [x:10] }
 
 Infeasible rows: {  }
 my_editPlusErrorVars: 0:[  ]
@@ -3728,18 +3728,18 @@ x removeColumn exited.
 - returning 0
 x removeRow exited.
 x addWithArtificialVariable exited.
-* optimize([z:obj])
+* optimize([Z:obj])
 Tableau:
 [s1:slack] <-=-> 3 + 1*[d1:dummy]
-[z:obj] <-=-> 3 + 1*[d1:dummy] + 2*[em2:slack] + 2*[ep3:slack]
+[Z:obj] <-=-> 3 + 1*[d1:dummy] + 2*[em2:slack] + 2*[ep3:slack]
 [ep2:slack] <-=-> 3 + 1*[d1:dummy] + 1*[em2:slack] + 1*[ep3:slack] + -1*[em3:slack]
 [y:13] <-=-> 10 + -1*[ep3:slack] + 1*[em3:slack]
 [x:10] <-=-> 7 + -1*[d1:dummy] + -1*[ep3:slack] + 1*[em3:slack]
 
 Columns:
-[d1:dummy] -> { [s1:slack], [z:obj], [ep2:slack], [x:10] }
-[em2:slack] -> { [z:obj], [ep2:slack] }
-[ep3:slack] -> { [z:obj], [ep2:slack], [y:13], [x:10] }
+[d1:dummy] -> { [s1:slack], [Z:obj], [ep2:slack], [x:10] }
+[em2:slack] -> { [Z:obj], [ep2:slack] }
+[ep3:slack] -> { [Z:obj], [ep2:slack], [y:13], [x:10] }
 [em3:slack] -> { [ep2:slack], [y:13], [x:10] }
 
 Infeasible rows: {  }
@@ -3757,15 +3757,15 @@ x optimize exited.
 * setExternalVariables()
 Tableau:
 [s1:slack] <-=-> 3 + 1*[d1:dummy]
-[z:obj] <-=-> 3 + 1*[d1:dummy] + 2*[em2:slack] + 2*[ep3:slack]
+[Z:obj] <-=-> 3 + 1*[d1:dummy] + 2*[em2:slack] + 2*[ep3:slack]
 [ep2:slack] <-=-> 3 + 1*[d1:dummy] + 1*[em2:slack] + 1*[ep3:slack] + -1*[em3:slack]
 [y:13] <-=-> 10 + -1*[ep3:slack] + 1*[em3:slack]
 [x:10] <-=-> 7 + -1*[d1:dummy] + -1*[ep3:slack] + 1*[em3:slack]
 
 Columns:
-[d1:dummy] -> { [s1:slack], [z:obj], [ep2:slack], [x:10] }
-[em2:slack] -> { [z:obj], [ep2:slack] }
-[ep3:slack] -> { [z:obj], [ep2:slack], [y:13], [x:10] }
+[d1:dummy] -> { [s1:slack], [Z:obj], [ep2:slack], [x:10] }
+[em2:slack] -> { [Z:obj], [ep2:slack] }
+[ep3:slack] -> { [Z:obj], [ep2:slack], [y:13], [x:10] }
 [em3:slack] -> { [ep2:slack], [y:13], [x:10] }
 
 Infeasible rows: {  }
@@ -3788,15 +3788,15 @@ my_dummyCounter == 1
 editMinusErrorVars 0, editPlusErrorVars 0, stayMinusErrorVars 0, stayPlusErrorVars 0, errorVars 0, markerVars 4
 Tableau:
 [s1:slack] <-=-> 3 + 1*[d1:dummy]
-[z:obj] <-=-> 3 + 1*[d1:dummy] + 2*[em2:slack] + 2*[ep3:slack]
+[Z:obj] <-=-> 3 + 1*[d1:dummy] + 2*[em2:slack] + 2*[ep3:slack]
 [ep2:slack] <-=-> 3 + 1*[d1:dummy] + 1*[em2:slack] + 1*[ep3:slack] + -1*[em3:slack]
 [y:10] <-=-> 10 + -1*[ep3:slack] + 1*[em3:slack]
 [x:7] <-=-> 7 + -1*[d1:dummy] + -1*[ep3:slack] + 1*[em3:slack]
 
 Columns:
-[d1:dummy] -> { [s1:slack], [z:obj], [ep2:slack], [x:7] }
-[em2:slack] -> { [z:obj], [ep2:slack] }
-[ep3:slack] -> { [z:obj], [ep2:slack], [y:10], [x:7] }
+[d1:dummy] -> { [s1:slack], [Z:obj], [ep2:slack], [x:7] }
+[em2:slack] -> { [Z:obj], [ep2:slack] }
+[ep3:slack] -> { [Z:obj], [ep2:slack], [y:10], [x:7] }
 [em3:slack] -> { [ep2:slack], [y:10], [x:7] }
 
 Infeasible rows: {  }
@@ -3828,7 +3828,7 @@ x chooseSubject exited.
 x newSubject exited.
 * addRow([x:0], 10 + 1*[d1:dummy])
 Tableau:
-[z:obj] <-=-> 0
+[Z:obj] <-=-> 0
 [x:0] <-=-> 10 + 1*[d1:dummy]
 
 Columns:
@@ -3839,9 +3839,9 @@ Infeasible rows: {  }
 x addRow exited.
 - returning true
 x tryAddingDirectly exited.
-* optimize([z:obj])
+* optimize([Z:obj])
 Tableau:
-[z:obj] <-=-> 0
+[Z:obj] <-=-> 0
 [x:0] <-=-> 10 + 1*[d1:dummy]
 
 Columns:
@@ -3861,7 +3861,7 @@ my_prevEditConstants:
 x optimize exited.
 * setExternalVariables()
 Tableau:
-[z:obj] <-=-> 0
+[Z:obj] <-=-> 0
 [x:0] <-=-> 10 + 1*[d1:dummy]
 
 Columns:
@@ -3899,7 +3899,7 @@ my_artificialCounter == 0
 my_dummyCounter == 2
 editMinusErrorVars 0, editPlusErrorVars 0, stayMinusErrorVars 0, stayPlusErrorVars 0, errorVars 0, markerVars 2
 Tableau:
-[z:obj] <-=-> 0
+[Z:obj] <-=-> 0
 [x:10] <-=-> 10 + 1*[d1:dummy]
 
 Columns:
@@ -3931,7 +3931,7 @@ x chooseSubject exited.
 x newSubject exited.
 * addRow([x:0], 10 + 1*[s1:slack])
 Tableau:
-[z:obj] <-=-> 0
+[Z:obj] <-=-> 0
 [x:0] <-=-> 10 + 1*[s1:slack]
 
 Columns:
@@ -3942,9 +3942,9 @@ Infeasible rows: {  }
 x addRow exited.
 - returning true
 x tryAddingDirectly exited.
-* optimize([z:obj])
+* optimize([Z:obj])
 Tableau:
-[z:obj] <-=-> 0
+[Z:obj] <-=-> 0
 [x:0] <-=-> 10 + 1*[s1:slack]
 
 Columns:
@@ -3964,7 +3964,7 @@ my_prevEditConstants:
 x optimize exited.
 * setExternalVariables()
 Tableau:
-[z:obj] <-=-> 0
+[Z:obj] <-=-> 0
 [x:0] <-=-> 10 + 1*[s1:slack]
 
 Columns:
@@ -3999,7 +3999,7 @@ x tryAddingDirectly exited.
 * addWithArtificialVariable(5 + 1*[s1:slack] + 1*[s2:slack])
 addWithArtificialVariable before addRow-s:
 Tableau:
-[z:obj] <-=-> 0
+[Z:obj] <-=-> 0
 [x:10] <-=-> 10 + 1*[s1:slack]
 
 Columns:
@@ -4018,7 +4018,7 @@ my_prevEditConstants:
 
 * addRow([az:obj], 5 + 1*[s1:slack] + 1*[s2:slack])
 Tableau:
-[z:obj] <-=-> 0
+[Z:obj] <-=-> 0
 [az:obj] <-=-> 5 + 1*[s1:slack] + 1*[s2:slack]
 [x:10] <-=-> 10 + 1*[s1:slack]
 
@@ -4031,7 +4031,7 @@ Infeasible rows: {  }
 x addRow exited.
 * addRow([a1:slack], 5 + 1*[s1:slack] + 1*[s2:slack])
 Tableau:
-[z:obj] <-=-> 0
+[Z:obj] <-=-> 0
 [a1:slack] <-=-> 5 + 1*[s1:slack] + 1*[s2:slack]
 [az:obj] <-=-> 5 + 1*[s1:slack] + 1*[s2:slack]
 [x:10] <-=-> 10 + 1*[s1:slack]
@@ -4045,7 +4045,7 @@ Infeasible rows: {  }
 x addRow exited.
 addWithArtificialVariable after addRow-s:
 Tableau:
-[z:obj] <-=-> 0
+[Z:obj] <-=-> 0
 [a1:slack] <-=-> 5 + 1*[s1:slack] + 1*[s2:slack]
 [az:obj] <-=-> 5 + 1*[s1:slack] + 1*[s2:slack]
 [x:10] <-=-> 10 + 1*[s1:slack]
@@ -4067,7 +4067,7 @@ my_prevEditConstants:
 
 * optimize([az:obj])
 Tableau:
-[z:obj] <-=-> 0
+[Z:obj] <-=-> 0
 [a1:slack] <-=-> 5 + 1*[s1:slack] + 1*[s2:slack]
 [az:obj] <-=-> 5 + 1*[s1:slack] + 1*[s2:slack]
 [x:10] <-=-> 10 + 1*[s1:slack]
@@ -4096,7 +4096,7 @@ my_artificialCounter == 1
 my_dummyCounter == 0
 editMinusErrorVars 0, editPlusErrorVars 0, stayMinusErrorVars 0, stayPlusErrorVars 0, errorVars 0, markerVars 2
 Tableau:
-[z:obj] <-=-> 0
+[Z:obj] <-=-> 0
 [a1:slack] <-=-> 5 + 1*[s1:slack] + 1*[s2:slack]
 [az:obj] <-=-> 5 + 1*[s1:slack] + 1*[s2:slack]
 [x:10] <-=-> 10 + 1*[s1:slack]
