@@ -9,6 +9,9 @@
 //
 // Cl.h
 
+#ifndef CL_H
+#define CL_H
+
 #include "ClVariable.h"
 #include "ClSimplexSolver.h"
 #include "ClLinearEquation.h"
@@ -16,3 +19,5 @@
 #include "ClErrors.h"
 #include "ClEditConstraint.h"
 #include "ClStayConstraint.h"
+
+#endif
