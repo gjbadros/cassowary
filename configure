@@ -2617,4 +2617,14 @@ test "$no_create" = yes || ${CONFIG_SHELL-/bin/sh} $CONFIG_STATUS || exit 1
 # (needed in case another package uses autoconf and includes the Cassowary
 #  header files -- w/o this hack the two config.h files and their defs would
 #  conflict and cause at least warnings, and maybe really bad things --03/18/99 gjb)
-grep '#define CL_' c++/cassowary/config.h > c++/cassowary/config-inline.h || true
+grep '#define CL_' c++/cassowary/config.h > c++/cassowary/config-inline-check.h || true
+
+# replace config-inline.h only if the new version is different
+# (avoid rebuilding everything)
+d=c++/cassowary
+if test ! -f $d/config-inline.h; then 
+   mv $d/config-inline-check.h $d/config-inline.h && echo "creating $d/config-inline.h"
+else
+   { diff -q $d/config-inline-check.h $d/config-inline.h >/dev/null 2>&1 && echo "$d/config-inline.h is unchanged" } || \
+	   { mv -f $d/config-inline-check.h $d/config-inline.h && echo "creating $d/config-inline.h" }
+fi
