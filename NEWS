@@ -11,9 +11,41 @@ Seattle, WA 98195-2350
 
 with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
 
+16-Feb-1999, Changes since Cassowary v0.23 (for release v0.3)
+* Miscellaneious changes
+** Updated copyright to include 1999
+** Reference Anthony Beurivé's STk wrapper
+
+* Changes to Java and C++
+** Bug fix for Michael Kaufmann's report (see ChangeLog for details)
+** resolve(Vector..) procedure is now depracated;  preferred interface is
+suggestValue(...) calls followed by resolve() (the one taking no
+arguments).
+** Added ClVariable::SetVarMap(..), ClVariable::VarMap() to permit
+ClVariable ctr to save the mapping between given name and actual object
+in a symbol table (used for parsing ascii expressions in C++ version)
+
+* Changes to just C++ implementation
+** Added creader.y, creader.l and function PcnParseConstraint(..) for
+creating a constraint from an ASCII string.
+** Added CL_NO_IO compile-time option to C++ version for preventing need
+to link with the stream library (is not complete)
+** Added CL_FIND_LEAK compile-time option for counting ctrs/dtr
+invocations
+** Added CL_USE_HASH_MAP compile-time option to permit using the GNU
+hash_map class instead of the standard STL map (which is a sorted
+associative container whose performance for lookups is logarithmic
+rather than constant time).  Still does not work for me --02/16/99 gjb.
+
+* Changes to just Java implementation (updated to match changes to C++
+version for .2)
+** Added {get,set}AttachedObject for ClVariable, ClConstant
+** Permit access to ClSimplexSolver.ConstraintMap()
+** Permit nested beginEdit()s and handle them correctly
+
 
 30-Jan-1999, Changes since Cassowary v0.22 (for release v0.23)
-* Bug fix
+* Bug fix (see ChangeLog for details)
 
 
 23-Jan-1999, Changes since Cassowary v0.21 (for release v0.22)
@@ -40,7 +72,7 @@ with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
 
 
 
-6-Aug-98, Changes since Cassowary v0.1:
+6-Aug-98, Changes since Cassowary v0.1 (for release v0.2):
 
 * Changes to the distribution for release v0.2
 
