@@ -1,3 +1,42 @@
+Mon Nov 29 10:54:24 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* configure.in: Bump to version 0.54, added -lGTL to GTL_LIB even
+	when no --with-gtl option is given.  No longer create README from
+	README.in.  Added --enable-static-library option, off by default.
+
+	* cassowary.spec.in, cassowary-both.spec.in: No longer need the
+	--enable-guile-build option;  it's the default now.
+
+Mon Nov 29 10:52:49 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile.am: Added use of AM_CONDITIONAL
+	CL_BUILD_STATIC_LIBRARY;  only buile libcassowary.a if that option 
+	was selected.
+
+	* guile/Makefile.am (libconstraints_la_LIBADD): Added @GTL_LIB@ to 
+	make the guile library work with the FD-enabled version of the library.
+
+Sat Nov 27 16:11:10 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* configure.in: Invert sense of --enable-guile-build and call it
+	--disable-guile-build;  build guile wrapper automatically if
+	guile-config works.
+
+Sat Nov 27 15:20:03 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* configure.in: Use an AM_CONDITIONAL for CL_BUILD_FD_SOLVER, not
+	an AC_DEFINE.  Also, remove duplicate AC_SUBST of GTL_LIB, and fix 
+	AM_CONDITIONAL of CL_BUILD_TESTS.
+
+Sat Nov 27 15:19:20 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile.am: Try separating out FD stuff better, and use
+	CL_BUILD_FD_SOLVER AM_CONDITIONAL to control dependence on that
+	code.
+
+	* c++/config.h.in: Drop CL_BUILD_FD_SOLVER; it's now an
+	AM_CONDITIONAL instead of a define.
+
 Wed Nov 24 15:40:27 1999  Greg J. Badros  <gjb@cs.washington.edu>
 
 	* c++/ClSimplexSolver.cc: Fix typo in a throw message.
