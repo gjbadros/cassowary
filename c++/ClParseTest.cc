@@ -32,15 +32,13 @@ int main()
   while (getline(cin,szLine))
     {
     istrstream xiLine(szLine.c_str());
-    try 
-      {
-      if ((pcn = parseConstraint(xiLine,mapVars)) != NULL)
-        {
+    try {
+      if ((pcn = parseConstraint(xiLine,mapVars)) != NULL) {
         solver.addConstraint(*pcn);
-        }
       }
+    }
     catch (const char *szError) { }
-    catch (..) { } 
+    catch (...) { }
     }
 
   cout << solver << endl;
