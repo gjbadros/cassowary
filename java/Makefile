@@ -43,6 +43,7 @@ JAVAFILES = \
 	ClPoint.java \
 	ClTableau.java \
 	ClSimplexSolver.java \
+	CL.java \
 	Set.java
 
 #	ClTests.java \

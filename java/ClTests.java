@@ -25,8 +25,8 @@ class ClTests {
       
     solver.addStay(x);
     solver.addStay(y);
-    fOkResult = fOkResult && ClVariable.clApprox(x,5);
-    fOkResult = fOkResult && ClVariable.clApprox(y,10);
+    fOkResult = fOkResult && CL.approx(x,5);
+    fOkResult = fOkResult && CL.approx(y,10);
     System.out.println("x == " + x.value());
     System.out.println("y == " + y.value());
     return(fOkResult);
@@ -41,39 +41,39 @@ class ClTests {
       
     solver.addConstraint( new ClLinearEquation( x, 100, ClStrength.clsWeak ) );
       
-    ClLinearInequality c10 = new ClLinearInequality(x,CN.LEQ,10.0);
-    ClLinearInequality c20 = new ClLinearInequality(x,CN.LEQ,20.0);
+    ClLinearInequality c10 = new ClLinearInequality(x,CL.LEQ,10.0);
+    ClLinearInequality c20 = new ClLinearInequality(x,CL.LEQ,20.0);
       
     solver
       .addConstraint(c10)
       .addConstraint(c20);
       
-    fOkResult = fOkResult && ClVariable.clApprox(x,10.0);
+    fOkResult = fOkResult && CL.approx(x,10.0);
     System.out.println("x == " + x.value());
       
     solver.removeConstraint(c10);
-    fOkResult = fOkResult && ClVariable.clApprox(x,20.0);
+    fOkResult = fOkResult && CL.approx(x,20.0);
     System.out.println("x == " + x.value());
 
     solver.removeConstraint(c20);
-    fOkResult = fOkResult && ClVariable.clApprox(x,100.0);
+    fOkResult = fOkResult && CL.approx(x,100.0);
     System.out.println("x == " + x.value());
 
-    ClLinearInequality c10again = new ClLinearInequality(x,CN.LEQ,10.0);
+    ClLinearInequality c10again = new ClLinearInequality(x,CL.LEQ,10.0);
 
     solver
       .addConstraint(c10)
       .addConstraint(c10again);
       
-    fOkResult = fOkResult && ClVariable.clApprox(x,10.0);
+    fOkResult = fOkResult && CL.approx(x,10.0);
     System.out.println("x == " + x.value());
     
     solver.removeConstraint(c10);
-    fOkResult = fOkResult && ClVariable.clApprox(x,10.0);
+    fOkResult = fOkResult && CL.approx(x,10.0);
     System.out.println("x == " + x.value());
 
     solver.removeConstraint(c10again);
-    fOkResult = fOkResult && ClVariable.clApprox(x,100.0);
+    fOkResult = fOkResult && CL.approx(x,100.0);
     System.out.println("x == " + x.value());
 
     return(fOkResult);
@@ -92,30 +92,30 @@ class ClTests {
       .addConstraint( new ClLinearEquation(x, 100.0, ClStrength.clsWeak))
       .addConstraint( new ClLinearEquation(y, 120.0, ClStrength.clsStrong));
       
-    ClLinearInequality c10 = new ClLinearInequality(x,CN.LEQ,10.0);
-    ClLinearInequality c20 = new ClLinearInequality(x,CN.LEQ,20.0);
+    ClLinearInequality c10 = new ClLinearInequality(x,CL.LEQ,10.0);
+    ClLinearInequality c20 = new ClLinearInequality(x,CL.LEQ,20.0);
       
     solver
       .addConstraint(c10)
       .addConstraint(c20);
-    fOkResult = fOkResult && ClVariable.clApprox(x,10.0) && ClVariable.clApprox(y,120.0);
+    fOkResult = fOkResult && CL.approx(x,10.0) && CL.approx(y,120.0);
     System.out.println("x == " + x.value() + ", y == " + y.value());
 
     solver.removeConstraint(c10);
-    fOkResult = fOkResult && ClVariable.clApprox(x,20.0) && ClVariable.clApprox(y,120.0);
+    fOkResult = fOkResult && CL.approx(x,20.0) && CL.approx(y,120.0);
     System.out.println("x == " + x.value() + ", y == " + y.value());
    
     ClLinearEquation cxy = new ClLinearEquation( CL.Times(2.0,x), y);
     solver.addConstraint(cxy);
-    fOkResult = fOkResult && ClVariable.clApprox(x,20.0) && ClVariable.clApprox(y,40.0);
+    fOkResult = fOkResult && CL.approx(x,20.0) && CL.approx(y,40.0);
     System.out.println("x == " + x.value() + ", y == " + y.value());
 
     solver.removeConstraint(c20);
-    fOkResult = fOkResult && ClVariable.clApprox(x,60.0) && ClVariable.clApprox(y,120.0);
+    fOkResult = fOkResult && CL.approx(x,60.0) && CL.approx(y,120.0);
     System.out.println("x == " + x.value() + ", y == " + y.value());
 
     solver.removeConstraint(cxy);
-    fOkResult = fOkResult && ClVariable.clApprox(x,100.0) && ClVariable.clApprox(y,120.0);
+    fOkResult = fOkResult && CL.approx(x,100.0) && CL.approx(y,120.0);
     System.out.println("x == " + x.value() + ", y == " + y.value());
       
     return(fOkResult);
@@ -130,15 +130,15 @@ class ClTests {
     ClSimplexSolver solver = new ClSimplexSolver();
 
     solver
-      .addConstraint( new ClLinearInequality(x,CN.LEQ,y) )
+      .addConstraint( new ClLinearInequality(x,CL.LEQ,y) )
       .addConstraint( new ClLinearEquation(y, CL.Plus(x,3.0)) )
       .addConstraint( new ClLinearEquation(x,10.0,ClStrength.clsWeak) )
       .addConstraint( new ClLinearEquation(y,10.0,ClStrength.clsWeak) )
       ;
    
     fOkResult = fOkResult && 
-      ( ClVariable.clApprox(x,10.0) && ClVariable.clApprox(y,13.0) ||
-	ClVariable.clApprox(x,7.0) && ClVariable.clApprox(y,10.0) );
+      ( CL.approx(x,10.0) && CL.approx(y,13.0) ||
+	CL.approx(x,7.0) && CL.approx(y,10.0) );
       
     System.out.println("x == " + x.value() + ", y == " + y.value());
     return(fOkResult);
@@ -176,8 +176,8 @@ class ClTests {
       ClSimplexSolver solver = new ClSimplexSolver();
       
       solver
-	.addConstraint( new ClLinearInequality(x,CN.GEQ,10.0) )
-	.addConstraint( new ClLinearInequality(x,CN.LEQ, 5.0) );
+	.addConstraint( new ClLinearInequality(x,CL.GEQ,10.0) )
+	.addConstraint( new ClLinearInequality(x,CL.LEQ, 5.0) );
 
       // no exception, we failed!
       return(false);

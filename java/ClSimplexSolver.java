@@ -42,11 +42,11 @@ class ClSimplexSolver extends ClTableau
   { 
     try {
       ClLinearInequality cn = 
-	new ClLinearInequality(v,CN.GEQ,new ClLinearExpression(lower));
+	new ClLinearInequality(v,CL.GEQ,new ClLinearExpression(lower));
       return this;
     }
     catch (ExCLInternalError err) {
-      System.err.println("Broken CN.GEQ!");
+      System.err.println("Broken CL.GEQ!");
       return this;
     }
   }
@@ -55,11 +55,11 @@ class ClSimplexSolver extends ClTableau
   { 
     try {
       ClLinearInequality cn = 
-	new ClLinearInequality(v,CN.LEQ,new ClLinearExpression(upper));
+	new ClLinearInequality(v,CL.LEQ,new ClLinearExpression(upper));
       return this;
     }
     catch (ExCLInternalError err) {
-      System.err.println("Broken CN.LEQ!");
+      System.err.println("Broken CL.LEQ!");
       return this;
     }
   }
@@ -355,7 +355,7 @@ class ClSimplexSolver extends ClTableau
 
     traceprint("azTableauRow.constant() == " + azTableauRow.constant());
     
-    if (!ClVariable.clApprox(azTableauRow.constant(),0.0)) {
+    if (!CL.approx(azTableauRow.constant(),0.0)) {
       throw new ExCLRequiredFailure();
     }
 
@@ -446,7 +446,7 @@ class ClSimplexSolver extends ClTableau
       }
     }
     
-    if (!ClVariable.clApprox(expr.constant(),0.0)) {
+    if (!CL.approx(expr.constant(),0.0)) {
       throw new ExCLRequiredFailure();
     }
     if (coeff > 0.0) {

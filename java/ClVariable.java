@@ -76,27 +76,4 @@ class ClVariable extends ClAbstractVariable
     { my_value = value; }
 
   private double my_value;
-
-
-  public static boolean clApprox(double a, double b)
-    {
-      double epsilon = 1.0e-8;
-      if (a == 0.0) {
-	return (Math.abs(b) < epsilon);
-      } else if (b == 0.0) {
-	return (Math.abs(a) < epsilon);
-      } else {
-	return (Math.abs(a-b) < Math.abs(a) * epsilon);
-      }
-    }
-  
-  public static boolean clApprox(ClVariable clv, double b)
-    {
-      return clApprox(clv.value(),b);
-    }
-  
-  static boolean clApprox(double a, ClVariable clv)
-    {
-      return clApprox(a,clv.value());
-    }
 }

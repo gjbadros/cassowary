@@ -128,7 +128,7 @@ class ClLinearExpression extends CL
 
   public ClLinearExpression divide(double x) throws ExCLNonlinearExpression
     {
-      if (ClVariable.clApprox(x,0.0))
+      if (CL.approx(x,0.0))
 	{
 	throw new ExCLNonlinearExpression();
 	}
@@ -146,7 +146,7 @@ class ClLinearExpression extends CL
 
   public ClLinearExpression divFrom(ClLinearExpression expr) throws ExCLNonlinearExpression
     {
-      if (!isConstant() || ClVariable.clApprox(my_constant.doubleValue(),0.0))
+      if (!isConstant() || CL.approx(my_constant.doubleValue(),0.0))
 	{
 	throw new ExCLNonlinearExpression();
 	}
@@ -195,7 +195,7 @@ class ClLinearExpression extends CL
       if (coeff != null) 
 	{
 	double new_coefficient = coeff.doubleValue() + c;
-	if (ClVariable.clApprox(new_coefficient,0))   {
+	if (CL.approx(new_coefficient,0))   {
 	  my_terms.remove(v);
 	}
 	else {
@@ -203,7 +203,7 @@ class ClLinearExpression extends CL
 	}
 	}
       else {
-	if (!ClVariable.clApprox(c,0.0)) {
+	if (!CL.approx(c,0.0)) {
 	  my_terms.put(v,new Double(c));
 	}
       }
@@ -229,7 +229,7 @@ class ClLinearExpression extends CL
        if (coeff != null) 
  	{
  	double new_coefficient = coeff.doubleValue() + c;
- 	if (ClVariable.clApprox(new_coefficient,0))
+ 	if (CL.approx(new_coefficient,0))
  	  {
  	  solver.noteRemovedVariable(v,subject);
  	  my_terms.remove(v);
@@ -241,7 +241,7 @@ class ClLinearExpression extends CL
  	}
        else
  	{
- 	if (!ClVariable.clApprox(c,0.0))
+ 	if (!CL.approx(c,0.0))
  	  {
  	  my_terms.put(v,new Double(c));
  	  solver.noteAddedVariable(v,subject);
@@ -275,7 +275,7 @@ class ClLinearExpression extends CL
       if (d_old_coeff != null) {
 	double old_coeff = ((Double) d_old_coeff).doubleValue();
 	double newCoeff = old_coeff + multiplier * coeff;
-	if (ClVariable.clApprox(newCoeff,0.0)) {
+	if (CL.approx(newCoeff,0.0)) {
 	  solver.noteRemovedVariable(clv,subject);
 	  my_terms.remove(clv);
 	} else {
@@ -333,7 +333,7 @@ class ClLinearExpression extends CL
       StringBuffer bstr = new StringBuffer();
       Enumeration e = my_terms.keys();
 
-      if (!ClVariable.clApprox(my_constant.doubleValue(),0.0) || my_terms.size() == 0) 
+      if (!CL.approx(my_constant.doubleValue(),0.0) || my_terms.size() == 0) 
 	{
 	bstr.append(my_constant.toString());
 	}
