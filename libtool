@@ -29,7 +29,7 @@
 # This program was configured as follows,
 # on host bowman.cs.monash.edu.au:
 #
-# CC="gcc" CFLAGS="-g -O2" CPPFLAGS="" \
+# CC="gcc" CFLAGS="-g -O2" CPPFLAGS="-g -Wall -W -I/uns/include" \
 # LD="/usr/bin/ld" NM="/usr/bin/nm -B" RANLIB="ranlib" LN_S="ln -s" \
 #   ./ltconfig --with-gcc --with-gnu-ld --no-verify ./ltmain.sh i686-pc-linux-gnu
 #

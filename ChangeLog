@@ -1,3 +1,75 @@
+Tue Apr 27 20:35:23 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSymbolicWeight.h, c++/ClSymbolicWeight.cc: Drop default
+ 	ctr, and give default arg value to CLevels of 3.  Added operator*.
+
+	* c++/ClFDTests.cc: Better test.
+
+	* c++/ClFDSolver.h, c++/ClFDSolver.cc: Use SymbolicWeights for
+	errors, so hierarchy is handled (i.e., strengths on constraints
+	are honoured).
+
+	* c++/ClFDConstraint.h: Added ctr with strength, weight.
+
+	* c++/ClFDBinaryOneWayConstraint.h: Added strength, weight
+	arguments to ctr.
+
+	* c++/ClConstraint.h:  Added symbolicWeight() accessor.
+
+Tue Apr 27 15:04:34 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClFDSolver.cc (RemoveConstraint): Fix some bugs-- handle nil 
+	read-only variable properly, and clean up _mapVarToNode when
+	erasing nodes.
+
+Tue Apr 27 10:40:58 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSolver.cc: Added -- wrote PrintTo, << basic impls, and
+	simple AddConstraint.
+
+	* c++/QocaBench.cc, c++/ClTests.cc, c++/ClSubgraphTest.cc,
+ 	ClLeakTest.cc, ClC.cc: Use Solve(), not solve()
+
+	* c++/ClVariable.h:  Added DesiredValue, PlfdnDomain base-class
+	accessors, handle clvNil in PrintOn.
+
+	* c++/Makefile.am:  Added ClSolver.cc, link with -lGTL, added
+	missing and new .cc, .h files.
+
+	* c++/ClTypedefs.h: added ClVarToConstraintSetMap.
+
+	* c++/ClSolver.h: Added AddConstraint{,NoException},
+	RemoveConstraint{,NoException}, Solver here to the abstract
+	interface, also the prototypes for the PrintTo and << on the
+	ClTypedefs.h types.
+
+	* c++/ClSimplexSolver.h, c++/ClSimplexSolver.cc: Solve(), not
+ 	solve(), move some protos in abstract base class ClSolver.
+
+	* c++/ClLinearInequality.h: Use ClCnRelation, not
+	ClInequalityOperator.
+
+	* c++/ClFDVariable.h, c++/ClFDVariable.cc: More accessors,
+	settors, comment-out non-initial-domain ctr.
+
+	* c++/ClFDTests.cc: Test more.
+
+	* c++/ClFDSolver.h, c++/ClFDSolver.cc: Almost complete, but
+	largely untested implementation.
+
+	* c++/ClFDBinaryOneWayConstraint.h: Added ctrs, setters, getters.
+
+	* c++/ClErrors.h: Fixed throw message for ExCLConstraintNotFound
+	to not refer to the tableau.
+
+	* c++/ClConstraint.h: Added ClCnRelation (was ClInequalityOperator 
+	in c++/ClLinearInequality.h) and wrote StrCnRelation for printing
+	it.
+
+	* c++/Cl.h:  include ClFDSolver.h
+
+	* c++/Cassowary.h : include values.h, def FDN_NOTSET (FIXME: drop this?)
+
 Sun Apr 25 18:55:26 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* c++/Makefile.am: Added ClFDBinaryOneWayConstraint.h,
