@@ -35,7 +35,7 @@
 #include "ClLinearInequality.h"
 #include "ClSimplexSolver.h"
 #include "ClErrors.h"
-#include "creader.h"
+#include "ClReader.h"
 
 #include <vector>
 
