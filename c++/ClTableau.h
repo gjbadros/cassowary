@@ -12,7 +12,7 @@
 #define ClTableau_H
 
 #include <map.h>
-#include <multiset.h>
+#include <set.h>
 #include <vector.h>
 #include "Cassowary.h"
 #include "ClLinearExpression.h"
@@ -47,7 +47,7 @@ class ClTableau {
   // oldVar should now be a basic variable
   void substituteOut(const ClVariable &oldVar, const ClLinearExpression &expr);
 
-  map<ClVariable, multiset<ClVariable> > columns()
+  map<ClVariable, set<ClVariable> > columns()
     { return my_columns; }  
 
   map<ClVariable, ClLinearExpression > rows()
@@ -56,7 +56,7 @@ class ClTableau {
   // return true iff the variable subject is in the columns keys
   bool columnsHasKey(const ClVariable &subject) const
     { 
-    map<ClVariable, multiset<ClVariable> >::const_iterator i = my_columns.find(subject);
+    map<ClVariable, set<ClVariable> >::const_iterator i = my_columns.find(subject);
     return (i != my_columns.end());
     }
 
@@ -64,14 +64,18 @@ class ClTableau {
     {
     map<ClVariable, ClLinearExpression>::const_iterator i = my_rows.find(v);
     if (i != my_rows.end())
-      return (*i).second;
+      return const_cast<ClLinearExpression &>((*i).second);
     else
       return cleNil();
     }
 
  private:
 
-  map<ClVariable, multiset<ClVariable> > my_columns;
+  // my_columns is a mapping from variables which occur in expressions to the
+  // set of basic variables whose expressions contain them
+  // i.e., it's a mapping from variables in expressions (a column) to the 
+  // set of rows that contain them
+  map<ClVariable, set<ClVariable> > my_columns;
   map<ClVariable, ClLinearExpression > my_rows;
 
   // the ordered collection of basic variables that have infeasible rows

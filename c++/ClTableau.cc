@@ -17,7 +17,8 @@ ClTableau::addRow(const ClVariable &var, const ClLinearExpression &expr)
 {
   my_rows[var] = expr;
   map<ClVariable,Number>::const_iterator it = expr.terms().begin();
-  // for each variable in expr, add var to the multiset of variables in that column
+  // for each variable in expr, add var to the set of rows which have that variable
+  // in their expression
   for (; it != expr.terms().end(); ++it)
     {
     const ClVariable &v = (*it).first;
@@ -53,13 +54,13 @@ ClTableau::noteAddedVariable(const ClVariable &v, const ClVariable &subject)
 void 
 ClTableau::removeParametricVar(const ClVariable &var)
 {
-  map<ClVariable, multiset<ClVariable> >::iterator it_var = my_columns.find(var);
-  multiset<ClVariable> &varset = (*it_var).second;
+  map<ClVariable, set<ClVariable> >::iterator it_var = my_columns.find(var);
+  set<ClVariable> &varset = (*it_var).second;
   // remove the rows with the variables in varset
-  multiset<ClVariable>::iterator it = varset.begin();
+  set<ClVariable>::iterator it = varset.begin();
   for (; it != varset.end(); ++it)
     {
-    ClVariable &v = (*it);
+    const ClVariable &v = (*it);
     map <ClVariable,Number> &terms = my_rows[v].terms();
     terms.erase(terms.find(var));
     }
@@ -90,12 +91,12 @@ ClTableau::removeRow(const ClVariable &var)
 void 
 ClTableau::substituteOut(const ClVariable &oldVar, const ClLinearExpression &expr)
 {
-  map<ClVariable, multiset<ClVariable> >::iterator it_oldVar = my_columns.find(oldVar);
-  multiset<ClVariable> &varset = (*it_oldVar).second;
-  multiset<ClVariable>::iterator it = varset.begin();
+  map<ClVariable, set<ClVariable> >::iterator it_oldVar = my_columns.find(oldVar);
+  set<ClVariable> &varset = (*it_oldVar).second;
+  set<ClVariable>::iterator it = varset.begin();
   for (; it != varset.end(); ++it)
     {
-    ClVariable &v = (*it);
+    const ClVariable &v = (*it);
     ClLinearExpression &row = my_rows[v];
     row.substituteOut(oldVar,expr,v,*this);
     if (v.isRestricted() && row.constant() < 0.0)

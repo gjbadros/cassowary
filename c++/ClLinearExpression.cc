@@ -10,6 +10,7 @@
 
 #include <assert.h>
 #include "ClLinearExpression.h"
+//#include "ClSimplexSolver.h"
 #include "ClTableau.h"
 #include "ClErrors.h"
 
@@ -180,7 +181,7 @@ ClLinearExpression::addExpression(const ClLinearExpression &expr, Number n)
 ClLinearExpression &
 ClLinearExpression::addExpression(const ClLinearExpression &expr, Number n,
 				  const ClVariable &subject,
-				  ClSimplexSolver &solver)
+				  ClTableau &solver)
 {
   incrementConstant(n*expr.constant());
 
@@ -231,7 +232,7 @@ ClLinearExpression::addVariable(const ClVariable &v, Number c)
 ClLinearExpression &
 ClLinearExpression::addVariable(const ClVariable &v, Number c,
 				const ClVariable &subject,
-				ClSimplexSolver &solver)
+				ClTableau &solver)
 { // body largely duplicated above
   map<ClVariable,Number>::iterator i = my_terms.find(v);
   if (i != my_terms.end())
@@ -283,7 +284,7 @@ void
 ClLinearExpression::substituteOut(const ClVariable &v, 
 				  const ClLinearExpression &expr,
 				  const ClVariable &subject,
-				  ClSimplexSolver &solver)
+				  ClTableau &solver)
 {
   map<ClVariable,Number>::iterator pv = my_terms.find(v);
   assert(pv != my_terms.end() && !clApprox((*pv).second,0.0));

@@ -76,7 +76,7 @@ class ClLinearExpression  {
   // expression.
   ClLinearExpression &addExpression(const ClLinearExpression &expr, Number n,
 				    const ClVariable &subject,
-				    ClSimplexSolver &solver);
+				    ClTableau &solver);
 
   // Add a term c*v to this expression.  If the expression already
   // contains a term involving v, add c to the existing coefficient.
@@ -89,7 +89,7 @@ class ClLinearExpression  {
   // solver if v appears or disappears from this expression.
   ClLinearExpression &addVariable(const ClVariable &v, Number c,
 				  const ClVariable &subject,
-				  ClSimplexSolver &solver);
+				  ClTableau &solver);
 
   // Return a variable in this expression.  (It is an error if this
   // expression is constant -- signal ExCLInternalError in that case).
@@ -104,7 +104,7 @@ class ClLinearExpression  {
   void substituteOut(const ClVariable &v, 
 		     const ClLinearExpression &expr,
 		     const ClVariable &subject,
-		     ClSimplexSolver &solver);
+		     ClTableau &solver);
 
 #ifdef FIXGJB_OLD_SMALLTALK_WAY
   ClLinearExpression asLinearExpression() const 
@@ -160,8 +160,8 @@ class ClLinearExpression  {
   void set_constant(Number c)
     { my_constant = c; }
 
-  map<ClVariable,Number> &terms()
-    { return my_terms; }
+  map<ClVariable,Number> &terms() const
+    { return const_cast<map<ClVariable,Number> &>(my_terms); }
 
   void incrementConstant(Number c)
     { my_constant += c; }

@@ -12,6 +12,9 @@
 #define ClSimplexSolver_H
 
 #include "Cassowary.h"
+#include "ClTableau.h"
+#include "ClLinearConstraint.h"
+#include "ClStrength.h"
 
 class ClVariable;
 
@@ -33,7 +36,7 @@ class ClSimplexSolver : public ClTableau {
   // increasing weights so that the solver will try to satisfy the x
   // and y stays on the same point, rather than the x stay on one and
   // the y stay on another.
-  void addPointStays(const vector<ClPoint> &listOfPoints);
+  // FIXGJB:  void addPointStays(const vector<ClPoint> &listOfPoints);
   void addPointStay(const ClVariable &vx, const ClVariable &vy, double weight);
 
   // Add a stay of the given strength (default to weak) of v to the tableau
