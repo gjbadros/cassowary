@@ -62,12 +62,13 @@ AC_SUBST(TEST_PROGRAMS)
 AC_SUBST(BENCH_PROGRAMS)
 
 
+sources_for_fd_solver="ClFDSolver.cc ClFDVariable.cc ClFDConnectorVariable.cc ClFDBinaryOneWayConstraint.cc"
 
 AC_ARG_ENABLE(fd-solver,
 [  --enable-fd-solver   Enable the restricted finite domain solver]
 ,[if test "yes" = "$enableval"; then
-    AC_DEFINE(BUILD_FD_SOLVER)
-    SOURCES_FOR_FD_SOLVER='$(sources_for_fd_solver)'
+    AC_DEFINE(CL_BUILD_FD_SOLVER)
+    SOURCES_FOR_FD_SOLVER="$sources_for_fd_solver"
   fi
 ])
 AC_SUBST(SOURCES_FOR_FD_SOLVER)
@@ -77,7 +78,7 @@ dnl # Check for the GTL library (needed for fd solver)
 dnl GTL_LIB=""
 dnl AC_CHECK_LIB(GTL, GML_init, [
 dnl GTL_LIB="-lGTL"
-dnl AC_DEFINE(HAVE_GTL)
+dnl AC_DEFINE(CL_HAVE_GTL)
 dnl ], no_gtl_lib=yes,)
 
 AC_SUBST(GTL_LIB)
@@ -87,8 +88,8 @@ ACE_ARG_PATH(gtl,
 [  --with-gtl=DIR   Use GTL installation from DIR
                          can omit DIR to use $prefix ],
 [
-	AC_DEFINE(HAVE_GTL)
-	HAVE_GTL="yes"
+	AC_DEFINE(CL_HAVE_GTL)
+	CL_HAVE_GTL="yes"
 	AC_MSG_CHECKING(where to expect to find GTL headers and library)
 	if test -z "${withval}" || test "yes" = "${withval}"; then
 	   AC_MSG_RESULT("defaulting to the prefix = ${prefix}")

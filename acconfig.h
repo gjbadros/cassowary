@@ -32,8 +32,8 @@
 #undef CL_SOLVER_STATS
 
 /* Define this if you want to build the finite domain solver */
-#undef BUILD_FD_SOLVER
+#undef CL_BUILD_FD_SOLVER
 
 /* Define this if you have the GTL, graph template library, installed
    you need that for the FD solver */
-#undef HAVE_GTL
+#undef CL_HAVE_GTL
