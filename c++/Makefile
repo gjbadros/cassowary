@@ -20,6 +20,7 @@ CFLAGS = -g -Wall
 EGCSDIR = /uns/egcs
 CXX = $(CPP)
 SWIG = swig
+PYTHON_INCLUDE = /usr/include/python1.4
 
 #CPPFLAGS = -O6 -DCL_NO_TRACE -DNO_SOLVER_STATS -DNDEBUG -Wall -pedantic -W
 CPPFLAGS = -O6 -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W
@@ -27,10 +28,10 @@ CPPFLAGS = -O6 -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W
 #CPPFLAGS = -g -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W
 #CPPFLAGS = -g -Wall -pedantic -W
 
-LIB=cassowary-optimized
+#LIB=cassowary-optimized
 #LIB=cassowary-notrace
 #LIB=cassowary-trace
-#LIB=cassowary
+LIB=cassowary
 
 LDLIBS = -l$(LIB)
 
@@ -95,6 +96,19 @@ lib:    $(CL_LIBRARY)
 
 swig: cassowary.i
 	$(SWIG) -c++ -python -shadow cassowary.i
+
+swig-guile: cassowary.i
+	$(SWIG) -c++ -guile -shadow cassowary.i
+
+module: $(CL_LIBRARY) cassowary_wrap.o
+	$(CPP) -shared -o cassowarycmodule.so cassowary_wrap.o $(CL_LIBRARY)
+
+module-guile: $(CL_LIBRARY) cassowary_wrap.o
+	$(CPP) -shared -o cassowarycmodule.so cassowary_wrap.o $(CL_LIBRARY)
+
+
+cassowary_wrap.o: cassowary_wrap.c
+	$(CPP) -I$(PYTHON_INCLUDE) -fpic -c cassowary_wrap.c
 
 $(CL_LIBRARY): $(OBJS)
 	rm -f $@
