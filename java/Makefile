@@ -39,7 +39,8 @@ JAVAFILES = \
 	ClTableau.java \
 	ClVariable.java \
 	ClPoint.java \
-	ClTests.java
+	ClTests.java \
+	Set.java
 
 CLASSFILES = $(JAVAFILES:.java=.class)
 
