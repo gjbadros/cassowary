@@ -1607,6 +1607,8 @@ ClSimplexSolver::ChangeStrengthAndWeight(ClConstraint *pcn, const ClStrength &st
       cerr << "to: " << endl << *pzRow << endl;
 #endif
 
+      _fNeedsSolving = true;
+
       if (_fAutosolve)
 	{
 	  Optimize(_objective);
