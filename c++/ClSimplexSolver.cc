@@ -346,13 +346,16 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
   // try to optimize az to 0
   optimize(az);
 
+  // Careful, we want to get the expression that is in
+  // the tableau, not the one we initialized it with!
+  ClLinearExpression *pazRow = rowExpression(az);
 #ifndef NO_TRACE
-  cerr << "azRow.constant() == " << azRow.constant() << endl;
+  cerr << "pazRow->constant() == " << pazRow->constant() << endl;
 #endif
 
   // Check that we were able to make the objective value 0
   // If not, the original constraint was not satisfiable
-  if (!clApprox(azRow.constant(),0.0))
+  if (!clApprox(pazRow->constant(),0.0))
     {
     EXCEPTION_ABORT;
     throw ExCLRequiredFailure();
@@ -610,6 +613,7 @@ ClSimplexSolver::dualOptimize()
     // need to erase it_exitVar at end
     set<const ClAbstractVariable *>::iterator it_exitVar = my_infeasibleRows.begin();
     const ClAbstractVariable *pexitVar = *it_exitVar;
+    my_infeasibleRows.erase(it_exitVar);
     const ClAbstractVariable *pentryVar = NULL;
     // exitVar might have become basic after some other pivoting
     // so allow for the case of its not being there any longer
@@ -630,15 +634,8 @@ ClSimplexSolver::dualOptimize()
 	  if (c > 0.0 && pv->isPivotable())
 	    {
 	    Number zc = pzRow->coefficientFor(*pv);
-	    if (zc != 0)
-	      {
-	      r = zc/c;
-	      }
-	    else
-	      {
-	      r = 0; // FIXGJB r := [ClSymbolicWeight zero]
-	      }
-	    if (ratio == MAXDOUBLE || r < ratio)
+	    r = zc/c; // FIXGJB r:= zc/c or zero, as ClSymbolicWeight-s
+	    if (r < ratio)
 	      {
 	      pentryVar = pv;
 	      ratio = r;
@@ -653,7 +650,6 @@ ClSimplexSolver::dualOptimize()
 	pivot(*pentryVar,*pexitVar);
 	}
       }
-    my_infeasibleRows.erase(it_exitVar);
     }
 }
 
