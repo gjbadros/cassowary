@@ -543,8 +543,10 @@ ClSimplexSolver::Resolve()
   DualOptimize();
   SetExternalVariables();
   _infeasibleRows.clear();
+  // The below was commented out by
   // A. Beurive' Tue Jul  6 13:48:57 CEST 1999
-  // ResetStayConstants();
+  // GJB:FIXME:: why, Anthony?
+  ResetStayConstants();
 }
 
 ClSimplexSolver &
