@@ -29,13 +29,10 @@ public class QuadDemo extends Applet {
   int          dbDragging; // Which db is being dragged? -1 for none
 
   ClSimplexSolver solver;
-  ClEditConstraint editX, editY;
 
   public void init() {
 
     solver = new ClSimplexSolver();
-    editX = null;
-    editY = null;
     dbDragging = -1;
 
     db = new DraggableBox[8];
@@ -179,14 +176,12 @@ public class QuadDemo extends Applet {
 
     if ( dbDragging != -1 ) {
       try {
-        editX = new ClEditConstraint(db[dbDragging].X(), ClStrength.strong);
-        editY = new ClEditConstraint(db[dbDragging].Y(), ClStrength.strong);
-        solver.addConstraint(editX);
-        solver.addConstraint(editY);
+        solver
+          .addEditVar(db[dbDragging].X())
+          .addEditVar(db[dbDragging].Y())
+          .beginEdit();
       } catch (ExCLInternalError ex) {
         System.out.println("mouseDown: CLInternalError!");
-      } catch (ExCLRequiredFailure ex) {
-        System.out.println("mouseDown: CLRequiredFailure!");
       }
     }
     return true;
@@ -196,15 +191,10 @@ public class QuadDemo extends Applet {
     if ( dbDragging != -1 ) {
       try {
         dbDragging = -1;
-        solver.removeConstraint(editX);
-        solver.removeConstraint(editY);
-        editX = null;
-        editY = null;
+        solver.endEdit();
         repaint();
       } catch (ExCLInternalError ex) {
         System.out.println("mouseUp: CLInternalError!");
-      } catch (ExCLConstraintNotFound ex) {
-        System.out.println("mouseUp: CLConstraintNotFound!");
       }
     }
     return true;
@@ -213,9 +203,14 @@ public class QuadDemo extends Applet {
   public boolean mouseDrag(Event e, int x, int y) {
     if ( dbDragging != -1 ) {
       try {
-        solver.resolve(x, y);
+        solver
+          .suggestValue(db[dbDragging].X(),x)
+          .suggestValue(db[dbDragging].Y(),y)
+          .resolve();
       } catch (ExCLInternalError ex) {
         System.out.println("mouseDrag: CLInternalError!");
+      } catch (ExCLError ex) {
+        System.out.println("mouseDrag: CLError!");
       }
       repaint();
     }
