@@ -4,7 +4,7 @@
 aclocal
 
 # Copy ltconfig and ltmain.sh for this version of libtool
-libtoolize --automake
+libtoolize --automake --copy
 
 # Generate Makefile.in's from Makefile.am's and configure.in
 # (adding missing files that may be needed for proper operation)
