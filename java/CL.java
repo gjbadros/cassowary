@@ -16,6 +16,7 @@ package EDU.Washington.grad.gjb.cassowary;
 public class CL {
   protected final static boolean fDebugOn = false;
   protected final static boolean fTraceOn = false;
+  protected final static boolean fTraceAdded = false;
   protected final static boolean fGC = false;
 
   protected static void debugprint(String s)
