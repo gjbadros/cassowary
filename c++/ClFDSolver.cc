@@ -128,7 +128,7 @@ ClFDSolver::Solve()
   t.run(G);
   topsort::topsort_iterator it = t.top_order_begin();
   topsort::topsort_iterator end = t.top_order_end();
-  double errorTotal = 0;
+  ClSymbolicWeight errorTotal;
   ResetSetFlagsOnVariables();
   for (; it != end; ++it) {
     ClVariable clv = nodeToVar[*it];
@@ -142,8 +142,8 @@ ClFDSolver::Solve()
       cout << *pcn << endl;
     }
     cout << endl;
-    pair<double,FDNumber> p = ComputeBest(pcldv);
-    double e = p.first;
+    pair<ClSymbolicWeight,FDNumber> p = ComputeBest(pcldv);
+    ClSymbolicWeight e = p.first;
     FDNumber v = p.second;
     pcldv->ChangeValue(v);
     pcldv->SetFIsSet(true);
@@ -154,12 +154,12 @@ ClFDSolver::Solve()
 
 /* return the best (lowest) incremental error and the value
    at which that error occurs */
-pair<double,FDNumber>
+pair<ClSymbolicWeight,FDNumber>
 ClFDSolver::ComputeBest(ClFDVariable *pcldv)
 {
   assert(pcldv);
   assert(!pcldv->FIsSet());
-  double minError = MAXDOUBLE;
+  ClSymbolicWeight minError(MAXDOUBLE,MAXDOUBLE,MAXDOUBLE);
   FDNumber bestValue = FDN_NOTSET;
   //  ClVariable clv(pcldv);
   // for each domain value
@@ -167,14 +167,14 @@ ClFDSolver::ComputeBest(ClFDVariable *pcldv)
        itVal != pcldv->PlfdnDomain()->end();
        ++itVal) {
     FDNumber value = *itVal;
-    double error = 0.0;
+    ClSymbolicWeight error;
     const ClConstraintSet &setCns = _mapClvToCns[pcldv];
     // for each constraint affecting *pcldv
     for (ClConstraintSet::const_iterator itCn = setCns.begin();
          itCn != setCns.end();
          ++itCn) {
       const ClConstraint *pcn = *itCn;
-      double e = ErrorForClvAtValSubjectToCn(pcldv,value,*pcn);
+      ClSymbolicWeight e = ErrorForClvAtValSubjectToCn(pcldv,value,*pcn);
       error += e;
     }
     // now error is the total error for binding clv <- value
@@ -187,10 +187,10 @@ ClFDSolver::ComputeBest(ClFDVariable *pcldv)
   // and it occurs binding clv <- bestValue
   assert(minError < MAXDOUBLE);
   assert(bestValue != FDN_NOTSET);
-  return pair<double,FDNumber>(minError,bestValue);
+  return pair<ClSymbolicWeight,FDNumber>(minError,bestValue);
 }
 
-double 
+ClSymbolicWeight
 ClFDSolver::ErrorForClvAtValSubjectToCn(ClFDVariable *pcldv,FDNumber value,const ClConstraint &cn)
 {
   const ClFDBinaryOneWayConstraint *pcnFd = dynamic_cast<const ClFDBinaryOneWayConstraint*>(&cn);
@@ -234,7 +234,10 @@ ClFDSolver::ErrorForClvAtValSubjectToCn(ClFDVariable *pcldv,FDNumber value,const
   default:
     assert(false);
   }
-  return e;
+  if (cn.IsRequired() && e > 0)
+    return ClsRequired().symbolicWeight();
+  else
+    return cn.symbolicWeight() * (e*cn._weight);
 }
 
 

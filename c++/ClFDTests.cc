@@ -36,10 +36,10 @@ simple1()
    ClVariable x(new ClFDVariable("x",10,l));
    ClVariable y(new ClFDVariable("y",14,l));
    cout << x << ", " << y << endl;
-   ClFDBinaryOneWayConstraint cn1(x,cnLT,y,2,4);
+   ClFDBinaryOneWayConstraint cn1(x,cnGEQ,y,1,5);
    ClFDBinaryOneWayConstraint cn2(x,cnGEQ,y);
    ClFDBinaryOneWayConstraint cn3(y,cnGEQ,x);
-   ClFDBinaryOneWayConstraint cn4(y,cnGEQ,18);
+   ClFDBinaryOneWayConstraint cn4(y,cnGEQ,10);
    cout << cn1 << endl;
    cout << cn2 << endl;
    cout << cn3 << endl;
@@ -58,6 +58,8 @@ simple1()
 
    fdsolver.ShowSolve();
    fdsolver.Solve();
+
+   cout << "x = " << x.Value() << "; y = " << y.Value() << endl;
    
    cerr << (fdsolver.RemoveConstraintNoException(&cn1) ? "Removed cn1" : "Failed removing cn1")
         << endl;

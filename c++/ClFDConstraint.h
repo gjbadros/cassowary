@@ -20,11 +20,16 @@
 #include "Cassowary.h"
 #include "ClConstraint.h"
 
+
 // Just a node in the class hierarchy for now
 class ClFDConstraint : public ClConstraint {
  private: typedef ClConstraint super;
 
  public:
+  // Constructor
+  ClFDConstraint(const ClStrength &strength = ClsRequired(),
+		     double weight = 1.0) 
+      : ClConstraint(strength, weight) { }
 
  protected:
 

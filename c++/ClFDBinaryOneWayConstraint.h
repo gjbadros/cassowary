@@ -27,13 +27,17 @@ class ClFDBinaryOneWayConstraint : public ClFDConstraint {
  public:
 
    ClFDBinaryOneWayConstraint(ClVariable vRW, enum ClCnRelation rel, ClVariable vRO, 
-                              double coefficient = 1.0, double constant = 0.0)
-       : ClFDConstraint(), _vRW(vRW), _rel(rel), _vRO(vRO),
+                              double coefficient = 1.0, double constant = 0.0,
+                              const ClStrength &strength = ClsRequired(),
+                              double weight = 1.0)
+       : ClFDConstraint(strength,weight), _vRW(vRW), _rel(rel), _vRO(vRO),
          _coefficient(coefficient), _constant(constant)
     { }
 
-   ClFDBinaryOneWayConstraint(ClVariable vRW, enum ClCnRelation rel, double constant)
-       : ClFDConstraint(), _vRW(vRW), _rel(rel), _vRO(clvNil),
+   ClFDBinaryOneWayConstraint(ClVariable vRW, enum ClCnRelation rel, double constant,
+                              const ClStrength &strength = ClsRequired(),
+                              double weight = 1.0)
+       : ClFDConstraint(strength,weight), _vRW(vRW), _rel(rel), _vRO(clvNil),
          _coefficient(0), _constant(constant)
     { }
 

@@ -26,7 +26,7 @@
 #include <string>
 
 class ClSimplexSolver;
-
+class ClFDSolver;
 
 enum ClCnRelation {cnEQ, cnNEQ, cnLEQ, cnGEQ, cnLT, cnGT };
 
@@ -149,7 +149,12 @@ public:
   }
 
   friend ClSimplexSolver;
+  friend ClFDSolver;
 private:
+
+  ClSymbolicWeight symbolicWeight() const {
+    return _strength.symbolicWeight();
+  }
 
   void addedTo(const ClSimplexSolver &)
     { ++_times_added; }

@@ -22,6 +22,7 @@
 #include "ClVariable.h"
 #include "ClErrors.h"
 #include "ClTypedefs.h"
+#include "ClSymbolicWeight.h"
 #include <GTL/graph.h>
 
 class ClVariable;
@@ -68,9 +69,10 @@ class ClFDSolver: public ClSolver {
 
   /* return the best (lowest) incremental error and the value
      at which that error occurs */
-  pair<double,FDNumber> ComputeBest(ClFDVariable *pcldv);
+  pair<ClSymbolicWeight,FDNumber> ComputeBest(ClFDVariable *pcldv);
 
-  double ErrorForClvAtValSubjectToCn(ClFDVariable *pcldv,FDNumber value,const ClConstraint &cn);
+  ClSymbolicWeight ErrorForClvAtValSubjectToCn(ClFDVariable *pcldv,
+                                               FDNumber value,const ClConstraint &cn);
 
   /* Turn all FDVariable FIsSet() flags to false */
   void ResetSetFlagsOnVariables();

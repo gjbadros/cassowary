@@ -27,10 +27,7 @@ class ClSymbolicWeight : public gc {
 class ClSymbolicWeight {
 #endif
  public:
-  ClSymbolicWeight() 
-    { }
-
-  ClSymbolicWeight(int CLevels, Number value = 0.0);
+  ClSymbolicWeight(int CLevels = 3, Number value = 0.0);
 
   ClSymbolicWeight(Number w1, Number w2 = 0.0, Number w3 = 0.0);
 
@@ -83,6 +80,11 @@ class ClSymbolicWeight {
 
   ClSymbolicWeight operator+=(const ClSymbolicWeight &cl)
     { return addtoMe(cl); }
+
+  ClSymbolicWeight operator*(const Number &n)
+    { ClSymbolicWeight answer(*this);
+      answer *= n;
+      return answer; }
 
   bool lessThan(const ClSymbolicWeight &cl) const;
   bool lessThanOrEqual(const ClSymbolicWeight &cl) const;
