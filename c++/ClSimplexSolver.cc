@@ -763,7 +763,8 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
     // them to the expression (they can't be basic).
     ++my_slackCounter;
     auto_ptr<ClSlackVariable> p (new ClSlackVariable (my_slackCounter, "s"));
-    pslackVar = p;		// transfer ownership to other auto_ptr
+    pslackVar = p;
+    p.release();	// transfer ownership to other auto_ptr
     // index the constraint under its slack variable
     my_markerVars[&cn] = pslackVar.get();
     if (!cn.isRequired())
@@ -771,6 +772,7 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
       ++my_slackCounter;
       auto_ptr<ClSlackVariable> p (new ClSlackVariable (my_slackCounter, "em"));
       peminus = p;
+      p.release();   // FIXGJB these and below shouldn't be needed w/ egcs
       pexpr->setVariable(*peminus,1.0);
       // add emnius to the objective function with the appropriate weight
       ClLinearExpression *pzRow = rowExpression(my_objective);
@@ -791,6 +793,7 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
       ++my_dummyCounter;
       auto_ptr<ClDummyVariable> p (new ClDummyVariable (my_dummyCounter, "d"));
       pdummyVar = p;
+      p.release();
       pexpr->setVariable(*pdummyVar,1.0);
       my_markerVars[&cn] = pdummyVar.get();
 #ifndef CL_NO_TRACE
@@ -806,8 +809,10 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
       ++my_slackCounter;
       auto_ptr<ClSlackVariable> p1 (new ClSlackVariable (my_slackCounter, "ep"));
       peplus = p1;
+      p1.release();
       auto_ptr<ClSlackVariable> p2 (new ClSlackVariable (my_slackCounter, "em"));
       peminus = p2;
+      p2.release();
 	  
       pexpr->setVariable(*peplus,-1.0);
       pexpr->setVariable(*peminus,1.0);
