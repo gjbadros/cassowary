@@ -1,8 +1,12 @@
 #!/bin/zsh -f
-CXX_SIZES=(100 200 300 400 500 600 700 800 900 1000)
+CXX_SIZES=(100 200 300 400 500 600      800 900 1000)
 JAVA_SIZES=(100 200 300 400 500 600 700 800 900 1000)
 RESOLVES=1000
 
+WHICH=both
+
+case "$WHICH" in
+  cxx|both)
 # C++
 pushd c++
 for i in $CXX_SIZES; do
@@ -11,10 +15,14 @@ for i in $CXX_SIZES; do
   echo
 done
 popd
+;;
+esac
 
 echo "--------------"
 echo
 
+case "$WHICH" in
+  java|both)
 # Java
 pushd java
 export CLASSPATH=/home/gjb/java-jar/java_cup-10k-b2.jar:/home/gjb/cassowary/java/classes:.
@@ -25,3 +33,5 @@ for i in $JAVA_SIZES; do
   echo
 done
 popd
+;;
+esac
