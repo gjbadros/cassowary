@@ -1,3 +1,13 @@
+Thu Mar 18 15:20:51 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* Release v0.4.
+
+Thu Mar 18 14:44:39 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* configure.in: Do not let config-inline.h get overwritten if it
+	is unchanged.  Add some extra messages to tell status of
+	config-inline.h
+
 Thu Mar 18 12:59:02 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* README, configure.in, wrappers/Makefile.in: Added
