@@ -1,3 +1,22 @@
+Wed Feb 17 12:10:28 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClTypedefs.h: Added -- factored out useful typedefs from
+	ClSimplexSolver.h, ClTableau.h and put them in this file.
+
+	* c++/ClTableau.h, c++/ClSimplexSolver.h, c++/debug.h:  Use
+	ClTypedefs.h.  Drop gdb_print (it uses printOn and printTo, now).
+	Renamed printDebugInfo to printOnVerbose (for generalized gdb
+	interface)
+
+	* c++/ClSimplexSolver.cc: Fix two bugs where I was modifying data
+	structures indirectly while iterating over them.  Remove a delete
+	that was premature to fix another bug in optimized builds.
+
+	* c++/ClLinearExpression.h, c++/ClConstraint.h,
+ 	c++/ClAbstractVariable.h: Drop gdb_print().
+
+	* c++/ClSymbolicWeight.h: Use Number instead of double more consistently.
+
 Tue Feb 16 15:04:06 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* c++/Cassowary.h,ClAbstractVariable.h,ClMap.h,ClSet.h,Makefile: Use 
