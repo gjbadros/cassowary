@@ -9,7 +9,7 @@ dnl ## Initialize autoconf ##
 AC_INIT(c++/ClSimplexSolver.cc)
 AC_PREREQ(2.4)
 
-CASSOWARY_VERSION=0.51post
+CASSOWARY_VERSION=0.52
 AC_SUBST(CASSOWARY_VERSION)
 
 dnl ## Initialize automake ##

@@ -11,7 +11,7 @@ Seattle, WA 98195-2350
 
 with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
 
--1999: Version 0.52 Released.
+25-September-1999: Version 0.52 released.
 * Bug fix for nested edits where a later edit includes an already-being-edited variable
 
 14-September-1999: Version 0.51 released.

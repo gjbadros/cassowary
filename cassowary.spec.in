@@ -13,7 +13,7 @@ BuildRoot: /tmp/cassowary-%ver-build
 Copyright: Copyright (C) 1998,1999 Greg J. Badros
 Packager: Greg J. Badros <gjb@cs.washington.edu>
 URL: http://www.cs.washington.edu/research/constraints/cassowary
-Requires: guile >= 1.3.2
+Requires: guile >= 1.3.4
 Requires: GTL >= 0.3.1
 Provides: cassowary-constraint-solver
 
