@@ -1,7 +1,7 @@
 Announcing the release of a free constraint solver:
 
 Cassowary Constraint Solver for Smalltalk, C++, and Java
-Version 0.50-cvs
+Version 0.50
 
 Web Page: http://www.cs.washington.edu/research/constraints/cassowary
 Distribution: ftp://ftp.cs.washington.edu:/pub/constraints/code/cassowary/
