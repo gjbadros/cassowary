@@ -1,0 +1,101 @@
+--- Makefile.am	1999/08/26 05:05:13	1.1
++++ Makefile.am	1999/08/26 05:05:28
+@@ -13,6 +13,8 @@
+ 
+ AUTOMAKE_OPTIONS = foreign dist-zip 1.3
+ 
++EXTRA_DIST = README GTL.spec
++
+ #---------------------------------------------------------------------------
+ #   Links for using GTL without installing
+ #---------------------------------------------------------------------------
+--- doc/html/Makefile.am	1999/08/26 04:55:19	1.1
++++ doc/html/Makefile.am	1999/08/26 17:10:44
+@@ -7,25 +7,29 @@
+ 
+ SUBDIRS=icons
+ 
+-dist-hook: doc
+-	cp *.html $(distdir)
++EXTRA_DIST=*.html
++
++pkgdata_DATA=*.html
++
++#dist-hook: doc
++#	cp *.html $(distdir)
+ 
+ .PHONY: doc doc.kdoc doc.dlh homepage
+ doc:	index.html doc.kdoc doc.dlh
+ 
+-index.html: index.src
+-	cp index.src index.html
++#index.html: index.src
++#	cp index.src index.html
++
++#doc.kdoc:
++#	-rm -f GTL
++#	$(LN_S) $(top_srcdir)/include/GTL ./GTL
++#	$(KDOC) -H -d . GTL GTL/*.h
++#	-rm -f GTL
+ 
+-doc.kdoc:
+-	-rm -f GTL
+-	$(LN_S) $(top_srcdir)/include/GTL ./GTL
+-	$(KDOC) -H -d . GTL GTL/*.h
+-	-rm -f GTL
+-
+-doc.dlh:
+-	$(DLH) --icon-dir=icons $(top_srcdir)/doc/latex/GTL-userguide.tex
+-	mv GTL-userguide/doc*.html .
+-	-rm -rf GTL-userguide
++#doc.dlh:
++#	$(DLH) --icon-dir=icons $(top_srcdir)/doc/latex/GTL-userguide.tex
++#	mv GTL-userguide/doc*.html .
++#	-rm -rf GTL-userguide
+ 
+ homepage: doc
+ 	cp -Rf *.html icons /mount/archive.theory/www/himsolt/Graphlet/GTL
+--- doc/latex/Makefile.am	1999/08/26 04:58:16	1.1
++++ doc/latex/Makefile.am	1999/08/26 17:11:04
+@@ -10,6 +10,7 @@
+ #---------------------------------------------------------------------------
+ 
+ EXTRA_DIST = $(PACKAGE).ps
++pkgdata_DATA= $(PACKAGE).ps
+ 
+ HFILES = $(wildcard $(top_srcdir)/include/$(PACKAGE)/*.h)
+ 
+@@ -30,20 +31,20 @@
+ #   Rules
+ #---------------------------------------------------------------------------
+ 
+-$(PACKAGE)-classes.tex: $(HFILES)
+-	-rm -f $(PACKAGE)
+-	$(LN_S) $(top_srcdir)/include/$(PACKAGE) ./$(PACKAGE)
+-	$(KDOC) -T -d . tmp $(PACKAGE)/*.h
+-	postprocess tmp.tex > $(PACKAGE)-classes.tex
+-	rm tmp.tex
+-
+-%.dvi: %.tex %.cls
+-	latex $<
+-	makeindex $(<:.tex=.idx)
+-	latex $<
++#$(PACKAGE)-classes.tex: $(HFILES)
++#	-rm -f $(PACKAGE)
++#	$(LN_S) $(top_srcdir)/include/$(PACKAGE) ./$(PACKAGE)
++#	$(KDOC) -T -d . tmp $(PACKAGE)/*.h
++#	postprocess tmp.tex > $(PACKAGE)-classes.tex
++#	rm tmp.tex
++
++#%.dvi: %.tex %.cls
++#	latex $<
++#	makeindex $(<:.tex=.idx)
++#	latex $<
+ 
+-%.ps: %.dvi
+-	dvips -o $@ $<
++#%.ps: %.dvi
++#	dvips -o $@ $<
+ 
+ #---------------------------------------------------------------------------
+ #   end of file
