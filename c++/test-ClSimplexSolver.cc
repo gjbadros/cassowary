@@ -13,7 +13,7 @@ main( char **argv, int argc )
   ClVariable a("a",0.0);
   ClVariable b("b",0.0);
 
-  ClLinearExpression b_minus_a = 0- a /* = */ + b;
+  ClLinearExpression b_minus_a = 0- a /* = */ + 2 * b + 1;
   cerr << b_minus_a << endl;
   ClLinearEquation a_equals_2b(b_minus_a);
   ClEditConstraint edit_a(a);
@@ -25,7 +25,7 @@ main( char **argv, int argc )
   solver.addConstraint(a_equals_2b);
   solver.addStay(a);
   solver.addStay(b);
-  solver.addConstraint(edit_a);
+  solver.addConstraint(edit_b);
   
   
   vector<double> rgedits;
