@@ -16,6 +16,7 @@
 
 JAVAC = javac
 JAVAC_FLAGS = -g
+#JAVAC_FLAGS = -O
 
 TESTS = test-ClStrength test-ClVariable test-ClLinearExpression test-ClConstraint \
 	test-ClSimplexSolver ClTests
@@ -40,13 +41,14 @@ JAVAFILES = \
 	ClSymbolicWeight.java \
 	ClVariable.java \
 	ClPoint.java \
+	ClDouble.java \
 	ClTableau.java \
 	ClSimplexSolver.java \
 	ExCLConstraintNotFound.java \
 	ExCLError.java \
 	ExCLInternalError.java \
 	ExCLNonlinearExpression.java \
-	ExCLNotEnoughtStays.java \
+	ExCLNotEnoughStays.java \
 	ExCLRequiredFailure.java \
 	ExCLTooDifficult.java \
 	CL.java \
