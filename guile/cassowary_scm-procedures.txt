@@ -10,7 +10,7 @@ constraints have strength "cls-required", then the system will remain
 soluble.)  If an error is signalled because one object in the list ARGS
 is not a constraint object, the preceding arguments will have already
 been added.
-[From cassowary_scm.cc:1159]
+[From cassowary_scm.cc:1161]
 
 
 (cl-add-editvar solver cl-vars #&optional strength factor)
@@ -26,7 +26,7 @@ selecting the edit variables with this procedure, you must call
 `cl-begin-edit' before using `cl-suggest-value'.  To remove the edit
 variables, use `cl-end-edit' when done changing the variables'
 values.
-[From cassowary_scm.cc:1243]
+[From cassowary_scm.cc:1245]
 
 
 (cl-add-stay solver cl-vars #&optional strength factor)
@@ -43,7 +43,7 @@ Future versions of the solver may add the stay
 constraint implicitly upon a variable's first use.  Until then,
 though, be sure to add stay constraints on all the cl-variable objects
 you intend to use with the given SOLVER.
-[From cassowary_scm.cc:1303]
+[From cassowary_scm.cc:1305]
 
 
 (cl-begin-edit solver)
@@ -53,7 +53,7 @@ This procedure must be invoked after adding edit variables to SOLVER
 (via `cl-add-editvar') and before using `cl-suggest-values' to change
 those edit variables' values.  Every `cl-begin-edit' invocation should
 have a matching `cl-end-edit' call.
-[From cassowary_scm.cc:1368]
+[From cassowary_scm.cc:1370]
 
 
 (cl-constraint-list solver #&optional internal-also?)
@@ -65,7 +65,7 @@ INTERNAL-ALSO? is #f or not given, then only the constraints added via
 the guile interface will be listed.  If INTERNAL-ALSO? is #t, then all
 constraints added to the solver (even those added by primitive code
 directly) will be listed.
-[From cassowary_scm.cc:1525]
+[From cassowary_scm.cc:1527]
 
 
 (cl-constraint? obj)
@@ -94,7 +94,7 @@ Finish changing the values of the edit variables in SOLVER.
 This procedure must be invoked once for every invocation of
 `cl-begin-edit'.   It will force a final re-solve before removing
 any edit variables that have been added via `cl-add-editvar'.
-[From cassowary_scm.cc:1389]
+[From cassowary_scm.cc:1391]
 
 
 (cl-equation? obj)
@@ -130,7 +130,7 @@ an integer before returning the value.
 (cl-is-constraint-satisfied? solver cn)
 - Built-in Primitive
 Return #t if CN is satisfied in SOLVER, #f otherwise.
-[From cassowary_scm.cc:1410]
+[From cassowary_scm.cc:1412]
 
 
 (cl-minus exprA exprB)
@@ -159,7 +159,7 @@ trying to remove the remaining constraints.  If all constraints are
 removed successfully, this procedure will return #t.  If an error is
 signalled because one object in the list ARGS is not a constraint
 object, the preceding arguments will have already been removed.
-[From cassowary_scm.cc:1201]
+[From cassowary_scm.cc:1203]
 
 
 (cl-resolve solver . args)
@@ -178,7 +178,7 @@ the `cl-resolve' invocation must match the order of the variables in
 the `cl-add-editvar' invocation(s).
 In either case, you must invoke `cl-end-edit' to remove the edit
 variables from the solver after you are done changing their values.
-[From cassowary_scm.cc:1469]
+[From cassowary_scm.cc:1471]
 
 
 (cl-solver-debug-print solver #&optional port)
@@ -223,7 +223,7 @@ not happen until after invoking `cl-resolve' on SOLVER.  Then the
 possibly changed values can be retrieved via `cl-value' or
 `cl-int-value'.  Note that the constraints that have been added to
 SOLVER may not permit changing VAR to VALUE.
-[From cassowary_scm.cc:1430]
+[From cassowary_scm.cc:1432]
 
 
 (cl-times exprA exprB)
