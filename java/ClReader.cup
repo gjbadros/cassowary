@@ -1,8 +1,9 @@
-package edu.washington.grad.will;
+// $Id$
+// ClReader.cup
+
+package edu.washington.grad.gjb.cassowary;
 
 import java_cup.runtime.*;
-
-import EDU.Washington.grad.gjb.cassowary.*;
 
 parser code
 {:
@@ -70,3 +71,6 @@ expr		::=	  NUMBER:a			{: RESULT = (new ClLinearExpression(a.doubleValue()));			
 			| MINUS expr:a			{: RESULT = (CL.Times	(-1			, (ClLinearExpression) a));				:}
 			%prec UMINUS
 			| LPAREN expr:a RPAREN		{: RESULT = a;												:};
+
+// Local Variables:
+// tab-width: 4

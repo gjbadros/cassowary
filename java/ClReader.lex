@@ -1,8 +1,7 @@
-package edu.washington.grad.will;
+// $Id$
 
+package edu.washington.grad.gjb.cassowary;
 import java_cup.runtime.Symbol;
-
-import EDU.Washington.grad.gjb.cassowary.*;
 
 %%
 
@@ -103,3 +102,7 @@ ws		= [ \t\r\n\f]+
 					}
 
 .					{ System.err.println("Illegal character: " + yytext() );		}
+
+
+// Local Variables:
+// tab-width: 4
