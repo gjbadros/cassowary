@@ -1230,6 +1230,7 @@ removeConstraint: cn
 		1 to: index-1 do: [:i | self editMinusErrorVars at: i put: (oldEditMinusErrorVars at: i)].
 		index+1 to: oldSize do: [:i | self editMinusErrorVars at: i-1 put: (oldEditMinusErrorVars at: i)].
 		"remove the constants from prevEditConstants"
+#FIXGJB: do we need the oldPrevEditConstants variable?
 		oldPrevEditConstants := self prevEditConstants.
 		self prevEditConstants: (Array new: oldSize-1).
 		1 to: index-1 do: [:i | self prevEditConstants at: i put: (oldPrevEditConstants at: i)].
