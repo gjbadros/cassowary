@@ -2,6 +2,7 @@ CL.class
 CN.class
 ClAbstractVariable.class
 ClConstraint.class
+ClDouble.class
 ClDummyVariable.class
 ClEditConstraint.class
 ClEditOrStayConstraint.class
