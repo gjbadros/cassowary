@@ -1,3 +1,13 @@
+Mon Mar 29 21:01:21 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* ltconfig, ltmain.sh: Added -- so libtool isn't broken in
+	distributions. 
+
+Mon Mar 29 20:59:17 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* configure.in: Try to undo a bash-ism.  Untested on a vendor sh,
+	but still works with bash.
+
 Sat Mar 20 19:19:37 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* Release v0.41.
