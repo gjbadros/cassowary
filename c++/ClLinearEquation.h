@@ -11,7 +11,6 @@
 #ifndef ClLinearEquation_H
 #define ClLinearEquation_H
 
-#include <iostream>
 #include "Cassowary.h"
 #include "ClLinearConstraint.h"
 #include "ClLinearExpression.h"

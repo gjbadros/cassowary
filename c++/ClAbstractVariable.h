@@ -12,7 +12,6 @@
 #define ClAbstractVariable_H
 
 #include <stdio.h>
-#include <iostream>
 #include "Cassowary.h"
 #include "auto_ptr.h"
 

@@ -11,7 +11,6 @@
 #ifndef ClEditConstraint_H
 #define ClEditConstraint_H
 
-#include <iostream>
 #include "Cassowary.h"
 #include "ClEditOrStayConstraint.h"
 

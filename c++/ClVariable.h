@@ -11,7 +11,6 @@
 #ifndef ClVariable_H
 #define ClVariable_H
 
-#include <iostream>
 #include <stdio.h>
 #include "Cassowary.h"
 #include "ClAbstractVariable.h"

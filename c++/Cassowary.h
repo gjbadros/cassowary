@@ -11,13 +11,15 @@
 #ifndef Cassowary_H
 #define Cassowary_H
 
-#include <iostream>
 #include <string>
 #include <assert.h>
 #ifdef _WIN32
+#include <iostream>
 #pragma warning(disable : 4786)
 using namespace std;
 #define __FUNCTION__ "WIN"
+#else
+#include <iostream.h>
 #endif
 
 typedef double Number;
