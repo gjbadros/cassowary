@@ -1,6 +1,7 @@
 #include <string>
 #include "ClLinearEquation.h"
 #include "ClLinearInequality.h"
+#include "ClEditConstraint.h"
 #include "ClStayConstraint.h"
 #include "ClSimplexSolver.h"
 
@@ -26,9 +27,18 @@ main( char **argv, int argc )
   ClStayConstraint cn(w);
   cout << cn << endl;
 
+  ClEditConstraint cnEdit(a);
+
   ClSimplexSolver solver;
 
   solver.addConstraint(cn);
+  solver.addConstraint(cnEdit);
+  solver.addConstraint(constraint2);
+
+
+  vector<double> rgedits;
+  rgedits.push_back(1.0);
+  solver.resolve(rgedits);
 
 
 }
