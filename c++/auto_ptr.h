@@ -9,6 +9,8 @@
 #ifdef _WIN32
 #include <memory>
 #else
+// FIXGJB: This implementation for egcs is buggy -- be careful
+// and replace ASAP
 template<class T>
 class auto_ptr {
  public:
@@ -39,8 +41,9 @@ class auto_ptr {
     return oldPointee;
     } 
 
+ protected:
   // This is non-standard
-  // void reset(T *p = 0) { delete pointee; pointee = p; }
+  void reset(T *p = 0) { delete pointee; pointee = p; }
 
  private:
   T *pointee;
