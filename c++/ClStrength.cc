@@ -10,13 +10,14 @@
 
 #include "ClStrength.h"
 #include <assert.h>
+#include <values.h>
 
 // Use the singleton pattern for the strength objects
 ClStrength &clsRequired()
 {
-  // required is distinct by reference equality to this static object,
+  // required is distinct by equality to this static object,
   // but I still use an especially high symbolic weight, just in case
-  static ClStrength required_strength("required", 2.0, 2.0, 2.0);
+  static ClStrength required_strength("required", MAXDOUBLE, MAXDOUBLE, MAXDOUBLE);
   return required_strength;
 }
 

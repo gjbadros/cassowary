@@ -75,4 +75,32 @@ private:
   Number my_value;
 };
 
+
+#include <math.h>
+
+// Compare two double-s approximately, since equality is no good
+inline bool clApprox(double a, double b)
+{
+  float epsilon = 1.0e-8;
+  if (a == 0.0) {
+    return (fabs(b) < epsilon);
+  } else if (b == 0.0) {
+    return (fabs(a) < epsilon);
+  } else {
+    return (fabs(a-b) < fabs(a) * epsilon);
+  }
+}
+
+// Can remove these if I decide to 
+// autoconvert from ClVariable-s to double-s
+inline bool clApprox(const ClVariable &clv, double b)
+{
+  return clApprox(clv.value(),b);
+}
+
+inline bool clApprox(double a, const ClVariable &clv)
+{
+  return clApprox(a,clv.value());
+}
+
 #endif

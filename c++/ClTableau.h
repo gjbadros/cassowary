@@ -45,7 +45,7 @@ class ClTableau {
     my_columns[&v].insert(&subject); 
     }
 
-  friend ostream &printTo(ostream &xo, const ClTableau &clt);
+  ostream &printOn(ostream &xo) const;
 
  protected:
   // Constructor -- want to start with empty objects so not much to do

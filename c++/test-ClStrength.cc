@@ -1,6 +1,7 @@
 #include <string>
 #include "Cassowary.h"
 #include "ClStrength.h"
+#include "debug.h"
 
 int
 main( char **argv, int argc )
@@ -24,6 +25,9 @@ main( char **argv, int argc )
 
   ClStrength cls5(String("cls5"),clsw.divideBy(2));
   cout << cls5 << endl;
+
+  ClStrength a(clsRequired());
+  cout << "a is " << a.isRequired() << endl;
 
   cout << clsw << (clsw == clsw2? "==" : "!=") << clsw2 << endl;
   cout << clsw2 << (clsw2 == clsw3? "==" : "!=") << clsw3 << endl;

@@ -124,19 +124,19 @@ ClTableau::substituteOut(const ClAbstractVariable &oldVar, const ClLinearExpress
 
 
 ostream &
-printTo(ostream &xo, const ClTableau &clt)
+ClTableau::printOn(ostream &xo) const
 {
   xo << "Tableau:\n" 
-     << clt.my_rows << endl;
+     << my_rows << endl;
   xo << "Columns:\n" 
-     << clt.my_columns << endl;
+     << my_columns << endl;
   xo << "Infeasible rows:\n" 
-     << clt.my_infeasibleRows << endl;
+     << my_infeasibleRows << endl;
   return xo;
 }
 
 ostream &operator<<(ostream &xo, const ClTableau &clt)
-{ return printTo(xo,clt); }
+{ return clt.printOn(xo); }
 
 ostream &
 printTo(ostream &xo, const set<const ClAbstractVariable *> & varset)

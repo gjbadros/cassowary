@@ -22,12 +22,6 @@ ClStrength &clsMedium();
 ClStrength &clsWeak();
 
 class ClStrength {
- private:
-  // instance variables
-  String my_name;
-  ClSymbolicWeight my_symbolicWeight;
-  
-
  public:
 
   ClStrength(const String &name, const ClSymbolicWeight &symbolicWeight) :
@@ -41,7 +35,7 @@ class ClStrength {
     { }
 
   virtual bool isRequired() const
-    { return (this == &clsRequired()); }
+    { return (my_symbolicWeight == clsRequired().my_symbolicWeight); }
 
   virtual ostream &printOn(ostream &xo) const
     { xo << name() << ":" << symbolicWeight(); return xo; }
@@ -61,6 +55,11 @@ class ClStrength {
 
   friend ostream& operator<<(ostream &xos, const ClStrength &cls)
     { cls.printOn(xos); return xos; }
+
+  // instance variables
+  String my_name;
+  ClSymbolicWeight my_symbolicWeight;
+  
 
 };
 

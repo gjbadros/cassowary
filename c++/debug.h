@@ -16,7 +16,6 @@ ostream &operator<<(ostream &xo, const map<const ClAbstractVariable *, ClLinearE
 
 ostream &operator<<(ostream &xo, const vector<const ClAbstractVariable *> &varlist);
 
-
 class Tracer {
  public:
   Tracer(const char *const sz) : sz_(sz) { cerr << "* " << sz; }
@@ -26,7 +25,8 @@ class Tracer {
 };
 
 
-// Don't define this if exceptions work!
-#define EXCEPTION_ABORT abort()
+// Don't define this if exceptions work!  They do w/ egcs-1.01 for me
+//#define EXCEPTION_ABORT abort()
+#define EXCEPTION_ABORT
 
 #endif

@@ -10,6 +10,7 @@
 
 #include <assert.h>
 #include "ClLinearExpression.h"
+#include "ClVariable.h"
 #include "ClTableau.h"
 #include "ClErrors.h"
 #include "debug.h"

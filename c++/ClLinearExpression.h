@@ -88,7 +88,7 @@ class ClLinearExpression  {
   // contains a term involving v, add c to the existing coefficient.
   // If the new coefficient is approximately 0, delete v.
   ClLinearExpression &setVariable(const ClAbstractVariable &v, Number c)
-    {assert(!clApprox(c,0.0));  my_terms[&v] = c; return *this; }
+    {assert(c != 0.0);  my_terms[&v] = c; return *this; }
 
   // Add a term c*v to this expression.  If the expression already
   // contains a term involving v, add c to the existing coefficient.

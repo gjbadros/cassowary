@@ -101,8 +101,6 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
 	pzRow->addExpression(*pexpr,-1.0,my_objective,*this);
 	}
       }
-    // FIXGJB: move to top?
-    my_errorVars.erase(it_eVars);
     }
 
   map<const ClConstraint *, const ClAbstractVariable *>::iterator 
@@ -270,6 +268,8 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
       }
     }
 
+  if (it_eVars != my_errorVars.end())
+    my_errorVars.erase(it_eVars);
   optimize(my_objective);
   setExternalVariables();
 }
@@ -359,6 +359,7 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
   // If not, the original constraint was not satisfiable
   if (!clApprox(pazRow->constant(),0.0))
     {
+    cerr << "Original constraint is not satisfiable" << endl;
     EXCEPTION_ABORT;
     throw ExCLRequiredFailure();
     }
@@ -535,6 +536,7 @@ ClSimplexSolver::chooseSubject(ClLinearExpression &expr)
   // the subject negative."
   if (!clApprox(expr.constant(),0.0))
     {
+    cerr << "Non-zero constant -- unsatisfiable required constraint" << endl;
     EXCEPTION_ABORT;
     throw ExCLRequiredFailure();
     }
@@ -645,6 +647,7 @@ ClSimplexSolver::dualOptimize()
 	  }
 	if (ratio == MAXDOUBLE)
 	  {
+	  cerr << "ratio == nil (MAXDOUBLE)" << endl;
 	  EXCEPTION_ABORT;
 	  throw ExCLInternalError();
 	  }
@@ -665,6 +668,8 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
 #ifndef NO_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << cn << ")" << endl;
+  cerr << "cn.isInequality() == " << cn.isInequality() << endl;
+  cerr << "cn.isRequired() == " << cn.isRequired() << endl;
 #endif
   const ClLinearExpression &cnExpr = cn.expression();
   ClLinearExpression &expr = *(new ClLinearExpression(cnExpr.constant()));
@@ -726,6 +731,9 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
       ClDummyVariable &dummyVar = *(new ClDummyVariable(my_dummyCounter,"d"));
       expr.setVariable(dummyVar,1.0);
       my_markerVars[&cn] = &dummyVar;
+#ifndef NO_TRACE
+      cerr << "Adding dummyVar == d" << my_dummyCounter << endl;
+#endif
       }
     else
       {
@@ -1055,32 +1063,32 @@ ostream &operator<<(ostream &xo, const vector<const ClAbstractVariable *> &varli
 }
 
 ostream &
-printTo(ostream &xo, const ClSimplexSolver &tableau)
+ClSimplexSolver::printOn(ostream &xo) const
 {
   // FIXGJB duplicated from tableau printer
   xo << "Tableau:\n" 
-     << tableau.my_rows << endl;
+     << my_rows << endl;
   xo << "Columns:\n" 
-     << tableau.my_columns << endl;
-  xo << "Infeasible rows:" << tableau.my_infeasibleRows << endl;
+     << my_columns << endl;
+  xo << "Infeasible rows:" << my_infeasibleRows << endl;
 
   xo << "my_editPlusErrorVars: "
-     << tableau.my_editPlusErrorVars << endl;
+     << my_editPlusErrorVars << endl;
   xo << "my_editMinusErrorVars: "
-     << tableau.my_editMinusErrorVars << endl;
+     << my_editMinusErrorVars << endl;
 
   xo << "my_stayPlusErrorVars: "
-     << tableau.my_stayPlusErrorVars << endl;
+     << my_stayPlusErrorVars << endl;
   xo << "my_stayMinusErrorVars: "
-     << tableau.my_stayMinusErrorVars << endl;
+     << my_stayMinusErrorVars << endl;
 
   xo << "my_prevEditConstants: " 
-     << tableau.my_prevEditConstants << endl;
+     << my_prevEditConstants << endl;
 
   return xo;
 }
 
-ostream &operator<<(ostream &xo, const ClSimplexSolver &tableau)
+ostream &operator<<(ostream &xo, const ClSimplexSolver &clss)
 {
-  return printTo(xo,tableau);
+  return clss.printOn(xo);
 }

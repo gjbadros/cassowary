@@ -85,7 +85,7 @@ class ClSimplexSolver : public ClTableau {
   void resolve(const vector<double> &newEditConstants);
 
   friend ostream &operator<<(ostream &xo, const ClSimplexSolver &tableau);
-  friend ostream &printTo(ostream &xo, const ClSimplexSolver &tableau);
+  ostream &printOn(ostream &xo) const;
 
  protected:
   // Add the constraint expr=0 to the inequality tableau using an

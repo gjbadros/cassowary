@@ -46,6 +46,6 @@ main( char **argv, int argc )
   catch (const ExCLError &error) 
     {
     cerr << "Exception " << error.description() << endl;
-    exit(0);
+    exit(-1);
     }
 }
