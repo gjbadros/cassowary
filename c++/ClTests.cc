@@ -288,6 +288,7 @@ addDel(int nCns = 900, int nVars = 900, int nResolves = 10000)
 
   timer.Start();
   ClSimplexSolver solver;
+  solver.setAutosolve(false);
 
   ClVariable **rgpclv = new PClVariable[nVars];
   for (int i = 0; i < nVars; i++)
@@ -328,9 +329,6 @@ addDel(int nCns = 900, int nVars = 900, int nResolves = 10000)
   for (j = 0; j < nCns; j++)
     {
     // add the constraint -- if it's incompatible, just ignore it
-    // FIXGJB: exceptions are extra expensive in C++, so this might not
-    // be particularly fair
-#ifndef NO_CATCH_EXCEPTIONS_HERE
     try
       {
       solver.addConstraint(*(rgpcns[j]));
@@ -340,12 +338,8 @@ addDel(int nCns = 900, int nVars = 900, int nResolves = 10000)
       cExceptions++;
       rgpcns[j] = NULL;
       }
-#else
-    solver.addConstraintNoException(*(rgpcns[j]));
-#endif
-    
     }
-  // FIXGJB end = Timer.now();
+  solver.solve();
   cout << "done adding constraints [" << cExceptions << " exceptions]" << endl;
   cout << "time = " << timer.ElapsedTime() << "\n" << endl;
   cout << "time per cn = " << timer.ElapsedTime()/nCns << "\n" << endl;
@@ -389,6 +383,7 @@ addDel(int nCns = 900, int nVars = 900, int nResolves = 10000)
     {
     if (rgpcns[j])
       {
+      cerr << "removing " << j << endl;
       solver.removeConstraint(*(rgpcns[j]));
       }
     }
