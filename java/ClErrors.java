@@ -15,45 +15,6 @@
 // ExCLError
 //
 
-class ExCLError extends Exception
-{
-
-  public String description()
-    { return "(ExCLError) An error has occured in CL"; }
-  
-}
-
-class ExCLInternalError extends ExCLError
-{
-  public String description()
-    { return "(ExCLInternalError) An internal error has occurred"; }
-}
-
-class ExCLTooDifficult extends ExCLError
-{
-  public String description()
-    { return "(ExCLTooDifficult) The constraints are too difficult to solve"; }
-}
-
-class ExCLRequiredFailure extends ExCLError
-{
-  public String description()
-    { return "(ExCLRequiredFailure) A required constraint cannot be satisfied"; }
-}
-
-
-class ExCLNotEnoughtStays extends ExCLError
-{
-  public String description()
-    { return "(ExCLNotEnoughtStays) There are not enough stays to give specific values to every variable"; }
-}
-
-class ExCLNonlinearExpression extends ExCLError
-{
-  public String description()
-    { return "(ExCLNonlinearExpression) The resulting expression would be nonlinear"; }
-}
-
 class ExCLConstraintNotFound extends ExCLError
 {
   public String description()

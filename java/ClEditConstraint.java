@@ -34,6 +34,6 @@ class ClEditConstraint extends ClEditOrStayConstraint
   { return true; }
 
   public String toString()
-  { return "edit" + variable().toString(); }
+  { return "edit" + super.toString(); }
 
 }

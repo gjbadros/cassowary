@@ -35,7 +35,7 @@ class ClLinearConstraint extends ClConstraint
 
   public ClLinearConstraint(ClLinearExpression cle)
   { 
-    super(ClStrength.clsRequired,1.0);
+    super(ClStrength.required,1.0);
     my_expression = cle;
   }
 

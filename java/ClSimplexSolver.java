@@ -102,8 +102,8 @@ class ClSimplexSolver extends ClTableau
 				      double weight)
        throws ExCLRequiredFailure, ExCLInternalError
   { 
-    addStay(vx,ClStrength.clsWeak,weight);
-    addStay(vy,ClStrength.clsWeak,weight);
+    addStay(vx,ClStrength.weak,weight);
+    addStay(vy,ClStrength.weak,weight);
     return  this;
   }
 
@@ -115,8 +115,8 @@ class ClSimplexSolver extends ClTableau
   public ClSimplexSolver addPointStay(ClPoint clp, double weight)
        throws ExCLRequiredFailure, ExCLInternalError
   { 
-    addStay(clp.X(),ClStrength.clsWeak,weight);
-    addStay(clp.Y(),ClStrength.clsWeak,weight);
+    addStay(clp.X(),ClStrength.weak,weight);
+    addStay(clp.Y(),ClStrength.weak,weight);
     return this;
   }
 
@@ -146,7 +146,7 @@ class ClSimplexSolver extends ClTableau
   public ClSimplexSolver addStay(ClVariable v)
        throws ExCLRequiredFailure, ExCLInternalError
   { 
-    addStay(v,ClStrength.clsWeak,1.0); return this;
+    addStay(v,ClStrength.weak,1.0); return this;
   }
 
 
@@ -154,12 +154,15 @@ class ClSimplexSolver extends ClTableau
        throws ExCLConstraintNotFound, ExCLInternalError
   {
     fnenterprint("removeConstraint: " + cn);
+    traceprint(this.toString());
 
     resetStayConstants();
     
     ClLinearExpression zRow = rowExpression(my_objective);
     
     Set eVars = (Set) my_errorVars.get(cn);
+    traceprint("eVars == " + eVars);
+
     if (eVars != null) {
       for (Enumeration e = eVars.elements(); e.hasMoreElements() ; ) {
 	ClAbstractVariable clv = (ClAbstractVariable) e.nextElement();
@@ -259,7 +262,7 @@ class ClSimplexSolver extends ClTableau
 	}
       }
     } else if (cn.isEditConstraint()) {
-      // assert(eVars != null);
+      assert(eVars != null);
       for (Enumeration e = eVars.elements(); e.hasMoreElements(); ) {
 	final ClAbstractVariable var = (ClAbstractVariable) e.nextElement();
 	int i = 0;
@@ -305,12 +308,12 @@ class ClSimplexSolver extends ClTableau
     setExternalVariables();
   }
 
-  public void resolve(Number x, Number y)
+  public void resolve(double x, double y)
        throws ExCLInternalError
   {
     Vector vals = new Vector(2);
-    vals.addElement(x);
-    vals.addElement(y);
+    vals.addElement(new Double(x));
+    vals.addElement(new Double(y));
     resolve(vals);
   }
 
@@ -566,7 +569,7 @@ class ClSimplexSolver extends ClTableau
 	ClLinearExpression zRow = rowExpression(my_objective);
 	ClSymbolicWeight sw = cn.strength().symbolicWeight().times(cn.weight());
 	zRow.setVariable( eminus,sw.asDouble());
-	((Set) my_errorVars.get(cn)).insert(eminus);
+	insertErrorVar(cn,eminus);
 	noteAddedVariable(eminus,my_objective);
       }
     }
@@ -604,7 +607,7 @@ class ClSimplexSolver extends ClTableau
 	  my_stayPlusErrorVars.addElement(eplus);
 	  my_stayMinusErrorVars.addElement(eminus);
 	}
-	if (cn.isEditConstraint()) {
+	else if (cn.isEditConstraint()) {
 	  my_editPlusErrorVars.addElement(eplus);
 	  my_editMinusErrorVars.addElement(eminus);
 	  my_prevEditConstants.addElement(new Double(cnExpr.constant()));
@@ -744,9 +747,11 @@ class ClSimplexSolver extends ClTableau
 
   private void insertErrorVar(ClConstraint cn, ClAbstractVariable var)
   { 
+    fnenterprint("insertErrorVar:" + cn + ", " + var);
+
     Set cnset = (Set) my_errorVars.get(var);
     if (cnset == null)
-      my_errorVars.put(var,cnset = new Set());
+      my_errorVars.put(cn,cnset = new Set());
     cnset.insert(var);
   }
 

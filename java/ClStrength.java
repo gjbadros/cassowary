@@ -26,7 +26,7 @@ class ClStrength
     }
 
   public boolean isRequired()
-    { return (my_symbolicWeight == clsRequired.symbolicWeight()); }
+    { return (this == required); }
 
   public String toString()
     { return name () + (!isRequired()? (":" + symbolicWeight()) : ""); }
@@ -43,13 +43,13 @@ class ClStrength
   public void set_symbolicWeight(ClSymbolicWeight symbolicWeight)
     { my_symbolicWeight = symbolicWeight; }
 
-  public static final ClStrength clsRequired = new ClStrength("<Required>", 1000, 1000, 1000);
+  public static final ClStrength required = new ClStrength("<Required>", 1000, 1000, 1000);
 
-  public static final ClStrength clsStrong = new ClStrength("strong", 1.0, 0.0, 0.0);
+  public static final ClStrength strong = new ClStrength("strong", 1.0, 0.0, 0.0);
 
-  public static final ClStrength clsMedium = new ClStrength("medium", 0.0, 1.0, 0.0);
+  public static final ClStrength medium = new ClStrength("medium", 0.0, 1.0, 0.0);
 
-  public static final ClStrength clsWeak = new ClStrength("weak", 0.0, 0.0, 1.0);
+  public static final ClStrength weak = new ClStrength("weak", 0.0, 0.0, 1.0);
 
   private String my_name;
 

@@ -28,7 +28,7 @@ abstract class ClConstraint
     { my_strength = strength; my_weight = 1.0; }
 
   public ClConstraint()
-    { my_strength = ClStrength.clsRequired; my_weight = 1.0; }
+    { my_strength = ClStrength.required; my_weight = 1.0; }
   
   public abstract ClLinearExpression expression();
 

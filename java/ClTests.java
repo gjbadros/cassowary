@@ -14,7 +14,9 @@
 // 
 // ClTests.java
 
-class ClTests {
+import java.lang.*;
+
+class ClTests extends CL {
   public static boolean justStay1()
        throws ExCLInternalError, ExCLRequiredFailure
   {
@@ -39,7 +41,7 @@ class ClTests {
     ClVariable x = new ClVariable("x");
     ClSimplexSolver solver = new ClSimplexSolver();
       
-    solver.addConstraint( new ClLinearEquation( x, 100, ClStrength.clsWeak ) );
+    solver.addConstraint( new ClLinearEquation( x, 100, ClStrength.weak ) );
       
     ClLinearInequality c10 = new ClLinearInequality(x,CL.LEQ,10.0);
     ClLinearInequality c20 = new ClLinearInequality(x,CL.LEQ,20.0);
@@ -89,8 +91,8 @@ class ClTests {
     ClSimplexSolver solver = new ClSimplexSolver();
 
     solver
-      .addConstraint( new ClLinearEquation(x, 100.0, ClStrength.clsWeak))
-      .addConstraint( new ClLinearEquation(y, 120.0, ClStrength.clsStrong));
+      .addConstraint( new ClLinearEquation(x, 100.0, ClStrength.weak))
+      .addConstraint( new ClLinearEquation(y, 120.0, ClStrength.strong));
       
     ClLinearInequality c10 = new ClLinearInequality(x,CL.LEQ,10.0);
     ClLinearInequality c20 = new ClLinearInequality(x,CL.LEQ,20.0);
@@ -132,8 +134,8 @@ class ClTests {
     solver
       .addConstraint( new ClLinearInequality(x,CL.LEQ,y) )
       .addConstraint( new ClLinearEquation(y, CL.Plus(x,3.0)) )
-      .addConstraint( new ClLinearEquation(x,10.0,ClStrength.clsWeak) )
-      .addConstraint( new ClLinearEquation(y,10.0,ClStrength.clsWeak) )
+      .addConstraint( new ClLinearEquation(x,10.0,ClStrength.weak) )
+      .addConstraint( new ClLinearEquation(y,10.0,ClStrength.weak) )
       ;
    
     fOkResult = fOkResult && 
@@ -190,125 +192,116 @@ class ClTests {
       }
   }
 
-//   boolean addDel(int nCns, int nVars, int nResolves)
-//   {
-//     //Timer timer;
-//   // FIXGJB: from where did .12 come?
-//   final double ineqProb = 0.12;
-//   final int maxVars = 3;
+  public static boolean addDel(int nCns, int nVars, int nResolves)
+       throws ExCLInternalError, ExCLRequiredFailure, 
+	 ExCLNonlinearExpression, ExCLConstraintNotFound
+  {
+    Timer timer = new Timer();
+    // FIXGJB: from where did .12 come?
+    final double ineqProb = 0.12;
+    final int maxVars = 3;
 
-//   cout << "starting timing test. nCns = " << nCns
-//        << ", nVars = " << nVars << ", nResolves = " << nResolves << endl;
+    System.out.println("starting timing test. nCns = " + nCns +
+        ", nVars = " + nVars + ", nResolves = " + nResolves);
+    
+    timer.Start();
+    ClSimplexSolver solver = new ClSimplexSolver();
 
-//   timer.Start();
-//   ClSimplexSolver solver;
+    ClVariable[] rgpclv = new ClVariable[nVars];
+    for (int i = 0; i < nVars; i++) {
+      rgpclv[i] = new ClVariable(i,"x");
+      solver.addStay(rgpclv[i]);
+    }
 
-//   ClVariable **rgpclv = new PClVariable[nVars];
-//   for (int i = 0; i < nVars; i++)
-//     {
-//     rgpclv[i] = new ClVariable(i,"x");
-//     solver.addStay(*rgpclv[i]);
-//     }
+    ClConstraint[] rgpcns = new ClConstraint[nCns];
+    int nvs = 0;
+    int k;
+    int j;
+    double coeff;
+    for (j = 0; j < nCns; j++) {
+      // number of variables in this constraint
+      nvs = (int) (Math.random()*maxVars) + 1;
+      ClLinearExpression expr = new ClLinearExpression(Math.random() * 20.0 - 10.0);
+      for (k = 0; k < nvs; k++) {
+        coeff = Math.random()*10 - 5;
+        expr.addExpression(CL.Times(rgpclv[(int) (Math.random()*nVars)], coeff));
+      }
+      if (Math.random() < ineqProb) {
+        rgpcns[j] = new ClLinearInequality(expr);
+      } else {  
+        rgpcns[j] = new ClLinearEquation(expr);
+      }
+      traceprint("Constraint " + j + " is " + rgpcns[j]);
+    }
 
-//   ClConstraint **rgpcns = new PClConstraint[nCns];
-//   int nvs = 0;
-//   int k;
-//   int j;
-//   double coeff;
-//   for (j = 0; j < nCns; j++)
-//     {
-//     // number of variables in this constraint
-//     nvs = int(Math.random()*maxVars) + 1;
-//     ClLinearExpression expr = Math.random()*20.0 - 10.0;
-//     for (k = 0; k < nvs; k++)
-//        {
-//        coeff = UniformRandom()*10 - 5;
-//        expr.addExpression(*(rgpclv[int(UniformRandom()*nVars)]) * coeff);
-//        }
-//     if (UniformRandom() < ineqProb)
-//        {
-//        rgpcns[j] = new ClLinearInequality(expr);
-//        }
-//     else
-//        {  
-//        rgpcns[j] = new ClLinearEquation(expr);
-//        }
-//     }
+    System.out.println("done building data structures");
+    System.out.println("time = " + timer.ElapsedTime());
+    timer.Start();
+    int cExceptions = 0;
+    for (j = 0; j < nCns; j++) {
+      // add the constraint -- if it's incompatible, just ignore it
+      // FIXGJB: exceptions are extra expensive in C++, so this might not
+      // be particularly fair
+      try
+	{
+	  solver.addConstraint(rgpcns[j]);
+	}
+      catch (ExCLRequiredFailure err)
+	{
+	  cExceptions++;
+	  traceprint("got exception adding " + rgpcns[j]);
+	  rgpcns[j] = null;
+	}
+    }
+   // FIXGJB end = Timer.now();
+   System.out.println("done adding constraints [" + cExceptions + " exceptions]");
+   System.out.println("time = " + timer.ElapsedTime() + "\n");
+   timer.Start();
 
-//   cout << "done building data structures" << endl;
-//   cout << "time = " << timer.ElapsedTime() << "\n" << endl;
-//   timer.Start();
-//   int cExceptions = 0;
-//   for (j = 0; j < nCns; j++)
-//     {
-//     // add the constraint -- if it's incompatible, just ignore it
-//     // FIXGJB: exceptions are extra expensive in C++, so this might not
-//     // be particularly fair
-//     try
-//       {
-//       solver.addConstraint(*(rgpcns[j]));
-//       }
-//     catch (ExCLRequiredFailure &)
-//       {
-//       cExceptions++;
-//       rgpcns[j] = NULL;
-//       }
-//     }
-//   // FIXGJB end = Timer.now();
-//   cout << "done adding constraints [" << cExceptions << " exceptions]" << endl;
-//   cout << "time = " << timer.ElapsedTime() << "\n" << endl;
-//   timer.Start();
+   int e1Index = (int) Math.random()*nVars;
+   int e2Index = (int) Math.random()*nVars;
+   
+   ClEditConstraint edit1 = new ClEditConstraint(rgpclv[e1Index],ClStrength.strong);
+   ClEditConstraint edit2 = new ClEditConstraint(rgpclv[e2Index],ClStrength.strong);
 
-//   int e1Index = int(UniformRandom()*nVars);
-//   int e2Index = int(UniformRandom()*nVars);
+   solver
+     .addConstraint(edit1)
+     .addConstraint(edit2);
 
-//   ClEditConstraint edit1(*(rgpclv[e1Index]),clsStrong());
-//   ClEditConstraint edit2(*(rgpclv[e2Index]),clsStrong());
+   System.out.println("done creating edit constraints -- about to start resolves");
+   System.out.println("time = " + timer.ElapsedTime() + "\n");
+   timer.Start();
 
-//   solver
-//     .addConstraint(edit1)
-//     .addConstraint(edit2);
+   // FIXGJB start = Timer.now();
+   for (int m = 0; m < nResolves; m++)
+     {
+     solver.resolve(rgpclv[e1Index].value() * 1.001,
+		    rgpclv[e2Index].value() * 1.001);
+     }
 
-//   cout << "done creating edit constraints -- about to start resolves" << endl;
-//   cout << "time = " << timer.ElapsedTime() << "\n" << endl;
-//   timer.Start();
+   System.out.println("done resolves -- now removing constraints");
+   System.out.println("time = " + timer.ElapsedTime() + "\n");
 
-//   // FIXGJB start = Timer.now();
-//   for (int m = 0; m < nResolves; m++)
-//     {
-//     vector<Number> vals;
-//     vals.push_back(rgpclv[e1Index]->value() * 1.001);
-//     vals.push_back(rgpclv[e2Index]->value() * 1.001);
-//     solver.resolve(vals);
-//     }
+   solver.removeConstraint(edit1);
+   solver.removeConstraint(edit2);
 
-//   // cout << "run time: " <<
+   timer.Start();
 
-//   cout << "done resolves -- now removing constraints" << endl;
-//   cout << "time = " << timer.ElapsedTime() << "\n" <<endl;
-//   solver.removeConstraint(edit1);
-//   solver.removeConstraint(edit2);
-  
-//   timer.Start();
+   for (j = 0; j < nCns; j++)
+     {
+     if (rgpcns[j] != null)
+       {
+       solver.removeConstraint(rgpcns[j]);
+       }
+     }
 
-//   for (j = 0; j < nCns; j++)
-//     {
-//     if (rgpcns[j])
-//       {
-//       solver.removeConstraint(*(rgpcns[j]));
-//       }
-//     }
+   System.out.println("done removing constraints and addDel timing test");
+   System.out.println("time = " + timer.ElapsedTime() + "\n");
 
-//   // FIXGJB end = Timer.now();
-//   // cout << "Total remove time: " 
-//   //      << "remove time per cn"
-//   cout << "done removing constraints and addDel timing test" << endl;
-//   cout << "time = " << timer.ElapsedTime() << "\n" <<endl;
-
-//   timer.Start();
-
-//   return true;
-// }
+   timer.Start();
+   
+   return true;
+ }
 
 
   public static final void main( String[] args )
@@ -344,9 +337,13 @@ class ClTests {
       fResult = inconsistent2(); fAllOkResult &= fResult;
       if (!fResult) System.out.println("Failed!");
       
-      //     System.out.println("addDel:");
-      //     fResult = addDel(); fAllOkResult &= fResult;
-      //     if (!fResult) System.out.println("Failed!");
+      System.out.println("addDel:");
+      fResult = addDel(900,900,10000);
+      // fResult = addDel(300,300,1000);
+      // fResult = addDel(30,30,100);
+      //fResult = addDel(10,10,30);
+      fAllOkResult &= fResult;
+      if (!fResult) System.out.println("Failed!");
       
       } 
     //    catch (Exception err)

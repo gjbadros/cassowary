@@ -21,7 +21,7 @@ class testClStrength {
     ClSymbolicWeight clsw3 = new ClSymbolicWeight(2.0,0.5,0.5);
     ClSymbolicWeight clsw4 = new ClSymbolicWeight(2.0,0.4,0.5);
 
-    System.out.println(ClStrength.clsRequired);
+    System.out.println(ClStrength.required);
     System.out.println(clsw2.asDouble());
 
     ClStrength cls = new ClStrength("cls",clsw);
