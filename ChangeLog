@@ -1,3 +1,26 @@
+Mon Jul 26 09:22:11 1999  Greg Badros  <gjb@cs.washington.edu>
+
+	* acconfig.h, configure.in: Use CL_ prefix for BUILD_FD_SOLVER and
+ 	HAVE_GTL.
+
+Mon Jul 26 09:17:56 1999  Greg Badros  <gjb@cs.washington.edu>
+
+	* c++/config.h.in,c++/ClC.h,c++/ClC.cc,c++/Cl.h: Use CL_ prefix on
+ 	BUILD_FD_SOLVER and HAVE_GTL so that the config-inline.h gets the
+ 	right definitions.
+
+	* c++/Makefile.am: Expanded out the sources_for_fd_solver since
+	the _OBJECTS make variable doesn't get expanded properly if this
+	step is deferred until later.  This breaks builds w/o FD solver,
+	but I have to get Amaya working ASAP.
+
+Mon Jul 19 17:08:03 1999  Greg Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSymbolicWeight.h: Increase multiplier to 10000 for
+	AsDouble-- works around the bug in resizing Scwm windows because
+	the medium stay constraints on width and height are too strong for 
+	the strong edit constraint.
+
 Sun Jul 11 19:37:39 1999  Greg Badros  <gjb@cs.washington.edu>
 
 	* c++/ClLinearExpression.h: Remove "class" from a typedef
