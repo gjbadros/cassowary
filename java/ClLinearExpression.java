@@ -57,7 +57,7 @@ class ClLinearExpression extends CL
 
   public ClLinearExpression(Double constant, Hashtable terms)
     {
-      my_constant = new Double(constant.doubleValue()); //ASKCSK
+      my_constant = new Double(constant.doubleValue());
       my_terms = (Hashtable) terms.clone();
     }
 
@@ -192,17 +192,15 @@ class ClLinearExpression extends CL
       fnenterprint("addVariable:" + v + ", " + c);
 
       Double coeff = (Double) my_terms.get(v);
-      if (coeff != null) 
-	{
+      if (coeff != null) {
 	double new_coefficient = coeff.doubleValue() + c;
-	if (CL.approx(new_coefficient,0))   {
+	if (CL.approx(new_coefficient,0)) {
 	  my_terms.remove(v);
 	}
 	else {
 	  my_terms.put(v,new Double(new_coefficient));  // ASKCSK
 	}
-	}
-      else {
+      } else {
 	if (!CL.approx(c,0.0)) {
 	  my_terms.put(v,new Double(c));
 	}
