@@ -53,6 +53,12 @@ class ClStrength {
   virtual const ClSymbolicWeight &symbolicWeight() const
     { return _symbolicWeight; }
 
+  void setPv(void *pv)
+    { _pv = pv; }
+
+  void *Pv() const
+    { return _pv; }
+
  private:
   string name() const
     { return _name; }
@@ -69,7 +75,8 @@ class ClStrength {
   // instance variables
   string _name;
   ClSymbolicWeight _symbolicWeight;
-  
+
+  void *_pv;
 
 };
 

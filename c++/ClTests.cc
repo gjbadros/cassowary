@@ -350,6 +350,48 @@ inconsistent2()
 }
 
 bool
+inconsistent3()
+{
+ try 
+   {
+   ClVariable w("w");
+   ClVariable x("x");
+   ClVariable y("y");
+   ClVariable z("z");
+   ClSimplexSolver solver;
+
+   solver
+     .addConstraint( ClLinearInequality(w,cnGEQ,10.0) )
+     .addConstraint( ClLinearInequality(x,cnGEQ,w) )
+     .addConstraint( ClLinearInequality(y,cnGEQ,x) )
+     .addConstraint( ClLinearInequality(z,cnGEQ,y) )
+     .addConstraint( ClLinearInequality(z,cnGEQ,8.0) )
+     .addConstraint( ClLinearInequality(z,cnLEQ,4.0) );
+
+   // no exception, we failed!
+   return(false);
+   } 
+ catch (ExCLRequiredFailure &)
+   {
+   // we want this exception to get thrown
+   cout << "Success -- got the exception" << endl;
+   //    cout << solver << endl;
+   return(true);
+   }
+ catch (ExCLError &error) 
+   {
+   cerr << "Exception! " << error.description() << endl;
+   return(false);
+   }
+ catch (...) 
+   {
+   cerr << "Unknown exception" << endl;
+   return(false);
+   }
+}
+
+
+bool
 multiedit()
 {
  try
@@ -694,6 +736,7 @@ main( int argc, char **argv )
     RUN_TEST(casso1);
     RUN_TEST(inconsistent1);
     RUN_TEST(inconsistent2);
+    RUN_TEST(inconsistent3);
     RUN_TEST(multiedit);
     // RUN_TEST(blackboxsat);
 

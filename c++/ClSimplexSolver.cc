@@ -89,6 +89,7 @@ ClSimplexSolver::addConstraint(const ClConstraint &cn)
     { // could not add directly
     if (!addWithArtificialVariable(*pexpr))
       {
+      cerr << *this << endl;
       removeConstraint(cn);
       throw ExCLRequiredFailure();
       }
@@ -234,7 +235,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
       }
     }
 
-  map<const ClConstraint *, const ClAbstractVariable *>::iterator 
+  ClConstraintToVarMap::iterator 
     it_marker = _markerVars.find(&cn);
   if (it_marker == _markerVars.end())
     { // could not find the constraint
@@ -378,7 +379,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
 	{
 	if (eVars.find(*itStayPlusErrorVars) != eVars.end())
 	  {
-	  _stayMinusErrorVars.erase(itStayPlusErrorVars);
+	  _stayPlusErrorVars.erase(itStayPlusErrorVars);
 	  }
 	if (eVars.find(*itStayMinusErrorVars) != eVars.end())
 	  {
@@ -583,7 +584,17 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
 
   // the artificial objective is av, which we know is equal to expr
   // (which contains only parametric variables)
+  
+  // objective is treated as a row in the tableau,
+  // so do the substitution for its value (we are minimizing
+  // the artificial variable)
+  // this row will be removed from the tableau after optimizing
   addRow(*paz,*pazRow);
+  
+  // now add the normal row to the tableau -- when artifical
+  // variable is minimized to 0 (if possible)
+  // this row remains in the tableau to maintain the constraint
+  // we are trying to add
   addRow(*pav,expr);
 
 #ifndef CL_NO_TRACE
@@ -592,6 +603,9 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
 #endif
 
   // try to optimize az to 0
+  // note we are *not* optimizing the real objective, but optimizing
+  // the artificial objective to see if the error in the constraint
+  // we are adding can be set to 0
   optimize(*paz);
 
   // Careful, we want to get the expression that is in
@@ -605,7 +619,10 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
   // If not, the original constraint was not satisfiable
   if (!clApprox(pazTableauRow->constant(),0.0))
     {
+    // remove the artificial objective row that we just
+    // added temporarily
     delete removeRow(*paz);
+    // and delete the artificial objective variable that we also added above
     delete paz;
     return false;
     }
@@ -614,15 +631,22 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
   const ClLinearExpression *pe = rowExpression(*pav);
   if (pe != NULL)
     {
+    // FIXGJB: do we ever even get here?
     // Find another variable in this row and pivot, so that av becomes parametric
     // If there isn't another variable in the row then 
     // the tableau contains the equation av = 0  -- just delete av's row
     if (pe->isConstant())
       {
+      // FIXGJB: do we ever get here?
+      assert(clApprox(pe->constant(),0.0));
       delete removeRow(*pav);
+      // remove the temporary objective function
+      // FIXGJB may need this too: delete removeRow(*paz);
+      // FIXGJB: maybe should be deleting pav here
       return true;
       }
     const ClAbstractVariable *pentryVar = pe->anyPivotableVariable();
+    assert(pentryVar);  // this assertion may be bogus --12/03/98 gjb
     if (!pentryVar)
       return false; /* required failure */
     pivot(*pentryVar, *pav);
@@ -638,7 +662,7 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
 }
 
 // We are trying to add the constraint expr=0 to the appropriate
-// tableau.  Try to add expr directly to the tableax without
+// tableau.  Try to add expr directly to the tableaus without
 // creating an artificial variable.  Return true if successful and
 // false if not.
 bool 
@@ -787,6 +811,7 @@ ClSimplexSolver::chooseSubject(ClLinearExpression &expr)
   // the subject negative."
   if (!clApprox(expr.constant(),0.0))
     {
+    cerr << "in choose subject:\n" <<  *this << endl;
     throw ExCLRequiredFailure();
     }
   if (coeff > 0.0)
