@@ -44,7 +44,8 @@ class QuadDemoWindow : public QWidget
   ClSimplexSolver solver;
   ClEditConstraint *peditX;
   ClEditConstraint *peditY;
-  int idbDragging;
+  int idbDragging; // the index of the draggable box used
+  int imbUsed; // the mouse button pressed to start a drag
 };
 
 inline QPoint QPFromClP(const ClPoint &clp)
