@@ -322,26 +322,32 @@ class ClTests extends CL {
       System.out.println("justStay1:");
       fResult = justStay1(); fAllOkResult &= fResult;
       if (!fResult) System.out.println("Failed!");
+      if (CL.fGC) System.out.println("Num vars = " + ClAbstractVariable.numCreated() );
 	
       System.out.println("addDelete1:");
       fResult = addDelete1(); fAllOkResult &= fResult;
       if (!fResult) System.out.println("Failed!");
+      if (CL.fGC) System.out.println("Num vars = " + ClAbstractVariable.numCreated() );
     
       System.out.println("addDelete2:");
       fResult = addDelete2(); fAllOkResult &= fResult;
       if (!fResult) System.out.println("Failed!");
+      if (CL.fGC) System.out.println("Num vars = " + ClAbstractVariable.numCreated() );
     
       System.out.println("casso1:");
       fResult = casso1(); fAllOkResult &= fResult;
       if (!fResult) System.out.println("Failed!");
+      if (CL.fGC) System.out.println("Num vars = " + ClAbstractVariable.numCreated() );
     
       System.out.println("inconsistent1:");
       fResult = inconsistent1(); fAllOkResult &= fResult;
       if (!fResult) System.out.println("Failed!");
+      if (CL.fGC) System.out.println("Num vars = " + ClAbstractVariable.numCreated() );
     
       System.out.println("inconsistent2:");
       fResult = inconsistent2(); fAllOkResult &= fResult;
       if (!fResult) System.out.println("Failed!");
+      if (CL.fGC) System.out.println("Num vars = " + ClAbstractVariable.numCreated() );
       
       System.out.println("addDel:");
       // fResult = addDel(900,900,10000);
@@ -351,6 +357,7 @@ class ClTests extends CL {
       // fResult = addDel(5,5,10);
       fAllOkResult &= fResult;
       if (!fResult) System.out.println("Failed!");
+      if (CL.fGC) System.out.println("Num vars = " + ClAbstractVariable.numCreated() );
       
       } 
     //    catch (Exception err)
