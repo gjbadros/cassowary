@@ -3,14 +3,16 @@
 #######    linux-gcc-shared on Fri Jan 23 16:00:50 PST 1998
 
 EGCSDIR=/uns/egcs
+QTDIR=/scratch/gjb/qt-1.32
 
-INCDIR = /scratch/gjb/qt-1.32/include
-CFLAGS = -pg -O2 -fno-strength-reduce -Wall -W -I/usr/X11R6/include -I.. -DCL_NO_TRACE
+INCDIR = $(QTDIR)/include
+# CFLAGS = -pg -O2 -fno-strength-reduce -Wall -W -I/usr/X11R6/include -I.. -DCL_NO_TRACE
+CFLAGS = -g -fno-strength-reduce -Wall -W -I/usr/X11R6/include -I.. -DCL_NO_TRACE
 LIBCFLAGS = -fPIC
 YACCCFLAGS = -Wno-unused -Wno-parentheses
-LFLAGS = -pg -L$(EGCSDIR)/lib -L/scratch/gjb/qt-1.32/lib -lqt -L.. -lcassowary
+LFLAGS = -pg -L$(EGCSDIR)/lib -L$(QTDIR)/lib -lqt -L.. -lcassowary
 CC = g++
-MOC = /scratch/gjb/qt-1.32/bin/moc
+MOC = $(QTDIR)/bin/moc
 SHELL =	/bin/sh
 
 ####### End of automatically generated section
@@ -27,20 +29,22 @@ SHELL =	/bin/sh
 
 ####### Files
 
-HEADERS =	hello.h
-SOURCES =	hello.cpp \
-		main.cpp
-OBJECTS =	hello.o \
-		main.o
-SRCMOC	=	moc_hello.cpp
-OBJMOC	=	moc_hello.o
-TARGET	=	hello
+HEADERS =	QuadDemoWindow.h
+SOURCES = 	QuadDemoWindow.cc QuadDemo.cc
+OBJECTS =	$(SOURCES:.cc=.o)
+
+SRCMOC	=	moc_QuadDemoWindow.cc
+OBJMOC	=	moc_QuadDemoWindow.o
+TARGET	=	QuadDemo
 
 ####### Implicit rules
 
-.SUFFIXES: .cpp .c
+.SUFFIXES: .cpp .c .cc
 
 .cpp.o:
+	$(CC) -c $(CFLAGS) -I$(INCDIR) -o $@ $<
+
+.cc.o:
 	$(CC) -c $(CFLAGS) -I$(INCDIR) -o $@ $<
 
 .c.o:
@@ -60,15 +64,9 @@ clean:
 
 ####### Compile
 
-hello.o: hello.cpp \
-		hello.h
+moc_QuadDemoWindow.cc: QuadDemoWindow.h
+	$(MOC) $< -o $@
 
-main.o: main.cpp \
-		hello.h
+QuadDemoWindow.o: QuadDemoWindow.cc QuadDemoWindow.h DraggableBox.h
 
-moc_hello.o: moc_hello.cpp \
-		hello.h
-
-moc_hello.cpp: hello.h
-	$(MOC) hello.h -o moc_hello.cpp
-
+QuadDemo.o: QuadDemo.cc QuadDemoWindow.h DraggableBox.h
