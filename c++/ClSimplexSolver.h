@@ -328,6 +328,10 @@ class ClSimplexSolver : public ClTableau {
 
   bool FIsConstraintSatisfied(const ClConstraint *const pcn) const;
 
+  // DEPRECATED
+  bool FIsConstraintSatisfied(const ClConstraint &pcn) const
+    { return FIsConstraintSatisfied(&pcn); }
+
   void setPv(void *pv)
     { _pv = pv; }
 
