@@ -85,9 +85,6 @@ libcassowary_la_SOURCES = \
 	ClSymbolicWeight.cc \
 	ClTableau.cc \
 	ClVariable.cc \
-	ClFDVariable.cc \
-	ClFDConnectorVariable.cc \
-	ClFDBinaryOneWayConstraint.cc \
 	ClFloatVariable.cc \
 	ClSlackVariable.cc \
 	ClDummyVariable.cc \
