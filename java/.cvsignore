@@ -24,6 +24,7 @@ ExCLConstraintNotFound.class
 ExCLError.class
 ExCLInternalError.class
 ExCLNonlinearExpression.class
+ExCLNotEnoughStays.class
 ExCLNotEnoughtStays.class
 ExCLRequiredFailure.class
 ExCLTooDifficult.class
