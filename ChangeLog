@@ -1,3 +1,21 @@
+Wed Apr 28 19:10:32 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile.am (INCLUDES): Include @GUILE_INCLUDES@ -- actually 
+	done to get cassowary libraries (GJB:FIXME::)
+
+Wed Apr 28 18:49:51 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile.am: Added ClCTest to the _PROGRAMS, and use
+	-lstdc++ on them
+
+	* c++/ClSolver.h: Expose Resolve() in base-class interface, along
+	with <<, and PrintOn.
+
+	* c++/ClSolver.cc: Added << operator.
+
+	* c++/ClC.h, c++/ClC.cc, c++/ClTest.c: Fixed bugs, use
+ 	CL_Solver... instead of CL_SimplexSolver... where appropriate.
+
 Wed Apr 28 17:15:47 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* c++/ClSymbolicWeight.h: Make CLevels unsigned, not int, and
