@@ -40,6 +40,19 @@ class ClLinearEquation extends ClLinearConstraint
   }
 
   public ClLinearEquation(ClAbstractVariable clv,
+			  ClLinearExpression cle,
+			  ClStrength strength)
+  { 
+    this(clv,cle,strength,1.0);
+  }
+
+  public ClLinearEquation(ClAbstractVariable clv,
+			  ClLinearExpression cle)
+  { 
+    this(clv,cle,ClStrength.required,1.0);
+  }
+
+  public ClLinearEquation(ClAbstractVariable clv,
 			  double val,
 			  ClStrength strength,
 			  double weight)
@@ -48,45 +61,25 @@ class ClLinearEquation extends ClLinearConstraint
     my_expression.addVariable(clv,-1.0);
   }
 
-
   public ClLinearEquation(ClAbstractVariable clv,
 			  double val,
 			  ClStrength strength)
   { 
-    super(new ClLinearExpression(val), strength); 
-    my_expression.addVariable(clv,-1.0);
+    this(clv,val,strength,1.0);
   }
 
   public ClLinearEquation(ClAbstractVariable clv,
 			  double val)
   { 
-    super(new ClLinearExpression(val)); 
-    my_expression.addVariable(clv,-1.0);
+    this(clv,val,ClStrength.required,1.0);
   }
-
-
-  public ClLinearEquation(ClAbstractVariable clv,
-			  ClLinearExpression cle,
-			  ClStrength strength)
-  { 
-    super(cle, strength); 
-    my_expression.addVariable(clv,-1.0);
-  }
-
-  public ClLinearEquation(ClAbstractVariable clv,
-			  ClLinearExpression cle)
-  { 
-    super(cle);
-    my_expression.addVariable(clv,-1.0);
-  }
-
 
   public ClLinearEquation(ClLinearExpression cle,
 			  ClAbstractVariable clv,
 			  ClStrength strength,
 			  double weight)
   { 
-    super(cle, strength, weight); 
+    super(((ClLinearExpression) cle.clone()), strength, weight); 
     my_expression.addVariable(clv,-1.0);
   }
 
@@ -94,16 +87,14 @@ class ClLinearEquation extends ClLinearConstraint
 			  ClAbstractVariable clv,
 			  ClStrength strength)
   { 
-    super(cle, strength); 
-    my_expression.addVariable(clv,-1.0);
+    this(cle,clv,strength,1.0);
   }
 
 
   public ClLinearEquation(ClLinearExpression cle,
 			  ClAbstractVariable clv)
   { 
-    super(cle); 
-    my_expression.addVariable(clv,-1.0);
+    this(cle,clv,ClStrength.required,1.0);
   }
 
   public ClLinearEquation(ClLinearExpression cle1,
@@ -111,7 +102,7 @@ class ClLinearEquation extends ClLinearConstraint
 			  ClStrength strength,
 			  double weight)
   { 
-    super(cle1, strength, weight); 
+    super(((ClLinearExpression) cle1.clone()), strength, weight); 
     my_expression.addExpression(cle2,-1.0);
   }
 
@@ -119,15 +110,13 @@ class ClLinearEquation extends ClLinearConstraint
 			  ClLinearExpression cle2,
 			  ClStrength strength)
   { 
-    super(cle1, strength); 
-    my_expression.addExpression(cle2,-1.0);
+    this(cle1,cle2,strength,1.0);
   }
 
   public ClLinearEquation(ClLinearExpression cle1,
 			  ClLinearExpression cle2)
   { 
-    super(cle1); 
-    my_expression.addExpression(cle2,-1.0);
+    this(cle1,cle2,ClStrength.required,1.0);
   }
   
   public String toString()
