@@ -40,10 +40,10 @@ JAVAFILES = \
 	ClSymbolicWeight.java \
 	ClVariable.java \
 	ClPoint.java \
+	ClTableau.java \
 	Set.java
 
 #	ClTests.java \
-#	ClTableau.java \
 #	ClSimplexSolver.java \
 
 CLASSFILES = $(JAVAFILES:.java=.class)
