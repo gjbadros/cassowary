@@ -20,26 +20,30 @@
 #include "Cassowary.h"
 #include "ClFDConstraint.h"
 
+class ClLinearConstraint;
+
 // Just a node in the class hierarchy for now
 class ClFDBinaryOneWayConstraint : public ClFDConstraint {
  private: typedef ClFDConstraint super;
 
  public:
 
-   ClFDBinaryOneWayConstraint(ClVariable vRW, enum ClCnRelation rel, ClVariable vRO, 
-                              double coefficient = 1.0, double constant = 0.0,
-                              const ClStrength &strength = ClsRequired(),
-                              double weight = 1.0)
-       : ClFDConstraint(strength,weight), _vRW(vRW), _rel(rel), _vRO(vRO),
-         _coefficient(coefficient), _constant(constant)
+  ClFDBinaryOneWayConstraint(ClVariable vRW, enum ClCnRelation rel, ClVariable vRO, 
+                             double coefficient = 1.0, double constant = 0.0,
+                             const ClStrength &strength = ClsRequired(),
+                             double weight = 1.0)
+      : ClFDConstraint(strength,weight), _vRW(vRW), _rel(rel), _vRO(vRO),
+        _coefficient(coefficient), _constant(constant)
     { }
-
-   ClFDBinaryOneWayConstraint(ClVariable vRW, enum ClCnRelation rel, double constant,
-                              const ClStrength &strength = ClsRequired(),
+  
+  ClFDBinaryOneWayConstraint(ClVariable vRW, enum ClCnRelation rel, double constant,
+                             const ClStrength &strength = ClsRequired(),
                               double weight = 1.0)
-       : ClFDConstraint(strength,weight), _vRW(vRW), _rel(rel), _vRO(clvNil),
-         _coefficient(0), _constant(constant)
+      : ClFDConstraint(strength,weight), _vRW(vRW), _rel(rel), _vRO(clvNil),
+        _coefficient(0), _constant(constant)
     { }
+  
+  ClFDBinaryOneWayConstraint(const ClLinearConstraint &cn);
 
 #ifndef CL_NO_IO
   virtual ostream &PrintOn(ostream &xo) const
@@ -68,6 +72,9 @@ class ClFDBinaryOneWayConstraint : public ClFDConstraint {
     { return _coefficient; }
   double Constant() const 
     { return _constant; }
+
+  bool IsInequality() const
+    { return (_rel != cnEQ && _rel != cnNEQ); }
 
  protected:
   ClVariable _vRW;

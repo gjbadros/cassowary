@@ -52,7 +52,9 @@ ws [ \t\n]+
 {ws}			/* skip whitespace */
 \n|";"			{ return 0; }
 ">="			{ return GEQ; }
+">"			{ return GT; }
 "<=" 			{ return LEQ; }
+"<" 			{ return LT; }
 "==" 			{ return '='; }
 "="|"-"|"+"|"*"|"/"|"("|")" 	{ return yytext[0]; }
 

@@ -49,6 +49,7 @@ libcassowary_a_SOURCES = \
 	ClTableau.cc \
 	ClVariable.cc \
 	ClFDVariable.cc \
+	ClFDBinaryOneWayConstraint.cc \
 	ClFloatVariable.cc \
 	ClSlackVariable.cc \
 	ClDummyVariable.cc \
@@ -68,6 +69,7 @@ libcassowary_la_SOURCES = \
 	ClTableau.cc \
 	ClVariable.cc \
 	ClFDVariable.cc \
+	ClFDBinaryOneWayConstraint.cc \
 	ClFloatVariable.cc \
 	ClSlackVariable.cc \
 	ClDummyVariable.cc \

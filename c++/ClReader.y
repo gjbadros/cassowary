@@ -84,7 +84,9 @@ void yyerror(const char *sz);
 %token <pclv> RO_VAR
 
 %token GEQ
+%token GT
 %token LEQ
+%token LT
 
 %type <pcle> expr
 %type <pcn> constraint equation inequality
@@ -105,6 +107,8 @@ equation:  expr '=' expr  { $$ = new ClLinearEquation(*$1, *$3);   }
 
 inequality: expr GEQ expr { $$ = new ClLinearInequality(*$1, cnGEQ, *$3); }
           | expr LEQ expr { $$ = new ClLinearInequality(*$1, cnLEQ, *$3); }
+          | expr LT  expr { $$ = new ClLinearInequality(*$1, cnLT,  *$3); }
+          | expr GT  expr { $$ = new ClLinearInequality(*$1, cnGT,  *$3); }
 ;
 
 expr:     NUM                { $$ = new ClLinearExpression($1);        }
