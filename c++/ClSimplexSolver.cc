@@ -45,17 +45,16 @@ ClSimplexSolver::~ClSimplexSolver()
 
 // Add the constraint cn to the tableau
 ClSimplexSolver &
-ClSimplexSolver::addConstraint(const ClConstraint *const pcn)
+ClSimplexSolver::addConstraint(ClConstraint *const pcn)
 {
-  const ClConstraint &cn = *pcn;
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
-  cerr << "(" << cn << ")" << endl;
+  cerr << "(" << *pcn << ")" << endl;
 #endif
   
-  if (cn.isEditConstraint())
+  if (pcn->isEditConstraint())
     {
-    const ClEditConstraint *pcnEdit = dynamic_cast<const ClEditConstraint *>(&cn);
+    ClEditConstraint *pcnEdit = dynamic_cast<ClEditConstraint *>(pcn);
     const ClVariable &v = pcnEdit->variable();
     if (!v.isExternal() ||
         (!FIsBasicVar(v) && !columnsHasKey(v)))
@@ -70,7 +69,7 @@ ClSimplexSolver::addConstraint(const ClConstraint *const pcn)
 
   ClVariable clvEplus, clvEminus;
   Number prevEConstant;
-  ClLinearExpression *pexpr = newExpression(cn, /* output to: */
+  ClLinearExpression *pexpr = newExpression(pcn, /* output to: */
                                             clvEplus,clvEminus,
                                             prevEConstant);
   bool fAddedOkDirectly = false;
@@ -88,7 +87,7 @@ ClSimplexSolver::addConstraint(const ClConstraint *const pcn)
 #ifdef CL_TRACE
     cerr << "could not add directly -- caught ExCLRequiredFailure error" << endl;
 #endif
-    removeConstraint(pcn);
+    removeConstraintInternal(pcn);
     throw;
     }
 
@@ -101,7 +100,7 @@ ClSimplexSolver::addConstraint(const ClConstraint *const pcn)
       cerr << "Failed solve! Could not add constraint.\n"
            << *this << endl;
 #endif
-      removeConstraint(pcn);
+      removeConstraintInternal(pcn);
       if (FIsExplaining())
         throw e;
       else
@@ -111,9 +110,9 @@ ClSimplexSolver::addConstraint(const ClConstraint *const pcn)
 
   _fNeedsSolving = true;
 
-  if (cn.isEditConstraint())
+  if (pcn->isEditConstraint())
     {
-    const ClEditConstraint *pcnEdit = dynamic_cast<const ClEditConstraint *>(&cn);
+    ClEditConstraint *pcnEdit = dynamic_cast<ClEditConstraint *>(pcn);
     int ccnEdit = _editVarMap.size();
     _editVarMap[pcnEdit->variable()] = new ClEditInfo(pcnEdit,
                                                       clvEplus, clvEminus,
@@ -126,6 +125,7 @@ ClSimplexSolver::addConstraint(const ClConstraint *const pcn)
     setExternalVariables();
     }
 
+  pcn->addedTo(*this);
   return *this;
 }
 
@@ -134,7 +134,7 @@ ClSimplexSolver::addConstraint(const ClConstraint *const pcn)
 // The above function "addConstraint" throws an exception in that case
 // which may be inconvenient
 bool
-ClSimplexSolver::addConstraintNoException(const ClConstraint *const pcn)
+ClSimplexSolver::addConstraintNoException(ClConstraint *const pcn)
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -233,7 +233,7 @@ private:
 // Remove the constraint cn from the tableau
 // Also remove any error variable associated with cn
 ClSimplexSolver &
-ClSimplexSolver::removeConstraint(const ClConstraint *const pcn)
+ClSimplexSolver::removeConstraintInternal(const ClConstraint *const pcn)
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -470,7 +470,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint *const pcn)
   // The above function "removeConstraint" throws an exception in that case
   // which may be inconvenient
 bool
-ClSimplexSolver::removeConstraintNoException(const ClConstraint *const pcn)
+ClSimplexSolver::removeConstraintNoException(ClConstraint *const pcn)
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -1027,18 +1027,18 @@ ClSimplexSolver::dualOptimize()
 // the constraint is non-required give its error variables an
 // appropriate weight in the objective function.
 ClLinearExpression *
-ClSimplexSolver::newExpression(const ClConstraint &cn,
+ClSimplexSolver::newExpression(const ClConstraint *pcn,
                                ClVariable &clvEplus,
                                ClVariable &clvEminus,
                                Number &prevEConstant)
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
-  cerr << "(" << cn << ")" << endl;
-  cerr << "cn.isInequality() == " << cn.isInequality() << endl;
-  cerr << "cn.isRequired() == " << cn.isRequired() << endl;
+  cerr << "(" << *pcn << ")" << endl;
+  cerr << "cn.isInequality() == " << pcn->isInequality() << endl;
+  cerr << "cn.isRequired() == " << pcn->isRequired() << endl;
 #endif
-  const ClLinearExpression &cnExpr = cn.expression();
+  const ClLinearExpression &cnExpr = pcn->expression();
   auto_ptr<ClLinearExpression> pexpr ( new ClLinearExpression(cnExpr.constant()) );
   auto_ptr<ClSlackVariable> pslackVar;
   auto_ptr<ClDummyVariable> pdummyVar;
@@ -1062,7 +1062,7 @@ ClSimplexSolver::newExpression(const ClConstraint &cn,
     }
 
   // add slack and error variables as needed
-  if (cn.isInequality())
+  if (pcn->isInequality())
     {
     // cn is an inequality, so add a slack variable.  The original
     // constraint is expr>=0, so that the resulting equality is
@@ -1076,26 +1076,26 @@ ClSimplexSolver::newExpression(const ClConstraint &cn,
     ReinitializeAutoPtr(pslackVar,new ClSlackVariable (_slackCounter, "s"));
     pexpr->setVariable(*pslackVar,-1);
     // index the constraint under its slack variable and vice-versa
-    _markerVars[&cn] = pslackVar.get();
-    _constraintsMarked[pslackVar.get()] = &cn;
+    _markerVars[pcn] = pslackVar.get();
+    _constraintsMarked[pslackVar.get()] = pcn;
     
-    if (!cn.isRequired())
+    if (!pcn->isRequired())
       {
       ++_slackCounter;
       ReinitializeAutoPtr(peminus,new ClSlackVariable (_slackCounter, "em"));
       pexpr->setVariable(*peminus,1.0);
       // add emnius to the objective function with the appropriate weight
       ClLinearExpression *pzRow = rowExpression(_objective);
-      // FIXGJB: pzRow->addVariable(eminus,cn.strength().symbolicWeight() * cn.weight());
-      ClSymbolicWeight sw = cn.strength().symbolicWeight().times(cn.weight());
+      // FIXGJB: pzRow->addVariable(eminus,pcn->strength().symbolicWeight() * pcn->weight());
+      ClSymbolicWeight sw = pcn->strength().symbolicWeight().times(pcn->weight());
       pzRow->setVariable(*peminus,sw.asDouble());
-      _errorVars[&cn].insert(peminus.get());
+      _errorVars[pcn].insert(peminus.get());
       noteAddedVariable(*peminus,_objective);
       }
     }
   else
     { // cn is an equality
-    if (cn.isRequired())
+    if (pcn->isRequired())
       {
       // Add a dummy variable to the expression to serve as a marker
       // for this constraint.  The dummy variable is never allowed to
@@ -1103,8 +1103,8 @@ ClSimplexSolver::newExpression(const ClConstraint &cn,
       ++_dummyCounter;
       ReinitializeAutoPtr(pdummyVar,new ClDummyVariable (_dummyCounter, "d"));
       pexpr->setVariable(*pdummyVar,1.0);
-      _markerVars[&cn] = pdummyVar.get();
-      _constraintsMarked[pdummyVar.get()] = &cn;
+      _markerVars[pcn] = pdummyVar.get();
+      _constraintsMarked[pdummyVar.get()] = pcn;
 #ifdef CL_TRACE
       cerr << "Adding dummyVar == d" << _dummyCounter << endl;
 #endif
@@ -1122,35 +1122,35 @@ ClSimplexSolver::newExpression(const ClConstraint &cn,
       pexpr->setVariable(*peplus,-1.0);
       pexpr->setVariable(*peminus,1.0);
       // index the constraint under one of the error variables
-      _markerVars[&cn] = peplus.get();
-      _constraintsMarked[peplus.get()] = &cn;
+      _markerVars[pcn] = peplus.get();
+      _constraintsMarked[peplus.get()] = pcn;
 
       ClLinearExpression *pzRow = rowExpression(_objective);
-      // FIXGJB: pzRow->addVariable(eplus,cn.strength().symbolicWeight() * cn.weight());
-      ClSymbolicWeight sw = cn.strength().symbolicWeight().times(cn.weight());
+      // FIXGJB: pzRow->addVariable(eplus,pcn->strength().symbolicWeight() * pcn->weight());
+      ClSymbolicWeight sw = pcn->strength().symbolicWeight().times(pcn->weight());
       double swCoeff = sw.asDouble();
 #ifdef CL_TRACE
       if (swCoeff == 0) 
 	{
 	cerr << "sw == " << sw << endl
-	     << "cn == " << cn << endl;
+	     << "cn == " << *pcn << endl;
 	cerr << "adding " << *peplus << " and " << *peminus 
 	     << " with swCoeff == " << swCoeff << endl;
 	}
 #endif      
       pzRow->setVariable(*peplus,swCoeff);
       noteAddedVariable(*peplus,_objective);
-      // FIXGJB: pzRow->addVariable(eminus,cn.strength().symbolicWeight() * cn.weight());
+      // FIXGJB: pzRow->addVariable(eminus,pcn->strength().symbolicWeight() * pcn->weight());
       pzRow->setVariable(*peminus,swCoeff);
       noteAddedVariable(*peminus,_objective);
-      _errorVars[&cn].insert(peminus.get());
-      _errorVars[&cn].insert(peplus.get());
-      if (cn.isStayConstraint()) 
+      _errorVars[pcn].insert(peminus.get());
+      _errorVars[pcn].insert(peplus.get());
+      if (pcn->isStayConstraint()) 
 	{
 	_stayPlusErrorVars.push_back(peplus.get());
 	_stayMinusErrorVars.push_back(peminus.get());
 	}
-      else if (cn.isEditConstraint())
+      else if (pcn->isEditConstraint())
 	{
         clvEplus = peplus.get();
         clvEminus = peminus.get();
@@ -1480,19 +1480,17 @@ ostream &operator<<(ostream &xo, const ClSimplexSolver &clss)
 bool 
 ClSimplexSolver::FIsConstraintSatisfied(const ClConstraint *const pcn) const
 {
-  const ClConstraint &cn = *pcn;
-
-  ClConstraintToVarMap::const_iterator it_marker = _markerVars.find(&cn);
+  ClConstraintToVarMap::const_iterator it_marker = _markerVars.find(pcn);
   if (it_marker == _markerVars.end())
     { // could not find the constraint
     throw ExCLConstraintNotFound();
     }
 
 #ifndef CL_NO_IO
-  bool fCnsays = cn.FIsSatisfied();
+  bool fCnsays = pcn->FIsSatisfied();
 #endif
 
-  ClConstraintToVarSetMap::const_iterator it_eVars = _errorVars.find(&cn);
+  ClConstraintToVarSetMap::const_iterator it_eVars = _errorVars.find(pcn);
 
   if (it_eVars != _errorVars.end())
     {

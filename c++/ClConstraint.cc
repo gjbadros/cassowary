@@ -18,7 +18,8 @@ ClConstraint::printOn(ostream &xo) const
 {
   // Note that the trailing "= 0)" or ">= 0)" is missing, as derived classes will
   // print the right thing after calling this function
-  xo << strength() << " {" << weight() << "} (" << expression();
+  xo << strength() << " {" << weight() << "} [" 
+     << _times_added << "] (" << expression();
   return xo;
 }
 

@@ -80,11 +80,11 @@ class ClSimplexSolver : public ClTableau {
     { addLowerBound(v,lower); addUpperBound(v,upper); return *this; }
 
   // Add the constraint cn to the tableau
-  ClSimplexSolver &addConstraint(const ClConstraint *const pcn);
+  ClSimplexSolver &addConstraint(ClConstraint *const pcn);
 
 #ifndef CL_NO_DEPRECATED
   // Deprecated! --02/19/99 gjb
-  ClSimplexSolver &addConstraint(const ClConstraint &cn) 
+  ClSimplexSolver &addConstraint(ClConstraint &cn) 
     { return addConstraint(&cn); }
 #endif
 
@@ -92,11 +92,11 @@ class ClSimplexSolver : public ClTableau {
   // (i.e., the resulting system would be unsatisfiable)
   // The above function "addConstraint" throws an exception in that case
   // which may be inconvenient
-  bool addConstraintNoException(const ClConstraint *const pcn);
+  bool addConstraintNoException(ClConstraint *const pcn);
 
 #ifndef CL_NO_DEPRECATED
   // Deprecated --02/22/99 gjb
-  bool addConstraintNoException(const ClConstraint &cn)
+  bool addConstraintNoException(ClConstraint &cn)
     { return addConstraintNoException(&cn); }
 #endif
 
@@ -111,8 +111,8 @@ class ClSimplexSolver : public ClTableau {
 
   ClSimplexSolver &removeEditVar(ClVariable v)
     {
-      const ClEditInfo *pcei = _editVarMap[v];
-      const ClConstraint *pcnEdit = pcei->_pconstraint;
+      ClEditInfo *pcei = _editVarMap[v];
+      ClConstraint *pcnEdit = pcei->_pconstraint;
       removeConstraint(pcnEdit);
       delete pcnEdit;
       return *this;
@@ -174,11 +174,12 @@ class ClSimplexSolver : public ClTableau {
 
   // Remove the constraint cn from the tableau
   // Also remove any error variable associated with cn
-  ClSimplexSolver &removeConstraint(const ClConstraint *const pcn);
+  ClSimplexSolver &removeConstraint(ClConstraint *const pcn)
+    { removeConstraintInternal(pcn); pcn->removedFrom(*this); return *this; }
 
 #ifndef CL_NO_DEPRECATED
   // Deprecated! --02/19/99 gjb
-  ClSimplexSolver &removeConstraint(const ClConstraint &cn) 
+  ClSimplexSolver &removeConstraint(ClConstraint &cn) 
     { return removeConstraint(&cn); }
 #endif
 
@@ -186,11 +187,11 @@ class ClSimplexSolver : public ClTableau {
   // Same as above, but returns false if the constraint dne
   // The above function "removeConstraint" throws an exception in that case
   // which may be inconvenient
-  bool removeConstraintNoException(const ClConstraint *const pcn);
+  bool removeConstraintNoException(ClConstraint *const pcn);
 
 #ifndef CL_NO_DEPRECATED
   // Deprecated --02/22/99 gjb
-  bool removeConstraintNoException(const ClConstraint &cn)
+  bool removeConstraintNoException(ClConstraint &cn)
     { return removeConstraintNoException(&cn); }
 #endif
 
@@ -371,7 +372,7 @@ class ClSimplexSolver : public ClTableau {
     // the tableau row (the expression) owns the peplus, peminus,
     // and addEditVar/removeEditVar pair or the client code owns
     // the constraint object
-    ClEditInfo(const ClEditConstraint *pconstraint, 
+    ClEditInfo(ClEditConstraint *pconstraint, 
                ClVariable eplus, ClVariable eminus,
                Number prevEditConstant,
                int index)
@@ -384,7 +385,7 @@ class ClSimplexSolver : public ClTableau {
     ~ClEditInfo() 
       { }
   private:
-    const ClConstraint *_pconstraint;
+    ClConstraint *_pconstraint;
     ClVariable _clvEditPlus;
     ClVariable _clvEditMinus;
     Number _prevEditConstant;
@@ -465,7 +466,7 @@ class ClSimplexSolver : public ClTableau {
   // Normalize if necessary so that the constant is non-negative.  If
   // the constraint is non-required give its error variables an
   // appropriate weight in the objective function.
-  ClLinearExpression *newExpression(const ClConstraint &cn,
+  ClLinearExpression *newExpression(const ClConstraint *pcn,
                                     ClVariable &clvEplus,
                                     ClVariable &clvEminus,
                                     Number &prevEConstant);
@@ -504,6 +505,10 @@ class ClSimplexSolver : public ClTableau {
   // values are just implicit in the tableu -- so we don't need to set
   // them.
   void setExternalVariables();
+
+  // this gets called by removeConstraint and by addConstraint when the
+  // contraint we're trying to add is inconsistent
+  ClSimplexSolver &removeConstraintInternal(const ClConstraint *const pcn);
 
   void ChangeClv(ClVariable clv, Number n) {
     clv.change_value(n); 

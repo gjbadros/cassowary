@@ -18,6 +18,8 @@
 #include "ClLinearExpression.h"
 #include "ClStrength.h"
 
+class ClSimplexSolver;
+
 #ifdef USE_GC_CONSTRAINT
 class ClConstraint : public gc {
 #else
@@ -28,7 +30,8 @@ public:
   ClConstraint(const ClStrength &strength = clsRequired(), double weight = 1.0 ) :
     _strength(strength),
     _weight(weight),
-    _pv(0)
+    _pv(0),
+    _times_added(0)
     { 
       CtrTracer(__FUNCTION__,this);
     }
@@ -82,7 +85,32 @@ public:
 
   virtual bool FIsSatisfied() const { return false; }
 
+  void ChangeStrength( const ClStrength &strength) 
+    { 
+      if (_times_added == 0) {
+        setStrength(strength);
+      } else {
+        throw ExCLTooDifficult();
+      }
+    }
+
+  void ChangeWeight( double weight )
+    { 
+      if (_times_added == 0) {
+        setWeight(weight);
+      } else {
+        throw ExCLTooDifficult();
+      }
+    }
+
+  friend ClSimplexSolver;
 private:
+
+  void addedTo(const ClSimplexSolver &)
+    { ++_times_added; }
+
+  void removedFrom(const ClSimplexSolver &)
+    { --_times_added; }
 
   void setStrength( const ClStrength &strength )
     { _strength = strength; }
@@ -96,6 +124,8 @@ private:
   double _weight;
 
   void *_pv;
+
+  int _times_added;
 };
 
 typedef ClConstraint *PClConstraint;
