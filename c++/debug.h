@@ -12,23 +12,21 @@
 #ifndef CASSOWARY_DEBUG_H_
 #define CASSOWARY_DEBUG_H_
 
-#include "Cassowary.h"
-#include "ClMap.h"
-#include "ClSet.h"
 #include <vector>
-#include "ClLinearExpression_fwd.h"
+#include "Cassowary.h"
+#include "ClTypedefs.h"
 
 class ClAbstractVariable;
 
 #ifndef CL_NO_IO
 
-ostream &operator<<(ostream &xo, const ClSet<const ClAbstractVariable *> & varset);
+ostream &operator<<(ostream &xo, const ClTableauVarSet &varset);
 
-ostream &operator<<(ostream &xo, const ClMap<const ClAbstractVariable *, ClSet<const ClAbstractVariable *> > & varmap);
+ostream &operator<<(ostream &xo, const ClTableauColumnsMap &varmap);
 
-ostream &operator<<(ostream &xo, const ClMap<const ClAbstractVariable *, ClLinearExpression * > & rows);
+ostream &operator<<(ostream &xo, const ClTableauRowsMap &rows);
 
-ostream &operator<<(ostream &xo, const vector<const ClAbstractVariable *> &varlist);
+ostream &operator<<(ostream &xo, const ClVarVector &varlist);
 
 class Tracer {
  public:
