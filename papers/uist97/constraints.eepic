@@ -1,0 +1,49 @@
+\setlength{\unitlength}{0.00083333in}
+%
+\begingroup\makeatletter\ifx\SetFigFont\undefined
+% extract first six characters in \fmtname
+\def\x#1#2#3#4#5#6#7\relax{\def\x{#1#2#3#4#5#6}}%
+\expandafter\x\fmtname xxxxxx\relax \def\y{splain}%
+\ifx\x\y   % LaTeX or SliTeX?
+\gdef\SetFigFont#1#2#3{%
+  \ifnum #1<17\tiny\else \ifnum #1<20\small\else
+  \ifnum #1<24\normalsize\else \ifnum #1<29\large\else
+  \ifnum #1<34\Large\else \ifnum #1<41\LARGE\else
+     \huge\fi\fi\fi\fi\fi\fi
+  \csname #3\endcsname}%
+\else
+\gdef\SetFigFont#1#2#3{\begingroup
+  \count@#1\relax \ifnum 25<\count@\count@25\fi
+  \def\x{\endgroup\@setsize\SetFigFont{#2pt}}%
+  \expandafter\x
+    \csname \romannumeral\the\count@ pt\expandafter\endcsname
+    \csname @\romannumeral\the\count@ pt\endcsname
+  \csname #3\endcsname}%
+\fi
+\fi\endgroup
+{\renewcommand{\dashlinestretch}{30}
+\begin{picture}(3577,921)(0,-10)
+\put(2398,464){\ellipse{78}{78}}
+\put(1147,464){\ellipse{78}{78}}
+\path(1147,464)(2398,464)
+\put(1772,542){\makebox(0,0)[b]{$x_m$}}
+\put(2398,542){\makebox(0,0)[b]{$x_r$}}
+\put(1147,542){\makebox(0,0)[b]{$x_l$}}
+\dashline{60.000}(12,307)(3494,307)
+\path(208,894)(208,151)
+\path(3337,894)(3337,151)
+\path(521,346)(521,268)
+\put(1772,464){\ellipse{78}{78}}
+\path(834,346)(834,268)
+\put(1772,33){\makebox(0,0)[b]{$50$}}
+\path(1147,346)(1147,268)
+\path(1459,346)(1459,268)
+\path(1772,346)(1772,268)
+\path(2085,346)(2085,268)
+\path(2398,346)(2398,268)
+\path(2711,346)(2711,268)
+\path(3024,346)(3024,268)
+\put(208,33){\makebox(0,0)[b]{$0$}}
+\put(3337,33){\makebox(0,0)[b]{$100$}}
+\end{picture}
+}

@@ -1,0 +1,81 @@
+\setlength{\unitlength}{0.00083333in}
+%
+\begingroup\makeatletter\ifx\SetFigFont\undefined
+% extract first six characters in \fmtname
+\def\x#1#2#3#4#5#6#7\relax{\def\x{#1#2#3#4#5#6}}%
+\expandafter\x\fmtname xxxxxx\relax \def\y{splain}%
+\ifx\x\y   % LaTeX or SliTeX?
+\gdef\SetFigFont#1#2#3{%
+  \ifnum #1<17\tiny\else \ifnum #1<20\small\else
+  \ifnum #1<24\normalsize\else \ifnum #1<29\large\else
+  \ifnum #1<34\Large\else \ifnum #1<41\LARGE\else
+     \huge\fi\fi\fi\fi\fi\fi
+  \csname #3\endcsname}%
+\else
+\gdef\SetFigFont#1#2#3{\begingroup
+  \count@#1\relax \ifnum 25<\count@\count@25\fi
+  \def\x{\endgroup\@setsize\SetFigFont{#2pt}}%
+  \expandafter\x
+    \csname \romannumeral\the\count@ pt\expandafter\endcsname
+    \csname @\romannumeral\the\count@ pt\endcsname
+  \csname #3\endcsname}%
+\fi
+\fi\endgroup
+{\renewcommand{\dashlinestretch}{30}
+\begin{picture}(3663,1882)(0,-10)
+\put(3020,1425){\ellipse{78}{78}}
+\put(2082,1425){\ellipse{78}{78}}
+\put(3327,458){\ellipse{78}{78}}
+\put(3020,458){\ellipse{78}{78}}
+\put(2712,458){\ellipse{78}{78}}
+\dashline{60.000}(12,301)(3494,301)
+\path(208,888)(208,145)
+\path(3337,888)(3337,145)
+\path(521,340)(521,262)
+\path(834,340)(834,262)
+\path(1147,340)(1147,262)
+\path(1459,340)(1459,262)
+\path(1772,340)(1772,262)
+\path(2085,340)(2085,262)
+\path(2398,340)(2398,262)
+\path(2711,340)(2711,262)
+\path(3024,340)(3024,262)
+\dashline{60.000}(15,1268)(3497,1268)
+\path(211,1855)(211,1112)
+\path(3340,1855)(3340,1112)
+\path(524,1307)(524,1229)
+\path(837,1307)(837,1229)
+\path(1150,1307)(1150,1229)
+\put(1150,1425){\ellipse{78}{78}}
+\path(1462,1307)(1462,1229)
+\put(3017,667){\makebox(0,0)[b]{\smash{{{\SetFigFont{6}{7.2}{rm}$x_m$}}}}}
+\path(1775,1307)(1775,1229)
+\path(2088,1307)(2088,1229)
+\path(2401,1307)(2401,1229)
+\path(2714,1307)(2714,1229)
+\path(3027,1307)(3027,1229)
+\path(1150,1425)(3012,1425)
+\path(2715,458)(3320,460)
+\dottedline{45}(1767,1368)(2082,1368)
+\path(1962.000,1338.000)(2082.000,1368.000)(1962.000,1398.000)
+\dottedline{45}(2397,1360)(3020,1360)
+\path(2900.000,1330.000)(3020.000,1360.000)(2900.000,1390.000)
+\dottedline{45}(1149,389)(2705,385)
+\path(2584.923,355.309)(2705.000,385.000)(2585.078,415.308)
+\dottedline{45}(3027,378)(3342,378)
+\path(3222.000,348.000)(3342.000,378.000)(3222.000,408.000)
+\dottedline{45}(2079,580)(3012,580)
+\path(2892.000,550.000)(3012.000,580.000)(2892.000,610.000)
+\put(208,27){\makebox(0,0)[b]{\smash{{{\SetFigFont{6}{7.2}{rm}$0$}}}}}
+\put(3337,27){\makebox(0,0)[b]{\smash{{{\SetFigFont{6}{7.2}{rm}$100$}}}}}
+\put(1772,27){\makebox(0,0)[b]{\smash{{{\SetFigFont{6}{7.2}{rm}$50$}}}}}
+\put(211,994){\makebox(0,0)[b]{\smash{{{\SetFigFont{6}{7.2}{rm}$0$}}}}}
+\put(3340,994){\makebox(0,0)[b]{\smash{{{\SetFigFont{6}{7.2}{rm}$100$}}}}}
+\put(1775,994){\makebox(0,0)[b]{\smash{{{\SetFigFont{6}{7.2}{rm}$50$}}}}}
+\put(1150,1503){\makebox(0,0)[b]{\smash{{{\SetFigFont{6}{7.2}{rm}$x_l$}}}}}
+\put(3009,1503){\makebox(0,0)[b]{\smash{{{\SetFigFont{6}{7.2}{rm}$x_r$}}}}}
+\put(2075,1503){\makebox(0,0)[b]{\smash{{{\SetFigFont{6}{7.2}{rm}$x_m$}}}}}
+\put(3471,536){\makebox(0,0)[b]{\smash{{{\SetFigFont{6}{7.2}{rm}$x_r$}}}}}
+\put(2692,663){\makebox(0,0)[b]{\smash{{{\SetFigFont{6}{7.2}{rm}$x_l$}}}}}
+\end{picture}
+}

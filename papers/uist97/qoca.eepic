@@ -1,0 +1,55 @@
+\setlength{\unitlength}{0.00083333in}
+%
+\begingroup\makeatletter\ifx\SetFigFont\undefined
+% extract first six characters in \fmtname
+\def\x#1#2#3#4#5#6#7\relax{\def\x{#1#2#3#4#5#6}}%
+\expandafter\x\fmtname xxxxxx\relax \def\y{splain}%
+\ifx\x\y   % LaTeX or SliTeX?
+\gdef\SetFigFont#1#2#3{%
+  \ifnum #1<17\tiny\else \ifnum #1<20\small\else
+  \ifnum #1<24\normalsize\else \ifnum #1<29\large\else
+  \ifnum #1<34\Large\else \ifnum #1<41\LARGE\else
+     \huge\fi\fi\fi\fi\fi\fi
+  \csname #3\endcsname}%
+\else
+\gdef\SetFigFont#1#2#3{\begingroup
+  \count@#1\relax \ifnum 25<\count@\count@25\fi
+  \def\x{\endgroup\@setsize\SetFigFont{#2pt}}%
+  \expandafter\x
+    \csname \romannumeral\the\count@ pt\expandafter\endcsname
+    \csname @\romannumeral\the\count@ pt\endcsname
+  \csname #3\endcsname}%
+\fi
+\fi\endgroup
+{\renewcommand{\dashlinestretch}{30}
+\begin{picture}(3529,915)(0,-10)
+\put(1453,458){\ellipse{78}{78}}
+\put(2713,458){\ellipse{78}{78}}
+\dashline{60.000}(12,301)(3494,301)
+\path(208,888)(208,145)
+\path(3337,888)(3337,145)
+\path(521,340)(521,262)
+\path(834,340)(834,262)
+\path(1147,340)(1147,262)
+\path(1459,340)(1459,262)
+\path(1772,340)(1772,262)
+\path(2085,340)(2085,262)
+\put(2079,458){\ellipse{78}{78}}
+\path(2398,340)(2398,262)
+\put(2706,536){\makebox(0,0)[b]{\smash{{{\SetFigFont{6}{7.2}{rm}$x_r$}}}}}
+\path(2711,340)(2711,262)
+\path(3024,340)(3024,262)
+\dottedline{45}(1764,401)(2079,401)
+\path(1959.000,371.000)(2079.000,401.000)(1959.000,431.000)
+\path(1457,457)(2713,461)
+\dottedline{45}(1149,401)(1464,401)
+\path(1344.000,371.000)(1464.000,401.000)(1344.000,431.000)
+\dottedline{45}(2387,401)(2702,401)
+\path(2582.000,371.000)(2702.000,401.000)(2582.000,431.000)
+\put(208,27){\makebox(0,0)[b]{\smash{{{\SetFigFont{6}{7.2}{rm}$0$}}}}}
+\put(3337,27){\makebox(0,0)[b]{\smash{{{\SetFigFont{6}{7.2}{rm}$100$}}}}}
+\put(1772,27){\makebox(0,0)[b]{\smash{{{\SetFigFont{6}{7.2}{rm}$50$}}}}}
+\put(2072,536){\makebox(0,0)[b]{\smash{{{\SetFigFont{6}{7.2}{rm}$x_m$}}}}}
+\put(1447,536){\makebox(0,0)[b]{\smash{{{\SetFigFont{6}{7.2}{rm}$x_l$}}}}}
+\end{picture}
+}
