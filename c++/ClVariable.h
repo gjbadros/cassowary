@@ -24,6 +24,7 @@
 #include "Cassowary.h"
 #include "ClFloatVariable.h"
 #include "ClFDVariable.h"
+#include "ClTypedefs.h"
 
 class ClVariable;
 typedef map<const string,ClVariable> StringToVarMap;
