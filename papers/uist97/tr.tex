@@ -19,34 +19,23 @@
 \newcommand{\finish}[1]{{\bf #1}\marginpar{\Large $\bullet$}}
 \input{abb1.tex}
 
-% suppress the page number on this first page
-\thispagestyle{empty}
-\setcounter{page}{0}
+
+\title{The Cassowary Lineary Arithmetic Constraint Solving Algorithm:
+  Interface and Implementation}
+
+\author{Greg J. Badros \and Alan Borning}
+
+\date{Technical Report UW-CSE-98-DRAFT \\
+Department of Computer Science and Engineering \\
+University of Washington \\
+Box 352350, Seattle, WA  98195-2350  USA \\
+{\small \{{\tt gjb},{\tt borning}\}{\tt @cs.washington.edu}} \\
+26 June 1998}  
 
 \begin{document}
+\maketitle
 
-\vspace*{27 mm}
-
-\begin{center}
-{\Large\bf Solving Linear Arithmetic Constraints \\
-       for User Interface Applications: \\
-\vspace*{1mm}
-       Algorithm Details} \\ 
-\vspace*{5 mm}
-
-Greg Badros, Alan Borning, Kim Marriott, Peter Stuckey, and Yi Xiao  \\
-
-\vspace*{5 mm}
-
-Technical Report DRAFT \\
-Department of Computer Science \& Engineering \\
-University of Washington \\
-June 1998  \\
-\end{center}
-
-\vspace*{7 mm}
-
-{\large {\bf Abstract.}} 
+\begin{abstract}
 Linear equality and inequality constraints arise naturally in specifying
 many aspects of user interfaces, such as requiring that one window be to
 the left of another, requiring that a pane occupy the leftmost 1/3 of a
@@ -57,35 +46,17 @@ a major limitation.  We describe incremental algorithms based on the dual
 simplex and active set methods that can solve such systems of constraints
 efficiently.  Both algorithms have been implemented and tested.
 
-This informal technical report is adapted from the paper ``Solving Linear
-Arithmetic Constraints for User Interface Applications,'' which will appear
-in the Proceedings of UIST'97 (The ACM User Interface and Software
-Technology Symposium).  It contains additional details, in particular of
-the Cassowary and QOCA algorithms and their implementations.
+This informal technical report is details the latest version of the
+Cassowary algorithm.  An earlier version of this technical report also
+discussed QOCA and the similarities between Cassowary and that
+algorithm~cite{borning-simplex-tr}.
+\end{abstract}
 
+% suppress the page number on this first page
+%\thispagestyle{empty}
+%\setcounter{page}{0}
 
-\vspace*{2 mm}
-
-Authors' addresses:
-
-\begin{center}
-\begin{tabular}{ll}
-Greg Badros, Alan Borning            & Kim Marriott   \\
-Dept.\ of Computer Science \& Engr.  & Dept.\ of Computer Science \\
-University of Washington             & Monash University \\
-Box 352350                           & Wellington Road  \\
-Seattle, Washington 98195, USA       & Clayton, Victoria 3168, Australia   \\
-\{gjb,borning\}@cs.washington.edu      & marriott@cs.monash.edu.au \\
-\ \\
-Peter Stuckey                        & Yi Xiao  \\
-Dept.\ of Computer Science           & Dept.\ of Mathematics \& Statistics \\
-University of Melbourne              & University of Melbourne \\
-Parkville, Victoria 3052, Australia  &  Parkville, Victoria 3052, Australia \\
-pjs@cs.mu.oz.au                      &  yxiao@maths.mu.oz.au
-\end{tabular}
-\end{center}
-
-\newpage
+\bigskip
 
 \section{Introduction}
 
@@ -156,14 +127,14 @@ equality and inequality constraints are {\em locally-error-better},
 {\em weighted-sum-better}, and {\em least-squares-better}.  
 For a given
 collection of constraints, Cassowary finds a locally-error-better or a
-weighted-sum-better solution; QOCA finds a least-squares-better solution.
+weighted-sum-better solution
+(In constrast, QOCA finds a least-squares-better solution.
 The least-squares-better comparator strongly
 penalizes outlying values when trading off constraints of the same
 strength.  It is particularly suited to tasks such as laying out a tree, a
 graph, or a collection of windows, where there are inherently conflicting
-preferences (for example, that all the nodes in the depiction of a graph
-have some minimum spacing and that edge lengths be minimized).
-Locally-error-better, on the other hand, is a more permissive
+preferences~\cite{borning-simplex-tr}.)
+Locally-error-better is a more permissive
 comparator, in that it admits more solutions to the constraints.  (In fact
 any least-squares-better or weighted-sum-better solution is also a
 locally-error-better solution \cite{borning-lisp-symbolic-computation-92}.)
@@ -247,21 +218,14 @@ simplex form}, a type of solved form.  In Section \ref{resolving} we give
 an algorithm, Cassowary, based on the dual simplex, for incrementally
 solving hierarchies of constraints using the locally-error-better or
 weighted-sum-better comparators when a constraint is added or an object is
-moved, while in Section \ref{quadratic} we give an algorithm, QOCA, based
-on the active set method, for incrementally solving hierarchies of
-constraints using the least-squares-better comparator.
+moved.
 
-Both of our algorithms have been implemented, Cassowary in
-Smalltalk, C++, and Java and QOCA in C++\@.  They perform surprisingly well, and a summary
-of our results is given in Section \ref{empirical-evaluation}.  The QOCA
-implementation is considerably more sophisticated 
-than the current version of Cassowary.  However, QOCA is
-inherently a more complex algorithm, and re-implementing it with a
-comparable level of performance would be a daunting task.  In contrast,
-Cassowary is straightforward, and a reimplementation based on this paper is
-more reasonable, given a knowledge of the simplex algorithm.  The
-various implementations with example applications are available from the 
-authors.
+Cassowary has been implemented in Smalltalk, C++, and Java. It performs
+surprisingly well, and a summary of our results is given in Section
+\ref{empirical-evaluation}.  The algorithm is straightforward, and a
+reimplementation based on this paper is more reasonable, given a
+knowledge of the simplex algorithm.  The various implementations with
+example applications are available from the authors.
 
 \subsection{Related Work}
 
@@ -278,13 +242,6 @@ systems that handle simultaneous linear equations include \mbox{DETAIL}
 researchers (including the first author) have experimented with a
 straightforward use of a simplex package in a UI constraint solver,
 but the speed was not satisfactory for interactive use.
-An earlier version of QOCA is described in references \cite{helm-gi-92} and
-\cite{helm-eurographics-92}.  These earlier descriptions, however, do not
-give any details of the algorithm, although the incremental deletion
-algorithm is described in \cite{huynh-marriott-96}.  
-The current implementation is
-much improved, in particular through the use of the active set method
-described in Section \ref{active-sets}.
 
 Baraff \cite{baraff-siggraph-94} describes a quadratic optimization
 algorithm for solving linear constraints that arise in modelling physical
@@ -299,26 +256,31 @@ computation progresses, but there is no notion as such of state and change.
 As a result, these systems are not so well suited for building interactive
 graphical applications.
 
+Borning, Marriot, Stuckey, and Xiao discuss both an early version of
+Cassowary and the related QOCA algorithm.  QOCA uses the same solving
+technique as Cassowary, but uses a least-squares-better comparator
+during the optimization from basic feasible solved
+form~\cite{borning-uist-97,borning-simplex-tr}.  An earlier version of
+QOCA is described in references \cite{helm-gi-92} and
+\cite{helm-eurographics-92}.  These earlier descriptions, however, do
+not give any details of the algorithm, although the incremental deletion
+algorithm is described in \cite{huynh-marriott-96}.
+
+
 \section{Incremental Simplex}
 \label{inc-simplex}
 
 \begin{quotation}
-As you see, the subject of linear programming is surrounded by notational
-and terminological thickets.  Both of these thorny defenses are lovingly
-cultivated by a coterie of stern acolytes who have devoted themselves to
-the field.  
-Actually, the basic ideas of linear programming are quite simple. 
--- {\em Numerical Recipes}, \cite[page 424]{press-89}
+  As you see, the subject of linear programming is surrounded by
+  notational and terminological thickets.  Both of these thorny defenses
+  are lovingly cultivated by a coterie of stern acolytes who have
+  devoted themselves to the field.  Actually, the basic ideas of linear
+  programming are quite simple.  -- {\em Numerical Recipes}, \cite[page
+  424]{press-89}
 \end{quotation}
 
-We now describe an incremental version of the simplex algorithm, adapted to
-the task at hand.
-The material presented in this section is common to both
-Cassowary and QOCA\@.  
-The two algorithms use different optimization
-techniques, however, which are described in Sections \ref{quasi-linear} and
-\ref{quadratic} respectively.  
-In the description we use a running example,
+We now describe an incremental version of the simplex algorithm, adapted
+to the task at hand.  In the description we use a running example,
 illustrated by the diagram in Figure~\ref{fig:pict}.
 
 \begin{figure}[htb]
@@ -469,10 +431,9 @@ explicitly in any event.)
 {\bf Another Detail.}  The operations are shown as modifying $C_U$ as well
 as $C_S$\@.  It would be possible to modify just $C_S$ and leave $C_U$
 unchanged, using $C_U$ only to define values for the variables on the left
-hand side of its equations.  This would speed up pivoting, but at least for
-Cassowary it would make the incremental updates of the constants in edit
+hand side of its equations.  This would speed up pivoting byt it would make the incremental updates of the constants in edit
 constraints slower; and since this is a much more frequent operation, in
-the Cassowary implementation we do actually modify both $C_U$ and $C_S$\@.
+the implementation we do actually modify both $C_U$ and $C_S$\@.
 
 An augmented simplex form optimization problem is in 
 \emph{basic feasible solved form} if the equations are of the form 
@@ -559,8 +520,8 @@ it already takes its minimum value of $0$ in the associated basic feasible
 solution.  Hence we are at an optimal solution.  
 
 (If we were to have an unrestricted variable in the objective function, the
-optimization would be unbounded.  This is not an issue for Cassowary or
-QOCA, since the objective function in those cases always only contains
+optimization would be unbounded.  This is not an issue for our algorithm 
+since the objective function in those cases always only contains
 restricted variables, i.e.\ variables implicitly constrained to be
 non-negative.)
 
@@ -716,12 +677,11 @@ our objective function, which is equal to $a$).  If the row is just $a =
 can then pivot $x$ into the basis using this row and remove the column for
 $a$.
 
-%%% ASKALAN Not just for efficiency-- it failed when we always used 
-%%% an artificial variable
-%{\bf Implementation Note.}  In some cases we can add an equation to the
-%tableau without using an artificial variable, and for efficiency should do
-%so when it is easy to detect that this can be done.  See Section
-%\ref{cassowary-adding-constraints}.
+{\bf Implementation Note.}  In some cases we can add an equation to the
+tableau without using an artificial variable, even when the equation
+contains only restricted variables, and for efficiency should do so when
+it is easy to detect that this can be done.  See Section
+\ref{cassowary-adding-constraints}.
 
 \subsection{Incrementality: Removing a Constraint}
 \label{removing-constraints}
@@ -938,8 +898,7 @@ In the presentation, we will use $s = 1000$ and $w = 1$.
 
 Cassowary actually uses symbolic weights and a lexicographic ordering,
 which ensures that strong constraints are always satisfied in preference to
-weak ones (see Section \ref{cassowary-details}).  However, QOCA 
-does not employ symbolic weights.
+weak ones (see Section \ref{cassowary-details}).
 
 Unfortunately neither of these objective functions is linear and hence the
 simplex method is not applicable directly.  We now show how we can 
@@ -947,7 +906,7 @@ solve the problem using optimization algorithms
 based on the two alternate objective functions: \emph{quasi-linear
 optimization} and \emph{quadratic optimization}.
 
-\section{Cassowary: Quasi-linear Optimization}
+\section{Cassowary's Quasi-linear Optimization}
 \label{quasi-linear}
 
 Cassowary finds either locally-error-better or weighted-sum-better
@@ -956,8 +915,7 @@ locally-error-better solution \cite{borning-lisp-symbolic-computation-92},
 the weighted-sum part of the optimization comes automatically from the
 manner in which the objective function is constructed.
 
-For Cassowary
-both the edit and the stay constraints will be represented as equations of
+Both the edit and the stay constraints will be represented as equations of
 the form  
 $$v = \alpha + \delta_v^{+} - \delta_v^{-}$$
 where $\delta_v^{+}$ and $\delta_v^{-}$ are non-negative variables
@@ -1331,13 +1289,12 @@ would be required in moving from 50 to 95.  This illustrates why the dual
 optimization is well suited to this problem and leads to efficient
 resolving of the hierarchical constraints.
 
-\section{Cassowary Details}
+\section{Implementation Details}
 \label{cassowary-details}
 
-This section is only in the technical report (not the UIST paper) and
-includes details on the Cassowary implementations.  (The current
-implementations are in Smalltalk, C++, and Java.)  There is also a
-subsection on some fine points regarding the comparator.
+This section explains the details of the various Cassowary
+implementations. There is also a subsection on some fine points
+regarding the comparator.
 
 \subsection{Solver Protocol}
 \label{solver-protocol}
@@ -1426,8 +1383,7 @@ is likely to be changed inappropriately to satisfy the other
 constraints while initially building the tableau.
 
 Instead, stay constraints could be implicit for each variable, and thus
-be in effect before any other constraints.  See Subsection
-\ref{constraint-revisions}.
+be in effect before any other constraints.
 
 \subsection{Principal Classes}
 
@@ -1615,28 +1571,11 @@ the variable with the edit or stay.  Otherwise all they do is respond
 appropriately to the messages {\sf isEditConstraint} and {\sf
 isStayConstraint}. 
 
-\subsubsection{Possible Revisions to Constraint Representation}
-\label{constraint-revisions}
-
-In contrast to the current Cassowary implementation described above, the
-QOCA implementation does not represent edits or stays explicitly.  Rather,
-each variable has a preferred value and a weight, in addition to a current
-value.  Given the special treatment of edit constraints in Cassowary (and
-since there are typically only one or two of them) it is probably worth
-continuing to represent them explicitly.  However, since many variables
-have a stay it may be worth representing stay constraints implicitly.  Then
-every constrainable variable would automatically be given an implicit stay
-constraint of a given strength, which could be a special null strength if
-no stay were desired.  This strength would be stored as an instance
-variable of {\sf ClVariable}.  This would only allow at most one stay per
-variable, which is the typical situation --- if multiple stays were needed
-for some reason this could be simulated using additional variables and
-equality constraints.
-
-This hierarchy is also intended to allow extension to include local
-propagation constraints (which would be another subclass of {\sf
-ClConstraint}) -- otherwise we could have made everything be a linear
-constraint. 
+This constraint hierarchy is also intended to allow extension to include
+local propagation constraints (which would be another subclass of {\sf
+  ClConstraint}) -- otherwise we could have made everything be a linear
+constraint, and eliminated the abstract class {\sf ClConstraint}
+entirely.
 
 \subsubsection{Constraint Creation}
 \label{constraint-creation}
@@ -1685,14 +1624,14 @@ Similarly, in C++ the arithmetic operators are overloaded to build {\sf
   ClLinearExpression}s from {\sf ClVariable}s and other {\sf
   ClLinearExpression}s.  Actual constraints are built using various
 constructors for {\sf ClLinearEquation} or {\sf ClLinearInequality}.  An
-enumeration defines {\sf cnLEQ} and {\sf cnGEQ} to approximate the
-Smalltalk interface.  For example:
+enumeration defines the symbolic constants {\sf cnLEQ} and {\sf cnGEQ}
+to approximate the Smalltalk interface.  For example:
 
 \hspace*{1 cm}{\sf ClLinearInequality cn(3*x+5, cnLEQ,y); ~ ~ ~ // C++}
 
 build the constraint {\sf cn} representing $3 x + 5 \leq y$.
 
-In Java, the same constraint would be built like so:
+In Java, the same constraint would be built as follows:
 
 \hspace*{1 cm}{\sf ClLinearInequality cn = new
   ClLinearInequality(CL.Plus(CL.Times(x,3),5), CL.LEQ, y);}
@@ -1973,11 +1912,14 @@ getting the two representations out of sync.
 \label{cassowary-adding-constraints}
 
 Section \ref{adding-constraints} discussed how to add constraints
-incrementally.  For efficiency we should avoid using an artificial
-variable if possible.  We can avoid using an artificial variable if we can
-choose a subject for the equation from among its current variables.
-Here are the rules for choosing a subject.  (These are to be used after
-replacing any basic variables with their defining expressions.)  
+incrementally.  If the equation contains any unrestricted variables, we can
+not use an artificial variable because we can not put an equation in $C_S$
+that contains an unrestricted variable.  In some other cases we can avoid
+using an artificial variable for efficiency.  We can avoid using an
+artificial variable if we can choose a subject for the equation from among
+its current variables.  Here are the rules for choosing a subject.  (These
+are to be used after replacing any basic variables with their defining
+expressions.)
 
 We start with an expression {\sf expr} (which is an instance of {\sf
 ClLinearExpression}).  If necessary, normalize {\sf expr} by multiplying by
@@ -2041,10 +1983,9 @@ constraint might have become satisfiable (or more nearly satisfiable).
 
 \subsection{Omissions}
 
-The solver should implement Bland's anti-cycling rule, but it does not at the
-moment.  Adding this should be straightforward.
-
-%% ASKALAN Ref for Bland's anti-cycling rule
+The solver should implement Bland's anti-cycling
+rule~\cite{marriott-stuckey-book}, but it does not at the moment.
+Adding this should be straightforward.
 
 \subsection{Comparator Details}  
 \label{comparator-details}  
@@ -2166,517 +2107,13 @@ primitive constraints, which would allow us to trade off the errors
 arbitrarily and hence satisfy the stay on the $x$ component of one point
 and the $y$ component of another.
 
-Note also that all of this is not a problem for QOCA --- its
-least-squares-better comparator distributes the error to the $x$ and $y$
-components of all the points with stays of the same strength.
-
-\section{QOCA: Quadratic Optimization}
-\label{quadratic}
-
-Another useful way of comparing solutions to constraint hierarchies is
-least-squares-better, in which case we are interested in
-solving optimization problems of the form, referred to as $QP$:
-\begin{quote}
-minimize $f$ subject to $C$  \\
-where $f = \sum_{i=1}^n w_i (x_i - d_i)^2$
-\end{quote}\vspace{-0.9ex}
-The variables are $x_1, \ldots , x_n$, and $C$  is the set of
-required constraints.  The desired value for variable
-$x_i$ is $d_i$, and the ``weight'' associated with that desire (which
-should reflect the hierarchy) is $w_i$.
-
-This problem is a type of {\em quadratic programming} in which a quadratic
-optimization function is minimized with respect to a set of linear
-arithmetic equality and inequality constraints.  In particular, since the
-optimization function is a sum of squares, the problem is an example
-of {\em convex} quadratic programming, meaning that the local minimum is
-also the global minimum.  This is fortunate, since convex quadratic
-programming has been well-studied and efficient methods for solving these
-problems are well-known in the operations research community.
-Here we will present two methods.
-The first is a variant of the simplex algorithm introduced earlier,
-while the second, based on ``active sets,''
-is the method of choice for medium scale problems consisting of up to
-1000 variables and constraints.
-
-\subsection{Linear Complementary Pivoting}
-\label{linear-complementary-pivoting}
-
-Arguably the simplest approach to solving convex quadratic problems
-is a simple modification of the simplex algorithm
-that finds the local optimum of a quadratic problem, which since
-the problem is convex, is the global optimimum.
-
-Now, a solution is a local minimum if in every direction either the
-optimization value increases or the region becomes infeasible.
-The information about infeasibility is captured by the constraints
-in the original problem (called the {\em primal problem}).
-Information about how the optimization function
-decreases is captured in the so-called {\em dual  problem} which
-is obtained by looking at the derivative of the optimization function.
-The idea is therefore to combine the primal and dual problems
-and solve these together. Any solution to their combination will
-be a feasible optimal solution for the original problem.
-The point about a quadratic problem is that the derivative
-of a quadratic optimization function is linear. Thus both the
-dual and the primal problem consist of linear arithmetic constraints
-and so a variant of the simplex can be used to solve their conjunction.
-Let the constraints in the primal problem be in basic feasible
-solved form:
-\[
-PP: \qquad \bigwedge_{i=1}^n x_i = b_i - \sum_{j=1}^m a_{ij} y_j
-\]
-where $x_1,...,x_n$ are the basic variables and $y_1,...,y_m$ are
-the parameters and let the function to be minimized be $O$ and
-assume that basic variables have been eliminated from $O$.
-Then the dual problem is
-\[
-DP: \qquad \bigwedge_{j=1}^m t_j =
-\frac{ \partial O}{\partial y_j} +  \sum_{i=1}^n a_{ij} z_i
-\]
-where $z_1,...,z_n \ge 0$ are the dual variables
-(one for each equation in the primal problem)
-and $t_1,...,t_m \ge 0$ are the dual slack variables.
-
-The combined problem $CP$ is the conjunction of the dual and
-primal problem plus the constraints that for all $i$ and $j$,
-$x_i \times z_i = 0$ and $y_j \times t_j = 0$.
-Note that the last constraints mean that in the combined problem
-every variable has a {\em complementary} variable which is not allowed
-to be positive if it is.
-
-For example, imagine that our primal problem is the constraints from before:
-\[
-\begin{array}{rlrrr}
-x_m & = &50 & + \frac{1}{2} x_l & - \frac{1}{2} s_4 \\
-s_1 & = &90 & - x_l &  - s_4 \\
-s_2 & = &100 & - x_l \\
-d_3 & = &95 & - \frac{1}{2} x_l & + \frac{1}{2} s_4 \\
-x_r & = &100 &  & - s_4
-\end{array}
-\]
-and that we have the weak stay
-constraints  $x_l = 10$, $x_m= 50$ and $x_r = 90$.
-The optimization problem is therefore to minimize
-\[
-(x_l - 10)^2 + (x_m - 50)^2 + (x_r - 90)^2.
-\]
-Eliminating basic variables from this function gives
-\[
-O = (x_l - 10)^2 + (\frac{1}{2} x_l  - \frac{1}{2} s_4)^2
- + (10 -s_4)^2.
-\]
-Now
-\[
-\frac{ \partial O}{\partial x_l} = 2 (x_l - 10) +
- (2 \times \frac{1}{2}) (\frac{1}{2} x_l  - \frac{1}{2} s_4)
-= \frac{5}{2} x_l  - \frac{1}{2} s_4 - 20
-\]
-and
-\[
-\frac{ \partial O}{\partial s_4} =
- (2 \times - \frac{1}{2}) (\frac{1}{2} x_l  - \frac{1}{2} s_4)
- - 2 (10 -s_4)
-= - \frac{1}{2} x_l  + \frac{5}{2} s_4 - 20.
-\]
-The dual problem is therefore
-\[
-\begin{array}{rlrrrrrrrr}
-t_1 & = &-20 & + \frac{5}{2} x_l & - \frac{1}{2} s_4 &
-        + \frac{1}{2} z_1 & - z_2 & - z_3 & - \frac{1}{2} z_4 & \\
-t_2 & = &-20 & + - \frac{1}{2} x_l & + \frac{5}{2} s_4 &
-        - \frac{1}{2} z_1 & - z_2 &  & + \frac{1}{2} z_4 & -z_5  \\
-\end{array}
-\]
-
-Putting the primal and dual together we obtain the problem:
-\[
-\begin{array}{rlrrrrrrrr}
-x_m & = &50 & + \frac{1}{2} x_l & - \frac{1}{2} s_4 \\
-s_1 & = &90 & - x_l &  - s_4 \\
-s_2 & = &100 & - x_l \\
-d_3 & = &95 & - \frac{1}{2} x_l & + \frac{1}{2} s_4 \\
-x_r & = &100 &  & - s_4\\
-t_1 & = &-20 & + \frac{5}{2} x_l & - \frac{1}{2} s_4 &
-        + \frac{1}{2} z_1 & - z_2 & - z_3 & - \frac{1}{2} z_4 & \\
-t_2 & = &-20 & + - \frac{1}{2} x_l & + \frac{5}{2} s_4 &
-        - \frac{1}{2} z_1 & - z_2 &  & + \frac{1}{2} z_4 & -z_5  \\
-\end{array}
-\]
-where the variables in the problem and their complements are given by:
-\[
-\begin{array}{cc}
-x_l \leftrightarrow t_1 & x_m \leftrightarrow z_1 \\
-x_r \leftrightarrow z_5 & s_1 \leftrightarrow z_2 \\
-s_2 \leftrightarrow z_3 & d_3 \leftrightarrow z_4 \\
-s_4 \leftrightarrow t_2 &  \\
-\end{array}
-\]
-
-A consequence of the way the dual is constructed is that a variable
-and its complement cannot both be basic, meaning that the solution
-read from the basic feasible
-solved form automatically satisfies the complementary condition.
-
-Unfortunately the complete problem
-is not in basic feasible form. To transform it
-into basic feasible form we add an artificial variable $v$
-to every equation giving the equations:
-\[
-\begin{array}{rlrrrrrrrrr}
-x_m & = &50 & + v & + \frac{1}{2} x_l & - \frac{1}{2} s_4 \\
-s_1 & = &90  & + v & - x_l &  - s_4 \\
-s_2 & = &100  & + v & - x_l \\
-d_3 & = &95  & + v & - \frac{1}{2} x_l & + \frac{1}{2} s_4 \\
-x_r & = &100  & + v &  & - s_4\\
-t_1 & = &-20  & + v & + \frac{5}{2} x_l & - \frac{1}{2} s_4 &
-        + \frac{1}{2} z_1 & - z_2 & - z_3 & - \frac{1}{2} z_4 & \\
-t_2 & = &-20  & + v & - \frac{1}{2} x_l & + \frac{5}{2} s_4 &
-        - \frac{1}{2} z_1 & - z_2 &  & + \frac{1}{2} z_4 & -z_5  \\
-\end{array}
-\]
-We now pivot on the row with the largest negative constant. In this
-case either the row with basic variable $t_1$ or that with $t_2$.
- Say we arbitrarily choose $t_2$
-then we obtain:
-\[
-\begin{array}{rlrrrrrrrrr}
-x_m & = & 70 & + t_2 &  + x_l & -3 s_4 &
-        + \frac{1}{2} z_1 & + z_2 & &  -  \frac{1}{2} z_4 & + z_5 \\
-s_1 & = & 110  & + t_2 & - \frac{1}{2} x_l &  + \frac{3}{2} s_4 &
-        + \frac{1}{2} z_1 & + z_2 & &  -  \frac{1}{2} z_4 & + z_5 \\
-s_2 & = &120  & + t_2 & - \frac{1}{2} x_l & - \frac{5}{2} s_4 &
-        + \frac{1}{2} z_1 & + z_2 & &  -  \frac{1}{2} z_4 & + z_5 \\
-d_3 & = & 115  & + t_2 &  & - 2 s_4 &
-        + \frac{1}{2} z_1 & + z_2 & &  -  \frac{1}{2} z_4 & + z_5 \\
-x_r & = &120  & + t_2 & + \frac{1}{2} x_l  & - \frac{7}{2}s_4 &
-        + \frac{1}{2} z_1 & + z_2 & &  -  \frac{1}{2} z_4 & + z_5 \\
-t_1 & = & 0  & + t_2 & + 3 x_l & -3 s_4 &
-        + z_1 &  & - z_3 & - z_4 & + z_5\\
-v & = &-20  & + t_2 & +  \frac{1}{2} x_l & - \frac{5}{2} s_4 &
-        + \frac{1}{2} z_1 & + z_2 &  & -  \frac{1}{2} z_4 &  +z_5  \\
-\end{array}
-\]
-
-We have now obtained a solved form which is basic feasible and which
-satisfies the complementary conditions. The only problem is that the
-artificial variable $v$ is in the basis. We continue pivoting until $v$
-leaves the basis. At each pivot we choose to make basic the
-variable which is complementary to the variable which just left the basis.
-Thus in the next stage we would choose to move $s_4$ into the basis since
-this is the complement of $t_2$. We use the standard simplex row selection
-rule to determine which variable to move out of the basis. This ensures
-that feasibility is maintained. Because we only move a variable into the basis
-once its complementary variable has been moved out of the basis this means that
-the solution corresponding to any of the solved forms will satisfy
-the complementary conditions.
-
-In analogy with the incremental simplex algorithm
-we can modify this algorithm so that it is incremental for resolving.
-Changing the desired variable values only changes the constants
-in the solved form. There are two possibilities. If the solved form
-remains feasible, then we just read the new solution directly from the
-solved form. Otherwise, the solved form is now infeasible. In this
-case we proceed as above, first introducing an artificial variable
-$v$ and making the solved form feasible, then pivoting until $v$
-leaves the basis.
-
-We are currently exploring an implementation based on complementary pivoting.
-
-\subsection{Active Set Method}
-\label{active-sets}
-
-Our current implementation of QOCA uses the {\em active set method}
-\cite{fletcher-book} to solve the convex quadratic programming problem.
-This method is an iterative technique for solving constrained optimization
-problems with inequality constraints.  It is reasonably robust and quite
-fast, and is the method of choice for medium scale problems consisting of
-up to 1000 variables and constraints.
-
-The key idea behind the algorithm is to solve a sequence of constrained
-optimization problems $O_0$, ..., $O_t \ (t \geq 0)$.  
-Each problem minimizes $f$ with
-respect to a set of equality constraints, ${\cal A}$, called the {\em
-active set}.  The active set consists of the original equality constraints
-plus those inequality constraints that are ``tight,'' in other words, those
-inequalities that are currently required to be satisfied as
-equalities. The other inequalities are ignored for the moment.
-
-Essentially, each optimization problem $O_i$ can be treated as an unconstrained
-quadratic optimization problem, denoted by $U_i$. To obtain $U_i$, we
-rewrite the equality constraints in $O_i$ in basic feasible solved
-form, and then eliminate all basic variables in the objective function $f$.
-The optimal solution is the point at which all of the partial derivatives of 
-$f$ equal zero. The problem $U_i$ can be solved easily, since we are 
-dealing with a convex quadratic function $f$ and so 
-its derivatives are linear. 
-As a result, to solve $U_i$ we need only solve a system of
-linear equations over unrestricted variables. 
-
-In more detail,
-in the active set method, we assume at each stage
-that a feasible initial guess 
-$\vx_0 = (x_1, \cdots x_n)^T$ is available, as well as the corresponding
-active set ${\cal A}$\@. 
-Assume that we have just solved the optimization problem $O_0$, and let its 
-solution be $\vx^\ast_0$. We  face the following two possibilities 
-when determining the new approximate solution $\vx_1$. 
-\bl{\arabic{bean}.}
-\item $\vx^\ast_0$ is feasible with respect
- to the constraints in $O_0$ but it
-violates some inequality constraints in $QP$ that are not in the current
-active set ${\cal A}$. In this case, a scalar $\alpha \in [0,1]$ is 
-selected, such that it is as large as possible and the point $\vx_0 + \alpha
-(\vx^\ast_0 - \vx_0) $ is feasible. This point is taken as the new approximate
-solution $\vx_1$, and the violated constraints are added to the active
-set, giving rise to a new optimization problem $O_1$. 
-\item $\vx^\ast_0$ is feasible with respect to the original problem $QP$\@.
-It is directly taken as the new 
-approximate solution $\vx_1$ and we test to see it is  also
-optimal $QP$. This requires us to 
-check if there exists a direction $\vs$ at $\vx_1$, such that a feasible
-incremental step along $\vs$ reduces $f$. If such direction $\vs$ exists,
-then one constraint is taken out of the active set ${\cal A}$ 
-to generate the direction $\vs$, which results in a new 
-optimization problem $O_1$. If no such direction exists we are finished
-since $\vx_1$ is both feasible and optimal.
-\el
-%
-If the active set is modified, the whole process is repeated until 
-the optimal solution is reached.
-
-
-
-
-Note that the active set method is closely related to the simplex method. Those
-inequalities whose slack variables are not basic are in the active set,
-while those whose slack variables are basic are not.  Pivoting corresponds
-to moving one inequality out of the active set and replacing it by another.
-
-%
-%*** example ***
-%
-
-Consider our working example with the weak constraints that
-$x_m=50$, $x_l=30$ and $x_r=70$\@. This gives rise to the
-minimization problem $QP_1:$
-\begin{quote}
-minimize $f_1 = (x_m - 50)^2 + (x_l - 30)^2 
-+ (x_r - 70)^2 $ subject to
-$$
-\begin{array}{rrrrcl}
-(1)  & 2 x_m & -x_l & -x_r & = & 0 \\
-(2)      &       & -x_l & +x_r & \geq & 10 \\
-(3)      &       &      & -x_r & \geq & -100 \\
-(4)      &       & x_l  &      & \geq & 0 
-\end{array}
-$$
-\end{quote}
-Although it is obvious that $x_m = 50, x_l = 30, x_r = 70 $
-or $ \vx^\ast = (50,30,70)^T$ is the optimal solution, it is still
-instructive to see how the active set method computes this. 
-The initial guess and active set are read from the augmented simplex form
-tableux. We start with
-an initial guess $x_m = 50, x_l = 0, x_r = 100$,
-i.e.\ $\vx_0=(50,0,100)^T$,
-and constraints 1, 3 and 4 are active. Thus 
-${\cal A}^{(1)}_0 = \{ 1,3,4 \}$ is the initial active set. The equality
-constrained optimization problem $O^{(1)}_0$ is therefore
-\begin{quote}
-minimize $f_1$ subject to
-$$
-\begin{array}{rrrrrr}
-          & 2x_m & -x_l & -x_r & = & 0 \\
-          &      &      & -x_r & = & -100 \\
-          &      & x_l  &      & = & 0
-\end{array}
-$$
-\end{quote}
-The problem $O^{(1)}_0$ has only one feasible solution $x_m = 50, x_l = 0,
-x_r = 100$, so it is also the optimal solution, denoted by $\vx^\ast_0$\@.
-Next we check if $\vx^\ast_0$ is the optimal solution to the problem
-$QP_1$\@. Constraint 4 forces $x_l$ to take the value 0
-in $\vx^\ast_0$\@. However, the value of the
-objective function $f_1$ can be reduced if $x_l$ 
-is increased. 
-Thus the 4th constraint $\vx_l \geq 0 $ can be moved out of the active
-set in order to further reduce the value of $f_1$\@. This gives
-$\vx_1 = \vx^\ast_0$ as the new approximate
-solution, ${\cal A}^{(1)}_1 = \{1,3\}$ as the active set and the optimization
-problem $O^{(1)}_1$ as 
-\begin{quote}
-minimize $f_1$ subject to
-$$\begin{array}{rrrrrr} 
-          & 2x_m & -x_l & -x_r & = & 0 \\
-          &      &      & -x_r & = & -100
-\end{array}
-$$
-\end{quote}
-To solve $O^{(1)}_1$, we rewrite the constraints in $O^{(1)}_1$ to a basic
-feasible solved form $x_r = 100 \wedge x_l = 2x_m - 100$, and then eliminate 
-basic variables in the function $f_1$\@. This results in the following 
-unconstrained optimization problem 
-\begin{quote}
-minimize $(x_m - 50)^2 + (2x_m - 100 -30)^2 + (100 - 70)^2$
-\end{quote}
-Setting the derivative to be zero we obtain 
-$$ 2(x_m -50) + 2 \times 2 (2x_m - 130) = 0.$$
-Solving this together with the constraint in $O^{(1)}_1$, the optimal solution
-of $O^{(1)}_1$ is found to be $\vx^\ast_1 = (62,24,100)^T$\@. It is
-easy to verify that $\vx^\ast_1$ is still feasible. Similarly to the 
-case for $\vx^\ast_0$, in $\vx^\ast_1$
-$x_r$ is forced to take the value 100 because of the
-3rd constraint, yet the function value $f_1$ can be
-reduced if $x_r$ is decreased. 
-So the 3rd constraint $-x_r \geq -100$ is moved out of the active
-set. We now have the new approximate solution $\vx_2 = \vx^\ast_1$, 
-the active set 
-${\cal A}^{(1)}_2 = \{ 1 \}$ and the optimization problem $O^{(1)}_2$:
-
-\mbox{minimize $f_1$ subject to $2 x_m - x_l - x_r = 0.$}
-
-To solve this problem, we repeat the same procedure as for solving $O^{(1)}_1$\@.
-%Rewrite the constraint as $x_l = 2x_m - x_r$ and substitute it into the 
-%function $f_1$, then we have the unconstrained problem \\
-%\begin{quote}
-%\hspace*{0.5 cm} $ \min \ q = (x_m-50)^2 + (x_l-30)^2 + (2x_m-x_l-70)^2$ \\
-%\end{quote}\vspace{-0.9ex}
-The solution to this problem satisfies the equations:
-\bel{Q1_2}
-\begin{array}{lclcl}
-2(x_m-50) &+& 2 \times 2(2x_m - x_l -70)&  = & 0  \\
-2(x_l-30) &+& 2(2x_m - x_l -70) & = & 0  
-\end{array}  
-\eel
-%which is obtained by setting all partial derivatives of $q$ to be zero.  
-These together with the constraint in $O^{(1)}_2$ have the solution
-$\vx^\ast= (50,30,70)^T$\@. This is the optimal solution to $O^{(1)}_2$ and
-is also the optimal solution to the original problem $QP_1$\@. 
-
-
-\begin{figure}[htb]
-\begin{center}
-\input qoca.eepic
-\end{center}
-\caption{Resolving the constraints using QOCA\label{fig:qoca}}
-\end{figure}
-
-
-Now imagine that we have started to manipulate the diagram.
-We have the weak constraints that $x_l = 30$ and $x_r = 70$ and
-the strong constraint that $x_m = 60$\@.
-Reflecting this, we change the first term in the function $f_1$ to be
-$1000(x_m-60)^2$, denote it as $f_2$ and the corresponding optimization
-problem as $QP_2$\@. 
-Starting from $\vx_0 = (50,30,70)^T$, which is the optimal solution
-to $QP_1$, an equality constrained problem $O^{(2)}_0$ is formed. $O^{(2)}_0$
-is the same as $O^{(1)}_2$, except that they have different objective 
-functions. The solution to $O^{(2)}_0$ satisfies similar linear equations
-to those of (\ref{Q1_2}). These can be obtained by replacing the term $2(x_m-50)$
-in the first equation of (\ref{Q1_2}) by $1000 (x_m-60)$
-reflecting the change in the objective function. A solved form 
-for these equations is 
-\bel{Q2_0}
-\begin{array}{lclcl}
-x_m & = & \frac{500}{501} \times 60 & + & \frac{50}{501} \\
-x_l & = & x_m & - & 20 
-\end{array}
-\eel
-which leads to the optimal solution for both $O^{(2)}_0$ and $QP_2$ 
-as $x_m = 59.98, x_l = 39.98, x_r = 79.98 $\@. 
-
-Note that the exact least-squares-better
-solution is actually $x_m = 60, x_l = 40, x_r = 80$\@.  With
-quadratic optimization the strong constraints do not completely dominate the
-weak ones in the computed solution.  However, by choosing a suitably large
-constant we found a solution that {\em is} least-squares-better to under
-a one-pixel resolution, so that the deviation from a least-squares-better
-solution would not be visible in an interactive system. 
-
-In practice, this 
-appears to work well. However, in principle it is possible to solve the
-problem iteratively by computing the solution to a sequence of 
-quadratic optimization problems in which the 
-constants grow by an order of magnitude
-and stopping when the solution is sufficiently close to the limit.
-It might also be possible to solve the problem by using symbolic values,
-however, this is more difficult than in the Cassowary algorithm because
-of more complex manipulation.
-
-To modify the active set method so that it is incremental for
-resolving, we observe that 
-changing the desired variable values only changes the
-optimization function $f$\@. Thus we can reuse the active set from the last
-resolve and reoptimize with respect to this.  In most cases the active set does
-not change, and so we are done.  Otherwise we proceed as above.
-
-For example, if we now move $x_m$ from 60 to 90,
-we change the objective function again, but need only change the 
-desired values and can keep the weights the same as they are in $f_2$,
-e.g.\ in the new objective function $f_3$, the variable $x_m$ has 
-a new desired value 90. The corresponding optimization problem
-is referred to as $QP_3$\@. To solve this problem, the {\em resolve}
-procedure makes use of the information from the
-previous solve $QP_2$, while applying the active set method to $QP_3$\@. 
-When resolving, it is important to notice that, if we start from 
-the solution for the previous problem $QP_2$, i.e.\ $\vx_0 = (59.98,
-39.98,79.98)^T$, then the solution to the corresponding equality
-constrained problem $O^{(3)}_0$,
-\begin{quote}
-minimize $f_3 $ subject to $2x_m -x_l -x_r = 0$,
-\end{quote}
-can be easily obtained. In fact, one can just replace the desired
-value 60 for $x_m$ in (\ref{Q2_0}) by its new desired value 90, which 
-leads to the optimal solution to $O^{(0)}_3$ as 
-$\vx^\ast_0 = (89.9202, 69.9202,109.9202)^T$\@. If the desired value 
-does not change too much, it is quite likely that $\vx^\ast_0$ is also 
-optimal for $QP_3$\@. Unfortunately, this is not the case for this example,
-since $\vx^\ast_0$ violates the 3rd constraint $-x_r \geq -100$\@.
-Choosing $\alpha \in [ 0, 1]$ to be as big as possible while still ensuring
-that
-$\vx_1 = \vx_0 + \alpha(\vx^\ast_0 - \vx_0)$ is feasible, 
-we have $\alpha = 0.6687$
-and $\vx_1 = \vx_0 + \alpha(\vx^\ast_0 - \vx_0)$ as the new approximate 
-solution, at which the 3rd constraint becomes active. By
-solving the corresponding
-equality constrained problem $Q^{(3)}_1$,
-\begin{quote}
-minimize $f_3 $ subject to $2x_m - x_l -x_r = 0, 
-\ -x_r = -100 $,
-\end{quote}
-the optimal solution to $QP_3$ is found to be 
-$x_m = 89.9003$, $x_l = 79.8007$,
-$x_r = 100$. 
-
-Figure~\ref{fig:qoca} shows the effect of moving the horizontal line
-with the least squares comparator. With this comparator the line
-moves right maintaining the same length until it hits the right boundary,
-at which point it starts to compress. This contrasts with the behaviour
-of the locally-error-better comparator
-in which the line grew until it bumped against the side.
-
-The actual implementation of QOCA is rather more complex than this example 
-suggests and the reader is referred to \cite{fletcher-book} for more details.
+Note also that all of this is not a problem for least-squares-better
+comparators such as the one that the QOCA algorithm uses --- that
+comparator distributes the error to the $x$ and $y$ components of all
+the points with stays of the same strength~\cite{borning-simplex-tr}.
 
 \section{Empirical Evaluation}
 \label{empirical-evaluation}
-
-Both algorithms have been implemented and tested.
-
-Our algorithms for incremental addition and deletion of equality and inequality
-constraints and for solving and resolving for the least-square comparator
-using the QOCA algorithm have been implemented as part of the QOCA C++
-constraint solving toolkit. 
-The results are very satisfactory.
-For a test problem with 300 constraints and
-300 variables, adding a constraint takes
-on average  $1.5$~msec, deleting a constraint $1.6$~msec, the initial
-solve  $12$~msec, and subsequent resolving as the point moves $4.5$~msec.
-For a larger problem with 900 constraints and variables,
-adding a constraint takes
-on average  $9.7$~msec, deleting a constraint $17$~msec, the initial
-solve  $120$~msec, and subsequent resolving as the point moves $67$~msec.
-These tests were run a sun4m sparc, running SunOS~5.4.
 
 Cassowary has been implemented in Smalltalk, C++, and Java.
 Running the Smalltalk implementation of Cassowary on the same problems, 
@@ -2692,7 +2129,7 @@ constraint $151$~msec, and resolving as the point moves $45$~msec.  These
 tests were run using an implementation in OTI Smalltalk Version 4.0 running
 on a IBM Thinkpad 760EL laptop computer.
 
-For the C++ implementation of Cassowary on the problem with 900
+For the C++ implementation on the problem with 900
 constraints and variables, adding a constraint takes $40$~msec, deleting 
 a constraint $8$~msec, and resolving as the point moves $8$~msec.  By
 default for Cassowary the solver optimizes after each constraint
@@ -2708,18 +2145,7 @@ head-to-head comparison.  Nevertheless, they indicate that both
 algorithms are eminently practical for use with interactive graphical
 applications.
 
-The QOCA toolkit has been employed in a number of applications.
-The first application is part of an intelligent pen and paper
-interface that contains a parser to incrementally parse diagrams drawn by
-the user using a stylus, and that has a diagram editor that respects
-the semantics of the diagram by preserving the constraints recognized
-in the parsing process.  QOCA is used for both error correction in
-parsing and for diagram manipulation in the editor~\cite{chok-marriott95}.
-A second QOCA application is for layout of trees and graphs in the
-presence of arbitrary linear arithmetic constraints and with
-suggested placements for some nodes~\cite{he-marriott96}.
-
-The various implementations of Cassowary are also being used actively.
+The various implementations of Cassowary are being used actively.
 One author is currently embedding the C++ implementation in a X11 system
 window manager based on a Scheme configuration language. A demonstration
 Constraint Drawing Application using the Java implementation is
@@ -2730,6 +2156,10 @@ determined by the combination of constraints from both the web author
 and the viewer.
 
 \subsection*{Acknowledgments}
+
+Thanks to Kim Marriott, Peter Stuckey and Yi Xiao who were instrumental
+in devloping the incremental simplex-based algorithm on which Cassowary
+and QOCA~\cite{borning-simplex-tr} are based.
 
 This project has been funded in part by the National Science Foundation
 under Grants \mbox{IRI-9302249} and \mbox{CCR-9402551} and in part by Object
