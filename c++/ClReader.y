@@ -108,7 +108,7 @@ ClConstraint *PcnParseConstraint(istream &xi, const ClVarLookupFunction &lookup_
   ClParseData cl_parse_data(xi, lookup_func);
   pxi_lexer = &xi;
   if (yyparse(&cl_parse_data) == 0) { // success
-#ifndef NO_DEBUG_PARSER
+#ifdef DEBUG_PARSER
     cerr << *cl_parse_data.Pcn() << endl;
 #endif
     cl_parse_data.Pcn()->ChangeStrength(strength);

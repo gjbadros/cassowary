@@ -14,7 +14,7 @@
 #define _CLC_H__
 
 #if defined(HAVE_CONFIG_H) && !defined(CONFIG_H_INCLUDED) && !defined(CONFIG_INLINE_H_INCLUDED)
-#include <cassowary/config-inline.h>
+#include "cassowary/config-inline.h"
 #define CONFIG_INLINE_H_INCLUDED
 #endif
 
@@ -74,6 +74,8 @@ CL_SimplexSolver CL_SimplexSolverNew();
 /* Print the ClSimplexSolver object out to the given FILE * */
 void CL_SimplexSolverPrint(CL_SimplexSolver solver, FILE *out);
 
+void CL_ConstraintPrint(CL_Constraint pcn, FILE *out);
+
   /* FIXGJB: do not use ClVariable -- use ClAbstractVariable, perhaps? */
 typedef void (*PfnChangeClvCallback)(CLV clv, CL_SimplexSolver solver);
 
@@ -93,6 +95,8 @@ boolean CL_ClvIsNil(const CLV clv);
 
 /* Return a new constraint from parsing the strings */
 CL_Constraint CL_ParseConstraint(const char *szConstraintRule, const char *szConstraintStrength);
+
+boolean CL_FIsSatisfied(CL_Constraint pcn);
 
 /* Add a constraint to the solver */
 int CL_AddConstraint(CL_SimplexSolver solver, CL_Constraint cn);

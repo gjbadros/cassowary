@@ -23,6 +23,8 @@
 #define CONFIG_H_INCLUDED
 #endif
 
+#define boolean int
+
 extern "C" {
 
 typedef StringToVarMap *CL_VarMap;
@@ -98,6 +100,16 @@ CL_SimplexSolverPrint(CL_SimplexSolver solver, FILE *out)
   fprintf(out,"%s",xo.str());
 }
 
+/* Print the constraint object out to the given FILE * */
+void 
+CL_ConstraintPrint(CL_Constraint pcn, FILE *out)
+{
+  strstream xo;
+  xo << *pcn << ends;
+  fprintf(out,"%s",xo.str());
+}
+
+
 void 
 CL_TableauPrintExternalVariables(CL_Tableau tableau, FILE *out)
 {
@@ -139,7 +151,7 @@ double CL_ClvValue(const CLV var)
   return var->Value();
 }
 
-int
+boolean
 CL_ClvIsNil(const CLV var)
 {
   return var->IsNil();
@@ -160,8 +172,14 @@ CL_Constraint CL_ParseConstraint(const char *szConstraintRule, const char *szCon
   }
 }
 
+boolean CL_FIsSatisfied(ClConstraint *pcn)
+{
+  return pcn->FIsSatisfied();
+}
+
+
 /* Add a constraint to the solver; return 1 on success, 0 on failure */
-int CL_AddConstraint(CL_SimplexSolver solver, CL_Constraint cn)
+boolean CL_AddConstraint(CL_SimplexSolver solver, CL_Constraint cn)
 {
   try {
     return (solver->AddConstraintNoException(cn)?1:0);

@@ -45,7 +45,8 @@ libcassowary_a_SOURCES = \
 	ClSlackVariable.cc \
 	ClDummyVariable.cc \
 	ClReader-lex.cc \
-	ClReader.cc
+	ClReader.cc \
+	ClC.cc
 
 libcassowary_la_SOURCES = \
 	ClAbstractVariable.cc \
