@@ -24,6 +24,9 @@ class ClDummyVariable extends ClAbstractVariable
     {
       super(name);
     }
+
+  public ClDummyVariable()
+    { }
   
   public ClDummyVariable(long number, String prefix)
     {

@@ -21,12 +21,13 @@ abstract class ClAbstractVariable
   public ClAbstractVariable(String name)
     {
       my_name = name;
-      
       iVariableNumber++;
-      if (name.length() == 0)
-      {
-	my_name = "v" + iVariableNumber;
-      }
+    }
+
+  public ClAbstractVariable()
+    {
+      iVariableNumber++;
+      my_name = "v" + iVariableNumber;
     }
 
   public ClAbstractVariable(long varnumber, String prefix)

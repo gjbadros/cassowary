@@ -22,6 +22,9 @@ class ClSlackVariable extends ClAbstractVariable
 
   public ClSlackVariable(String name)
     {  super(name); }
+
+  public ClSlackVariable()
+    {  }
   
   public ClSlackVariable(long number, String prefix)
     { super(number,prefix); }
