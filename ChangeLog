@@ -1,3 +1,19 @@
+Fri May  7 17:02:09 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClC.cc (CL_ClvLookup): Return NULL if varmap is NULL instead 
+	of asserting it is non-NULL
+
+Thu May  6 19:02:38 1999  Greg J Badros  <gjb@bowman.cs.monash.edu.au>
+
+	* c++/ClFDTests.cc: Added return type to connect1.
+
+	* c++/ClFDSolver.cc: Return *this where missing.
+
+	* c++/ClFDConnectorVariable.h: Reorder mem vars to match
+	initialization order in ctr.
+
+	* c++/ClC.h, c++/ClC.cc:  Added CL_ClvIsFD.
+
 Sun May  2 10:42:00 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* c++/ClReader.l: Permit "_" in identifiers (needed for env
