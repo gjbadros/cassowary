@@ -28,13 +28,16 @@ class ClLinearEquation : public ClLinearConstraint {
  private: typedef ClLinearConstraint super;
 
  public:
-  // Constructor
+ //// Constructors
+
+ // ClLinearEquation(expr,...)    is   expr == 0
  ClLinearEquation(const ClLinearExpression &cle,
 		  const ClStrength strength = clsRequired(),
 		  double weight = 1.0) :
    ClLinearConstraint(cle,strength, weight)
    { }
 
+ // ClLinearEquation(var,expr,...)  is   var == expr
  ClLinearEquation(const ClAbstractVariable &clv,
 		  const ClLinearExpression &cle,
 		  const ClStrength strength = clsRequired(),
@@ -42,6 +45,7 @@ class ClLinearEquation : public ClLinearConstraint {
    ClLinearConstraint(cle,strength,weight)
    { my_expression.addVariable(clv,-1.0); }
 
+ // ClLinearEquation(expr,var,...) is   var == expr
  ClLinearEquation(const ClLinearExpression &cle,
 		  const ClAbstractVariable &clv,
 		  const ClStrength strength = clsRequired(),
@@ -49,6 +53,13 @@ class ClLinearEquation : public ClLinearConstraint {
    ClLinearConstraint(cle,strength,weight)
    { my_expression.addVariable(clv,-1.0); }
 
+ // ClLinearEquation(expr,expr,...) is   expr == expr
+ ClLinearEquation(const ClLinearExpression &cle1,
+		  const ClLinearExpression &cle2,
+		  const ClStrength strength = clsRequired(),
+		  double weight = 1.0) :
+   ClLinearConstraint(cle1,strength,weight)
+   { my_expression.addExpression(cle2,-1.0); }
  
  virtual ostream &printOn(ostream &xo) const
    {  super::printOn(xo); xo << " = 0 )"; return xo; }
