@@ -35,7 +35,7 @@ class ClSimplexSolver : public ClTableau {
     my_dummyCounter(0)
     { 
     my_rows[&my_objective] = new ClLinearExpression(); 
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
     cerr << "objective row new@ " << my_rows[&my_objective] << endl;
 #endif
     }

@@ -15,14 +15,14 @@
 // let ClSimplexSolver worry about deleting the variables
 ClTableau::~ClTableau()
 {
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   cerr << *this << endl;
 #endif
   map<const ClAbstractVariable *, ClLinearExpression *>::iterator it = my_rows.begin();
   for (; it != my_rows.end(); ++it)
     {
     // free the ClLinearExpression that we new-ed 
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
     cerr << "Deleting row  delete@ " << ((*it).second) << endl;
 #endif
     delete (*it).second;
@@ -38,7 +38,7 @@ ClTableau::~ClTableau()
 void 
 ClTableau::addRow(const ClAbstractVariable &var, const ClLinearExpression &expr)
 {
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << var << ", " << expr << ")" << endl;
 #endif
@@ -51,7 +51,7 @@ ClTableau::addRow(const ClAbstractVariable &var, const ClLinearExpression &expr)
     const ClAbstractVariable *pv = (*it).first;
     my_columns[pv].insert(&var);
     }
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   cerr << *this << endl;
 #endif
 }
@@ -63,7 +63,7 @@ ClTableau::addRow(const ClAbstractVariable &var, const ClLinearExpression &expr)
 void 
 ClTableau::removeColumn(const ClAbstractVariable &var)
 {
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << var << ")" << endl;
 #endif
@@ -85,7 +85,7 @@ ClTableau::removeColumn(const ClAbstractVariable &var)
 ClLinearExpression *
 ClTableau::removeRow(const ClAbstractVariable &var)
 {
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << var << ")" << endl;
 #endif
@@ -105,7 +105,7 @@ ClTableau::removeRow(const ClAbstractVariable &var)
     my_infeasibleRows.erase(itVar);
     }
   my_rows.erase(it);
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   cerr << "- returning " << *pexpr << endl;
 #endif
   return pexpr;
@@ -118,7 +118,7 @@ ClTableau::removeRow(const ClAbstractVariable &var)
 void 
 ClTableau::substituteOut(const ClAbstractVariable &oldVar, const ClLinearExpression &expr)
 {
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   cerr << "* ClTableau::";
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << oldVar << ", " << expr << ")" << endl;

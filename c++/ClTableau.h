@@ -28,7 +28,7 @@ class ClTableau {
   // Update the column cross-indices.
   void noteRemovedVariable(const ClAbstractVariable &v, const ClAbstractVariable &subject)
     { 
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
     Tracer TRACER(__FUNCTION__);
     cerr << "(" << v << ", " << subject << ")" << endl;
 #endif
@@ -41,7 +41,7 @@ class ClTableau {
   // update column cross indices
   void noteAddedVariable(const ClAbstractVariable &v, const ClAbstractVariable &subject)
     { 
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
     Tracer TRACER(__FUNCTION__);
     cerr << "(" << v << ", " << subject << ")" << endl;
 #endif

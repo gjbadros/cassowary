@@ -39,7 +39,7 @@ ClSimplexSolver::~ClSimplexSolver()
 ClSimplexSolver &
 ClSimplexSolver::addConstraint(const ClConstraint &cn)
 {
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << cn << ")" << endl;
 #endif
@@ -66,7 +66,7 @@ ClSimplexSolver::addConstraint(const ClConstraint &cn)
 ClSimplexSolver &
 ClSimplexSolver::addPointStays(const vector<const ClPoint *> &listOfPoints)
 {
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
 #endif
 
@@ -86,7 +86,7 @@ ClSimplexSolver::addPointStays(const vector<const ClPoint *> &listOfPoints)
 ClSimplexSolver &
 ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
 {
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << cnconst << ")" << endl;
 #endif
@@ -133,7 +133,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
   const ClAbstractVariable &marker = *((*it_marker).second);
   my_markerVars.erase(it_marker);
   // delete &marker happens below
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   cerr << "Looking to remove var " << marker << endl;
 #endif
   if (rowExpression(marker) == NULL )
@@ -142,7 +142,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
     // only consider restricted basic variables
     set<const ClAbstractVariable *> &col = my_columns[&marker];
     set<const ClAbstractVariable *>::iterator it_col = col.begin();
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
     cerr << "Must pivot -- columns are " << col << endl;
 #endif
 
@@ -156,7 +156,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
 	const ClLinearExpression *pexpr = rowExpression(*pv);
 	assert(pexpr != NULL );
 	Number coeff = pexpr->coefficientFor(marker);
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
 	cerr << "Marker " << marker << "'s coefficient in " << *pexpr << " is "
 	     << coeff << endl;
 #endif
@@ -183,7 +183,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
     // non-negativity restriction on the marker variable.)
     if (pexitVar == NULL ) 
       {
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
       cerr << "pexitVar is still NULL" << endl;
 #endif
       it_col = col.begin();
@@ -229,7 +229,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
   if (rowExpression(marker) != NULL )
     {
     ClLinearExpression *pexpr = removeRow(marker);
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
     cerr << "delete@ " << pexpr << endl;
 #endif
     delete pexpr;
@@ -334,7 +334,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
 void 
 ClSimplexSolver::reset()
 {
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "()" << endl;
 #endif
@@ -353,7 +353,7 @@ ClSimplexSolver::reset()
 void 
 ClSimplexSolver::resolve(const vector<Number> &newEditConstants)
 { // CODE DUPLICATED BELOW
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << newEditConstants << ")" << endl;
 #endif
@@ -373,7 +373,7 @@ ClSimplexSolver::resolve(const vector<Number> &newEditConstants)
 void 
 ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
 {
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << expr << ")" << endl;
 #endif
@@ -388,7 +388,7 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
   // the artificial objective is av, which we know is equal to expr
   // (which contains only parametric variables)
 
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   cerr << __FUNCTION__ << " before addRow-s:" << endl;
   cerr << (*this) << endl;
 #endif
@@ -398,7 +398,7 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
   addRow(*paz,*pazRow);
   addRow(*pav,expr);
 
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   cerr << __FUNCTION__ << " after addRow-s:" << endl;
   cerr << (*this) << endl;
 #endif
@@ -409,7 +409,7 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
   // Careful, we want to get the expression that is in
   // the tableau, not the one we initialized it with!
   ClLinearExpression *pazTableauRow = rowExpression(*paz);
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   cerr << "pazTableauRow->constant() == " << pazTableauRow->constant() << endl;
 #endif
 
@@ -451,14 +451,14 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
 bool 
 ClSimplexSolver::tryAddingDirectly(ClLinearExpression &expr)
 {
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << expr << ")" << endl;
 #endif
   const ClAbstractVariable *psubject = chooseSubject(expr);
   if (psubject == NULL )
     {
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
     cerr << "- returning false" << endl;
 #endif
     return false;
@@ -469,7 +469,7 @@ ClSimplexSolver::tryAddingDirectly(ClLinearExpression &expr)
     substituteOut(*psubject,expr);
     }
   addRow(*psubject,expr);
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   cerr << "- returning true" << endl;
 #endif
   return true; // successfully added directly
@@ -497,7 +497,7 @@ ClSimplexSolver::tryAddingDirectly(ClLinearExpression &expr)
 const ClAbstractVariable *
 ClSimplexSolver::chooseSubject(ClLinearExpression &expr)
 {
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << expr << ")" << endl;
 #endif
@@ -608,7 +608,7 @@ ClSimplexSolver::deltaEditConstant(Number delta,
 				   const ClAbstractVariable &plusErrorVar,
 				   const ClAbstractVariable &minusErrorVar)
 {
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << delta << ", " << plusErrorVar << ", " << minusErrorVar << ")" << endl;
 #endif
@@ -662,7 +662,7 @@ ClSimplexSolver::deltaEditConstant(Number delta,
 void 
 ClSimplexSolver::dualOptimize()
 {
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "()" << endl;
 #endif
@@ -720,7 +720,7 @@ ClSimplexSolver::dualOptimize()
 ClLinearExpression *
 ClSimplexSolver::newExpression(const ClConstraint &cn)
 {
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << cn << ")" << endl;
   cerr << "cn.isInequality() == " << cn.isInequality() << endl;
@@ -790,7 +790,7 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
       pdummyVar.reset(new ClDummyVariable(my_dummyCounter,"d"));
       pexpr->setVariable(*pdummyVar,1.0);
       my_markerVars[&cn] = pdummyVar.get();
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
       cerr << "Adding dummyVar == d" << my_dummyCounter << endl;
 #endif
       }
@@ -811,7 +811,7 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
       // FIXGJB: pzRow->addVariable(eplus,cn.strength().symbolicWeight() * cn.weight());
       ClSymbolicWeight sw = cn.strength().symbolicWeight().times(cn.weight());
       double swCoeff = sw.asDouble();
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
       if (swCoeff == 0) 
 	{
 	cerr << "sw == " << sw << endl
@@ -845,7 +845,7 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
     {
     pexpr->multiplyMe(-1);
     }
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   // FIXGJB instrument new and delete instead of trying to
   // output msgs everwhere I use them!
   cerr << "- returning " << *pexpr << " new@ " << pexpr.get() << endl;
@@ -865,7 +865,7 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
 void 
 ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
 {
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << zVar << ")" << endl;
   cerr << *this << endl;
@@ -897,7 +897,7 @@ ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
     // we are at an optimum
     if (objectiveCoeff == 0)
       return;
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
     cerr << "*pentryVar == " << *pentryVar << ", "
 	 << "objectiveCoeff == " << objectiveCoeff
 	 << endl;
@@ -913,7 +913,7 @@ ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
     for (; it_rowvars != columnVars.end(); ++it_rowvars)
       {
       const ClAbstractVariable *pv = *it_rowvars;
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
       cerr << "Checking " << *pv << endl;
 #endif
       if (pv->isPivotable()) 
@@ -926,7 +926,7 @@ ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
 	  r = - pexpr->constant() / coeff;
 	  if (r < minRatio)
 	    {
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
 	    cerr << "New minRatio == " << r << endl;
 #endif
 	    minRatio = r;
@@ -945,7 +945,7 @@ ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
       throw ExCLInternalError();
       }
     pivot(*pentryVar, *pexitVar);
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
     cerr << *this << endl;
 #endif
     }
@@ -956,7 +956,7 @@ ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
 void 
 ClSimplexSolver::pivot(const ClAbstractVariable &entryVar, const ClAbstractVariable &exitVar)
 {
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << entryVar << ", " << exitVar << ")" << endl;
 #endif
@@ -991,7 +991,7 @@ ClSimplexSolver::pivot(const ClAbstractVariable &entryVar, const ClAbstractVaria
 void 
 ClSimplexSolver::resetEditConstants(const vector<Number> &newEditConstants)
 {
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << newEditConstants << ")" << endl;
 #endif
@@ -1034,7 +1034,7 @@ ClSimplexSolver::resetEditConstants(const vector<Number> &newEditConstants)
 void 
 ClSimplexSolver::resetStayConstants()
 {
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "()" << endl;
 #endif
@@ -1071,7 +1071,7 @@ ClSimplexSolver::resetStayConstants()
 void 
 ClSimplexSolver::setExternalVariables()
 {
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "()" << endl;
   cerr << *this << endl;

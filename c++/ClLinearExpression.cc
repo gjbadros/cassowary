@@ -204,7 +204,7 @@ ClLinearExpression::addExpression(const ClLinearExpression &expr, Number n,
 ClLinearExpression &
 ClLinearExpression::addVariable(const ClAbstractVariable &v, Number c)
 { // body largely duplicated below
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << v << ", " << c << ")" << endl;
 #endif
@@ -243,7 +243,7 @@ ClLinearExpression::addVariable(const ClAbstractVariable &v, Number c,
 				const ClAbstractVariable &subject,
 				ClTableau &solver)
 { // body largely duplicated above
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << v << ", " << c << ", " << subject << ", ...)" << endl;
 #endif
@@ -272,7 +272,7 @@ ClLinearExpression::addVariable(const ClAbstractVariable &v, Number c,
       solver.noteAddedVariable(v,subject);
       }
     }
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   cerr << "Now *this == " << *this << endl;
 #endif
   return *this;
@@ -302,7 +302,7 @@ ClLinearExpression::substituteOut(const ClAbstractVariable &var,
 				  const ClAbstractVariable &subject,
 				  ClTableau &solver)
 {
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   cerr << "* ClLinearExpression::";
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << var << ", " << expr << ", " << subject << ", " 
@@ -324,7 +324,7 @@ ClLinearExpression::substituteOut(const ClAbstractVariable &var,
     map<const ClAbstractVariable *,Number>::iterator poc = my_terms.find(pv);
     if (poc != my_terms.end())
       { // if oldCoeff is not nil
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
       cerr << "Considering (*poc) == " << (*poc).second << "*" << *(*poc).first << endl;
 #endif
       // found it, so new coefficient is old one plus what is in *i
@@ -341,14 +341,14 @@ ClLinearExpression::substituteOut(const ClAbstractVariable &var,
       }
     else
       { // did not have that variable already (oldCoeff == nil)
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
       cerr << "Adding (*i) == " << (*i).second << "*" << *(*i).first << endl;
 #endif
       my_terms[pv] = multiplier * c;
       solver.noteAddedVariable(*pv,subject);
       }
     }
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   cerr << "Now (*this) is " << *this << endl;
 #endif
 }
@@ -399,7 +399,7 @@ ClLinearExpression::changeSubject(const ClAbstractVariable &old_subject,
 Number
 ClLinearExpression::newSubject(const ClAbstractVariable &subject)
 {
-#ifndef NO_TRACE
+#ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << subject << ")" << endl;
 #endif
