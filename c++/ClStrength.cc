@@ -17,7 +17,8 @@ ClStrength &clsRequired()
 {
   // required is distinct by equality to this static object,
   // but I still use an especially high symbolic weight, just in case
-  static ClStrength required_strength("required", MAXDOUBLE, MAXDOUBLE, MAXDOUBLE);
+  // FIXGJB: hack?
+  static ClStrength required_strength("<Required>", 1000, 1000, 1000);
   return required_strength;
 }
 
