@@ -1,5 +1,5 @@
 Cassowary Constraint Solver for Smalltalk, C++, and Java
-Version 0.2-pre
+Version 0.2
 
 Web Page: http://www.cs.washington.edu/research/constraints/cassowary
 Contact: cassowary@cs.washington.edu
@@ -9,11 +9,12 @@ Alan Borning <borning@cs.washington.edu>
 University of Washington
 Computer Science and Engineering
 Seattle, WA 98195-2350
-28-July-1998
+06-August-1998
 
 with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
 
 See ANNOUNCE for a brief description and announcement of this distribution.
+See NEWS for a history of user-visible changes.
 See COPYRIGHT for legalese regarding use of this distribution.
 
 Please send bug reports to cassowary@cs.washington.edu
@@ -43,6 +44,12 @@ implementation is in cassowary-tr.ps (pdf version in cassowary-tr.pdf).
 This paper is required reading if you intend to use the solver in your
 own project(s).
 
+See also the SCWM (Scheme Constraints Window Manager) web page:
+
+http://web.mit.edu/mstachow/www/scwm.html
+
+SCWM, also by Greg Badros, is the most substantial application using
+this toolkit that we are aware of.
 
 ------------------------------------------------------------------
 
