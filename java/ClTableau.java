@@ -118,6 +118,9 @@ class ClTableau extends CL
       for (Enumeration e = expr.terms().keys() ; e.hasMoreElements(); ) {
         ClAbstractVariable clv = (ClAbstractVariable) e.nextElement();
 	insertColVar(clv,var);
+        if (clv.isExternal()) {
+          _externalParametricVars.insert(clv);
+        }
       }
       if (var.isExternal()) {
 	_externalRows.insert(var);
