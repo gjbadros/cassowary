@@ -100,12 +100,41 @@ c addDelete2.
 		cr.
 !
 
+addDelete3
+
+"
+	| c |
+c := ClCassowaryTester new.
+c haltFirst: false.
+c addDelete3.
+"
+
+		| x solver result c1 c2 |
+
+	haltFirst ifTrue: [self halt].
+
+	x := ClVariable new name: 'x'.
+
+	solver := ClSimplexSolver new.
+	c1 := (x cnEqual: 100.0 strength: ClStrength weak weight: 5).  "notice weight=5 for this one"
+	c2 := (x cnEqual: 200.0 strength: ClStrength weak).
+	solver addConstraint: c1; addConstraint: c2.
+	result := (x value clApprox: 100.0).
+	solver removeConstraint: c1.
+	result := result & (x value clApprox: 200.0).
+
+	Transcript cr; 
+		show: 'ClCassowaryTester addDelete2 result='; 
+		show: (result ifTrue: ['passed'] ifFalse: ['failed']); 
+		cr.
+!
+
 edit1
 
 "
 	| c |
 c := ClCassowaryTester new.
-c haltFirst: true.
+c haltFirst: false.
 c edit1.
 "
 
@@ -227,7 +256,7 @@ stay1
 "
 	| c |
 c := ClCassowaryTester new.
-c haltFirst: true.
+c haltFirst: false.
 c stay1.
 "
 
@@ -288,7 +317,37 @@ c twoSolutions.
 		show: 'ClCassowaryTester twoSolutions result='; 
 		show: (result ifTrue: ['passed'] ifFalse: ['failed']); 
 		cr.
-! !
+!
+
+weighted1
+
+"
+	| c |
+c := ClCassowaryTester new.
+c haltFirst: false.
+c weighted1.
+"
+
+		| x solver result c15 c20 |
+
+	haltFirst ifTrue: [self halt].
+
+	x := ClVariable new name: 'x'.
+
+	solver := ClSimplexSolver new.
+	c15 := x cnEqual: 15.0 strength: ClStrength weak.
+	c20 := x cnEqual: 20.0 strength: ClStrength weak weight: 2.
+	solver addConstraint: c15.
+	result := x value clApprox: 15.0.
+	solver addConstraint: c20.
+	result := result & (x value clApprox: 20.0).
+	solver removeConstraint: c20.
+	result := result & (x value clApprox: 15.0).
+
+	Transcript cr; 
+		show: 'ClCassowaryTester weighted1 result='; 
+		show: (result ifTrue: ['passed'] ifFalse: ['failed']); 
+		cr.! !
 
 ClCassowaryTester initializeAfterLoad!
 ClTests initializeAfterLoad!

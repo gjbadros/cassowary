@@ -631,7 +631,7 @@ addVariable: v coefficient: c
 	(self terms includesKey: v)
 		ifTrue: [
 			newCoeff := c + (self terms at: v).
-			(newCoeff clApprox: 0.0)
+			(newCoeff clApproxZero)
 				ifTrue: [
 					self terms removeKey: v.
 					^self]
@@ -975,7 +975,7 @@ substituteOut: var expr: expr subject: subject solver: solver
 				self terms at: v put: multiplier*c.  solver noteAddedVariable: v subject: subject]
 			ifFalse: [
 				newCoeff := oldCoeff + (multiplier*c).
-				(newCoeff clApprox: 0.0)
+				(newCoeff clApproxZero)
 					ifTrue: [self terms removeKey: v.  solver noteRemovedVariable: v subject: subject]
 					ifFalse: [self terms at: v put: newCoeff]]].
 !
@@ -1233,8 +1233,8 @@ removeConstraint: cn
 	eVars do: [:v | 
 		expr := self rows at: v ifAbsent: [nil].
 		expr isNil
-			ifTrue: [obj addVariable: v coefficient: cn weight * cn strength symbolicWeight subject: zRow solver: self]
-			ifFalse: [obj addExpression: expr times: cn weight * cn strength symbolicWeight subject: zRow solver: self]].
+			ifTrue: [obj addVariable: v coefficient: -1.0*cn weight*cn strength symbolicWeight subject: zRow solver: self]
+			ifFalse: [obj addExpression: expr times: -1.0*cn weight*cn strength symbolicWeight subject: zRow solver: self]].
 
 	marker := self markerVars removeKey: cn.
 	"try to make the marker variable basic if it isn't already"
@@ -1385,7 +1385,7 @@ addWithArtificialVariable: expr
 	"try to optimize av to 0"
 	self optimize: az.
 	"Check that we were able to make the objective value 0.  If not, the original constraint was unsatisfiable."
-	(azRow constant clApprox: 0.0) ifFalse: [ExCLRequiredFailure signal].
+	(azRow constant clApproxZero) ifFalse: [ExCLRequiredFailure signal].
 	"see if av is a basic variable"
 	self rows at: av ifPresent: [:e |
 		"Find another variable in this row and pivot, so that av becomes parametric.  If there isn't another variable
@@ -1468,7 +1468,7 @@ chooseSubject: expr
 		constant is nonzero we are trying to add an unsatisfiable required constraint.  (Remember
 		that dummy variables must take on a value of 0.)  Otherwise, if the constant is zero, 
 		multiply by -1 if necessary to make the coefficient for the subject negative."
-	(expr constant clApprox: 0.0) ifFalse: [ExCLRequiredFailure signal].
+	(expr constant clApproxZero) ifFalse: [ExCLRequiredFailure signal].
 	coeff > 0 ifTrue: [
 		expr terms keysAndValuesDo: [:v :c | expr terms at: v put: 0.0-c]].
 	^subject
@@ -2293,15 +2293,19 @@ approxNonNegative
 	^true
 !
 
-clApproxZero
-	"return true if this symbolic weight is approximately zero.  Allow coefficients that are within epsilon of
-		0 to count as 0"
-		| a nepsilon |
-	nepsilon := 0.0 - ClEpsilon.
+clApprox: s
+	"Return true if this symbolic weight is approximately equal to s. 
+		The argument s must be another symbolic weight -- we can't
+		compare symbolic weights with ordinary numbers."
+	s isSymbolicWeight ifFalse: [ExCLInternalError signal].
 	1 to: self size do: [:i | 
-		a := self at: i.  
-		a clApproxZero ifFalse: [^false]].
+		((self at: i) clApprox: (s at: i)) ifFalse: [^false]].
 	^true
+!
+
+clApproxZero
+	"return true if this symbolic weight is approximately zero"
+	^self clApprox: Zero
 !
 
 isSymbolicWeight
