@@ -1,3 +1,17 @@
+Fri Sep  4 18:52:50 1998  Greg Badros  <gjb@cs.washington.edu>
+
+	* guile/cassowary_scm.hpp, guile/cassowary_scm.cc: Added PvFromScm 
+	and ScmFromPv to hide the reinterpret casts used to store a scheme 
+	object as the void * Pv() attached to a cassowary object.  Attach
+	the scheme-level cl-variable to a ClVariable object.  Added
+	`clv-attach!' and `clv-attached-object' to manipulate the attached 
+	object (often better to use scheme level properties, though)
+
+Fri Sep  4 18:51:30 1998  Greg Badros  <gjb@cs.washington.edu>
+
+	* guile/Makefile: Use "perl" from path to run extract docs instead 
+	of relying on #! line
+
 Wed Sep  2 17:08:14 1998  Greg Badros  <gjb@cs.washington.edu>
 
 	* guile/cassowary_scm.cc, guile/cassowary_scm.hpp: Added
