@@ -1,6 +1,8 @@
 ## $Id$
 ## Process this file with automake to create Makefile.in
 
+SUBDIRS = doc
+
 if HAVE_GUILE
 # This gets put in with libcassowary.a
 lib_LIBRARIES = libconstraints.a
@@ -15,7 +17,7 @@ GUILE_INCLUDES = @GUILE_INCLUDES@
 
 INCLUDES = -I. -I$(top_srcdir)/c++ -I$(prefix)/include -I$(exec_prefix)/include $(GUILE_INCLUDES)
 
-EXTRA_DIST=cassowary_scm-procedures.txt cassowary_scm-variables.txt cassowary_scm.sgml cltests.scm
+EXTRA_DIST = cltests.scm
 
 libconstraints_a_SOURCES = cassowary_scm.cc
 
@@ -58,3 +60,4 @@ BUILT_SOURCES=$(guile_snarfs)
 
 test:
 	env GUILE_LOAD_PATH=.:$$GUILE_LOAD_PATH guile -s cltests.scm
+
