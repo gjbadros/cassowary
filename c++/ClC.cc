@@ -63,6 +63,14 @@ CL_VarMap CL_GetVarMap()
   return varmap;
 }
 
+boolean
+CL_VarMapDelete(const char *sz)
+{
+  const string s(sz);
+  StringToVarMap::iterator it = varmap->find(s);
+  varmap->erase(it);
+}
+
 
 /* Return a new ClVariable with name and initial Value */
 CLV CL_ClvNew(const char *szName, double Value, CL_SimplexSolver solver)
@@ -82,6 +90,9 @@ void CL_VariableSetPv(CLV var, void *pv)
 void *CL_VariablePv(CLV var)
 { return var->Pv(); }
 
+const char *
+CL_VariableName(CLV var)
+{ return var->Name().c_str(); }
 
 /* Return a new ClSimplexSolver object */
 CL_SimplexSolver CL_SimplexSolverNew()
