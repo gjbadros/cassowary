@@ -1,0 +1,23 @@
+See ../README for general information and generic instructions.
+Also see ../COPYRIGHT for legalese regarding use of this distribution.
+Also see ../IMPORTANT for some important notes that you mustn't overlook.
+
+This directory contains the source code to a wrapping of cassowary for
+use with guile scheme.
+
+See cassowary_scm-procedures.txt for a list of the scheme procedures
+that are defined, or cassowary_scm.sgml for an SGML markup of that
+documentation (follows the DocBook DTD -- use Jade to convert to HTML).
+
+This wrapping was motivated by the desire to embed Cassowary in SCWM --
+the Scheme Constraints Window Managers.  See:
+
+http://web.mit.edu/mstachow/www/scwm.html
+
+also see the guile page at:
+
+http://www.red-bean.com/guile/
+
+and the Jade page at:
+
+http://www.jclark.com/jade/
