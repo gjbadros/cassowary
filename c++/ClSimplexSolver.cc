@@ -22,11 +22,9 @@
 // See newExpression -- all allocation is done in there
 ClSimplexSolver::~ClSimplexSolver()
 {
-#ifndef NO_TRACE
-     cerr << "my_slackCounter == " << my_slackCounter
-	  << "\nmy_artificialCounter == " << my_artificialCounter
-	  << "\nmy_dummyCounter == " << my_dummyCounter << endl;
-#endif
+   cerr << "my_slackCounter == " << my_slackCounter
+	<< "\nmy_artificialCounter == " << my_artificialCounter
+	<< "\nmy_dummyCounter == " << my_dummyCounter << endl;
 }
 
 // Add the constraint cn to the tableau
@@ -321,17 +319,23 @@ ClSimplexSolver::reset()
   cerr << "()" << endl;
 #endif
   // FIXGJB  -- can postpone writing this for a while
+  // gotta be careful, though, as it's a likely place for
+  // a memory leak to sneak in
   assert(false);
 }
 
 // Re-solve the current collection of constraints for new values for
 // the constants of the edit variables.
+// Note that I benchmarked isolating the common case of two
+// edit constants just being passed as two double arguments,
+// and there was no noticeable difference on the 900 constraint problem
+// --01/21/98 gjb
 void 
-ClSimplexSolver::resolve(const vector<double> &newEditConstants)
-{
+ClSimplexSolver::resolve(const vector<Number> &newEditConstants)
+{ // CODE DUPLICATED BELOW
 #ifndef NO_TRACE
   Tracer TRACER(__FUNCTION__);
-  cerr << "(" << "newEditConstants" << newEditConstants << ")" << endl;
+  cerr << "(" << newEditConstants << ")" << endl;
 #endif
   my_infeasibleRows.clear();
   resetStayConstants();
@@ -393,8 +397,6 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
   // If not, the original constraint was not satisfiable
   if (!clApprox(pazTableauRow->constant(),0.0))
     {
-    cerr << "Original constraint is not satisfiable" << endl;
-    EXCEPTION_ABORT;
     throw ExCLRequiredFailure();
     }
 
@@ -570,8 +572,6 @@ ClSimplexSolver::chooseSubject(ClLinearExpression &expr)
   // the subject negative."
   if (!clApprox(expr.constant(),0.0))
     {
-    cerr << "Non-zero constant -- unsatisfiable required constraint" << endl;
-    EXCEPTION_ABORT;
     throw ExCLRequiredFailure();
     }
   if (coeff > 0.0)
@@ -682,7 +682,6 @@ ClSimplexSolver::dualOptimize()
 	if (ratio == MAXDOUBLE)
 	  {
 	  cerr << "ratio == nil (MAXDOUBLE)" << endl;
-	  EXCEPTION_ABORT;
 	  throw ExCLInternalError();
 	  }
 	pivot(*pentryVar,*pexitVar);
@@ -825,6 +824,8 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
     pexpr->multiplyMe(-1);
     }
 #ifndef NO_TRACE
+  // FIXGJB instrument new and delete instead of trying to
+  // output msgs everwhere I use them!
   cerr << "- returning " << *pexpr << " new@ " << pexpr.get() << endl;
 #endif
   // Terrible name -- release() does *not* delete the object,
@@ -919,7 +920,6 @@ ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
     if (minRatio == MAXDOUBLE)
       {
       cerr << "objective function is unbounded!" << endl;
-      EXCEPTION_ABORT;
       throw ExCLInternalError();
       }
     pivot(*pentryVar, *pexitVar);
@@ -978,7 +978,6 @@ ClSimplexSolver::resetEditConstants(const vector<Number> &newEditConstants)
     cerr << "newEditConstants == " << newEditConstants << endl
 	 << "my_editPlusErrorVars == " << my_editPlusErrorVars << endl
 	 << "Sizes don't match!" << endl;
-    EXCEPTION_ABORT;
     throw ExCLInternalError();
     }
   vector<Number>::const_iterator itNew = newEditConstants.begin();
