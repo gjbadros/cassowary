@@ -24,7 +24,6 @@ TESTS = test-ClStrength test-ClVariable test-ClLinearExpression test-ClConstrain
 # classes that are used by the others (javac does not get
 # dependences right if multiple classes are in one file)
 JAVAFILES = \
-	ClErrors.java \
 	ClAbstractVariable.java \
 	ClDummyVariable.java \
 	ClObjectiveVariable.java \
@@ -43,22 +42,28 @@ JAVAFILES = \
 	ClPoint.java \
 	ClTableau.java \
 	ClSimplexSolver.java \
+	ExCLConstraintNotFound.java \
+	ExCLError.java \
+	ExCLInternalError.java \
+	ExCLNonlinearExpression.java \
+	ExCLNotEnoughtStays.java \
+	ExCLRequiredFailure.java \
+	ExCLTooDifficult.java \
 	CL.java \
-	Set.java
-
-#	ClTests.java \
+	Set.java \
+	Timer.java
 
 TESTFILES = \
 	testClStrength.java \
 	testClLinearExpression.java \
-#	ClTests.java
+	ClTests.java
 
 CLASSFILES = $(JAVAFILES:.java=.class)
 
 TESTCLASSFILES = $(TESTFILES:.java=.class)
 
-%.class: %.java
-	$(JAVAC) $(JAVAC_FLAGS) $<
+%.class: $(JAVAFILES) $(TESTFILES)
+	$(JAVAC) $(JAVAC_FLAGS) $(JAVAFILES) $(TESTFILES)
 
 all:	$(CLASSFILES)
 
