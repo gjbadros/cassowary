@@ -82,7 +82,7 @@ ClSimplexSolver::AddConstraint(ClConstraint *const pcn)
       // but it'd be unnecessarily inefficient --
       // and probably easier for the client application
       // to deal with
-      throw ExCLEditMisuse("(ExCLEditMisuse) Edit constaint on variable not in tableau.");
+      throw ExCLEditMisuse("(ExCLEditMisuse) Edit constraint on variable not in tableau.");
       }
     ClEditInfo *pcei = PEditInfoFromClv(v);
     if (pcei)

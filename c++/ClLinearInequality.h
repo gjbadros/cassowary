@@ -52,6 +52,10 @@ class ClLinearInequality : public ClLinearConstraint {
      {
      _expression.AddVariable(clv,-1.0);
      }
+   else
+     {
+       throw ExCLEditMisuse("Cannot use that operator for ClLinearInequality objects");
+     }
    if (op == cnLT || op == cnGT) {
      _fStrictInequality = true;
    }
