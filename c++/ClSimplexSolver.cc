@@ -1177,7 +1177,7 @@ ClSimplexSolver::resetEditConstants(const vector<Number> &newEditConstants)
     cerr << "newEditConstants == " << newEditConstants << endl
 	 << "_editPlusErrorVars == " << _editPlusErrorVars << endl
 	 << "Sizes don't match!" << endl;
-    throw ExCLInternalError();
+    throw ExCLBadResolve();
     }
   vector<Number>::const_iterator itNew = newEditConstants.begin();
   vector<Number>::iterator itPrev = _prevEditConstants.begin();
