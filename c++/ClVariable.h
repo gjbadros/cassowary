@@ -20,17 +20,20 @@ class ClVariable : public ClAbstractVariable {
 public:
   ClVariable(string name = "", Number value = 0.0) :
     ClAbstractVariable(name),
-    _value(value)
+    _value(value),
+    _pv(NULL)
     { }
 
   ClVariable(Number value) :
     ClAbstractVariable(""),
-    _value(value)
+    _value(value),
+    _pv(NULL)
     { }
 
   ClVariable(long number, char *prefix, Number value = 0.0) :
     ClAbstractVariable(number,prefix),
-    _value(value)
+    _value(value),
+    _pv(NULL)
     { }
 
   // Return true if this a dummy variable (used as a marker variable
