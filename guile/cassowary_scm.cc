@@ -114,11 +114,10 @@ variable if you want its value to not change. */
 {
   char *szName = NULL;
   double n = 0;
-  int iarg = 1;
 
   if (!FUnsetSCM(name)) {
     if (!gh_string_p(name)) {
-      scm_wrong_type_arg(FUNC_NAME, iarg++, name);
+      scm_wrong_type_arg(FUNC_NAME, 1, name);
     } else {
       szName = gh_scm2newstr(name,NULL);
     }
@@ -126,7 +125,7 @@ variable if you want its value to not change. */
 
   if (!FUnsetSCM(value)) {
     if (!gh_number_p(value)) {
-      scm_wrong_type_arg(FUNC_NAME, iarg++, value);
+      scm_wrong_type_arg(FUNC_NAME, 2, value);
     } else {
       n = gh_scm2double(value);
     }
@@ -155,9 +154,8 @@ Use `clv-attached-object' to retreive OBJ later.
 Consider instead using `set-object-property' and `object-property'. */
 #define FUNC_NAME s_clv_attach_x
 {
-  int iarg = 1;
   ClVariable *pclv = NULL;
-  if (!FIsClVariableScm(var)) scm_wrong_type_arg(FUNC_NAME,iarg++,var);
+  if (!FIsClVariableScm(var)) scm_wrong_type_arg(FUNC_NAME,1,var);
   pclv = PclvFromScm(var);
   /* FIXGJB: should unprotect the prior object, or mark it
      but to mark it I'd need to be sure that all cl-variables'
@@ -175,10 +173,9 @@ Returns #f if no object was attached using `clv-attach!'.
 Consider instead using `set-object-property' and `object-property'. */
 #define FUNC_NAME s_clv_attached_object
 {
-  int iarg = 1;
   ClVariable *pclv = NULL;
   SCM obj = SCM_BOOL_F;
-  if (!FIsClVariableScm(var)) scm_wrong_type_arg(FUNC_NAME,iarg++,var);
+  if (!FIsClVariableScm(var)) scm_wrong_type_arg(FUNC_NAME,1,var);
   pclv = PclvFromScm(var);
   if (pclv->Pv()) {
     obj = ScmFromPv(pclv->Pv());
@@ -194,9 +191,8 @@ SCWM_PROC(cl_value, "cl-value", 1, 0, 0,
 The value is a double.  Use `cl-int-value' to return an integer. */
 #define FUNC_NAME s_cl_value
 {
-  int iarg = 1;
   if (!FIsClVariableScm(clv)) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, clv);
+    scm_wrong_type_arg(FUNC_NAME, 1, clv);
   }
 
   ClVariable *pclv = PclvFromScm(clv);
@@ -211,9 +207,8 @@ Internally, the value is a double.  This rounds that real number to
 an integer before returning the value. */
 #define FUNC_NAME s_cl_int_value
 {
-  int iarg = 1;
   if (!FIsClVariableScm(clv)) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, clv);
+    scm_wrong_type_arg(FUNC_NAME, 1, clv);
   }
 
   ClVariable *pclv = PclvFromScm(clv);
@@ -275,11 +270,9 @@ cl-weight objects could be supported in the future.  See also
 cl-strength object given the sequence of numbers directly. */
 #define FUNC_NAME s_make_cl_weight
 {
-  int iarg = 1;
-
-  if (!gh_number_p(w1)) scm_wrong_type_arg(FUNC_NAME, iarg++, w1);
-  if (!gh_number_p(w2)) scm_wrong_type_arg(FUNC_NAME, iarg++, w2);
-  if (!gh_number_p(w3)) scm_wrong_type_arg(FUNC_NAME, iarg++, w3);
+  if (!gh_number_p(w1)) scm_wrong_type_arg(FUNC_NAME, 1, w1);
+  if (!gh_number_p(w2)) scm_wrong_type_arg(FUNC_NAME, 2, w2);
+  if (!gh_number_p(w3)) scm_wrong_type_arg(FUNC_NAME, 3, w3);
 
   ClSymbolicWeight *pclsw = new ClSymbolicWeight(gh_scm2double(w1),
                                                  gh_scm2double(w2),
@@ -339,7 +332,7 @@ SCWM_PROC(cl_strength_p, "cl-strength?", 1, 0, 0,
 #undef FUNC_NAME
 
 static SCM
-ScmMakeClStrength(const ClStrength *pcls)
+ScmMakeClStrength(ClStrength *pcls)
 {
   SCM answer;
 
@@ -347,8 +340,10 @@ ScmMakeClStrength(const ClStrength *pcls)
   SCM_NEWCELL(answer);
   SCM_SETCAR(answer, (SCM) SCMTYPEID);
   SCM_SETCDR(answer, (SCM) pcls);
+  pcls->setPv(PvFromScm(answer));
   SCM_ALLOW_INTS;
 
+  
   return answer;
 }
 
@@ -364,20 +359,20 @@ are often enough for a suitably expressive constraint-hierarchy,
 but new strengths can be introduced if necessary. */
 #define FUNC_NAME s_make_cl_strength
 {
-  int iarg = 1;
-
   if (!gh_string_p(name))
-    scm_wrong_type_arg(FUNC_NAME,iarg++,name);
+    scm_wrong_type_arg(FUNC_NAME,1,name);
 
   if (!FIsClSymbolicWeightScm(weight))
-    scm_wrong_type_arg(FUNC_NAME,iarg++,weight);
+    scm_wrong_type_arg(FUNC_NAME,2,weight);
   
   char *szName = gh_scm2newstr(name,NULL);
   ClSymbolicWeight *pclsw = PclswFromScm(weight);
   ClStrength *pcls = new ClStrength(szName,*pclsw);
   delete szName;
 
-  return ScmMakeClStrength(pcls);
+  SCM answer = ScmMakeClStrength(pcls);
+  scm_protect_object(answer);
+  return answer;
 }
 #undef FUNC_NAME
 
@@ -392,12 +387,10 @@ cl-weight object with the values and using that to build a cl-strength
 object. */
 #define FUNC_NAME s_make_cl_strength_3
 {
-  int iarg = 1;
-
-  if (!gh_string_p(name)) scm_wrong_type_arg(FUNC_NAME,iarg++,name);
-  if (!gh_number_p(w1)) scm_wrong_type_arg(FUNC_NAME, iarg++, w1);
-  if (!gh_number_p(w2)) scm_wrong_type_arg(FUNC_NAME, iarg++, w2);
-  if (!gh_number_p(w3)) scm_wrong_type_arg(FUNC_NAME, iarg++, w3);
+  if (!gh_string_p(name)) scm_wrong_type_arg(FUNC_NAME, 1, name);
+  if (!gh_number_p(w1)) scm_wrong_type_arg(FUNC_NAME, 2, w1);
+  if (!gh_number_p(w2)) scm_wrong_type_arg(FUNC_NAME, 3, w2);
+  if (!gh_number_p(w3)) scm_wrong_type_arg(FUNC_NAME, 4, w3);
 
   char *szName = gh_scm2newstr(name,NULL);
   ClStrength *pcls = new ClStrength(szName,
@@ -406,13 +399,8 @@ object. */
                                     gh_scm2double(w3));
   delete szName;
 
-  SCM answer;
-
-  SCM_DEFER_INTS;
-  SCM_NEWCELL(answer);
-  SCM_SETCAR(answer, (SCM) SCMTYPEID);
-  SCM_SETCDR(answer, (SCM) pcls);
-  SCM_ALLOW_INTS;
+  SCM answer = ScmMakeClStrength(pcls);
+  scm_protect_object(answer);
 
   return answer;
 }
@@ -469,11 +457,10 @@ variables can be used interchangeably with constraint expressions, but
 this procedure can be used to force building a simple expression. */
 #define FUNC_NAME s_make_cl_expression
 {
-  int iarg = 1;
   ClLinearExpression *pexpr = NULL;
 
   if (!FIsClVariableScm(clv) && !gh_number_p(clv)) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, clv);
+    scm_wrong_type_arg(FUNC_NAME, 1, clv);
   } 
   if (FIsClVariableScm(clv)) {
     pexpr = new ClLinearExpression(*PclvFromScm(clv));
@@ -509,15 +496,14 @@ Both EXPRA and EXPRB may be cl-expression objects or cl-variable
 objects. */
 #define FUNC_NAME s_cl_plus
 {
-  int iarg = 1;
   ClLinearExpression *pexprA = NULL;
   ClLinearExpression *pexprB = NULL;
   
   if (NULL == (pexprA = PexprNewConvertSCM(exprA))) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, exprA);
+    scm_wrong_type_arg(FUNC_NAME, 1, exprA);
   }
   if (NULL == (pexprB = PexprNewConvertSCM(exprB))) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, exprB);
+    scm_wrong_type_arg(FUNC_NAME, 2, exprB);
   }
   
   pexprA->addExpression(*pexprB);
@@ -543,15 +529,14 @@ Both EXPRA and EXPRB may be cl-expression objects or cl-variable
 objects. */
 #define FUNC_NAME s_cl_minus
 {
-  int iarg = 1;
   ClLinearExpression *pexprA = NULL;
   ClLinearExpression *pexprB = NULL;
 
   if (NULL == (pexprA = PexprNewConvertSCM(exprA))) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, exprA);
+    scm_wrong_type_arg(FUNC_NAME, 1, exprA);
   }
   if (NULL == (pexprB = PexprNewConvertSCM(exprB))) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, exprB);
+    scm_wrong_type_arg(FUNC_NAME, 2, exprB);
   }
   
   pexprA->addExpression(*pexprB,-1);
@@ -579,15 +564,14 @@ if it does (e.g., if EXPRA and EXPRB both contain the same
 cl-variable), an error will result. */
 #define FUNC_NAME s_cl_times
 {
-  int iarg = 1;
   ClLinearExpression *pexprA = NULL;
   ClLinearExpression *pexprB = NULL;
 
   if (NULL == (pexprA = PexprNewConvertSCM(exprA))) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, exprA);
+    scm_wrong_type_arg(FUNC_NAME, 1, exprA);
   }
   if (NULL == (pexprB = PexprNewConvertSCM(exprB))) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, exprB);
+    scm_wrong_type_arg(FUNC_NAME, 2, exprB);
   }
 
   try {
@@ -622,15 +606,14 @@ if it does (e.g., if EXPRA and EXPRB both contain the same
 cl-variable), an error will result. */
 #define FUNC_NAME s_cl_divide
 {
-  int iarg = 1;
   ClLinearExpression *pexprA = NULL;
   ClLinearExpression *pexprB = NULL;
 
   if (NULL == (pexprA = PexprNewConvertSCM(exprA))) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, exprA);
+    scm_wrong_type_arg(FUNC_NAME, 1, exprA);
   }
   if (NULL == (pexprB = PexprNewConvertSCM(exprB))) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, exprB);
+    scm_wrong_type_arg(FUNC_NAME, 2, exprB);
   }
 
   try {
@@ -707,25 +690,24 @@ STRENGTH, a cl-strength, and has a weight factor of FACTOR, a real
 number.  STRENGTH defaults to cls-required, FACTOR defaults to 1. */
 #define FUNC_NAME s_make_cl_equation
 {
-  int iarg = 1;
   ClLinearExpression *pexpr = NULL;
 
   if (NULL == (pexpr = PexprNewConvertSCM(expr))) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, expr);
+    scm_wrong_type_arg(FUNC_NAME, 1, expr);
   }
 
   const ClStrength *pcls = &clsRequired();
   if (FIsClStrengthScm(strength)) {
     pcls = PclsFromScm(strength);
   } else if (!FUnsetSCM(strength)) {
-    scm_wrong_type_arg(FUNC_NAME,iarg++,strength);
+    scm_wrong_type_arg(FUNC_NAME,2,strength);
   }
 
   double nWeight = 1.0;
   if (gh_number_p(factor)) {
     nWeight = gh_scm2double(factor);
   } else if (!FUnsetSCM(factor)) {
-    scm_wrong_type_arg(FUNC_NAME,iarg++,factor);
+    scm_wrong_type_arg(FUNC_NAME,3,factor);
   }
 
   ClLinearEquation *peq = new ClLinearEquation(*pexpr,*pcls,nWeight);
@@ -752,15 +734,14 @@ EXPRB.  Note that if neither expression contains a variable, an
 error will be signalled. */
 #define FUNC_NAME s_make_cl_equality
 {
-  int iarg = 1;
   ClLinearExpression *pexprA = NULL;
   ClLinearExpression *pexprB = NULL;
 
   if (NULL == (pexprA = PexprNewConvertSCM(exprA))) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, exprA);
+    scm_wrong_type_arg(FUNC_NAME, 1, exprA);
   }
   if (NULL == (pexprB = PexprNewConvertSCM(exprB))) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, exprB);
+    scm_wrong_type_arg(FUNC_NAME, 2, exprB);
   }
   if (!(FIsClLinearExpressionScm(exprA) || FIsClVariableScm(exprA) ||
         FIsClLinearExpressionScm(exprB) || FIsClVariableScm(exprB))) {
@@ -770,14 +751,14 @@ error will be signalled. */
   if (FIsClStrengthScm(strength)) {
     pcls = PclsFromScm(strength);
   } else if (!FUnsetSCM(strength)) {
-    scm_wrong_type_arg(FUNC_NAME,iarg++,strength);
+    scm_wrong_type_arg(FUNC_NAME,3,strength);
   }
 
   double nWeight = 1.0;
   if (gh_number_p(factor)) {
     nWeight = gh_scm2double(factor);
   } else if (!FUnsetSCM(factor)) {
-    scm_wrong_type_arg(FUNC_NAME,iarg++,factor);
+    scm_wrong_type_arg(FUNC_NAME,4,factor);
   }
 
   ClLinearEquation *peq = new ClLinearEquation(*pexprA,*pexprB,*pcls,nWeight);
@@ -854,16 +835,14 @@ Consider `make-cl-constraint' as a higher-level interface to building
 arbitrary constraints. */
 #define FUNC_NAME s_make_cl_inequality
 {
-  int iarg = 1;
-
   ClLinearExpression *pexprA = NULL;
   ClLinearExpression *pexprB = NULL;
 
   if (NULL == (pexprA = PexprNewConvertSCM(exprA))) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, exprA);
+    scm_wrong_type_arg(FUNC_NAME, 1, exprA);
   }
   if (NULL == (pexprB = PexprNewConvertSCM(exprB))) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, exprB);
+    scm_wrong_type_arg(FUNC_NAME, 3, exprB);
   }
   if (!(FIsClLinearExpressionScm(exprA) || FIsClVariableScm(exprA) ||
         FIsClLinearExpressionScm(exprB) || FIsClVariableScm(exprB))) {
@@ -874,14 +853,14 @@ arbitrary constraints. */
   if (FIsClStrengthScm(strength)) {
     pcls = PclsFromScm(strength);
   } else if (!FUnsetSCM(strength)) {
-    scm_wrong_type_arg(FUNC_NAME,iarg++,strength);
+    scm_wrong_type_arg(FUNC_NAME,4,strength);
   }
 
   double nWeight = 1.0;
   if (gh_number_p(factor)) {
     nWeight = gh_scm2double(factor);
   } else if (!FUnsetSCM(factor)) {
-    scm_wrong_type_arg(FUNC_NAME,iarg++,factor);
+    scm_wrong_type_arg(FUNC_NAME,5,factor);
   }
 
   ClLinearInequality *pineq;
@@ -992,6 +971,34 @@ exists to simplify that test. */
 }
 #undef FUNC_NAME
 
+SCWM_PROC(cl_constraint_strength, "cl-constraint-strength", 1, 0, 0,
+          (SCM constraint))
+  /** Return the cl-strength object for constraint CONSTRAINT. */
+#define FUNC_NAME s_cl_constraint_strength
+{
+  if (!FIsClConstraintScm(constraint)) {
+    scm_wrong_type_arg(FUNC_NAME,1,constraint);
+  }
+  ClConstraint *pconstraint = PcnFromScm(constraint);
+  return ScmFromPv(pconstraint->strength().Pv());
+}
+#undef FUNC_NAME
+
+
+SCWM_PROC(cl_constraint_weight, "cl-constraint-weight", 1, 0, 0,
+          (SCM constraint))
+  /** Return the weighting factor (a number) for constraint CONSTRAINT. */
+#define FUNC_NAME s_cl_constraint_weight
+{
+  if (!FIsClConstraintScm(constraint)) {
+    scm_wrong_type_arg(FUNC_NAME,1,constraint);
+  }
+  ClConstraint *pconstraint = PcnFromScm(constraint);
+  return gh_double2scm(pconstraint->weight());
+}
+#undef FUNC_NAME
+
+
 
 SCWM_PROC(make_cl_constraint, "make-cl-constraint", 3, 2, 0,
            (SCM exprA, SCM op, SCM exprB, SCM strength, SCM factor))
@@ -1007,16 +1014,14 @@ a weight factor of FACTOR, a real number.  STRENGTH defaults to
 cls-required, FACTOR defaults to 1.  */
 #define FUNC_NAME s_make_cl_constraint
 {
-  int iarg = 1;
-
   ClLinearExpression *pexprA = NULL;
   ClLinearExpression *pexprB = NULL;
 
   if (NULL == (pexprA = PexprNewConvertSCM(exprA))) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, exprA);
+    scm_wrong_type_arg(FUNC_NAME, 1, exprA);
   }
   if (NULL == (pexprB = PexprNewConvertSCM(exprB))) {
-    scm_wrong_type_arg(FUNC_NAME, iarg++, exprB);
+    scm_wrong_type_arg(FUNC_NAME, 3, exprB);
   }
   if (!(FIsClLinearExpressionScm(exprA) || FIsClVariableScm(exprA) ||
         FIsClLinearExpressionScm(exprB) || FIsClVariableScm(exprB))) {
@@ -1027,14 +1032,14 @@ cls-required, FACTOR defaults to 1.  */
   if (FIsClStrengthScm(strength)) {
     pcls = PclsFromScm(strength);
   } else if (!FUnsetSCM(strength)) {
-    scm_wrong_type_arg(FUNC_NAME,iarg++,strength);
+    scm_wrong_type_arg(FUNC_NAME,4,strength);
   }
 
   double nWeight = 1.0;
   if (gh_number_p(factor)) {
     nWeight = gh_scm2double(factor);
   } else if (!FUnsetSCM(factor)) {
-    scm_wrong_type_arg(FUNC_NAME,iarg++,factor);
+    scm_wrong_type_arg(FUNC_NAME,5,factor);
   }
 
   ClConstraint *pcn = NULL;
@@ -1107,13 +1112,12 @@ as the printable form of constraint solver objects contains only a
 brief summary of the contents of the solver. */
 #define FUNC_NAME s_cl_solver_debug_print
 {
-  int iarg = 1;
   if (!FIsClSimplexSolverScm(solver))
-    scm_wrong_type_arg(FUNC_NAME,iarg++,solver);
+    scm_wrong_type_arg(FUNC_NAME,1,solver);
   if (FUnsetSCM(port))
     port = scm_current_output_port();
   if (scm_output_port_p(port) == SCM_BOOL_F)
-    scm_wrong_type_arg(FUNC_NAME,iarg++,port);
+    scm_wrong_type_arg(FUNC_NAME,2,port);
   
   strstream ss;
   ClSimplexSolver *psolver = PsolverFromScm(solver);
@@ -1172,10 +1176,8 @@ is not a constraint object, the preceding arguments will have already
 been added. */
 #define FUNC_NAME s_cl_add_constraint
 {
-  int iarg = 1;
-
   if (!FIsClSimplexSolverScm(solver)) {
-    scm_wrong_type_arg(FUNC_NAME,iarg++,solver);
+    scm_wrong_type_arg(FUNC_NAME,1,solver);
   }
     
   ClSimplexSolver *psolver = PsolverFromScm(solver);
@@ -1184,7 +1186,7 @@ been added. */
     for (int i = 0; SCM_NNULLP (args); args = SCM_CDR (args), ++i) {
       SCM constraint = SCM_CAR(args);
       if (!FIsClConstraintScm(constraint)) {
-        scm_wrong_type_arg(FUNC_NAME,iarg,args);
+        scm_wrong_type_arg(FUNC_NAME,2,args);
       }
       ClConstraint *pconstraint = PcnFromScm(constraint);
       psolver->addConstraint(*pconstraint);
@@ -1212,10 +1214,8 @@ signalled because one object in the list ARGS is not a constraint
 object, the preceding arguments will have already been removed. */
 #define FUNC_NAME s_cl_remove_constraint
 {
-  int iarg = 1;
-
   if (!FIsClSimplexSolverScm(solver)) {
-    scm_wrong_type_arg(FUNC_NAME,iarg++,solver);
+    scm_wrong_type_arg(FUNC_NAME,1,solver);
   }
 
   ClSimplexSolver *psolver = PsolverFromScm(solver);
@@ -1224,7 +1224,7 @@ object, the preceding arguments will have already been removed. */
     for (int i = 0; SCM_NNULLP (args); args = SCM_CDR (args), ++i) {
       SCM constraint = SCM_CAR(args);
       if (!FIsClConstraintScm(constraint)) {
-        scm_wrong_type_arg(FUNC_NAME,iarg,args);
+        scm_wrong_type_arg(FUNC_NAME,2,args);
       }
       ClConstraint *pconstraint = PcnFromScm(constraint);
       psolver->removeConstraint(*pconstraint);
@@ -1241,7 +1241,6 @@ object, the preceding arguments will have already been removed. */
 #undef FUNC_NAME
 
 
-// FIXGJB: add strength argument
 SCWM_PROC(cl_add_editvar, "cl-add-editvar", 2, 2, 0,
            (SCM solver, SCM cl_vars, SCM strength, SCM factor))
   /** Add edit constraints on variables CL-VARS to SOLVER.
@@ -1376,9 +1375,8 @@ those edit variables' values.  Every `cl-begin-edit' invocation should
 have a matching `cl-end-edit' call. */
 #define FUNC_NAME s_cl_begin_edit
 {
-  int iarg = 1;
   if (!FIsClSimplexSolverScm(solver)) {
-    scm_wrong_type_arg(FUNC_NAME,iarg++,solver);
+    scm_wrong_type_arg(FUNC_NAME,1,solver);
   }
   ClSimplexSolver *psolver = PsolverFromScm(solver);
 
@@ -1396,9 +1394,8 @@ This procedure must be invoked once for every invocation of
 any edit variables that have been added via `cl-add-editvar'. */
 #define FUNC_NAME s_cl_end_edit
 {
-  int iarg = 1;
   if (!FIsClSimplexSolverScm(solver)) {
-    scm_wrong_type_arg(FUNC_NAME,iarg++,solver);
+    scm_wrong_type_arg(FUNC_NAME,1,solver);
   }
   ClSimplexSolver *psolver = PsolverFromScm(solver);
 
@@ -1414,12 +1411,11 @@ SCWM_PROC (cl_is_constraint_satisfied_p, "cl-is-constraint-satisfied?", 2, 0, 0,
   /** Return #t if CN is satisfied in SOLVER, #f otherwise. */
 #define FUNC_NAME s_cl_is_constraint_satisfied_p
 {
-  int iarg = 1;
   if (!FIsClSimplexSolverScm(solver)) {
-    scm_wrong_type_arg(FUNC_NAME,iarg++,solver);
+    scm_wrong_type_arg(FUNC_NAME,1,solver);
   }
   if (!FIsClConstraintScm(cn)) {
-    scm_wrong_type_arg(FUNC_NAME,iarg++,cn);
+    scm_wrong_type_arg(FUNC_NAME,2,cn);
   }
   ClSimplexSolver *psolver = PsolverFromScm(solver);
   ClConstraint *pcn = PcnFromScm(cn);
@@ -1444,15 +1440,14 @@ possibly changed values can be retrieved via `cl-value' or
 SOLVER may not permit changing VAR to VALUE. */
 #define FUNC_NAME s_cl_suggest_value
 {
-  int iarg = 1;
   if (!FIsClSimplexSolverScm(solver)) {
-    scm_wrong_type_arg(FUNC_NAME,iarg++,solver);
+    scm_wrong_type_arg(FUNC_NAME,1,solver);
   }
   if (!FIsClVariableScm(var)) {
-    scm_wrong_type_arg(FUNC_NAME,iarg++,var);
+    scm_wrong_type_arg(FUNC_NAME,2,var);
   }
   if (!gh_number_p(value)) {
-    scm_wrong_type_arg(FUNC_NAME,iarg++,value);
+    scm_wrong_type_arg(FUNC_NAME,3,value);
   }
   ClSimplexSolver *psolver = PsolverFromScm(solver);
   ClVariable *pclv = PclvFromScm(var);
@@ -1489,9 +1484,8 @@ In either case, you must invoke `cl-end-edit' to remove the edit
 variables from the solver after you are done changing their values. */
 #define FUNC_NAME s_cl_resolve
 {
-  int iarg = 1;
   if (!FIsClSimplexSolverScm(solver)) {
-    scm_wrong_type_arg(FUNC_NAME,iarg++,solver);
+    scm_wrong_type_arg(FUNC_NAME,1,solver);
   }
   ClSimplexSolver *psolver = PsolverFromScm(solver);
 
@@ -1505,7 +1499,7 @@ variables from the solver after you are done changing their values. */
   for (int i = 0; SCM_NNULLP (args); args = SCM_CDR (args), ++i) {
     SCM val = SCM_CAR(args);
     if (!gh_number_p(val)) {
-      scm_wrong_type_arg(FUNC_NAME,iarg,args);
+      scm_wrong_type_arg(FUNC_NAME,2,args);
     }
     rgval.push_back(gh_scm2double(val));
   }
@@ -1536,12 +1530,11 @@ directly) will be listed. */
 #define FUNC_NAME s_cl_constraint_list
 {
   SCM list = SCM_EOL;
-  int iarg = 1;
   if (!FIsClSimplexSolverScm(solver)) {
-    scm_wrong_type_arg(FUNC_NAME,iarg++,solver);
+    scm_wrong_type_arg(FUNC_NAME,1,solver);
   }
   bool fInternalAlso;
-  COPY_BOOL_OR_ERROR_DEFAULT_FALSE(fInternalAlso,internal_also_p,iarg++,FUNC_NAME);
+  COPY_BOOL_OR_ERROR_DEFAULT_FALSE(fInternalAlso,internal_also_p,2,FUNC_NAME);
     
   ClSimplexSolver *psolver = PsolverFromScm(solver);
 
@@ -1608,16 +1601,20 @@ init_cassowary_scm()
 
   SCM_DEFER_INTS;
   scm_permanent_object(
-    scm_cls_weak = scm_sysintern("cls-weak",ScmMakeClStrength(&clsWeak()))
+    scm_cls_weak = scm_sysintern("cls-weak",ScmMakeClStrength(const_cast<ClStrength *>
+                                                              (&clsWeak())))
     );
   scm_permanent_object(
-    scm_cls_medium = scm_sysintern("cls-medium",ScmMakeClStrength(&clsMedium()))
+    scm_cls_medium = scm_sysintern("cls-medium",ScmMakeClStrength(const_cast<ClStrength *>
+                                                                  (&clsMedium())))
     );
   scm_permanent_object(
-    scm_cls_strong = scm_sysintern("cls-strong",ScmMakeClStrength(&clsStrong()))
+    scm_cls_strong = scm_sysintern("cls-strong",ScmMakeClStrength(const_cast<ClStrength *>
+                                                                  (&clsStrong())))
     );
   scm_permanent_object(
-    scm_cls_required = scm_sysintern("cls-required",ScmMakeClStrength(&clsRequired()))
+    scm_cls_required = scm_sysintern("cls-required",ScmMakeClStrength(const_cast<ClStrength *>
+                                                                      (&clsRequired())))
     );
   SCM_ALLOW_INTS;
 #ifndef SCM_MAGIC_SNARFER
