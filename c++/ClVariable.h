@@ -82,7 +82,7 @@ public:
   static StringToVarMap *pmapStrPclv;
 #ifndef CL_NO_IO
   ostream &printOn(ostream &xo) const
-    { return pclv->printOn(xo); }
+    { return pclv->printOn(xo); /* return xo << "@" << pclv << endl; */}
 #endif
 
   friend bool operator<(ClVariable cl1, ClVariable cl2)

@@ -264,7 +264,7 @@ public class ClLinearExpression extends CL
     {
       if (isConstant())
 	{
-	throw new ExCLInternalError();
+	throw new ExCLInternalError("anyPivotableVariable called on a constant");
 	}
 
       for (Enumeration e = _terms.keys() ; e.hasMoreElements(); ) {

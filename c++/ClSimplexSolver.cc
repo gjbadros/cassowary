@@ -269,12 +269,12 @@ ClSimplexSolver::removeConstraintInternal(const ClConstraint *const pcn)
       const ClLinearExpression *pexpr = rowExpression(*it);
       if (pexpr == NULL )
 	{
-	pzRow->addVariable(*it,-1.0 * pcn->strength().symbolicWeight().asDouble(),
+	pzRow->addVariable(*it,-pcn->weight() * pcn->strength().symbolicWeight().asDouble(),
 			   _objective,*this);
 	}
       else
 	{ // the error variable was in the basis
-	pzRow->addExpression(*pexpr,-1.0 * pcn->strength().symbolicWeight().asDouble(),
+	pzRow->addExpression(*pexpr,-pcn->weight() * pcn->strength().symbolicWeight().asDouble(),
 			     _objective,*this);
 	}
       }

@@ -47,7 +47,7 @@ public class ClLinearInequality extends ClLinearConstraint
     } else if (op_enum == CL.LEQ) {
       _expression.addVariable(clv1,-1.0);
     } else // the operator was invalid
-      throw new ExCLInternalError();
+      throw new ExCLInternalError("Invalid operator in ClLinearInequality constructor");
   }
 
   public ClLinearInequality(ClVariable clv1,
@@ -82,7 +82,7 @@ public class ClLinearInequality extends ClLinearConstraint
     } else if (op_enum == CL.LEQ) {
       _expression.addVariable(clv,-1.0);
     } else // the operator was invalid
-      throw new ExCLInternalError();
+      throw new ExCLInternalError("Invalid operator in ClLinearInequality constructor");
   }
 
   public ClLinearInequality(ClVariable clv,
@@ -116,7 +116,7 @@ public class ClLinearInequality extends ClLinearConstraint
     } else if (op_enum == CL.LEQ) {
       _expression.addExpression(cle1,-1.0);
     } else // the operator was invalid
-      throw new ExCLInternalError();
+      throw new ExCLInternalError("Invalid operator in ClLinearInequality constructor");
   }
 
   public ClLinearInequality(ClLinearExpression cle1,
@@ -151,7 +151,7 @@ public class ClLinearInequality extends ClLinearConstraint
     } else if (op_enum == CL.LEQ) {
       _expression.addVariable(clv,-1.0);
     } else // the operator was invalid
-      throw new ExCLInternalError();
+      throw new ExCLInternalError("Invalid operator in ClLinearInequality constructor");
   }
 
   public ClLinearInequality(ClAbstractVariable clv,
@@ -186,7 +186,7 @@ public class ClLinearInequality extends ClLinearConstraint
     } else if (op_enum == CL.GEQ) {
       _expression.addVariable(clv,-1.0);
     } else // the operator was invalid
-      throw new ExCLInternalError();
+      throw new ExCLInternalError("Invalid operator in ClLinearInequality constructor");
   }
 
 

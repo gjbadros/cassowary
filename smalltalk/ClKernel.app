@@ -1233,8 +1233,8 @@ removeConstraint: cn
 	eVars do: [:v | 
 		expr := self rows at: v ifAbsent: [nil].
 		expr isNil
-			ifTrue: [obj addVariable: v coefficient: -1.0*cn strength symbolicWeight subject: zRow solver: self]
-			ifFalse: [obj addExpression: expr times: -1.0*cn strength symbolicWeight subject: zRow solver: self]].
+			ifTrue: [obj addVariable: v coefficient: cn weight * cn strength symbolicWeight subject: zRow solver: self]
+			ifFalse: [obj addExpression: expr times: cn weight * cn strength symbolicWeight subject: zRow solver: self]].
 
 	marker := self markerVars removeKey: cn.
 	"try to make the marker variable basic if it isn't already"

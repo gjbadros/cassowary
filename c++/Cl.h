@@ -20,14 +20,14 @@
 #undef CL_TRACE_VERBOSE
 #endif
 
-#include "ClVariable.h"
-#include "ClSimplexSolver.h"
-#include "ClLinearEquation.h"
-#include "ClLinearInequality.h"
-#include "ClErrors.h"
-#include "ClEditConstraint.h"
-#include "ClStayConstraint.h"
-#include "ClReader.h"
+#include "cassowary/ClVariable.h"
+#include "cassowary/ClSimplexSolver.h"
+#include "cassowary/ClLinearEquation.h"
+#include "cassowary/ClLinearInequality.h"
+#include "cassowary/ClErrors.h"
+#include "cassowary/ClEditConstraint.h"
+#include "cassowary/ClStayConstraint.h"
+#include "cassowary/ClReader.h"
 
 extern char *szCassowaryVersion;
 

@@ -100,6 +100,7 @@ TEST_OBJS = test-ClConstraint.o    \
 	ClTests.o                  \
 	ClBug0.o                  \
 	ClBug1.o                  \
+	ClBug2.o                  \
 	ClLeakTest.o		   \
 	ClParseTest.o              \
 	ClSubgraphTest.o           \
@@ -118,7 +119,7 @@ CTEST_SRCS = $(CTEST_OBJS:.o=.c)
 NT_SOURCES = $(OBJS:.o=.cpp) $(TEST_OBJS:.o=.cpp)
 
 TESTS = test-ClStrength test-ClVariable test-ClLinearExpression test-ClConstraint \
-	test-ClSimplexSolver ClTests ClBug0 ClBug1 ClLeakTest ClSubgraphTest ClParseTest QocaBench
+	test-ClSimplexSolver ClTests ClBug0 ClBug1 ClBug2 ClLeakTest ClSubgraphTest ClParseTest QocaBench
 
 CTESTS = ClCTest
 

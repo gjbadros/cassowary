@@ -11,26 +11,49 @@
  * (Originally developed for the Amaya CCSS extensions)
  */
 
+#define CLC_IMPL
 #include "ClC.h"
 
 #include "Cl.h"
 #include <strstream.h>
 #include <stdio.h>
 
-static StringToVarMap mapVars;
+extern "C" {
 
+typedef StringToVarMap *CL_VarMap;
+
+CL_VarMap varmap = NULL;
 
 /* Functions unique to the C interface */
 void
 CL_Init()
 {
-  ClVariable::SetVarMap(&mapVars);
 }
 
 void
 CL_Shutdown()
 {
   /* empty */
+}
+
+CL_VarMap CL_VarMapNew()
+{
+  return new StringToVarMap();
+}
+
+
+CL_VarMap CL_SetVarMap(CL_VarMap varmap_)
+{
+  if (varmap_ == NULL)
+    varmap_ = CL_VarMapNew();
+  varmap = varmap_;
+  ClVariable::SetVarMap(varmap);
+  return varmap;
+}
+
+CL_VarMap CL_GetVarMap()
+{
+  return varmap;
 }
 
 
@@ -40,6 +63,9 @@ CLV CL_ClvNew(const char *szName, double value, CL_SimplexSolver solver)
   ClVariable *pclv = new ClVariable(szName,value);
   if (solver)
     solver->addStay(*pclv);
+#if 0
+  fprintf(stderr,"Created var %s @ %p\n",szName,pclv->get_pclv());
+#endif
   return pclv;
 }
 
@@ -94,7 +120,11 @@ CL_SimplexSolverAddStrongStay(CL_SimplexSolver solver, CLV var, double weight)
 /* Return a clvariable with the given name, or NULL if not found */
 CLV CL_ClvLookup(const char *szName)
 {
-  ClVariable *pclv = new ClVariable(mapVars[szName]);
+  assert(varmap);
+  StringToVarMap::iterator it = varmap->find(szName);
+  if (it == varmap->end())
+    return NULL;
+  ClVariable *pclv = new ClVariable(it->second);
   return pclv;
 }
 
@@ -111,13 +141,18 @@ CL_ClvIsNil(const CLV var)
 }
 
 
-/* Return a new constraint from parsing the strings */
+/* Return a new constraint (or NULL) from parsing the strings */
 CL_Constraint CL_ParseConstraint(const char *szConstraintRule, const char *szConstraintStrength)
 {
-  istrstream xiLine(szConstraintRule);
-  ClConstraint *pcn = PcnParseConstraint(xiLine,ClVarLookupInMap(&mapVars,false),
-                                         ClsFromSz(szConstraintStrength));
-  return pcn;
+  try {
+    istrstream xiLine(szConstraintRule);
+    ClConstraint *pcn = PcnParseConstraint(xiLine,ClVarLookupInMap(varmap,false),
+                                           ClsFromSz(szConstraintStrength));
+    return pcn;
+  } catch (ExCLError &e) {
+    fprintf(stderr,"%s\n",e.description().c_str());
+    return NULL;
+  }
 }
 
 /* Add a constraint to the solver; return 1 on success, 0 on failure */
@@ -146,3 +181,4 @@ void CL_SimplexSolverSetEditedValue(CL_SimplexSolver solver, CLV var, double n)
   solver->setEditedValue(*var,n);
 }
 
+}

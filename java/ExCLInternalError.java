@@ -14,6 +14,11 @@ package EDU.Washington.grad.gjb.cassowary;
 
 public class ExCLInternalError extends ExCLError
 {
+  public ExCLInternalError(String s) {
+    description_ = s;
+  }
   public String description()
-    { return "(ExCLInternalError) An internal error has occurred"; }
+    { return "(ExCLInternalError) " + description_; }
+
+  private String description_;
 }

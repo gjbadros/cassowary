@@ -183,7 +183,8 @@ public class QuadDemo extends Applet {
           .addEditVar(db[dbDragging].Y())
           .beginEdit();
       } catch (ExCLInternalError ex) {
-        System.out.println("mouseDown: CLInternalError!");
+        System.err.println("mouseDown: CLInternalError!");
+        System.err.println(ex.description());
       }
     }
     return true;
@@ -196,7 +197,8 @@ public class QuadDemo extends Applet {
         solver.endEdit();
         repaint();
       } catch (ExCLInternalError ex) {
-        System.out.println("mouseUp: CLInternalError!");
+        System.err.println("mouseUp: CLInternalError!");
+        System.err.println(ex.description());
       }
     }
     return true;

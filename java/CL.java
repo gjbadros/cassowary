@@ -30,12 +30,20 @@ public class CL {
   protected static void fnexitprint(String s)
   { System.err.println("- " + s); }
 
+  protected void assert(boolean f,String description) throws ExCLInternalError
+  { 
+    if (!f) { 
+      throw new ExCLInternalError("Assertion failed:" + description); 
+    }
+  }
+
   protected void assert(boolean f) throws ExCLInternalError
   { 
     if (!f) { 
-      System.err.println("Assertion failed!"); throw new ExCLInternalError(); 
+      throw new ExCLInternalError("Assertion failed");
     }
   }
+
 
   public static final byte GEQ = 1;
   public static final byte LEQ = 2;

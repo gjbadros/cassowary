@@ -61,9 +61,11 @@ ws [ \t\n]+
         lvalp->pclv = pclv;
         return VAR;
       } else {
+	pxi_lexer = NULL;
 	throw ExCLParseErrorBadIdentifier(str);
         return 0;
       }
    }
 
-.			{ throw ExCLParseErrorMisc("Unrecognized character"); }
+.     {	pxi_lexer = NULL; throw ExCLParseErrorMisc("Unrecognized character"); }
+

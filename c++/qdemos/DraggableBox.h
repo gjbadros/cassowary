@@ -58,16 +58,10 @@ class DraggableBox {
   Number CenterY() const
     { return _center.Yvalue(); }
 
-  ClVariable &X() 
+  ClVariable X() 
     { return _center.X(); }
 
-  ClVariable &Y() 
-    { return _center.Y(); }
-
-  const ClVariable &X() const
-    { return _center.X(); }
-
-  const ClVariable &Y() const
+  ClVariable Y() 
     { return _center.Y(); }
 
   const ClPoint &CenterPt() const

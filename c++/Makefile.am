@@ -24,7 +24,8 @@ test_PROGRAMS = \
 
 bugs_PROGRAMS = \
 	ClBug0 \
-	ClBug1
+	ClBug1 \
+	ClBug2
 
 
 
@@ -43,6 +44,41 @@ libcassowary_a_SOURCES = \
 	ClReader-lex.cc \
 	ClReader.cc
 
+
+cassoincludedir = $(includedir)/cassowary
+
+pkginclude_HEADERS = Cl.h ClC.h
+
+cassoinclude_HEADERS = \
+	Cassowary.h \
+	ClAbstractVariable.h \
+	ClDummyVariable.h \
+	ClObjectiveVariable.h \
+	ClSlackVariable.h \
+	ClConstraint.h \
+	ClConstraintHash.h \
+	ClEditConstraint.h \
+	ClEditOrStayConstraint.h \
+	ClErrors.h \
+	ClLinearConstraint.h \
+	ClLinearEquation.h \
+	ClLinearExpression.h \
+	ClLinearExpression_fwd.h \
+	ClLinearInequality.h \
+	ClSimplexSolver.h \
+	ClStayConstraint.h \
+	ClStrength.h \
+	ClSymbolicWeight.h \
+	ClTableau.h \
+	ClFloatVariable.h \
+	ClVariable.h \
+	ClReader.h \
+	ClTypedefs.h \
+	ClMap.h \
+	ClSet.h \
+	ClPoint.h \
+	auto_ptr.h \
+	debug.h \
 
 
 ClTests_SOURCES = ClTests.cc
@@ -69,4 +105,6 @@ test_ClVariable_SOURCES = test-ClVariable.cc
 ClBug0_SOURCES = ClBug0.cc
 
 ClBug1_SOURCES = ClBug1.cc
+
+ClBug2_SOURCES = ClBug2.cc
 

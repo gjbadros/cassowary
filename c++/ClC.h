@@ -36,6 +36,18 @@ typedef struct ClSimplexSolver *CL_Tableau;
 struct ClConstraint;
 typedef struct ClConstraint *CL_Constraint;
 
+#ifndef CLC_IMPL
+struct StringToVarMap;
+typedef struct StringToVarMap *CL_VarMap;
+
+
+CL_VarMap CL_SetVarMap(CL_VarMap varmap_);
+
+CL_VarMap CL_GetVarMap();
+
+CL_VarMap CL_VarMapNew();
+#endif
+
 /* Must call this before any others */
 void CL_Init();
 

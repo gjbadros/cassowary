@@ -50,35 +50,26 @@ public class ClSimplexSolver extends ClTableau
 
   // Convenience function for creating a linear inequality constraint
   public final ClSimplexSolver addLowerBound(ClAbstractVariable v, double lower)
+    throws ExCLInternalError
   { 
-    try {
-      ClLinearInequality cn = 
-	new ClLinearInequality(v,CL.GEQ,new ClLinearExpression(lower));
-      return this;
-    }
-    catch (ExCLInternalError err) {
-      System.err.println("Broken CL.GEQ!");
-      return this;
-    }
+    ClLinearInequality cn = 
+      new ClLinearInequality(v,CL.GEQ,new ClLinearExpression(lower));
+    return this;
   }
 
   // Convenience function for creating a linear inequality constraint
   public final ClSimplexSolver addUpperBound(ClAbstractVariable v, double upper)
+    throws ExCLInternalError
   { 
-    try {
-      ClLinearInequality cn = 
-	new ClLinearInequality(v,CL.LEQ,new ClLinearExpression(upper));
-      return this;
-    }
-    catch (ExCLInternalError err) {
-      System.err.println("Broken CL.LEQ!");
-      return this;
-    }
+    ClLinearInequality cn = 
+      new ClLinearInequality(v,CL.LEQ,new ClLinearExpression(upper));
+    return this;
   }
 
   // Convenience function for creating a pair of linear inequality constraint
   public final ClSimplexSolver addBounds(ClAbstractVariable v,
-				   double lower, double upper)
+                                         double lower, double upper)
+    throws ExCLInternalError                                         
   { addLowerBound(v,lower); addUpperBound(v,upper); return  this; }
 
   // Add constraint "cn" to the solver
@@ -161,7 +152,7 @@ public class ClSimplexSolver extends ClTableau
     catch (ExCLRequiredFailure e)
       {
         // should not get this
-        throw new ExCLInternalError();
+        throw new ExCLInternalError("Required failure when adding an edit variable");
       }
   }
 
@@ -185,7 +176,7 @@ public class ClSimplexSolver extends ClTableau
   public final ClSimplexSolver beginEdit()
     throws ExCLInternalError
   {
-    assert(_editVarMap.size() > 0);
+    assert(_editVarMap.size() > 0,"_editVarMap.size() > 0");
     // may later want to do more in here
     _infeasibleRows.clear();
     resetStayConstants();
@@ -198,9 +189,10 @@ public class ClSimplexSolver extends ClTableau
   public final ClSimplexSolver endEdit()
     throws ExCLInternalError
   {
-    assert(_editVarMap.size() > 0);
+    assert(_editVarMap.size() > 0,"_editVarMap.size() > 0");
     resolve();
-    int n = ((Integer)_stkCedcns.pop()).intValue();
+    _stkCedcns.pop();
+    int n = ((Integer)_stkCedcns.peek()).intValue();
     removeEditVarsTo(n);
     // may later want to do more in here
     return this;
@@ -225,14 +217,14 @@ public class ClSimplexSolver extends ClTableau
             removeEditVar(v);
           }
         }
-        assert(_editVarMap.size() == n);
+        assert(_editVarMap.size() == n, "_editVarMap.size() == n");
         
         return this;
       }
     catch (ExCLConstraintNotFound e)
       {
         // should not get this 
-        throw new ExCLInternalError();
+        throw new ExCLInternalError("Constraint not found in removeEditVarsTo");
       }
   }
 
@@ -331,11 +323,11 @@ public class ClSimplexSolver extends ClTableau
 	ClAbstractVariable clv = (ClAbstractVariable) e.nextElement();
 	final ClLinearExpression expr = rowExpression(clv);
 	if (expr == null ) {
-	  zRow.addVariable(clv, -1.0 * 
+	  zRow.addVariable(clv, -cn.weight() * 
 			    cn.strength().symbolicWeight().asDouble(),
 			    _objective, this);
 	} else { // the error variable was in the basis
-	  zRow.addExpression(expr, -1.0 *
+	  zRow.addExpression(expr, -cn.weight() *
 			     cn.strength().symbolicWeight().asDouble(),
 			     _objective, this);
 	}
@@ -426,7 +418,7 @@ public class ClSimplexSolver extends ClTableau
 	}
       }
     } else if (cn.isEditConstraint()) {
-      assert(eVars != null);
+      assert(eVars != null,"eVars != null");
       ClEditConstraint cnEdit = (ClEditConstraint) cn;
       ClVariable clv = cnEdit.variable();
       ClEditInfo cei = (ClEditInfo) _editVarMap.get(clv);
@@ -458,7 +450,7 @@ public class ClSimplexSolver extends ClTableau
        throws ExCLInternalError
   {
     if (fTraceOn) fnenterprint("reset");
-    throw new ExCLInternalError();
+    throw new ExCLInternalError("reset not implemented");
   }
   
   // Re-solve the current collection of constraints for new values for
@@ -482,7 +474,7 @@ public class ClSimplexSolver extends ClTableau
           suggestValue(v,((ClDouble) newEditConstants.elementAt(i))
                        .doubleValue());
       } catch (ExCLError err) {
-        throw new ExCLInternalError();
+        throw new ExCLInternalError("Error during resolve");
       }
     }
     resolve();
@@ -578,7 +570,7 @@ public class ClSimplexSolver extends ClTableau
         suggestValue(v,n);
       } catch (ExCLError e) {
         // just added it above, so we shouldn't get an error
-        throw new ExCLInternalError();
+        throw new ExCLInternalError("Error in setEditedValue");
       }
       endEdit();
     }
@@ -599,7 +591,7 @@ public class ClSimplexSolver extends ClTableau
         addStay(v);
       } catch (ExCLRequiredFailure e) {
         // cannot have a required failure, since we add w/ weak
-        throw new ExCLInternalError();
+        throw new ExCLInternalError("Error in addVar -- required failure is impossible");
       }
       if (fTraceOn) { traceprint("added initial stay on " + v); }
     }
@@ -691,7 +683,7 @@ public class ClSimplexSolver extends ClTableau
       ClAbstractVariable entryVar = e.anyPivotableVariable();
       pivot( entryVar, av);
     }
-    assert(rowExpression(av) == null);
+    assert(rowExpression(av) == null, "rowExpression(av) == null");
     removeColumn(av);
     removeRow(az);
   }
@@ -844,7 +836,7 @@ public class ClSimplexSolver extends ClTableau
     for (Enumeration e = columnVars.elements(); e.hasMoreElements() ; ) {
       final ClAbstractVariable basicVar = (ClAbstractVariable) e.nextElement();
       ClLinearExpression expr = rowExpression(basicVar);
-      //assert(expr != null );
+      //assert(expr != null, "expr != null" );
       final double c = expr.coefficientFor(minusErrorVar);
       expr.incrementConstant(c * delta);
       if (basicVar.isRestricted() && expr.constant() < 0.0) {
@@ -884,8 +876,7 @@ public class ClSimplexSolver extends ClTableau
 	    }
 	  }
 	  if (ratio == Double.MAX_VALUE) {
-	    System.err.println("ratio == nil (MAX_VALUE)");
-	    throw new ExCLInternalError();
+	    throw new ExCLInternalError("ratio == nil (MAX_VALUE) in dualOptimize");
 	  }
 	  pivot( entryVar, exitVar);
 	}
@@ -997,7 +988,7 @@ public class ClSimplexSolver extends ClTableau
     if (fTraceOn) traceprint(this.toString());
 
     ClLinearExpression zRow = rowExpression(zVar);
-    assert(zRow != null);
+    assert(zRow != null, "zRow != null");
     ClAbstractVariable entryVar = null;
     ClAbstractVariable exitVar = null;
     while (true) {
@@ -1036,8 +1027,7 @@ public class ClSimplexSolver extends ClTableau
 	}
       }
       if (minRatio == Double.MAX_VALUE) {
-	System.err.println("objective function is unbounded!");
-	throw new ExCLInternalError();
+	throw new ExCLInternalError("Objective function is unbounded in optimize");
       }
       pivot(entryVar, exitVar);
       if (fTraceOn) traceprint(this.toString());
