@@ -24,17 +24,18 @@ abstract class ClEditOrStayConstraint extends ClConstraint
   {
     super(strength, weight);
     my_variable = var;
+    my_expression = new ClLinearExpression(my_variable, -1.0, my_variable.value());
   }
 
   public ClEditOrStayConstraint(ClVariable var,
 				ClStrength strength)
   {
-    super(strength);
-    my_variable = var;
+    this(var,strength,1.0);
   }
 
   public ClEditOrStayConstraint(ClVariable var)
   {
+    this(var,ClStrength.required,1.0);
     my_variable = var;
   }
   
@@ -42,11 +43,13 @@ abstract class ClEditOrStayConstraint extends ClConstraint
     { return  my_variable; }
 
   public ClLinearExpression expression()
-    { return new ClLinearExpression( my_variable,-1.0,my_variable.value()); }
+    { return my_expression; }
 
   private void setVariable(ClVariable v)
     { my_variable = v; }
 
   protected ClVariable  my_variable;
+  // cache the expresion
+  private ClLinearExpression my_expression;
 
 }
