@@ -22,13 +22,30 @@
 #include "ClLinearInequality.h"
 #include "ClStrength.h"
 #include "ClStayConstraint.h"
+#include "ClEditConstraint.h"
 #include "ClObjectiveVariable.h"
 
 class ClVariable;
 class ClPoint;
 
+class ClConstraintAndIndex {
+  friend ClSimplexSolver;
+public:
+  ClConstraintAndIndex()
+      :pconstraint(NULL), index(-1)
+    { }
+  ClConstraintAndIndex(const ClConstraint *pconstraint_, int i)
+      :pconstraint(pconstraint_), index(i)
+    { }
+private:
+  const ClConstraint *pconstraint;
+  int index;
+};
+
+
 typedef map<const ClConstraint *, ClTableauVarSet > ClConstraintToVarSetMap;
 typedef map<const ClConstraint *, const ClAbstractVariable *> ClConstraintToVarMap;
+typedef map<const ClVariable *, const ClConstraintAndIndex *> ClVarToConstraintAndIndexMap;
 typedef vector<const ClAbstractVariable *> ClVarVector;
 
 class ClSimplexSolver : public ClTableau {
@@ -69,8 +86,33 @@ class ClSimplexSolver : public ClTableau {
   // Add the constraint cn to the tableau
   ClSimplexSolver &addConstraint(const ClConstraint &cn);
 
-  ClSimplexSolver &addConstraintNoException(const ClConstraint &cn);
 
+  // Same as above, but returns false if the constraint cannot be solved
+  // (i.e., the resulting system would be unsatisfiable)
+  // The above function "addConstraint" throws an exception in that case
+  // which may be inconvenient
+  bool addConstraintNoException(const ClConstraint &cn);
+
+  ClSimplexSolver &addEditVar(const ClVariable &v, ClStrength &strength = clsStrong())
+    { 
+      ClEditConstraint *pedit = new ClEditConstraint(v, strength);
+      return addConstraint(*pedit);
+    }
+
+  ClSimplexSolver &removeEditVar(const ClVariable &v)
+    {
+      const ClConstraintAndIndex *pcai = my_editVarMap[&v];
+      const ClConstraint *pcnEdit = pcai->pconstraint;
+      return removeConstraint(*pcnEdit);
+    }
+
+  ClSimplexSolver &beginEdit()
+    {
+      assert(my_editVarMap.size() != 0);
+      return *this;
+    }
+    
+  ClSimplexSolver &removeAllEditVars();
 
   // Add weak stays to the x and y parts of each point. These have
   // increasing weights so that the solver will try to satisfy the x
@@ -117,6 +159,9 @@ class ClSimplexSolver : public ClTableau {
 
   friend ostream &operator<<(ostream &xo, const ClSimplexSolver &tableau);
   ostream &printOn(ostream &xo) const;
+
+  ostream &printInternalInfo(ostream &xo) const;
+
 
  protected:
   // Add the constraint expr=0 to the inequality tableau using an
@@ -240,6 +285,10 @@ class ClSimplexSolver : public ClTableau {
   ClConstraintToVarMap my_markerVars;
 
   ClObjectiveVariable &my_objective;
+
+  // Map edit variables to their constraints and the index into
+  // the parallel ClVarVector arrays, above
+  ClVarToConstraintAndIndexMap my_editVarMap;
 
   int my_slackCounter;
   int my_artificialCounter;
