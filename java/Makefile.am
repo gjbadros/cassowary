@@ -38,7 +38,7 @@ JAVAFILES = \
 	ClParseTest.java \
 	Timer.java
 
-#SUBDIRS=demos cda
+SUBDIRS=demos cda
 
 EXTRA_DIST=$(JAVAFILES)
 
