@@ -1,9 +1,9 @@
 # Note that this is NOT a relocatable package
 %define ver @VERSION@
-%define rel 7
+%define rel 1
 %define prefix /usr
 
-Name: cassowary
+Name: cassowary-nofd
 Summary: A Linear Arithmetic Constraint Solving Library.
 Version: %ver
 Release: %rel
@@ -14,7 +14,6 @@ Copyright: Copyright (C) 1998,1999 Greg J. Badros
 Packager: Greg J. Badros <gjb@cs.washington.edu>
 URL: http://www.cs.washington.edu/research/constraints/cassowary
 Requires: guile >= 1.3.2
-Requires: GTL >= 0.3.1
 Provides: cassowary-constraint-solver
 
 %description
@@ -25,10 +24,16 @@ Constraints may be either requirements or preferences.  Client code
 specifies the constraints to be maintained, and the solver updates the
 constrained variables to have values that satisfy the constraints.
 
+This package lacks the finite domain subsolver.  The cassowary RPM
+contains that solver as well, but also requires the GTL (Graph
+Template Library) package.
+
+
 %changelog
 * Tue Sep 7 1999 Greg J. Badros <gjb@cs.washington.edu)
-- added provides virtual package "cassowary-constraint-solver" so that
-  both this .spec and cassowary.spec can provide it
+- Added cassowary-nofd package to remove GTL dependence, added provides
+  virtual package "cassowary-constraint-solver" so that both this .spec
+  and cassowary.spec can provide it
 
 * Sat Sep 4 1999 Greg J. Badros <gjb@cs.washington.edu)
 - Use -fpermissive if it is available, fix --enable-warnings
@@ -48,9 +53,9 @@ constrained variables to have values that satisfy the constraints.
 ln -sf . ./c++/cassowary
 
 %ifarch alpha
-./configure --host=alpha-linux --prefix=%prefix --enable-guile-build --with-gtl=%prefix --enable-fd-solver --enable-fsstd --enable-permissive
+./configure --host=alpha-linux --prefix=%prefix --enable-guile-build --enable-fsstd --enable-permissive
 %else
-./configure --prefix=%prefix --enable-guile-build --with-gtl=%prefix --enable-fd-solver --enable-fsstd --enable-permissive
+./configure --prefix=%prefix --enable-guile-build --enable-fsstd --enable-permissive
 %endif
 
 make
