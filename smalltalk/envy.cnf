@@ -1,0 +1,41 @@
+"Set the pixmap path for XmGetPixmap."
+CgScreen bitmapPath: #('..\..\bitmaps').
+!
+
+
+"Open evaluation log." 
+System openEvaluationLogNamed: 'doit.log'.
+EmLibrary maximumBufferSize: 2048.
+
+"-----------------------------------------------------------------------------
+| WARNING: There is a known Microsoft/Novell defect when accessing a Novell| |
+| file server from Windows/95 and Windows/NT. You must use the correct client|
+| software in this configuration. Please refer to:                           |
+|                                                                            |
+|      http://www.oti.com/corporat/whatsnew.htm                              |
+|                                                                            |
+| for the most up to date information.                                       |
+|                                                                            |
+| Using the generic I/O DLL without installing the correct requestor patches |
+| will corrupt your library.  This defect is not present when running        |
+| Windows 3.1.                                                               |
+-----------------------------------------------------------------------------"
+
+
+		"Use file access for Windows 3.11 + WIN32s"
+		EmLibraryPrimitives
+		    accessLibraryName: 'EGA32400.DLL';
+		    fileIOLibraryName: 'EIO32400.DLL'. 
+!
+
+
+"Start up ENVY/Manager."
+EmLibrary
+    defaultName: '..\..\manager\manager.dat'.
+
+EmLibrary serverAddress: nil.
+
+EmLibrary
+    releaseLockMode: true;
+    singleUserMode: false.
+!

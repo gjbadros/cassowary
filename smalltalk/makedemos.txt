@@ -1,0 +1,6 @@
+ClSequenceDiagramDemo1 new open.
+(ClBinaryTreeDemo height: 5)  open.
+ClBoxesDemo new open.
+ClElasticQuadDemo new open.
+ClBoundedQuadDemo new open.
+ClQuadDemo new open.
