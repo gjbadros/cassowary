@@ -133,3 +133,34 @@ my_slackCounter == 1017
 my_artificialCounter == 770
 my_dummyCounter == 785
 editMinusErrorVars 2, editPlusErrorVars 2, stayMinusErrorVars 900, stayPlusErrorVars 900, errorVars 0, markerVars 1022
+
+
+-----------------------
+Same, but w/ profiling off and NDEBUG set
+addDel:
+starting timing test. nCns = 900, nVars = 900, nResolves = 10000
+done building data structures
+time = 1.26
+
+done adding constraints [120 exceptions]
+time = 36.34
+
+done creating edit constraints -- about to start resolves
+time = 0.12
+
+done resolves -- now removing constraints
+time = 26.23
+
+done removing constraints and addDel timing test
+time = 7.31
+
+my_slackCounter == 1017
+my_artificialCounter == 770
+my_dummyCounter == 785
+editMinusErrorVars 2, editPlusErrorVars 2, stayMinusErrorVars 900, stayPlusErrorVars 900, errorVars 0, markerVars 1022
+
+
+40 ms for add
+2.6 ms for re-solve
+8 ms for remove
+
