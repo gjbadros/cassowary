@@ -18,7 +18,7 @@
 #include <iostream.h>
 #include <assert.h>
 #include <strstream.h>
-#include "scwm-snarf.h"
+#include "cl-snarf.h"
 
 #include <guile/gh.h>
 
