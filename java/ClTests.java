@@ -13,8 +13,12 @@ package EDU.Washington.grad.gjb.cassowary;
 
 import java.lang.*;
 import java.util.Random;
+import java.util.Vector;
+import java.io.FileReader;
+import java.io.BufferedReader;
 
 public class ClTests extends CL {
+
   public ClTests()
   {
     RND = new Random(123456789);
@@ -330,12 +334,14 @@ public class ClTests extends CL {
     // FIXGJB: from where did .12 come?
     final double ineqProb = 0.12;
     final int maxVars = 3;
+    InitializeRandoms();
 
     System.out.println("starting timing test. nCns = " + nCns +
         ", nVars = " + nVars + ", nResolves = " + nResolves);
     
     timer.Start();
     ClSimplexSolver solver = new ClSimplexSolver();
+    solver.setAutosolve(false);
 
     ClVariable[] rgpclv = new ClVariable[nVars];
     for (int i = 0; i < nVars; i++) {
@@ -343,14 +349,18 @@ public class ClTests extends CL {
       solver.addStay(rgpclv[i]);
     }
 
-    ClConstraint[] rgpcns = new ClConstraint[nCns];
+    int nCnsMade = nCns*2;
+
+    ClConstraint[] rgpcns = new ClConstraint[nCnsMade];
+    ClConstraint[] rgpcnsAdded = new ClConstraint[nCns];
     int nvs = 0;
     int k;
     int j;
     double coeff;
-    for (j = 0; j < nCns; j++) {
+    for (j = 0; j < nCnsMade; ++j) {
       // number of variables in this constraint
       nvs = RandomInRange(1,maxVars);
+      if (fTraceOn) traceprint("Using nvs = " + nvs);
       ClLinearExpression expr = new ClLinearExpression(UniformRandomDiscretized() * 20.0 - 10.0);
       for (k = 0; k < nvs; k++) {
         coeff = UniformRandomDiscretized()*10 - 5;
@@ -365,88 +375,137 @@ public class ClTests extends CL {
       if (fTraceOn) traceprint("Constraint " + j + " is " + rgpcns[j]);
     }
 
+    timer.Stop();
     System.out.println("done building data structures");
     System.out.println("time = " + timer.ElapsedTime());
+
+    timer.Reset();
     timer.Start();
     int cExceptions = 0;
-    for (j = 0; j < nCns; j++) {
+    int cCns = 0;
+    for (j = 0; j < nCnsMade && cCns < nCns; j++) {
       // add the constraint -- if it's incompatible, just ignore it
       // FIXGJB: exceptions are extra expensive in C++, so this might not
       // be particularly fair
       try
 	{
 	  solver.addConstraint(rgpcns[j]);
+          rgpcnsAdded[cCns++] = rgpcns[j];
+          if (fTraceAdded) traceprint("Added cn: " + rgpcns[j]);
 	}
       catch (ExCLRequiredFailure err)
 	{
 	  cExceptions++;
 	  if (fTraceOn) traceprint("got exception adding " + rgpcns[j]);
+	  if (fTraceAdded) traceprint("got exception adding " + rgpcns[j]);
 	  rgpcns[j] = null;
 	}
     }
-   // FIXGJB end = Timer.now();
-   System.out.println("done adding constraints [" + cExceptions + " exceptions]");
-   System.out.println("time = " + timer.ElapsedTime() + "\n");
-   timer.Start();
+    solver.solve();
+    timer.Stop();
 
-   int e1Index = (int) (UniformRandomDiscretized()*nVars);
-   int e2Index = (int) (UniformRandomDiscretized()*nVars);
+    System.out.println("done adding " + cCns + " constraints [" 
+                       + j + " attempted, " 
+                       + cExceptions + " exceptions]");
+    System.out.println("time = " + timer.ElapsedTime() + "\n");
+    System.out.println("time per Add cn = " + timer.ElapsedTime()/cCns);
+    
+    int e1Index = (int) (UniformRandomDiscretized()*nVars);
+    int e2Index = (int) (UniformRandomDiscretized()*nVars);
+    
+    System.out.println("Editing vars with indices " + e1Index + ", " + e2Index);
+    
+    ClEditConstraint edit1 = new ClEditConstraint(rgpclv[e1Index],ClStrength.strong);
+    ClEditConstraint edit2 = new ClEditConstraint(rgpclv[e2Index],ClStrength.strong);
+    
+    //   CL.fDebugOn = CL.fTraceOn = true;
+    System.out.println("about to start resolves");
+    
+    timer.Reset();
+    timer.Start();
+    
+    solver
+      .addConstraint(edit1)
+      .addConstraint(edit2);
 
-   System.out.println("indices " + e1Index + ", " + e2Index);
-   
-   ClEditConstraint edit1 = new ClEditConstraint(rgpclv[e1Index],ClStrength.strong);
-   ClEditConstraint edit2 = new ClEditConstraint(rgpclv[e2Index],ClStrength.strong);
+    timer.Stop();
+    for (int m = 0; m < nResolves; m++)
+      {
+        solver.resolve(rgpclv[e1Index].value() * 1.001,
+                       rgpclv[e2Index].value() * 1.001);
+      }
+    solver.removeConstraint(edit1);
+    solver.removeConstraint(edit2);
+    timer.Stop();
+    
+    
+    System.out.println("done resolves -- now removing constraints");
+    System.out.println("time = " + timer.ElapsedTime() + "\n");
+    System.out.println("time per Resolve = " + timer.ElapsedTime()/nResolves);
+    
+    timer.Reset();
+    timer.Start();
+    
+    for (j = 0; j < cCns; j++)
+      {
+        solver.removeConstraint(rgpcnsAdded[j]);
+        // System.out.println("removing #" + j);
+      }
+    //    solver.solve();
+    timer.Stop();
+    
+    System.out.println("done removing constraints and addDel timing test");
+    System.out.println("time = " + timer.ElapsedTime() + "\n");
+    System.out.println("time per Remove cn = " + timer.ElapsedTime()/cCns);
+    
+    return true;
+  }
 
-   //   CL.fDebugOn = CL.fTraceOn = true;
+  public final static void InitializeRandoms() {
+    try {
+      iRandom = 0;
+      String s;
+      FileReader in = new FileReader("randoms.txt");
+      BufferedReader reader = new BufferedReader(in);
+      vRandom = new Vector(20001);
+      // skip over comment
+      reader.readLine();
+      // skip over number of randoms
+      reader.readLine();
+      Double f;
+      while ((s = reader.readLine()) != null) {
+        f = Double.valueOf(s);
+        vRandom.add(f);
+        ++cRandom;
+      }
+      System.out.println("Read in " + cRandom + " random numbers");
+    } catch (java.io.IOException e) {
+      // nothing
+    }
+  }
+    
 
-   solver
-     .addConstraint(edit1)
-     .addConstraint(edit2);
-
-   System.out.println("done creating edit constraints -- about to start resolves");
-   System.out.println("time = " + timer.ElapsedTime() + "\n");
-   timer.Start();
-
-   // FIXGJB start = Timer.now();
-   for (int m = 0; m < nResolves; m++)
-     {
-     solver.resolve(rgpclv[e1Index].value() * 1.001,
-		    rgpclv[e2Index].value() * 1.001);
-     }
-
-   System.out.println("done resolves -- now removing constraints");
-   System.out.println("time = " + timer.ElapsedTime() + "\n");
-
-   solver.removeConstraint(edit1);
-   solver.removeConstraint(edit2);
-
-   timer.Start();
-
-   for (j = 0; j < nCns; j++)
-     {
-     if (rgpcns[j] != null)
-       {
-       solver.removeConstraint(rgpcns[j]);
-       }
-     }
-
-   System.out.println("done removing constraints and addDel timing test");
-   System.out.println("time = " + timer.ElapsedTime() + "\n");
-
-   timer.Start();
-   
-   return true;
- }
-
-  public final static double UniformRandomDiscretized()
+  public final static double UniformRandomDiscretizedUsingRND()
   {
     double n = Math.abs(RND.nextInt());
     return (n/Integer.MAX_VALUE);
   }
 
+  public final static double UniformRandomDiscretized()
+  {
+    if (iRandom >= cRandom) {
+      // throw new Exception("Out of random numbers");
+      return -1;
+    }
+    double f =  ((Double)vRandom.elementAt(iRandom++)).doubleValue();
+    //    System.out.println("returning value = " + f);
+    return f;
+  }
+
+
   public final static int RandomInRange(int low, int high)
   {
-    return (int) UniformRandomDiscretized()*(high-low)+low;
+    return (int) (UniformRandomDiscretized()*(high-low+1))+low;
   }
     
 
@@ -536,5 +595,8 @@ public class ClTests extends CL {
     //      }
   }
 
+  static private int iRandom = 0;
+  static private int cRandom = 0;
+  static private Vector vRandom;
   static private Random RND;
 }
