@@ -28,7 +28,7 @@ solver:
 
 o C++
 o Java
-o Smalltalk
+o Smalltalk (v0.1)
 
 For each implementation language, there is at least one example program; 
 for some there are many.

@@ -20,6 +20,8 @@ with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
 
 ** mention SCWM in README
 
+** mention non-maintenance of Smalltalk implementation unless we have users
+
 * Changes to the C++ and Java implementations
 
 ** Fixed several bugs -- dummy variables were wrongly being pivoted into
