@@ -1,3 +1,23 @@
+Sat Jan 23 16:46:27 1999  Greg Badros  <gjb@cs.washington.edu>
+
+	* guile/cassowary_scm.cc: Replace iarg uses with literal argument
+	index numbers.  Use const_cast to avoid warnings when calling
+	ScmMakeClStrength on clsWeak,clsMedium,clsStrong,clsRequired objects
+
+Sat Jan 23 15:30:16 1999  Greg Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSimplexSolver.cc: Added some comments, some explanations
+	when exceptions are thrown, and some minor cleanups, bug-fixes
+
+	* c++/ClTests.cc: Added inconsistent3() test, and run it.
+
+	* c++/ClStrength.h: Added _pv memvar, and setPv(), Pv() -- needed
+	for tracking ClStrengths in guile
+
+	* guile/cassowary_scm.cc: Replace all iarg uses with the literal
+	number.  Point ClStrength objects at their scheme-level object
+	using their new _pv field.  Protect ClStrength objects properly.
+
 Sat Sep 19 17:08:21 1998  Greg Badros  <gjb@cs.washington.edu>
 
 	* c++/Makefile (CPPFLAGS): Added USE_GC, commented out, and added
