@@ -47,6 +47,9 @@ and everything will work.  A more complex, but realistic example is:
             --enable-warnings
 make -k
 
+Be sure to give the extra --enable-permissive flag to configure if
+you are building with gcc-2.95 or more recent.
+
 As yet another data point, I build Cassowary with:
 
 ./configure --with-guile-exec-prefix=/uns/bin \

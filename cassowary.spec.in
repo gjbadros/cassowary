@@ -56,7 +56,7 @@ ln -sf . ./c++/cassowary
 make
 
 %install
-make prefix=$RPM_BUILD_ROOT%{prefix} install-strip
+make prefix=$RPM_BUILD_ROOT%{prefix} fake_root_for_install=$RPM_BUILD_ROOT install-strip
 
 %clean
 rm -rf $RPM_BUILD_ROOT

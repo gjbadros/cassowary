@@ -40,3 +40,7 @@
 
 /* Does cc/gcc take -fpermissive? */
 #undef NO_CC_PERMISSIVE
+
+/* Define this if your libguile has scm_make_smob_type_mfpe,
+   the new-style SMOB interface (>= guile-1.3.2 */
+#undef HAVE_SCM_MAKE_SMOB_TYPE_MFPE

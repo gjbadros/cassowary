@@ -9,7 +9,7 @@ dnl ## Initialize autoconf ##
 AC_INIT(c++/ClSimplexSolver.cc)
 AC_PREREQ(2.4)
 
-CASSOWARY_VERSION=0.51
+CASSOWARY_VERSION=0.51post
 AC_SUBST(CASSOWARY_VERSION)
 
 dnl ## Initialize automake ##
@@ -129,6 +129,8 @@ AC_ARG_ENABLE(fd-solver,
   fi
 ])
 AC_SUBST(SOURCES_FOR_FD_SOLVER)
+
+AC_CHECK_LIB(guile, scm_make_smob_type_mfpe, AC_DEFINE(HAVE_SCM_MAKE_SMOB_TYPE_MFPE), ,$GUILE_LIBS)
 
 
 dnl # Check for the GTL library (needed for fd solver)
@@ -290,6 +292,13 @@ else
 	AC_PATH_PROGS(GUILE_CONFIG, guile-config build-guile, no, ${GUILE_BIN_DIR})
 fi
 
+case "$ac_R_nospace" in 
+"yes") GUILE_LIBS_PRE="-L${guile_lib_path} -R${guile_lib_path}" ;;
+"no")  GUILE_LIBS_PRE="-L${guile_lib_path} -R ${guile_lib_path}" ;;
+*)     GUILE_LIBS_PRE="-L${guile_lib_path}" ;;
+esac
+
+
 GUILE_CONFIG_works=no
 if test "no" != "$GUILE_CONFIG"; then
   AC_MSG_CHECKING(whether guile-config or build-guile works)
@@ -305,10 +314,26 @@ if test "no" != "$GUILE_CONFIG"; then
   fi
 
   AC_MSG_CHECKING(what the guile pkgdatadir is)
-  GUILE_PKGDATA_DIR=`guile-config info pkgdatadir`
+  GUILE_PKGDATA_DIR=`${GUILE_CONFIG} info pkgdatadir`
   AC_MSG_RESULT($GUILE_PKGDATA_DIR)
-  GUILE_PKGDATA_DIR=\${prefix}/${GUILE_PKGDATA_DIR##$prefix}
+  GUILE_PKGDATA_DIR=${fake_root_for_install}${GUILE_PKGDATA_DIR}
   cassoguiledir=$GUILE_PKGDATA_DIR/site/cassowary
+fi
+
+if test "yes" = "$GUILE_CONFIG_works"; then
+  AC_MSG_CHECKING(for guile libraries)
+  GUILE_LIBS="${GUILE_LIBS_PRE} `${GUILE_CONFIG} link`"
+  AC_MSG_RESULT($GUILE_LIBS)
+else
+  AC_CHECK_LIB(m, sin, GUILE_LIBS="-lm",, $GUILE_LIBS_PRE)
+  AC_CHECK_LIB(rx, main, GUILE_LIBS="-lrx $GUILE_LIBS",, $GUILE_LIBS_PRE)
+  AC_CHECK_LIB(qt, main, GUILE_LIBS="-lqt $GUILE_LIBS",, $GUILE_LIBS_PRE)
+  AC_CHECK_LIB(dl, dlopen, GUILE_LIBS="-ldl $GUILE_LIBS";DL_SUPPORT=true,, $GUILE_LIBS_PRE)
+  AC_CHECK_LIB(c, dlopen, GUILE_LIBS="$GUILE_LIBS";DL_SUPPORT=true,, $GUILE_LIBS_PRE)
+
+  AC_CHECK_LIB(guile, scm_handle_by_message_noexit, GUILE_LIBS="${GUILE_LIBS_PRE} -lguile ${GUILE_LIBS}", [
+  	AC_MSG_ERROR(Can not find Guile 1.2 or later on the system)
+  ], $GUILE_LIBS_PRE $GUILE_LIBS)
 fi
 
 
@@ -318,9 +343,12 @@ if test x"$enable_guile_build" = x"yes"; then
     GUILE_ENABLED="true"
 fi
 
+AC_CHECK_LIB(guile, scm_make_smob_type_mfpe, AC_DEFINE(HAVE_SCM_MAKE_SMOB_TYPE_MFPE), ,$GUILE_LIBS)
+
 AC_SUBST(cassoguiledir)
 AC_SUBST(GUILE)
 AC_SUBST(GUILE_INCLUDES)
+AC_SUBST(GUILE_LIBS)
 AC_SUBST(GUILE_BIN_DIR)
 AC_SUBST(GUILE_LIB_DIR)
 AC_SUBST(GUILE_PKGDATA_DIR)

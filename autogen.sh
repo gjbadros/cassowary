@@ -33,3 +33,6 @@ else
   CMD=./configure
 fi
 $CMD "$@" && echo && echo "Now type 'make' to compile Cassowary, and install via 'make install'."
+
+# Make a missing symlink that does not get created from cvs checkouts
+test -L c++/cassowary || ln -sf . ./c++/cassowary
