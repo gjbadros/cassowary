@@ -429,6 +429,29 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
   return *this;
 }
 
+
+  // Same as above, but returns false if the constraint dne
+  // The above function "removeConstraint" throws an exception in that case
+  // which may be inconvenient
+bool
+ClSimplexSolver::removeConstraintNoException(const ClConstraint &cn)
+{
+#ifndef CL_NO_TRACE
+  Tracer TRACER(__FUNCTION__);
+  cerr << "(" << cn << ")" << endl;
+#endif
+  try 
+    {
+    removeConstraint(cn);
+    return true;
+    }
+  catch (const ExCLConstraintNotFound &e)
+    {
+    return false;
+    }
+}
+
+
 // Re-initialize this solver from the original constraints, thus
 // getting rid of any accumulated numerical problems.  (Actually,
 // Alan hasn't observed any such problems yet, but here's the method
@@ -576,7 +599,9 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
       delete removeRow(*pav);
       return true;
       }
-    const ClAbstractVariable *pentryVar = pe->anyVariable();
+    const ClAbstractVariable *pentryVar = pe->anyPivotableVariable();
+    if (!pentryVar)
+      return false; /* required failure */
     pivot(*pentryVar, *pav);
     }
   // now av should be parametric
@@ -990,6 +1015,9 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
   // If necessary normalize the expression by multiplying by -1
   if (pexpr->constant() < 0)
     {
+#ifndef CL_NO_TRACE
+    cerr << "newExpression's constant is " << pexpr->constant() << ", < 0, so flipping" << endl;
+#endif
     pexpr->multiplyMe(-1);
     }
 #ifndef CL_NO_TRACE
@@ -1105,6 +1133,7 @@ ClSimplexSolver::pivot(const ClAbstractVariable &entryVar, const ClAbstractVaria
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << entryVar << ", " << exitVar << ")" << endl;
 #endif
+  assert(entryVar.isPivotable());
   
   // expr is the expression for the exit variable (about to leave the basis) -- 
   // so that the old tableau includes the equation:
