@@ -11,7 +11,7 @@ libtoolize --automake --copy
 
 # Generate Makefile.in's from Makefile.am's and configure.in
 # (adding missing files that may be needed for proper operation)
-automake --add-missing --gnu
+automake --add-missing
 
 # Generate include/config.h.in from acconfig.h and configure.in
 autoheader
