@@ -27,7 +27,7 @@ istream *pxi_lexer;
 
 /* Make lexer reader from the global variable */
 #define YY_INPUT(buf,result,max_size) \
-	 do { if ((*pxi_lexer) >> buf[0]) result = 1; \
+	 do { if (pxi_lexer->get(buf[0])) result = 1; \
 		  else result = YY_NULL; } while (0)
 
 %}
@@ -38,11 +38,11 @@ DIGIT [0-9]
 ALPHA [A-Za-z]
 ALPHANUM [A-Za-z0-9]
 ID_OK_PUNC [-\[\]]
-ID [A-Za-z][-A-Za-z0-9\[\]]*
-ws [ \t]+
+ID {ALPHA}({ALPHANUM}|{ID_OK_PUNC})*
+ws [ \t\n]+
 
 %%
-ws			/* skip whitespace */
+{ws}			/* skip whitespace */
 \n|";"			{ return 0; }
 ">="			{ return GEQ; }
 "<=" 			{ return LEQ; }
@@ -65,3 +65,5 @@ ws			/* skip whitespace */
         return 0;
       }
     }
+
+.			{ cerr << "Unrecognized character: " << yytext << endl; return 0; }
