@@ -27,7 +27,7 @@ variables to have values that satisfy the constraints.
 %setup
 
 %build
-./configure --prefix=/usr/share/contrib --exec-prefix=/usr/contrib
+./configure --prefix=/usr/share/contrib --exec-prefix=/usr/contrib --with-guile-prefix=/usr/contrib
 make 
 
 %install
