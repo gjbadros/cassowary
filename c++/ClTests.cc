@@ -52,7 +52,7 @@ double UniformRandom()
 
 #else
 
-void InitializeRandoms(long s) {
+void InitializeRandoms(long s = time(NULL)) {
   cerr << "Seed = " << s << endl;
   srand(s);
 }
