@@ -9,7 +9,7 @@ dnl ## Initialize autoconf ##
 AC_INIT(c++/ClSimplexSolver.cc)
 AC_PREREQ(2.4)
 
-CASSOWARY_VERSION=0.53
+CASSOWARY_VERSION=0.54
 AC_SUBST(CASSOWARY_VERSION)
 
 dnl ## Initialize automake ##
@@ -125,17 +125,16 @@ AC_ARG_ENABLE(fd-solver,
 [  --enable-fd-solver   Enable the restricted finite domain solver]
 ,[if test "yes" = "$enableval"; then
     CL_BUILD_FD_SOLVER=true
+dnl    # Check for the GTL library (needed for fd solver)
+    GTL_LIB="-lGTL"  #just define this for now
+dnl    AC_CHECK_LIB(GTL, GML_init, [
+dnl    GTL_LIB="-lGTL"
+dnl    AC_DEFINE(CL_HAVE_GTL)
+dnl    ], no_gtl_lib=yes,)
   fi
 ])
 AM_CONDITIONAL(CL_BUILD_FD_SOLVER, test "true" = "$CL_BUILD_FD_SOLVER")
 
-
-dnl # Check for the GTL library (needed for fd solver)
-dnl GTL_LIB=""
-dnl AC_CHECK_LIB(GTL, GML_init, [
-dnl GTL_LIB="-lGTL"
-dnl AC_DEFINE(CL_HAVE_GTL)
-dnl ], no_gtl_lib=yes,)
 
 
 ACE_ARG_PATH(gtl,
@@ -191,6 +190,10 @@ else
 fi
 AM_CONDITIONAL(HAVE_CPP, test "true" = "$HAVE_CPP")
 
+
+AC_ARG_ENABLE(static-library, [ --enable-static-library  Build static libcassowary.a ],
+		build_static_library=yes, build_static_library=no)
+AM_CONDITIONAL(CL_BUILD_STATIC_LIBRARY, test "yes" = "$build_static_library")
 
 
 AC_ARG_ENABLE(hash_map_and_set,
@@ -322,6 +325,7 @@ fi
 if test "yes" = "$GUILE_CONFIG_works"; then
   AC_MSG_CHECKING(for guile libraries)
   GUILE_LIBS="${GUILE_LIBS_PRE} `${GUILE_CONFIG} link`"
+  GUILE_ENABLED="true"
   AC_MSG_RESULT($GUILE_LIBS)
 else
   AC_CHECK_LIB(m, sin, GUILE_LIBS="-lm",, $GUILE_LIBS_PRE)
@@ -336,10 +340,10 @@ else
 fi
 
 
-AC_ARG_ENABLE(guile_build, [ --enable-guile-build  Build Guile wrapper for Cassowary ],
-		enable_guile_build=yes, enable_guile_build=no)
-if test x"$enable_guile_build" = x"yes"; then
-    GUILE_ENABLED="true"
+AC_ARG_ENABLE(guile_build, [ --disable-guile-build  Build Guile wrapper for Cassowary ],
+		disable_guile_build=yes, disable_guile_build=no)
+if test x"disable_guile_build" = x"yes"; then
+    GUILE_ENABLED="false"
 fi
 
 AC_CHECK_LIB(guile, scm_make_smob_type_mfpe, AC_DEFINE(HAVE_SCM_MAKE_SMOB_TYPE_MFPE), ,$GUILE_LIBS)
@@ -443,7 +447,6 @@ AM_CONDITIONAL(HAVE_JAVA, test "true" = "$HAVE_JAVA")
 
 AC_OUTPUT([
 	Makefile \
-	README \
 	ANNOUNCE \
 	cassowary-config \
 	c++/Makefile \

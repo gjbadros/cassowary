@@ -63,18 +63,18 @@ Provides: cassowary-constraint-solver
 ln -sf . ./c++/cassowary
 
 %ifarch alpha
-./configure --host=alpha-linux --prefix=%prefix --enable-guile-build --with-gtl=%prefix --enable-fd-solver --enable-fsstd --enable-permissive
+./configure --host=alpha-linux --prefix=%prefix --with-gtl=%prefix --enable-fd-solver --enable-fsstd --enable-permissive
 %else
-./configure --prefix=%prefix --enable-guile-build --with-gtl=%prefix --enable-fd-solver --enable-fsstd --enable-permissive
+./configure --prefix=%prefix --with-gtl=%prefix --enable-fd-solver --enable-fsstd --enable-permissive
 %endif
 
 %build nofd
 ln -sf . ./c++/cassowary
 
 %ifarch alpha
-./configure --host=alpha-linux --prefix=%prefix --enable-guile-build --enable-fsstd --enable-permissive
+./configure --host=alpha-linux --prefix=%prefix --enable-fsstd --enable-permissive
 %else
-./configure --prefix=%prefix --enable-guile-build --enable-fsstd --enable-permissive
+./configure --prefix=%prefix --enable-fsstd --enable-permissive
 %endif
 
 

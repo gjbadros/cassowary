@@ -48,9 +48,9 @@ constrained variables to have values that satisfy the constraints.
 ln -sf . ./c++/cassowary
 
 %ifarch alpha
-fake_root_for_install=$RPM_BUILD_ROOT ./configure --host=alpha-linux --prefix=%prefix --enable-guile-build --with-gtl=%prefix --enable-fd-solver --enable-fsstd --enable-permissive
+fake_root_for_install=$RPM_BUILD_ROOT ./configure --host=alpha-linux --prefix=%prefix --with-gtl=%prefix --enable-fd-solver --enable-fsstd --enable-permissive
 %else
-fake_root_for_install=$RPM_BUILD_ROOT ./configure --prefix=%prefix --enable-guile-build --with-gtl=%prefix --enable-fd-solver --enable-fsstd --enable-permissive
+fake_root_for_install=$RPM_BUILD_ROOT ./configure --prefix=%prefix --with-gtl=%prefix --enable-fd-solver --enable-fsstd --enable-permissive
 %endif
 
 make
