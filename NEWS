@@ -11,7 +11,7 @@ Seattle, WA 98195-2350
 
 with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
 
-10-July-1999: Version 0.50 released.
+12-July-1999: Version 0.50 released.
 * Made only C++ version build by default, --enable-java-build is needed to turn java on
 * Added restricted finite domain solver
 ** needs --with-gtl configure option, and libGTL.{a,so*} to be installed

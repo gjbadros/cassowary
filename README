@@ -47,6 +47,12 @@ and everything will work.  A more complex, but realistic example is:
             --enable-warnings
 make -k
 
+As yet another data point, I build Cassowary with:
+
+./configure --with-guile-exec-prefix=/uns/bin \
+            --with-guile-prefix=/uns/share --prefix=/uns/share \
+            --exec-prefix=/uns --enable-maintainer-mode
+
 See the file "INSTALL" for more details about
 autoconf support and the options that the "configure" takes.  You can
 also do "./configure --help" for the list of the options that configure
