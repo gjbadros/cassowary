@@ -4,6 +4,7 @@
 *.o
 .deps
 .libs
+config.h.in
 ClBug0
 ClBug1
 ClBug2
