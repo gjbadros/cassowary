@@ -17,6 +17,21 @@
 #include "ClVariable.h"
 #include "ClTypedefs.h"
 
+
+#ifndef CL_NO_IO
+class ClTableau;
+
+ostream &operator<<(ostream &xo, const ClTableau &clt);
+
+ostream &operator<<(ostream &xo, const ClVarSet &varset);
+
+ostream &operator<<(ostream &xo, const ClTableauColumnsMap &varmap);
+
+ostream &operator<<(ostream &xo, const ClTableauRowsMap &rows);
+
+ostream &operator<<(ostream &xo, const ClVarVector &varlist);
+#endif // CL_NO_IO
+
 class ClTableau {
 
  public:
@@ -27,41 +42,40 @@ class ClTableau {
   // expression is in a tableau the corresponding basic variable is
   // subject (or if subject is nil then it's in the objective function).
   // Update the column cross-indices.
-  void noteRemovedVariable(const ClAbstractVariable &v, const ClAbstractVariable &subject)
+  void noteRemovedVariable(ClVariable v, ClVariable subject)
     { 
 #ifdef CL_TRACE
     Tracer TRACER(__FUNCTION__);
     cerr << "(" << v << ", " << subject << ")" << endl;
 #endif
-    ClTableauVarSet &column = _columns[&v];
-    ClTableauVarSet::const_iterator it = column.find(&subject);
+    ClVarSet &column = _columns[v];
+    ClVarSet::const_iterator it = column.find(subject);
     assert(it != column.end());
     column.erase(it);
 #ifdef CL_TRACE_VERBOSE
-    cerr << "v = " << v << " and columns[&v].size() = "
+    cerr << "v = " << v << " and columns[v].size() = "
          << column.size() << endl;
 #endif
     if (column.size() == 0)
       {
-      const ClVariable *pclv = static_cast<const ClVariable *>(&v);  
-      _columns.erase(pclv);
-      _externalRows.erase(pclv);
-      _externalParametricVars.erase(pclv);
+      _columns.erase(v);
+      _externalRows.erase(v);
+      _externalParametricVars.erase(v);
       }
     }
 
   // v has been added to the linear expression for subject
   // update column cross indices
-  void noteAddedVariable(const ClAbstractVariable &v, const ClAbstractVariable &subject)
+  void noteAddedVariable(ClVariable v, ClVariable subject)
     { 
 #ifdef CL_TRACE
     Tracer TRACER(__FUNCTION__);
     cerr << "(" << v << ", " << subject << ")" << endl;
 #endif
-    _columns[&v].insert(&subject); 
+    _columns[v].insert(subject); 
     if (v.isExternal() && !FIsBasicVar(v))
       {
-      _externalParametricVars.insert(static_cast<const ClVariable *>(&v));
+      _externalParametricVars.insert(v);
       }
     }
 
@@ -82,31 +96,29 @@ class ClTableau {
     ClTableauRowsMap::const_iterator itRow = _rows.begin();
     for (; itRow != _rows.end(); ++itRow)
       {
-      const ClAbstractVariable *pclv = (*itRow).first;
-      if (pclv->isExternal())
+      const ClVariable clv = (*itRow).first;
+      if (clv.isExternal())
         {
-        const ClVariable *pv = dynamic_cast<const ClVariable *>(pclv);
-        if (_externalRows.find(pv) == _externalRows.end()) 
+        if (_externalRows.find(clv) == _externalRows.end()) 
           {
 #ifndef CL_NO_IO
-          cerr << "External basic variable " << *pclv
+          cerr << "External basic variable " << clv
                << " is not in _externalRows" << endl;
 #endif
           }
         }
-      const ClLinearExpression *pcle = rowExpression(*pclv);
+      const ClLinearExpression *pcle = rowExpression(clv);
       assert(pcle);
       ClVarToNumberMap::const_iterator it = pcle->terms().begin();
       for (; it != pcle->terms().end(); ++it)
         {
-        const ClAbstractVariable *pclv = (*it).first;
-        if (pclv->isExternal()) 
+        ClVariable clv = (*it).first;
+        if (clv.isExternal()) 
           {
-          const ClVariable *pv = dynamic_cast<const ClVariable *>(pclv);
-          if (_externalParametricVars.find(pv) == _externalParametricVars.end())
+          if (_externalParametricVars.find(clv) == _externalParametricVars.end())
             {
 #ifndef CL_NO_IO
-            cerr << "External parametric variable " << *pclv 
+            cerr << "External parametric variable " << clv 
                  << " is not in _externalParametricVars" << endl;
 #endif
             }
@@ -129,24 +141,24 @@ class ClTableau {
   // expr is now owned by ClTableau class, 
   // and ClTableauis responsible for deleting it
   // (also, expr better be allocated on the heap!)
-  void addRow(const ClAbstractVariable &v, const ClLinearExpression &expr);
+  void addRow(ClVariable v, const ClLinearExpression &expr);
 
   // Remove v from the tableau -- remove the column cross indices for v
   // and remove v from every expression in rows in which v occurs
   // returns a pointer to the variable (since we often want to delete
   // the variable)
-  const ClAbstractVariable *removeColumn(const ClAbstractVariable &v);
+  ClVariable removeColumn(ClVariable v);
 
   // Remove the basic variable v from the tableau row v=expr
   // Then update column cross indices
   // Probably want to call delete on the ClLinearExpression * returned
   // unless you're adding that same expression back into the 
   // tableau
-  ClLinearExpression *removeRow(const ClAbstractVariable &v);
+  ClLinearExpression *removeRow(ClVariable v);
 
   // Replace all occurrences of oldVar with expr, and update column cross indices
   // oldVar should now be a basic variable
-  void substituteOut(const ClAbstractVariable &oldVar, const ClLinearExpression &expr);
+  void substituteOut(ClVariable oldVar, const ClLinearExpression &expr);
 
   ClTableauColumnsMap columns()
     { return _columns; }  
@@ -155,29 +167,29 @@ class ClTableau {
     { return _rows; }  
 
   // return true iff the variable subject is in the columns keys
-  bool columnsHasKey(const ClAbstractVariable &subject) const
+  bool columnsHasKey(ClVariable subject) const
     { 
-    ClTableauColumnsMap::const_iterator i = _columns.find(&subject);
+    ClTableauColumnsMap::const_iterator i = _columns.find(subject);
     return (i != _columns.end());
     }
 
-  const ClLinearExpression *rowExpression(const ClAbstractVariable &v) const
+  const ClLinearExpression *rowExpression(ClVariable v) const
     {
-    ClTableauRowsMap::const_iterator i = _rows.find(&v);
+    ClTableauRowsMap::const_iterator i = _rows.find(v);
     if (i != _rows.end())
       return (*i).second;
     else
       return NULL;
     }
 
-  ClLinearExpression *rowExpression(const ClAbstractVariable &v)
+  ClLinearExpression *rowExpression(ClVariable v)
     {
       const ClTableau *pthis = const_cast<const ClTableau *>(this);
       return const_cast<ClLinearExpression *>(pthis->rowExpression(v));
     }
 
 
-  bool FIsBasicVar(const ClAbstractVariable &v)
+  bool FIsBasicVar(ClVariable v)
     { return rowExpression(v) != NULL; }
 
   // private: FIXGJB: can I improve the encapsulation?
@@ -193,20 +205,16 @@ class ClTableau {
 
   // the collection of basic variables that have infeasible rows
   // (used when reoptimizing)
-  ClTableauVarSet _infeasibleRows;
+  ClVarSet _infeasibleRows;
 
   // the set of rows where the basic variable is external
   // this was added to the C++ version to reduce time in setExternalVariables()
-  ClExternalVarSet _externalRows;
+  ClVarSet _externalRows;
 
   // the set of external variables which are parametric
   // this was added to the C++ version to reduce time in setExternalVariables()
-  ClExternalVarSet _externalParametricVars;
+  ClVarSet _externalParametricVars;
 
 };
-
-#ifndef CL_NO_IO
-ostream &operator<<(ostream &xo, const ClTableau &clt);
-#endif
 
 #endif

@@ -1,3 +1,128 @@
+Tue Feb 23 08:55:28 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile: Fix build rules for bison/flex parser so
+	dependencies are correct.  Added new targets, all-notests,
+	all-tests, make 'lib' the default target, and all really build
+	everything.
+
+	* c++/creader.h, c++/creader.l, c++/creader.y: Take address of
+	ClVariable-s from the map's values (cannot use ClVariable in the
+	union directly because union members cannot have constructors).
+	#include ClVariable.h instead of fwd decl of ClVariable so that we 
+	get the StringToVarMap typedef, too.
+
+Mon Feb 22 16:33:16 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile: Use CL_LIBRARY, not LIB_FILE, throughout. Use
+	flags for maximum performance.
+
+	* c++/ClVariable.h, c++/ClConstraintHash.h, c++/Cassowary.h:
+ 	Divide pointer address by CL_PTR_HASH_DIVISOR in hash functions
+
+	* c++/ClTests.cc:  Added CL_SHOW_CNS_IN_BENCHMARK guard protecting 
+	new displaying of constraints and listing of inconsistent constraints.
+
+Mon Feb 22 12:18:53 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClTests.cc (inconsistent3): Drop extra redundant
+	inconsistency for pedagogical reasons.  Use simpler pointer-based
+	addConstraint in benchmark test
+
+	* c++/ClSimplexSolver.h: Added addConstraintNoException,
+	removeConstraintNoException taking ClConstraint &'s -- deprecated.
+	Added CL_NO_DEPRECATED guard for turning off availability of
+	deprecated functions.
+
+Mon Feb 22 11:12:35 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSimplexSolver.h: Added deprecated
+	FIsConstraintSatisfied(Constraint &)
+
+	* guile/cassowary_scm.cc: Use ClConstraintToVarMap for return
+	value of ConstraintMap().  Pass Constraint *'s instead of &'s.
+	Use new name printOnVerbose instead of printDebugInfo.
+
+Fri Feb 19 18:00:49 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClTests.cc: Updated to fix below interface.
+
+	* c++/ClSimplexSolver.cc, c++/ClSimplexSolver.h: make
+ 	addConstraint, addConstraintNoException, removeConstraint,
+ 	removeConstraintNoException take ClConstraint *'s instead of
+ 	ClConstraint &'s.  Clarifies the mental model, and simplifies the
+ 	syntax.  Old style is still accepted, but is deprecated.
+
+Fri Feb 19 17:41:45 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClFloatVariable.cc, c++/ClFloatVariable.h: Added -- moved
+	here from ClVariable.h, and renamed from class ClVariableRep since 
+	they not what ClVariable wraps (ClVariable wraps
+	ClAbstractVariable)
+
+	* c++/ClAbstractVariable.h: Fatten interface to include set_value, 
+	change_value, setPv, and Pv.
+
+	* c++/ClVariable.h, c++/ClVariable.cc: Move ClVariableRep into
+	ClFloatVariable.{h,cc}, and use pclv-> for
+	set_value, change_value, SetPv, and Pv since ClAbstractVariable
+	now has a fat interface and we do not need to do the dynamic
+	down-casting. 
+
+	* c++/Makefile: Added new files to build rules.
+
+Fri Feb 19 17:08:29 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/debug.h, c++/ClTableau.h: Move operator<< out into ClTableau.h
+
+	* c++/ClVariable.h, c++/ClVariable.cc: Move some inline functions
+	into .cc so that the hash function can go in the .h file (some stl 
+	dependency issue, it seems).
+
+	* c++/ClErrors.h, c++/ClTypedefs.h: Move typedef for
+ 	ClConstraintSet from ClErrors.h into ClTypedefs.h, and have former 
+	include the latter.
+
+	* c++/Cassowary.h: #include ClConstraintHash.h
+
+	* c++/ClConstraintHash.h: Added.  The hash function needs to
+	appear before any typedef that uses a hash_map or hash_set, so
+	this file is included by Cassowary.h
+
+Fri Feb 19 08:45:24 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSubgraphTest.cc: Fix some bugs just from not testing
+	completely. 
+
+	* c++/*: Fix bugs from not-updated-code hidden by #ifdefs.  Builds 
+	w/ all compile-options except -DCL_USE_HASH_MAP_AND_SET.  Drop
+	some gratuitous appearances of ClAbstractVariable
+
+Thu Feb 18 18:53:56 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClLinearExpression.cc: Use clvNill when returning a
+	ClVariable instead of NULL
+
+	* c++/ClVariable.h, c++/ClVariable.cc: operators ==, !=, < all should use the
+	contained pointers address, not value.  Also define global clvNil,
+	isNil(). 
+
+	* c++/ClTests.cc: BUGFIX: #if 0 removed from adding stays in
+	simple1 test
+
+	* c++/ClSimplexSolver.h:  Use ClVariable-s internally for
+	ClObjectiveVariable-s.
+
+	* c++/ClSimplexSolver.cc: Use ClVariable-s internally for
+	ClObjectiveVariable-s and replace ClAbstractVariable
+	*p{entryVar,exitVar} with ClVariable-s.  (Use clvNil and isNil()
+	to test for not yet set).
+
+Thu Feb 18  Greg J Badros  <gjb@cs.washington.edu>
+	
+	* c++/*: First compilable and almost working version with
+ 	ClVariable as a handle to ClVariableRep.  Major simplifications
+	throughout.
+
 Thu Feb 18 14:22:14 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* c++/Makefile: Split out the options into += lists so they can be 

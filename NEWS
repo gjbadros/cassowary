@@ -11,10 +11,7 @@ Seattle, WA 98195-2350
 
 with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
 
-16-Feb-1999, Changes since Cassowary v0.23 (for release v0.3)
-* Miscellaneious changes
-** Updated copyright to include 1999
-** Reference Anthony Beurivé's STk wrapper
+19-Feb-1999, Changes since Cassowary v0.23 (for release v0.3)
 
 * Changes to Java and C++
 ** Bug fix for Michael Kaufmann's report (see ChangeLog for details)
@@ -26,6 +23,11 @@ ClVariable ctr to save the mapping between given name and actual object
 in a symbol table (used for parsing ascii expressions in C++ version)
 
 * Changes to just C++ implementation
+** Use ClVariable as a handle class to a ClAbstractVariable-- old
+ClVariable is now a ClFloatVariable.  SetChangeClvCallback now takes a
+function that takes a ClVariable handle, not a pointer.
+** Passing ClConstraints's by const & is now deprecated -- pass by
+pointer to the ClConstraint object
 ** Added creader.y, creader.l and function PcnParseConstraint(..) for
 creating a constraint from an ASCII string.
 ** Added CL_NO_IO compile-time option to C++ version for preventing need
@@ -42,6 +44,12 @@ version for .2)
 ** Added {get,set}AttachedObject for ClVariable, ClConstant
 ** Permit access to ClSimplexSolver.ConstraintMap()
 ** Permit nested beginEdit()s and handle them correctly
+
+* Miscellaneious changes
+** Updated copyright to include 1999
+** Fixed wrappers/Makefile for building Python wrapper
+** Reference Anthony Beurivé's STk wrapper
+** Fix Scwm URL
 
 
 30-Jan-1999, Changes since Cassowary v0.22 (for release v0.23)

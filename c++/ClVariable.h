@@ -8,6 +8,7 @@
 // See ../LICENSE for legal details regarding this software
 //
 // ClVariable.h
+// A handle on ClAbstractVariable-s
 
 #ifndef ClVariable_H
 #define ClVariable_H
@@ -16,133 +17,86 @@
 #include <map>
 #include <string>
 #include "Cassowary.h"
-#include "ClAbstractVariable.h"
+#include "ClFloatVariable.h"
 
 class ClVariable;
+typedef map<string,ClVariable> StringToVarMap;
 
-typedef map<string,const ClVariable *> StringToVarMap;
 
-class ClVariable : public ClAbstractVariable {
+class ClVariable {
+  ClAbstractVariable *pclv;
 public:
-  typedef ClAbstractVariable super;
+  ClVariable(ClAbstractVariable *pclv_) : pclv(pclv_) { }
+  ClVariable(ClAbstractVariable &clv_) : pclv(&clv_) { }
 
-  ClVariable(string name = "", Number value = 0.0) :
-    ClAbstractVariable(name),
-    _value(value),
-    _pv(NULL)
-    { if (pmapSzPclv) { (*pmapSzPclv)[name] = this; } }
+  /// These ctrs build ClFloatVariable-s
+  ClVariable(string name, Number value = 0.0) 
+      : pclv(new ClFloatVariable(name,value)) 
+    { if (pmapSzPclv) { (*pmapSzPclv)[name] = *this; }  }
+  ClVariable(Number value = 0.0) 
+      : pclv(new ClFloatVariable(value)) { }
+  ClVariable(long number, char *prefix, Number value = 0.0)
+      : pclv(new ClFloatVariable(number,prefix,value)) { }
 
-  ClVariable(Number value) :
-    ClAbstractVariable(""),
-    _value(value),
-    _pv(NULL)
-    { }
+  /// permit ClVariables to be used as pointers to pclvs
+  ClAbstractVariable *operator->() { return pclv; }
 
-  ClVariable(long number, char *prefix, Number value = 0.0) :
-    ClAbstractVariable(number,prefix),
-    _value(value),
-    _pv(NULL)
-    { }
+  /// and also forward the function calls along
 
-  // Return true if this a dummy variable (used as a marker variable
-  // for required equality constraints).  Such variables aren't
-  // allowed to enter the basis when pivoting.
-  virtual bool isDummy() const
-    { return false; }
+  bool isDummy() const { return pclv->isDummy(); }
+  bool isExternal() const { return pclv->isExternal(); }
+  bool isPivotable() const { return pclv->isPivotable(); }
+  bool isRestricted() const { return pclv->isRestricted(); }
 
-  // Return true if this a variable known outside the solver.  
-  // (We need to give such variables a value after solving is complete.)
-  virtual bool isExternal() const
-    { return true; }
+  string name() const { return pclv->name(); }
 
-  // Return true if we can pivot on this variable.
-  virtual bool isPivotable() const
-    { return false; }
+  Number value() const { return pclv->value(); }
+  int intValue() const { return pclv->intValue(); }
+  void set_value(Number value) 
+    { pclv->set_value(value); }
+  void change_value(Number value) 
+    { pclv->change_value(value); }
+  void setPv(void *pv) 
+    { pclv->setPv(pv); }
+  void *Pv() const 
+    { return pclv->Pv(); }
 
-  // Return true if this is a restricted (or slack) variable.  Such
-  // variables are constrained to be non-negative and occur only
-  // internally to the simplex solver.
-  virtual bool isRestricted() const
-    { return false; }
+  void setName(string const &name) { pclv->setName(name); }
 
-#ifndef CL_NO_IO
-  // Prints a semi-descriptive representation to the stream, using the
-  // name if there is one, and otherwise the hash number of this
-  // object.
-  //	EXAMPLE
-  //	  [x:10.0]		-- name = "x", value = 10.0
-  virtual ostream &printOn(ostream &xo) const
-  {  
-    xo << "[" << name() << ":" << _value << "]";
-    return xo;
-  }
-#endif
-  
-  // Return the current value I hold.
-  Number value() const
-    { return _value; }
-
-  // Round the value to an integer and return it
-  int intValue() const
-    { int i = int(_value + 0.5); 
-#ifdef CL_TRACE_VERBOSE
-    cerr << "intValue() returning i = " << i << endl;
-#endif
-    return i;
-    }
-
-  // change the value held -- should *not* use this if the variable is
-  // in a solver -- instead use addEditVar() and suggestValue() interface
-  void set_value(Number value)
-    { _value = value; }
-
-  // permit overriding in subclasses in case something needs to be
-  // done when the value is changed by the solver
-  // may be called when the value hasn't actually changed -- just 
-  // means the solver is setting the external variable
-  virtual void change_value(Number value)
-    { _value = value; }
-
-  void setPv(void *pv)
-    { _pv = pv; }
-
-  void *Pv() const
-    { return _pv; }
-
-  // Set the name of the variable
-  virtual void setName(string const &name)
-    { 
-      super::setName(name); 
-#ifndef CL_NO_IO
-      cerr << "Not updating symbol table!" << endl;
-#endif
-    }
+  ClAbstractVariable *get_pclv() const { return pclv; } 
+  bool isNil() const { return pclv == NULL; }
 
   static void SetVarMap(StringToVarMap *pmap) { pmapSzPclv = pmap; }
   static StringToVarMap *VarMap() { return pmapSzPclv; }
-  
-private:
-
   static StringToVarMap *pmapSzPclv;
+#ifndef CL_NO_IO
+  ostream &printOn(ostream &xo) const
+    { return pclv->printOn(xo); }
+#endif
 
-  // similar to set_value -- see caveat above -- made private for now
-  // since it's probably the wrong thing and is too easy to invoke
-  Number operator=(Number value)
-    { _value = value; return value; }
+  friend bool operator<(ClVariable cl1, ClVariable cl2)
+    { return cl1.pclv < cl2.pclv; }
 
-  // Copy constructor left undefined since we want to
-  // outlaw passing by value!  Will get a link error if you
-  // try to use within ClVariable.c, compile-time error everywhere else
-  ClVariable(const ClVariable &);
+  friend bool operator==(ClVariable cl1, ClVariable cl2)
+    { return cl1.pclv == cl2.pclv; }
 
-  Number _value;
+  friend bool operator!=(ClVariable cl1, ClVariable cl2)
+    { return !(cl1 == cl2); }
 
-  // C-style extension mechanism so I
-  // don't have to wrap ScwmClVariables separately
-  void *_pv;
 };
 
-typedef ClVariable *PClVariable;
+#ifndef CL_NO_IO
+inline ostream &operator<<(ostream &xo, const ClVariable &clv)
+{ return clv.printOn(xo); }
+#endif
+
+#ifdef CL_USE_HASH_MAP_AND_SET
+struct hash<ClVariable> { 
+  size_t operator()(const ClVariable & v) const
+    { return size_t((unsigned long)v.get_pclv()/CL_PTR_HASH_DIVISOR);  }
+};
+#endif
+
 
 #include <math.h>
 
@@ -159,14 +113,16 @@ inline bool clApprox(double a, double b)
 
 // Can remove these if I decide to 
 // autoconvert from ClVariable-s to double-s
-inline bool clApprox(const ClVariable &clv, double b)
+inline bool clApprox(ClVariable clv, double b)
 {
-  return clApprox(clv.value(),b);
+  return clApprox(clv->value(),b);
 }
 
-inline bool clApprox(double a, const ClVariable &clv)
+inline bool clApprox(double a, ClVariable clv)
 {
-  return clApprox(a,clv.value());
+  return clApprox(a,clv->value());
 }
+
+extern ClVariable clvNil;
 
 #endif

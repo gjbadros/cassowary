@@ -12,6 +12,8 @@
 #ifndef ClConstraint_H
 #define ClConstraint_H
 
+#include "debug.h"
+
 #include "Cassowary.h"
 #include "ClLinearExpression.h"
 #include "ClStrength.h"

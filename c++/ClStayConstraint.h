@@ -15,8 +15,6 @@
 #include "Cassowary.h"
 #include "ClEditOrStayConstraint.h"
 
-class ClAbstractVariable;
-
 class ClStayConstraint : public ClEditOrStayConstraint {
      typedef ClEditOrStayConstraint super;
  public:

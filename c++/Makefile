@@ -30,12 +30,14 @@ FLEX_FLAGS =
 
 CPPFLAGS = -Wall -pedantic -W
 
-CPPFLAGS += -DCL_SOLVER_CHECK_INTEGRITY
+#CPPFLAGS += -DCL_SOLVER_CHECK_INTEGRITY
 
-#CPPFLAGS += -O6 -NDEBUG
+#CPPFLAGS += -DCL_NO_DEPRECATED
+
+CPPFLAGS += -O6 -DNEBUG
 #CPPFLAGS += -O6
 #CPPFLAGS += -O2
-CPPFLAGS += -g
+#CPPFLAGS += -g
 
 #CPPFLAGS += -DCL_USE_HASH_MAP_AND_SET
 
@@ -43,17 +45,18 @@ CPPFLAGS += -g
 
 #CPPFLAGS += -DCL_SOLVER_STATS
 
-#CPPFLAGS += -DCL_NO_IO
+#CPPFLAGS += -DCL_NO_IO   # The tests will not work if I/O is disabled (by enabling this define)
 
-#OTHER_LIBS = 
-OTHER_LIBS = ../../gc/gc.a
+#CPPFLAGS += -DCL_PTR_HASH_DIVISOR=1  #defaults to 4
+
+OTHER_LIBS = 
+#OTHER_LIBS = ../../gc/gc.a
 
 #LIB=cassowary-optimized
 LIB=cassowary-notrace
 #LIB=cassowary-trace
 #LIB=cassowary-debug
 #LIB=cassowary
-LIB_FILE=lib$(LIB).a
 
 LDLIBS = -l$(LIB)
 
@@ -71,6 +74,7 @@ OBJS = 	ClAbstractVariable.o \
 	ClSymbolicWeight.o \
 	ClTableau.o \
 	ClVariable.o \
+	ClFloatVariable.o \
 	ClSlackVariable.o \
 	ClDummyVariable.o
 
@@ -107,26 +111,41 @@ HEADERS = Cassowary.h \
 	ClObjectiveVariable.h \
 	ClSlackVariable.h \
 	ClConstraint.h \
+	ClConstraintHash.h \
 	ClEditConstraint.h \
 	ClEditOrStayConstraint.h \
 	ClErrors.h \
 	ClLinearConstraint.h \
 	ClLinearEquation.h \
 	ClLinearExpression.h \
+	ClLinearExpression_fwd.h \
 	ClLinearInequality.h \
 	ClSimplexSolver.h \
 	ClStayConstraint.h \
 	ClStrength.h \
 	ClSymbolicWeight.h \
 	ClTableau.h \
+	ClFloatVariable.h \
 	ClVariable.h \
-	ClPoint.h
+	ClTypedefs.h \
+	ClMap.h \
+	ClSet.h \
+	ClPoint.h \
+	auto_ptr.h \
+	debug.h \
+	timer.h \
+	creader.h
 
-all:	lib ClTests ClLeakTest ClTestColumns ClSubgraphTest $(bugtests)
+#Default rule is to just build the static library
+lib:    $(CL_LIBRARY)
+
+all-notests: lib shared_lib
+
+all-tests: ClParseTest ClLeakTest ClTestColumns ClSubgraphTest bugtests
 
 bugtests: ClBug0 ClBug1
 
-lib:    $(CL_LIBRARY)
+all: all-notests all-tests
 
 shared_lib:	$(CL_SHARED_LIBRARY)
 
@@ -139,7 +158,7 @@ $(CL_SHARED_LIBRARY): $(OBJS)
 	$(CPP_SO_LINK) -o $@ $(OBJS)
 
 clean:	
-	rm -f $(TESTS) *.o
+	rm -f $(TESTS) *.o creader.cc creader-lex.cc
 	@echo "Consider doing a \`make depend'"
 
 TAGS: $(SOURCES) $(HEADERS)
@@ -147,18 +166,22 @@ TAGS: $(SOURCES) $(HEADERS)
 
 cassowary-tests: $(TESTS)
 
-%: %.o $(LIB_FILE) $(OTHER_LIBS)
+%: %.o $(CL_LIBRARY) $(OTHER_LIBS)
 	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 cassowary-test:	$(TEST_OBJS)
 
 creader.cc: creader.y
-	$(BISON) -d -pcl --output-file $@ $^
+	$(BISON) -d -pcl --output-file $@ $<
 
-creader-lex.cc: creader.l
-	$(FLEX) $(FLEX_FLAGS) -Pcl -o$@ $^ 
+creader.cc.h: creader.cc
 
-ClParseTest: $(LIB_FILE) $(OTHER_LIBS) ClParseTest.o creader-lex.o creader.o
+creader-lex.cc: creader.cc.h
+
+creader-lex.cc: creader.l 
+	$(FLEX) $(FLEX_FLAGS) -Pcl -o$@ $<
+
+ClParseTest: $(CL_LIBRARY) $(OTHER_LIBS) ClParseTest.o creader-lex.o creader.o
 	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS) -lfl
 
 libcassowary.a:	

@@ -14,19 +14,6 @@
 
 #include <vector>
 #include "Cassowary.h"
-#include "ClTypedefs.h"
-
-class ClAbstractVariable;
-
-#ifndef CL_NO_IO
-
-ostream &operator<<(ostream &xo, const ClTableauVarSet &varset);
-
-ostream &operator<<(ostream &xo, const ClTableauColumnsMap &varmap);
-
-ostream &operator<<(ostream &xo, const ClTableauRowsMap &rows);
-
-ostream &operator<<(ostream &xo, const ClVarVector &varlist);
 
 #ifdef CL_TRACE
 class Tracer {
@@ -52,7 +39,5 @@ class Tracer {
 inline void CtrTracer(const char *const, const void *) { }
 inline void DtrTracer(const char *const, const void *) { }
 #endif // CL_TRACE  
-
-#endif // CL_NO_IO
 
 #endif

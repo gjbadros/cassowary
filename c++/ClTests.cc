@@ -32,10 +32,8 @@ simple1()
    ClSimplexSolver solver;
 
    ClLinearEquation eq(x,y+0.0);
-#if 0
    solver.addStay(x);
    solver.addStay(y);
-#endif
    solver.addConstraint(eq);
    cout << "x = " << x.value() << endl
         << "y = " << y.value() << endl;
@@ -137,7 +135,7 @@ addDelete1()
    ClVariable x("x");
    ClSimplexSolver solver;
 
-   solver.addConstraint( *(new ClLinearEquation( x, 100, clsWeak() )) );
+   solver.addConstraint(new ClLinearEquation( x, 100, clsWeak() ));
     
    ClLinearInequality c10(x,cnLEQ,10.0);
    ClLinearInequality c20(x,cnLEQ,20.0);
@@ -203,8 +201,8 @@ addDelete2()
    ClSimplexSolver solver;
 
    solver
-     .addConstraint( *(new ClLinearEquation(x, 100.0, clsWeak())))
-     .addConstraint( *(new ClLinearEquation(y, 120.0, clsStrong())));
+     .addConstraint(new ClLinearEquation(x, 100.0, clsWeak()))
+     .addConstraint(new ClLinearEquation(y, 120.0, clsStrong()));
 
    ClLinearInequality c10(x,cnLEQ,10.0);
    ClLinearInequality c20(x,cnLEQ,20.0);
@@ -258,10 +256,10 @@ casso1()
    ClSimplexSolver solver;
 
    solver
-     .addConstraint( *(new ClLinearInequality(x,cnLEQ,y)) )
-     .addConstraint( *(new ClLinearEquation(y, x+3.0)) )
-     .addConstraint( *(new ClLinearEquation(x,10.0,clsWeak())) )
-     .addConstraint( *(new ClLinearEquation(y,10.0,clsWeak())) )
+     .addConstraint(new ClLinearInequality(x,cnLEQ,y))
+     .addConstraint(new ClLinearEquation(y, x+3.0))
+     .addConstraint(new ClLinearEquation(x,10.0,clsWeak()))
+     .addConstraint(new ClLinearEquation(y,10.0,clsWeak()))
      ;
    
    fOkResult = fOkResult && 
@@ -329,8 +327,8 @@ inconsistent2()
    ClSimplexSolver solver;
 
    solver
-     .addConstraint( *(new ClLinearInequality(x,cnGEQ,10.0)) )
-     .addConstraint( *(new ClLinearInequality(x,cnLEQ, 5.0)) );
+     .addConstraint(new ClLinearInequality(x,cnGEQ,10.0))
+     .addConstraint(new ClLinearInequality(x,cnLEQ, 5.0));
 
    // no exception, we failed!
    return(false);
@@ -366,12 +364,11 @@ inconsistent3()
    ClSimplexSolver solver;
 
    solver
-     .addConstraint( *(new ClLinearInequality(w,cnGEQ,10.0)) )
-     .addConstraint( *(new ClLinearInequality(x,cnGEQ,w)) )
-     .addConstraint( *(new ClLinearInequality(y,cnGEQ,x)) )
-     .addConstraint( *(new ClLinearInequality(z,cnGEQ,y)) )
-     .addConstraint( *(new ClLinearInequality(z,cnGEQ,8.0)) )
-     .addConstraint( *(new ClLinearInequality(z,cnLEQ,4.0)) );
+     .addConstraint(new ClLinearInequality(w,cnGEQ,10.0))
+     .addConstraint(new ClLinearInequality(x,cnGEQ,w))
+     .addConstraint(new ClLinearInequality(y,cnGEQ,x))
+     .addConstraint(new ClLinearInequality(z,cnGEQ,y))
+     .addConstraint(new ClLinearInequality(z,cnLEQ,4.0));
 
    // no exception, we failed!
    return(false);
@@ -533,14 +530,14 @@ blackboxsat()
       if (strcasecmp(szCmd,"add") == 0)
         {
         cin >> i;
-        cout << "eq" << i << ": " << solver.addConstraintNoException(*(rgpcn[i])) 
+        cout << "eq" << i << ": " << solver.addConstraintNoException(rgpcn[i])
              << "\t" << *(rgpcn[i]) << endl;
         cout << r1 << " = " << r1.value() << endl;
         }
       else if (strcasecmp(szCmd,"del") == 0)
         {
         cin >> i;
-        cout << "REMeq" << i << ": " << solver.removeConstraintNoException(*(rgpcn[i])) 
+        cout << "REMeq" << i << ": " << solver.removeConstraintNoException(rgpcn[i])
              << "\t" << *(rgpcn[i]) << endl;
         cout << r1 << " = " << r1.value() << endl;
         }
@@ -589,6 +586,8 @@ blackboxsat()
    }
 }
 
+typedef ClVariable *PClVariable;
+
 bool
 addDel(const int nCns = 900, const int nVars = 900, const int nResolves = 10000)
 //addDel(int nCns = 300, int nVars = 300, int nResolves = 1000)
@@ -636,25 +635,37 @@ addDel(const int nCns = 900, const int nVars = 900, const int nResolves = 10000)
        {  
        rgpcns[j] = new ClLinearEquation(expr);
        }
+#ifdef CL_SHOW_CNS_IN_BENCHMARK
+    cout << "Cn[" << j << "]: " << *rgpcns[j] << endl;
+#endif
     }
 
   cout << "done building data structures" << endl;
   cout << "time = " << timer.ElapsedTime() << "\n" << endl;
   timer.Start();
   int cExceptions = 0;
+#ifdef CL_SHOW_CNS_IN_BENCHMARK
+  cout << "Exceptions on: ";
+#endif
   for (j = 0; j < nCns; j++)
     {
     // add the constraint -- if it's incompatible, just ignore it
     try
       {
-      solver.addConstraint(*(rgpcns[j]));
+      solver.addConstraint(rgpcns[j]);
       }
     catch (ExCLRequiredFailure &)
       {
       cExceptions++;
       rgpcns[j] = NULL;
+#ifdef CL_SHOW_CNS_IN_BENCHMARK
+      cout << j << " ";
+#endif
       }
     }
+#ifdef CL_SHOW_CNS_IN_BENCHMARK
+  cout << "\n" << endl;
+#endif
   solver.solve();
   cout << "done adding constraints [" << cExceptions << " exceptions]" << endl;
   cout << "time = " << timer.ElapsedTime() << "\n" << endl;
@@ -699,7 +710,7 @@ addDel(const int nCns = 900, const int nVars = 900, const int nResolves = 10000)
     {
     if (rgpcns[j])
       {
-      solver.removeConstraint(*(rgpcns[j]));
+      solver.removeConstraint(rgpcns[j]);
       }
     }
 
