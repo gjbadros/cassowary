@@ -164,3 +164,97 @@ editMinusErrorVars 2, editPlusErrorVars 2, stayMinusErrorVars 900, stayPlusError
 2.6 ms for re-solve
 8 ms for remove
 
+-------------------------------
+on bowman (Dual PII/400 320MB, Linux 2.2.1)
+ -O6 -DNEBUG  --02/22/99 gjb 
+
+addDel:
+starting timing test. nCns = 900, nVars = 900, nResolves = 10000
+done building data structures
+time = 0.1
+
+done adding constraints [117 exceptions]
+time = 15.08
+
+time per cn = 0.0167556
+
+time per actual cn = 0.0192593
+
+done creating edit constraints -- about to start resolves
+time = 0.03
+
+done resolves -- now removing constraints
+time = 12.77
+
+time per resolve = 0.001277
+
+done removing constraints and addDel timing test
+time = 0.98
+
+time per cn = 0.00108889
+
+time per actual cn = 0.0012516
+
+
+17 ms for add
+1.3 ms for resolve
+1.3 ms for remove
+
+----------------------------------
+with hashtable, /4 as hash fncs
+done adding constraints [117 exceptions]
+time = 13.01
+
+time per cn = 0.0144556
+
+time per actual cn = 0.0166156
+
+done creating edit constraints -- about to start resolves
+time = 0.03
+
+done resolves -- now removing constraints
+time = 9.48
+
+time per resolve = 0.000948
+
+done removing constraints and addDel timing test
+time = 0.71
+
+time per cn = 0.000788889
+
+time per actual cn = 0.000906769
+
+
+----------------------------------
+QOCA on bowman (Dual PII/400 320MB, Linux 2.2.1)
+
+addDel:
+starting timing test. nCns = 900, nVars = 900, nResolves = 10000
+done building data structures
+time = 2.92
+
+done adding constraints [117 exceptions]
+time = 12.42
+
+time per cn = 0.0138
+
+time per actual cn = 0.0158621
+
+done creating edit constraints -- about to start resolves
+time = 0
+
+done resolves -- now removing constraints
+time = 33.41
+
+time per resolve = 0.003341
+
+done removing constraints and addDel timing test
+time = 3.87
+
+time per cn = 0.0043
+
+time per actual cn = 0.00494253
+
+14 ms for add
+3.3 ms for resolve
+4.3 ms for remove
