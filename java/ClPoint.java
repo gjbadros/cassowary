@@ -17,103 +17,40 @@
 
 class ClPoint
 {
+  public ClPoint(double x, double y)
+    {
+      my_clv_x = new ClVariable(x);
+      my_clv_y = new ClVariable(y);
+    }
 
-/**
-* ClPoint
-* @param x
-* @param y
-*/
-public
-ClPoint(Number x, Number y)
-{
- clv_x = x;
-	clv_y = y;
-	 }
+  public ClPoint(ClVariable clv_x, ClVariable clv_y)
+    { my_clv_x = clv_x; my_clv_y = clv_y; }
 
-/**
-* ClPoint
-*/
-public
-ClPoint()
-{ }
+  public ClVariable X()
+    { return my_clv_x; }
 
-/**
-* X
-* @return ClVariable &
-*/
-public
-/* @c2j++: "ClVariable & X()" replacement:  &  to " " */
-ClVariable X()
-{ return clv_x; }
+  public ClVariable Y()
+    { return my_clv_y; }
 
-/**
-* Y
-* @return ClVariable &
-*/
-public
-/* @c2j++: "ClVariable & Y()" replacement:  &  to " " */
-ClVariable Y()
-{ return clv_y; }
+  public void SetXY(double x, double y)
+    { my_clv_x = new ClVariable(x); my_clv_y = new ClVariable(y); }
 
-/**
-* X
-* @return ClVariable &
-*/
-public
-/* @c2j++: "ClVariable & X()" replacement:  &  to " " */
-ClVariable X()
-{ return clv_x; }
+  public void SetXY(ClVariable clv_x, ClVariable clv_y)
+    { my_clv_x = clv_x; my_clv_y = clv_y; }
 
-/**
-* Y
-* @return ClVariable &
-*/
-public
-/* @c2j++: "ClVariable & Y()" replacement:  &  to " " */
-ClVariable Y()
-{ return clv_y; }
+  public double Xvalue()
+    { return X().value(); }
 
-/**
-* SetXY
-* @param x
-* @param y
-*/
-public
-void SetXY(Number x, Number y)
-{ clv_x = x; clv_y = y; }
+  public double Yvalue()
+    { return Y().value(); }
 
-/**
-* Xvalue
-* @return Number
-*/
-public
-Number Xvalue()
-{ return X().value(); }
+  public String toString()
+    {
+      return "(" + my_clv_x.toString() + ", " + my_clv_y.toString() + ")";
+    }
 
-/**
-* Yvalue
-* @return Number
-*/
-public
-Number Yvalue()
-{ return Y().value(); }
-ClVariable clv_x;
-ClVariable clv_y;
+  private ClVariable my_clv_x;
 
-/**
-* <
+  private ClVariable my_clv_y;
 
-private
-
-
-/**
-* @param xo
-* @param clp
-* @return <
-*/
-static < <(ostream& xo, ClPoint& clp)
-{
-  xo << "(" << clp.clv_x << ", " << clp.clv_y << ")";
-  return xo;
-}
 }
