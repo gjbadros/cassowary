@@ -1,3 +1,4 @@
+CL.class
 CN.class
 ClAbstractVariable.class
 ClConstraint.class
@@ -16,6 +17,7 @@ ClStayConstraint.class
 ClStrength.class
 ClSymbolicWeight.class
 ClTableau.class
+ClTests.class
 ClVariable.class
 ExCLConstraintNotFound.class
 ExCLError.class
@@ -26,3 +28,4 @@ ExCLRequiredFailure.class
 ExCLTooDifficult.class
 Set.class
 testClLinearExpression.class
+testClStrength.class
