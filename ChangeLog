@@ -1,3 +1,13 @@
+Fri Feb 19 18:00:49 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClTests.cc: Updated to fix below interface.
+
+	* c++/ClSimplexSolver.cc, c++/ClSimplexSolver.h: make
+ 	addConstraint, addConstraintNoException, removeConstraint,
+ 	removeConstraintNoException take ClConstraint *'s instead of
+ 	ClConstraint &'s.  Clarifies the mental model, and simplifies the
+ 	syntax.  Old style is still accepted, but is deprecated.
+
 Fri Feb 19 17:41:45 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* c++/ClFloatVariable.cc, c++/ClFloatVariable.h: Added -- moved

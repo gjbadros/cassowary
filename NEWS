@@ -39,6 +39,8 @@ associative container whose performance for lookups is logarithmic
 rather than constant time).  Still does not work for me --02/16/99 gjb.
 ** Use ClVariable as a handle class to a ClAbstractVariable-- old
 ClVariable is now a ClFloatVariable
+** Passing ClConstraints's by const & is now deprecated -- pass by
+pointer to the ClConstraint object
 
 * Changes to just Java implementation (updated to match changes to C++
 version for .2)
