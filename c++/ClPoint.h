@@ -20,6 +20,8 @@
 #include "Cassowary.h"
 #include "ClVariable.h"
 
+// ClPoint is just a convenience class for pairs of
+// ClVariables -- often useful for coordinate pairs in 2-space
 class ClPoint {
  public:
   ClPoint(Number x, Number y)
@@ -42,6 +44,8 @@ class ClPoint {
   const ClVariable &Y() const
     { return clv_y; }
 
+  void SetXY(Number x, Number y)
+    { clv_x = x; clv_y = y; }
 
   Number Xvalue() const
     { return X().value(); }
