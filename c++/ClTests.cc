@@ -21,6 +21,39 @@ double UniformRandom()
 
 
 bool
+simple1()
+{
+ try
+   {
+   bool fOkResult = true;
+   ClVariable x(167);
+   ClVariable y(2);
+   ClSimplexSolver solver;
+
+   ClLinearEquation eq(x,y+0.0);
+#if 0
+   solver.addStay(x);
+   solver.addStay(y);
+#endif
+   solver.addConstraint(eq);
+   cout << "x = " << x.value() << endl
+        << "y = " << y.value() << endl;
+   fOkResult = (x.value() == y.value());
+   return fOkResult;
+   } 
+ catch (ExCLError &error) 
+   {
+   cerr << "Exception! " << error.description() << endl;
+   return(false);
+   } 
+ catch (...) 
+   {
+   cerr << "Unknown exception" << endl;
+   return(false);
+   }
+}
+
+bool
 justStay1()
 {
  try
@@ -536,7 +569,9 @@ main( int argc, char **argv )
     cout << #x << ":" << endl; \
     fResult = x(); fAllOkResult &= fResult; \
     if (!fResult) cout << "Failed!" << endl;
-    
+
+    RUN_TEST(simple1);
+    exit (0);
     RUN_TEST(justStay1);
     RUN_TEST(addDelete1);
     RUN_TEST(addDelete2);
