@@ -14,8 +14,15 @@
 #include "Cassowary.h"
 #include "ClAbstractVariable.h"
 
+class ClTableau;
+class ClSimplexSolver;
+
+
 class ClSlackVariable: public ClAbstractVariable {
-public:
+protected:
+  friend ClTableau;
+  friend ClSimplexSolver;
+
   ClSlackVariable(String name = "") :
     ClAbstractVariable(name)
     { }
