@@ -456,4 +456,4 @@ ClGenericLinearExpression<T>::evaluate() const
 
 
 template class ClGenericLinearExpression<Number>;
-template class ClGenericLinearExpression<ClSymbolicWeight>;
+// template class ClGenericLinearExpression<ClSymbolicWeight>;
