@@ -252,7 +252,8 @@ class ClSimplexSolver extends ClTableau
     if (eVars != null) {
       for (Enumeration e = eVars.elements(); e.hasMoreElements(); ) {
 	ClAbstractVariable v = (ClAbstractVariable) e.nextElement();
-	if ( v != marker) {
+        // FIXGJBNOW != or equals?
+	if ( v != marker ) {
 	  removeColumn(v);
 	  v = null;
 	}
