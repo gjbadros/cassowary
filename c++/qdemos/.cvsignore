@@ -1,2 +1,5 @@
+QuadDemo
 hello
+moc_QuadDemoWindow.cc
+moc_hello.cc
 moc_hello.cpp
