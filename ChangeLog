@@ -1,3 +1,18 @@
+Wed Mar 31 17:23:18 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* wrappers/Makefile.in: Rename PYTHON_HEADERS to PYTHON_HEADER_DIR 
+	so it does not get treated specially by automake (?).
+
+	* configure.in: Bump to .42. Added --disable-cpp-build,
+	--disable-java-build, and disable Python/Guile builds
+	automatically if directories cannot be found.  Drop the
+	cassowary from c++/cassowary/config.h -- just use c++/config.h
+
+	* autogen.sh: do not fail if config.status is not -x.
+
+	* Makefile.am: Honour the HAVE_foo flags so that not all subdirs
+	have to be built.
+
 Mon Mar 29 21:01:21 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* ltconfig, ltmain.sh: Added -- so libtool isn't broken in

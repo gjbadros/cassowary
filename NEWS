@@ -11,6 +11,11 @@ Seattle, WA 98195-2350
 
 with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
 
+31-Mar-1999: Version 0.42 released.
+* Fixed autoconf bugs (.41 was a buggy release)
+*  Added --disable-cpp-build,--disable-java-build, and disable Python/Guile builds
+automatically if directories cannot be found
+
 20-Mar-1999: Version 0.41 released.
 * Fixed bug in autoconf support -- config.sub, config.guess to the
 distribution so configure should actually work (they were symlinks
