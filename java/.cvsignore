@@ -27,5 +27,6 @@ ExCLNotEnoughtStays.class
 ExCLRequiredFailure.class
 ExCLTooDifficult.class
 Set.class
+Timer.class
 testClLinearExpression.class
 testClStrength.class
