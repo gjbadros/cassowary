@@ -30,5 +30,6 @@ ExCLRequiredFailure.class
 ExCLTooDifficult.class
 Set.class
 Timer.class
+java.prof
 testClLinearExpression.class
 testClStrength.class
