@@ -47,7 +47,14 @@ class ClTableau extends CL
   public String toString()
     { 
       StringBuffer bstr = new StringBuffer("Tableau:\n");
-      bstr.append(my_rows.toString());
+      for (Enumeration e = my_rows.keys(); e.hasMoreElements(); ) {
+	ClAbstractVariable clv = (ClAbstractVariable) e.nextElement();
+	ClLinearExpression expr = (ClLinearExpression) my_rows.get(clv);
+	bstr.append(clv.toString());
+	bstr.append(" <==> ");
+	bstr.append(expr.toString());
+	bstr.append("\n");
+      }
 
       bstr.append("\nColumns:\n");
       bstr.append(my_columns.toString());
