@@ -12,6 +12,7 @@ cassowary-nofd.spec2
 cassowary.spec
 config.cache
 config.h
+config.h.in
 config.log
 config.status
 configure
