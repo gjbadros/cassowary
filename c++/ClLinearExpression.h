@@ -38,7 +38,7 @@ class ClGenericLinearExpression : public gc {
 class ClGenericLinearExpression  {
 #endif
  public:
-  typedef ClMap<ClVariable,class T> ClVarToCoeffMap;
+  typedef ClMap<ClVariable,T> ClVarToCoeffMap;
 
   // convert Number-s into ClLinearExpression-s
   ClGenericLinearExpression(T num = 0.0);

@@ -171,35 +171,49 @@ AC_SUBST(CPPEXTRAFLAGS)
 
 
 
-guile_prefix=${prefix}
+GUILE_BIN_DIR=""
+GUILE_INCLUDES=""
+
+guile_lib_path=""
+
+if test "NONE" = "$exec_prefix"; then
+	if test "NONE" = "$prefix"; then
+		guile_lib_path="$ac_default_prefix/lib"
+	else
+		guile_lib_path="$prefix/lib"
+	fi
+else
+        guile_lib_path="$exec_prefix/lib"
+fi
+if test "NONE" = "$prefix"; then
+        GUILE_INCLUDES="-I$ac_default_prefix/include"
+else
+        GUILE_INCLUDES="-I$prefix/include"
+fi
 
 ACE_ARG_PATH(guile-prefix,
-[  --with-guile-prefix=DIR    Expect guile to be installed in DIR [optional]],
+[  --with-guile-prefix=DIR Expect guile to be installed in DIR [optional]],
 [
 	AC_MSG_CHECKING(where to expect to find guile)
 	guile_prefix="${withval}"
+	GUILE_BIN_DIR="${guile_prefix}/bin"
+	GUILE_INCLUDES="-I${guile_prefix}/include"
+	guile_lib_path="${guile_prefix}/lib"
 	
 	AC_MSG_RESULT("${guile_prefix}")
 ])
 
-GUILE_BIN_DIR="${guile_prefix}/bin"
-GUILE_INCLUDES="-I${guile_prefix}/include"
-GUILE_LIB_DIR="${guile_prefix}/lib"
-
-
-guile_exec_prefix=${exec_prefix}
-
 ACE_ARG_PATH(guile-exec-prefix,
 [  --with-guile-exec-prefix=DIR 
-                             Expect guile binaries to be installed in DIR 
-                             [optional]],
+                          Expect guile binaries to be installed in DIR 
+                          [optional]],
 [
 	AC_MSG_CHECKING(where to expect to find guile binaries)
 	guile_exec_prefix="${withval}"
+	GUILE_BIN_DIR="${guile_exec_prefix}"
 	
 	AC_MSG_RESULT("${guile_exec_prefix}")
 ])
-GUILE_BIN_DIR="${guile_exec_prefix}"
 
 if test -z "${GUILE_BIN_DIR}"; then
 	AC_PATH_PROGS(GUILE_CONFIG, guile-config build-guile, no)
@@ -219,6 +233,7 @@ if test "no" != "$GUILE_CONFIG"; then
 else
   GUILE_CONFIG_works=no
 fi
+
 
 if test -z "${GUILE_BIN_DIR}"; then
 	AC_PATH_PROG(GUILE, guile, no)
