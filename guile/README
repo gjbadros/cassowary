@@ -23,7 +23,7 @@ in the GUILE_LOAD_PATH already.)
 This wrapping was motivated by the desire to embed Cassowary in Scwm --
 the Scheme Constraints Window Managers.  See:
 
-http://vicarious-existence.mit.edu/scwm
+http://scwm.mit.edu
 
 also see the guile page at:
 
