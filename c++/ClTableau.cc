@@ -31,13 +31,11 @@ ClTableau::~ClTableau()
 ostream &
 ClTableau::printInternalInfo(ostream &xo) const
 {
-  xo << "Tableau Information:" << endl
-     << "Rows: " << _rows.size()
-     << " (= " << _rows.size() - 1 << " constraints)" << endl
-     << "Columns: " << _columns.size() << endl
-     << "Infeasible Rows: " << _infeasibleRows.size() << endl
-     << "External basic variables: " << _externalRows.size() << endl
-     << "External parameteric variables: " << _externalParametricVars.size() << endl;
+  xo << "ncns:" << _rows.size() -1
+     << "; cols:" << _columns.size()
+     << "; infrows:" << _infeasibleRows.size() 
+     << "; ebvars:" << _externalRows.size()
+     << "; epvars:" << _externalParametricVars.size();
   return xo;
 }
 

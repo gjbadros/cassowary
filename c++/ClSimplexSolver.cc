@@ -1333,7 +1333,7 @@ ostream &
 ClSimplexSolver::printInternalInfo(ostream &xo) const
 {
   super::printInternalInfo(xo);
-  xo << "Number of edit variables: " << _editVarMap.size() << endl;
+  xo << "; edvars: " << _editVarMap.size();
   return xo;
 }
 
