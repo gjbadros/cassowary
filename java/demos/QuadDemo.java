@@ -23,6 +23,8 @@ import java.awt.*;
 import java.applet.*;
 import java.util.Vector;
 
+import EDU.Washington.grad.gjb.cassowary.*;
+
 public class QuadDemo extends Applet {
   DraggableBox db[];  // Line endpoints
   DraggableBox mp[];  // Midpoints
@@ -245,6 +247,10 @@ public class QuadDemo extends Applet {
       g.setColor(Color.black);
     }
     g.setColor(Color.black);
+  }
+
+  public static void main(String[] argv) {
+    System.err.println("Run using `appletviewer quaddemo.htm'");
   }
 
 }
