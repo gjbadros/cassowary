@@ -1,5 +1,5 @@
 Cassowary Constraint Solver for Smalltalk, C++, and Java
-Version 0.1
+Version 0.2-pre
 
 Web Page: http://www.cs.washington.edu/research/constraints/cassowary
 Contact: cassowary@cs.washington.edu
@@ -9,7 +9,7 @@ Alan Borning <borning@cs.washington.edu>
 University of Washington
 Computer Science and Engineering
 Seattle, WA 98195-2350
-26-June-1998
+28-July-1998
 
 with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
 
@@ -31,6 +31,9 @@ o Smalltalk
 
 For each implementation language, there is at least one example program; 
 for some there are many.
+
+There is a wrapping of the C++ solver in Guile-Scheme -- see the guile/
+subdirectory.
 
 There is also a SWIG-generated wrapper of the C++ library making the
 solver available from the Python language.
@@ -85,10 +88,15 @@ smalltalk will likely require (possibly significant) changes.
 
 See smalltalk/README for more details about the Smalltalk version.
 
+See guile/README for details about the Guile Scheme wrapper of the C++
+implementation, and for a pointer to SCWM, the Scheme Constraints Window 
+Manager which uses Cassowary.
 
-The Python bindings (by Tessa Lau) and experimental guile-scheme
-bindings for the Cassowary library are in the wrappers/ subdirectory.
-SWIG was used in wrapping the library.  
+The Python bindings (by Tessa Lau) bindings for the Cassowary library
+are in the wrappers/ subdirectory.  SWIG was used in wrapping the
+library.  These bindings may no longer work, and are provided only for
+your hacking pleasure (please send back useful patches if you do get the 
+code working).
 
 For more information about SWIG, see:
 
