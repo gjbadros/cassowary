@@ -2,6 +2,7 @@
 # Makefile for Quals project: Constraint-Based Drawing Application
 CDA_HOME = /scratch/gjb/cassowary/java/cda
 CASSOWARY_CLASSES = /scratch/gjb/cassowary/java
+JAVA_CLASSES = /usr/local/.licensed/jdk/lib/classes.zip
 
 CLASSES = $(CDA_HOME)/classes
 #CLASSES = .
@@ -84,7 +85,7 @@ ICON_BMPS = \
 ALL_ICON_FILES = $(patsubst %.bmp,Icons/%.bmp,$(ICON_BMPS))
 ICON_GIFS = $(ICON_BMPS:%.bmp=classes/%.gif)
 
-JFLAGS = -g -d $(CLASSES) -classpath $(CLASSES):$(CASSOWARY_CLASSES):/uns/lib/jdk/lib/classes.zip
+JFLAGS = -g -d $(CLASSES) -classpath $(CLASSES):$(CASSOWARY_CLASSES):$(JAVA_CLASSES)
 # -classpath $(CLASSES)\;e:/jdk1.1.5/lib/classes.zip
 
 default:  all
