@@ -13,8 +13,9 @@ import java.util.*;
 
 class ClTableau extends CL
 {
-
-  public ClTableau()
+  // ctr is protected, since this only supports an ADT for
+  // the ClSimplexSolved class
+  protected ClTableau()
   {
     _columns = new Hashtable();
     _rows = new Hashtable();
@@ -23,6 +24,10 @@ class ClTableau extends CL
     _externalParametricVars = new Set();
   }
 
+  // Variable v has been removed from an expression.  If the
+  // expression is in a tableau the corresponding basic variable is
+  // subject (or if subject is nil then it's in the objective function).
+  // Update the column cross-indices.
   public final void noteRemovedVariable(ClAbstractVariable v, ClAbstractVariable subject)
     { 
       if (fTraceOn) fnenterprint("noteRemovedVariable: " + v + ", " + subject);
@@ -31,6 +36,8 @@ class ClTableau extends CL
       }
     }
 
+  // v has been added to the linear expression for subject
+  // update column cross indices
   public final void noteAddedVariable(ClAbstractVariable v, ClAbstractVariable subject)
     { 
       if (fTraceOn) fnenterprint("noteAddedVariable: " + v + ", " + subject);
@@ -39,7 +46,7 @@ class ClTableau extends CL
       }
     }
   
-  // from Michael Noth <noth@cs>
+  // Originally from Michael Noth <noth@cs>
   public String getInternalInfo() {
     StringBuffer retstr = new StringBuffer("Tableau Information:\n");
     retstr.append("Rows: " + _rows.size());
@@ -81,8 +88,11 @@ class ClTableau extends CL
       return bstr.toString();
     }
 
+  // Convenience function to insert a variable into
+  // the set of rows stored at _columns[param_var],
+  // creating a new set if needed
   private final void insertColVar(ClAbstractVariable param_var, 
-			    ClAbstractVariable rowvar)
+                                  ClAbstractVariable rowvar)
   { 
     Set rowset = (Set) _columns.get(param_var);
     if (rowset == null)
@@ -90,6 +100,11 @@ class ClTableau extends CL
     rowset.insert(rowvar);
   }
 
+  // Add v=expr to the tableau, update column cross indices
+  // v becomes a basic variable
+  // expr is now owned by ClTableau class, 
+  // and ClTableauis responsible for deleting it
+  // (also, expr better be allocated on the heap!)
   protected final void addRow(ClAbstractVariable var, ClLinearExpression expr)
     {
       if (fTraceOn) fnenterprint("addRow: " + var + ", " + expr);
@@ -108,6 +123,8 @@ class ClTableau extends CL
       if (fTraceOn) traceprint(this.toString());
     }
 
+  // Remove v from the tableau -- remove the column cross indices for v
+  // and remove v from every expression in rows in which v occurs
   protected final void removeColumn(ClAbstractVariable var)
     {
       if (fTraceOn) fnenterprint("removeColumn:" + var);
@@ -131,6 +148,8 @@ class ClTableau extends CL
       }
     }
 
+  // Remove the basic variable v from the tableau row v=expr
+  // Then update column cross indices
   protected final ClLinearExpression removeRow(ClAbstractVariable var)
        throws ExCLInternalError
     {
@@ -161,6 +180,8 @@ class ClTableau extends CL
       return expr;
     }
 
+  // Replace all occurrences of oldVar with expr, and update column cross indices
+  // oldVar should now be a basic variable
   protected final void substituteOut(ClAbstractVariable oldVar, ClLinearExpression expr)
     {
       if (fTraceOn) fnenterprint("substituteOut:" + oldVar + ", " + expr);
@@ -189,6 +210,7 @@ class ClTableau extends CL
   protected final Hashtable rows()
     { return _rows; }
 
+  // return true iff the variable subject is in the columns keys
   protected final boolean columnsHasKey(ClAbstractVariable subject)
     { 
       return _columns.containsKey(subject);
@@ -200,10 +222,25 @@ class ClTableau extends CL
       return (ClLinearExpression) _rows.get(v);
     }
 
+  // _columns is a mapping from variables which occur in expressions to the
+  // set of basic variables whose expressions contain them
+  // i.e., it's a mapping from variables in expressions (a column) to the 
+  // set of rows that contain them
   protected Hashtable _columns; // From ClAbstractVariable to Set of variables
+
+  // _rows maps basic variables to the expressions for that row in the tableau
   protected Hashtable _rows;    // From ClAbstractVariable to ClLinearExpression
+
+  // the collection of basic variables that have infeasible rows
+  // (used when reoptimizing)
   protected Set _infeasibleRows; // Set of ClAbstractVariable-s
+
+  // the set of rows where the basic variable is external
+  // this was added to the Java/C++ versions to reduce time in setExternalVariables()
   protected Set _externalRows; // Set of ClVariable-s
+
+  // the set of external variables which are parametric
+  // this was added to the Java/C++ versions to reduce time in setExternalVariables()
   protected Set _externalParametricVars; // Set of ClVariable-s
 
 }

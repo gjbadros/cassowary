@@ -123,9 +123,11 @@ class ClTableau {
   // i.e., it's a mapping from variables in expressions (a column) to the 
   // set of rows that contain them
   ClTableauColumnsMap _columns;
+
+  // _rows maps basic variables to the expressions for that row in the tableau
   ClTableauRowsMap _rows;
 
-  // the ordered collection of basic variables that have infeasible rows
+  // the collection of basic variables that have infeasible rows
   // (used when reoptimizing)
   ClTableauVarSet _infeasibleRows;
 

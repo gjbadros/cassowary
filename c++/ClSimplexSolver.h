@@ -23,6 +23,10 @@
 class ClVariable;
 class ClPoint;
 
+// ClConstraintAndIndex is a privately used class
+// that just wraps a constraint and an index into
+// the parallel vectors containing error variables
+// and edit constants
 class ClConstraintAndIndex {
   friend ClSimplexSolver;
 public:
@@ -37,12 +41,15 @@ private:
   int index;
 };
 
-
+// Give a bunch of simpler names to the various useful maps
 typedef map<const ClConstraint *, ClTableauVarSet > ClConstraintToVarSetMap;
 typedef map<const ClConstraint *, const ClAbstractVariable *> ClConstraintToVarMap;
 typedef map<const ClVariable *, const ClConstraintAndIndex *> ClVarToConstraintAndIndexMap;
 typedef vector<const ClAbstractVariable *> ClVarVector;
 
+
+// ClSimplexSolver encapsulates the solving behaviour
+// of the cassowary algorithm
 class ClSimplexSolver : public ClTableau {
  protected: typedef ClTableau super;
 
@@ -90,6 +97,7 @@ class ClSimplexSolver : public ClTableau {
   // which may be inconvenient
   bool addConstraintNoException(const ClConstraint &cn);
 
+  // Add an edit constraint for "v" with given strength
   ClSimplexSolver &addEditVar(const ClVariable &v, ClStrength &strength = clsStrong())
     { 
       ClEditConstraint *pedit = new ClEditConstraint(v, strength);
@@ -107,10 +115,6 @@ class ClSimplexSolver : public ClTableau {
 
   // beginEdit() should be called before sending
   // resolve() messages, after adding the appropriate edit variables
-  // 
-  // it is basically a no-op for now,
-  // but it is specified in the API just in case
-  // we need it later
   ClSimplexSolver &beginEdit()
     {
       assert(_editVarMap.size() != 0);
@@ -159,22 +163,16 @@ class ClSimplexSolver : public ClTableau {
 
   // Remove the constraint cn from the tableau
   // Also remove any error variable associated with cn
-  ClSimplexSolver &removeConstraint(const ClConstraint &pcn);
+  ClSimplexSolver &removeConstraint(const ClConstraint &cn);
 
   // Re-initialize this solver from the original constraints, thus
-  // getting rid of any accumulated numerical problems.  (Actually,
-  // Alan hasn't observed any such problems yet, but here's the method
-  // anyway.)
+  // getting rid of any accumulated numerical problems.  (Actually, we
+  // haven't definitely observed any such problems yet)
   void reset();
 
   // Re-solve the current collection of constraints for new values for
   // the constants of the edit variables.
   void resolve(const vector<Number> &newEditConstants);
-
-  // Re-solve the cuurent collection of constraints, given the new
-  // values for the edit variables that have already been
-  // suggested (see suggestValue() method)
-  void resolve();
 
   // Convenience function for resolve-s of two variables
   void resolve(Number x, Number y)
@@ -184,6 +182,11 @@ class ClSimplexSolver : public ClTableau {
     vals.push_back(y);
     resolve(vals);
     }
+
+  // Re-solve the cuurent collection of constraints, given the new
+  // values for the edit variables that have already been
+  // suggested (see suggestValue() method)
+  void resolve();
 
   // Suggest a new value for an edit variable
   // the variable needs to be added as an edit variable
@@ -205,7 +208,7 @@ class ClSimplexSolver : public ClTableau {
   ClSimplexSolver &setAutosolve(bool f)
     { _fOptimizeAutomatically = f; return *this; }
 
-  // Tell whether we're autosolving
+  // Tell whether we are autosolving
   bool FIsAutosolving() const
     { return _fOptimizeAutomatically; }
 
@@ -326,7 +329,7 @@ class ClSimplexSolver : public ClTableau {
   // stays.  For the moment I'll put this in though.)  Variables that
   // are internal to the solver don't actually store values -- their
   // values are just implicit in the tableu -- so we don't need to set
-  // them."
+  // them.
   void setExternalVariables();
 
   /// instance variables
