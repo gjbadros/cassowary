@@ -434,7 +434,7 @@ AC_OUTPUT([
 	java/Makefile \
 	java/demos/Makefile \
 	java/cda/Makefile \
-	],[chmod +x cassowary-config])
+	],[chmod +x cassowary-config; sh scripts/recreate-symlinks])
 
 # Not create config-inline.h for the C++ header files to include
 # (needed in case another package uses autoconf and includes the Cassowary
