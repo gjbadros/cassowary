@@ -38,7 +38,12 @@ class ClStrength {
     { return (my_symbolicWeight == clsRequired().my_symbolicWeight); }
 
   virtual ostream &printOn(ostream &xo) const
-    { xo << name() << ":" << symbolicWeight(); return xo; }
+    { 
+    xo << name(); 
+    if (!isRequired())
+      xo << ":" << symbolicWeight(); 
+    return xo; 
+    }
 
   virtual ClSymbolicWeight symbolicWeight() const
     { return my_symbolicWeight; }
