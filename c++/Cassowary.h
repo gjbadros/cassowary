@@ -12,23 +12,7 @@
 #ifndef Cassowary_H
 #define Cassowary_H
 
-#ifdef CL_USE_HASH_MAP_AND_SET
-#include <hash_map>
-#include <hash_set>
-class ClConstraint;
-struct hash<const ClConstraint *>
-{
-  size_t operator()(const ClConstraint * const p) const {
-    return (size_t)p;
-  }
-};
-struct hash<ClConstraint *>
-{
-  size_t operator()(ClConstraint * const p) const {
-    return (size_t)p;
-  }
-};
-#endif /* CL_USE_HASH_MAP_AND_SET */
+#include "ClConstraintHash.h"
 
 #ifdef USE_GC
 #include "../../gc/gc_cpp.h"

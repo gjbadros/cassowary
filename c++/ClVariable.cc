@@ -13,3 +13,18 @@
 
 StringToVarMap *ClVariable::pmapSzPclv = NULL;
 ClVariable clvNil(static_cast<ClAbstractVariable*>(0));
+
+ostream &ClVariableRep::printOn(ostream &xo) const
+{  
+  xo << "[" << name() << ":" << _value << "]";
+  return xo;
+}
+
+void ClVariableRep::setName(string const &name)
+{ 
+  super::setName(name); 
+#ifndef CL_NO_IO
+  cerr << "Not updating symbol table!" << endl;
+#endif
+}
+

@@ -31,10 +31,11 @@ typedef ClMap<ClVariable, ClVarSet > ClTableauColumnsMap;
 typedef ClMap<ClVariable, ClLinearExpression *> ClTableauRowsMap;
 
 // For Solver
-typedef ClMap<const ClConstraint *, ClVarSet > ClConstraintToVarSetMap;
+typedef ClMap<const ClConstraint *, ClVarSet> ClConstraintToVarSetMap;
 typedef ClMap<const ClConstraint *, ClVariable> ClConstraintToVarMap;
 typedef ClMap<ClVariable, const ClConstraint *> ClVarToConstraintMap;
 typedef vector<ClVariable> ClVarVector;
+typedef ClSet<const ClConstraint *> ClConstraintSet;
 
 
 #endif

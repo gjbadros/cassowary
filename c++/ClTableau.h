@@ -17,6 +17,21 @@
 #include "ClVariable.h"
 #include "ClTypedefs.h"
 
+
+#ifndef CL_NO_IO
+class ClTableau;
+
+ostream &operator<<(ostream &xo, const ClTableau &clt);
+
+ostream &operator<<(ostream &xo, const ClVarSet &varset);
+
+ostream &operator<<(ostream &xo, const ClTableauColumnsMap &varmap);
+
+ostream &operator<<(ostream &xo, const ClTableauRowsMap &rows);
+
+ostream &operator<<(ostream &xo, const ClVarVector &varlist);
+#endif // CL_NO_IO
+
 class ClTableau {
 
  public:
@@ -201,9 +216,5 @@ class ClTableau {
   ClVarSet _externalParametricVars;
 
 };
-
-#ifndef CL_NO_IO
-ostream &operator<<(ostream &xo, const ClTableau &clt);
-#endif
 
 #endif

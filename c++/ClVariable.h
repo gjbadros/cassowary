@@ -70,11 +70,7 @@ public:
   // object.
   //	EXAMPLE
   //	  [x:10.0]		-- name = "x", value = 10.0
-  virtual ostream &printOn(ostream &xo) const
-  {  
-    xo << "[" << name() << ":" << _value << "]";
-    return xo;
-  }
+  virtual ostream &printOn(ostream &xo) const;
 #endif
   
   // Return the current value I hold.
@@ -104,13 +100,7 @@ public:
     { return _pv; }
 
   // Set the name of the variable
-  virtual void setName(string const &name)
-    { 
-      super::setName(name); 
-#ifndef CL_NO_IO
-      cerr << "Not updating symbol table!" << endl;
-#endif
-    }
+  virtual void setName(string const &name);
 
 private:
 
@@ -134,12 +124,6 @@ private:
 class ClVariable;
 typedef map<string,ClVariable> StringToVarMap;
 
-#ifdef CL_USE_HASH_MAP_AND_SET
-struct hash<ClVariable>
-{ 
-  size_t operator()(ClVariable v) const;
-};
-#endif
 
 class ClVariable {
   ClAbstractVariable *pclv;
@@ -210,8 +194,10 @@ inline ostream &operator<<(ostream &xo, const ClVariable &clv)
 #endif
 
 #ifdef CL_USE_HASH_MAP_AND_SET
-size_t hash<ClVariable>::operator()(ClVariable v) const
-{ return size_t(v.get_pclv());  }
+struct hash<ClVariable> { 
+  size_t operator()(const ClVariable & v) const
+    { return size_t(v.get_pclv());  }
+};
 #endif
 
 
