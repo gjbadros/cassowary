@@ -8,6 +8,12 @@
 
 #ifdef _WIN32
 #include <memory>
+template<class T>
+void ReinitializeAutoPtr(auto_ptr<T> &apref, T *pt)
+{
+  auto_ptr<T> ap(pt);
+  apref = ap;
+}
 #else
 // FIXGJB: This implementation for egcs is buggy -- be careful
 // and replace ASAP
@@ -41,13 +47,20 @@ class auto_ptr {
     return oldPointee;
     } 
 
- protected:
+  // protected:
   // This is non-standard
   void reset(T *p = 0) { delete pointee; pointee = p; }
 
  private:
   T *pointee;
 };
+
+template<class T>
+void ReinitializeAutoPtr(auto_ptr<T> &apref, T *pt)
+{
+  apref.reset(pt);
+}
+
 
 #endif
 

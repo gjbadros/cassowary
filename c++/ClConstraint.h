@@ -74,4 +74,6 @@ private:
   double my_weight;
 };
 
+typedef ClConstraint *PClConstraint;
+
 #endif

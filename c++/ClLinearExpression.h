@@ -22,6 +22,7 @@ class ClLinearExpression;
 
 ClLinearExpression &cleNil();
 
+typedef map<const ClAbstractVariable *,Number> ClVarToNumberMap;
 
 class ClLinearExpression  {
  public:
@@ -168,10 +169,10 @@ class ClLinearExpression  {
   void set_constant(Number c)
     { my_constant = c; }
 
-  const map<const ClAbstractVariable *,Number> &terms() const
+  const ClVarToNumberMap &terms() const
     { return my_terms; }
 
-  map<const ClAbstractVariable *,Number> &terms() 
+  ClVarToNumberMap &terms() 
     { return my_terms; }
 
   void incrementConstant(Number c)
@@ -212,8 +213,10 @@ class ClLinearExpression  {
  private:
 
   Number my_constant;
-  map<const ClAbstractVariable *,Number> my_terms;
+  ClVarToNumberMap my_terms;
 
 };
+
+typedef ClLinearExpression *PClLinearExpression;
 
 #endif

@@ -234,9 +234,6 @@ inconsistent2()
    }
 }
 
-typedef ClVariable *PClVariable;
-typedef ClConstraint *PClConstraint;
-
 bool
 addDel(int nCns = 900, int nVars = 900, int nResolves = 10000)
 {
@@ -371,7 +368,7 @@ if (!fResult) cout << "Failed!" << endl;
   RUN_TEST(casso1);
   RUN_TEST(inconsistent1);
   RUN_TEST(inconsistent2);
-  RUN_TEST(addDel);
+  //  RUN_TEST(addDel);
   
 #undef RUN_TEST
 

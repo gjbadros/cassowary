@@ -16,6 +16,10 @@
 #include "Cassowary.h"
 #include "ClLinearExpression.h"
 
+typedef set<const ClAbstractVariable *> ClTableauVarSet;
+typedef map<const ClAbstractVariable *, ClTableauVarSet > ClTableauColumnsMap;
+typedef map<const ClAbstractVariable *, ClLinearExpression *> ClTableauRowsMap;
+
 class ClTableau {
 
  public:
@@ -32,7 +36,7 @@ class ClTableau {
     Tracer TRACER(__FUNCTION__);
     cerr << "(" << v << ", " << subject << ")" << endl;
 #endif
-    set<const ClAbstractVariable *>::const_iterator it = my_columns[&v].find(&subject);
+    ClTableauVarSet::const_iterator it = my_columns[&v].find(&subject);
     assert(it != my_columns[&v].end());
     my_columns[&v].erase(it); 
     }
@@ -79,22 +83,22 @@ class ClTableau {
   // oldVar should now be a basic variable
   void substituteOut(const ClAbstractVariable &oldVar, const ClLinearExpression &expr);
 
-  map<const ClAbstractVariable *, set<const ClAbstractVariable *> > columns()
+  ClTableauColumnsMap columns()
     { return my_columns; }  
 
-  map<const ClAbstractVariable *, ClLinearExpression * > rows()
+  ClTableauRowsMap rows()
     { return my_rows; }  
 
   // return true iff the variable subject is in the columns keys
   bool columnsHasKey(const ClAbstractVariable &subject) const
     { 
-    map<const ClAbstractVariable *, set<const ClAbstractVariable *> >::const_iterator i = my_columns.find(&subject);
+    ClTableauColumnsMap::const_iterator i = my_columns.find(&subject);
     return (i != my_columns.end());
     }
 
   ClLinearExpression *rowExpression(const ClAbstractVariable &v)
     {
-    map<const ClAbstractVariable *, ClLinearExpression *>::const_iterator i = my_rows.find(&v);
+    ClTableauRowsMap::const_iterator i = my_rows.find(&v);
     if (i != my_rows.end())
       return (*i).second;
     else
@@ -107,12 +111,12 @@ class ClTableau {
   // set of basic variables whose expressions contain them
   // i.e., it's a mapping from variables in expressions (a column) to the 
   // set of rows that contain them
-  map<const ClAbstractVariable *, set<const ClAbstractVariable *> > my_columns;
-  map<const ClAbstractVariable *, ClLinearExpression *> my_rows;
+  ClTableauColumnsMap my_columns;
+  ClTableauRowsMap my_rows;
 
   // the ordered collection of basic variables that have infeasible rows
   // (used when reoptimizing)
-  set<const ClAbstractVariable *> my_infeasibleRows;
+  ClTableauVarSet my_infeasibleRows;
 
 };
 

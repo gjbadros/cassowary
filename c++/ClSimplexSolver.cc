@@ -104,12 +104,12 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
 
   // remove any error variables from the objective function
   ClLinearExpression *pzRow = rowExpression(my_objective);
-  map<const ClConstraint *, set<const ClAbstractVariable *> >::iterator 
+  ClConstraintToVarSetMap::iterator 
     it_eVars = my_errorVars.find(&cn);
   if (it_eVars != my_errorVars.end())
     {
-    set<const ClAbstractVariable *> &eVars = (*it_eVars).second;
-    set<const ClAbstractVariable *>::iterator it = eVars.begin();
+    ClTableauVarSet &eVars = (*it_eVars).second;
+    ClTableauVarSet::iterator it = eVars.begin();
     for ( ; it != eVars.end(); ++it )
       {
       const ClLinearExpression *pexpr = rowExpression(*(*it));
@@ -141,8 +141,8 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
     { // not in the basis, so need to do some work
     // first choose which variable to move out of the basis
     // only consider restricted basic variables
-    set<const ClAbstractVariable *> &col = my_columns[&marker];
-    set<const ClAbstractVariable *>::iterator it_col = col.begin();
+    ClTableauVarSet &col = my_columns[&marker];
+    ClTableauVarSet::iterator it_col = col.begin();
 #ifndef CL_NO_TRACE
     cerr << "Must pivot -- columns are " << col << endl;
 #endif
@@ -241,8 +241,8 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
   // and so it has been deleted when we removed its row.
   if (it_eVars != my_errorVars.end())
     {
-    set<const ClAbstractVariable *> &eVars = (*it_eVars).second;
-    set<const ClAbstractVariable *>::iterator it = eVars.begin();
+    ClTableauVarSet &eVars = (*it_eVars).second;
+    ClTableauVarSet::iterator it = eVars.begin();
     for ( ; it != eVars.end(); ++it )
       {
       const ClAbstractVariable *pv = (*it);
@@ -260,9 +260,9 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
     // variables v in those vectors that are also in set eVars
     if (it_eVars != my_errorVars.end())
       {
-      set<const ClAbstractVariable *> &eVars = (*it_eVars).second;
-      vector<const ClAbstractVariable *>::iterator itStayPlusErrorVars = my_stayPlusErrorVars.begin();
-      vector<const ClAbstractVariable *>::iterator itStayMinusErrorVars = my_stayMinusErrorVars.begin();
+      ClTableauVarSet &eVars = (*it_eVars).second;
+      ClVarVector::iterator itStayPlusErrorVars = my_stayPlusErrorVars.begin();
+      ClVarVector::iterator itStayMinusErrorVars = my_stayMinusErrorVars.begin();
       for (; itStayMinusErrorVars != my_stayMinusErrorVars.end();
 	   ++itStayPlusErrorVars, ++itStayMinusErrorVars)
 	{
@@ -284,13 +284,13 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
     //                my_editMinusErrorVars, and
     //                my_prevEditConstants
     assert(it_eVars != my_errorVars.end());
-    set<const ClAbstractVariable *> &eVars = (*it_eVars).second;
-    set<const ClAbstractVariable *>::iterator it_v = eVars.begin();
+    ClTableauVarSet &eVars = (*it_eVars).second;
+    ClTableauVarSet::iterator it_v = eVars.begin();
     for ( ; it_v != eVars.end(); ++it_v)
       {
       const ClAbstractVariable *pvar = *it_v;
       // find var in my_editPlusErrorVars
-      vector<const ClAbstractVariable *>::iterator 
+      ClVarVector::iterator 
 	itEditPlusErrorVars = my_editPlusErrorVars.begin();
       for ( ; itEditPlusErrorVars != my_editPlusErrorVars.end(); ++itEditPlusErrorVars )
 	{
@@ -299,7 +299,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
       if (itEditPlusErrorVars != my_editPlusErrorVars.end())
 	{ // found it
 	int index = itEditPlusErrorVars - my_editPlusErrorVars.begin();
-	vector<const ClAbstractVariable *>::iterator 
+	ClVarVector::iterator 
 	  itEditMinusErrorVars = my_editMinusErrorVars.begin() + index;
 	vector<Number>::iterator 
 	  itPrevEditConstants = my_prevEditConstants.begin() + index;
@@ -315,7 +315,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
   if (it_eVars != my_errorVars.end())
     {
     // delete the constraint's error variables
-    set<const ClAbstractVariable *>::const_iterator it_set = (it_eVars->second).begin();
+    ClTableauVarSet::const_iterator it_set = (it_eVars->second).begin();
     for ( ; it_set != (it_eVars->second).end(); ++it_set)
       {
       delete *it_set;
@@ -512,8 +512,8 @@ ClSimplexSolver::chooseSubject(ClLinearExpression &expr)
   // negative coefficient
   bool foundNewRestricted = false;
 
-  const map<const ClAbstractVariable *,Number> &terms = expr.terms();
-  map<const ClAbstractVariable *,Number>::const_iterator it = terms.begin();
+  const ClVarToNumberMap &terms = expr.terms();
+  ClVarToNumberMap::const_iterator it = terms.begin();
   for ( ; it != terms.end(); ++it )
     {
     const ClAbstractVariable *pv = (*it).first;
@@ -546,8 +546,8 @@ ClSimplexSolver::chooseSubject(ClLinearExpression &expr)
 	// never pick a dummy variable here.
 	if (!foundNewRestricted && !pv->isDummy() && c < 0.0)
 	  {
-	  const map<const ClAbstractVariable *, set<const ClAbstractVariable *> > &col = columns();
-	  map<const ClAbstractVariable *, set<const ClAbstractVariable *> >::const_iterator it_col = col.find(pv);
+	  const ClTableauColumnsMap &col = columns();
+	  ClTableauColumnsMap::const_iterator it_col = col.find(pv);
 	  if (it_col == col.end() || 
 	      ( col.size() == 1 && columnsHasKey(my_objective) ) )
 	    {
@@ -642,8 +642,8 @@ ClSimplexSolver::deltaEditConstant(Number delta,
   // in which they occur by finding the column for the minusErrorVar
   // (it doesn't matter whether we look for that one or for
   // plusErrorVar).  Fix the constants in these expressions.
-  set<const ClAbstractVariable *> &columnVars = my_columns[&minusErrorVar];
-  set<const ClAbstractVariable *>::iterator it = columnVars.begin();
+  ClTableauVarSet &columnVars = my_columns[&minusErrorVar];
+  ClTableauVarSet::iterator it = columnVars.begin();
   for (; it != columnVars.end(); ++it)
     {
     const ClAbstractVariable *pbasicVar = *it;
@@ -671,7 +671,7 @@ ClSimplexSolver::dualOptimize()
   // need to handle infeasible rows
   while (!my_infeasibleRows.empty())
     {
-    set<const ClAbstractVariable *>::iterator it_exitVar = my_infeasibleRows.begin();
+    ClTableauVarSet::iterator it_exitVar = my_infeasibleRows.begin();
     const ClAbstractVariable *pexitVar = *it_exitVar;
     my_infeasibleRows.erase(it_exitVar);
     const ClAbstractVariable *pentryVar = NULL;
@@ -685,8 +685,8 @@ ClSimplexSolver::dualOptimize()
 	{
 	double ratio = DBL_MAX;
 	double r;
-	map<const ClAbstractVariable *,Number> &terms = pexpr->terms();
-	map<const ClAbstractVariable *,Number>::iterator it = terms.begin();
+	ClVarToNumberMap &terms = pexpr->terms();
+	ClVarToNumberMap::iterator it = terms.begin();
 	for ( ; it != terms.end(); ++it )
 	  {
 	  const ClAbstractVariable *pv = (*it).first;
@@ -733,8 +733,8 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
   auto_ptr<ClDummyVariable> pdummyVar;
   auto_ptr<ClSlackVariable> peminus;
   auto_ptr<ClSlackVariable> peplus;
-  const map<const ClAbstractVariable *, Number> &cnTerms = cnExpr.terms();
-  map<const ClAbstractVariable *,Number>::const_iterator it = cnTerms.begin();
+  const ClVarToNumberMap &cnTerms = cnExpr.terms();
+  ClVarToNumberMap::const_iterator it = cnTerms.begin();
   for ( ; it != cnTerms.end(); ++it)
     {
     const ClAbstractVariable *pv = (*it).first;
@@ -762,17 +762,14 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
     // Since both of these variables are newly created we can just add
     // them to the expression (they can't be basic).
     ++my_slackCounter;
-    auto_ptr<ClSlackVariable> p (new ClSlackVariable (my_slackCounter, "s"));
-    pslackVar = p;
-    p.release();	// transfer ownership to other auto_ptr
+    ReinitializeAutoPtr(pslackVar,new ClSlackVariable (my_slackCounter, "s"));
+    pexpr->setVariable(*pslackVar,-1);
     // index the constraint under its slack variable
     my_markerVars[&cn] = pslackVar.get();
     if (!cn.isRequired())
       {
       ++my_slackCounter;
-      auto_ptr<ClSlackVariable> p (new ClSlackVariable (my_slackCounter, "em"));
-      peminus = p;
-      p.release();   // FIXGJB these and below shouldn't be needed w/ egcs
+      ReinitializeAutoPtr(peminus,new ClSlackVariable (my_slackCounter, "em"));
       pexpr->setVariable(*peminus,1.0);
       // add emnius to the objective function with the appropriate weight
       ClLinearExpression *pzRow = rowExpression(my_objective);
@@ -791,9 +788,7 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
       // for this constraint.  The dummy variable is never allowed to
       // enter the basis when pivoting.
       ++my_dummyCounter;
-      auto_ptr<ClDummyVariable> p (new ClDummyVariable (my_dummyCounter, "d"));
-      pdummyVar = p;
-      p.release();
+      ReinitializeAutoPtr(pdummyVar,new ClDummyVariable (my_dummyCounter, "d"));
       pexpr->setVariable(*pdummyVar,1.0);
       my_markerVars[&cn] = pdummyVar.get();
 #ifndef CL_NO_TRACE
@@ -807,13 +802,9 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
       //       expr = eplus - eminus, 
       // in other words:  expr-eplus+eminus=0
       ++my_slackCounter;
-      auto_ptr<ClSlackVariable> p1 (new ClSlackVariable (my_slackCounter, "ep"));
-      peplus = p1;
-      p1.release();
-      auto_ptr<ClSlackVariable> p2 (new ClSlackVariable (my_slackCounter, "em"));
-      peminus = p2;
-      p2.release();
-	  
+      ReinitializeAutoPtr(peplus,new ClSlackVariable (my_slackCounter, "ep"));
+      ReinitializeAutoPtr(peminus,new ClSlackVariable (my_slackCounter, "em"));
+
       pexpr->setVariable(*peplus,-1.0);
       pexpr->setVariable(*peminus,1.0);
       // index the constraint under one of the error variables
@@ -891,8 +882,8 @@ ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
     // Find the most negative coefficient in the objective function
     // (ignoring dummy variables).  If all coefficients are positive
     // we're done
-    map<const ClAbstractVariable *,Number> &terms = pzRow->terms();
-    map<const ClAbstractVariable *,Number>::iterator it = terms.begin();
+    ClVarToNumberMap &terms = pzRow->terms();
+    ClVarToNumberMap::iterator it = terms.begin();
     for (; it != terms.end(); ++it)
       {
       const ClAbstractVariable *pv = (*it).first;
@@ -918,8 +909,8 @@ ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
     // Only consider pivotable basic variables
     // (i.e. restricted, non-dummy variables)
     double minRatio = DBL_MAX;
-    set<const ClAbstractVariable *> &columnVars = my_columns[pentryVar];
-    set<const ClAbstractVariable *>::iterator it_rowvars = columnVars.begin();
+    ClTableauVarSet &columnVars = my_columns[pentryVar];
+    ClTableauVarSet::iterator it_rowvars = columnVars.begin();
     Number r = 0.0;
     for (; it_rowvars != columnVars.end(); ++it_rowvars)
       {
@@ -1015,9 +1006,9 @@ ClSimplexSolver::resetEditConstants(const vector<Number> &newEditConstants)
     }
   vector<Number>::const_iterator itNew = newEditConstants.begin();
   vector<Number>::iterator itPrev = my_prevEditConstants.begin();
-  vector<const ClAbstractVariable *>::const_iterator 
+  ClVarVector::const_iterator 
     itEditPlusErrorVars = my_editPlusErrorVars.begin();
-  vector<const ClAbstractVariable *>::const_iterator
+  ClVarVector::const_iterator
     itEditMinusErrorVars = my_editMinusErrorVars.begin();
 
   for ( ; itNew != newEditConstants.end(); 
@@ -1049,9 +1040,9 @@ ClSimplexSolver::resetStayConstants()
   Tracer TRACER(__FUNCTION__);
   cerr << "()" << endl;
 #endif
-  vector<const ClAbstractVariable *>::const_iterator 
+  ClVarVector::const_iterator 
     itStayPlusErrorVars = my_stayPlusErrorVars.begin();
-  vector<const ClAbstractVariable *>::const_iterator 
+  ClVarVector::const_iterator 
     itStayMinusErrorVars = my_stayMinusErrorVars.begin();
 
   for ( ; itStayPlusErrorVars != my_stayPlusErrorVars.end();
@@ -1087,8 +1078,8 @@ ClSimplexSolver::setExternalVariables()
   cerr << "()" << endl;
   cerr << *this << endl;
 #endif
-  map<const ClAbstractVariable *, ClLinearExpression *>::iterator itRowVars;
-  map<const ClAbstractVariable *, set<const ClAbstractVariable *> >::iterator itColumnVars;
+  ClTableauRowsMap::iterator itRowVars;
+  ClTableauColumnsMap::iterator itColumnVars;
 
   itRowVars = my_rows.begin();
   for ( ; itRowVars != my_rows.end() ; ++itRowVars )
@@ -1117,9 +1108,9 @@ ClSimplexSolver::setExternalVariables()
 }
 
 ostream &
-printTo(ostream &xo, const vector<const ClAbstractVariable *> &varlist)
+printTo(ostream &xo, const ClVarVector &varlist)
 {
-  vector<const ClAbstractVariable *>::const_iterator it = varlist.begin();
+  ClVarVector::const_iterator it = varlist.begin();
   xo << varlist.size() << ":" << "[ ";
   if (it != varlist.end())
     {
@@ -1134,7 +1125,7 @@ printTo(ostream &xo, const vector<const ClAbstractVariable *> &varlist)
   return xo;
 }
 
-ostream &operator<<(ostream &xo, const vector<const ClAbstractVariable *> &varlist)
+ostream &operator<<(ostream &xo, const ClVarVector &varlist)
 {
   return printTo(xo,varlist);
 }

@@ -21,6 +21,9 @@
 class ClVariable;
 
 typedef pair<ClVariable,ClVariable> ClPoint;
+typedef map<const ClConstraint *, ClTableauVarSet > ClConstraintToVarSetMap;
+typedef map<const ClConstraint *, const ClAbstractVariable *> ClConstraintToVarMap;
+typedef vector<const ClAbstractVariable *> ClVarVector;
 
 class ClSimplexSolver : public ClTableau {
  protected: typedef ClTableau super;
@@ -192,13 +195,13 @@ class ClSimplexSolver : public ClTableau {
 
   // the arrays of positive and negative error vars for the edit constraints
   // (need both positive and negative since they have only non-negative values)
-  vector<const ClAbstractVariable *> my_editMinusErrorVars;
-  vector<const ClAbstractVariable *> my_editPlusErrorVars;
+  ClVarVector my_editMinusErrorVars;
+  ClVarVector my_editPlusErrorVars;
 
   // the arrays of positive and negative error vars for the stay constraints
   // (need both positive and negative since they have only non-negative values)
-  vector<const ClAbstractVariable *> my_stayMinusErrorVars;
-  vector<const ClAbstractVariable *> my_stayPlusErrorVars;
+  ClVarVector my_stayMinusErrorVars;
+  ClVarVector my_stayPlusErrorVars;
 
   // The array of constants for the edit constraints on the previous
   // iteration.  These must be in the same order as editPlusErrorVars
@@ -207,11 +210,11 @@ class ClSimplexSolver : public ClTableau {
 
   // give error variables for a non required constraint,
   // maps to ClSlackVariable-s
-  map<const ClConstraint *, set<const ClAbstractVariable *> > my_errorVars;
+  ClConstraintToVarSetMap my_errorVars;
 
   // Return a lookup table giving the marker variable for each
   // constraint (used when deleting a constraint).
-  map<const ClConstraint *, const ClAbstractVariable *> my_markerVars;
+  ClConstraintToVarMap my_markerVars;
 
   ClObjectiveVariable &my_objective;
 

@@ -31,7 +31,7 @@ ClLinearExpression::~ClLinearExpression()
 ostream &
 ClLinearExpression::printOn(ostream &xo) const
 {
-  map<const ClAbstractVariable *,Number>::const_iterator i = my_terms.begin();
+  ClVarToNumberMap::const_iterator i = my_terms.begin();
 
   if (!clApprox(my_constant,0.0) || i == my_terms.end())
     {
@@ -60,7 +60,7 @@ ClLinearExpression::multiplyMe(Number x)
 {
   my_constant *= x;
 
-  map<const ClAbstractVariable *,Number>::const_iterator i = my_terms.begin();
+  ClVarToNumberMap::const_iterator i = my_terms.begin();
   for ( ; i != my_terms.end(); ++i)
     {
     my_terms[(*i).first] = (*i).second * x;
@@ -158,7 +158,7 @@ ClLinearExpression::addExpression(const ClLinearExpression &expr, Number n)
 {
   incrementConstant(n*expr.constant());
 
-  map<const ClAbstractVariable *,Number>::const_iterator i = expr.my_terms.begin();
+  ClVarToNumberMap::const_iterator i = expr.my_terms.begin();
   for ( ; i != expr.my_terms.end(); ++i)
     {
     addVariable(*((*i).first), n * (*i).second);
@@ -176,7 +176,7 @@ ClLinearExpression::addExpression(const ClLinearExpression &expr, Number n,
 {
   incrementConstant(n*expr.constant());
 
-  map<const ClAbstractVariable *,Number>::const_iterator i = expr.my_terms.begin();
+  ClVarToNumberMap::const_iterator i = expr.my_terms.begin();
   for ( ; i != expr.my_terms.end(); ++i)
     {
     addVariable(*((*i).first), n * (*i).second, subject, solver);
@@ -194,7 +194,7 @@ ClLinearExpression::addVariable(const ClAbstractVariable &v, Number c)
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << v << ", " << c << ")" << endl;
 #endif
-  map<const ClAbstractVariable *,Number>::iterator i = my_terms.find(&v);
+  ClVarToNumberMap::iterator i = my_terms.find(&v);
   if (i != my_terms.end())
     {
     // expression already contains that variable, so add to it
@@ -233,7 +233,7 @@ ClLinearExpression::addVariable(const ClAbstractVariable &v, Number c,
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << v << ", " << c << ", " << subject << ", ...)" << endl;
 #endif
-  map<const ClAbstractVariable *,Number>::iterator i = my_terms.find(&v);
+  ClVarToNumberMap::iterator i = my_terms.find(&v);
   if (i != my_terms.end())
     {
     // expression already contains that variable, so add to it
@@ -295,19 +295,19 @@ ClLinearExpression::substituteOut(const ClAbstractVariable &var,
        << solver << ")" << endl;
   cerr << "*this == " << *this << endl;
 #endif
-  map<const ClAbstractVariable *,Number>::iterator pv = my_terms.find(&var);
+  ClVarToNumberMap::iterator pv = my_terms.find(&var);
   assert(pv != my_terms.end());
   // FIXGJB: this got thrown! assert(!clApprox((*pv).second,0.0));
 
   Number multiplier = (*pv).second;
   my_terms.erase(pv);
   incrementConstant(multiplier * expr.my_constant);
-  map<const ClAbstractVariable *,Number>::const_iterator i = expr.my_terms.begin();
+  ClVarToNumberMap::const_iterator i = expr.my_terms.begin();
   for ( ; i != expr.my_terms.end(); ++i)
     {
     const ClAbstractVariable *pv = (*i).first;
     Number c = (*i).second;
-    map<const ClAbstractVariable *,Number>::iterator poc = my_terms.find(pv);
+    ClVarToNumberMap::iterator poc = my_terms.find(pv);
     if (poc != my_terms.end())
       { // if oldCoeff is not nil
 #ifndef CL_NO_TRACE
@@ -389,7 +389,7 @@ ClLinearExpression::newSubject(const ClAbstractVariable &subject)
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << subject << ")" << endl;
 #endif
-  map<const ClAbstractVariable *,Number>::iterator pnewSubject = my_terms.find(&subject);
+  ClVarToNumberMap::iterator pnewSubject = my_terms.find(&subject);
   assert(pnewSubject != my_terms.end());
   //  assert(!clApprox((*pnewSubject).second,0.0));
   Number reciprocal = 1.0 / (*pnewSubject).second;

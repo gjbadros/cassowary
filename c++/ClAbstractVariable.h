@@ -97,4 +97,6 @@ private:
   static long iVariableNumber;
 };
 
+typedef ClAbstractVariable *PClAbstractVariable;
+
 #endif

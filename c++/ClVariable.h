@@ -75,6 +75,7 @@ private:
   Number my_value;
 };
 
+typedef ClVariable *PClVariable;
 
 #include <math.h>
 
