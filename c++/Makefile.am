@@ -4,6 +4,7 @@
 lib_LIBRARIES = libcassowary.a
 lib_LTLIBRARIES = libcassowary.la
 
+INCLUDES = @GUILE_INCLUDES@
 LDADD = libcassowary.a -L@prefix@/lib -lGTL
 ClCTest_LDADD = $(LDADD) -lstdc++
 
