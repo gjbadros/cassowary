@@ -90,3 +90,40 @@ ClSymbolicWeight::minus(const ClSymbolicWeight &cl) const
     }
   return clsw;
 }
+
+
+bool 
+ClSymbolicWeight::lessThan(const ClSymbolicWeight &cl) const
+{
+  return my_values < cl.my_values;
+}
+
+bool 
+ClSymbolicWeight::lessThanOrEqual(const ClSymbolicWeight &cl) const
+{
+  return my_values <= cl.my_values;
+}
+
+bool 
+ClSymbolicWeight::equal(const ClSymbolicWeight &cl) const
+{
+  return my_values == cl.my_values;
+}
+
+bool 
+ClSymbolicWeight::greaterThan(const ClSymbolicWeight &cl) const
+{
+  return my_values > cl.my_values;
+}
+
+bool 
+ClSymbolicWeight::greaterThanOrEqual(const ClSymbolicWeight &cl) const
+{
+  return my_values >= cl.my_values;
+}
+
+bool 
+ClSymbolicWeight::isNegative() const
+{
+  return my_values < zero().my_values;
+}

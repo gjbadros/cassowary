@@ -21,6 +21,10 @@ class ClLinearExpression  {
  public:
   ClLinearExpression();
 
+  // Convert from ClVariable to a ClLinearExpression
+  // this replaces ClVariable::asLinearExpression
+  ClLinearExpression(const ClVariable &);
+
   // Return a new linear expression formed by multiplying self by x.
   // (Note that this result must be linear.)
   ClLinearExpression times(Number x) const;
@@ -80,8 +84,10 @@ class ClLinearExpression  {
   // expression is constant -- signal ExCLInternalError in that case).
   ClAbstractVariable *anyVariable() const;
 
+#ifdef FIXGJB_OLD_SMALLTALK_WAY
   ClLinearExpression asLinearExpression() const 
     { return this; }
+#endif
 
 
   // This linear expression currently represents the equation

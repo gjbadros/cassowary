@@ -7,6 +7,8 @@ main( char **argv, int argc )
 {
   ClSymbolicWeight clsw(0.0,1.0,0.0);
   ClSymbolicWeight clsw2(2.0,0.5,0.5);
+  ClSymbolicWeight clsw3(2.0,0.5,0.5);
+  ClSymbolicWeight clsw4(2.0,0.4,0.5);
 
   ClStrength cls(String("cls"),clsw);
   cout << cls << endl;
@@ -22,4 +24,17 @@ main( char **argv, int argc )
 
   ClStrength cls5(String("cls5"),clsw.divideBy(2));
   cout << cls5 << endl;
+
+  cout << clsw << (clsw == clsw2? "==" : "!=") << clsw2 << endl;
+  cout << clsw2 << (clsw2 == clsw3? "==" : "!=") << clsw3 << endl;
+  cout << clsw3 << (clsw3 == clsw4? "==" : "!=") << clsw4 << endl;
+
+  cout << clsw << (clsw < clsw2? "<" : "!<") << clsw2 << endl;
+  cout << clsw2 << (clsw2 < clsw3? "<" : "!<") << clsw3 << endl;
+  cout << clsw3 << (clsw3 < clsw4? "<" : "!<") << clsw4 << endl;
+
+  cout << clsw << (clsw > clsw2? ">" : "!>") << clsw2 << endl;
+  cout << clsw2 << (clsw2 > clsw3? ">" : "!>") << clsw3 << endl;
+  cout << clsw3 << (clsw3 > clsw4? ">" : "!>") << clsw4 << endl;
+
 }

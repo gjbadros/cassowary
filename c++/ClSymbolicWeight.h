@@ -37,6 +37,14 @@ class ClSymbolicWeight {
   bool greaterThanOrEqual(const ClSymbolicWeight &cl) const;
   bool isNegative() const;
 
+  friend operator==(const ClSymbolicWeight &cl1, const ClSymbolicWeight &cl2)
+    { return cl1.equal(cl2); }
+
+  friend operator<(const ClSymbolicWeight &cl1, const ClSymbolicWeight &cl2)
+    { return cl1.lessThan(cl2); }
+
+  // function.h provides operator>, >=, <= from operator<
+
   ostream &printOn(ostream &xo) const
     { 
     vector<double>::const_iterator i = my_values.begin();

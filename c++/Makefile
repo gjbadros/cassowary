@@ -11,21 +11,31 @@ CC = gcc
 CPP = g++
 CFLAGS = -g
 
-TEST_OBJS = 
+TEST_OBJS = ClStrength.o ClSymbolicWeight.o
 TEST_SRCS = $(OBJS:.o=.cc)
+
+SOURCES = $(wildcard *.cc)
 
 HEADERS = Cassowary.h ClErrors.h \
 	  ClAbstractVariable.h ClDummyVariable.h ClObjectVariable.h \
 	  ClSlackVariable.h ClVariable.h \
 	  ClConstraint.h ClStrength.h
 
+all:	libcassowary.a cassowary-tests
+
 TAGS: $(SOURCES)
 	etags $^
 
-all:	libcassowary.a cassowary-test
+cassowary-tests: test-ClStrength test-ClVariable
 
 test-ClStrength: test-ClStrength.o ClStrength.o ClSymbolicWeight.o
 	g++ -o $@ $^
+
+test-ClLinearExpression: test-ClLinearExpression.o $(TEST_OBJS)
+
+test-ClVariable: test-ClVariable.o $(TEST_OBJS)
+	g++ -o $@ $^
+
 
 cassowary-test:	$(TEST_OBJS)
 
@@ -45,4 +55,4 @@ tags: TAGS
 	modpod2texinfo $< >$@
 
 
-.PHONY:	tags all
+.PHONY:	tags all cassowary-tests

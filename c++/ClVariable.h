@@ -13,13 +13,19 @@
 
 #include "Cassowary.h"
 #include "ClAbstractVariable.h"
+#ifdef FIXGJB_OLD_SMALLTALK_WAY
 #include "ClLinearExpression.h"
 #include "ClLinearEquation.h"
+#endif
 
 class ClVariable: public ClAbstractVariable {
 public:
-  ClVariable(const String &name, Number value = 0.0);
 
+  // Constructor
+  ClVariable(const String &name, Number value = 0.0) :
+    my_name(name),
+    my_value(value)
+    { } 
 
   // Return true if this a variable known outside the solver.  
   // (We need to give such variables a value after solving is complete.)
@@ -38,9 +44,7 @@ public:
 
   ostream &printOn(ostream &xo)
   {  
-    xo << "[" << name << ":";
-    value.printOn(xo);
-    xo << "]" << endl;
+    xo << "[" << my_name << ":" << my_value << "]" << endl;
     return xo;
   }
   
@@ -49,7 +53,10 @@ public:
     { return my_value; }
   void set_value(Number const &value)
     { my_value = value; }
-  
+
+#ifdef FIXGJB_OLD_SMALLTALK_WAY
+  // These get replaced by a conversion from ClVariable to ClLinearExpression
+
   ClLinearExpression asLinearExpression() const;
   
   ClLinearExpression times(Number n) const
@@ -106,7 +113,7 @@ public:
 			   const ClStrength &strength = ClStrength::required(),
 			   double weight = 1.0);
 
-
+#endif
   /* Also has "@" for creating point pairs */
   /* arithmetic linear expression builders */
   /* constraint creators */ 
