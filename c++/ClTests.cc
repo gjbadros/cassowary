@@ -368,7 +368,6 @@ inconsistent3()
      .addConstraint(new ClLinearInequality(x,cnGEQ,w))
      .addConstraint(new ClLinearInequality(y,cnGEQ,x))
      .addConstraint(new ClLinearInequality(z,cnGEQ,y))
-     .addConstraint(new ClLinearInequality(z,cnGEQ,8.0))
      .addConstraint(new ClLinearInequality(z,cnLEQ,4.0));
 
    // no exception, we failed!
@@ -647,7 +646,7 @@ addDel(const int nCns = 900, const int nVars = 900, const int nResolves = 10000)
     // add the constraint -- if it's incompatible, just ignore it
     try
       {
-      solver.addConstraint(*(rgpcns[j]));
+      solver.addConstraint(rgpcns[j]);
       }
     catch (ExCLRequiredFailure &)
       {

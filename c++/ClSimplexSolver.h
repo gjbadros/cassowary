@@ -82,15 +82,24 @@ class ClSimplexSolver : public ClTableau {
   // Add the constraint cn to the tableau
   ClSimplexSolver &addConstraint(const ClConstraint *const pcn);
 
+#ifndef CL_NO_DEPRECATED
   // Deprecated! --02/19/99 gjb
   ClSimplexSolver &addConstraint(const ClConstraint &cn) 
     { return addConstraint(&cn); }
+#endif
 
   // Same as above, but returns false if the constraint cannot be solved
   // (i.e., the resulting system would be unsatisfiable)
   // The above function "addConstraint" throws an exception in that case
   // which may be inconvenient
   bool addConstraintNoException(const ClConstraint *const pcn);
+
+#ifndef CL_NO_DEPRECATED
+  // Deprecated --02/22/99 gjb
+  bool addConstraintNoException(const ClConstraint &cn)
+    { return addConstraintNoException(&cn); }
+#endif
+
 
   // Add an edit constraint for "v" with given strength
   ClSimplexSolver &addEditVar(const ClVariable &v, const ClStrength &strength = clsStrong(),
@@ -167,15 +176,23 @@ class ClSimplexSolver : public ClTableau {
   // Also remove any error variable associated with cn
   ClSimplexSolver &removeConstraint(const ClConstraint *const pcn);
 
+#ifndef CL_NO_DEPRECATED
   // Deprecated! --02/19/99 gjb
   ClSimplexSolver &removeConstraint(const ClConstraint &cn) 
     { return removeConstraint(&cn); }
+#endif
 
 
   // Same as above, but returns false if the constraint dne
   // The above function "removeConstraint" throws an exception in that case
   // which may be inconvenient
   bool removeConstraintNoException(const ClConstraint *const pcn);
+
+#ifndef CL_NO_DEPRECATED
+  // Deprecated --02/22/99 gjb
+  bool removeConstraintNoException(const ClConstraint &cn)
+    { return removeConstraintNoException(&cn); }
+#endif
 
 
   // Re-initialize this solver from the original constraints, thus
