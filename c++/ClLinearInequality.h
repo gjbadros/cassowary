@@ -54,6 +54,25 @@ class ClLinearInequality : public ClLinearConstraint {
      }
    }
 
+ // ClLinearInequality(var,OP,expr) is  var >= expr
+ ClLinearInequality(const ClLinearExpression &cle,
+		    ClInequalityOperator op,
+		    const ClAbstractVariable &clv,
+		    const ClStrength strength = clsRequired(),
+		    double weight = 1.0) :
+   ClLinearConstraint( cle, strength, weight)
+   { 
+   if (op == cnLEQ)
+     {
+     my_expression.multiplyMe(-1.0);
+     my_expression.addVariable(clv,1.0);
+     }
+   else // op == cnGEQ
+     {
+     my_expression.addVariable(clv,-1.0);
+     }
+   }
+
  // ClLinearInequality(expr,OP,expr) is  expr >= expr
  ClLinearInequality(const ClLinearExpression &cle1,
 		    ClInequalityOperator op,
@@ -70,6 +89,25 @@ class ClLinearInequality : public ClLinearConstraint {
    else // op == cnLEQ
      {
      my_expression.addExpression(cle1,-1.0);
+     }
+   }
+
+ // ClLinearInequality(expr,OP,expr) is  expr >= expr
+ ClLinearInequality(const ClVariable &clv1,
+		    ClInequalityOperator op,
+		    const ClVariable &clv2,
+		    const ClStrength strength = clsRequired(),
+		    double weight = 1.0) :
+   ClLinearConstraint( clv2, strength, weight)
+   { 
+   if (op == cnGEQ)
+     {
+     my_expression.multiplyMe(-1.0);
+     my_expression.addVariable(clv1);
+     }
+   else // op == cnLEQ
+     {
+     my_expression.addVariable(clv1,-1.0);
      }
    }
 
