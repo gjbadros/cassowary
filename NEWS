@@ -47,6 +47,7 @@ version for .2)
 
 * Miscellaneious changes
 ** Updated copyright to include 1999
+** Fixed wrappers/Makefile for building Python wrapper
 ** Reference Anthony Beurivé's STk wrapper
 ** Fix Scwm URL
 
