@@ -9,6 +9,7 @@
 #include <qpushbt.h>
 #include <qpainter.h>
 #include <qpixmap.h>
+#include <qbitmap.h>
 
 /*
   Constructs a QuadDemoWindow widget.
@@ -140,8 +141,10 @@ void QuadDemoWindow::mouseMoveEvent( QMouseEvent *e )
 void QuadDemoWindow::paintEvent( QPaintEvent * )
 {
   // Create the pixmap and fill it with the widget's background
-  QPixmap pm( size() );
+  QBitmap pm( size() );
+#ifdef USING_PIXMAP_NOT_BITMAP
   pm.fill( backgroundColor() );
+#endif
   
   // Paint the pixmap
   QPainter p;
