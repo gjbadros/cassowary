@@ -309,6 +309,12 @@ class ClSimplexSolver : public ClTableau {
 
   bool FIsConstraintSatisfied(const ClConstraint &cn) const;
 
+  void setPv(void *pv)
+    { _pv = pv; }
+
+  void *Pv() const
+    { return _pv; }
+
  protected:
   // Add the constraint expr=0 to the inequality tableau using an
   // artificial variable.  To do this, create an artificial variable
@@ -454,6 +460,10 @@ class ClSimplexSolver : public ClTableau {
   PfnChangeClvCallback _pfnChangeClvCallback;
   PfnResolveCallback _pfnResolveCallback;
   PfnCnSatCallback _pfnCnSatCallback;
+
+  // C-style extension mechanism so I
+  // don't have to wrap ScwmClSolver separately
+  void *_pv;
 
   // a stack of the number of edit constraints
   // that existed at the prior beginEdit.
