@@ -93,10 +93,6 @@ class CL {
     throws ExCLNonlinearExpression
     { return (new ClLinearExpression(e1)).times(e2); }
 
-  public static ClLinearExpression Times(ClVariable e1, double e2) 
-    throws ExCLNonlinearExpression
-    { return (new ClLinearExpression(e1)).times(new ClLinearExpression(e2)); }
-
   public static ClLinearExpression Times(double n, ClVariable clv) 
     throws ExCLNonlinearExpression
     { return (new ClLinearExpression(clv,n)); }
