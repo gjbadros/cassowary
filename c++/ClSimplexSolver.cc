@@ -67,7 +67,7 @@ ClSimplexSolver::addConstraint(const ClConstraint &cn)
       throw ExCLRequiredFailure();
       }
     }
-  optimize(my_objective);
+  optimize(my_objective, &my_zrow);
   setExternalVariables();
   if (cn.isEditConstraint())
     {
@@ -169,7 +169,6 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
   resetStayConstants();
 
   // remove any error variables from the objective function
-  ClLinearExpression *pzRow = rowExpression(my_objective);
   ClConstraintToVarSetMap::iterator 
     it_eVars = my_errorVars.find(&cn);
   if (it_eVars != my_errorVars.end())
@@ -181,13 +180,13 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
       const ClLinearExpression *pexpr = rowExpression(*(*it));
       if (pexpr == NULL )
 	{
-	pzRow->addVariable(*(*it),-1.0 * cnconst.strength().symbolicWeight().asDouble(),
-			   my_objective,*this);
+	my_zrow.addVariable(*(*it),cnconst.strength().symbolicWeight().negated(),
+                            my_objective,*this);
 	}
       else
 	{ // the error variable was in the basis
-	pzRow->addExpression(*pexpr,-1.0 * cnconst.strength().symbolicWeight().asDouble(),
-			     my_objective,*this);
+	my_zrow.addExpression(*pexpr,cnconst.strength().symbolicWeight().negated(),
+                              my_objective,*this);
 	}
       }
     }
@@ -401,7 +400,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
     }
   delete &marker;
 
-  optimize(my_objective);
+  optimize(my_objective, &my_zrow);
   setExternalVariables();
   return *this;
 }
@@ -524,7 +523,7 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
 #endif
 
   // try to optimize az to 0
-  optimize(*paz);
+  optimize(*paz, pazRow);
 
   // Careful, we want to get the expression that is in
   // the tableau, not the one we initialized it with!
@@ -795,7 +794,6 @@ ClSimplexSolver::dualOptimize()
   Tracer TRACER(__FUNCTION__);
   cerr << "()" << endl;
 #endif
-  const ClLinearExpression *pzRow = rowExpression(my_objective);
   // need to handle infeasible rows
   while (!my_infeasibleRows.empty())
     {
@@ -811,26 +809,28 @@ ClSimplexSolver::dualOptimize()
       // make sure the row is still not feasible
       if (pexpr->constant() < 0.0)
 	{
-	double ratio = DBL_MAX;
-	double r;
+        bool fSetRatio = false;
+	T ratio;
+	T r;
 	ClVarToNumberMap &terms = pexpr->terms();
 	ClVarToNumberMap::iterator it = terms.begin();
 	for ( ; it != terms.end(); ++it )
 	  {
 	  const ClAbstractVariable *pv = (*it).first;
-	  Number c = (*it).second;
+	  T c = (*it).second;
 	  if (c > 0.0 && pv->isPivotable())
 	    {
-	    Number zc = pzRow->coefficientFor(*pv);
-	    r = zc/c; // FIXGJB r:= zc/c or zero, as ClSymbolicWeight-s
+	    ClSymbolicWeight zc = my_zrow.coefficientFor(*pv);
+	    r = zc/c;
 	    if (r < ratio)
 	      {
 	      pentryVar = pv;
 	      ratio = r;
+              fSetRatio = true;
 	      }
 	    }
 	  }
-	if (ratio == DBL_MAX)
+	if (fSetRatio == false)
 	  {
 	  cerr << "ratio == nil (DBL_MAX)" << endl;
 	  throw ExCLInternalError();
@@ -899,11 +899,9 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
       ++my_slackCounter;
       ReinitializeAutoPtr(peminus,new ClSlackVariable (my_slackCounter, "em"));
       pexpr->setVariable(*peminus,1.0);
-      // add emnius to the objective function with the appropriate weight
-      ClLinearExpression *pzRow = rowExpression(my_objective);
-      // FIXGJB: pzRow->addVariable(eminus,cn.strength().symbolicWeight() * cn.weight());
-      ClSymbolicWeight sw = cn.strength().symbolicWeight().times(cn.weight());
-      pzRow->setVariable(*peminus,sw.asDouble());
+      // add eminus to the objective function with the appropriate weight
+      ClSymbolicWeight sw = cn.strength().symbolicWeight() *cn.weight();
+      my_zrow.setVariable(*peminus,sw);
       my_errorVars[&cn].insert(peminus.get());
       noteAddedVariable(*peminus,my_objective);
       }
@@ -937,23 +935,15 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
       pexpr->setVariable(*peminus,1.0);
       // index the constraint under one of the error variables
       my_markerVars[&cn] = peplus.get();
-      ClLinearExpression *pzRow = rowExpression(my_objective);
-      // FIXGJB: pzRow->addVariable(eplus,cn.strength().symbolicWeight() * cn.weight());
-      ClSymbolicWeight sw = cn.strength().symbolicWeight().times(cn.weight());
-      double swCoeff = sw.asDouble();
+      ClSymbolicWeight sw = cn.strength().symbolicWeight() * cn.weight();
 #ifndef CL_NO_TRACE
-      if (swCoeff == 0) 
-	{
-	cerr << "sw == " << sw << endl
-	     << "cn == " << cn << endl;
-	cerr << "adding " << *peplus << " and " << *peminus 
-	     << " with swCoeff == " << swCoeff << endl;
-	}
+      cerr << "cn == " << cn << endl;
+      cerr << "adding " << *peplus << " and " << *peminus 
+           << " with sw == " << sw << endl;
 #endif      
-      pzRow->setVariable(*peplus,swCoeff);
+      my_zrow.setVariable(*peplus,sw);
       noteAddedVariable(*peplus,my_objective);
-      // FIXGJB: pzRow->addVariable(eminus,cn.strength().symbolicWeight() * cn.weight());
-      pzRow->setVariable(*peminus,swCoeff);
+      my_zrow.setVariable(*peminus,sw);
       noteAddedVariable(*peminus,my_objective);
       my_errorVars[&cn].insert(peminus.get());
       my_errorVars[&cn].insert(peplus.get());
@@ -992,30 +982,30 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
 
 // Minimize the value of the objective.  (The tableau should already
 // be feasible.)
+template <class T>
 void 
-ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
+ClSimplexSolver::optimize(const ClObjectiveVariable &zVar, ClGenericLinearExpression<T> *pzRow)
 {
 #ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << zVar << ")" << endl;
   cerr << *this << endl;
 #endif
-  ClLinearExpression *pzRow = rowExpression(zVar);
   assert(pzRow != NULL);
   const ClAbstractVariable *pentryVar = NULL;
   const ClAbstractVariable *pexitVar = NULL;
   while (true)
     {
-    Number objectiveCoeff = 0;
+    T objectiveCoeff = 0;
     // Find the most negative coefficient in the objective function
     // (ignoring the non-pivotable dummy variables).  If all
     // coefficients are positive we're done
-    ClVarToNumberMap &terms = pzRow->terms();
-    ClVarToNumberMap::iterator it = terms.begin();
+    ClGenericLinearExpression<T>::ClVarToCoeffMap &terms = pzRow->terms();
+    ClGenericLinearExpression<T>::ClVarToCoeffMap::iterator it = terms.begin();
     for (; it != terms.end(); ++it)
       {
       const ClAbstractVariable *pv = (*it).first;
-      Number c = (*it).second;
+      T c = (*it).second;
       if (pv->isPivotable() && c < objectiveCoeff)
 	{
 	objectiveCoeff = c;
@@ -1039,7 +1029,7 @@ ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
     double minRatio = DBL_MAX;
     ClTableauVarSet &columnVars = my_columns[pentryVar];
     ClTableauVarSet::iterator it_rowvars = columnVars.begin();
-    Number r = 0.0;
+    T r(0.0);
     for (; it_rowvars != columnVars.end(); ++it_rowvars)
       {
       const ClAbstractVariable *pv = *it_rowvars;
@@ -1049,7 +1039,7 @@ ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
       if (pv->isPivotable()) 
 	{
 	const ClLinearExpression *pexpr = rowExpression(*pv);
-	Number coeff = pexpr->coefficientFor(*pentryVar);
+	T coeff = pexpr->coefficientFor(*pentryVar);
 	// only consider negative coefficients
 	if (coeff < 0.0)
 	  {
