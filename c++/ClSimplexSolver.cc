@@ -131,11 +131,13 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
       const ClLinearExpression *pexpr = rowExpression(*(*it));
       if (pexpr == NULL )
 	{
-	pzRow->addVariable(*(*it),-1.0,my_objective,*this);
+	pzRow->addVariable(*(*it),-1.0 * cnconst.strength().symbolicWeight().asDouble(),
+			   my_objective,*this);
 	}
       else
 	{ // the error variable was in the basis
-	pzRow->addExpression(*pexpr,-1.0,my_objective,*this);
+	pzRow->addExpression(*pexpr,-1.0 * cnconst.strength().symbolicWeight().asDouble(),
+			     my_objective,*this);
 	}
       }
     }
@@ -330,15 +332,21 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
 
   if (it_eVars != my_errorVars.end())
     {
+    // FIXGJB
+    // This code is not needed since the variables are deleted
+    // when they are removed from the row --
+    // leaving it in results in double deletions
     // delete the constraint's error variables
-    ClTableauVarSet::const_iterator it_set = (it_eVars->second).begin();
-    for ( ; it_set != (it_eVars->second).end(); ++it_set)
-      {
-      delete *it_set;
-      }
+    //    ClTableauVarSet &evars_set = (*it_eVars).second;
+    //    ClTableauVarSet::const_iterator it_set = evars_set.begin();
+    //    for ( ; it_set != evars_set.end(); ++it_set)
+    //      {
+    //      delete *it_set;
+    //      }
     my_errorVars.erase(it_eVars);
     }
   delete &marker;
+
   optimize(my_objective);
   setExternalVariables();
   return *this;
@@ -896,8 +904,8 @@ ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
     {
     Number objectiveCoeff = 0;
     // Find the most negative coefficient in the objective function
-    // (ignoring dummy variables).  If all coefficients are positive
-    // we're done
+    // (ignoring the non-pivotable dummy variables).  If all
+    // coefficients are positive we're done
     ClVarToNumberMap &terms = pzRow->terms();
     ClVarToNumberMap::iterator it = terms.begin();
     for (; it != terms.end(); ++it)
@@ -1005,7 +1013,7 @@ ClSimplexSolver::pivot(const ClAbstractVariable &entryVar, const ClAbstractVaria
 // error variable.  (They can't both be basic.)  Fix the constant in
 // this expression.  Otherwise they are both nonbasic.  Find all of
 // the expressions in which they occur, and fix the constants in
-// those.  See the UIST paper for details.  void
+// those.  See the UIST paper for details.
 void 
 ClSimplexSolver::resetEditConstants(const vector<Number> &newEditConstants)
 {
@@ -1069,7 +1077,7 @@ ClSimplexSolver::resetStayConstants()
       {
       pexpr = rowExpression(*(*itStayMinusErrorVars));
       }
-    else
+    if (pexpr != NULL)
       {
       pexpr->set_constant(0.0);
       }
