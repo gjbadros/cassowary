@@ -17,10 +17,10 @@
 
 class ClStrength;
 
-ClStrength &clsRequired();
-ClStrength &clsStrong();
-ClStrength &clsMedium();
-ClStrength &clsWeak();
+const ClStrength &clsRequired();
+const ClStrength &clsStrong();
+const ClStrength &clsMedium();
+const ClStrength &clsWeak();
 
 class ClStrength {
  public:
@@ -46,7 +46,7 @@ class ClStrength {
     return xo; 
     }
 
-  virtual ClSymbolicWeight symbolicWeight() const
+  virtual const ClSymbolicWeight &symbolicWeight() const
     { return _symbolicWeight; }
 
  private:

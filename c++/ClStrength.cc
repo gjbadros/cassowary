@@ -12,7 +12,7 @@
 #include "ClStrength.h"
 
 // Use the singleton pattern for the strength objects
-ClStrength &clsRequired()
+const ClStrength &clsRequired()
 {
   // required is distinct by equality to this static object,
   // but I still use an especially high symbolic weight, just in case
@@ -21,20 +21,20 @@ ClStrength &clsRequired()
   return required_strength;
 }
 
-ClStrength &clsStrong()
+const ClStrength &clsStrong()
 {
   static ClStrength strong_strength("strong", 1.0, 0.0, 0.0);
   return strong_strength;
 }
 
-ClStrength &clsMedium()
+const ClStrength &clsMedium()
 {
   static ClStrength medium_strength("medium", 0.0, 1.0, 0.0);
   return medium_strength;
 }
 
 
-ClStrength &clsWeak()
+const ClStrength &clsWeak()
 {
   static ClStrength weak_strength("weak", 0.0, 0.0, 1.0);
   return weak_strength;

@@ -101,7 +101,7 @@ class ClSimplexSolver : public ClTableau {
   bool addConstraintNoException(const ClConstraint &cn);
 
   // Add an edit constraint for "v" with given strength
-  ClSimplexSolver &addEditVar(const ClVariable &v, ClStrength &strength = clsStrong())
+  ClSimplexSolver &addEditVar(const ClVariable &v, const ClStrength &strength = clsStrong())
     { 
       ClEditConstraint *pedit = new ClEditConstraint(v, strength);
       return addConstraint(*pedit);

@@ -20,12 +20,13 @@ addDelete1()
    {
    bool fOkResult = true; 
    ClVariable x("x");
-   ClSimplexSolver solver;
 
-   solver.addConstraint( ClLinearEquation( x, 100, clsWeak() ) );
     
    ClLinearInequality c10(x,cnLEQ,10.0);
    ClLinearInequality c20(x,cnLEQ,20.0);
+
+   ClSimplexSolver solver;
+   solver.addConstraint( ClLinearEquation( x, 100, clsWeak() ) );
     
    solver
      .addConstraint(c10)

@@ -25,7 +25,7 @@ class ClLinearInequality : public ClLinearConstraint {
  //// Constructors
  // ClLinearInequality(expr,...)  is expr >= 0
  ClLinearInequality(const ClLinearExpression &cle,
-		    const ClStrength strength = clsRequired(),
+		    const ClStrength &strength = clsRequired(),
 		    double weight = 1.0) :
    ClLinearConstraint(cle,strength, weight)
    { }
@@ -34,7 +34,7 @@ class ClLinearInequality : public ClLinearConstraint {
  ClLinearInequality(const ClVariable &clv,
 		    ClInequalityOperator op,
 		    const ClLinearExpression &cle,
-		    const ClStrength strength = clsRequired(),
+		    const ClStrength &strength = clsRequired(),
 		    double weight = 1.0) :
    ClLinearConstraint( cle, strength, weight)
    { 
@@ -54,7 +54,7 @@ class ClLinearInequality : public ClLinearConstraint {
  ClLinearInequality(const ClLinearExpression &cle,
 		    ClInequalityOperator op,
 		    const ClVariable &clv,
-		    const ClStrength strength = clsRequired(),
+		    const ClStrength &strength = clsRequired(),
 		    double weight = 1.0) :
    ClLinearConstraint( cle, strength, weight)
    { 
@@ -74,7 +74,7 @@ class ClLinearInequality : public ClLinearConstraint {
  ClLinearInequality(const ClLinearExpression &cle1,
 		    ClInequalityOperator op,
 		    const ClLinearExpression &cle2,
-		    const ClStrength strength = clsRequired(),
+		    const ClStrength &strength = clsRequired(),
 		    double weight = 1.0) :
    ClLinearConstraint( cle2, strength, weight)
    { 
@@ -94,7 +94,7 @@ class ClLinearInequality : public ClLinearConstraint {
  ClLinearInequality(const ClVariable &clv1,
 		    ClInequalityOperator op,
 		    const ClVariable &clv2,
-		    const ClStrength strength = clsRequired(),
+		    const ClStrength &strength = clsRequired(),
 		    double weight = 1.0) :
    ClLinearConstraint( clv2, strength, weight)
    { 

@@ -27,7 +27,7 @@ class ClLinearEquation : public ClLinearConstraint {
 
  // ClLinearEquation(expr,...)    is   expr == 0
  ClLinearEquation(const ClLinearExpression &cle,
-		  const ClStrength strength = clsRequired(),
+		  const ClStrength &strength = clsRequired(),
 		  double weight = 1.0) :
    ClLinearConstraint(cle,strength, weight)
    { }
@@ -35,7 +35,7 @@ class ClLinearEquation : public ClLinearConstraint {
  // ClLinearEquation(var,expr,...)  is   var == expr
  ClLinearEquation(const ClAbstractVariable &clv,
 		  const ClLinearExpression &cle,
-		  const ClStrength strength = clsRequired(),
+		  const ClStrength &strength = clsRequired(),
 		  double weight = 1.0) :
    ClLinearConstraint(cle,strength,weight)
    { _expression.addVariable(clv,-1.0); }
@@ -43,7 +43,7 @@ class ClLinearEquation : public ClLinearConstraint {
  // ClLinearEquation(expr,var,...) is   var == expr
  ClLinearEquation(const ClLinearExpression &cle,
 		  const ClAbstractVariable &clv,
-		  const ClStrength strength = clsRequired(),
+		  const ClStrength &strength = clsRequired(),
 		  double weight = 1.0) :
    ClLinearConstraint(cle,strength,weight)
    { _expression.addVariable(clv,-1.0); }
@@ -51,7 +51,7 @@ class ClLinearEquation : public ClLinearConstraint {
  // ClLinearEquation(expr,expr,...) is   expr == expr
  ClLinearEquation(const ClLinearExpression &cle1,
 		  const ClLinearExpression &cle2,
-		  const ClStrength strength = clsRequired(),
+		  const ClStrength &strength = clsRequired(),
 		  double weight = 1.0) :
    ClLinearConstraint(cle1,strength,weight)
    { _expression.addExpression(cle2,-1.0); }

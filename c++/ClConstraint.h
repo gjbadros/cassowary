@@ -50,7 +50,7 @@ public:
   virtual bool isStayConstraint() const
     { return false; }
 
-  virtual ClStrength strength() const
+  virtual const ClStrength &strength() const
     { return _strength; }
 
   virtual double weight() const

@@ -26,7 +26,7 @@ class ClLinearConstraint : public ClConstraint {
 
   // Constructor
   ClLinearConstraint(const ClLinearExpression &cle,
-		     const ClStrength strength = clsRequired(),
+		     const ClStrength &strength = clsRequired(),
 		     double weight = 1.0) :
     ClConstraint(strength, weight),
     _expression(cle)
