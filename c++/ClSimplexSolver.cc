@@ -1023,7 +1023,8 @@ ClSimplexSolver::DualOptimize()
 	    {
 	    Number zc = pzRow->CoefficientFor(v);
 	    r = zc/c; // FIXGJB r:= zc/c or Zero, as ClSymbolicWeight-s
-	    if (r < ratio)
+	    if (r < ratio || 
+                (ClApprox(r,ratio) && v.get_pclv() < entryVar.get_pclv()))
 	      {
 	      entryVar = v;
 	      ratio = r;
@@ -1229,13 +1230,10 @@ ClSimplexSolver::Optimize(ClVariable zVar)
       {
       ClVariable v = (*it).first;
       Number c = (*it).second;
-      if (v.IsPivotable() && c < objectiveCoeff)
+      if (v.IsPivotable() && c < 0.0 && (entryVar == clvNil || v.get_pclv() < entryVar.get_pclv()))
 	{
 	objectiveCoeff = c;
 	entryVar = v;
-	// A. Beurive' Tue Jul 13 23:03:05 CEST 1999 Why the most
-	// negative?  I encountered unending cycles of pivots!
-	// break; Pulled out to do Bland's rule properly --03/31/01 gjb
 	}
       }
     // if all coefficients were positive (or if the objective
