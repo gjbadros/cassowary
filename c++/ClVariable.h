@@ -98,13 +98,11 @@ typedef ClVariable *PClVariable;
 // Compare two double-s approximately, since equality is no good
 inline bool clApprox(double a, double b)
 {
-  double epsilon = 1.0e-8;
-  if (a == 0.0) {
-    return (fabs(b) < epsilon);
-  } else if (b == 0.0) {
-    return (fabs(a) < epsilon);
+  const double epsilon = 1.0e-8;
+  if (a > b) {
+    return (a - b) < epsilon;
   } else {
-    return (fabs(a-b) < fabs(a) * epsilon);
+    return (b - a) < epsilon;
   }
 }
 
