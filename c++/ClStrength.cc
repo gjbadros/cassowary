@@ -36,3 +36,4 @@ ClStrength::ClStrength(const String &name, double w1, double w2, double w3) :
   // just to be sure that this special case applies
   assert(nLevels() == 3);
 }
+

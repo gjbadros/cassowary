@@ -16,16 +16,20 @@
 
 class ClSymbolicWeight {
  public:
-  ClSymbolicWeight(int cLevels);
+  ClSymbolicWeight() 
+    { }
+
+  ClSymbolicWeight(int cLevels, double value = 0.0);
 
   ClSymbolicWeight(double w1 = 0.0, double w2 = 0.0, double w3 = 0.0);
 
   static ClSymbolicWeight &zero();
 
   ClSymbolicWeight times(Number n) const;
+  ClSymbolicWeight divideBy(Number n) const;
   ClSymbolicWeight plus(const ClSymbolicWeight &cl) const;
   ClSymbolicWeight minus(const ClSymbolicWeight &cl) const;
-  ClSymbolicWeight divideBy(Number n) const;
+
   bool lessThan(const ClSymbolicWeight &cl) const;
   bool lessThanOrEqual(const ClSymbolicWeight &cl) const;
   bool equal(const ClSymbolicWeight &cl) const;
@@ -33,10 +37,28 @@ class ClSymbolicWeight {
   bool greaterThanOrEqual(const ClSymbolicWeight &cl) const;
   bool isNegative() const;
 
-  ostream &printOn(ostream &xo);
+  ostream &printOn(ostream &xo) const
+    { 
+    vector<double>::const_iterator i = my_values.begin();
+    cout << *i;
+    for (++i; i != my_values.end(); ++i) 
+      {
+      cout << "," << *i;
+      }
+    }
 
+  int cLevels() const
+    { return my_values.size(); }
+
+  // FIXGJB: use a template function to generate these automatically
+  friend ostream& operator<<(ostream &xos, const ClSymbolicWeight &clsw)
+    { clsw.printOn(xos); return xos; }
 
  private:
   vector<double> my_values;
+
+  void push_back(double d) 
+    { my_values.push_back(d); }
+
 };
 #endif

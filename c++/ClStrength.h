@@ -43,7 +43,7 @@ class ClStrength {
     { return (this == &clsRequired()); }
 
   virtual ostream &printOn(ostream &xo) const
-    { xo << name(); }
+    { xo << name() << ":" << symbolicWeight(); }
 
   virtual ClSymbolicWeight symbolicWeight() const
     { return my_symbolicWeight; }
@@ -57,6 +57,9 @@ class ClStrength {
 
   void set_symbolicWeight(const ClSymbolicWeight &symbolicWeight)
     { my_symbolicWeight = symbolicWeight; }
+
+  friend ostream& operator<<(ostream &xos, const ClStrength &cls)
+    { cls.printOn(xos); return xos; }
 
 };
 
