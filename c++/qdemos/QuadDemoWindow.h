@@ -38,9 +38,9 @@ class QuadDemoWindow : public QWidget
   void paintEvent( QPaintEvent * );
   private slots:
  private:
-  DraggableBox db[4];
-  enum {cdb = 4};
-  ClPoint mp[4];
+  DraggableBox db[8];
+  enum {cdb = 8};
+  DraggableBox *const mp;
   ClSimplexSolver solver;
   ClEditConstraint *peditX;
   ClEditConstraint *peditY;

@@ -29,6 +29,7 @@
 
 QuadDemoWindow::QuadDemoWindow( QWidget *parent, const char *name )
   : QWidget(parent,name),
+    mp(db+4),
     peditX(NULL), peditY(NULL),
     idbDragging(-1)
 {
@@ -48,6 +49,7 @@ QuadDemoWindow::QuadDemoWindow( QWidget *parent, const char *name )
     .addPointStay(db[3].CenterPt(),weight *= 2)
     ;
     
+  // keep midpoints at midpoints
   solver
     .addConstraint(ClLinearEquation(mp[0].X(), (db[0].X() + db[1].X())/2))
     .addConstraint(ClLinearEquation(mp[0].Y(), (db[0].Y() + db[1].Y())/2))
@@ -60,6 +62,7 @@ QuadDemoWindow::QuadDemoWindow( QWidget *parent, const char *name )
     ;
 
 
+  // keep from turning inside out
   solver
     .addConstraint(ClLinearInequality(db[0].X() + 10, cnLEQ, db[2].X()))
     .addConstraint(ClLinearInequality(db[0].X() + 10, cnLEQ, db[3].X()))
@@ -71,6 +74,26 @@ QuadDemoWindow::QuadDemoWindow( QWidget *parent, const char *name )
     .addConstraint(ClLinearInequality(db[3].Y() + 10, cnLEQ, db[1].Y()))
     .addConstraint(ClLinearInequality(db[3].Y() + 10, cnLEQ, db[2].Y()))
     ;
+
+  int MaxX = 450;
+  int MaxY = 450;
+  solver
+    .addConstraint(ClLinearInequality(db[0].X(), cnGEQ, 0))
+    .addConstraint(ClLinearInequality(db[1].X(), cnGEQ, 0))
+    .addConstraint(ClLinearInequality(db[2].X(), cnGEQ, 0))
+    .addConstraint(ClLinearInequality(db[3].X(), cnGEQ, 0))
+    .addConstraint(ClLinearInequality(db[0].Y(), cnGEQ, 0))
+    .addConstraint(ClLinearInequality(db[1].Y(), cnGEQ, 0))
+    .addConstraint(ClLinearInequality(db[2].Y(), cnGEQ, 0))
+    .addConstraint(ClLinearInequality(db[3].Y(), cnGEQ, 0))
+    .addConstraint(ClLinearInequality(db[0].X(), cnLEQ, MaxX))
+    .addConstraint(ClLinearInequality(db[1].X(), cnLEQ, MaxX))
+    .addConstraint(ClLinearInequality(db[2].X(), cnLEQ, MaxX))
+    .addConstraint(ClLinearInequality(db[3].X(), cnLEQ, MaxX))
+    .addConstraint(ClLinearInequality(db[0].Y(), cnLEQ, MaxY))
+    .addConstraint(ClLinearInequality(db[1].Y(), cnLEQ, MaxY))
+    .addConstraint(ClLinearInequality(db[2].Y(), cnLEQ, MaxY))
+    .addConstraint(ClLinearInequality(db[3].Y(), cnLEQ, MaxY));
     
 }
 
@@ -173,10 +196,10 @@ void QuadDemoWindow::paintEvent( QPaintEvent * )
   p.drawLine(db[3].QCenterPt(),db[0].QCenterPt());
 
   // paint the inscribed parallelogram
-  p.drawLine(QPFromClP(mp[0]),QPFromClP(mp[1]));
-  p.drawLine(QPFromClP(mp[1]),QPFromClP(mp[2]));
-  p.drawLine(QPFromClP(mp[2]),QPFromClP(mp[3]));
-  p.drawLine(QPFromClP(mp[3]),QPFromClP(mp[0]));
+  p.drawLine(mp[0].QCenterPt(),mp[1].QCenterPt());
+  p.drawLine(mp[1].QCenterPt(),mp[2].QCenterPt());
+  p.drawLine(mp[2].QCenterPt(),mp[3].QCenterPt());
+  p.drawLine(mp[3].QCenterPt(),mp[0].QCenterPt());
 
   // paint the control points
   for (int i=0; i < cdb; i++)
