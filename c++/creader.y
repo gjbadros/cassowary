@@ -1,3 +1,18 @@
+/*
+ $Id$
+
+ Cassowary Incremental Constraint Solver
+ Original Smalltalk Implementation by Alan Borning
+ This C++ Implementation by Greg J. Badros, <gjb@cs.washington.edu>
+ http://www.cs.washington.edu/homes/gjb
+ (C) 1998 Alan Borning and Greg Badros
+ See ../COPYRIGHT for legal details regarding this software
+
+ creader.y
+ Contributed by Steve Wolfman
+*/
+
+
 %{
   /* C Declarations */
 
@@ -129,9 +144,9 @@ void yyerror(char * s)
 // aVars is an array of variables large enough to account for
 // each one that might be mentioned in a constraint (as tXX where
 // XX is some number).
-ClConstraint * parseConstraint(istream & in, ClVariable * aVars)
+ClConstraint * parseConstraint(istream &xi, ClVariable *pclv)
 {
-  yyarg arg(in, aVars);
+  yyarg arg(xi, pclv);
 
   if (yyparse(&arg) == 0) {// success
 #ifndef NDEEPDEBUG
