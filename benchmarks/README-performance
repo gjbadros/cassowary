@@ -1,0 +1,36 @@
+Cassowary-0.61 on merlin, a Pentium III/800MHz
+
+C++, Compiled w/ gcc-2.96
+
+300 cns, 300 variables
+(really 259 cns)
+add 1.9 msec
+resolve .2 msec
+remove .2 msec
+
+900 cns, 900 variables
+(really 783 cns)
+add 10. msec
+resolve .9 msec
+remove .6 msec
+
+
+Java, Sun JSDK 1.3.0 (with HotSpot JIT)
+
+300 cns, 300 variables
+(really 207 cns)
+add 1. msec
+resolve .3 msec
+remove .6 msec
+
+900 cns, 900 variables
+(really 611 cns)
+add 2.4 msec
+resolve 1.1 msec
+remove 2.3 msec
+
+
+(But note that these aren't exactly comparable because of the random
+number generator -- the divisor for adds and removes is always the
+*actual* number of cns, but it's faster to add the 207th constraint to a
+system with 206 constraints than to add the 259th to a system with 258).

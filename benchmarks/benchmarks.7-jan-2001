@@ -1,0 +1,111 @@
+ClTests 100 100 1000
+done adding 100 constraints [127 attempted, 27 exceptions]
+time per Add cn = 0.0006
+time per Resolve = 6e-05
+time per Remove cn = 0.0001
+
+ClTests 200 200 1000
+done adding 200 constraints [244 attempted, 44 exceptions]
+time per Add cn = 0.0011
+time per Resolve = 0.00014
+time per Remove cn = 0.00015
+
+ClTests 300 300 1000
+done adding 300 constraints [394 attempted, 94 exceptions]
+time per Add cn = 0.00253333
+time per Resolve = 0.00024
+time per Remove cn = 0.000366667
+
+ClTests 400 400 1000
+done adding 400 constraints [529 attempted, 129 exceptions]
+time per Add cn = 0.0169
+time per Resolve = 0.00029
+time per Remove cn = 0.000325
+
+ClTests 500 500 1000
+done adding 500 constraints [634 attempted, 134 exceptions]
+time per Add cn = 0.005
+time per Resolve = 0.00044
+time per Remove cn = 0.00036
+
+ClTests 600 600 1000
+done adding 600 constraints [768 attempted, 168 exceptions]
+time per Add cn = 0.00938333
+time per Resolve = 0.00052
+
+ClTests 800 800 1000
+
+ClTests 900 900 1000
+done adding 900 constraints [1207 attempted, 307 exceptions]
+time per Add cn = 0.0172222
+time per Resolve = 0.00099
+time per Remove cn = 0.000644444
+
+ClTests 1000 1000 1000
+done adding 1000 constraints [1325 attempted, 325 exceptions]
+time per Add cn = 0.01398
+time per Resolve = 0.00123
+time per Remove cn = 0.0007
+
+--------------
+
+java EDU.Washington.grad.gjb.cassowary.ClTests 100 100 1000
+done adding 100 constraints [127 attempted, 27 exceptions]
+time per Add cn = 9.0E-4
+time per Resolve = 1.1300000000000001E-4
+time per Remove cn = 3.1E-4
+
+java EDU.Washington.grad.gjb.cassowary.ClTests 200 200 1000
+done adding 200 constraints [246 attempted, 46 exceptions]
+time per Add cn = 7.25E-4
+time per Resolve = 2.03E-4
+time per Remove cn = 3.1E-4
+
+java EDU.Washington.grad.gjb.cassowary.ClTests 300 300 1000
+done adding 300 constraints [394 attempted, 94 exceptions]
+time per Add cn = 0.00138
+time per Resolve = 2.9099999999999997E-4
+time per Remove cn = 9.533333333333333E-4
+
+java EDU.Washington.grad.gjb.cassowary.ClTests 400 400 1000
+done adding 400 constraints [536 attempted, 136 exceptions]
+time per Add cn = 0.002615
+time per Resolve = 3.86E-4
+time per Remove cn = 6.475000000000001E-4
+
+java EDU.Washington.grad.gjb.cassowary.ClTests 500 500 1000
+done adding 500 constraints [644 attempted, 144 exceptions]
+time per Add cn = 0.00148
+time per Resolve = 5.669999999999999E-4
+time per Remove cn = 9.559999999999999E-4
+
+java EDU.Washington.grad.gjb.cassowary.ClTests 600 600 1000
+done adding 600 constraints [765 attempted, 165 exceptions]
+time per Add cn = 0.003595
+time per Resolve = 6.19E-4
+time per Remove cn = 0.042611666666666666
+
+java EDU.Washington.grad.gjb.cassowary.ClTests 700 700 1000
+done adding 700 constraints [975 attempted, 275 exceptions]
+time per Add cn = 0.0015185714285714286
+time per Resolve = 7.59E-4
+time per Remove cn = 0.0038914285714285717
+
+java EDU.Washington.grad.gjb.cassowary.ClTests 800 800 1000
+done adding 800 constraints [1102 attempted, 302 exceptions]
+time per Add cn = 0.0027600000000000003
+time per Resolve = 0.001001
+time per Remove cn = 0.0517175
+
+java EDU.Washington.grad.gjb.cassowary.ClTests 900 900 1000
+done adding 900 constraints [1219 attempted, 319 exceptions]
+time per Add cn = 0.002172222222222222
+time per Resolve = 0.0011690000000000001
+time per Remove cn = 0.002017777777777778
+
+java EDU.Washington.grad.gjb.cassowary.ClTests 1000 1000 1000
+done adding 1000 constraints [1363 attempted, 363 exceptions]
+time per Add cn = 0.001245
+time per Resolve = 0.001405
+time per Remove cn = 0.001849
+

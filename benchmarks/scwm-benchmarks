@@ -1,0 +1,35 @@
+On merlin, 2560x1024 (Xinerama XFree86 4.0 display)
+
+
+25 windows added
+scwm> s
+#<cl-timed-solver ncns:206; cols:204; infrows:0; ebvars:102; epvars:0; edvars: 0 .... >
+scwm> (cl-get-add-timings s)
+(0.09 198)
+scwm> (cl-get-resolve-timings s)
+(0.01 72)
+scwm> (cl-get-remove-timings s)
+(0.04 60)
+
+
+move a bunch of windows around
+scwm> (cl-get-resolve-timings s)
+(0.22 459)
+
+
+
+make a 2x2 tiled collection, along with 2 other windows related to that collection
+scwm> (cl-get-add-timings s)
+(0.48 532)
+scwm> (cl-get-resolve-timings s)
+(1.97 2927)
+scwm> (cl-get-remove-timings s)
+(0.21 299)
+
+More moves, etc.
+scwm> (cl-get-resolve-timings s)
+(2.32 3489)
+
+
+scwm> s
+#<cl-timed-solver ncns:249; cols:236; infrows:0; ebvars:118; epvars:0; edvars: 0...>
