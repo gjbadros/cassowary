@@ -1,0 +1,3 @@
+#!/bin/sh -
+# Run java version
+exec java -classpath ./classes EDU.Washington.grad.gjb.cassowary.ClTests "$@"
