@@ -37,7 +37,10 @@ For each implementation language, there is at least one example program;
 for some there are many.
 
 There is a wrapping of the C++ solver in Guile-Scheme -- see the guile/
-subdirectory.
+subdirectory.  Also, Anthony Beurivé has wrapped Cassowary for
+STk/Scheme.  His code is available at:
+
+  http://dept-info.labri.u-bordeaux.fr/~beurive/Code
 
 There is also a SWIG-generated wrapper of the C++ library making the
 solver available from the Python language.
@@ -49,9 +52,9 @@ own project(s).
 
 See also the SCWM (Scheme Constraints Window Manager) web page:
 
-http://huis-clos.mit.edu/scwm/
+http://vicarious-existence.mit.edu/scwm/
 
-SCWM, also by Greg Badros, is the most substantial application using
+Scwm, also by Greg Badros, is the most substantial application using
 this toolkit that we are aware of.
 
 ------------------------------------------------------------------
