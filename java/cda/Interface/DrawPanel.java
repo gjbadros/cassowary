@@ -787,8 +787,8 @@ class DrawPanel extends Panel {
     for ( a = 0; a < curConstr.size(); a++ ) 
       System.out.println((Constraint) curConstr.elementAt(a));
   
-    // System.out.println("Solver info:");
-    // System.out.println(solver);
+    System.out.println("Solver info:");
+    System.out.println(solver);
     System.out.println(solver.getInternalInfo());
   }
 
@@ -1674,6 +1674,9 @@ class DrawPanel extends Panel {
 
 /*
  * $Log$
+ * Revision 1.2  1998/05/09 00:30:32  gjb
+ * Remove cr-s
+ *
  * Revision 1.1  1998/05/09 00:11:13  gjb
  * Added
  *
