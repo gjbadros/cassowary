@@ -122,7 +122,7 @@ clean:
 	rm -f $(TESTS) *.o $(CL_LIBRARY)
 	@echo "Consider doing a \`make depend'"
 
-TAGS: $(SOURCES)
+TAGS: $(SOURCES) $(HEADERS)
 	etags $^
 
 cassowary-tests: $(TESTS)
