@@ -167,7 +167,7 @@ TAGS: $(SOURCES) $(HEADERS)
 cassowary-tests: $(TESTS)
 
 %: %.o $(CL_LIBRARY) $(OTHER_LIBS)
-	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
+	$(CPP) $(LDFLAGS) -o $@ $^ # $(LDLIBS) # uncomment if want dynlink
 
 cassowary-test:	$(TEST_OBJS)
 
