@@ -69,10 +69,24 @@ ClSimplexSolver::addConstraint(const ClConstraint &cn)
     }
   optimize(my_objective);
   setExternalVariables();
+  if (cn.isEditConstraint())
+    {
+    int i = my_prevEditConstants.size() - 1;
+    const ClEditConstraint *pcnEdit = dynamic_cast<const ClEditConstraint *>(&cn);
+    my_editVarMap[&pcnEdit->variable()] = new ClConstraintAndIndex(&cn,i);
+    }
   return *this;
 }
 
-ClSimplexSolver &
+// Same as above, but returns false if the constraint cannot be solved
+// (i.e., the resulting system would be unsatisfiable)
+// The above function "addConstraint" throws an exception in that case
+// which may be inconvenient
+// Note that we duplicate the code instead of using a try block
+// since one reason for avoiding the exception might be performance
+// (exceptions are not usually optimized for speed since they are
+// supposed to be exceptional)
+bool
 ClSimplexSolver::addConstraintNoException(const ClConstraint &cn)
 {
 #ifndef CL_NO_TRACE
@@ -88,12 +102,17 @@ ClSimplexSolver::addConstraintNoException(const ClConstraint &cn)
   if (!tryAddingDirectly(*pexpr))
     { // could not add directly
     if (!addWithArtificialVariable(*pexpr))
-      cerr << __FUNCTION__ << ": RequiredException would be thrown" << endl;
-      return *this;
+      return false;
     }
   optimize(my_objective);
   setExternalVariables();
-  return *this;
+  if (cn.isEditConstraint())
+    {
+    int i = my_prevEditConstants.size() - 1;
+    const ClEditConstraint *pcnEdit = dynamic_cast<const ClEditConstraint *>(&cn);
+    my_editVarMap[&pcnEdit->variable()] = new ClConstraintAndIndex(&cn,i);
+    }
+  return true;
 }
 
 
@@ -124,6 +143,20 @@ ClSimplexSolver::addPointStay(const ClPoint &clp, double weight)
 { 
   addStay(clp.X(),clsWeak(),weight);
   addStay(clp.Y(),clsWeak(),weight);
+  return *this;
+}
+
+
+ClSimplexSolver &
+ClSimplexSolver::removeAllEditVars()
+{
+  ClVarToConstraintAndIndexMap::const_iterator it = my_editVarMap.begin();
+  for (; it != my_editVarMap.end(); ++it)
+    {
+    const ClConstraintAndIndex *pcai = (*it).second;
+    const ClEditConstraint *pcnEdit = dynamic_cast<const ClEditConstraint *>(pcai->pconstraint);
+    removeEditVar(pcnEdit->variable());
+    }
   return *this;
 }
 
@@ -351,7 +384,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
 	  itEditMinusErrorVars = my_editMinusErrorVars.begin() + index;
 	vector<Number>::iterator 
 	  itPrevEditConstants = my_prevEditConstants.begin() + index;
-        removeColumn(**itEditMinusErrorVars);
+        ///        removeColumn(**itEditMinusErrorVars); // FIXGJBNOW
 	my_editPlusErrorVars.erase(itEditPlusErrorVars);
 	my_editMinusErrorVars.erase(itEditMinusErrorVars);
 	my_prevEditConstants.erase(itPrevEditConstants);
@@ -359,6 +392,8 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
 	break;
 	}
       }
+    const ClEditConstraint *pcnEdit = dynamic_cast<const ClEditConstraint *>(&cn);
+    my_editVarMap.erase(&pcnEdit->variable());
     }
 
   if (it_eVars != my_errorVars.end())
@@ -474,7 +509,7 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
   if (!clApprox(pazTableauRow->constant(),0.0))
     {
     delete removeRow(*paz);
-    removeColumn(*pav);
+    ///    removeColumn(*pav); //FIXGJBNOW
     delete pav;
     return false;
     }
@@ -768,6 +803,9 @@ ClSimplexSolver::dualOptimize()
 	  }
 	if (ratio == DBL_MAX)
 	  {
+          cerr << *this << endl;
+          this->printInternalInfo(cerr);
+          cerr << endl;
 	  cerr << "ratio == nil (DBL_MAX)" << endl;
 	  throw ExCLInternalError();
 	  }
@@ -1007,6 +1045,9 @@ ClSimplexSolver::optimize(const ClObjectiveVariable &zVar)
     // application.
     if (minRatio == DBL_MAX)
       {
+      cerr << *this << endl;
+      this->printInternalInfo(cerr);
+      cerr << endl;
       cerr << "objective function is unbounded!" << endl;
       throw ExCLInternalError();
       }
@@ -1063,6 +1104,9 @@ ClSimplexSolver::resetEditConstants(const vector<Number> &newEditConstants)
 #endif
   if (newEditConstants.size() != my_editPlusErrorVars.size())
     { // number of edit constants doesn't match the number of edit error variables
+    cerr << *this << endl;
+    this->printInternalInfo(cerr);
+    cerr << endl;
     cerr << "newEditConstants == " << newEditConstants << endl
 	 << "my_editPlusErrorVars == " << my_editPlusErrorVars << endl
 	 << "Sizes don't match!" << endl;
@@ -1207,6 +1251,15 @@ ClSimplexSolver::printOn(ostream &xo) const
 
   return xo;
 }
+
+ostream &
+ClSimplexSolver::printInternalInfo(ostream &xo) const
+{
+  super::printInternalInfo(xo);
+  xo << "Number of edit variables: " << my_editVarMap.size() << endl;
+  return xo;
+}
+
 
 ostream &operator<<(ostream &xo, const ClSimplexSolver &clss)
 {
