@@ -646,7 +646,7 @@ class ClSimplexSolver extends ClTableau
 	  entryVar = v;
 	}
       }
-      if (objectiveCoeff == 0)
+      if (objectiveCoeff == 0 || entryVar == null)
 	return;
       if (fTraceOn) traceprint("entryVar == " + entryVar + ", objectiveCoeff == " + objectiveCoeff);
 
