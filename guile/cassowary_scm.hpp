@@ -214,6 +214,11 @@ inline bool FIsClSimplexSolverScm(SCM scm)
 inline ClSimplexSolver *PsolverFromScm(SCM scm)
 { return (ClSimplexSolver *)(SCM_CDR(scm)); }
 
+inline void *PvFromScm(SCM scm)
+{ return reinterpret_cast<void *>(scm); }
+
+inline SCM ScmFromPv(const void *pv)
+{ return reinterpret_cast<SCM>(pv); }
 
 #endif
 

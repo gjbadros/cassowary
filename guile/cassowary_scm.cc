@@ -141,10 +141,51 @@ variable if you want its value to not change. */
     pclv = new ClVariable(n);
   }
 
-  return ScmMakeClVariable(pclv);
+  SCM answer = ScmMakeClVariable(pclv);
+  pclv->setPv(PvFromScm(answer));
+  return answer;
 }
 #undef FUNC_NAME
 
+
+SCWM_PROC (clv_attach_x, "clv-attach!", 2, 0, 0,
+           (SCM var, SCM obj))
+     /** Attach OBJ to VAR, undoing any previous attachments. 
+Use `clv-attached-object' to retreive OBJ later.  
+Consider instead using `set-object-property' and `object-property'. */
+#define FUNC_NAME s_clv_attach_x
+{
+  int iarg = 1;
+  ClVariable *pclv = NULL;
+  if (!FIsClVariableScm(var)) scm_wrong_type_arg(FUNC_NAME,iarg++,var);
+  pclv = PclvFromScm(var);
+  /* FIXGJB: should unprotect the prior object, or mark it
+     but to mark it I'd need to be sure that all cl-variables'
+     Pv() is a scheme object */
+  scm_protect_object(obj);
+  pclv->setPv(PvFromScm(obj));
+  return SCM_UNDEFINED;
+}
+#undef FUNC_NAME
+
+SCWM_PROC (clv_attached_object, "clv-attached-object", 1, 0, 0,
+           (SCM var))
+     /** Return the object attached to cl-variable VAR.
+Returns #f if no object was attached using `clv-attach!'.
+Consider instead using `set-object-property' and `object-property'. */
+#define FUNC_NAME s_clv_attached_object
+{
+  int iarg = 1;
+  ClVariable *pclv = NULL;
+  SCM obj = SCM_BOOL_F;
+  if (!FIsClVariableScm(var)) scm_wrong_type_arg(FUNC_NAME,iarg++,var);
+  pclv = PclvFromScm(var);
+  if (pclv->Pv()) {
+    obj = ScmFromPv(pclv->Pv());
+  }
+  return obj;
+}
+#undef FUNC_NAME
 
 
 SCWM_PROC(cl_value, "cl-value", 1, 0, 0,
@@ -690,7 +731,7 @@ number.  STRENGTH defaults to cls-required, FACTOR defaults to 1. */
   ClLinearEquation *peq = new ClLinearEquation(*pexpr,*pcls,nWeight);
 
   SCM answer = ScmMakeClLinearEquation(peq);
-  peq->setPv(reinterpret_cast<void *>(answer));
+  peq->setPv(PvFromScm(answer));
   return answer;
 }
 #undef FUNC_NAME
@@ -851,7 +892,7 @@ arbitrary constraints. */
   }
 
   SCM answer = ScmMakeClLinearInequality(pineq);
-  pineq->setPv(reinterpret_cast<void *>(answer));
+  pineq->setPv(PvFromScm(answer));
   return answer;
 }
 #undef FUNC_NAME
@@ -1146,7 +1187,7 @@ been added. */
       ClConstraint *pconstraint = PcnFromScm(constraint);
       psolver->addConstraint(*pconstraint);
       scm_protect_object(constraint);
-      pconstraint->setPv(reinterpret_cast<void *>(constraint));
+      pconstraint->setPv(PvFromScm(constraint));
     }
   } catch (const ExCLRequiredFailure &e) {
     // scm_misc_error(FUNC_NAME,e.description, SCM_EOL);
@@ -1511,7 +1552,7 @@ directly) will be listed. */
     const ClConstraint *pcn = (*it_marker).first;
     SCM cn = SCM_UNDEFINED;
     void *pv = pcn->Pv();
-    if (pv) cn = reinterpret_cast<SCM>(pv);
+    if (pv) cn = ScmFromPv(pv);
     else if (fInternalAlso) {
       const ClLinearEquation *peq = 
         dynamic_cast<const ClLinearEquation *>(pcn);
