@@ -25,8 +25,12 @@ PYTHON_INCLUDE = /uns/include/python1.5
 #CPPFLAGS = -O6 -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W
 #CPPFLAGS = -O6 -DNO_REQUIRED_EXCEPTIONS -DCL_NO_TRACE -Wall -pedantic -W
 #CPPFLAGS = -O6 -pg -DCL_NO_TRACE -Wall -pedantic -W
-CPPFLAGS = -g -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W
+CPPFLAGS = -g -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W #-DUSE_GC
+#CPPFLAGS = -g -DCL_NO_TRACE -DNO_SOLVER_STATS -DCL_SOLVER_CHECK_INTEGRITY -Wall -pedantic -W
 #CPPFLAGS = -g -Wall -pedantic -W
+
+OTHER_LIBS =
+# OTHER_LIBS = ../../gc/gc.a
 
 #LIB=cassowary-optimized
 LIB=cassowary-notrace
@@ -112,34 +116,34 @@ TAGS: $(SOURCES) $(HEADERS)
 
 cassowary-tests: $(TESTS)
 
-ClTests: ClTests.o $(LIB_FILE)
+ClTests: ClTests.o $(LIB_FILE) $(OTHER_LIBS)
 	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-ClLeakTest: ClLeakTest.o $(LIB_FILE)
+ClLeakTest: ClLeakTest.o $(LIB_FILE) $(OTHER_LIBS)
 	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-ClSubgraphTest: ClSubgraphTest.o $(LIB_FILE)
+ClSubgraphTest: ClSubgraphTest.o $(LIB_FILE) $(OTHER_LIBS)
 	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-ClTestColumns: ClTestColumns.o $(LIB_FILE)
+ClTestColumns: ClTestColumns.o $(LIB_FILE) $(OTHER_LIBS)
 	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-test-ClStrength: test-ClStrength.o ClStrength.o ClSymbolicWeight.o $(LIB_FILE)
+test-ClStrength: test-ClStrength.o ClStrength.o ClSymbolicWeight.o $(LIB_FILE) $(OTHER_LIBS)
 	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-test-ClLinearExpression: test-ClLinearExpression.o $(LIB_FILE)
+test-ClLinearExpression: test-ClLinearExpression.o $(LIB_FILE) $(OTHER_LIBS)
 	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-test-ClVariable: test-ClVariable.o $(LIB_FILE)
+test-ClVariable: test-ClVariable.o $(LIB_FILE) $(OTHER_LIBS)
 	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-test-ClConstraint: test-ClConstraint.o $(LIB_FILE)
+test-ClConstraint: test-ClConstraint.o $(LIB_FILE) $(OTHER_LIBS)
 	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-test-ClBounds: test-ClBounds.o $(LIB_FILE)
+test-ClBounds: test-ClBounds.o $(LIB_FILE) $(OTHER_LIBS)
 	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-test-ClSimplexSolver: test-ClSimplexSolver.o $(LIB_FILE)
+test-ClSimplexSolver: test-ClSimplexSolver.o $(LIB_FILE) $(OTHER_LIBS)
 	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 cassowary-test:	$(TEST_OBJS)
