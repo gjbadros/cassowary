@@ -23,6 +23,9 @@ class ClDouble extends Number
   public ClDouble()
     { this(0.0); }
 
+  public final Object clone()
+    { return new ClDouble(value); }
+
   public final double doubleValue()
     { return value; }
 
@@ -57,7 +60,10 @@ class ClDouble extends Number
     }
 
   public final int hashCode()
-    { return (int) java.lang.Double.doubleToLongBits(value); }
+    { 
+      System.err.println("ClDouble.hashCode() called!");
+      return (int) java.lang.Double.doubleToLongBits(value); 
+    }
 
   private double value;
 }
