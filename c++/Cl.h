@@ -38,7 +38,8 @@
 #include "cassowary/ClEditConstraint.h"
 #include "cassowary/ClStayConstraint.h"
 #include "cassowary/ClReader.h"
+#include "cassowary/ClFDBinaryOneWayConstraint.h"
 
-extern char *szCassowaryVersion;
+extern const char *szCassowaryVersion;
 
 #endif

@@ -17,6 +17,7 @@ test_PROGRAMS = \
 	ClParseTest \
 	ClSubgraphTest \
 	ClLeakTest \
+	ClFDTests \
 	test-ClConstraint \
 	test-ClLinearExpression \
 	test-ClSimplexSolver \
@@ -25,11 +26,16 @@ test_PROGRAMS = \
 
 
 
-bugs_PROGRAMS = \
-	ClBug0 \
-	ClBug1 \
-	ClBug2
+#bugs_PROGRAMS = \
+#	ClBug0 \
+#	ClBug1 \
+#	ClBug2
 
+#ClBug0_SOURCES = ClBug0.cc
+
+#ClBug1_SOURCES = ClBug1.cc
+
+#ClBug2_SOURCES = ClBug2.cc
 
 
 libcassowary_a_SOURCES = \
@@ -37,6 +43,7 @@ libcassowary_a_SOURCES = \
 	ClConstraint.cc \
 	ClLinearExpression.cc \
 	ClSimplexSolver.cc \
+	ClFDSolver.cc \
 	ClStrength.cc \
 	ClSymbolicWeight.cc \
 	ClTableau.cc \
@@ -83,7 +90,9 @@ pkginclude_HEADERS = \
 	ClLinearExpression.h \
 	ClLinearExpression_fwd.h \
 	ClLinearInequality.h \
+	ClSolver.h \
 	ClSimplexSolver.h \
+	ClFDSolver.h \
 	ClStayConstraint.h \
 	ClStrength.h \
 	ClSymbolicWeight.h \
@@ -103,6 +112,8 @@ pkginclude_HEADERS = \
 
 ClTests_SOURCES = ClTests.cc
 
+ClFDTests_SOURCES = ClFDTests.cc
+
 QocaBench_SOURCES = QocaBench.cc
 
 ClParseTest_SOURCES = ClParseTest.cc
@@ -121,12 +132,6 @@ test_ClStrength_SOURCES = test-ClStrength.cc
 
 test_ClVariable_SOURCES = test-ClVariable.cc
 
-
-ClBug0_SOURCES = ClBug0.cc
-
-ClBug1_SOURCES = ClBug1.cc
-
-ClBug2_SOURCES = ClBug2.cc
 
 ClReader-lex.cc: ClReader.l ClReader.h
 	$(LEX) -Pcl -o$@ $<

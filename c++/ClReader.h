@@ -82,6 +82,8 @@ struct ClParseData {
       : _xi(xi), _lookup_func(lookup_func) { }
 
   ClConstraint *Pcn() { return _pcn; }
+
+  ClVarSet _readOnlyVarsSoFar;
       
   istream & _xi;
   ClConstraint * _pcn;

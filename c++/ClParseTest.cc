@@ -39,7 +39,12 @@ int main()
     try {
       if ((pcn = PcnParseConstraint(xiLine,ClVarLookupInMap(&mapVars,false)))
           != NULL) {
-        solver.AddConstraint(*pcn);
+        cerr << "Got constraint: " << *pcn << "... ";
+        if (solver.AddConstraintNoException(*pcn))
+          cerr << "Added!";
+        else
+          cerr << "Inconsistent!";
+        cerr << endl;
       }
     }
     catch (const ExCLParseError &e) {

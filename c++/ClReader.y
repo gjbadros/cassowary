@@ -11,6 +11,26 @@
  ClReader.y
  Original implementation contributed by Steve Wolfman
  Subsequently largely revised by Greg J. Badros
+
+ Supports parsing of read-only variables in constraints via "?" suffix
+ annotations on variables.  If a variable is followed by "?" in any of
+ its occurrences in the constraint, that variable is deemed read-only
+ and entered into the constraint object as such.  E.g.,
+
+  x = 2*y?
+
+  is a one-way constraint that sets x from y's value.
+
+  x = y + y?
+    and
+  x = y? + y
+ 
+  are identical one-way constraints with y read-only.  One would prefer
+  to have it written like so:
+
+  x = y? + y?
+
+  but it need not be, and no warning or error is raised.
 */
 
 
@@ -61,6 +81,7 @@ void yyerror(const char *sz);
 
 %token <num> NUM
 %token <pclv> VAR
+%token <pclv> RO_VAR
 
 %token GEQ
 %token LEQ
@@ -88,6 +109,8 @@ inequality: expr GEQ expr { $$ = new ClLinearInequality(*$1, cnGEQ, *$3); }
 
 expr:     NUM                { $$ = new ClLinearExpression($1);        }
 	| VAR                { $$ = new ClLinearExpression(*$1);       }
+        | RO_VAR             { $$ = new ClLinearExpression(*$1);
+                               ((ClParseData*)YYPARSE_PARAM)->_readOnlyVarsSoFar.insert(*$1); }
 	| expr '+' expr      { $$ = new ClLinearExpression(*$1 + *$3); }
 	| expr '-' expr      { $$ = new ClLinearExpression(*$1 - *$3); }
 	| expr '*' expr      { $$ = new ClLinearExpression(*$1 * *$3); }
@@ -118,6 +141,7 @@ ClConstraint *PcnParseConstraint(istream &xi, const ClVarLookupFunction &lookup_
     cerr << *cl_parse_data.Pcn() << endl;
 #endif
     cl_parse_data.Pcn()->ChangeStrength(strength);
+    cl_parse_data.Pcn()->AddROVars(cl_parse_data._readOnlyVarsSoFar);
     return cl_parse_data.Pcn();
   }
   else { // failed

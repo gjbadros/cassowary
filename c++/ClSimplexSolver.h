@@ -19,6 +19,7 @@
 
 #include <stack>
 #include "Cassowary.h"
+#include "ClSolver.h"
 #include "ClTableau.h"
 #include "ClLinearInequality.h"
 #include "ClStrength.h"
@@ -36,7 +37,7 @@ class ExCLRequiredFailureWithExplanation;
 
 // ClSimplexSolver encapsulates the solving behaviour
 // of the cassowary algorithm
-class ClSimplexSolver : public ClTableau {
+class ClSimplexSolver : public ClSolver, public ClTableau {
  protected: typedef ClTableau super;
   class ClEditInfo;
   typedef ClMap<ClVariable, ClEditInfo *> ClVarToEditInfoMap;
@@ -360,12 +361,6 @@ class ClSimplexSolver : public ClTableau {
   bool FIsConstraintSatisfied(const ClConstraint &pcn) const
     { return FIsConstraintSatisfied(&pcn); }
 
-  void SetPv(void *pv)
-    { _pv = pv; }
-
-  void *Pv() const
-    { return _pv; }
-
   // re-set all the external variables to their current values
   // most importantly, this re-calls all the ChangeClv callbacks
   // (which might be used to copy the ClVariable's value to another
@@ -612,4 +607,3 @@ ostream &operator<<(ostream &xo, const ClSimplexSolver::ClVarToEditInfoMap &mapV
 
 
 #endif
-

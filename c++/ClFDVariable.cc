@@ -16,10 +16,11 @@
 #define CONFIG_H_INCLUDED
 #endif
 
+// Use < > for ClFDVariable-s, instead of [ ]
 #ifndef CL_NO_IO
 ostream &ClFDVariable::PrintOn(ostream &xo) const
 {  
-  xo << "[" << Name() << ":" << _value << "]";
+  xo << "<" << Name() << ":" << _value << ">";
   return xo;
 }
 #endif

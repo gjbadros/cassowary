@@ -43,7 +43,8 @@ DIGIT [0-9]
 ALPHA [A-Za-z]
 ALPHANUM [A-Za-z0-9]
 ID_OK_PUNC [-\[\]]
-ID {ALPHA}({ALPHANUM}|{ID_OK_PUNC})*
+RO_ANNOTATION "?"
+ID {ALPHA}({ALPHANUM}|{ID_OK_PUNC})*({RO_ANNOTATION})?
 NUMID "{"{DIGIT}+"}"
 ws [ \t\n]+
 
@@ -60,11 +61,18 @@ ws [ \t\n]+
 
 {ID} 			{       /* Lookup the variable name */
       ClParseData *pclpd = ((ClParseData *) YYLEX_PARAM);
-      const string str(yytext);
-      ClVariable *pclv = pclpd->_lookup_func(str);
+      int cch = strlen(yytext);
+      ClVariable *pclv = NULL;
+      bool fReadOnly = false;
+      if (yytext[cch-1] == '?') {
+	yytext[cch-1] = '\0';
+	fReadOnly = true;
+      }
+      const string str = string(yytext);
+      pclv = pclpd->_lookup_func(str);
       if (!pclv->IsNil()) {
         lvalp->pclv = pclv;
-        return VAR;
+        return fReadOnly?RO_VAR:VAR;
       } else {
 	pxi_lexer = NULL;
 	yy_flush_buffer(YY_CURRENT_BUFFER);

@@ -28,7 +28,7 @@
 #define CONFIG_H_INCLUDED
 #endif
 
-char *szCassowaryVersion = VERSION;
+const char *szCassowaryVersion = VERSION;
 
 
 // Need to delete all expressions

@@ -22,6 +22,7 @@
 #include "Cassowary.h"
 #include "ClLinearExpression.h"
 #include "ClStrength.h"
+#include <set>
 
 class ClSimplexSolver;
 
@@ -34,8 +35,9 @@ public:
 
   ClConstraint(const ClStrength &strength = ClsRequired(), double weight = 1.0 ) :
     _strength(strength),
-    _weight(weight),
+    _readOnlyVars(),
     _pv(0),
+    _weight(weight),
     _times_added(0)
     { 
       CtrTracer(__FUNCTION__,this);
@@ -49,7 +51,8 @@ public:
   // Return my linear Expression.  (For linear equations, this
   // constraint represents Expression=0; for linear inequalities it
   // represents Expression>=0.)
-  virtual ClLinearExpression Expression() const = 0;
+  virtual ClLinearExpression Expression() const
+    { assert(false); }
 
   // Returns true if this is an edit constraint
   virtual bool IsEditConstraint() const
@@ -110,6 +113,22 @@ public:
       }
     }
 
+  bool FIsReadOnlyVar(ClVariable v) const { 
+    return !(_readOnlyVars.find(v) == _readOnlyVars.end());
+  }
+
+  const ClVarSet ReadOnlyVars() const {
+    return _readOnlyVars;
+  }
+
+  ClConstraint &AddROVars(const ClVarSet &setClv) {
+    for ( ClVarSet::const_iterator it = setClv.begin(); 
+          it != setClv.end(); ++it) {
+      _readOnlyVars.insert(*it);
+    }
+    return *this;
+  }
+
   friend ClSimplexSolver;
 private:
 
@@ -127,6 +146,8 @@ private:
 
   /// instance variables
   ClStrength _strength;
+
+  ClVarSet _readOnlyVars;
 
   double _weight;
 
