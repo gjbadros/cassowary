@@ -1,0 +1,27 @@
+#!/bin/zsh -f
+CXX_SIZES=(100 200 300 400 500 600 700 800 900 1000)
+JAVA_SIZES=(100 200 300 400 500 600 700 800 900 1000)
+RESOLVES=1000
+
+# C++
+pushd c++
+for i in $CXX_SIZES; do
+  echo "ClTests $i $i $RESOLVES"
+  ./ClTests $i $i $RESOLVES | grep "^time per"
+  echo
+done
+popd
+
+echo "--------------"
+echo
+
+# Java
+pushd java
+export CLASSPATH=/home/gjb/java-jar/java_cup-10k-b2.jar:/home/gjb/cassowary/java/classes:.
+export PATH=/usr/java/jdk1.3/bin:$PATH
+for i in $JAVA_SIZES; do
+  echo "java EDU.Washington.grad.gjb.cassowary.ClTests $i $i $RESOLVES"
+  java EDU.Washington.grad.gjb.cassowary.ClTests $i $i $RESOLVES | grep "^time per"
+  echo
+done
+popd
