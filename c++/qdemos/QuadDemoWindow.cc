@@ -41,6 +41,7 @@ QuadDemoWindow::QuadDemoWindow( QWidget *parent, const char *name )
     .addConstraint(ClLinearEquation(mp4.Yvar(),(db4.Yvar() + db1.Yvar())/2))
     ;
 
+  setBackgroundMode(NoBackground);
 }
 
 QuadDemoWindow::~QuadDemoWindow()
@@ -141,9 +142,11 @@ void QuadDemoWindow::mouseMoveEvent( QMouseEvent *e )
 void QuadDemoWindow::paintEvent( QPaintEvent * )
 {
   // Create the pixmap and fill it with the widget's background
-  QBitmap pm( size() );
 #ifdef USING_PIXMAP_NOT_BITMAP
+  QPixmap pm( size() );
   pm.fill( backgroundColor() );
+#else
+  QBitmap pm( size() );
 #endif
   
   // Paint the pixmap
@@ -168,7 +171,14 @@ void QuadDemoWindow::paintEvent( QPaintEvent * )
   db4.DrawMe(&p);
   
   p.end();
-  
+
   // Copy the pixmap to the QuadDemoWindow widget
+#ifdef USING_PIXMAP_NOT_BITMAP
+  QPainter painter;
+  painter.begin(this);
+  painter.drawPixmap(0,0,pm);
+  painter.end();
+#else
   bitBlt( this, 0, 0, &pm );
+#endif
 }
