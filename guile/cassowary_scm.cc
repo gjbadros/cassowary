@@ -78,7 +78,7 @@ SCM mark_cl_variable(SCM scm)
 size_t free_cl_variable(SCM scm)
 {
   ClVariable *pclv = PclvFromScm(scm);
-  delete pclv;
+  //  delete pclv;  // FIXGJB: don't delete until memory audit
   return 0;
 }
 
@@ -598,9 +598,6 @@ long SCMTYPEID;
 inline bool FIsClLinearEquationScm(SCM scm) 
 { return SCM_NIMP(scm) && SCM_CAR(scm) == (SCM) SCMTYPEID; }
 
-inline ClConstraint *PcnFromScm(SCM scm)
-{ return (ClConstraint *)(SCM_CDR(scm)); }
-
 inline ClLinearEquation *PeqFromScm(SCM scm)
 { return (ClLinearEquation *)(SCM_CDR(scm)); }
 
@@ -739,16 +736,6 @@ long SCMTYPEID;
 inline bool FIsClLinearInequalityScm(SCM scm) 
 { return SCM_NIMP(scm) && SCM_CAR(scm) == (SCM) SCMTYPEID; }
 
-inline bool FIsClConstraintScm(SCM scm) {
-  if (!SCM_NIMP(scm)) return false; 
-  SCM car = SCM_CAR(scm);
-
-  if (car == (SCM) scm_tc16_cl_equation) return true;
-  if (car == (SCM) scm_tc16_cl_inequality) return true;
-
-  return false;
-}
-
 inline ClLinearInequality *PineqFromScm(SCM scm)
 { return (ClLinearInequality *)(SCM_CDR(scm)); }
 
@@ -832,6 +819,91 @@ SCWM_PROC (make_cl_inequality, "make-cl-inequality", 3, 2, 0,
   SCM_NEWCELL(answer);
   SCM_SETCAR(answer, (SCM) SCMTYPEID);
   SCM_SETCDR(answer, (SCM) pineq);
+  SCM_ALLOW_INTS;
+
+  return answer;
+}
+#undef FUNC_NAME
+
+
+//// cl-constraint -- a wrapper for cl-equation and cl-inequality
+/// NOT a new SMOB type, just for convenience
+
+inline bool FIsClConstraintScm(SCM scm) {
+  if (!SCM_NIMP(scm)) return false; 
+  SCM car = SCM_CAR(scm);
+
+  if (car == (SCM) scm_tc16_cl_equation) return true;
+  if (car == (SCM) scm_tc16_cl_inequality) return true;
+
+  return false;
+}
+
+inline ClConstraint *PcnFromScm(SCM scm)
+{ return (ClConstraint *)(SCM_CDR(scm)); }
+
+SCWM_PROC (cl_constraint_p, "cl-constraint?", 1, 0, 0,
+           (SCM scm))
+#define FUNC_NAME s_cl_constraint_p
+{
+  return SCM_BOOL_FromF(FIsClConstraintScm(scm));
+}
+#undef FUNC_NAME
+
+
+SCWM_PROC (make_cl_constraint, "make-cl-constraint", 3, 2, 0,
+           (SCM exprA, SCM op, SCM exprB, SCM strength, SCM weight))
+#define FUNC_NAME s_make_cl_constraint
+{
+  int iarg = 1;
+
+  ClLinearExpression *pexprA = NULL;
+  ClLinearExpression *pexprB = NULL;
+
+  if (NULL == (pexprA = PexprNewConvertSCM(exprA))) {
+    scm_wrong_type_arg(FUNC_NAME, iarg++, exprA);
+  }
+  if (NULL == (pexprB = PexprNewConvertSCM(exprB))) {
+    scm_wrong_type_arg(FUNC_NAME, iarg++, exprB);
+  }
+  if (!(FIsClLinearExpressionScm(exprA) || FIsClVariableScm(exprA) ||
+        FIsClLinearExpressionScm(exprB) || FIsClVariableScm(exprB))) {
+    scm_misc_error(FUNC_NAME,"One of arguments must contain a variable",SCM_EOL);
+  }
+
+  ClStrength *pcls = &clsRequired();
+  if (FIsClStrengthScm(strength)) {
+    pcls = PclsFromScm(strength);
+  } else if (!FUnsetSCM(strength)) {
+    scm_wrong_type_arg(FUNC_NAME,iarg++,strength);
+  }
+
+  double nWeight = 1.0;
+  if (gh_number_p(weight)) {
+    nWeight = gh_scm2double(weight);
+  } else if (!FUnsetSCM(weight)) {
+    scm_wrong_type_arg(FUNC_NAME,iarg++,weight);
+  }
+
+  ClConstraint *pcn = NULL;
+  SCM id = (SCM) scm_tc16_cl_inequality;
+  if (op == gh_lookup("<=")) {
+    pcn = new ClLinearInequality(*pexprA,cnLEQ,*pexprB,*pcls,nWeight);
+  } else if (op == gh_lookup(">=")) {
+    pcn = new ClLinearInequality(*pexprA,cnGEQ,*pexprB,*pcls,nWeight);
+  } else if (op == gh_lookup("=")) {
+    pcn = new ClLinearEquation(*pexprA,*pexprB,*pcls,nWeight);
+    id = (SCM) scm_tc16_cl_equation;
+  } else {
+    scm_wrong_type_arg(FUNC_NAME, 2, op);
+  }
+ 
+  SCM answer;
+
+  SCM_DEFER_INTS;
+  SCM_NEWCELL(answer);
+  SCM_SETCAR(answer, id);
+  SCM_SETCDR(answer, (SCM) pcn);
   SCM_ALLOW_INTS;
 
   return answer;
