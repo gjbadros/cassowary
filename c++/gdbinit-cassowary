@@ -1,5 +1,5 @@
 define dp
-call (void) (&$arg0->printOn(cerr))
+call (void) (&($arg0)->printOn(cerr))
 echo \n
 end
 document dp

@@ -104,7 +104,7 @@ main( int argc, char **argv )
       }
     }
     
-    cout << "all done with input log." 
+    cout << "all done with input log.\n" 
          << "Time processing = " << timer.ElapsedTime() << endl;
 
   }

@@ -1,3 +1,16 @@
+Mon Mar  1 15:11:52 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClVariable.h: Added explict copy ctr.
+
+	* c++/ClEditConstraint.h, c++/ClStayConstraint.h: Changed output
+ 	format so parentheses started by super:: call to ClConstraint.h
+ 	are closed properly.
+
+	* c++/ClSimplexSolver.h, c++/ClSimplexSolver.cc: Undo removing a
+ 	pass by reference of ClVariable when used as an output argument.
+  	Added printing for ClEditInfo class instancesm,
+ 	ClVarToEditInfoMap.
+
 Mon Mar  1 13:46:48 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* README: Updated for version 0.31.

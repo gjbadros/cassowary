@@ -15,6 +15,7 @@ with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
 * Changes to C++
 ** Some bug fixes -- pass ClVariable-s around by value instead of const
 & since they are now a handle class.
+** Changed output format for ClEditConstraint, ClStayConstraint instances
 ** Use a function-object for controlling lookup/creation of variables in PcnParseConstraint
 ** Fix bugs in creader.y parser (did not accept parens or division
 before).  Introduced "==" as a a synonym for "="
