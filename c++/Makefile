@@ -10,7 +10,10 @@
 CC = gcc
 CPP = egcs-g++
 CFLAGS = -g -Wall
-CPPFLAGS = -g -Wall -L/uns/lib/egcs
+# Below line is for egcs-1.0
+#CPPFLAGS = -g -Wall -L/uns/lib/egcs
+# Below line is for egcs-1.01 -- this makes exceptions work for me!
+CPPFLAGS = -g -Wall -L/uns/egcs-1.01/lib
 CXX = $(CPP)
 # -falt-external-templates
 LDFLAGS = -L/uns/lib/egcs
@@ -19,7 +22,7 @@ TEST_OBJS = ClStrength.o ClSymbolicWeight.o ClLinearExpression.o \
 		 ClConstraint.o ClTableau.o ClSimplexSolver.o ClAbstractVariable.o
 TEST_SRCS = $(OBJS:.o=.cc)
 TESTS = test-ClStrength test-ClVariable test-ClLinearExpression test-ClConstraint \
-	test-ClSimplexSolver
+	test-ClSimplexSolver ClTests
 
 SOURCES = $(wildcard *.cc)
 
@@ -48,6 +51,9 @@ TAGS: $(SOURCES)
 	etags $^
 
 cassowary-tests: $(TESTS)
+
+ClTests: ClTests.o $(TEST_OBJS)
+	$(CPP) $(LDFLAGS) -o $@ $^
 
 test-ClStrength: test-ClStrength.o ClStrength.o ClSymbolicWeight.o
 	$(CPP) $(LDFLAGS) -o $@ $^
