@@ -22,7 +22,7 @@
 #include "Cassowary.h"
 #include "ClLinearExpression.h"
 #include "ClStrength.h"
-#include <set>
+#include "ClTypedefs.h"
 #include <string>
 
 class ClSimplexSolver;
