@@ -29,7 +29,7 @@ public:
     { return false; }
   bool isRestricted() const
     { return true; }
-}
+};
 
 
 class ClObjectVariable: public ClAbstractVariable {
@@ -40,7 +40,7 @@ public:
     { return false; }
   bool isRestricted() const
     { return false; }
-}
+};
 
 class ClSlackVariable: public ClAbstractVariable {
 public:
@@ -50,7 +50,7 @@ public:
     { return true; }
   bool isRestricted() const
     { return true; }
-}  
+};
 
 class ClVariable: public ClAbstractVariable {
 public:
@@ -84,5 +84,5 @@ public:
 
 private:
   Number my_value;
-}
+};
 
