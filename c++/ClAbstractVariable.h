@@ -20,7 +20,7 @@
 #include <stdio.h> /* for sprintf */
 #include "Cassowary.h"
 #include "ClErrors.h"
-#include "auto_ptr.h"
+#include <memory>
 
 #ifdef USE_GC
 class ClAbstractVariable : public gc {

@@ -17,7 +17,7 @@
 #include "ClSlackVariable.h"
 #include "ClObjectiveVariable.h"
 #include "ClDummyVariable.h"
-#include "auto_ptr.h"
+#include "cl_auto_ptr.h"
 #include <algorithm>
 #include <float.h>
 #include <strstream>
@@ -29,7 +29,6 @@
 #endif
 
 const char *szCassowaryVersion = VERSION;
-
 
 // Need to delete all expressions
 // and all slack and dummy variables
@@ -1017,11 +1016,11 @@ ClSimplexSolver::NewExpression(const ClConstraint *pcn,
   cerr << "cn.IsRequired() == " << pcn->IsRequired() << endl;
 #endif
   const ClLinearExpression &cnExpr = pcn->Expression();
-  auto_ptr<ClLinearExpression> pexpr ( new ClLinearExpression(cnExpr.Constant()) );
-  auto_ptr<ClSlackVariable> pslackVar;
-  auto_ptr<ClDummyVariable> pdummyVar;
-  auto_ptr<ClSlackVariable> peminus(0);
-  auto_ptr<ClSlackVariable> peplus(0);
+  cl_auto_ptr<ClLinearExpression> pexpr ( new ClLinearExpression(cnExpr.Constant()) );
+  cl_auto_ptr<ClSlackVariable> pslackVar;
+  cl_auto_ptr<ClDummyVariable> pdummyVar;
+  cl_auto_ptr<ClSlackVariable> peminus(0);
+  cl_auto_ptr<ClSlackVariable> peplus(0);
   const ClVarToNumberMap &cnTerms = cnExpr.Terms();
   ClVarToNumberMap::const_iterator it = cnTerms.begin();
   for ( ; it != cnTerms.end(); ++it)
@@ -1151,7 +1150,7 @@ ClSimplexSolver::NewExpression(const ClConstraint *pcn,
 #endif
   // Terrible Name -- release() does *not* delete the object,
   // only makes sure that the destructor won't delete the object
-  // (it releases the auto_ptr from the responsibility of deleting the object)
+  // (it releases the cl_auto_ptr from the responsibility of deleting the object)
   pslackVar.release();
   pdummyVar.release();
   peminus.release();
