@@ -892,7 +892,8 @@ public class ClSimplexSolver extends ClTableau
 	    if (c > 0.0 && v.isPivotable()) {
 	      double zc = zRow.coefficientFor(v);
 	      r = zc/c; // FIXGJB r:= zc/c or zero, as ClSymbolicWeight-s
-	      if (r < ratio) {
+	      if (r < ratio || 
+                  (CL.approx(r,ratio) && v.hashCode() < entryVar.hashCode())) {
 		entryVar = v;
 		ratio = r;
 	      }
@@ -1020,10 +1021,9 @@ public class ClSimplexSolver extends ClTableau
       for (Enumeration e = terms.keys(); e.hasMoreElements() ; ) {
 	ClAbstractVariable v = (ClAbstractVariable) e.nextElement();
 	double c = ((ClDouble) terms.get(v)).doubleValue();
-	if (v.isPivotable() && c < objectiveCoeff) {
+	if (v.isPivotable() && c < 0.0 && (entryVar == null || v.hashCode() < entryVar.hashCode())) {
 	  objectiveCoeff = c;
 	  entryVar = v;
-          break;
 	}
       }
       if (objectiveCoeff >= -_epsilon) // || entryVar == null)
@@ -1042,8 +1042,9 @@ public class ClSimplexSolver extends ClTableau
 	  if (fTraceOn) traceprint("pivotable, coeff = " + coeff);
 	  if (coeff < 0.0) {
 	    r = - expr.constant() / coeff;
-	    if (r < minRatio) {
-	      if (fTraceOn) traceprint("New minratio == " + r);
+	    if (r < minRatio || 
+                (CL.approx(r,minRatio) && 
+                 v.hashCode() < exitVar.hashCode()))  {
 	      minRatio = r;
 	      exitVar = v;
 	    }
