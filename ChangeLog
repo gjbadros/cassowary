@@ -1,8 +1,10 @@
-Mon Nov 29 10:54:24 1999  Greg J. Badros  <gjb@cs.washington.edu>
+Mon Nov 29 16:23:06 1999    <gjb@cs.washington.edu>
 
 	* configure.in: Bump to version 0.54, added -lGTL to GTL_LIB even
 	when no --with-gtl option is given.  No longer create README from
 	README.in.  Added --enable-static-library option, off by default.
+
+	* c++/Makefile.am (sources): Added ClReader.cc
 
 	* cassowary.spec.in, cassowary-both.spec.in: No longer need the
 	--enable-guile-build option;  it's the default now.
