@@ -35,6 +35,7 @@
 #include "ClLinearInequality.h"
 #include "ClSimplexSolver.h"
 #include "ClErrors.h"
+#include "creader.h"
 
 #include <vector>
 
@@ -181,7 +182,7 @@ Consider instead using `set-object-property' and `object-property'. */
      Pv() is a scheme object */
   scm_protect_object(obj);
   pclv->setPv(PvFromScm(obj));
-  return SCM_UNDEFINED;
+  return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 
@@ -651,8 +652,9 @@ cl-variable), an error will result. */
   } catch (const ExCLNonlinearExpression &e) {
     delete pexprA;
     delete pexprB;
-    scm_misc_error(FUNC_NAME, e.description(), SCM_EOL);
+    scm_misc_error(FUNC_NAME, e.description().c_str(), SCM_EOL);
   }
+  return SCM_BOOL_F;
 }
 #undef FUNC_NAME
 
@@ -1018,6 +1020,121 @@ CL_PROC(cl_constraint_weight, "cl-constraint-weight", 1, 0, 0,
 }
 #undef FUNC_NAME
 
+CL_PROC(cl_constraint_change_strength_x, "cl-constraint-change-strength!", 2, 0, 0,
+          (SCM constraint, SCM strength))
+  /** Set CONSTRAINT's strength to STRENGTH.
+This is only allowed if the constraint is not in any solver.
+Returns #t if successful, #f otherwise. */
+#define FUNC_NAME s_cl_constraint_change_strength_x
+{
+  if (!FIsClConstraintScm(constraint)) {
+    scm_wrong_type_arg(FUNC_NAME,1,constraint);
+  }
+  if (!FIsClStrengthScm(strength)) {
+    scm_wrong_type_arg(FUNC_NAME,2,strength);
+  }
+  ClConstraint *pconstraint = PcnFromScm(constraint);
+  ClStrength *pcls = PclsFromScm(strength);
+  try {
+    pconstraint->ChangeStrength(*pcls);
+  } catch (const ExCLTooDifficult &) {
+    return SCM_BOOL_F;
+  }
+  return SCM_BOOL_T;
+}
+#undef FUNC_NAME
+
+
+CL_PROC(cl_constraint_change_weight_x, "cl-constraint-change-weight!", 2, 0, 0,
+          (SCM constraint, SCM weight))
+  /** Set CONSTRAINT's weighting factor to WEIGHT (a number).
+This is only allowed if the constraint is not in any solver.
+Returns #t if successful, #f otherwise. */
+#define FUNC_NAME s_cl_constraint_change_weight_x
+{
+  if (!FIsClConstraintScm(constraint)) {
+    scm_wrong_type_arg(FUNC_NAME,1,constraint);
+  }
+  if (!gh_number_p(weight)) {
+    scm_wrong_type_arg(FUNC_NAME,2,weight);
+  }
+  ClConstraint *pconstraint = PcnFromScm(constraint);
+  double nWeight = gh_scm2double(weight);
+  try {
+    pconstraint->ChangeWeight(nWeight);
+  } catch (const ExCLTooDifficult &) {
+    return SCM_BOOL_F;
+  }
+  return SCM_BOOL_T;
+}
+#undef FUNC_NAME
+
+
+
+class ClVarLookupByGuileProc: public ClVarLookupFunction {
+public:
+  ClVarLookupByGuileProc(SCM proc) : _proc(proc) { }
+  ClVariable *operator()(const string &str) const
+    {
+      SCM string_id = gh_str02scm(str.c_str());
+      SCM answer = gh_call1(_proc,string_id);
+      if (!FIsClVariableScm(answer))
+        return NULL;
+      return PclvFromScm(answer);
+    }
+private:
+  SCM _proc;
+};
+
+
+CL_PROC(make_cl_constraint_from_string, "make-cl-constraint-from-string", 2, 2, 0,
+           (SCM str, SCM lookup_proc, SCM strength, SCM factor))
+  /** Return a newly-constructed constraint object or #f if parse fails.
+
+STR is a string specifying the desired constraint.  The
+created constraint is given strength STRENGTH, a cl-strength, and has
+a weight factor of FACTOR, a real number.  STRENGTH defaults to
+cls-required, FACTOR defaults to 1.  LOOKUP-PROC must be a procedure
+that takes a single string argument and returns either a `cl-variable' object
+or #f if there is no such variable with that name.  (It may choose to 
+create a return a new `cl-variable' object.
+*/
+#define FUNC_NAME s_make_cl_constraint_from_string
+{
+  char *sz = gh_scm2newstr(str,NULL);
+  istrstream xiLine(sz);
+
+  if (!gh_procedure_p(lookup_proc)) {
+    scm_wrong_type_arg(FUNC_NAME,2,lookup_proc);
+  }
+
+  const ClStrength *pcls = &clsRequired();
+  if (FIsClStrengthScm(strength)) {
+    pcls = PclsFromScm(strength);
+  } else if (!FUnsetSCM(strength)) {
+    scm_wrong_type_arg(FUNC_NAME,3,strength);
+  }
+
+  double nWeight = 1.0;
+  if (gh_number_p(factor)) {
+    nWeight = gh_scm2double(factor);
+  } else if (!FUnsetSCM(factor)) {
+    scm_wrong_type_arg(FUNC_NAME,4,factor);
+  }
+
+  ClConstraint *pcn = PcnParseConstraint(xiLine,ClVarLookupByGuileProc(lookup_proc));
+
+  pcn->ChangeStrength(*pcls);
+  pcn->ChangeWeight(nWeight);
+
+  SCM id = (SCM) scm_tc16_cl_equation;
+  if (pcn->isInequality())
+    id = (SCM) scm_tc16_cl_inequality;
+
+  return ScmMakeClConstraint(pcn,id);
+}
+#undef FUNC_NAME
+
 
 
 CL_PROC(make_cl_constraint, "make-cl-constraint", 3, 2, 0,
@@ -1075,15 +1192,7 @@ cls-required, FACTOR defaults to 1.  */
     scm_wrong_type_arg(FUNC_NAME, 2, op);
   }
  
-  SCM answer;
-
-  SCM_DEFER_INTS;
-  SCM_NEWCELL(answer);
-  SCM_SETCAR(answer, id);
-  SCM_SETCDR(answer, (SCM) pcn);
-  SCM_ALLOW_INTS;
-
-  return answer;
+  return ScmMakeClConstraint(pcn,id);
 }
 #undef FUNC_NAME
 
@@ -1144,7 +1253,7 @@ brief summary of the contents of the solver. */
   psolver->printOnVerbose(ss);
   ss << ends;
   scm_puts(ss.str(), port);
-  return SCM_UNDEFINED;
+  return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 
@@ -1313,10 +1422,10 @@ values. */
       psolver->addEditVar(*pclv,*pcls,nWeight);
     }
   } catch (const ExCLEditMisuse &e) {
-    scm_misc_error(FUNC_NAME, e.description(), SCM_EOL);
+    scm_misc_error(FUNC_NAME, e.description().c_str(), SCM_EOL);
   }
 
-  return SCM_UNDEFINED;
+  return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 
@@ -1376,10 +1485,10 @@ you intend to use with the given SOLVER. */
       psolver->addStay(*pclv,*pcls,nWeight);
     }
   } catch (const ExCLError &e) {
-    scm_misc_error(FUNC_NAME, e.description(), SCM_EOL);
+    scm_misc_error(FUNC_NAME, e.description().c_str(), SCM_EOL);
   }
 
-  return SCM_UNDEFINED;
+  return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 
@@ -1402,7 +1511,7 @@ have a matching `cl-end-edit' call. */
 
   psolver->beginEdit();
 
-  return SCM_UNDEFINED;
+  return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 
@@ -1421,7 +1530,7 @@ any edit variables that have been added via `cl-add-editvar'. */
 
   psolver->endEdit();
 
-  return SCM_UNDEFINED;
+  return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 
@@ -1476,9 +1585,9 @@ SOLVER may not permit changing VAR to VALUE. */
   try {
     psolver->suggestValue(*pclv,n);
   } catch (const ExCLError &e) {
-    scm_misc_error(FUNC_NAME, e.description(), SCM_EOL);
+    scm_misc_error(FUNC_NAME, e.description().c_str(), SCM_EOL);
   }
-  return SCM_UNDEFINED;
+  return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 
@@ -1511,7 +1620,7 @@ variables from the solver after you are done changing their values. */
 
   if (FUnsetSCM(args)) {
     psolver->resolve();
-    return SCM_UNDEFINED;
+    return SCM_UNSPECIFIED;
   }
 
   vector<double> rgval;
@@ -1530,10 +1639,10 @@ variables from the solver after you are done changing their values. */
     else
       psolver->resolve(rgval);
   } catch (const ExCLBadResolve &e) {
-    scm_misc_error(FUNC_NAME, e.description(), SCM_EOL);
+    scm_misc_error(FUNC_NAME, e.description().c_str(), SCM_EOL);
   }
   
-  return SCM_UNDEFINED;
+  return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME
 
@@ -1636,6 +1745,11 @@ init_cassowary_scm()
 #ifndef SCM_MAGIC_SNARFER
 #include "cassowary_scm.x"
 #endif
+}
+
+void scm_init_app_cassowary_constraints_module()
+{
+  scm_register_module_xxx("app cassowary constraints", init_cassowary_scm);
 }
 
 } // extern "C"

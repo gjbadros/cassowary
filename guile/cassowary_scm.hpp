@@ -200,6 +200,19 @@ inline bool FIsClConstraintScm(SCM scm) {
 inline ClConstraint *PcnFromScm(SCM scm)
 { return (ClConstraint *)(SCM_CDR(scm)); }
 
+inline SCM ScmMakeClConstraint(const ClConstraint *pcn, SCM id) {
+  SCM answer;
+  
+  SCM_DEFER_INTS;
+  SCM_NEWCELL(answer);
+  SCM_SETCAR(answer, id);
+  SCM_SETCDR(answer, (SCM) pcn);
+  SCM_ALLOW_INTS;
+
+  return answer;
+}
+
+
 //// ClSimplexSolver wrapper
 class ClSimplexSolver;
 

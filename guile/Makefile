@@ -4,6 +4,7 @@
 #
 
 CPP = g++
+CPP_SO_LINK = g++ -shared
 CFLAGS = -Wall -g
 
 # See SCWM distribution for the extract-docs script
@@ -13,8 +14,18 @@ EXTRACT_DOCS = perl ../../scwm/utilities/dev/scwmdoc -PCL
 
 INCLUDES = -I. -I../c++ -I/uns/share/include -I/uns/include
 
+all: cassowary_scm.o shared
+
+shared:  app/cassowary/libconstraints.so
+
 cassowary_scm.o: cassowary_scm.cc cassowary_scm.x
 	$(CPP) $(CFLAGS) $(INCLUDES) -c $<
+
+# below target creates the directory symlink structure as needed
+app/cassowary/libconstraints.so: cassowary_scm.o ../c++/libcassowary.a
+	test -L app || test -d app || ln -s . app
+	test -L app/cassowary || test -d app/cassowary || { cd app; ln -s . cassowary }
+	$(CPP_SO_LINK) -o $@ $^
 
 cassowary_scm.x: cassowary_scm.cc
 	CC=$(CPP) guile-snarf $(INCLUDES)  $<  >$@
@@ -27,4 +38,4 @@ clean:
 
 doc: cassowary_scm.sgml
 
-.PHONY: clean doc
+.PHONY: all shared clean doc
