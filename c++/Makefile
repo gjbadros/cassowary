@@ -58,6 +58,7 @@ TEST_OBJS = test-ClConstraint.o    \
 	test-ClVariable.o	   \
 	test-ClBounds.o	           \
 	ClTests.o                  \
+	ClLeakTest.o		   \
 	ClSubgraphTest.o           \
 	ClTestColumns.o
 
@@ -70,7 +71,7 @@ TEST_SRCS = $(TEST_OBJS:.o=.cc)
 NT_SOURCES = $(OBJS:.o=.cpp) $(TEST_OBJS:.o=.cpp)
 
 TESTS = test-ClStrength test-ClVariable test-ClLinearExpression test-ClConstraint \
-	test-ClSimplexSolver ClTests ClSubgraphTest
+	test-ClSimplexSolver ClTests ClLeakTest ClSubgraphTest
 
 HEADERS = Cassowary.h \
 	Cl.h \
@@ -94,7 +95,7 @@ HEADERS = Cassowary.h \
 	ClVariable.h \
 	ClPoint.h
 
-all:	lib ClTests ClTestColumns ClSubgraphTest
+all:	lib ClTests ClLeakTest ClTestColumns ClSubgraphTest
 
 lib:    $(CL_LIBRARY)
 
@@ -112,6 +113,9 @@ TAGS: $(SOURCES) $(HEADERS)
 cassowary-tests: $(TESTS)
 
 ClTests: ClTests.o $(LIB_FILE)
+	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
+
+ClLeakTest: ClLeakTest.o $(LIB_FILE)
 	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 ClSubgraphTest: ClSubgraphTest.o $(LIB_FILE)
