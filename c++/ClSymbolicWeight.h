@@ -19,6 +19,7 @@
 
 #include "Cassowary.h"
 #include "ClErrors.h"
+#include "ClVariable.h"
 #include <vector>
 
 #ifdef USE_GC_WEIGHT
