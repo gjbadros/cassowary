@@ -1,6 +1,7 @@
 .deps
 ClBug0
 ClBug1
+ClBug2
 ClCTest
 ClLeakTest
 ClParseTest
@@ -14,9 +15,9 @@ ClTests-good
 ClTests-hash
 ClTests-setExtOpt
 ClTests-trace
+Makefile
 Makefile.dependencies
 Makefile.in
-Makefile
 QocaBench
 config.h
 creader-lex.cc
