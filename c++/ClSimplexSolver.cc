@@ -1088,23 +1088,27 @@ ClSimplexSolver::setExternalVariables()
     ClLinearExpression *pexpr = (*itRowVars).second;
     if (pvar->isExternal())
       {
-      ClVariable *pv = dynamic_cast<ClVariable *>(pvar);
-      assert(pv);
+      // This is a static cast since only ClVariable-s are external
+      ClVariable *pv = static_cast<ClVariable *>(pvar);
       pv->set_value(pexpr->constant());
       }
     }
 
+  // FIXGJB: revisit this --
+  // perhaps I should keep a list of ClVariable-s that aren't basic
+#ifndef NO_SET_EXTERNAL_PARAMETRIC_VARIABLES
   itColumnVars = my_columns.begin();
   for ( ; itColumnVars != my_columns.end(); ++itColumnVars )
     {
     ClAbstractVariable *pvar = const_cast<ClAbstractVariable *>((*itColumnVars).first);
     if (pvar->isExternal())
       {
-      ClVariable *pv = dynamic_cast<ClVariable *>(pvar);
-      assert(pv);
+      // This is a static cast since only ClVariable-s are external
+      ClVariable *pv = static_cast<ClVariable *>(pvar);
       pv->set_value(0.0);
       }
     }
+#endif
 }
 
 ostream &
