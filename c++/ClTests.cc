@@ -22,6 +22,44 @@ inline
 double UniformRandom()
 { return double(rand())/RAND_MAX; }
 
+
+bool
+justStay1()
+{
+ try
+   {
+   bool fOkResult = true;
+   ClVariable x(5);
+   ClVariable y(10);
+   ClSimplexSolver solver;
+
+#if 0
+   solver.addPointStay(x,y,1);
+#else
+   solver.addStay(x);
+   solver.addStay(y);
+#endif
+   fOkResult = fOkResult && clApprox(x,5);
+   fOkResult = fOkResult && clApprox(y,10);
+   cout << "x == " << x.value() << endl;
+   cout << "y == " << y.value() << endl;
+
+   return(fOkResult);
+   } 
+ catch (ExCLError &error) 
+   {
+   cerr << "Exception! " << error.description() << endl;
+   return(false);
+   } 
+ catch (...) 
+   {
+   cerr << "Unknown exception" << endl;
+   return(false);
+   }
+}
+
+
+
 bool
 addDelete1()
 {
@@ -339,6 +377,9 @@ addDel(int nCns = 900, int nVars = 900, int nResolves = 10000)
 
   cout << "done resolves -- now removing constraints" << endl;
   cout << "time = " << timer.ElapsedTime() << "\n" <<endl;
+  solver.removeConstraint(edit1);
+  solver.removeConstraint(edit2);
+  
   timer.Start();
 
   for (j = 0; j < nCns; j++)
@@ -374,6 +415,7 @@ main( char **, int  )
     fResult = x(); fAllOkResult &= fResult; \
     if (!fResult) cout << "Failed!" << endl;
     
+    RUN_TEST(justStay1);
     RUN_TEST(addDelete1);
     RUN_TEST(addDelete2);
     RUN_TEST(casso1);
