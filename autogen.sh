@@ -22,4 +22,13 @@ autoconf
 # to create new Makefiles under modules/* directories (e.g., modules/pie-menus)
 # (Note that this only is useful if builddir == scrdir, otherwise the
 #  user may need to run config.status from their builddir(s) manually)
-test -x ./config.status && ./config.status || true
+#test -x ./config.status && ./config.status || true
+
+# Instead of rerunning config.status, re-run configure from scratch
+if [ -r config.status ]; then
+  CMD=`awk '/^#.*\/?configure .*/ { $1 = ""; print; exit }' < config.status`
+  echo "Running: $CMD $@" 1>&2
+else
+  CMD=./configure
+fi
+$CMD "$@" && echo && echo "Now type 'make' to compile Cassowary, and install via 'make install'."

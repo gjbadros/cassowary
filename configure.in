@@ -10,7 +10,7 @@ AC_INIT(c++/ClSimplexSolver.cc)
 AC_PREREQ(2.4)
 
 dnl ## Initialize automake ##
-AM_INIT_AUTOMAKE(cassowary, 0.50)
+AM_INIT_AUTOMAKE(cassowary, 0.51)
 AM_MAINTAINER_MODE
 AM_CONFIG_HEADER(c++/config.h)
 
@@ -350,6 +350,8 @@ AC_OUTPUT(
 	guile/Makefile \
 	wrappers/Makefile \
 	docs/Makefile \
+	cassowary.spec \
+	GTL.spec \
 	)
 
 # Not create config-inline.h for the C++ header files to include
