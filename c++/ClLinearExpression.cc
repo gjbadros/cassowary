@@ -31,9 +31,6 @@ ClLinearExpression::~ClLinearExpression()
 ostream &
 ClLinearExpression::printOn(ostream &xo) const
 {
-#ifndef CL_NO_TRACE
-  Tracer TRACER(__FUNCTION__);
-#endif
   map<const ClAbstractVariable *,Number>::const_iterator i = my_terms.begin();
 
   if (!clApprox(my_constant,0.0) || i == my_terms.end())
