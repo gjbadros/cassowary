@@ -10,7 +10,6 @@
 
 #include "Cl.h"
 
-
 bool
 addDelete1()
 {
@@ -20,10 +19,10 @@ addDelete1()
    ClVariable x("x");
    ClSimplexSolver solver;
 
-   solver.addConstraint( ClLinearEquation( 0-x /* = */ + 100, clsWeak() ) );
+   solver.addConstraint( ClLinearEquation( x, 100, clsWeak() ) );
     
-   ClLinearInequality c10(10-x);
-   ClLinearInequality c20(20-x);
+   ClLinearInequality c10(x,cnLEQ,10.0);
+   ClLinearInequality c20(x,cnLEQ,20.0);
     
    solver
      .addConstraint(c10)
@@ -40,7 +39,7 @@ addDelete1()
    fOkResult = fOkResult && clApprox(x,100.0);
    cout << "x == " << x.value() << endl;
 
-   ClLinearInequality c10again = ClLinearInequality(10-x);
+   ClLinearInequality c10again(x,cnLEQ,10.0);
 
    solver
      .addConstraint(c10)
