@@ -23,6 +23,8 @@ PYTHON_INCLUDE = /uns/include/python1.5
 #FLEX_FLAGS = -d
 FLEX_FLAGS = 
 
+#LDFLAGS = -L. -pg
+LDFLAGS = -L.
 
 ## NOTE: the egcs-1.1b release's g++ will get a parse error
 ## with -pedantic -- just remove that option for compilation
@@ -39,7 +41,10 @@ CPPFLAGS = -Wall -pedantic -W
 #CPPFLAGS += -O2
 CPPFLAGS += -g
 
-#CPPFLAGS += -DCL_USE_HASH_MAP_AND_SET
+CPPFLAGS += -pg
+LDFLAGS += -pg
+
+CPPFLAGS += -DCL_USE_HASH_MAP_AND_SET
 
 #CPPFLAGS += -DCL_TRACE
 
@@ -59,9 +64,6 @@ LIB=cassowary
 #LIB=cassowary-debug
 
 LDLIBS = -l$(LIB)
-
-#LDFLAGS = -L. -pg
-LDFLAGS = -L.
 
 CL_LIBRARY = lib$(LIB).a
 CL_SHARED_LIBRARY = lib$(LIB).so
