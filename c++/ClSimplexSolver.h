@@ -16,6 +16,7 @@
 #include "ClLinearInequality.h"
 #include "ClStrength.h"
 #include "ClStayConstraint.h"
+#include "ClObjectiveVariable.h"
 
 class ClVariable;
 
@@ -26,48 +27,52 @@ class ClSimplexSolver : public ClTableau {
 
   // Constructor
   ClSimplexSolver() :
-    my_objective("z",CLObjectiveVar),
+    my_objective("z"),
     my_slackCounter(0),
     my_artificialCounter(0),
     my_dummyCounter(0)
-    { my_rows[my_objective] = *(new ClLinearExpression()); }
+    { my_rows[&my_objective] = new ClLinearExpression(); }
 
   ~ClSimplexSolver()
     { // FIXGJB need to delete my_rows[my_objective]
     }
   
   // Add constraints so that lower<=var<=upper.  (nil means no  bound.)
-  void addLowerBound(const ClVariable &v, Number lower)
+  void addLowerBound(const ClAbstractVariable &v, Number lower)
     { 
-    ClLinearInequality cn(ClLinearExpression(lower - v));
-    addConstraint(cn);
+    ClLinearInequality *pcn = new ClLinearInequality(ClLinearExpression(lower - v));
+    addConstraint(*pcn);
     }
-  void addUpperBound(const ClVariable &v, Number upper)
+  void addUpperBound(const ClAbstractVariable &v, Number upper)
     {
-    ClLinearInequality cn(ClLinearExpression(v - upper));
-    addConstraint(cn);
+    ClLinearInequality *pcn = new ClLinearInequality(ClLinearExpression(v - upper));
+    addConstraint(*pcn);
     }
-  void addBounds(const ClVariable &v, Number lower, Number upper)
+  void addBounds(const ClAbstractVariable &v, Number lower, Number upper)
     { addLowerBound(v,lower); addUpperBound(v,upper); }
 
   // Add the constraint cn to the tableau
-  void addConstraint(ClConstraint &cn);
+  void addConstraint(const ClConstraint &cn);
 
   // Add weak stays to the x and y parts of each point. These have
   // increasing weights so that the solver will try to satisfy the x
   // and y stays on the same point, rather than the x stay on one and
   // the y stay on another.
-  void addPointStays(const vector<ClPoint> &listOfPoints);
-  void addPointStay(const ClVariable &vx, const ClVariable &vy, double weight)
+  void addPointStays(const vector<const ClPoint *> &listOfPoints);
+  void addPointStay(const ClAbstractVariable &vx, const ClAbstractVariable &vy, double weight)
     { addStay(vx,clsWeak(),weight); addStay(vy,clsWeak(),weight); }
 
   // Add a stay of the given strength (default to weak) of v to the tableau
-  void addStay(const ClVariable &v, const ClStrength &strength = clsWeak(), double weight = 1.0 )
-    { ClStayConstraint cn(v,strength,weight); addConstraint(cn); }
+  void addStay(const ClAbstractVariable &v,
+	       const ClStrength &strength = clsWeak(), double weight = 1.0 )
+    { 
+    ClStayConstraint *pcn = new ClStayConstraint(v,strength,weight); 
+    addConstraint(*pcn); 
+    }
 
   // Remove the constraint cn from the tableau
   // Also remove any error variable associated with cn
-  void removeConstraint(const ClConstraint &cn);
+  void removeConstraint(const ClConstraint &pcn);
 
   // Re-initialize this solver from the original constraints, thus
   // getting rid of any accumulated numerical problems.  (Actually,
@@ -87,13 +92,13 @@ class ClSimplexSolver : public ClTableau {
   // artificial variable.  To do this, create an artificial variable
   // av and add av=expr to the inequality tableau, then make av be 0.
   // (Raise an exception if we can't attain av=0.)
-  void addWithArtificialVariable(ClLinearExpression &expr);
+  void addWithArtificialVariable(ClLinearExpression &pexpr);
 
   // We are trying to add the constraint expr=0 to the appropriate
   // tableau.  Try to add expr directly to the tableax without
   // creating an artificial variable.  Return true if successful and
   // false if not.
-  bool tryAddingDirectly(ClLinearExpression &expr);
+  bool tryAddingDirectly(ClLinearExpression &pexpr);
 
   // We are trying to add the constraint expr=0 to the tableaux.  Try
   // to choose a subject (a variable to become basic) from among the
@@ -113,9 +118,9 @@ class ClSimplexSolver : public ClTableau {
   // ignore whether a variable occurs in the objective function, since
   // new slack variables are added to the objective function by
   // 'newExpression:', which is called before this method.
-  const ClVariable &chooseSubject(ClLinearExpression &expr);
+  const ClAbstractVariable *chooseSubject(ClLinearExpression &pexpr);
   
-  void deltaEditConstant(Number delta, const ClVariable &v1, const ClVariable &v2);
+  void deltaEditConstant(Number delta, const ClAbstractVariable &pv1, const ClAbstractVariable &pv2);
   
   // We have set new values for the constants in the edit constraints.
   // Re-optimize using the dual simplex algorithm.
@@ -126,15 +131,15 @@ class ClSimplexSolver : public ClTableau {
   // Normalize if necessary so that the constant is non-negative.  If
   // the constraint is non-required give its error variables an
   // appropriate weight in the objective function.
-  ClLinearExpression *newExpression(ClConstraint &cn);
+  ClLinearExpression *newExpression(const ClConstraint &cn);
 
   // Minimize the value of the objective.  (The tableau should already
   // be feasible.)
-  void optimize(const ClVariable &zVar);
+  void optimize(const ClObjectiveVariable &pzVar);
 
   // Do a pivot.  Move entryVar into the basis (i.e. make it a basic variable),
   // and move exitVar out of the basis (i.e., make it a parametric variable)
-  void pivot(const ClVariable &entryVar, const ClVariable &exitVar);
+  void pivot(const ClAbstractVariable &pentryVar, const ClAbstractVariable &pexitVar);
 
   // Each of the non-required edits will be represented by an equation
   // of the form
@@ -182,13 +187,13 @@ class ClSimplexSolver : public ClTableau {
 
   // the arrays of positive and negative error vars for the edit constraints
   // (need both positive and negative since they have only non-negative values)
-  vector<ClVariable> my_editMinusErrorVars;
-  vector<ClVariable> my_editPlusErrorVars;
+  vector<const ClAbstractVariable *> my_editMinusErrorVars;
+  vector<const ClAbstractVariable *> my_editPlusErrorVars;
 
   // the arrays of positive and negative error vars for the stay constraints
   // (need both positive and negative since they have only non-negative values)
-  vector<ClVariable> my_stayMinusErrorVars;
-  vector<ClVariable> my_stayPlusErrorVars;
+  vector<const ClAbstractVariable *> my_stayMinusErrorVars;
+  vector<const ClAbstractVariable *> my_stayPlusErrorVars;
 
   // The array of constants for the edit constraints on the previous
   // iteration.  These must be in the same order as editPlusErrorVars
@@ -197,13 +202,13 @@ class ClSimplexSolver : public ClTableau {
 
   // give error variables for a non required constraint,
   // maps to ClSlackVariable-s
-  map<ClConstraint *, set<ClVariable> > my_errorVars;
+  map<const ClConstraint *, set<const ClAbstractVariable *> > my_errorVars;
 
   // Return a lookup table giving the marker variable for each
   // constraint (used when deleting a constraint).
-  map<ClConstraint *, ClVariable> my_markerVars;
+  map<const ClConstraint *, const ClAbstractVariable *> my_markerVars;
 
-  ClVariable my_objective;
+  ClObjectiveVariable my_objective;
 
 
   int my_slackCounter;

@@ -15,10 +15,12 @@
 #include "Cassowary.h"
 #include "ClEditOrStayConstraint.h"
 
+class ClAbstractVariable;
+
 class ClStayConstraint : public ClEditOrStayConstraint {
  public:
 
-  ClStayConstraint(const ClVariable &var,
+  ClStayConstraint(const ClAbstractVariable &var,
 		   const ClStrength &strength = clsWeak(), double weight = 1.0 ) :
     ClEditOrStayConstraint(var,strength,weight)
     { }

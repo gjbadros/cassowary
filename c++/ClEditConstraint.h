@@ -18,7 +18,7 @@
 class ClEditConstraint : public ClEditOrStayConstraint {
  public:
   
-  ClEditConstraint(const ClVariable &var,
+  ClEditConstraint(const ClAbstractVariable &var,
 		   const ClStrength &strength = clsStrong(), double weight = 1.0 ) :
     ClEditOrStayConstraint(var,strength,weight)
     { }

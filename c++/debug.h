@@ -5,16 +5,16 @@
 #include <set.h>
 #include <vector.h>
 
-class ClVariable;
+class ClAbstractVariable;
 class ClLinearExpression;
 
-ostream &operator<<(ostream &xo, const set<ClVariable> & varset);
+ostream &operator<<(ostream &xo, const set<const ClAbstractVariable *> & varset);
 
-ostream &operator<<(ostream &xo, const map<ClVariable, set<ClVariable> > & varmap);
+ostream &operator<<(ostream &xo, const map<const ClAbstractVariable *, set<const ClAbstractVariable *> > & varmap);
 
-ostream &operator<<(ostream &xo, const map<ClVariable, ClLinearExpression > & rows);
+ostream &operator<<(ostream &xo, const map<const ClAbstractVariable *, ClLinearExpression * > & rows);
 
-ostream &operator<<(ostream &xo, const vector<ClVariable> &varlist);
+ostream &operator<<(ostream &xo, const vector<const ClAbstractVariable *> &varlist);
 
 
 class Tracer {

@@ -13,7 +13,6 @@
 
 #include <map.h>
 #include <set.h>
-#include <vector.h>
 #include "Cassowary.h"
 #include "ClLinearExpression.h"
 
@@ -24,26 +23,26 @@ class ClTableau {
   // expression is in a tableau the corresponding basic variable is
   // subject (or if subject is nil then it's in the objective function).
   // Update the column cross-indices.
-  void noteRemovedVariable(const ClVariable &v, const ClVariable &subject)
+  void noteRemovedVariable(const ClAbstractVariable &v, const ClAbstractVariable &subject)
     { 
 #ifndef NO_TRACE
     Tracer TRACER(__FUNCTION__);
     cerr << "(" << v << ", " << subject << ")" << endl;
 #endif
-    set<ClVariable>::iterator it = my_columns[v].find(subject);
-    assert(it != my_columns[v].end());
-    my_columns[v].erase(it); 
+    set<const ClAbstractVariable *>::const_iterator it = my_columns[&v].find(&subject);
+    assert(it != my_columns[&v].end());
+    my_columns[&v].erase(it); 
     }
 
   // v has been added to the linear expression for subject
   // update column cross indices
-  void noteAddedVariable(const ClVariable &v, const ClVariable &subject)
+  void noteAddedVariable(const ClAbstractVariable &v, const ClAbstractVariable &subject)
     { 
 #ifndef NO_TRACE
     Tracer TRACER(__FUNCTION__);
     cerr << "(" << v << ", " << subject << ")" << endl;
 #endif
-    my_columns[v].insert(subject); 
+    my_columns[&v].insert(&subject); 
     }
 
   friend ostream &printTo(ostream &xo, const ClTableau &clt);
@@ -55,40 +54,40 @@ class ClTableau {
   
   // Add v=expr to the tableau, update column cross indices
   // v becomes a basic variable
-  void addRow(const ClVariable &v, const ClLinearExpression &expr);
+  void addRow(const ClAbstractVariable &v, const ClLinearExpression &expr);
 
   // Remove v from the tableau -- remove the column cross indices for v
   // and remove v from every expression in rows in which v occurs
-  void removeColumn(const ClVariable &v);
+  void removeColumn(const ClAbstractVariable &v);
 
   // Remove the basic variable v from the tableau row v=expr
   // Then update column cross indices
-  ClLinearExpression removeRow(const ClVariable &v);
+  ClLinearExpression *removeRow(const ClAbstractVariable &v);
 
   // Replace all occurrences of oldVar with expr, and update column cross indices
   // oldVar should now be a basic variable
-  void substituteOut(const ClVariable &oldVar, const ClLinearExpression &expr);
+  void substituteOut(const ClAbstractVariable &oldVar, const ClLinearExpression &expr);
 
-  map<ClVariable, set<ClVariable> > columns()
+  map<const ClAbstractVariable *, set<const ClAbstractVariable *> > columns()
     { return my_columns; }  
 
-  map<ClVariable, ClLinearExpression > rows()
+  map<const ClAbstractVariable *, ClLinearExpression * > rows()
     { return my_rows; }  
 
   // return true iff the variable subject is in the columns keys
-  bool columnsHasKey(const ClVariable &subject) const
+  bool columnsHasKey(const ClAbstractVariable &subject) const
     { 
-    map<ClVariable, set<ClVariable> >::const_iterator i = my_columns.find(subject);
+    map<const ClAbstractVariable *, set<const ClAbstractVariable *> >::const_iterator i = my_columns.find(&subject);
     return (i != my_columns.end());
     }
 
-  ClLinearExpression &rowExpression(const ClVariable &v) const
+  ClLinearExpression *rowExpression(const ClAbstractVariable &v)
     {
-    map<ClVariable, ClLinearExpression>::const_iterator i = my_rows.find(v);
+    map<const ClAbstractVariable *, ClLinearExpression *>::const_iterator i = my_rows.find(&v);
     if (i != my_rows.end())
-      return const_cast<ClLinearExpression &>((*i).second);
+      return (*i).second;
     else
-      return cleNil();
+      return NULL;
     }
 
   // private: FIXGJB: can I improve the encapsulation?
@@ -97,12 +96,12 @@ class ClTableau {
   // set of basic variables whose expressions contain them
   // i.e., it's a mapping from variables in expressions (a column) to the 
   // set of rows that contain them
-  map<ClVariable, set<ClVariable> > my_columns;
-  map<ClVariable, ClLinearExpression > my_rows;
+  map<const ClAbstractVariable *, set<const ClAbstractVariable *> > my_columns;
+  map<const ClAbstractVariable *, ClLinearExpression *> my_rows;
 
   // the ordered collection of basic variables that have infeasible rows
   // (used when reoptimizing)
-  set<ClVariable> my_infeasibleRows;
+  set<const ClAbstractVariable *> my_infeasibleRows;
 
 };
 

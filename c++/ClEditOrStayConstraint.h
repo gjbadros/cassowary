@@ -11,31 +11,32 @@
 #ifndef ClEditOrStayConstraint_H
 #define ClEditOrStayConstraint_H
 
-#include "ClVariable.h"
 #include "ClLinearExpression.h"
+
+class ClAbstractVariable;
 
 class ClEditOrStayConstraint : public ClConstraint {
  public:
 
-  ClEditOrStayConstraint(const ClVariable &var,
+  ClEditOrStayConstraint(const ClAbstractVariable &var,
 			 const ClStrength &strength = clsRequired(), double weight = 1.0 ) :
     ClConstraint(strength,weight),
-    my_variable(var)
+    my_pvariable(&var)
     { }
   
-  ClVariable variable() const
-    { return my_variable; }
+  const ClAbstractVariable *variable() const
+    { return my_pvariable; }
 
   ClLinearExpression expression() const
-    { ClLinearExpression v(my_variable); return v; }
+    { ClLinearExpression expr(*my_pvariable); return expr; }
 
  private:
 
-  void setVariable( const ClVariable &v)
-    { my_variable = v; }
+  void setVariable( const ClAbstractVariable &v)
+    { my_pvariable = &v; }
 
   /// instance variables
-  ClVariable my_variable;
+  const ClAbstractVariable *my_pvariable;
 
 
 };

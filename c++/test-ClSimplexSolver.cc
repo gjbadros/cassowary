@@ -5,12 +5,13 @@
 #include "ClEditConstraint.h"
 #include "ClStayConstraint.h"
 #include "ClSimplexSolver.h"
+#include "ClVariable.h"
 
 int
 main( char **argv, int argc )
 {
-  ClVariable a("a");
-  ClVariable b("b");
+  ClVariable a("a",0.0);
+  ClVariable b("b",0.0);
 
   ClLinearExpression b_minus_a = b - a;
   ClLinearEquation a_equals_b(b_minus_a);

@@ -10,13 +10,13 @@
 CC = gcc
 CPP = egcs-g++
 CFLAGS = -g -Wall
-CPPFLAGS = -g -Wall -fno-rtti -L/uns/lib/egcs
+CPPFLAGS = -g -Wall -L/uns/lib/egcs
 CXX = $(CPP)
 # -falt-external-templates
 LDFLAGS = -L/uns/lib/egcs
 
 TEST_OBJS = ClStrength.o ClSymbolicWeight.o ClLinearExpression.o \
-		 ClVariable.o ClConstraint.o ClTableau.o ClSimplexSolver.o
+		 ClConstraint.o ClTableau.o ClSimplexSolver.o ClAbstractVariable.o
 TEST_SRCS = $(OBJS:.o=.cc)
 TESTS = test-ClStrength test-ClVariable test-ClLinearExpression test-ClConstraint \
 	test-ClSimplexSolver

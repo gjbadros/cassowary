@@ -13,7 +13,7 @@
 
 #include <map.h>
 #include "debug.h"
-#include "ClVariable.h"
+#include "ClAbstractVariable.h"
 
 class ClSimplexSolver;
 class ClTableau;
@@ -29,7 +29,7 @@ class ClLinearExpression  {
 
   // Convert from ClVariable to a ClLinearExpression
   // this replaces ClVariable::asLinearExpression
-  ClLinearExpression(const ClVariable &clv);
+  ClLinearExpression(const ClAbstractVariable &clv);
 
   // copy ctr
   ClLinearExpression(const ClLinearExpression &expr) :
@@ -76,25 +76,25 @@ class ClLinearExpression  {
   // Notify the solver if a variable is added or deleted from this
   // expression.
   ClLinearExpression &addExpression(const ClLinearExpression &expr, Number n,
-				    const ClVariable &subject,
+				    const ClAbstractVariable &subject,
 				    ClTableau &solver);
 
   // Add a term c*v to this expression.  If the expression already
   // contains a term involving v, add c to the existing coefficient.
   // If the new coefficient is approximately 0, delete v.
-  ClLinearExpression &addVariable(const ClVariable &v, Number c);
+  ClLinearExpression &addVariable(const ClAbstractVariable &v, Number c);
 
   // Add a term c*v to this expression.  If the expression already
   // contains a term involving v, add c to the existing coefficient.
   // If the new coefficient is approximately 0, delete v.  Notify the
   // solver if v appears or disappears from this expression.
-  ClLinearExpression &addVariable(const ClVariable &v, Number c,
-				  const ClVariable &subject,
+  ClLinearExpression &addVariable(const ClAbstractVariable &v, Number c,
+				  const ClAbstractVariable &subject,
 				  ClTableau &solver);
 
   // Return a variable in this expression.  (It is an error if this
   // expression is constant -- signal ExCLInternalError in that case).
-  const ClVariable &anyVariable() const;
+  const ClAbstractVariable *anyVariable() const;
 
   // Replace var with a symbolic expression expr that is equal to it.
   // If a variable has been added to this expression that wasn't there
@@ -102,9 +102,9 @@ class ClLinearExpression  {
   // because it now has a coefficient of 0, inform the solver.
   // PRECONDITIONS:
   //   var occurs with a non-zero coefficient in this expression.
-  void substituteOut(const ClVariable &v, 
+  void substituteOut(const ClAbstractVariable &v, 
 		     const ClLinearExpression &expr,
-		     const ClVariable &subject,
+		     const ClAbstractVariable &subject,
 		     ClTableau &solver);
 
   // This linear expression currently represents the equation
@@ -122,8 +122,8 @@ class ClLinearExpression  {
   //   The new equation will be
   //        newSubject = -c/a + oldSubject/a - (a1/a)*v1 - ... - (an/a)*vn.
   //   Note that the term involving newSubject has been dropped.
-  void changeSubject(const ClVariable &old_subject,
-		     const ClVariable &new_subject);
+  void changeSubject(const ClAbstractVariable &old_subject,
+		     const ClAbstractVariable &new_subject);
 
   // This linear expression currently represents the equation self=0.  Destructively modify it so 
   // that subject=self represents an equivalent equation.  
@@ -141,14 +141,14 @@ class ClLinearExpression  {
   //
   // Note that the term involving subject has been dropped.
   // Returns the reciprocal, so changeSubject can use it, too
-  Number newSubject(const ClVariable &subject);
+  Number newSubject(const ClAbstractVariable &subject);
 
   // Return the coefficient corresponding to variable var, i.e.,
   // the 'ci' corresponding to the 'vi' that var is:
   //     v1*c1 + v2*c2 + .. + vn*cn + c
-  Number coefficientFor(const ClVariable &var) const
+  Number coefficientFor(const ClAbstractVariable &var) const
     { 
-    map<ClVariable, Number>::const_iterator it = my_terms.find(var);
+    map<const ClAbstractVariable *, Number>::const_iterator it = my_terms.find(&var);
     if (it != my_terms.end())
       return (*it).second;
     return 0.0;
@@ -160,10 +160,10 @@ class ClLinearExpression  {
   void set_constant(Number c)
     { my_constant = c; }
 
-  const map<ClVariable,Number> &terms() const
+  const map<const ClAbstractVariable *,Number> &terms() const
     { return my_terms; }
 
-  map<ClVariable,Number> &terms() 
+  map<const ClAbstractVariable *,Number> &terms() 
     { return my_terms; }
 
   void incrementConstant(Number c)
@@ -175,7 +175,7 @@ class ClLinearExpression  {
   virtual ostream &printOn(ostream &xo) const;
 
   friend ostream &operator<<(ostream &xo,const ClLinearExpression &cle)
-    { cle.printOn(xo); return xo; }
+    { return cle.printOn(xo); }
 
   friend ClLinearExpression operator+(const ClLinearExpression &e1,
 				      const ClLinearExpression &e2)
@@ -204,7 +204,7 @@ class ClLinearExpression  {
  private:
 
   Number my_constant;
-  map<ClVariable,Number> my_terms;
+  map<const ClAbstractVariable *,Number> my_terms;
 
 };
 

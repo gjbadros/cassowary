@@ -15,83 +15,40 @@
 #include <stdio.h>
 #include <assert.h>
 #include "Cassowary.h"
+#include "ClAbstractVariable.h"
 
-typedef enum { CLAbstractVar, CLSlackVar, CLObjectiveVar, CLDummyVar, CLVar } ClVariableKind;
-
-class ClVariable;
-
-ClVariable &clvNil();
-
-class ClVariable {
+class ClVariable : public ClAbstractVariable {
 public:
-  ClVariable(String name = "", ClVariableKind kind = CLVar, Number value = 0.0) :
-    my_kind(kind),
-    my_name(name),
-    my_value(value),
-    my_fDummy(false),
-    my_fExternal(false),
-    my_fPivotable(false),
-    my_fRestricted(false)
-    { 
-    if (name.length() == 0)
-      {
-      char sz[16];
-      sprintf(sz,"v%ld",iVariableNumber++);
-      my_name = String(sz);
-      }
-    initializeFor(kind);
-    assert (isCLVar() || my_value == 0.0);
-    }
+  ClVariable(String name = "", Number value = 0.0) :
+    ClAbstractVariable(name),
+    my_value(value)
+    { }
 
-  ClVariable(long number, char *prefix, ClVariableKind kind = CLVar, Number value = 0.0) :
-    my_kind(kind),
-    my_value(value),
-    my_fDummy(false),
-    my_fExternal(false),
-    my_fPivotable(false),
-    my_fRestricted(false)
-    { 
-    char sz[32];
-    sprintf(sz,"%s%ld",prefix,number);
-    my_name = String(sz);
-    initializeFor(kind);
-    assert (isCLVar() || my_value == 0.0);
-    }
-
-  bool isCLVar() const
-    { return my_kind == CLVar; }
-
-  bool isCLObjective() const
-    { return my_kind == CLObjectiveVar; }
-    
-  // Return the name of the variable
-  String name() const
-    { return my_name; }
-
-  // Set the name of the variable
-  void setName(String const &name)
-    { my_name = name; }
+  ClVariable(long number, char *prefix, Number value = 0.0) :
+    ClAbstractVariable(number,prefix),
+    my_value(value)
+    { }
 
   // Return true if this a dummy variable (used as a marker variable
   // for required equality constraints).  Such variables aren't
   // allowed to enter the basis when pivoting.
-  bool isDummy() const
-    { return my_fDummy; }
+  virtual bool isDummy() const
+    { return false; }
 
   // Return true if this a variable known outside the solver.  
   // (We need to give such variables a value after solving is complete.)
-  bool isExternal() const
-    { return my_fExternal; }
+  virtual bool isExternal() const
+    { return true; }
 
   // Return true if we can pivot on this variable.
-  bool isPivotable() const
-    { return my_fPivotable; }
+  virtual bool isPivotable() const
+    { return true; }
 
   // Return true if this is a restricted (or slack) variable.  Such
   // variables are constrained to be non-negative and occur only
   // internally to the simplex solver.
-  bool isRestricted() const
-    { return my_fRestricted; }
+  virtual bool isRestricted() const
+    { return false; }
 
   // Prints a semi-descriptive representation to the stream, using the
   // name if there is one, and otherwise the hash number of this
@@ -100,60 +57,22 @@ public:
   //	  x[10.0]		-- w/ name
   //	  x[0.0,100]		-- w/ name, bounds but no value yet
   //	  CV#345(10.0)		-- w/o name
-  ostream &printOn(ostream &xo) const
+  virtual ostream &printOn(ostream &xo) const
   {  
-    xo << "[" << my_name << ":" << my_value << "]";
+    xo << "[" << name() << ":" << my_value << "]";
     return xo;
   }
   
   // Return the current value I hold.
   Number value() const
-    { assert(isCLVar()); return my_value; }
+    { return my_value; }
 
-  void set_value(Number const &value)
-    { assert(isCLVar()); my_value = value; }
+  void set_value(Number value)
+    { my_value = value; }
 
-  friend ostream& operator<<(ostream &xos, const ClVariable &clv)
-    { clv.printOn(xos); return xos; }
-
-  friend bool operator<(const ClVariable &cl1, const ClVariable &cl2)
-    { return cl1.my_name < cl2.my_name; }
-
-  friend bool operator==(const ClVariable &cl1, const ClVariable &cl2)
-    { return cl1.my_name == cl2.my_name; }
 
 private:
-  void initializeFor(ClVariableKind kind)
-    {
-    switch (kind)
-      {
-      case CLAbstractVar:
-	break;
-      case CLSlackVar:
-	my_fPivotable = true;
-	my_fRestricted = true;
-	break;
-      case CLObjectiveVar:
-	break;
-      case CLDummyVar:
-	my_fDummy = true;
-	my_fRestricted = true;
-	break;
-      case CLVar:
-	my_fExternal = true;
-	break;
-      }
-    }
-
-  ClVariableKind my_kind;
-  String my_name;
   Number my_value;
-  bool my_fDummy;
-  bool my_fExternal;
-  bool my_fPivotable;
-  bool my_fRestricted;
-  
-  static long iVariableNumber;
 };
 
 #endif
