@@ -40,10 +40,6 @@ class ClStrength {
   virtual ~ClStrength()
     { }
 
-  // Return the number of non-required strengths
-  static int nLevels()
-    { return 3; }
-
   virtual bool isRequired() const
     { return (this == &clsRequired()); }
 

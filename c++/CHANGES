@@ -3,12 +3,22 @@ List of changes in C++ implementation
 * Eliminated the ClAbstractVariable hierarchy in favor of a simpler
   ClVariable class with member variables containing the state
  - behaviour wasn't changing for subclasses
+ - faster, since no virtual functions
  - con: all ClVariable kinds have a `Number value' field, so some space
    is wasted
+ - con: an enum-based implementation that isn't very extensible
+ 
 
 * Expressions don't convert themselves into constraints via cnEqual,
-etc., instead constraints can be constructed using expressions
+etc., instead constraints can be constructed from expressions
  - otherwise had a problem with header file inclusion, since I'm trying
    to do as much as possible by value, and avoiding pointers and
    references for efficiency and simplicity
+
+
+Possible Changes
+ - implicit stays, add ClStrength to ClVariable -- see p.20 of TR
+ - Add edit constraints to solver en masse, after removing old edit
+   constraints  -- see p.18 of TR
+ - separate out the tableau data structure from the solver
 

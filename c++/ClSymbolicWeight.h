@@ -23,6 +23,8 @@ class ClSymbolicWeight {
 
   ClSymbolicWeight(double w1 = 0.0, double w2 = 0.0, double w3 = 0.0);
 
+  ClSymbolicWeight(const vector<double> &weights);
+
   static ClSymbolicWeight &zero();
 
   ClSymbolicWeight times(Number n) const;

@@ -28,7 +28,7 @@ HEADERS = Cassowary.h ClErrors.h \
 all:	libcassowary.a cassowary-tests
 
 clean:	
-	rm $(TESTS) *.o
+	rm -f $(TESTS) *.o
 
 TAGS: $(SOURCES)
 	etags $^

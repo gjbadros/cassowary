@@ -27,6 +27,10 @@ ClSymbolicWeight::ClSymbolicWeight(double w1, double w2, double w3)
   assert(my_values.size() == 3);
 }
 
+ClSymbolicWeight::ClSymbolicWeight(const vector<double> &weights) :
+  my_values(weights)
+{ }
+
 ClSymbolicWeight &
 ClSymbolicWeight::zero()
 {

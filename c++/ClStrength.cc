@@ -43,6 +43,4 @@ ClStrength &clsWeak()
 ClStrength::ClStrength(const String &name, double w1, double w2, double w3) :
   my_name(name), my_symbolicWeight(w1, w2, w3)
 { 
-  // just to be sure that this special case applies
-  assert(nLevels() == 3);
 }
