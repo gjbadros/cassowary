@@ -107,6 +107,12 @@ void QuadDemoWindow::mousePressEvent( QMouseEvent *e )
 {
   int x = e->x();
   int y = e->y();
+  if (peditX != NULL || peditY != NULL)
+    {
+    assert(peditX != NULL && peditY != NULL);
+    return;
+    }
+  
   for (int i = 0; i < cdb; i++)
     {
     if (db[i].FContains(x,y))
@@ -117,6 +123,7 @@ void QuadDemoWindow::mousePressEvent( QMouseEvent *e )
     }
   if (idbDragging != -1)
     {
+    imbUsed = e->button();
     peditX = new ClEditConstraint(db[idbDragging].X(),clsStrong());
     peditY = new ClEditConstraint(db[idbDragging].Y(),clsStrong());
     solver
@@ -126,23 +133,32 @@ void QuadDemoWindow::mousePressEvent( QMouseEvent *e )
     }
 }
 
-void QuadDemoWindow::mouseReleaseEvent( QMouseEvent * )
+void QuadDemoWindow::mouseReleaseEvent( QMouseEvent *e )
 {
   if (idbDragging != -1)
     {
     try
       {
-      assert(peditX != NULL);
-      assert(peditY != NULL);
-      idbDragging = -1;
-      solver
-	.removeConstraint(*peditX)
-	.removeConstraint(*peditY)
-	;
-      delete peditX;
-      delete peditY;
-      peditX = peditY = NULL;
-      repaint();
+      if (e->button() == imbUsed)
+        {
+        // Only remove the constraints if the button
+        // that we initiated the drag with is released
+        assert(peditX != NULL);
+        assert(peditY != NULL);
+        idbDragging = -1;
+        solver
+          .removeConstraint(*peditX)
+          .removeConstraint(*peditY)
+          ;
+        delete peditX;
+        delete peditY;
+        peditX = peditY = NULL;
+        repaint();
+        }
+#ifndef NDEBUG
+      solver.printInternalInfo(cerr);
+      cerr << endl;
+#endif
       }
     catch (ExCLError &error) 
       {
