@@ -55,8 +55,9 @@ ClFDSolver::AddConstraint(ClConstraint *const pcn)
   node nRw = GetVarNode(rw);
   if (!ro.IsNil()) {
     node nRo = GetVarNode(ro);
-  
-    _mapCnToEdge[pcn] = G.new_edge(nRo, nRw);
+    edge e = G.new_edge(nRo, nRw);
+
+    _mapCnToEdge[pcn] = e;
 
     if (!G.is_acyclic()) {
       /* there is a cycle... give up after cleaning up */
@@ -97,15 +98,21 @@ ClFDSolver::RemoveConstraint(ClConstraint *const pcn)
   }
   _cnsAffectingRW.erase(it);
 
-  edge e = _mapCnToEdge[pcn];
-  G.del_edge(e);
-  _mapCnToEdge.erase(pcn);
+  if (!ro.IsNil()) {
+    edge e = _mapCnToEdge[pcn];
+    G.del_edge(e);
+    _mapCnToEdge.erase(pcn);
 
-  if (_mapVarToNode[rw].degree() == 0) {
-    G.del_node(_mapVarToNode[rw]);
+    if (_mapVarToNode.find(ro) != _mapVarToNode.end() &&
+        _mapVarToNode[ro].degree() == 0) {
+      G.del_node(_mapVarToNode[ro]);
+      _mapVarToNode.erase(ro);
+    }
   }
-  if (_mapVarToNode[ro].degree() == 0) {
-    G.del_node(_mapVarToNode[ro]);
+  if (_mapVarToNode.find(rw) != _mapVarToNode.end() &&
+      _mapVarToNode[rw].degree() == 0) {
+    G.del_node(_mapVarToNode[rw]);
+    _mapVarToNode.erase(rw);
   }
   if (_mapClvToCns[rw].size() == 0) {
     _mapClvToCns.erase(rw);
