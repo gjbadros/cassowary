@@ -762,14 +762,14 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
     // Since both of these variables are newly created we can just add
     // them to the expression (they can't be basic).
     ++my_slackCounter;
-    auto_ptr < ClSlackVariable > p (new ClSlackVariable (my_slackCounter, "s"));
+    auto_ptr<ClSlackVariable> p (new ClSlackVariable (my_slackCounter, "s"));
     pslackVar = p;		// transfer ownership to other auto_ptr
     // index the constraint under its slack variable
     my_markerVars[&cn] = pslackVar.get();
     if (!cn.isRequired())
       {
       ++my_slackCounter;
-      auto_ptr < ClSlackVariable > p (new ClSlackVariable (my_slackCounter, "em"));
+      auto_ptr<ClSlackVariable> p (new ClSlackVariable (my_slackCounter, "em"));
       peminus = p;
       pexpr->setVariable(*peminus,1.0);
       // add emnius to the objective function with the appropriate weight
@@ -789,7 +789,7 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
       // for this constraint.  The dummy variable is never allowed to
       // enter the basis when pivoting.
       ++my_dummyCounter;
-      auto_ptr < ClDummyVariable > p (new ClDummyVariable (my_dummyCounter, "d"));
+      auto_ptr<ClDummyVariable> p (new ClDummyVariable (my_dummyCounter, "d"));
       pdummyVar = p;
       pexpr->setVariable(*pdummyVar,1.0);
       my_markerVars[&cn] = pdummyVar.get();
@@ -804,9 +804,9 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
       //       expr = eplus - eminus, 
       // in other words:  expr-eplus+eminus=0
       ++my_slackCounter;
-      auto_ptr < ClSlackVariable > p1 (new ClSlackVariable (my_slackCounter, "ep"));
+      auto_ptr<ClSlackVariable> p1 (new ClSlackVariable (my_slackCounter, "ep"));
       peplus = p1;
-      auto_ptr < ClSlackVariable > p2 (new ClSlackVariable (my_slackCounter, "em"));
+      auto_ptr<ClSlackVariable> p2 (new ClSlackVariable (my_slackCounter, "em"));
       peminus = p2;
 	  
       pexpr->setVariable(*peplus,-1.0);
