@@ -10,44 +10,133 @@
 
 #include "Cl.h"
 
+
+bool
+addDelete1()
+{
+ try 
+   {
+   bool fOkResult = true; 
+   ClVariable x("x");
+   ClSimplexSolver solver;
+
+   solver.addConstraint( ClLinearEquation( 0-x /* = */ + 100, clsWeak() ) );
+    
+   ClLinearInequality c10(10-x);
+   ClLinearInequality c20(20-x);
+    
+   solver
+     .addConstraint(c10)
+     .addConstraint(c20);
+
+   fOkResult = fOkResult && clApprox(x,10.0);
+   cout << "x == " << x.value() << endl;
+
+   solver.removeConstraint(c10);
+   fOkResult = fOkResult && clApprox(x,20.0);
+   cout << "x == " << x.value() << endl;
+
+   solver.removeConstraint(c20);
+   fOkResult = fOkResult && clApprox(x,100.0);
+   cout << "x == " << x.value() << endl;
+
+   ClLinearInequality c10again = ClLinearInequality(10-x);
+
+   solver
+     .addConstraint(c10)
+     .addConstraint(c10again);
+
+   fOkResult = fOkResult && clApprox(x,10.0);
+   cout << "x == " << x.value() << endl;
+    
+   solver.removeConstraint(c10);
+   fOkResult = fOkResult && clApprox(x,10.0);
+   cout << "x == " << x.value() << endl;
+
+   solver.removeConstraint(c10again);
+   fOkResult = fOkResult && clApprox(x,100.0);
+   cout << "x == " << x.value() << endl;
+
+   return(fOkResult);
+   } 
+ catch (ExCLError &error) 
+   {
+   cerr << "Exception! " << error.description() << endl;
+   return(false);
+   } 
+ catch (...) 
+   {
+   cerr << "Unknown exception" << endl;
+   return(false);
+   }
+}
+
+bool
+addDelete2()
+{
+ try 
+   {
+   bool fOkResult = true; 
+   ClVariable x("x");
+   ClVariable y("y");
+   ClSimplexSolver solver;
+
+   solver
+     .addConstraint( ClLinearEquation(x, 100.0, clsWeak()))
+     .addConstraint( ClLinearEquation(y, 120.0, clsStrong()));
+
+   ClLinearInequality c10(x,cnLEQ,10.0);
+   fOkResult = fOkResult && clApprox(x,10.0);
+   cout << "x == " << x.value() << endl;
+
+   return(fOkResult);
+   } 
+ catch (ExCLError &error) 
+   {
+   cerr << "Exception! " << error.description() << endl;
+   return(false);
+   }
+ catch (...) 
+   {
+   cerr << "Unknown exception" << endl;
+   return(false);
+   }
+}
+
+bool
+casso1()
+{
+ try 
+   {
+   bool fOkResult = true; 
+   ClVariable x("x");
+   ClVariable y("y");
+   ClSimplexSolver solver;
+
+   fOkResult = fOkResult && clApprox(x,10.0);
+   cout << "x == " << x.value() << endl;
+
+   return(fOkResult);
+   } 
+ catch (ExCLError &error) 
+   {
+   cerr << "Exception! " << error.description() << endl;
+   return(false);
+   }
+ catch (...) 
+   {
+   cerr << "Unknown exception" << endl;
+   return(false);
+   }
+}
+
 int
 main( char **argv, int argc )
 {
   bool fOkResult = true;
-  ClVariable x("x");
+  fOkResult = fOkResult && addDelete1();
 
-  ClSimplexSolver solver;
-
-  try 
-    {
-    solver.addConstraint( ClLinearEquation( 0-x /* = */ + 100, clsWeak() ) );
-    
-    ClLinearInequality c10 = ClLinearInequality(10-x);
-    ClLinearInequality c20 = ClLinearInequality(20-x);
-    
-    solver.addConstraint(c10);
-    solver.addConstraint(c20);
-
-    fOkResult = fOkResult && clApprox(x,10.0);
-    cout << "x == " << x.value() << endl;
-
-    solver.removeConstraint(c10);
-    fOkResult = fOkResult && clApprox(x,20.0);
-    cout << "x == " << x.value() << endl;
-
-    solver.removeConstraint(c20);
-    fOkResult = fOkResult && clApprox(x,100.0);
-    cout << "x == " << x.value() << endl;
-
-    exit(fOkResult? 0 : -1);
-    } 
-  catch (ExCLError &error) 
-    {
-    cerr << "Exception! " << error.description() << endl;
-    exit(-1);
-    } 
-  catch (...) 
-    {
-    cerr << "Unknown exception" << endl;
-    }
+  
+  
+  exit (fOkResult? 0 : 255);
 }

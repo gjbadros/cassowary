@@ -26,6 +26,13 @@ class ClLinearEquation : public ClLinearConstraint {
 		  double weight = 1.0) :
    ClLinearConstraint(cle,strength, weight)
    { }
+
+ ClLinearEquation(const ClVariable &clv,
+		  const ClLinearExpression &cle,
+		  const ClStrength strength = clsRequired(),
+		  double weight = 1.0) :
+   ClLinearConstraint(cle-clv,strength,weight)
+   { }
  
  virtual ostream &printOn(ostream &xo) const
    {  super::printOn(xo); xo << " = 0 )"; return xo; }

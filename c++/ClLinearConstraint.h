@@ -15,6 +15,7 @@
 #include "ClConstraint.h"
 #include "ClLinearExpression.h"
 
+
 // Add the ClLinearExpression member variable needed for both
 // ClLinearEquation and ClLinearInequality
 class ClLinearConstraint : public ClConstraint {
@@ -29,14 +30,14 @@ class ClLinearConstraint : public ClConstraint {
     ClConstraint(strength, weight),
     my_expression(cle)
     { }
-  
+
   // Return my linear expression.  (For linear equations, this
   // constraint represents expression=0; for linear inequalities it
   // represents expression>=0.)
   ClLinearExpression expression() const
     { return my_expression; }
 
- private:
+ protected:
 
   ClLinearExpression my_expression;
 

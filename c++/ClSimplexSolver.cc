@@ -17,7 +17,7 @@
 #include "ClDummyVariable.h"
 
 // Add the constraint cn to the tableau
-void 
+ClSimplexSolver &
 ClSimplexSolver::addConstraint(const ClConstraint &cn)
 {
 #ifndef NO_TRACE
@@ -37,13 +37,14 @@ ClSimplexSolver::addConstraint(const ClConstraint &cn)
     }
   optimize(my_objective);
   setExternalVariables();
+  return *this;
 }
 
 // Add weak stays to the x and y parts of each point. These have
 // increasing weights so that the solver will try to satisfy the x
 // and y stays on the same point, rather than the x stay on one and
 // the y stay on another.
-void 
+ClSimplexSolver &
 ClSimplexSolver::addPointStays(const vector<const ClPoint *> &listOfPoints)
 {
 #ifndef NO_TRACE
@@ -59,11 +60,12 @@ ClSimplexSolver::addPointStays(const vector<const ClPoint *> &listOfPoints)
     addPointStay((*it)->first,(*it)->second,weight);
     weight *= multiplier;
     }
+  return *this;
 }
 
 // Remove the constraint cn from the tableau
 // Also remove any error variable associated with cn
-void 
+ClSimplexSolver &
 ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
 {
 #ifndef NO_TRACE
@@ -285,6 +287,7 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
     my_errorVars.erase(it_eVars);
   optimize(my_objective);
   setExternalVariables();
+  return *this;
 }
 
 // Re-initialize this solver from the original constraints, thus

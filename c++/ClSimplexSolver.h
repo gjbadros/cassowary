@@ -38,41 +38,41 @@ class ClSimplexSolver : public ClTableau {
     }
   
   // Add constraints so that lower<=var<=upper.  (nil means no  bound.)
-  void addLowerBound(const ClAbstractVariable &v, Number lower)
+  ClSimplexSolver &addLowerBound(const ClAbstractVariable &v, Number lower)
     { 
     ClLinearInequality *pcn = new ClLinearInequality(ClLinearExpression(lower - v));
-    addConstraint(*pcn);
+    return addConstraint(*pcn);
     }
-  void addUpperBound(const ClAbstractVariable &v, Number upper)
+  ClSimplexSolver &addUpperBound(const ClAbstractVariable &v, Number upper)
     {
     ClLinearInequality *pcn = new ClLinearInequality(ClLinearExpression(v - upper));
-    addConstraint(*pcn);
+    return addConstraint(*pcn);
     }
-  void addBounds(const ClAbstractVariable &v, Number lower, Number upper)
-    { addLowerBound(v,lower); addUpperBound(v,upper); }
+  ClSimplexSolver &addBounds(const ClAbstractVariable &v, Number lower, Number upper)
+    { addLowerBound(v,lower); addUpperBound(v,upper); return *this; }
 
   // Add the constraint cn to the tableau
-  void addConstraint(const ClConstraint &cn);
+  ClSimplexSolver &addConstraint(const ClConstraint &cn);
 
   // Add weak stays to the x and y parts of each point. These have
   // increasing weights so that the solver will try to satisfy the x
   // and y stays on the same point, rather than the x stay on one and
   // the y stay on another.
-  void addPointStays(const vector<const ClPoint *> &listOfPoints);
-  void addPointStay(const ClAbstractVariable &vx, const ClAbstractVariable &vy, double weight)
-    { addStay(vx,clsWeak(),weight); addStay(vy,clsWeak(),weight); }
+  ClSimplexSolver &addPointStays(const vector<const ClPoint *> &listOfPoints);
+  ClSimplexSolver &addPointStay(const ClAbstractVariable &vx, const ClAbstractVariable &vy, double weight)
+    { addStay(vx,clsWeak(),weight); addStay(vy,clsWeak(),weight); return *this; }
 
   // Add a stay of the given strength (default to weak) of v to the tableau
-  void addStay(const ClAbstractVariable &v,
+  ClSimplexSolver &addStay(const ClAbstractVariable &v,
 	       const ClStrength &strength = clsWeak(), double weight = 1.0 )
     { 
     ClStayConstraint *pcn = new ClStayConstraint(v,strength,weight); 
-    addConstraint(*pcn); 
+    return addConstraint(*pcn); 
     }
 
   // Remove the constraint cn from the tableau
   // Also remove any error variable associated with cn
-  void removeConstraint(const ClConstraint &pcn);
+  ClSimplexSolver &removeConstraint(const ClConstraint &pcn);
 
   // Re-initialize this solver from the original constraints, thus
   // getting rid of any accumulated numerical problems.  (Actually,

@@ -11,4 +11,5 @@
 #include "ClVariable.h"
 #include "ClSimplexSolver.h"
 #include "ClLinearEquation.h"
+#include "ClLinearInequality.h"
 #include "ClErrors.h"

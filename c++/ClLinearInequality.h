@@ -13,16 +13,39 @@
 
 #include "ClLinearConstraint.h"
 
+enum ClInequalityOperator { cnLEQ, cnGEQ };
+
+class ClVariable;
+
 class ClLinearInequality : public ClLinearConstraint {
  private: typedef ClLinearConstraint super;
 
  public:
-  // Constructor
+ // Constructor
  ClLinearInequality(const ClLinearExpression &cle,
 		    const ClStrength strength = clsRequired(),
 		    double weight = 1.0) :
    ClLinearConstraint(cle,strength, weight)
    { }
+
+ ClLinearInequality(const ClAbstractVariable &clv,
+		    ClInequalityOperator op,
+		    const ClLinearExpression &cle,
+		    const ClStrength strength = clsRequired(),
+		    double weight = 1.0) :
+   ClLinearConstraint( cle, strength, weight)
+   { 
+   if (op == cnGEQ)
+     {
+     my_expression.multiplyMe(-1.0);
+     my_expression.addVariable(clv,1.0);
+     }
+   else // op == cnLEQ
+     {
+     my_expression.addVariable(clv,-1.0);
+     }
+   }
+
  
  // Return true if this is an inequality constraint and
  // false if it is an equality constraint.  The default is
