@@ -11,6 +11,7 @@
 
 CC = gcc
 CPP = g++
+CPP_SO_LINK = g++ -shared
 CFLAGS = -g -Wall
 EGCSDIR = /uns/egcs
 CXX = $(CPP)
@@ -35,11 +36,12 @@ FLEX_FLAGS =
 #CPPFLAGS = -g -DCL_NO_TRACE -Wall -pedantic -W
 #CPPFLAGS = -g -DCL_NO_TRACE -DUSE_HASH_MAP_AND_SET -DCL_SOLVER_CHECK_INTEGRITY -Wall -pedantic -W #-DUSE_GC
 #CPPFLAGS = -g -DCL_NO_TRACE -DCL_NO_IO -DCL_SOLVER_CHECK_INTEGRITY -Wall -pedantic -W #-DUSE_GC
+#CPPFLAGS = -g -DCL_NO_TRACE -DCL_SOLVER_CHECK_INTEGRITY -Wall -pedantic -W -DCL_FIND_LEAK #-DUSE_GC
 CPPFLAGS = -g -DCL_NO_TRACE -DCL_SOLVER_CHECK_INTEGRITY -Wall -pedantic -W #-DUSE_GC
 #CPPFLAGS = -g -DCL_SOLVER_CHECK_INTEGRITY -Wall -pedantic -W #-DUSE_GC
 
-OTHER_LIBS = 
-# OTHER_LIBS = ../../gc/gc.a
+#OTHER_LIBS = 
+OTHER_LIBS = ../../gc/gc.a
 
 #LIB=cassowary-optimized
 LIB=cassowary-notrace
@@ -54,6 +56,7 @@ LDLIBS = -l$(LIB)
 LDFLAGS = -L.
 
 CL_LIBRARY = lib$(LIB).a
+CL_SHARED_LIBRARY = lib$(LIB).so
 
 OBJS = 	ClAbstractVariable.o \
 	ClConstraint.o \
@@ -62,7 +65,9 @@ OBJS = 	ClAbstractVariable.o \
 	ClStrength.o \
 	ClSymbolicWeight.o \
 	ClTableau.o \
-	ClVariable.o
+	ClVariable.o \
+	ClSlackVariable.o \
+	ClDummyVariable.o
 
 
 TEST_OBJS = test-ClConstraint.o    \
@@ -118,9 +123,15 @@ bugtests: ClBug0 ClBug1
 
 lib:    $(CL_LIBRARY)
 
+shared_lib:	$(CL_SHARED_LIBRARY)
+
 $(CL_LIBRARY): $(OBJS)
 	rm -f $@
 	ar ruv $@ $(OBJS)
+
+$(CL_SHARED_LIBRARY): $(OBJS)
+	rm -f $@
+	$(CPP_SO_LINK) -o $@ $(OBJS)
 
 clean:	
 	rm -f $(TESTS) *.o
@@ -162,7 +173,7 @@ ntsources: $(NT_SOURCES)
 	modpod2texinfo $< >$@
 
 
-.PHONY:	all bugtests cassowary-tests lib tags ntsources tests depend 
+.PHONY:	all bugtests cassowary-tests lib shared_lib tags ntsources tests depend 
 
 %.cpp: %.cc
 	ln -s $< $@
