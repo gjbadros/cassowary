@@ -1,5 +1,7 @@
-ln -s libcassowary-debug.a ./c++/libcassowary.a
-ln -s ../bib/constraints.bib ./papers/uist97/constraints.bib
+ln -s libcassowary.a ./c++/libcassowary-scwm.a
+ln -s . ./c++/cassowary
+ln -s . ./guile/app
+ln -s . ./guile/cassowary
 ln -s ../uist97/eepic.sty ./papers/cassowary-tr/eepic.sty
 ln -s ../uist97/epic.sty ./papers/cassowary-tr/epic.sty
 ln -s ../uist97/psfig.sty ./papers/cassowary-tr/psfig.sty
@@ -9,3 +11,4 @@ ln -s ../uist97/quasi.eepic ./papers/cassowary-tr/quasi.eepic
 ln -s ../uist97/uist96.cls ./papers/cassowary-tr/uist96.cls
 ln -s ../uist97/abb1.tex ./papers/cassowary-tr/abb1.tex
 ln -s ../bib/constraints.bib ./papers/cassowary-tr/constraints.bib
+ln -s ../bib/constraints.bib ./papers/uist97/constraints.bib
