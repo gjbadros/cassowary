@@ -41,6 +41,8 @@ ClSimplexSolver::~ClSimplexSolver()
        << "errorVars " << my_errorVars.size() << ", "
        << "markerVars " << my_markerVars.size() << endl;
 #endif
+  // Cannot print *this here, since local ClVariable-s may have been
+  // destructed already
 }
 
 // Add the constraint cn to the tableau
@@ -442,6 +444,8 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
   // If not, the original constraint was not satisfiable
   if (!clApprox(pazTableauRow->constant(),0.0))
     {
+    delete removeRow(*pav);
+    delete pav;
     throw ExCLRequiredFailure();
     }
 
