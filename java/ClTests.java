@@ -226,11 +226,12 @@ class ClTests extends CL {
     double coeff;
     for (j = 0; j < nCns; j++) {
       // number of variables in this constraint
-      nvs = (int) (UniformRandomDiscretized()*maxVars) + 1;
+      nvs = RandomInRange(1,maxVars);
       ClLinearExpression expr = new ClLinearExpression(UniformRandomDiscretized() * 20.0 - 10.0);
       for (k = 0; k < nvs; k++) {
         coeff = UniformRandomDiscretized()*10 - 5;
-        expr.addExpression(CL.Times(rgpclv[(int) (UniformRandomDiscretized()*nVars)], coeff));
+        int iclv = (int) (UniformRandomDiscretized()*nVars);
+        expr.addExpression(CL.Times(rgpclv[iclv], coeff));
       }
       if (UniformRandomDiscretized() < ineqProb) {
         rgpcns[j] = new ClLinearInequality(expr);
@@ -315,9 +316,15 @@ class ClTests extends CL {
 
   public final static double UniformRandomDiscretized()
   {
-    double n = RND.nextInt();
-    return n/Integer.MAX_VALUE;
+    double n = Math.abs(RND.nextInt());
+    return (n/Integer.MAX_VALUE);
   }
+
+  public final static int RandomInRange(int low, int high)
+  {
+    return (int) UniformRandomDiscretized()*(high-low)+low;
+  }
+    
 
 
   public final static void main( String[] args )
@@ -326,6 +333,8 @@ class ClTests extends CL {
   {
     //    try 
     {
+      ClTests clt = new ClTests();
+
       boolean fAllOkResult = true;
       boolean fResult;
       
@@ -360,7 +369,19 @@ class ClTests extends CL {
       if (CL.fGC) System.out.println("Num vars = " + ClAbstractVariable.numCreated() );
       
       System.out.println("addDel:");
-      fResult = addDel(900,900,10000);
+
+      int cns = 900, vars = 900, resolves = 10000;
+
+      if (args.length > 0)
+        cns = Integer.parseInt(args[0]);
+
+      if (args.length > 1)
+        vars = Integer.parseInt(args[1]);
+
+      if (args.length > 2)
+        resolves = Integer.parseInt(args[2]);
+
+      fResult = addDel(cns,vars,resolves);
       // fResult = addDel(300,300,1000);
       // fResult = addDel(30,30,100);
       // fResult = addDel(10,10,30);
