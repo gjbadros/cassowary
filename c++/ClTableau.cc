@@ -21,9 +21,6 @@
 // let ClSimplexSolver worry about deleting the variables
 ClTableau::~ClTableau()
 {
-#ifndef CL_NO_TRACE
-  cerr << *this << endl;
-#endif
   ClTableauRowsMap::iterator it = my_rows.begin();
   for (; it != my_rows.end(); ++it)
     {
