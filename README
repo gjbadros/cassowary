@@ -70,6 +70,8 @@ At one time or another, it has compiled using:
   o gcc-2.8.1 (needs libstdc++-2.8.x, too)
   o Visual C++ 5.0
 
+In particular, Cassowary will *not* build with gcc-2.7.x.x!
+
 See c++/README for more details about building the C++ version.
 
 
