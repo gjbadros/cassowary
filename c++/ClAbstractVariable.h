@@ -21,6 +21,7 @@
 #include "Cassowary.h"
 #include "ClErrors.h"
 #include <memory>
+#include "cl_auto_ptr.h"
 
 #ifdef USE_GC
 class ClAbstractVariable : public gc {
