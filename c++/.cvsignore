@@ -1,7 +1,9 @@
 ClTests
 ClTests-good
+ClTests-setExtOpt
 Makefile.dependencies
 gmon.out
+gmon.out-setExtOpt
 output
 test-ClConstraint
 test-ClLinearExpression
