@@ -89,9 +89,22 @@ public class ClSimplexSolver extends ClTableau
     
     ClLinearExpression expr = newExpression(cn);
   
-    if (!tryAddingDirectly(expr)) {
-      // could not add directly
-      addWithArtificialVariable(expr);
+    boolean fAddedOkDirectly = false;
+
+    try {
+      fAddedOkDirectly = tryAddingDirectly(expr);
+      if (!fAddedOkDirectly) {
+        // could not add directly
+        addWithArtificialVariable(expr);
+      }
+    } catch (ExCLRequiredFailure err) {
+      ///try {
+        ///        removeConstraint(cn); // FIXGJB
+        //      } catch (ExCLConstraintNotFound errNF) {
+        // This should not possibly happen
+        /// System.err.println("ERROR: could not find a constraint just added\n");
+        ///}
+      throw err;
     }
 
     _fNeedsSolving = true;
@@ -621,7 +634,7 @@ public class ClSimplexSolver extends ClTableau
 	removeRow(az);
 	return;
       }
-      ClAbstractVariable entryVar = e.anyVariable();
+      ClAbstractVariable entryVar = e.anyPivotableVariable();
       pivot( entryVar, av);
     }
     assert(rowExpression(av) == null);
@@ -966,6 +979,7 @@ public class ClSimplexSolver extends ClTableau
        throws ExCLInternalError
   {
     if (fTraceOn) fnenterprint("pivot: " + entryVar + ", " + exitVar);
+    assert(entryVar.isPivotable());
 
     ClLinearExpression  pexpr = removeRow(exitVar);
 
