@@ -1,3 +1,11 @@
+1999-02-15  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClVariable.{cc,h}, c++/ClAbstractVariable.h: Added
+	SetVarMap(..), VarMap(), and make variables given names get their
+	names mapped to the objects in the var map (for access when
+	parsing constraints as strings).  Make setName() virtual so
+	ClVariable can override it.
+
 1999-02-12  Greg J Badros  <gjb@cs.washington.edu>
 
 	* c++/creader.{y,h}: New version from Steve Wolfman, slightly
