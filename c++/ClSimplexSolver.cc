@@ -84,6 +84,15 @@ ClSimplexSolver::AddConstraint(ClConstraint *const pcn)
       // to deal with
       throw ExCLEditMisuse("(ExCLEditMisuse) Edit constaint on variable not in tableau.");
       }
+    ClEditInfo *pcei = PEditInfoFromClv(v);
+    if (pcei)
+      {
+      // we need to only add a partial _editInfoList entry for this
+      // edit constraint since the variable is already being edited.
+      // otherwise a more complete entry is added later in this function
+      _editInfoList.push_back(new ClEditInfo(v, NULL, clvNil, clvNil, 0));
+      return *this;
+      }
     }
 
   ClVariable clvEplus, clvEminus;
@@ -132,10 +141,9 @@ ClSimplexSolver::AddConstraint(ClConstraint *const pcn)
   if (pcn->IsEditConstraint())
     {
     ClEditConstraint *pcnEdit = dynamic_cast<ClEditConstraint *>(pcn);
-    int ccnEdit = _editVarMap.size();
-    _editVarMap[pcnEdit->variable()] = new ClEditInfo(pcnEdit,
-                                                      clvEplus, clvEminus,
-                                                      prevEConstant, ccnEdit);
+    ClVariable clv = pcnEdit->variable();
+    _editInfoList.push_back(new ClEditInfo(clv, pcnEdit, clvEplus, clvEminus,
+                                       prevEConstant));
     }
 
   if (_fAutosolve)
@@ -183,27 +191,56 @@ ClSimplexSolver &
 ClSimplexSolver::RemoveEditVarsTo(int n)
 {
   queue<ClVariable> qclv;
-  for ( ClVarToEditInfoMap::const_iterator it = _editVarMap.begin();
-        (it != _editVarMap.end() && _editVarMap.size() != static_cast<unsigned int>(n));
-        ++it ) 
-    {
-    const ClEditInfo *pcei = (*it).second;
-    assert(pcei);
-    if (pcei->_index >= n)
-      {
-      const ClEditConstraint *pcnEdit = dynamic_cast<const ClEditConstraint *>(pcei->_pconstraint);
-#ifdef CL_TRACE
-      cerr << __FUNCTION__ << ": Removing " << pcnEdit->variable() << endl;
+  ClVarSet sclvStillEditing; // Set of edit variables that we need to *not* remove
+#ifdef DEBUG_NESTED_EDITS
+  cerr << __FUNCTION__ << " " << n << endl;
 #endif
-      qclv.push(pcnEdit->variable());
-      }
+  int i = 0;
+  for ( ClEditInfoList::const_iterator it = _editInfoList.begin();
+        (it != _editInfoList.end() && _editInfoList.size() != static_cast<unsigned int>(n));
+        ++it, ++i ) 
+    {
+    const ClEditInfo *pcei = (*it);
+    assert(pcei);
+#ifdef DEBUG_NESTED_EDITS
+    cerr << __FUNCTION__ << "Checking " << pcei->_clv
+         << ", index = " << i << endl;
+#endif
+    if (i >= n)
+      qclv.push(pcei->_clv);
+    else
+      sclvStillEditing.insert(pcei->_clv);
     }
   while (!qclv.empty()) 
     {
-    RemoveEditVar(qclv.front());
+    ClVariable clv = qclv.front();
+    // only remove the variable if it's not in the set of variable
+    // from a previous nested outer edit
+    // e.g., if I do:
+    // Edit x,y
+    // Edit w,h,x,y
+    // EndEdit
+    // The end edit needs to only get rid of the edits on w,h
+    // not the ones on x,y
+    if (sclvStillEditing.find(clv) == sclvStillEditing.end())
+      {
+#ifdef DEBUG_NESTED_EDITS
+      cerr << __FUNCTION__ << ": Removing " << clv << endl;
+#endif
+      RemoveEditVar(clv);
+      }
+#ifdef DEBUG_NESTED_EDITS
+    else
+      {
+      cerr << __FUNCTION__ << ": Not removing " << clv << endl;
+      }
+#endif
     qclv.pop();
     }
-
+  while (_editInfoList.size() > n) {
+    _editInfoList.pop_back();
+  }
+  
   return *this;
 }
 
@@ -431,12 +468,12 @@ ClSimplexSolver::RemoveConstraintInternal(const ClConstraint *const pcn)
     {
     const ClEditConstraint *pcnEdit = dynamic_cast<const ClEditConstraint *>(pcn);
     const ClVariable clv = pcnEdit->variable();
-    ClEditInfo *pcei = _editVarMap[clv];
+    ClEditInfo *pcei = PEditInfoFromClv(clv);
     assert(pcei);
     ClVariable clvEditMinus = pcei->_clvEditMinus;
     RemoveColumn(clvEditMinus);  // clvEditPlus is a marker var and gets removed later
     delete pcei;
-    _editVarMap.erase(clv);
+    _editInfoList.remove(pcei);
     }
 
   if (fFoundErrorVar)
@@ -503,8 +540,8 @@ ClSimplexSolver::SuggestValue(ClVariable v, Number x)
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
 #endif
-  ClVarToEditInfoMap::const_iterator itEditVarMap = _editVarMap.find(v);
-  if (itEditVarMap == _editVarMap.end())
+  ClEditInfo *pcei = PEditInfoFromClv(v);
+  if (NULL == pcei)
     {
 #ifndef CL_NO_IO
     strstream ss;
@@ -514,7 +551,6 @@ ClSimplexSolver::SuggestValue(ClVariable v, Number x)
     throw ExCLEditMisuse(v.Name().c_str());
 #endif
     }
-  ClEditInfo *pcei = (*itEditVarMap).second;
   ClVariable clvEditPlus = pcei->_clvEditPlus;
   ClVariable clvEditMinus = pcei->_clvEditMinus;
   Number delta = x - pcei->_prevEditConstant;
@@ -533,16 +569,12 @@ ClSimplexSolver::SuggestValue(ClVariable v, Number x)
 void 
 ClSimplexSolver::Resolve(const vector<Number> &newEditConstants)
 {
-  ClVarToEditInfoMap::iterator it = _editVarMap.begin();
-  for (; it != _editVarMap.end(); ++it)
+  ClEditInfoList::iterator it = _editInfoList.begin();
+  int i = 0;
+  for (; i < newEditConstants.size() && it != _editInfoList.end(); ++it, ++i)
     {
-    ClVariable clv = (*it).first;
-    ClEditInfo *pcei = (*it).second;
-    unsigned i = pcei->_index;
-    if (i < newEditConstants.size())
-      {
-      SuggestValue(clv,newEditConstants[i]);
-      }
+    ClEditInfo *pcei = (*it);
+    SuggestValue(pcei->_clv,newEditConstants[i]);
     }
   Resolve();
 }
@@ -1435,8 +1467,8 @@ ClSimplexSolver::PrintOn(ostream &xo) const
      << _stayPlusErrorVars << endl;
   xo << "_stayMinusErrorVars: "
      << _stayMinusErrorVars << endl;
-  xo << "_editVarMap:\n"
-     << _editVarMap << endl;
+  xo << "_editInfoList:\n"
+     << _editInfoList << endl;
   return xo;
 }
 
@@ -1445,7 +1477,7 @@ ostream &
 ClSimplexSolver::PrintInternalInfo(ostream &xo) const
 {
   super::PrintInternalInfo(xo);
-  xo << "; edvars: " << _editVarMap.size();
+  xo << "; edvars: " << _editInfoList.size();
   xo << endl;
   printExternalVariablesTo(xo);
   return xo;
@@ -1502,20 +1534,19 @@ ClSimplexSolver::FIsConstraintSatisfied(const ClConstraint *const pcn) const
 
 #ifndef CL_NO_ID
 
-ostream &PrintTo(ostream &xo, const ClSimplexSolver::ClVarToEditInfoMap &mapVarToEditInfo)
+ostream &PrintTo(ostream &xo, const ClSimplexSolver::ClEditInfoList &listPEditInfo)
 {
-  ClSimplexSolver::ClVarToEditInfoMap::const_iterator it = mapVarToEditInfo.begin();
-  for ( ; it != mapVarToEditInfo.end(); ++it) {
-    const ClVariable &clv = (*it).first;
-    const ClSimplexSolver::ClEditInfo *pcei = (*it).second;
-    xo << clv << " -> " << *pcei << endl;
+  ClSimplexSolver::ClEditInfoList::const_iterator it = listPEditInfo.begin();
+  for ( ; it != listPEditInfo.end(); ++it) {
+    const ClSimplexSolver::ClEditInfo *pcei = (*it);
+    xo << *pcei << endl;
   }
   return xo;
 }
   
 
-ostream &operator<<(ostream &xo, const ClSimplexSolver::ClVarToEditInfoMap &mapVarToEditInfo)
-{ return PrintTo(xo,mapVarToEditInfo); }
+ostream &operator<<(ostream &xo, const ClSimplexSolver::ClEditInfoList &listPEditInfo)
+{ return PrintTo(xo,listPEditInfo); }
 
 #endif
 

@@ -40,7 +40,17 @@ class ExCLRequiredFailureWithExplanation;
 class ClSimplexSolver : public ClSolver, public ClTableau {
  protected: typedef ClTableau super;
   class ClEditInfo;
-  typedef ClMap<ClVariable, ClEditInfo *> ClVarToEditInfoMap;
+  typedef list<ClEditInfo *> ClEditInfoList;
+
+  ClEditInfo *PEditInfoFromClv(ClVariable clv) {
+    ClEditInfoList::iterator it = _editInfoList.begin();
+    for (; it != _editInfoList.end(); ++it) {
+      ClEditInfo *pei = (*it);
+      if (pei->_clv == clv)
+        return pei;
+    }
+    return NULL;
+  }
 
  public:
 
@@ -104,7 +114,7 @@ class ClSimplexSolver : public ClSolver, public ClTableau {
 
   ClSimplexSolver &RemoveEditVar(ClVariable v)
     {
-      ClEditInfo *pcei = _editVarMap[v];
+      ClEditInfo *pcei = PEditInfoFromClv(v);
       if (!pcei) {
         throw ExCLEditMisuse("Removing edit variable that was not found");
       }
@@ -118,13 +128,13 @@ class ClSimplexSolver : public ClSolver, public ClTableau {
   // Resolve() messages, after adding the appropriate edit variables
   ClSimplexSolver &BeginEdit()
     {
-      if (_editVarMap.size() == 0) {
+      if (_editInfoList.size() == 0) {
         throw ExCLEditMisuse("BeginEdit called, but no edit variable");
       }
       // may later want to do more in here
       _infeasibleRows.clear();
       ResetStayConstants();
-      _stkCedcns.push(_editVarMap.size());
+      _stkCedcns.push(_editInfoList.size());
       return *this;
     }
 
@@ -132,7 +142,8 @@ class ClSimplexSolver : public ClSolver, public ClTableau {
   // for now, it just removes edit variables added from before the last BeginEdit
   ClSimplexSolver &EndEdit()
     {
-      assert(_editVarMap.size() != 0);
+      if (_editInfoList.size() == 0)
+        throw ExCLEditMisuse("EndEdit called but no edit variables");
       Resolve();
       _stkCedcns.pop();
       RemoveEditVarsTo(_stkCedcns.top());
@@ -148,7 +159,7 @@ class ClSimplexSolver : public ClSolver, public ClTableau {
   ClSimplexSolver &RemoveEditVarsTo(int n);
 
   int numEditVars() const
-  { return _editVarMap.size(); }
+  { return _editInfoList.size(); }
 
   // Add weak stays to the x and y parts of each point. These have
   // increasing weights so that the solver will try to satisfy the x
@@ -331,7 +342,7 @@ class ClSimplexSolver : public ClSolver, public ClTableau {
   // ClEditInfo is a privately-used class
   // that just wraps a constraint, its positive and negative
   // error variables, and its prior edit Constant.
-  // It is used as values in _editVarMap, and replaces
+  // It is used as values in _editInfoList, and replaces
   // the parallel vectors of error variables and previous edit
   // constants from the smalltalk version of the code.
   class ClEditInfo {
@@ -342,22 +353,22 @@ class ClSimplexSolver : public ClSolver, public ClTableau {
     // the tableau row (the Expression) owns the peplus, peminus,
     // and AddEditVar/RemoveEditVar pair or the client code owns
     // the constraint object
-    ClEditInfo(ClEditConstraint *pconstraint, 
+    ClEditInfo(ClVariable clv,
+               ClEditConstraint *pconstraint, 
                ClVariable eplus, ClVariable eminus,
-               Number prevEditConstant,
-               int index)
-        :_pconstraint(pconstraint),
+               Number prevEditConstant)
+        :_clv(clv),
+         _pconstraint(pconstraint),
          _clvEditPlus(eplus), _clvEditMinus(eminus),
-         _prevEditConstant(prevEditConstant),
-         _index(index)
+         _prevEditConstant(prevEditConstant)
       { }
     
     ~ClEditInfo() 
      { }
 
     ostream &PrintOn(ostream &xo) const
-      { xo << "[" << _clvEditPlus << ", " << _clvEditMinus << "](" 
-           << _prevEditConstant << ")@" << _index << " -- " 
+      { xo << _clv << " -> [" << _clvEditPlus << ", " << _clvEditMinus << "](" 
+           << _prevEditConstant << ")@" << " -- " 
            << *_pconstraint; 
       return xo; }
     
@@ -365,15 +376,13 @@ class ClSimplexSolver : public ClSolver, public ClTableau {
       { return cei.PrintOn(xo); }
 
   private:
+    ClVariable _clv;
     ClConstraint *_pconstraint;
     ClVariable _clvEditPlus;
     ClVariable _clvEditMinus;
     Number _prevEditConstant;
-    int _index;
   };
   
-
-
   // Add the constraint expr=0 to the inequality tableau using an
   // artificial variable.  To do this, create an artificial variable
   // av and Add av=expr to the inequality tableau, then make av be 0.
@@ -520,7 +529,7 @@ class ClSimplexSolver : public ClSolver, public ClTableau {
 
   // Map edit variables to their constraints, errors, and prior
   // values
-  ClVarToEditInfoMap _editVarMap;
+  ClEditInfoList _editInfoList;
 
   int _slackCounter;
   int _artificialCounter;
@@ -552,8 +561,8 @@ class ClSimplexSolver : public ClSolver, public ClTableau {
 
 #ifndef CL_NO_IO
 
-ostream &PrintTo(ostream &xo, const ClSimplexSolver::ClVarToEditInfoMap &mapVarToEditInfo);
-ostream &operator<<(ostream &xo, const ClSimplexSolver::ClVarToEditInfoMap &mapVarToEditInfo);
+ostream &PrintTo(ostream &xo, const ClSimplexSolver::ClEditInfoList &listPEditInfo);
+ostream &operator<<(ostream &xo, const ClSimplexSolver::ClEditInfoList &listPEditInfo);
 
 #endif
 
