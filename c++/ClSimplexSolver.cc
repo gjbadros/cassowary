@@ -376,7 +376,6 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
 	  itEditMinusErrorVars = _editMinusErrorVars.begin() + index;
 	vector<Number>::iterator 
 	  itPrevEditConstants = _prevEditConstants.begin() + index;
-        ///        removeColumn(**itEditMinusErrorVars); // FIXGJBNOW
 	_editPlusErrorVars.erase(itEditPlusErrorVars);
 	_editMinusErrorVars.erase(itEditMinusErrorVars);
 	_prevEditConstants.erase(itPrevEditConstants);
@@ -492,7 +491,6 @@ ClSimplexSolver::suggestValue(ClVariable &v, Number x)
   return *this;
 }
 
-
 //// protected
 
 // Add the constraint expr=0 to the inequality tableau using an
@@ -547,14 +545,13 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
   if (!clApprox(pazTableauRow->constant(),0.0))
     {
     delete removeRow(*paz);
-    ///    removeColumn(*pav); //FIXGJBNOW
-    delete pav;
+    delete paz;
     return false;
     }
 
   // see if av is a basic variable
   const ClLinearExpression *pe = rowExpression(*pav);
-  if (pe != NULL )
+  if (pe != NULL)
     {
     // Find another variable in this row and pivot, so that av becomes parametric
     // If there isn't another variable in the row then 
@@ -562,8 +559,6 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr)
     if (pe->isConstant())
       {
       delete removeRow(*pav);
-      removeRow(*paz);
-      delete pav;
       return true;
       }
     const ClAbstractVariable *pentryVar = pe->anyVariable();
