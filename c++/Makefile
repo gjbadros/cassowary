@@ -11,7 +11,8 @@ CC = gcc
 CPP = egcs-g++
 CFLAGS = -g -Wall
 EGCSDIR = /uns/egcs
-CPPFLAGS = -O6 -DCL_NO_TRACE -Wall -L$(EGCSDIR)/lib -I$(EGCSDIR)/include
+CPPFLAGS = -g -Wall -L$(EGCSDIR)/lib -I$(EGCSDIR)/include
+#CPPFLAGS = -g -DCL_NO_TRACE -Wall -L$(EGCSDIR)/lib -I$(EGCSDIR)/include
 CXX = $(CPP)
 # -falt-external-templates
 LDFLAGS = -L/uns/lib/egcs
@@ -50,7 +51,6 @@ HEADERS = Cassowary.h \
 	ClDummyVariable.h \
 	ClObjectiveVariable.h \
 	ClSlackVariable.h \
-	ClEditVariable.h \
 	ClConstraint.h \
 	ClEditConstraint.h \
 	ClEditOrStayConstraint.h \
@@ -128,3 +128,4 @@ depend: $(TEST_SRCS) $(HEADERS)
 	makedepend *.cc
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
+
