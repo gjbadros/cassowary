@@ -12,7 +12,7 @@ MAIN_FILES = \
   Main.java \
   MainComponentListener.java
 
-MAIN_CLASSES = $(MAIN_FILES:%.java=classes/%.class)
+MAIN_CLASSES = $(MAIN_FILES:%.java=$(CLASSES)/%.class)
 ALL_MAIN_FILES = $(patsubst %.java,Main/%.java,$(MAIN_FILES))
 
 INTERFACE_FILES = \
