@@ -20,6 +20,26 @@ public class ClTests extends CL {
     RND = new Random(123456789);
   }
 
+  public final static boolean simple1()
+       throws ExCLInternalError, ExCLRequiredFailure
+  {
+    boolean fOkResult = true;
+    ClVariable x = new ClVariable(167);
+    ClVariable y = new ClVariable(2);
+    ClSimplexSolver solver = new ClSimplexSolver();
+      
+    //    solver.addStay(x);
+    //    solver.addStay(y);
+
+    ClLinearEquation eq = new ClLinearEquation(x,new ClLinearExpression(y));
+    solver.addConstraint(eq);
+    fOkResult = (x.value() == y.value());
+
+    System.out.println("x == " + x.value());
+    System.out.println("y == " + y.value());
+    return(fOkResult);
+  }
+
   public final static boolean justStay1()
        throws ExCLInternalError, ExCLRequiredFailure
   {
@@ -335,6 +355,11 @@ public class ClTests extends CL {
       boolean fAllOkResult = true;
       boolean fResult;
       
+      System.out.println("simple1:");
+      fResult = simple1(); fAllOkResult &= fResult;
+      if (!fResult) System.out.println("Failed!");
+      if (CL.fGC) System.out.println("Num vars = " + ClAbstractVariable.numCreated() );
+
       System.out.println("justStay1:");
       fResult = justStay1(); fAllOkResult &= fResult;
       if (!fResult) System.out.println("Failed!");
