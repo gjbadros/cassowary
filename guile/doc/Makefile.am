@@ -1,8 +1,9 @@
 ## $Id$
 ## Process this file with automake to create Makefile.in
 
-EXTRACT_DOCS = perl ../../../scwm/utilities/dev/scwmdoc -PCL
+SUBDIRS = src
 
+EXTRACT_DOCS = perl ../../../scwm/utilities/dev/scwmdoc -PCL
 
 EXTRA_DIST=cassowary_scm-procedures.txt cassowary_scm-variables.txt cassowary_scm.sgml
 
