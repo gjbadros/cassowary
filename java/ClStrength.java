@@ -22,7 +22,7 @@ class ClStrength
   public ClStrength(String name, double w1, double w2, double w3)
     {
       my_name = name;
-      my_symbolicWeight = ClSymbolicWeight(w1,w2,w3);
+      my_symbolicWeight = new ClSymbolicWeight(w1,w2,w3);
     }
 
   public boolean isRequired()
