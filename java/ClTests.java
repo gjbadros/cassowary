@@ -344,10 +344,11 @@ class ClTests extends CL {
       if (!fResult) System.out.println("Failed!");
       
       System.out.println("addDel:");
-      //fResult = addDel(900,900,10000);
+      // fResult = addDel(900,900,10000);
       // fResult = addDel(300,300,1000);
-      fResult = addDel(3,3,3);
-      //fResult = addDel(10,10,30);
+      fResult = addDel(30,30,100);
+      // fResult = addDel(10,10,30);
+      // fResult = addDel(5,5,10);
       fAllOkResult &= fResult;
       if (!fResult) System.out.println("Failed!");
       
