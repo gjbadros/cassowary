@@ -209,10 +209,35 @@ class ClLinearExpression  {
 				      const ClLinearExpression &e2)
     { return e1.divide(e2); }
 
+  // FIXGJB -- this may be wrong -- should test underlying expression for equality
   friend bool operator==(const ClLinearExpression &e1,
 			 const ClLinearExpression &e2)
     { return &e1 == &e2; }
 
+  /// Named versions of the operator functions for ease of
+  /// wrapping, or expressing using prefix notation
+
+  friend ClLinearExpression Plus(const ClLinearExpression &e1,
+				 const ClLinearExpression &e2)
+    { return e1.plus(e2); }
+
+  friend ClLinearExpression Minus(const ClLinearExpression &e1,
+				  const ClLinearExpression &e2)
+    { return e1.minus(e2); }
+
+  friend ClLinearExpression Times(const ClLinearExpression &e1,
+				  const ClLinearExpression &e2)
+    { return e1.times(e2); }
+
+
+  friend ClLinearExpression Divide(const ClLinearExpression &e1,
+				   const ClLinearExpression &e2)
+    { return e1.divide(e2); }
+
+  // FIXGJB -- this may be wrong -- should test underlying expression for equality
+  friend bool FEquals(const ClLinearExpression &e1,
+		      const ClLinearExpression &e2)
+    { return &e1 == &e2; }
 
   ClLinearExpression &multiplyMe(Number x);
 
