@@ -2,7 +2,6 @@ C++ version of Cassowary
 Sat Mar 10 19:55:24 PST 2001
 Linux merlin 2.2.16-22 #1 Tue Aug 22 16:49:06 EDT 2000 i686 unknown
 nCns,nSolvers,nResolves,testNo,totalAddTime,totalEditAddTime,totalResolveTime,totalEditDeleteTime,addTime,editAddTime,resolveTime,editDeleteTime
-900,5,1000,0,13720,100,4000,10,3.04889,10,0.8,1
 100,20,1000,1,100,20,1270,10,0.05,0.5,0.0635,0.25
 100,20,1000,2,150,10,1270,10,0.075,0.25,0.0635,0.25
 100,20,1000,3,110,20,1310,0,0.055,0.5,0.0655,0
