@@ -7,7 +7,7 @@
 # Original Smalltalk Implementation by Alan Borning
 # This Makefile by Greg J. Badros, <gjb@cs.washington.edu>
 # http://www.cs.washington.edu/homes/gjb
-# (C) 1998 Alan Borning and Greg Badros
+# (C) 1998, 1999 Alan Borning and Greg Badros
 # See ../LICENSE for legal details regarding this software
 #
 # Python wrapper by Tessa Lau <tlau@cs.washington.edu>
@@ -19,7 +19,7 @@ EGCSDIR = /uns/egcs
 CXX = $(CPP)
 SWIG = swig
 #PYTHON_INCLUDE = /uns/share/include/python1.5 -I/uns/include/python1.5
-PYTHON_INCLUDE = /usr/include/python1.4
+PYTHON_INCLUDE = /usr/include/python1.5
 
 LIB=cassowary
 LIB_FILE=../c++/lib$(LIB).a
@@ -34,12 +34,15 @@ CL_LIBRARY = ../c++/lib$(LIB).a
 
 # swig-python, swig-guile, and module are phony targets
 
-all: module
+all: swig-python module
 
 swig-python: cassowary.py cassowary_wrap.c cassowary_wrap.doc
 
-cassowary.py cassowary_wrap.c cassowary_wrap.doc: cassowary.i
+# cassowary.py is built with swig and a patch to improve the interface
+cassowary.py cassowary_wrap.c cassowary_wrap.doc: cassowary.i cassowary.py.diff
 	$(SWIG) -c++ -python -shadow cassowary.i
+	cp cassowary.py cassowary.py.orig
+	patch <cassowary.py.diff
 
 cassowary_wrap.o: cassowary_wrap.c
 	$(CPP) $(CFLAGS) -I$(PYTHON_INCLUDE) -fpic -c cassowary_wrap.c
