@@ -1,3 +1,4 @@
 test-ClConstraint
 test-ClLinearExpression
 test-ClVariable
+test-ClStrength
