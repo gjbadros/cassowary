@@ -5,6 +5,7 @@ Makefile.dependencies
 gmon.out
 gmon.out-setExtOpt
 output
+test-ClBounds
 test-ClConstraint
 test-ClLinearExpression
 test-ClSimplexSolver
