@@ -1,3 +1,30 @@
+1999-02-12  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/creader.{y,h}: New version from Steve Wolfman, slightly
+	updated for cleaner integration.
+
+	* c++/debug.h: Use ClMap, ClSet
+
+	* c++/{ClMap.h,ClSet.h}: Added, for optionally using hash_map,
+	hash_set instead of map, set.
+
+	* c++/ClSimplexSolver.{cc,h}: Added Steve Wolfman's explanation
+	support (added back map for marker->constraint, _fExplainFailure
+	var + getter & settor).  Use ClMap, ClSet.  Cleaned up some cerr
+	output, and use DEBUG_FAILURES cpp symbol to guard some output.
+
+	* c++/Cassowary.h: Added operator() for hash<..> to support
+	hashing things used as keys in hash_map/hash_set
+
+	* c++/ClErrors.h: Added ExCLRequiredFailureWithExplanation class
+	for explanation support.
+
+	* c++/{ClLinearExpression.h,ClTableau.h}: Use ClMap, not map. Use
+	ClSet, not set.
+
+	* c++/ClSymbolicWeight.h: Return a symbolic weight even when
+	assert(false) to avoid compiler warning.
+
 1999-02-11  Greg J Badros  <gjb@cs.washington.edu>
 
 	* guile/cassowary_scm.cc: Use cl-snarf.h, not scwm-snarf.h.  Use
