@@ -1,3 +1,22 @@
+Mon Dec 13 15:56:19 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* java/Yylex.java: Added, from Will Portnoy.
+
+	* java/ClReader.cup, java/ClReader.lex: Latest version from Will,
+	cleaned up line breaks, set a tab-width for Emacs.
+
+Mon Dec 13 15:55:59 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile.am: Remove ClReader.cc -- why did I add this
+	before?
+
+Fri Dec 10 13:29:00 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* java/ClSimplexSolver.java (addLowerBound, addUpperBound):  Fix
+	these two functions to call addConstraint before returning.
+	Thanks Stephen Allain for catching this!  Updated exception specs
+	for those methods and for addBounds.
+
 Tue Dec  7 08:42:34 1999  Greg J. Badros  <gjb@cs.washington.edu>
 
 	* smalltalk/A991206.dat: New image from Alan. Include correct
