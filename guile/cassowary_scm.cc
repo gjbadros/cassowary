@@ -90,7 +90,7 @@ SCM mark_cl_variable(SCM scm)
 
 size_t free_cl_variable(SCM scm)
 {
-  ClVariable *pclv = PclvFromScm(scm);
+  //  ClVariable *pclv = PclvFromScm(scm);
   //  delete pclv;  // FIXGJB: don't delete until memory audit
   return 0;
 }
@@ -230,7 +230,7 @@ print_cl_weight(SCM scm, SCM port, scm_print_state *pstate)
 
 SCWM_PROC(cl_weight_p, "cl-weight?", 1, 0, 0,
            (SCM obj))
-  /** Return #t if OBJ is a constraint weight object, #f otherwise */
+  /** Return #t if OBJ is a constraint weight object, #f otherwise. */
 #define FUNC_NAME s_cl_weight_p
 {
   return SCM_BOOL_FromF(FIsClSymbolicWeightScm(obj));
@@ -1295,6 +1295,10 @@ have a matching `cl-end-edit' call. */
 
 SCWM_PROC(cl_end_edit, "cl-end-edit", 1, 0, 0,
            (SCM solver))
+  /** Finish changing the values of the edit variables in SOLVER.
+This procedure must be invoked once for every invocation of 
+`cl-begin-edit'.   It will force a final re-solve before removing
+any edit variables that have been added via `cl-add-editvar'. */
 #define FUNC_NAME s_cl_end_edit
 {
   int iarg = 1;
@@ -1435,14 +1439,18 @@ init_cassowary_scm()
   REGISTER_SMOBFUNS(cl_solver);
 
   SCM_DEFER_INTS;
-  scm_cls_weak = scm_sysintern("cls-weak",ScmMakeClStrength(&clsWeak()));
-  scm_protect_object(scm_cls_weak);
-  scm_cls_strong = scm_sysintern("cls-medium",ScmMakeClStrength(&clsMedium()));
-  scm_protect_object(scm_cls_medium);
-  scm_cls_strong = scm_sysintern("cls-strong",ScmMakeClStrength(&clsStrong()));
-  scm_protect_object(scm_cls_strong);
-  scm_cls_required = scm_sysintern("cls-required",ScmMakeClStrength(&clsRequired()));
-  scm_protect_object(scm_cls_required);
+  scm_permanent_object(
+    scm_cls_weak = scm_sysintern("cls-weak",ScmMakeClStrength(&clsWeak()))
+    );
+  scm_permanent_object(
+    scm_cls_medium = scm_sysintern("cls-medium",ScmMakeClStrength(&clsMedium()))
+    );
+  scm_permanent_object(
+    scm_cls_strong = scm_sysintern("cls-strong",ScmMakeClStrength(&clsStrong()))
+    );
+  scm_permanent_object(
+    scm_cls_required = scm_sysintern("cls-required",ScmMakeClStrength(&clsRequired()))
+    );
   SCM_ALLOW_INTS;
 #ifndef SCM_MAGIC_SNARFER
 #include "cassowary_scm.x"
