@@ -87,7 +87,7 @@ class ClSimplexSolver : public ClTableau {
 
   // Re-solve the current collection of constraints for new values for
   // the constants of the edit variables.
-  void resolve(const vector<double> &newEditConstants);
+  void resolve(const vector<Number> &newEditConstants);
 
   friend ostream &operator<<(ostream &xo, const ClSimplexSolver &tableau);
   ostream &printOn(ostream &xo) const;
