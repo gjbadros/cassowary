@@ -35,7 +35,6 @@ divideBy
 multiplyMe
 netgated
 zero
-cls
 plus
 minus
 divide
@@ -105,3 +104,4 @@ clsMedium
 clsRequired
 clsWeak
 change_value ChangeValue
+isNil
