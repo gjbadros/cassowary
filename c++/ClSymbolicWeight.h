@@ -12,7 +12,7 @@
 #define ClSymbolicWeight_H
 
 #include "Cassowary.h"
-#include <vector.h>
+#include <vector>
 
 class ClSymbolicWeight {
  public:

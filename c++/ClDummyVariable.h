@@ -22,7 +22,7 @@ protected:
   friend ClTableau;
   friend ClSimplexSolver;
 
-  ClDummyVariable(String name = "") :
+  ClDummyVariable(string name = "") :
     ClAbstractVariable(name)
     { }
 

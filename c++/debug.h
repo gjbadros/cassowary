@@ -1,9 +1,9 @@
 #ifndef CASSOWARY_DEBUG_H_
 #define CASSOWARY_DEBUG_H_
 
-#include <map.h>
-#include <set.h>
-#include <vector.h>
+#include <map>
+#include <set>
+#include <vector>
 
 class ClAbstractVariable;
 class ClLinearExpression;

@@ -13,7 +13,7 @@ CFLAGS = -g -Wall
 # Below line is for egcs-1.0
 #CPPFLAGS = -g -Wall -L/uns/lib/egcs
 # Below line is for egcs-1.01 -- this makes exceptions work for me!
-CPPFLAGS = -O6 -DNO_TRACE -Wall -L/uns/egcs-1.01/lib -I/uns/egcs-1.01/include
+CPPFLAGS = -g -DNO_TRACE -Wall -L/uns/egcs-1.01/lib -I/uns/egcs-1.01/include
 CXX = $(CPP)
 # -falt-external-templates
 LDFLAGS = -L/uns/lib/egcs

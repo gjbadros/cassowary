@@ -19,7 +19,7 @@
 
 class ClVariable : public ClAbstractVariable {
 public:
-  ClVariable(String name = "", Number value = 0.0) :
+  ClVariable(string name = "", Number value = 0.0) :
     ClAbstractVariable(name),
     my_value(value)
     { }

@@ -23,7 +23,7 @@ protected:
   friend ClTableau;
   friend ClSimplexSolver;
 
-  ClSlackVariable(String name = "") :
+  ClSlackVariable(string name = "") :
     ClAbstractVariable(name)
     { }
 

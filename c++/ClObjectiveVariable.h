@@ -22,7 +22,7 @@ protected:
   friend ClTableau;
   friend ClSimplexSolver;
 
-  ClObjectiveVariable(String name = "") :
+  ClObjectiveVariable(string name = "") :
     ClAbstractVariable(name)
     { }
 

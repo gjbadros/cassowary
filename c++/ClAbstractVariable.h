@@ -17,7 +17,7 @@
 
 class ClAbstractVariable {
 public:
-  ClAbstractVariable(String name = "") :
+  ClAbstractVariable(string name = "") :
     my_name(name)
     { 
     iVariableNumber++;
@@ -25,7 +25,7 @@ public:
       {
       char sz[16];
       sprintf(sz,"v%ld",iVariableNumber++);
-      my_name = String(sz);
+      my_name = string(sz);
       }
     }
 
@@ -34,18 +34,18 @@ public:
     iVariableNumber++;
     char sz[16+strlen(prefix)];
     sprintf(sz,"%s%ld",prefix,varnumber);
-    my_name = String(sz);
+    my_name = string(sz);
     }
 
   virtual ~ClAbstractVariable()
     { }
 
   // Return the name of the variable
-  String name() const
+  string name() const
     { return my_name; }
 
   // Set the name of the variable
-  void setName(String const &name)
+  void setName(string const &name)
     { my_name = name; }
 
   // Return true if this a dummy variable (used as a marker variable
@@ -87,7 +87,7 @@ public:
     }
 
 private:
-  String my_name;
+  string my_name;
 
   static long iVariableNumber = 0;
 };

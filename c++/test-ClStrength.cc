@@ -11,19 +11,19 @@ main( char **argv, int argc )
   ClSymbolicWeight clsw3(2.0,0.5,0.5);
   ClSymbolicWeight clsw4(2.0,0.4,0.5);
 
-  ClStrength cls(String("cls"),clsw);
+  ClStrength cls(string("cls"),clsw);
   cout << cls << endl;
 
-  ClStrength cls2(String("cls2"),clsw.times(2));
+  ClStrength cls2(string("cls2"),clsw.times(2));
   cout << cls2 << endl;
 
-  ClStrength cls3(String("cls3"),clsw.plus(clsw2));
+  ClStrength cls3(string("cls3"),clsw.plus(clsw2));
   cout << cls3 << endl;
 
-  ClStrength cls4(String("cls4"),clsw.minus(clsw2));
+  ClStrength cls4(string("cls4"),clsw.minus(clsw2));
   cout << cls4 << endl;
 
-  ClStrength cls5(String("cls5"),clsw.divideBy(2));
+  ClStrength cls5(string("cls5"),clsw.divideBy(2));
   cout << cls5 << endl;
 
   ClStrength a(clsRequired());

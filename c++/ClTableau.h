@@ -11,8 +11,8 @@
 #ifndef ClTableau_H
 #define ClTableau_H
 
-#include <map.h>
-#include <set.h>
+#include <map>
+#include <set>
 #include "Cassowary.h"
 #include "ClLinearExpression.h"
 

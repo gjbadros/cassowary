@@ -24,12 +24,12 @@ ClStrength &clsWeak();
 class ClStrength {
  public:
 
-  ClStrength(const String &name, const ClSymbolicWeight &symbolicWeight) :
+  ClStrength(const string &name, const ClSymbolicWeight &symbolicWeight) :
     my_name(name), my_symbolicWeight(symbolicWeight)
     { }
 
   // special case for when nLevels = 3, should assert nLevels() == 3
-  ClStrength(const String &name, double w1, double w2, double w3);
+  ClStrength(const string &name, double w1, double w2, double w3);
 
   virtual ~ClStrength()
     { }
@@ -49,10 +49,10 @@ class ClStrength {
     { return my_symbolicWeight; }
 
  private:
-  String name() const
+  string name() const
     { return my_name; }
 
-  void set_name(String name)
+  void set_name(string name)
     { my_name = name; }
 
   void set_symbolicWeight(const ClSymbolicWeight &symbolicWeight)
@@ -62,7 +62,7 @@ class ClStrength {
     { cls.printOn(xos); return xos; }
 
   // instance variables
-  String my_name;
+  string my_name;
   ClSymbolicWeight my_symbolicWeight;
   
 

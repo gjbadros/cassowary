@@ -13,8 +13,6 @@
 
 #include <string>
 
-typedef string String;
 typedef double Number;
-
 
 #endif

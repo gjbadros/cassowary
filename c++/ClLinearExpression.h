@@ -11,7 +11,7 @@
 #ifndef ClLinearExpression_H
 #define ClLinearExpression_H
 
-#include <map.h>
+#include <map>
 #include "debug.h"
 #include "ClAbstractVariable.h"
 
