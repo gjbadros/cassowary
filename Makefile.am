@@ -12,6 +12,7 @@ bin_SCRIPTS = cassowary-config
 
 EXTRA_DIST = ANNOUNCE AUTHORS COPYING IMPORTANT INSTALL LICENSE COPYING.GPL NEWS README THANKS \
 		cassowary.spec cassowary-nofd.spec2 scripts/recreate-symlinks \
+		GTL.h.patch \
 		c++/config.h.in c++/stamp-h.in
 
 distdir_nofd = cassowary-nofd-@VERSION@
