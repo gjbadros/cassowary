@@ -1,4 +1,4 @@
-Announcing the release of a free constraint solver:
+Announcing the release of a free (for research use) constraint solver:
 
 Cassowary Constraint Solver for Smalltalk, C++, and Java
 Version @VERSION@
@@ -11,7 +11,7 @@ Greg J. Badros <gjb@cs.washington.edu> and
 Alan Borning <borning@cs.washington.edu>
 University of Washington
 Computer Science and Engineering
-25-September-1999
+24-October-1999
 
 with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
 
