@@ -48,6 +48,7 @@ int main()
           cerr << "Inconsistent or not permitted!";
         }
         cerr << endl;
+#if defined(CL_HAVE_GTL) && defined(CL_BUILD_FD_SOLVER)
         try {
           ClLinearConstraint *pcnLin = dynamic_cast<ClLinearConstraint *>(pcn);
           if (ClFDBinaryOneWayConstraint::FCanConvertCn(*pcnLin)) {
@@ -57,6 +58,7 @@ int main()
         } catch (const ExCLError &e) {
           cerr << e.description() << endl;
         }
+#endif
       }
     }
     catch (const ExCLParseError &e) {
