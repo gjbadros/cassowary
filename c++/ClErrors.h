@@ -50,5 +50,11 @@ class ExCLNonlinearExpression : public ExCLError {
     { return "(ExCLNonlinearExpression) The resulting expression would be nonlinear"; }
 };
   
+class ExCLConstraintNotFound : public ExCLError {
+ public:
+  virtual char *description() const
+    { return "(ExCLConstraintNotFound) Tried to remove a constraint never added to the tableu"; }
+};
+  
 
 #endif

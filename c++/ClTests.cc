@@ -86,8 +86,31 @@ addDelete2()
      .addConstraint( ClLinearEquation(y, 120.0, clsStrong()));
 
    ClLinearInequality c10(x,cnLEQ,10.0);
-   fOkResult = fOkResult && clApprox(x,10.0);
-   cout << "x == " << x.value() << endl;
+   ClLinearInequality c20(x,cnLEQ,20.0);
+
+   solver
+     .addConstraint(c10)
+     .addConstraint(c20);
+   fOkResult = fOkResult && clApprox(x,10.0) && clApprox(y,120.0);
+   cout << "x == " << x.value() << ", y == " << y.value() << endl;
+
+   solver.removeConstraint(c10);
+   fOkResult = fOkResult && clApprox(x,20.0) && clApprox(y,120.0);
+   cout << "x == " << x.value() << ", y == " << y.value() << endl;
+   
+   ClLinearEquation cxy( 2*x, y);
+   solver.addConstraint(cxy);
+   fOkResult = fOkResult && clApprox(x,20.0) && clApprox(y,40.0);
+   cout << "x == " << x.value() << ", y == " << y.value() << endl;
+
+   solver.removeConstraint(c20);
+   fOkResult = fOkResult && clApprox(x,60.0) && clApprox(y,120.0);
+   cout << "x == " << x.value() << ", y == " << y.value() << endl;
+
+   solver.removeConstraint(cxy);
+   fOkResult = fOkResult && clApprox(x,100.0) && clApprox(y,120.0);
+   cout << "x == " << x.value() << ", y == " << y.value() << endl;
+
 
    return(fOkResult);
    } 
@@ -113,8 +136,18 @@ casso1()
    ClVariable y("y");
    ClSimplexSolver solver;
 
-   fOkResult = fOkResult && clApprox(x,10.0);
-   cout << "x == " << x.value() << endl;
+   solver
+     .addConstraint( ClLinearInequality(x,cnLEQ,y) )
+     .addConstraint( ClLinearEquation(y, x+3.0) )
+     .addConstraint( ClLinearEquation(x,10.0,clsWeak()) )
+     .addConstraint( ClLinearEquation(y,10.0,clsWeak()) )
+     ;
+   
+   fOkResult = fOkResult && 
+     ( clApprox(x,10.0) && clApprox(y,13.0) ||
+       clApprox(x,7.0) && clApprox(y,10.0) );
+     
+   cout << "x == " << x.value() << ", y == " << y.value() << endl;
 
    return(fOkResult);
    } 
@@ -130,13 +163,74 @@ casso1()
    }
 }
 
+bool
+inconsistent1()
+{
+ try 
+   {
+   bool fOkResult = true; 
+   ClVariable x("x");
+   ClVariable y("y");
+   ClSimplexSolver solver;
+
+   fOkResult = fOkResult && clApprox(x,10.0);
+   cout << "x == " << x.value() << ", y == " << y.value() << endl;
+
+   return(fOkResult);
+   } 
+ catch (ExCLError &error) 
+   {
+   cerr << "Exception! " << error.description() << endl;
+   return(false);
+   }
+ catch (...) 
+   {
+   cerr << "Unknown exception" << endl;
+   return(false);
+   }
+}
+
+bool
+inconsistent2()
+{
+ try 
+   {
+   bool fOkResult = true; 
+   ClVariable x("x");
+   ClVariable y("y");
+   ClSimplexSolver solver;
+
+   fOkResult = fOkResult && clApprox(x,10.0);
+   cout << "x == " << x.value() << ", y == " << y.value() << endl;
+
+   return(fOkResult);
+   } 
+ catch (ExCLError &error) 
+   {
+   cerr << "Exception! " << error.description() << endl;
+   return(false);
+   }
+ catch (...) 
+   {
+   cerr << "Unknown exception" << endl;
+   return(false);
+   }
+}
+
+
 int
 main( char **argv, int argc )
 {
-  bool fOkResult = true;
-  fOkResult = fOkResult && addDelete1();
-
+  bool fAllOkResult = true;
+  bool fResult;
+  cout << "addDelete1:" << endl;
+  fResult = addDelete1(); fAllOkResult &= fResult;
+  if (!fResult) cout << "failed!" <<endl;
+  cout << "addDelete2:" << endl;
+  fResult = addDelete2(); fAllOkResult &= fResult;
+  if (!fResult) cout << "failed!" <<endl;
+  cout << "casso1:" << endl;
+  fResult = casso1(); fAllOkResult &= fResult;
   
-  
-  exit (fOkResult? 0 : 255);
+  exit (fAllOkResult? 0 : 255);
 }

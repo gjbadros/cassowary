@@ -107,8 +107,11 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
 
   map<const ClConstraint *, const ClAbstractVariable *>::iterator 
     it_marker = my_markerVars.find(&cn);
+  if (it_marker == my_markerVars.end())
+    { // could not find the constraint
+    throw ExCLConstraintNotFound();
+    }
   // try to make the marker variable basic if it isn't already
-  assert( it_marker != my_markerVars.end() );
   const ClAbstractVariable &marker = *((*it_marker).second);
 #ifndef NO_TRACE
   cerr << "Looking to remove var " << marker << endl;
