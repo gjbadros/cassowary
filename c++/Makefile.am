@@ -26,18 +26,36 @@ EXTRA_DIST = ClReader.l ClReader.y
 ## Only get built if --enable-cxx-tests is given
 bench_programs = QocaBench
 
+if CL_BUILD_FD_SOLVER
+test_fd_solver = ClFDTests
+else
+test_fd_solver = 
+endif
+
+if CL_BUILD_FD_SOLVER
+sources_for_fd_solver = \
+	ClFDSolver.cc \
+	ClFDVariable.cc \
+	ClFDConnectorVariable.cc \
+	ClFDBinaryOneWayConstraint.cc
+headers_for_fd_solver = ClFDBinaryOneWayConstraint.h ClFDConstraint.h ClFDSolver.h
+else
+sources_for_fd_solver =
+headers_for_fd_solver =
+endif
+
 ## Only get built if --enable-cxx-tests is given
 test_programs = \
 	ClParseTest \
 	ClSubgraphTest \
 	ClCTest \
 	ClLeakTest \
-	ClFDTests \
 	test-ClConstraint \
 	test-ClLinearExpression \
 	test-ClSimplexSolver \
 	test-ClStrength \
-	test-ClVariable
+	test-ClVariable \
+	$(test_fd_solver)
 
 test_PROGRAMS = ClTests
 if CL_BUILD_TESTS
@@ -56,46 +74,30 @@ ClBug1_SOURCES = ClBug1.cc
 
 ClBug2_SOURCES = ClBug2.cc
 
-##sources_for_fd_solver = \
-##	ClFDSolver.cc \
-##	ClFDVariable.cc \
-##	ClFDConnectorVariable.cc \
-##	ClFDBinaryOneWayConstraint.cc
+sources = \
+	ClAbstractVariable.cc \
+	ClConstraint.cc \
+	ClLinearExpression.cc \
+	ClSolver.cc \
+	ClSimplexSolver.cc \
+	ClStrength.cc \
+	ClSymbolicWeight.cc \
+	ClTableau.cc \
+	ClVariable.cc \
+	ClFloatVariable.cc \
+	ClSlackVariable.cc \
+	ClDummyVariable.cc \
+	ClReader-lex.cc \
+	ClC.cc
 
 
 libcassowary_a_SOURCES = \
-	ClAbstractVariable.cc \
-	ClConstraint.cc \
-	ClLinearExpression.cc \
-	ClSolver.cc \
-	ClSimplexSolver.cc \
-	ClStrength.cc \
-	ClSymbolicWeight.cc \
-	ClTableau.cc \
-	ClVariable.cc \
-	ClFloatVariable.cc \
-	ClSlackVariable.cc \
-	ClDummyVariable.cc \
-	ClReader-lex.cc \
-	ClC.cc \
-ClFDSolver.cc ClFDVariable.cc ClFDConnectorVariable.cc ClFDBinaryOneWayConstraint.cc
+	$(sources) \
+	$(sources_for_fd_solver)
 
 libcassowary_la_SOURCES = \
-	ClAbstractVariable.cc \
-	ClConstraint.cc \
-	ClLinearExpression.cc \
-	ClSolver.cc \
-	ClSimplexSolver.cc \
-	ClStrength.cc \
-	ClSymbolicWeight.cc \
-	ClTableau.cc \
-	ClVariable.cc \
-	ClFloatVariable.cc \
-	ClSlackVariable.cc \
-	ClDummyVariable.cc \
-	ClReader-lex.cc \
-	ClC.cc \
-ClFDSolver.cc ClFDVariable.cc ClFDConnectorVariable.cc ClFDBinaryOneWayConstraint.cc
+	$(sources) \
+	$(sources_for_fd_solver)
 
 include_HEADERS = Cl.h ClC.h
 
@@ -117,9 +119,6 @@ pkginclude_HEADERS = \
 	ClLinearInequality.h \
 	ClSolver.h \
 	ClSimplexSolver.h \
-	ClFDSolver.h \
-	ClFDBinaryOneWayConstraint.h \
-	ClFDConstraint.h \
 	ClStayConstraint.h \
 	ClStrength.h \
 	ClSymbolicWeight.h \
@@ -136,7 +135,8 @@ pkginclude_HEADERS = \
 	cl_auto_ptr.h \
 	config-inline.h \
 	debug.h \
-	timer.h
+	timer.h \
+	$(headers_for_fd_solver)
 
 
 ClTests_SOURCES = ClTests.cc
