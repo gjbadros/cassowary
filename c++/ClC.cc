@@ -57,12 +57,12 @@ CL_VarMap CL_GetVarMap()
 }
 
 
-/* Return a new ClVariable with name and initial value */
-CLV CL_ClvNew(const char *szName, double value, CL_SimplexSolver solver)
+/* Return a new ClVariable with name and initial Value */
+CLV CL_ClvNew(const char *szName, double Value, CL_SimplexSolver solver)
 {
-  ClVariable *pclv = new ClVariable(szName,value);
+  ClVariable *pclv = new ClVariable(szName,Value);
   if (solver)
-    solver->addStay(*pclv);
+    solver->AddStay(*pclv);
 #if 0
   fprintf(stderr,"Created var %s @ %p\n",szName,pclv->get_pclv());
 #endif
@@ -70,7 +70,7 @@ CLV CL_ClvNew(const char *szName, double value, CL_SimplexSolver solver)
 }
 
 void CL_VariableSetPv(CLV var, void *pv)
-{ var->setPv(pv); }
+{ var->SetPv(pv); }
 
 void *CL_VariablePv(CLV var)
 { return var->Pv(); }
@@ -112,7 +112,7 @@ CL_SimplexSolverSetChangeClvCallback(CL_SimplexSolver solver, PfnChangeClvCallba
 void 
 CL_SimplexSolverAddStrongStay(CL_SimplexSolver solver, CLV var, double weight)
 {
-  solver->addStay(*var,clsMedium(),weight);
+  solver->AddStay(*var,ClsMedium(),weight);
 }
 
 
@@ -128,16 +128,16 @@ CLV CL_ClvLookup(const char *szName)
   return pclv;
 }
 
-/* Return the value of clv */
+/* Return the Value of clv */
 double CL_ClvValue(const CLV var)
 {
-  return var->value();
+  return var->Value();
 }
 
 int
 CL_ClvIsNil(const CLV var)
 {
-  return var->isNil();
+  return var->IsNil();
 }
 
 
@@ -159,7 +159,7 @@ CL_Constraint CL_ParseConstraint(const char *szConstraintRule, const char *szCon
 int CL_AddConstraint(CL_SimplexSolver solver, CL_Constraint cn)
 {
   try {
-    return (solver->addConstraintNoException(cn)?1:0);
+    return (solver->AddConstraintNoException(cn)?1:0);
   } catch (...) {
     return 0;
   }
@@ -172,13 +172,13 @@ void CL_Solve(CL_SimplexSolver solver)
 
 void CL_Resolve(CL_SimplexSolver solver)
 {
-  solver->resolve();
+  solver->Resolve();
 }
 
 
 void CL_SimplexSolverSetEditedValue(CL_SimplexSolver solver, CLV var, double n)
 {
-  solver->setEditedValue(*var,n);
+  solver->SetEditedValue(*var,n);
 }
 
 }

@@ -22,16 +22,16 @@ main( char **, int )
   ClLinearExpression cle(a);
   cout << cle << endl;
   ClVariable b("b");
-  cle.addVariable(b,2);
+  cle.AddVariable(b,2);
   cout << cle << endl;
-  cout << cle.times(2) << endl;
-  cout << (cle.times(2).addVariable(ClVariable("c"),3)).times(-1) << endl;
+  cout << cle.Times(2) << endl;
+  cout << (cle.Times(2).AddVariable(ClVariable("c"),3)).Times(-1) << endl;
   cle = cle + 8;
   cout << cle << endl;
-  cle.changeSubject(a,b);
+  cle.ChangeSubject(a,b);
   cout << cle << endl;
   ClLinearExpression cle2 = cle;
-  cle.addExpression(cle,-1);
+  cle.AddExpression(cle,-1);
   cout << cle << endl;
   cout << b << endl;
   ClSimplexSolver solver;
@@ -39,7 +39,7 @@ main( char **, int )
   ClVariable c("c");
   ClLinearExpression cleNew = cle2 * 2 + 9;
   cout << cleNew << endl;
-  cle2.substituteOut(a,cleNew,c,solver);
+  cle2.SubstituteOut(a,cleNew,c,solver);
   cout << cle2 << endl;
 
   return 0;

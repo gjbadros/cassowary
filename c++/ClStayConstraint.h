@@ -20,7 +20,7 @@ class ClStayConstraint : public ClEditOrStayConstraint {
  public:
 
   ClStayConstraint(const ClVariable var,
-		   const ClStrength &strength = clsWeak(), double weight = 1.0 ) :
+		   const ClStrength &strength = ClsWeak(), double weight = 1.0 ) :
     ClEditOrStayConstraint(var,strength,weight)
     { }
 
@@ -28,8 +28,8 @@ class ClStayConstraint : public ClEditOrStayConstraint {
     { return true; }
 
 #ifndef CL_NO_IO  
-  virtual ostream &printOn(ostream &xo) const 
-    { super::printOn(xo); return xo << " STAY)"; }
+  virtual ostream &PrintOn(ostream &xo) const 
+    { super::PrintOn(xo); return xo << " STAY)"; }
 #endif
   
  private:

@@ -11,14 +11,14 @@
 
 #include "ClFloatVariable.h"
 
-ostream &ClFloatVariable::printOn(ostream &xo) const
+ostream &ClFloatVariable::PrintOn(ostream &xo) const
 {  
-  xo << "[" << name() << ":" << _value << "]";
+  xo << "[" << Name() << ":" << _value << "]";
   return xo;
 }
 
-void ClFloatVariable::setName(string const &name)
+void ClFloatVariable::SetName(string const &name)
 { 
-  super::setName(name); 
+  super::SetName(name); 
 }
 

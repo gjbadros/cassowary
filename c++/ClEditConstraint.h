@@ -20,17 +20,17 @@ class ClEditConstraint : public ClEditOrStayConstraint {
  public:
   
   ClEditConstraint(const ClVariable var,
-		   const ClStrength &strength = clsStrong(), double weight = 1.0 ) :
+		   const ClStrength &strength = ClsStrong(), double weight = 1.0 ) :
     ClEditOrStayConstraint(var,strength,weight)
     { }
 
   // Returns true if this is an edit constraint
-  virtual bool isEditConstraint() const
+  virtual bool IsEditConstraint() const
     { return true; }
 
 #ifndef CL_NO_IO
-  virtual ostream &printOn(ostream &xo) const 
-    { super::printOn(xo); return xo << "= edit)"; }
+  virtual ostream &PrintOn(ostream &xo) const 
+    { super::PrintOn(xo); return xo << "= edit)"; }
 #endif
 
  private:

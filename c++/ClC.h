@@ -54,10 +54,10 @@ void CL_Init();
 /* Must call this when done */
 void CL_Shutdown();
 
-/* Return a new ClVariable with name and initial value
+/* Return a new ClVariable with name and initial Value
    Also adds a stay for the newly-created variable in solver if
    solver is non null */
-CLV CL_ClvNew(const char *szName, double value, CL_SimplexSolver solver);
+CLV CL_ClvNew(const char *szName, double Value, CL_SimplexSolver solver);
 
 void CL_VariableSetPv(CLV var, void *pv);
 
@@ -81,7 +81,7 @@ void CL_TableauPrintExternalVariables(CL_Tableau tableau, FILE *out);
 /* Return a clvariable with the given name, or NULL if not found */
 CLV CL_ClvLookup(const char *szName);
 
-/* Return the value of clv */
+/* Return the Value of clv */
 double CL_ClvValue(const CLV clv);
 
 boolean CL_ClvIsNil(const CLV clv);

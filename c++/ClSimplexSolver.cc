@@ -27,7 +27,7 @@ char *szCassowaryVersion = "0.31";
 
 // Need to delete all expressions
 // and all slack and dummy variables
-// See newExpression -- all allocation is done in there
+// See NewExpression -- all allocation is done in there
 ClSimplexSolver::~ClSimplexSolver()
 {
 #ifdef CL_SOLVER_STATS
@@ -45,19 +45,19 @@ ClSimplexSolver::~ClSimplexSolver()
 
 // Add the constraint cn to the tableau
 ClSimplexSolver &
-ClSimplexSolver::addConstraint(ClConstraint *const pcn)
+ClSimplexSolver::AddConstraint(ClConstraint *const pcn)
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << *pcn << ")" << endl;
 #endif
   
-  if (pcn->isEditConstraint())
+  if (pcn->IsEditConstraint())
     {
     ClEditConstraint *pcnEdit = dynamic_cast<ClEditConstraint *>(pcn);
     const ClVariable &v = pcnEdit->variable();
-    if (!v.isExternal() ||
-        (!FIsBasicVar(v) && !columnsHasKey(v)))
+    if (!v.IsExternal() ||
+        (!FIsBasicVar(v) && !ColumnsHasKey(v)))
       {
       // we could try to make this case work,
       // but it'd be unnecessarily inefficient --
@@ -69,38 +69,38 @@ ClSimplexSolver::addConstraint(ClConstraint *const pcn)
 
   ClVariable clvEplus, clvEminus;
   Number prevEConstant;
-  ClLinearExpression *pexpr = newExpression(pcn, /* output to: */
+  ClLinearExpression *pexpr = NewExpression(pcn, /* output to: */
                                             clvEplus,clvEminus,
                                             prevEConstant);
   bool fAddedOkDirectly = false;
 
   try 
     {
-    // If possible add expr directly to the appropriate tableau by
+    // If possible Add expr directly to the appropriate tableau by
     // choosing a subject for expr (a variable to become basic) from
     // among the current variables in expr.  If this doesn't work use an
-    // artificial variable.  After adding expr re-optimize.
-    fAddedOkDirectly = tryAddingDirectly(*pexpr);
+    // artificial variable.  After adding expr re-Optimize.
+    fAddedOkDirectly = TryAddingDirectly(*pexpr);
     }
   catch (ExCLRequiredFailure &error)
     {
 #ifdef CL_TRACE
-    cerr << "could not add directly -- caught ExCLRequiredFailure error" << endl;
+    cerr << "could not Add directly -- caught ExCLRequiredFailure error" << endl;
 #endif
-    removeConstraintInternal(pcn);
+    RemoveConstraintInternal(pcn);
     throw;
     }
 
   if (!fAddedOkDirectly)
-    { // could not add directly
+    { // could not Add directly
     ExCLRequiredFailureWithExplanation e;
-    if (!addWithArtificialVariable(*pexpr, e))
+    if (!AddWithArtificialVariable(*pexpr, e))
       {
 #ifdef CL_DEBUG_FAILURES
-      cerr << "Failed solve! Could not add constraint.\n"
+      cerr << "Failed solve! Could not Add constraint.\n"
            << *this << endl;
 #endif
-      removeConstraintInternal(pcn);
+      RemoveConstraintInternal(pcn);
       if (FIsExplaining())
         throw e;
       else
@@ -110,7 +110,7 @@ ClSimplexSolver::addConstraint(ClConstraint *const pcn)
 
   _fNeedsSolving = true;
 
-  if (pcn->isEditConstraint())
+  if (pcn->IsEditConstraint())
     {
     ClEditConstraint *pcnEdit = dynamic_cast<ClEditConstraint *>(pcn);
     int ccnEdit = _editVarMap.size();
@@ -121,8 +121,8 @@ ClSimplexSolver::addConstraint(ClConstraint *const pcn)
 
   if (_fOptimizeAutomatically)
     {
-    optimize(_objective);
-    setExternalVariables();
+    Optimize(_objective);
+    SetExternalVariables();
     }
 
   pcn->addedTo(*this);
@@ -131,10 +131,10 @@ ClSimplexSolver::addConstraint(ClConstraint *const pcn)
 
 // Same as above, but returns false if the constraint cannot be solved
 // (i.e., the resulting system would be unsatisfiable)
-// The above function "addConstraint" throws an exception in that case
+// The above function "AddConstraint" throws an exception in that case
 // which may be inconvenient
 bool
-ClSimplexSolver::addConstraintNoException(ClConstraint *const pcn)
+ClSimplexSolver::AddConstraintNoException(ClConstraint *const pcn)
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -142,7 +142,7 @@ ClSimplexSolver::addConstraintNoException(ClConstraint *const pcn)
 #endif
   try 
     {
-    addConstraint(pcn);
+    AddConstraint(pcn);
     return true;
     }
   catch (const ExCLRequiredFailure &e)
@@ -156,7 +156,7 @@ ClSimplexSolver::addConstraintNoException(ClConstraint *const pcn)
 // and y stays on the same point, rather than the x stay on one and
 // the y stay on another.
 ClSimplexSolver &
-ClSimplexSolver::addPointStays(const vector<const ClPoint *> &listOfPoints)
+ClSimplexSolver::AddPointStays(const vector<const ClPoint *> &listOfPoints)
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -167,23 +167,23 @@ ClSimplexSolver::addPointStays(const vector<const ClPoint *> &listOfPoints)
   static const double multiplier = 2.0;
   for ( ; it != listOfPoints.end(); ++it )
     {
-    addPointStay((*it)->X(),(*it)->Y(),weight);
+    AddPointStay((*it)->X(),(*it)->Y(),weight);
     weight *= multiplier;
     }
   return *this;
 }
 
 ClSimplexSolver &
-ClSimplexSolver::addPointStay(const ClPoint &clp, double weight)
+ClSimplexSolver::AddPointStay(const ClPoint &clp, double weight)
 { 
-  addStay(clp.X(),clsWeak(),weight);
-  addStay(clp.Y(),clsWeak(),weight);
+  AddStay(clp.X(),ClsWeak(),weight);
+  AddStay(clp.Y(),ClsWeak(),weight);
   return *this;
 }
 
 
 ClSimplexSolver &
-ClSimplexSolver::removeEditVarsTo(int n)
+ClSimplexSolver::RemoveEditVarsTo(int n)
 {
   queue<ClVariable> qclv;
   for ( ClVarToEditInfoMap::const_iterator it = _editVarMap.begin();
@@ -203,7 +203,7 @@ ClSimplexSolver::removeEditVarsTo(int n)
     }
   while (!qclv.empty()) 
     {
-    removeEditVar(qclv.front());
+    RemoveEditVar(qclv.front());
     qclv.pop();
     }
 
@@ -233,7 +233,7 @@ private:
 // Remove the constraint cn from the tableau
 // Also remove any error variable associated with cn
 ClSimplexSolver &
-ClSimplexSolver::removeConstraintInternal(const ClConstraint *const pcn)
+ClSimplexSolver::RemoveConstraintInternal(const ClConstraint *const pcn)
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -243,14 +243,14 @@ ClSimplexSolver::removeConstraintInternal(const ClConstraint *const pcn)
   // We are about to remove a constraint.  There may be some stay
   // constraints that were unsatisfied previously -- if we just
   // removed the constraint these could come into play.  Instead,
-  // reset all of the stays so that things should stay where they are
+  // Reset all of the stays so that things should stay where they are
   // at the moment.
   _fNeedsSolving = true;
 
-  resetStayConstants();
+  ResetStayConstants();
 
   // remove any error variables from the objective function
-  ClLinearExpression *pzRow = rowExpression(_objective);
+  ClLinearExpression *pzRow = RowExpression(_objective);
 
 #ifdef CL_TRACE
   cerr << _errorVars << endl << endl;
@@ -266,15 +266,15 @@ ClSimplexSolver::removeConstraintInternal(const ClConstraint *const pcn)
     ClVarSet::iterator it = eVars.begin();
     for ( ; it != eVars.end(); ++it )
       {
-      const ClLinearExpression *pexpr = rowExpression(*it);
+      const ClLinearExpression *pexpr = RowExpression(*it);
       if (pexpr == NULL )
 	{
-	pzRow->addVariable(*it,-pcn->weight() * pcn->strength().symbolicWeight().asDouble(),
+	pzRow->AddVariable(*it,-pcn->weight() * pcn->strength().symbolicWeight().AsDouble(),
 			   _objective,*this);
 	}
       else
 	{ // the error variable was in the basis
-	pzRow->addExpression(*pexpr,-pcn->weight() * pcn->strength().symbolicWeight().asDouble(),
+	pzRow->AddExpression(*pexpr,-pcn->weight() * pcn->strength().symbolicWeight().AsDouble(),
 			     _objective,*this);
 	}
       }
@@ -300,7 +300,7 @@ ClSimplexSolver::removeConstraintInternal(const ClConstraint *const pcn)
     ClVarSet &col = _columns[marker];
     ClVarSet::iterator it_col = col.begin();
 #ifdef CL_TRACE
-    cerr << "Must pivot -- columns are " << col << endl;
+    cerr << "Must Pivot -- columns are " << col << endl;
 #endif
 
     ClVariable exitVar = clvNil;
@@ -309,11 +309,11 @@ ClSimplexSolver::removeConstraintInternal(const ClConstraint *const pcn)
     for ( ; it_col != col.end(); ++it_col) 
       {
       const ClVariable &v = *it_col;
-      if (v.isRestricted() )
+      if (v.IsRestricted() )
 	{
-	const ClLinearExpression *pexpr = rowExpression(v);
+	const ClLinearExpression *pexpr = RowExpression(v);
 	assert(pexpr != NULL );
-	Number coeff = pexpr->coefficientFor(marker);
+	Number coeff = pexpr->CoefficientFor(marker);
 #ifdef CL_TRACE
 	cerr << "Marker " << marker << "'s coefficient in " << *pexpr << " is "
 	     << coeff << endl;
@@ -321,7 +321,7 @@ ClSimplexSolver::removeConstraintInternal(const ClConstraint *const pcn)
 	// only consider negative coefficients
 	if (coeff < 0.0) 
 	  {
-	  Number r = - pexpr->constant() / coeff;
+	  Number r = - pexpr->Constant() / coeff;
 	  if (!fExitVarSet || r < minRatio)
 	    {
 	    minRatio = r;
@@ -349,12 +349,12 @@ ClSimplexSolver::removeConstraintInternal(const ClConstraint *const pcn)
       for ( ; it_col != col.end(); ++it_col) 
 	{
 	ClVariable v = *it_col;
-	if (v.isRestricted() )
+	if (v.IsRestricted() )
 	  {
-	  const ClLinearExpression *pexpr = rowExpression(v);
+	  const ClLinearExpression *pexpr = RowExpression(v);
 	  assert(pexpr != NULL);
-	  Number coeff = pexpr->coefficientFor(marker);
-	  Number r = pexpr->constant() / coeff;
+	  Number coeff = pexpr->CoefficientFor(marker);
+	  Number r = pexpr->Constant() / coeff;
 	  if (!fExitVarSet || r < minRatio)
 	    {
 	    minRatio = r;
@@ -372,7 +372,7 @@ ClSimplexSolver::removeConstraintInternal(const ClConstraint *const pcn)
       // unrestricted variables whose equation involves the marker var
       if (col.size() == 0)
 	{
-	removeColumn(marker);
+	RemoveColumn(marker);
 	}
       else
 	{
@@ -383,13 +383,13 @@ ClSimplexSolver::removeConstraintInternal(const ClConstraint *const pcn)
     
     if (fExitVarSet)
       {
-      pivot(marker,exitVar);
+      Pivot(marker,exitVar);
       }
     }
   
   if (FIsBasicVar(marker))
     {
-    ClLinearExpression *pexpr = removeRow(marker);
+    ClLinearExpression *pexpr = RemoveRow(marker);
 #ifdef CL_TRACE
     cerr << "delete@ " << pexpr << endl;
 #endif
@@ -408,7 +408,7 @@ ClSimplexSolver::removeConstraintInternal(const ClConstraint *const pcn)
       ClVariable v = (*it);
       if (v != marker)
 	{
-	removeColumn(v);
+	RemoveColumn(v);
 	}
       }
     }
@@ -430,14 +430,14 @@ ClSimplexSolver::removeConstraintInternal(const ClConstraint *const pcn)
                _stayMinusErrorVars.end());
       }
     }
-  else if (pcn->isEditConstraint())
+  else if (pcn->IsEditConstraint())
     {
     const ClEditConstraint *pcnEdit = dynamic_cast<const ClEditConstraint *>(pcn);
     const ClVariable clv = pcnEdit->variable();
     ClEditInfo *pcei = _editVarMap[clv];
     assert(pcei);
     ClVariable clvEditMinus = pcei->_clvEditMinus;
-    removeColumn(clvEditMinus);  // clvEditPlus is a marker var and gets removed later
+    RemoveColumn(clvEditMinus);  // clvEditPlus is a marker var and gets removed later
     delete pcei;
     _editVarMap.erase(clv);
     }
@@ -459,15 +459,15 @@ ClSimplexSolver::removeConstraintInternal(const ClConstraint *const pcn)
 
   if (_fOptimizeAutomatically)
     {
-    optimize(_objective);
-    setExternalVariables();
+    Optimize(_objective);
+    SetExternalVariables();
     }
 
   return *this;
 }
 
   // Same as above, but returns false if the constraint dne
-  // The above function "removeConstraint" throws an exception in that case
+  // The above function "RemoveConstraint" throws an exception in that case
   // which may be inconvenient
 bool
 ClSimplexSolver::removeConstraintNoException(ClConstraint *const pcn)
@@ -478,7 +478,7 @@ ClSimplexSolver::removeConstraintNoException(ClConstraint *const pcn)
 #endif
   try 
     {
-    removeConstraint(pcn);
+    RemoveConstraint(pcn);
     return true;
     }
   catch (const ExCLConstraintNotFound &e)
@@ -493,7 +493,7 @@ ClSimplexSolver::removeConstraintNoException(ClConstraint *const pcn)
 // Alan hasn't observed any such problems yet, but here's the method
 // anyway.)
 void 
-ClSimplexSolver::reset()
+ClSimplexSolver::Reset()
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -508,21 +508,21 @@ ClSimplexSolver::reset()
 
 // Re-solve the cuurent collection of constraints, given the new
 // values for the edit variables that have already been
-// suggested (see suggestValue() method)
+// suggested (see SuggestValue() method)
 void 
-ClSimplexSolver::resolve()
+ClSimplexSolver::Resolve()
 { // CODE DUPLICATED ABOVE
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
 #endif
-  dualOptimize();
-  setExternalVariables();
+  DualOptimize();
+  SetExternalVariables();
   _infeasibleRows.clear();
-  resetStayConstants();
+  ResetStayConstants();
 }
 
 ClSimplexSolver &
-ClSimplexSolver::suggestValue(ClVariable v, Number x)
+ClSimplexSolver::SuggestValue(ClVariable v, Number x)
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -532,10 +532,10 @@ ClSimplexSolver::suggestValue(ClVariable v, Number x)
     {
 #ifndef CL_NO_IO
     strstream ss;
-    ss << "suggestValue for variable " << v << ", but var is not an edit variable" << ends;
+    ss << "SuggestValue for variable " << v << ", but var is not an edit variable" << ends;
     throw ExCLEditMisuse(ss.str());
 #else
-    throw ExCLEditMisuse(v.name().c_str());
+    throw ExCLEditMisuse(v.Name().c_str());
 #endif
     }
   ClEditInfo *pcei = (*itEditVarMap).second;
@@ -543,19 +543,19 @@ ClSimplexSolver::suggestValue(ClVariable v, Number x)
   ClVariable clvEditMinus = pcei->_clvEditMinus;
   Number delta = x - pcei->_prevEditConstant;
   pcei->_prevEditConstant = x;
-  deltaEditConstant(delta,clvEditPlus,clvEditMinus);
+  DeltaEditConstant(delta,clvEditPlus,clvEditMinus);
   return *this;
 }
 
 // Re-solve the cuurent collection of constraints, given the new
 // values for the edit variables that have already been
-// suggested (see suggestValue() method)
+// suggested (see SuggestValue() method)
 // This is not guaranteed to work if you remove an edit constraint
 // from the middle of the edit constraints you added
 // (e.g., edit A, edit B, edit C, remove B -> this will fail!)
 // DEPRECATED
 void 
-ClSimplexSolver::resolve(const vector<Number> &newEditConstants)
+ClSimplexSolver::Resolve(const vector<Number> &newEditConstants)
 {
   ClVarToEditInfoMap::iterator it = _editVarMap.begin();
   for (; it != _editVarMap.end(); ++it)
@@ -565,10 +565,10 @@ ClSimplexSolver::resolve(const vector<Number> &newEditConstants)
     unsigned i = pcei->_index;
     if (i < newEditConstants.size())
       {
-      suggestValue(clv,newEditConstants[i]);
+      SuggestValue(clv,newEditConstants[i]);
       }
     }
-  resolve();
+  Resolve();
 }
 
 
@@ -576,10 +576,10 @@ ClSimplexSolver::resolve(const vector<Number> &newEditConstants)
 
 // Add the constraint expr=0 to the inequality tableau using an
 // artificial variable.  To do this, create an artificial variable
-// av and add av=expr to the inequality tableau, then make av be 0.
+// av and Add av=expr to the inequality tableau, then make av be 0.
 // (Raise an exception if we can't attain av=0 -- and prepare explanation)
 bool
-ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr,
+ClSimplexSolver::AddWithArtificialVariable(ClLinearExpression &expr,
                                            ExCLRequiredFailureWithExplanation &e)
 {
 #ifdef CL_TRACE
@@ -615,10 +615,10 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr,
   // this row will be removed from the tableau after optimizing
   addRow(*paz,*pazRow);
   
-  // now add the normal row to the tableau -- when artifical
+  // now Add the normal row to the tableau -- when artifical
   // variable is minimized to 0 (if possible)
   // this row remains in the tableau to maintain the constraint
-  // we are trying to add
+  // we are trying to Add
   addRow(*pav,expr);
 
 #ifdef CL_TRACE
@@ -626,70 +626,70 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr,
        << (*this) << endl;
 #endif
 
-  // try to optimize az to 0
+  // try to Optimize az to 0
   // note we are *not* optimizing the real objective, but optimizing
   // the artificial objective to see if the error in the constraint
   // we are adding can be set to 0
-  optimize(*paz);
+  Optimize(*paz);
 
-  // Careful, we want to get the expression that is in
+  // Careful, we want to get the Expression that is in
   // the tableau, not the one we initialized it with!
-  ClLinearExpression *pazTableauRow = rowExpression(*paz);
+  ClLinearExpression *pazTableauRow = RowExpression(*paz);
 #ifdef CL_TRACE
-  cerr << "pazTableauRow->constant() == " << pazTableauRow->constant() << endl;
+  cerr << "pazTableauRow->Constant() == " << pazTableauRow->Constant() << endl;
 #endif
 
   // Check that we were able to make the objective value 0
   // If not, the original constraint was not satisfiable
-  if (!clApprox(pazTableauRow->constant(),0.0))
+  if (!ClApprox(pazTableauRow->Constant(),0.0))
     {
-    buildExplanation(e, paz, pazTableauRow);
+    BuildExplanation(e, paz, pazTableauRow);
     // remove the artificial objective row that we just
     // added temporarily
-    delete removeRow(*paz);
+    delete RemoveRow(*paz);
     // and delete the artificial objective variable that we also added above
     delete paz;
     return false;
     }
 
   // see if av is a basic variable
-  const ClLinearExpression *pe = rowExpression(*pav);
+  const ClLinearExpression *pe = RowExpression(*pav);
   if (pe != NULL)
     {
     // FIXGJB: do we ever even get here?
-    // Find another variable in this row and pivot, so that av becomes parametric
+    // Find another variable in this row and Pivot, so that av becomes parametric
     // If there isn't another variable in the row then 
     // the tableau contains the equation av = 0  -- just delete av's row
-    if (pe->isConstant())
+    if (pe->IsConstant())
       {
       // FIXGJB: do we ever get here?
-      assert(clApprox(pe->constant(),0.0));
-      delete removeRow(*pav);
+      assert(ClApprox(pe->Constant(),0.0));
+      delete RemoveRow(*pav);
       // remove the temporary objective function
-      // FIXGJB may need this too: delete removeRow(*paz);
+      // FIXGJB may need this too: delete RemoveRow(*paz);
       delete pav;
 #ifdef CL_FIND_LEAK
       ++_cArtificialVarsDeleted;
 #endif
       return true;
       }
-    ClVariable entryVar = pe->anyPivotableVariable();
-    if (entryVar.isNil())
+    ClVariable entryVar = pe->AnyPivotableVariable();
+    if (entryVar.IsNil())
       {
-      buildExplanation(e, *pav, pe);
+      BuildExplanation(e, *pav, pe);
       return false; /* required failure */
       }
-    pivot(entryVar, *pav);
+    Pivot(entryVar, *pav);
     }
   // now av should be parametric
-  assert(rowExpression(*pav) == NULL);
-  removeColumn(*pav);
+  assert(RowExpression(*pav) == NULL);
+  RemoveColumn(*pav);
   delete pav;
 #ifdef CL_FIND_LEAK
   ++_cArtificialVarsDeleted;
 #endif
   // remove the temporary objective function
-  delete removeRow(*paz);
+  delete RemoveRow(*paz);
   delete paz;
   return true;
 }
@@ -698,7 +698,7 @@ ClSimplexSolver::addWithArtificialVariable(ClLinearExpression &expr,
 // Using the given equation (av = cle) build an explanation which
 // implicates all constraints used to construct the equation. That
 // is, everything for which the variables in the equation are markers.
-void ClSimplexSolver::buildExplanation(ExCLRequiredFailureWithExplanation &e,
+void ClSimplexSolver::BuildExplanation(ExCLRequiredFailureWithExplanation &e,
                                        ClVariable av,
                                        const ClLinearExpression *pcle)
 {
@@ -706,37 +706,37 @@ void ClSimplexSolver::buildExplanation(ExCLRequiredFailureWithExplanation &e,
   it_cn = _constraintsMarked.find(av);
   if (it_cn != _constraintsMarked.end()) 
     {
-      e.addConstraint((*it_cn).second);
+      e.AddConstraint((*it_cn).second);
     }
   
   assert(pcle != NULL);
   
-  const ClVarToNumberMap & terms = pcle->terms();
+  const ClVarToNumberMap & terms = pcle->Terms();
   ClVarToNumberMap::const_iterator it_term;
   for (it_term = terms.begin(); it_term != terms.end(); it_term++)
     {
     it_cn = _constraintsMarked.find((*it_term).first);
     if (it_cn != _constraintsMarked.end()) 
       {
-      e.addConstraint((*it_cn).second);
+      e.AddConstraint((*it_cn).second);
       }
     }
 }
 
 
 
-// We are trying to add the constraint expr=0 to the appropriate
-// tableau.  Try to add expr directly to the tableaus without
+// We are trying to Add the constraint expr=0 to the appropriate
+// tableau.  Try to Add expr directly to the tableaus without
 // creating an artificial variable.  Return true if successful and
 // false if not.
 bool 
-ClSimplexSolver::tryAddingDirectly(ClLinearExpression &expr) 
+ClSimplexSolver::TryAddingDirectly(ClLinearExpression &expr) 
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << expr << ")" << endl;
 #endif
-  ClVariable subject = chooseSubject(expr);
+  ClVariable subject = ChooseSubject(expr);
   if (subject.get_pclv() == NULL )
     {
 #ifdef CL_TRACE
@@ -744,10 +744,10 @@ ClSimplexSolver::tryAddingDirectly(ClLinearExpression &expr)
 #endif
     return false;
     }
-  expr.newSubject(subject);
-  if (columnsHasKey(subject))
+  expr.NewSubject(subject);
+  if (ColumnsHasKey(subject))
     {
-    substituteOut(subject,expr);
+    SubstituteOut(subject,expr);
     }
   addRow(subject,expr);
 #ifdef CL_TRACE
@@ -757,7 +757,7 @@ ClSimplexSolver::tryAddingDirectly(ClLinearExpression &expr)
 }
 
 
-// We are trying to add the constraint expr=0 to the tableaux.  Try
+// We are trying to Add the constraint expr=0 to the tableaux.  Try
 // to choose a subject (a variable to become basic) from among the
 // current variables in expr.  If expr contains any unrestricted
 // variables, then we must choose an unrestricted variable as the
@@ -767,16 +767,16 @@ ClSimplexSolver::tryAddingDirectly(ClLinearExpression &expr)
 // restricted variables, if there is a restricted variable with a
 // negative coefficient that is new to the solver we can make that
 // the subject.  Otherwise we can't find a subject, so return nil.
-// (In this last case we have to add an artificial variable and use
+// (In this last case we have to Add an artificial variable and use
 // that variable as the subject -- this is done outside this method
 // though.)
 // 
 // Note: in checking for variables that are new to the solver, we
 // ignore whether a variable occurs in the objective function, since
 // new slack variables are added to the objective function by
-// 'newExpression:', which is called before this method.
+// 'NewExpression:', which is called before this method.
 ClVariable
-ClSimplexSolver::chooseSubject(ClLinearExpression &expr)
+ClSimplexSolver::ChooseSubject(ClLinearExpression &expr)
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -792,7 +792,7 @@ ClSimplexSolver::chooseSubject(ClLinearExpression &expr)
   // negative coefficient
   bool foundNewRestricted = false;
 
-  const ClVarToNumberMap &terms = expr.terms();
+  const ClVarToNumberMap &terms = expr.Terms();
   ClVarToNumberMap::const_iterator it = terms.begin();
   for ( ; it != terms.end(); ++it )
     {
@@ -806,15 +806,15 @@ ClSimplexSolver::chooseSubject(ClLinearExpression &expr)
       // 'subject' is if v is unrestricted and new to the solver and
       // 'subject' isn't new.  If this is the case just pick v
       // immediately and return.
-      if (!v.isRestricted())
+      if (!v.IsRestricted())
 	{
-	if (!columnsHasKey(v))
+	if (!ColumnsHasKey(v))
 	  return v;
 	}
       }
     else
       { // we haven't found an restricted variable yet
-      if (v.isRestricted())
+      if (v.IsRestricted())
 	{
 	// v is restricted.  If we have already found a suitable
 	// restricted variable just stick with that.  Otherwise, if v
@@ -822,14 +822,14 @@ ClSimplexSolver::chooseSubject(ClLinearExpression &expr)
 	// it.  Regarding being new to the solver -- if the variable
 	// occurs only in the objective function we regard it as being
 	// new to the solver, since error variables are added to the
-	// objective function when we make the expression.  We also
+	// objective function when we make the Expression.  We also
 	// never pick a dummy variable here.
-	if (!foundNewRestricted && !v.isDummy() && c < 0.0)
+	if (!foundNewRestricted && !v.IsDummy() && c < 0.0)
 	  {
-	  const ClTableauColumnsMap &col = columns();
+	  const ClTableauColumnsMap &col = Columns();
 	  ClTableauColumnsMap::const_iterator it_col = col.find(v);
 	  if (it_col == col.end() || 
-	      ( col.size() == 1 && columnsHasKey(_objective) ) )
+	      ( col.size() == 1 && ColumnsHasKey(_objective) ) )
 	    {
 	    subject = v;
 	    foundNewRestricted = true;
@@ -845,7 +845,7 @@ ClSimplexSolver::chooseSubject(ClLinearExpression &expr)
 	}
       }
     }
-  if (!subject.isNil())
+  if (!subject.IsNil())
     return subject;
 
   // subject is nil. 
@@ -857,23 +857,23 @@ ClSimplexSolver::chooseSubject(ClLinearExpression &expr)
     {
     ClVariable v = (*it).first;
     Number c = (*it).second;
-    if (!v.isDummy())
+    if (!v.IsDummy())
       return NULL; // nope, no luck
     // if v is new to the solver, tentatively make it the subject
-    if (!columnsHasKey(v))
+    if (!ColumnsHasKey(v))
       {
       subject = v;
       coeff = c;
       }
     }
 
-  // If we get this far, all of the variables in the expression should
-  // be dummy variables.  If the constant is nonzero we are trying to
-  // add an unsatisfiable required constraint.  (Remember that dummy
-  // variables must take on a value of 0.)  Otherwise, if the constant
-  // is zero, multiply by -1 if necessary to make the coefficient for
+  // If we get this far, all of the variables in the Expression should
+  // be dummy variables.  If the Constant is nonzero we are trying to
+  // Add an unsatisfiable required constraint.  (Remember that dummy
+  // variables must take on a value of 0.)  Otherwise, if the Constant
+  // is Zero, multiply by -1 if necessary to make the coefficient for
   // the subject negative."
-  if (!clApprox(expr.constant(),0.0))
+  if (!ClApprox(expr.Constant(),0.0))
     {
 #ifdef CL_DEBUG_FAILURES
     cerr << "required failure in choose subject:\n"
@@ -882,7 +882,7 @@ ClSimplexSolver::chooseSubject(ClLinearExpression &expr)
     if (FIsExplaining()) 
       {
       ExCLRequiredFailureWithExplanation e;
-      buildExplanation(e, NULL, &expr);
+      BuildExplanation(e, NULL, &expr);
       throw e;
       }
     else
@@ -890,7 +890,7 @@ ClSimplexSolver::chooseSubject(ClLinearExpression &expr)
     }
   if (coeff > 0.0)
     {
-    expr.multiplyMe(-1);
+    expr.MultiplyMe(-1);
     }
   return subject;
 }
@@ -903,16 +903,16 @@ ClSimplexSolver::chooseSubject(ClLinearExpression &expr)
 // error in satisfying the edit constraint.  We are about to change
 // something, and we want to fix the constants in the equations
 // representing the edit constraints.  If one of eplus and eminus is
-// basic, the other must occur only in the expression for that basic
-// error variable.  (They can't both be basic.)  Fix the constant in
-// this expression.  Otherwise they are both nonbasic.  Find all of
+// basic, the other must occur only in the Expression for that basic
+// error variable.  (They can't both be basic.)  Fix the Constant in
+// this Expression.  Otherwise they are both nonbasic.  Find all of
 // the expressions in which they occur, and fix the constants in
 // those.  See the UIST paper for details.  
 // (This comment was for resetEditConstants(), but that is now
 // gone since it was part of the screwey vector-based interface
 // to resolveing. --02/15/99 gjb)
 void 
-ClSimplexSolver::deltaEditConstant(Number delta,
+ClSimplexSolver::DeltaEditConstant(Number delta,
 				   ClVariable plusErrorVar,
 				   ClVariable minusErrorVar)
 {
@@ -921,24 +921,24 @@ ClSimplexSolver::deltaEditConstant(Number delta,
   cerr << "(" << delta << ", " << plusErrorVar << ", " << minusErrorVar << ")" << endl;
 #endif
   // first check if the plusErrorVar is basic
-  ClLinearExpression *pexprPlus = rowExpression(plusErrorVar);
+  ClLinearExpression *pexprPlus = RowExpression(plusErrorVar);
   if (pexprPlus != NULL )
     {
-    pexprPlus->incrementConstant(delta);
+    pexprPlus->IncrementConstant(delta);
     // error variables are always restricted
-    // so the row is infeasible if the constant is negative
-    if (pexprPlus->constant() < 0.0)
+    // so the row is infeasible if the Constant is negative
+    if (pexprPlus->Constant() < 0.0)
       {
       _infeasibleRows.insert(plusErrorVar);
       }
     return;
     }
   // check if minusErrorVar is basic
-  ClLinearExpression *pexprMinus = rowExpression(minusErrorVar);
+  ClLinearExpression *pexprMinus = RowExpression(minusErrorVar);
   if (pexprMinus != NULL)
     {
-    pexprMinus->incrementConstant(-delta);
-    if (pexprMinus->constant() < 0.0)
+    pexprMinus->IncrementConstant(-delta);
+    if (pexprMinus->Constant() < 0.0)
       {
       _infeasibleRows.insert(minusErrorVar);
       }
@@ -954,11 +954,11 @@ ClSimplexSolver::deltaEditConstant(Number delta,
   for (; it != columnVars.end(); ++it)
     {
     ClVariable basicVar = *it;
-    ClLinearExpression *pexpr = rowExpression(basicVar);
+    ClLinearExpression *pexpr = RowExpression(basicVar);
     assert(pexpr != NULL );
-    double c = pexpr->coefficientFor(minusErrorVar);
-    pexpr->incrementConstant(c*delta);
-    if (basicVar.isRestricted() && pexpr->constant() < 0.0)
+    double c = pexpr->CoefficientFor(minusErrorVar);
+    pexpr->IncrementConstant(c*delta);
+    if (basicVar.IsRestricted() && pexpr->Constant() < 0.0)
       {
       _infeasibleRows.insert(basicVar);
       }
@@ -966,15 +966,15 @@ ClSimplexSolver::deltaEditConstant(Number delta,
 }
   
 // We have set new values for the constants in the edit constraints.
-// Re-optimize using the dual simplex algorithm.
+// Re-Optimize using the dual simplex algorithm.
 void 
-ClSimplexSolver::dualOptimize()
+ClSimplexSolver::DualOptimize()
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "()" << endl;
 #endif
-  const ClLinearExpression *pzRow = rowExpression(_objective);
+  const ClLinearExpression *pzRow = RowExpression(_objective);
   // need to handle infeasible rows
   while (!_infeasibleRows.empty())
     {
@@ -984,24 +984,24 @@ ClSimplexSolver::dualOptimize()
     ClVariable entryVar;
     // exitVar might have become basic after some other pivoting
     // so allow for the case of its not being there any longer
-    ClLinearExpression *pexpr = rowExpression(exitVar);
+    ClLinearExpression *pexpr = RowExpression(exitVar);
     if (pexpr != NULL )
       {
       // make sure the row is still not feasible
-      if (pexpr->constant() < 0.0)
+      if (pexpr->Constant() < 0.0)
 	{
 	double ratio = DBL_MAX;
 	double r;
-	ClVarToNumberMap &terms = pexpr->terms();
+	ClVarToNumberMap &terms = pexpr->Terms();
 	ClVarToNumberMap::iterator it = terms.begin();
 	for ( ; it != terms.end(); ++it )
 	  {
 	  ClVariable v = (*it).first;
 	  Number c = (*it).second;
-	  if (c > 0.0 && v.isPivotable())
+	  if (c > 0.0 && v.IsPivotable())
 	    {
-	    Number zc = pzRow->coefficientFor(v);
-	    r = zc/c; // FIXGJB r:= zc/c or zero, as ClSymbolicWeight-s
+	    Number zc = pzRow->CoefficientFor(v);
+	    r = zc/c; // FIXGJB r:= zc/c or Zero, as ClSymbolicWeight-s
 	    if (r < ratio)
 	      {
 	      entryVar = v;
@@ -1015,19 +1015,19 @@ ClSimplexSolver::dualOptimize()
 	  ss << "ratio == nil (DBL_MAX)" << ends;
 	  throw ExCLInternalError(ss.str());
 	  }
-	pivot(entryVar,exitVar);
+	Pivot(entryVar,exitVar);
 	}
       }
     }
 }
 
-// Make a new linear expression representing the constraint cn,
+// Make a new linear Expression representing the constraint cn,
 // replacing any basic variables with their defining expressions.
-// Normalize if necessary so that the constant is non-negative.  If
+// Normalize if necessary so that the Constant is non-negative.  If
 // the constraint is non-required give its error variables an
 // appropriate weight in the objective function.
 ClLinearExpression *
-ClSimplexSolver::newExpression(const ClConstraint *pcn,
+ClSimplexSolver::NewExpression(const ClConstraint *pcn,
                                /* output to */
                                ClVariable &clvEplus,
                                ClVariable &clvEminus,
@@ -1036,43 +1036,43 @@ ClSimplexSolver::newExpression(const ClConstraint *pcn,
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << *pcn << ")" << endl;
-  cerr << "cn.isInequality() == " << pcn->isInequality() << endl;
-  cerr << "cn.isRequired() == " << pcn->isRequired() << endl;
+  cerr << "cn.IsInequality() == " << pcn->IsInequality() << endl;
+  cerr << "cn.IsRequired() == " << pcn->IsRequired() << endl;
 #endif
-  const ClLinearExpression &cnExpr = pcn->expression();
-  auto_ptr<ClLinearExpression> pexpr ( new ClLinearExpression(cnExpr.constant()) );
+  const ClLinearExpression &cnExpr = pcn->Expression();
+  auto_ptr<ClLinearExpression> pexpr ( new ClLinearExpression(cnExpr.Constant()) );
   auto_ptr<ClSlackVariable> pslackVar;
   auto_ptr<ClDummyVariable> pdummyVar;
   auto_ptr<ClSlackVariable> peminus(0);
   auto_ptr<ClSlackVariable> peplus(0);
-  const ClVarToNumberMap &cnTerms = cnExpr.terms();
+  const ClVarToNumberMap &cnTerms = cnExpr.Terms();
   ClVarToNumberMap::const_iterator it = cnTerms.begin();
   for ( ; it != cnTerms.end(); ++it)
     {
     ClVariable v = (*it).first;
     Number c = (*it).second;
-    const ClLinearExpression *pe = rowExpression(v);
+    const ClLinearExpression *pe = RowExpression(v);
     if (pe == NULL)
       {
-      pexpr->addVariable(v,c);
+      pexpr->AddVariable(v,c);
       }
     else
       {
-      pexpr->addExpression(*pe,c);
+      pexpr->AddExpression(*pe,c);
       }
     }
 
-  // add slack and error variables as needed
-  if (pcn->isInequality())
+  // Add slack and error variables as needed
+  if (pcn->IsInequality())
     {
-    // cn is an inequality, so add a slack variable.  The original
+    // cn is an inequality, so Add a slack variable.  The original
     // constraint is expr>=0, so that the resulting equality is
-    // expr-slackVar=0.  If cn is also non-required add a negative
+    // expr-slackVar=0.  If cn is also non-required Add a negative
     // error variable, giving
     //    expr-slackVar = -errorVar, in other words
     //    expr-slackVar+errorVar=0.
-    // Since both of these variables are newly created we can just add
-    // them to the expression (they can't be basic).
+    // Since both of these variables are newly created we can just Add
+    // them to the Expression (they can't be basic).
     ++_slackCounter;
     ReinitializeAutoPtr(pslackVar,new ClSlackVariable (_slackCounter, "s"));
     pexpr->setVariable(*pslackVar,-1);
@@ -1080,25 +1080,25 @@ ClSimplexSolver::newExpression(const ClConstraint *pcn,
     _markerVars[pcn] = pslackVar.get();
     _constraintsMarked[pslackVar.get()] = pcn;
     
-    if (!pcn->isRequired())
+    if (!pcn->IsRequired())
       {
       ++_slackCounter;
       ReinitializeAutoPtr(peminus,new ClSlackVariable (_slackCounter, "em"));
       pexpr->setVariable(*peminus,1.0);
-      // add emnius to the objective function with the appropriate weight
-      ClLinearExpression *pzRow = rowExpression(_objective);
-      // FIXGJB: pzRow->addVariable(eminus,pcn->strength().symbolicWeight() * pcn->weight());
-      ClSymbolicWeight sw = pcn->strength().symbolicWeight().times(pcn->weight());
-      pzRow->setVariable(*peminus,sw.asDouble());
+      // Add emnius to the objective function with the appropriate weight
+      ClLinearExpression *pzRow = RowExpression(_objective);
+      // FIXGJB: pzRow->AddVariable(eminus,pcn->strength().symbolicWeight() * pcn->weight());
+      ClSymbolicWeight sw = pcn->strength().symbolicWeight().Times(pcn->weight());
+      pzRow->setVariable(*peminus,sw.AsDouble());
       _errorVars[pcn].insert(peminus.get());
-      noteAddedVariable(*peminus,_objective);
+      NoteAddedVariable(*peminus,_objective);
       }
     }
   else
     { // cn is an equality
-    if (pcn->isRequired())
+    if (pcn->IsRequired())
       {
-      // Add a dummy variable to the expression to serve as a marker
+      // Add a dummy variable to the Expression to serve as a marker
       // for this constraint.  The dummy variable is never allowed to
       // enter the basis when pivoting.
       ++_dummyCounter;
@@ -1126,10 +1126,10 @@ ClSimplexSolver::newExpression(const ClConstraint *pcn,
       _markerVars[pcn] = peplus.get();
       _constraintsMarked[peplus.get()] = pcn;
 
-      ClLinearExpression *pzRow = rowExpression(_objective);
-      // FIXGJB: pzRow->addVariable(eplus,pcn->strength().symbolicWeight() * pcn->weight());
-      ClSymbolicWeight sw = pcn->strength().symbolicWeight().times(pcn->weight());
-      double swCoeff = sw.asDouble();
+      ClLinearExpression *pzRow = RowExpression(_objective);
+      // FIXGJB: pzRow->AddVariable(eplus,pcn->strength().symbolicWeight() * pcn->weight());
+      ClSymbolicWeight sw = pcn->strength().symbolicWeight().Times(pcn->weight());
+      double swCoeff = sw.AsDouble();
 #ifdef CL_TRACE
       if (swCoeff == 0) 
 	{
@@ -1140,10 +1140,10 @@ ClSimplexSolver::newExpression(const ClConstraint *pcn,
 	}
 #endif      
       pzRow->setVariable(*peplus,swCoeff);
-      noteAddedVariable(*peplus,_objective);
-      // FIXGJB: pzRow->addVariable(eminus,pcn->strength().symbolicWeight() * pcn->weight());
+      NoteAddedVariable(*peplus,_objective);
+      // FIXGJB: pzRow->AddVariable(eminus,pcn->strength().symbolicWeight() * pcn->weight());
       pzRow->setVariable(*peminus,swCoeff);
-      noteAddedVariable(*peminus,_objective);
+      NoteAddedVariable(*peminus,_objective);
       _errorVars[pcn].insert(peminus.get());
       _errorVars[pcn].insert(peplus.get());
       if (pcn->isStayConstraint()) 
@@ -1151,28 +1151,28 @@ ClSimplexSolver::newExpression(const ClConstraint *pcn,
 	_stayPlusErrorVars.push_back(peplus.get());
 	_stayMinusErrorVars.push_back(peminus.get());
 	}
-      else if (pcn->isEditConstraint())
+      else if (pcn->IsEditConstraint())
 	{
         clvEplus = peplus.get();
         clvEminus = peminus.get();
-        prevEConstant = cnExpr.constant();
+        prevEConstant = cnExpr.Constant();
 	}
       }
     }
 
-  // the constant in the expression should be non-negative.
-  // If necessary normalize the expression by multiplying by -1
-  if (pexpr->constant() < 0)
+  // the Constant in the Expression should be non-negative.
+  // If necessary normalize the Expression by multiplying by -1
+  if (pexpr->Constant() < 0)
     {
 #ifdef CL_TRACE
-    cerr << "newExpression's constant is " << pexpr->constant() << ", < 0, so flipping" << endl;
+    cerr << "NewExpression's Constant is " << pexpr->Constant() << ", < 0, so flipping" << endl;
 #endif
-    pexpr->multiplyMe(-1);
+    pexpr->MultiplyMe(-1);
     }
 #ifdef CL_TRACE
   cerr << "- returning " << *pexpr << endl;
 #endif
-  // Terrible name -- release() does *not* delete the object,
+  // Terrible Name -- release() does *not* delete the object,
   // only makes sure that the destructor won't delete the object
   // (it releases the auto_ptr from the responsibility of deleting the object)
   pslackVar.release();
@@ -1185,14 +1185,14 @@ ClSimplexSolver::newExpression(const ClConstraint *pcn,
 // Minimize the value of the objective.  (The tableau should already
 // be feasible.)
 void 
-ClSimplexSolver::optimize(ClVariable zVar)
+ClSimplexSolver::Optimize(ClVariable zVar)
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << zVar << ")\n"
        << *this << endl;
 #endif
-  ClLinearExpression *pzRow = rowExpression(zVar);
+  ClLinearExpression *pzRow = RowExpression(zVar);
   assert(pzRow != NULL);
   ClVariable entryVar = NULL;
   ClVariable exitVar = NULL;
@@ -1202,13 +1202,13 @@ ClSimplexSolver::optimize(ClVariable zVar)
     // Find the most negative coefficient in the objective function
     // (ignoring the non-pivotable dummy variables).  If all
     // coefficients are positive we're done
-    ClVarToNumberMap &terms = pzRow->terms();
+    ClVarToNumberMap &terms = pzRow->Terms();
     ClVarToNumberMap::iterator it = terms.begin();
     for (; it != terms.end(); ++it)
       {
       ClVariable v = (*it).first;
       Number c = (*it).second;
-      if (v.isPivotable() && c < objectiveCoeff)
+      if (v.IsPivotable() && c < objectiveCoeff)
 	{
 	objectiveCoeff = c;
 	entryVar = v;
@@ -1238,14 +1238,14 @@ ClSimplexSolver::optimize(ClVariable zVar)
 #ifdef CL_TRACE
       cerr << "Checking " << v << endl;
 #endif
-      if (v.isPivotable()) 
+      if (v.IsPivotable()) 
 	{
-	const ClLinearExpression *pexpr = rowExpression(v);
-	Number coeff = pexpr->coefficientFor(entryVar);
+	const ClLinearExpression *pexpr = RowExpression(v);
+	Number coeff = pexpr->CoefficientFor(entryVar);
 	// only consider negative coefficients
 	if (coeff < 0.0)
 	  {
-	  r = - pexpr->constant() / coeff;
+	  r = - pexpr->Constant() / coeff;
 	  if (r < minRatio)
 	    {
 #ifdef CL_TRACE
@@ -1267,40 +1267,40 @@ ClSimplexSolver::optimize(ClVariable zVar)
       ss << "objective function is unbounded!" << ends;
       throw ExCLInternalError(ss.str());
       }
-    pivot(entryVar, exitVar);
+    Pivot(entryVar, exitVar);
 #ifdef CL_TRACE
-    cerr << "After optimize:\n"
+    cerr << "After Optimize:\n"
          << *this << endl;
 #endif
     }
 }
 
-// Do a pivot.  Move entryVar into the basis (i.e. make it a basic variable),
+// Do a Pivot.  Move entryVar into the basis (i.e. make it a basic variable),
 // and move exitVar out of the basis (i.e., make it a parametric variable)
 void 
-ClSimplexSolver::pivot(ClVariable entryVar, ClVariable exitVar)
+ClSimplexSolver::Pivot(ClVariable entryVar, ClVariable exitVar)
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
   cerr << "(" << entryVar << ", " << exitVar << ")" << endl;
 #endif
 
-  // the entryVar might be non-pivotable if we're doing a removeConstraint --
+  // the entryVar might be non-pivotable if we're doing a RemoveConstraint --
   // otherwise it should be a pivotable variable -- enforced at call sites,
   // hopefully
   
-  // expr is the expression for the exit variable (about to leave the basis) -- 
+  // expr is the Expression for the exit variable (about to leave the basis) -- 
   // so that the old tableau includes the equation:
   //   exitVar = expr
-  ClLinearExpression *pexpr = removeRow(exitVar);
+  ClLinearExpression *pexpr = RemoveRow(exitVar);
 
-  // Compute an expression for the entry variable.  Since expr has
+  // Compute an Expression for the entry variable.  Since expr has
   // been deleted from the tableau we can destructively modify it to
-  // build this expression.
-  pexpr->changeSubject(exitVar,entryVar);
-  substituteOut(entryVar,*pexpr);
+  // build this Expression.
+  pexpr->ChangeSubject(exitVar,entryVar);
+  SubstituteOut(entryVar,*pexpr);
 
-  if (entryVar.isExternal())
+  if (entryVar.IsExternal())
     {
     // entry var is no longer a parametric variable since we're moving
     // it into the basis
@@ -1322,10 +1322,10 @@ ClSimplexSolver::pivot(ClVariable entryVar, ClVariable exitVar)
 // they have value 0 in the current solution, meaning the previous
 // stay was exactly satisfied.  In this case nothing needs to be
 // changed.  Otherwise one of them is basic, and the other must
-// occur only in the expression for that basic error variable.
-// Reset the constant in this expression to 0.
+// occur only in the Expression for that basic error variable.
+// Reset the Constant in this Expression to 0.
 void 
-ClSimplexSolver::resetStayConstants()
+ClSimplexSolver::ResetStayConstants()
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -1339,14 +1339,14 @@ ClSimplexSolver::resetStayConstants()
   for ( ; itStayPlusErrorVars != _stayPlusErrorVars.end();
 	++itStayPlusErrorVars, ++itStayMinusErrorVars )
     {
-    ClLinearExpression *pexpr = rowExpression(*itStayPlusErrorVars);
+    ClLinearExpression *pexpr = RowExpression(*itStayPlusErrorVars);
     if (pexpr == NULL )
       {
-      pexpr = rowExpression(*itStayMinusErrorVars);
+      pexpr = RowExpression(*itStayMinusErrorVars);
       }
     if (pexpr != NULL)
       {
-      pexpr->set_constant(0.0);
+      pexpr->Set_constant(0.0);
       }
     }
 }
@@ -1362,7 +1362,7 @@ ClSimplexSolver::resetStayConstants()
 // values are just implicit in the tableu -- so we don't need to set
 // them."
 void 
-ClSimplexSolver::setExternalVariables()
+ClSimplexSolver::SetExternalVariables()
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -1379,7 +1379,7 @@ ClSimplexSolver::setExternalVariables()
     {
     ClVariable v = *itParVars;
 #ifndef NDEBUG
-    // defensively skip it if it is basic -- change_value is virtual
+    // defensively skip it if it is basic -- ChangeValue is virtual
     // so don't want to call it twice;  this should never
     // happen
     if (FIsBasicVar(v))
@@ -1388,7 +1388,7 @@ ClSimplexSolver::setExternalVariables()
       // WARNING
       cerr << __FUNCTION__ << "Error: variable " << v 
            << " in _externalParametricVars is basic" << endl;
-      cerr << "Row is: " << *rowExpression(v) << endl;
+      cerr << "Row is: " << *RowExpression(v) << endl;
 #endif
       continue;
       }
@@ -1401,8 +1401,8 @@ ClSimplexSolver::setExternalVariables()
   for ( ; itRowVars != _externalRows.end() ; ++itRowVars )
     {
     ClVariable v = *itRowVars;
-    ClLinearExpression *pexpr = rowExpression(v);
-    ChangeClv(v,pexpr->constant());
+    ClLinearExpression *pexpr = RowExpression(v);
+    ChangeClv(v,pexpr->Constant());
     }
 
   _fNeedsSolving = false;
@@ -1412,7 +1412,7 @@ ClSimplexSolver::setExternalVariables()
 
 #ifndef CL_NO_IO
 ostream &
-printTo(ostream &xo, const ClVarVector &varlist)
+PrintTo(ostream &xo, const ClVarVector &varlist)
 {
   ClVarVector::const_iterator it = varlist.begin();
   xo << varlist.size() << ":" << "[ ";
@@ -1430,11 +1430,11 @@ printTo(ostream &xo, const ClVarVector &varlist)
 }
 
 ostream &operator<<(ostream &xo, const ClVarVector &varlist)
-{ return printTo(xo,varlist); }
+{ return PrintTo(xo,varlist); }
 
 
 ostream &
-printTo(ostream &xo, const ClConstraintToVarSetMap &mapCnToVarSet)
+PrintTo(ostream &xo, const ClConstraintToVarSetMap &mapCnToVarSet)
 {
   ClConstraintToVarSetMap::const_iterator it = mapCnToVarSet.begin();
   for ( ; it != mapCnToVarSet.end(); ++it) {
@@ -1446,14 +1446,14 @@ printTo(ostream &xo, const ClConstraintToVarSetMap &mapCnToVarSet)
 }
 
 ostream &operator <<(ostream &xo, const ClConstraintToVarSetMap &mapCnToVarSet)
-{ return printTo(xo,mapCnToVarSet); }
+{ return PrintTo(xo,mapCnToVarSet); }
 
 
 
 ostream &
-ClSimplexSolver::printOn(ostream &xo) const
+ClSimplexSolver::PrintOn(ostream &xo) const
 {
-  super::printOn(xo);
+  super::PrintOn(xo);
 
   xo << "_stayPlusErrorVars: "
      << _stayPlusErrorVars << endl;
@@ -1466,9 +1466,9 @@ ClSimplexSolver::printOn(ostream &xo) const
 
 
 ostream &
-ClSimplexSolver::printInternalInfo(ostream &xo) const
+ClSimplexSolver::PrintInternalInfo(ostream &xo) const
 {
-  super::printInternalInfo(xo);
+  super::PrintInternalInfo(xo);
   xo << "; edvars: " << _editVarMap.size();
   xo << endl;
   printExternalVariablesTo(xo);
@@ -1477,7 +1477,7 @@ ClSimplexSolver::printInternalInfo(ostream &xo) const
 
 ostream &operator<<(ostream &xo, const ClSimplexSolver &clss)
 {
-  return clss.printOn(xo);
+  return clss.PrintOn(xo);
 }
 
 #endif
@@ -1503,8 +1503,8 @@ ClSimplexSolver::FIsConstraintSatisfied(const ClConstraint *const pcn) const
     ClVarSet::const_iterator it = eVars.begin();
     for ( ; it != eVars.end(); ++it )
       {
-      const ClLinearExpression *pexpr = rowExpression(*it);
-      if (pexpr != NULL && !clApprox(pexpr->constant(),0.0))
+      const ClLinearExpression *pexpr = RowExpression(*it);
+      if (pexpr != NULL && !ClApprox(pexpr->Constant(),0.0))
         {
 #ifndef CL_NO_IO
         if (fCnsays)
@@ -1526,7 +1526,7 @@ ClSimplexSolver::FIsConstraintSatisfied(const ClConstraint *const pcn) const
 
 #ifndef CL_NO_ID
 
-ostream &printTo(ostream &xo, const ClSimplexSolver::ClVarToEditInfoMap &mapVarToEditInfo)
+ostream &PrintTo(ostream &xo, const ClSimplexSolver::ClVarToEditInfoMap &mapVarToEditInfo)
 {
   ClSimplexSolver::ClVarToEditInfoMap::const_iterator it = mapVarToEditInfo.begin();
   for ( ; it != mapVarToEditInfo.end(); ++it) {
@@ -1539,7 +1539,7 @@ ostream &printTo(ostream &xo, const ClSimplexSolver::ClVarToEditInfoMap &mapVarT
   
 
 ostream &operator<<(ostream &xo, const ClSimplexSolver::ClVarToEditInfoMap &mapVarToEditInfo)
-{ return printTo(xo,mapVarToEditInfo); }
+{ return PrintTo(xo,mapVarToEditInfo); }
 
 #endif
 

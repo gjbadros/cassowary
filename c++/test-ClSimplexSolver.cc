@@ -33,13 +33,13 @@ main( char **, int )
   
   ClSimplexSolver solver;
 
-  cerr << "Starting addConstraint-s" << endl;
-  solver.addConstraint(a_b);
-  solver.addConstraint(a_c);
-  solver.addStay(a);
-  solver.addStay(b);
-  solver.addStay(c);
-  solver.addConstraint(edit_b);
+  cerr << "Starting AddConstraint-s" << endl;
+  solver.AddConstraint(a_b);
+  solver.AddConstraint(a_c);
+  solver.AddStay(a);
+  solver.AddStay(b);
+  solver.AddStay(c);
+  solver.AddConstraint(edit_b);
   
   vector<double> rgedits;
 
@@ -49,7 +49,7 @@ main( char **, int )
   rgedits.push_back(6.0);
   try 
     {
-    solver.resolve(rgedits);
+    solver.Resolve(rgedits);
     cout << "a = " << a << endl;
     cout << "b = " << b << endl;
     cout << "c = " << c << endl;

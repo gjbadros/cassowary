@@ -39,13 +39,13 @@ class ClPoint {
     { return _clv_y; }
 
   void SetXY(Number x, Number y)
-    { _clv_x.set_value(x); _clv_y.set_value(y); }
+    { _clv_x.SetValue(x); _clv_y.SetValue(y); }
 
   Number Xvalue() const
-    { return X().value(); }
+    { return X().Value(); }
 
   Number Yvalue() const
-    { return Y().value(); }
+    { return Y().Value(); }
 
  private:
   ClVariable _clv_x;

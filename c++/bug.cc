@@ -12,7 +12,7 @@ class ClGenericLinearExpression  {
  public:
   typedef std::map<PconstClAbstractVariable,T> ClVarToCoeffMap;
 
-  T coefficientFor(const ClAbstractVariable &var) const
+  T CoefficientFor(const ClAbstractVariable &var) const
     { 
     typename ClVarToCoeffMap::const_iterator it = _terms.find(&var);
     }

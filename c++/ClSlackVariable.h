@@ -31,8 +31,8 @@ protected:
   friend ClTableau;
   friend ClSimplexSolver;
 
-  ClSlackVariable(string name = "") :
-    ClAbstractVariable(name)
+  ClSlackVariable(string Name = "") :
+    ClAbstractVariable(Name)
     {
 #ifdef CL_FIND_LEAK
       ++cSlackVariables; 
@@ -48,20 +48,20 @@ protected:
     }
 
 #ifndef CL_NO_IO
-  virtual ostream &printOn(ostream &xo) const
+  virtual ostream &PrintOn(ostream &xo) const
   {  
-    xo << "[" << name() << ":slack]";
+    xo << "[" << Name() << ":slack]";
     return xo;
   }
 #endif
 
-  virtual bool isExternal() const
+  virtual bool IsExternal() const
     { return false; }
 
-  virtual bool isPivotable() const
+  virtual bool IsPivotable() const
     { return true; }
 
-  virtual bool isRestricted() const
+  virtual bool IsRestricted() const
     { return true; }
 
 };

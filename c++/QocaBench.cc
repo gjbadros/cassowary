@@ -31,7 +31,7 @@ main( int argc, char **argv )
     
     timer.Start();
     ClSimplexSolver solver;
-    solver.setAutosolve(false);
+    solver.SetAutosolve(false);
     StringToVarMap mapVars;
     ClVarLookupInMap LookupVar(&mapVars,true);
     map<long,ClConstraint *> mapIdToPcn;
@@ -64,8 +64,8 @@ main( int argc, char **argv )
         cerr << "solve" << endl;
         solver.solve();
       } else if ("qoca_resolve" == strCmd) {
-        cerr << "resolve" << endl;
-        solver.resolve();
+        cerr << "Resolve" << endl;
+        solver.Resolve();
       } else if ("qoca_suggestvalue" == strCmd) {
         char szVarname[50];
         double n;
@@ -76,7 +76,7 @@ main( int argc, char **argv )
         string strVarname = strArgs.substr(ichColon+1);
         ClVariable clv = *LookupVar(strVarname);
         cerr << "addvar of " << clv << endl;
-        solver.addStay(clv);
+        solver.AddStay(clv);
       } else if ("qoca_addconstraint" == strCmd) {
         size_t ichSpace = strArgs.find_first_of(" \t");
         string strConstraintId = strArgs.substr(0,ichSpace);
@@ -88,17 +88,17 @@ main( int argc, char **argv )
         cerr << "removecn with id = " << id << endl;
       } else if ("qoca_beginedit" == strCmd) {
         cerr << "beginedit" << endl;
-        solver.beginEdit();
+        solver.BeginEdit();
       } else if ("qoca_endedit" == strCmd) {
         cerr << "endedit" << endl;
-        solver.endEdit();
+        solver.EndEdit();
       } else if ("qoca_removevar" == strCmd) {
         ClVariable clv = *LookupVar(strArgs);
         cerr << "removevar (noop) " << clv << endl;
       } else if ("qoca_seteditvar" == strCmd) {
         ClVariable clv = *LookupVar(strArgs);
         cerr << "seteditvar " << clv << endl;
-        solver.addEditVar(clv);
+        solver.AddEditVar(clv);
       } else if ("qoca_stat" == strCmd) {
         cerr << "stat (noop)" << endl;
       }

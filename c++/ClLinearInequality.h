@@ -25,7 +25,7 @@ class ClLinearInequality : public ClLinearConstraint {
  //// Constructors
  // ClLinearInequality(expr,...)  is expr >= 0
  ClLinearInequality(const ClLinearExpression &cle,
-		    const ClStrength &strength = clsRequired(),
+		    const ClStrength &strength = ClsRequired(),
 		    double weight = 1.0) :
    ClLinearConstraint(cle,strength, weight)
    { }
@@ -34,18 +34,18 @@ class ClLinearInequality : public ClLinearConstraint {
  ClLinearInequality(const ClVariable clv,
 		    ClInequalityOperator op,
 		    const ClLinearExpression &cle,
-		    const ClStrength &strength = clsRequired(),
+		    const ClStrength &strength = ClsRequired(),
 		    double weight = 1.0) :
    ClLinearConstraint( cle, strength, weight)
    { 
    if (op == cnGEQ)
      {
-     _expression.multiplyMe(-1.0);
-     _expression.addVariable(clv,1.0);
+     _expression.MultiplyMe(-1.0);
+     _expression.AddVariable(clv,1.0);
      }
    else // op == cnLEQ
      {
-     _expression.addVariable(clv,-1.0);
+     _expression.AddVariable(clv,-1.0);
      }
    }
 
@@ -54,18 +54,18 @@ class ClLinearInequality : public ClLinearConstraint {
  ClLinearInequality(const ClLinearExpression &cle,
 		    ClInequalityOperator op,
 		    const ClVariable clv,
-		    const ClStrength &strength = clsRequired(),
+		    const ClStrength &strength = ClsRequired(),
 		    double weight = 1.0) :
    ClLinearConstraint( cle, strength, weight)
    { 
    if (op == cnLEQ)
      {
-     _expression.multiplyMe(-1.0);
-     _expression.addVariable(clv,1.0);
+     _expression.MultiplyMe(-1.0);
+     _expression.AddVariable(clv,1.0);
      }
    else // op == cnGEQ
      {
-     _expression.addVariable(clv,-1.0);
+     _expression.AddVariable(clv,-1.0);
      }
    }
 #endif
@@ -74,18 +74,18 @@ class ClLinearInequality : public ClLinearConstraint {
  ClLinearInequality(const ClLinearExpression &cle1,
 		    ClInequalityOperator op,
 		    const ClLinearExpression &cle2,
-		    const ClStrength &strength = clsRequired(),
+		    const ClStrength &strength = ClsRequired(),
 		    double weight = 1.0) :
    ClLinearConstraint( cle2, strength, weight)
    { 
    if (op == cnGEQ)
      {
-     _expression.multiplyMe(-1.0);
-     _expression.addExpression(cle1);
+     _expression.MultiplyMe(-1.0);
+     _expression.AddExpression(cle1);
      }
    else // op == cnLEQ
      {
-     _expression.addExpression(cle1,-1.0);
+     _expression.AddExpression(cle1,-1.0);
      }
    }
 
@@ -94,18 +94,18 @@ class ClLinearInequality : public ClLinearConstraint {
  ClLinearInequality(const ClVariable clv1,
 		    ClInequalityOperator op,
 		    const ClVariable clv2,
-		    const ClStrength &strength = clsRequired(),
+		    const ClStrength &strength = ClsRequired(),
 		    double weight = 1.0) :
    ClLinearConstraint( clv2, strength, weight)
    { 
    if (op == cnGEQ)
      {
-     _expression.multiplyMe(-1.0);
-     _expression.addVariable(clv1,1.0);
+     _expression.MultiplyMe(-1.0);
+     _expression.AddVariable(clv1,1.0);
      }
    else // op == cnLEQ
      {
-     _expression.addVariable(clv1,-1.0);
+     _expression.AddVariable(clv1,-1.0);
      }
    }
 #endif
@@ -114,16 +114,16 @@ class ClLinearInequality : public ClLinearConstraint {
  // Return true if this is an inequality constraint and
  // false if it is an equality constraint.  The default is
  // that it is not.
- virtual bool isInequality() const
+ virtual bool IsInequality() const
    { return true; }
 
 #ifndef CL_NO_IO 
- virtual ostream &printOn(ostream &xo) const
-   {  super::printOn(xo); xo << " >= 0 )"; return xo; }
+ virtual ostream &PrintOn(ostream &xo) const
+   {  super::PrintOn(xo); xo << " >= 0 )"; return xo; }
 #endif
 
   virtual bool FIsSatisfied() const
-    { return (_expression.evaluate() >= 0); }
+    { return (_expression.Evaluate() >= 0); }
 
  private:
 

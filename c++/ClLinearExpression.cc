@@ -24,8 +24,8 @@ ClGenericLinearExpression<T>::ClGenericLinearExpression(T num) :
 // this replaces ClVariable::asLinearExpression
 template <class T>
 ClGenericLinearExpression<T>::ClGenericLinearExpression(ClVariable clv, T value,
-                                                        T constant) :
-  _constant(constant)
+                                                        T Constant) :
+  _constant(Constant)
 {
   _terms[clv] = value;
 }
@@ -37,11 +37,11 @@ ClGenericLinearExpression<T>::~ClGenericLinearExpression()
 #ifndef CL_NO_IO
 template <class T>
 ostream &
-ClGenericLinearExpression<T>::printOn(ostream &xo) const
+ClGenericLinearExpression<T>::PrintOn(ostream &xo) const
 {
   typename ClVarToCoeffMap::const_iterator i = _terms.begin();
 
-  if (!clApprox(_constant,0.0) || i == _terms.end())
+  if (!ClApprox(_constant,0.0) || i == _terms.end())
     {
     xo << _constant;
     }
@@ -66,7 +66,7 @@ ClGenericLinearExpression<T>::printOn(ostream &xo) const
 // (private memfn)
 template <class T>
 ClGenericLinearExpression<T> &
-ClGenericLinearExpression<T>::multiplyMe(T x)
+ClGenericLinearExpression<T>::MultiplyMe(T x)
 {
   _constant *= x;
 
@@ -82,50 +82,50 @@ ClGenericLinearExpression<T>::multiplyMe(T x)
 // (Note that this result must be linear.)
 template <class T>
 ClGenericLinearExpression<T> 
-ClGenericLinearExpression<T>::times(Number x) const
+ClGenericLinearExpression<T>::Times(Number x) const
 {
   ClGenericLinearExpression<T> result = *this;
-  return result.multiplyMe(x);
+  return result.MultiplyMe(x);
 }
 
 // Return a new linear expression formed by multiplying self by x.
 // (Note that this result must be linear.)
 // The above function optimizes the specific case of multiplying
-// by a constant, here is the more general case
+// by a Constant, here is the more general case
 template <class T>
 ClGenericLinearExpression<T> 
-ClGenericLinearExpression<T>::times(const ClGenericLinearExpression<T> &expr) const
+ClGenericLinearExpression<T>::Times(const ClGenericLinearExpression<T> &expr) const
 {
-  if (isConstant())
+  if (IsConstant())
     {
-    return expr.times(_constant);
+    return expr.Times(_constant);
     }
-  else if (!expr.isConstant())
+  else if (!expr.IsConstant())
     {
     // neither are constants, so we'd introduce non-linearity
     throw ExCLNonlinearExpression();
     }	
-  return times(expr._constant);
+  return Times(expr._constant);
 }
 
 
 // Return a new linear expression formed by adding x to self.
 template <class T>
 ClGenericLinearExpression<T> 
-ClGenericLinearExpression<T>::plus(const ClGenericLinearExpression<T> &expr) const
+ClGenericLinearExpression<T>::Plus(const ClGenericLinearExpression<T> &expr) const
 {
   ClGenericLinearExpression<T> result = *this;
-  result.addExpression(expr,1.0);
+  result.AddExpression(expr,1.0);
   return result;
 }
 
 // Return a new linear expression formed by subtracting x from self.
 template <class T>
 ClGenericLinearExpression<T> 
-ClGenericLinearExpression<T>::minus(const ClGenericLinearExpression<T> &expr) const
+ClGenericLinearExpression<T>::Minus(const ClGenericLinearExpression<T> &expr) const
 {
   ClGenericLinearExpression<T> result = *this;
-  result.addExpression(expr,-1.0);
+  result.AddExpression(expr,-1.0);
   return result;
 }
 
@@ -133,53 +133,53 @@ ClGenericLinearExpression<T>::minus(const ClGenericLinearExpression<T> &expr) co
 // (Note that this result must be linear.)
 template <class T>
 ClGenericLinearExpression<T> 
-ClGenericLinearExpression<T>::divide(Number x) const
+ClGenericLinearExpression<T>::Divide(Number x) const
 {
-  if (clApprox(x,0.0))
+  if (ClApprox(x,0.0))
     {
     throw ExCLNonlinearExpression();
     }
-  return times(1.0/x);
+  return Times(1.0/x);
 }
 
 // Return a new linear expression formed by dividing self by x.
 // (Note that this result must be linear.)
 template <class T>
 ClGenericLinearExpression<T> 
-ClGenericLinearExpression<T>::divide(const ClGenericLinearExpression<T> &expr) const
+ClGenericLinearExpression<T>::Divide(const ClGenericLinearExpression<T> &expr) const
 {
-  if (!expr.isConstant())
+  if (!expr.IsConstant())
     {
     throw ExCLNonlinearExpression();
     }
-  return divide(expr._constant);
+  return Divide(expr._constant);
 }
 
 
 // Return a new linear expression (expr/this).  Since the result
-// must be linear, this is permissible only if 'this' is a constant.
+// must be linear, this is permissible only if 'this' is a Constant.
 template <class T>
 ClGenericLinearExpression<T> 
-ClGenericLinearExpression<T>::divFrom(const ClGenericLinearExpression<T> &expr) const
+ClGenericLinearExpression<T>::DivFrom(const ClGenericLinearExpression<T> &expr) const
 {
-  if (!isConstant() || clApprox(_constant,0.0))
+  if (!IsConstant() || ClApprox(_constant,0.0))
     {
     throw ExCLNonlinearExpression();
     }
-  return expr.divide(_constant);
+  return expr.Divide(_constant);
 }
 
 // Add n*expr to this expression for another expression expr.
 template <class T>
 ClGenericLinearExpression<T> &
-ClGenericLinearExpression<T>::addExpression(const ClGenericLinearExpression<T> &expr, Number n)
+ClGenericLinearExpression<T>::AddExpression(const ClGenericLinearExpression<T> &expr, Number n)
 {
-  incrementConstant(expr.constant()*n);
+  IncrementConstant(expr.Constant()*n);
 
   typename ClVarToCoeffMap::const_iterator i = expr._terms.begin();
   for ( ; i != expr._terms.end(); ++i)
     {
-    addVariable((*i).first, (*i).second * n);
+    AddVariable((*i).first, (*i).second * n);
     }
   return *this;
 }
@@ -189,26 +189,26 @@ ClGenericLinearExpression<T>::addExpression(const ClGenericLinearExpression<T> &
 // expression.
 template <class T>
 ClGenericLinearExpression<T> &
-ClGenericLinearExpression<T>::addExpression(const ClGenericLinearExpression<T> &expr, Number n,
+ClGenericLinearExpression<T>::AddExpression(const ClGenericLinearExpression<T> &expr, Number n,
 				  ClVariable subject,
 				  ClTableau &solver)
 {
-  incrementConstant(expr.constant() * n);
+  IncrementConstant(expr.Constant() * n);
 
   typename ClVarToCoeffMap::const_iterator i = expr._terms.begin();
   for ( ; i != expr._terms.end(); ++i)
     {
-    addVariable((*i).first, (*i).second * n, subject, solver);
+    AddVariable((*i).first, (*i).second * n, subject, solver);
     }
   return *this;
 }
 
 // Add a term c*v to this expression.  If the expression already
-// contains a term involving v, add c to the existing coefficient.
+// contains a term involving v, Add c to the existing coefficient.
 // If the new coefficient is approximately 0, delete v.
 template <class T>
 ClGenericLinearExpression<T> &
-ClGenericLinearExpression<T>::addVariable(ClVariable v, T c)
+ClGenericLinearExpression<T>::AddVariable(ClVariable v, T c)
 { // body largely duplicated below
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -217,12 +217,12 @@ ClGenericLinearExpression<T>::addVariable(ClVariable v, T c)
   typename ClVarToCoeffMap::iterator i = _terms.find(v);
   if (i != _terms.end())
     {
-    // expression already contains that variable, so add to it
+    // expression already contains that variable, so Add to it
     T new_coefficient = 0;
     new_coefficient = (*i).second + c;
-    if (clApprox(new_coefficient,0.0))
+    if (ClApprox(new_coefficient,0.0))
       {
-      // new coefficient is zero, so erase it
+      // new coefficient is Zero, so erase it
       _terms.erase(i);
       }
     else
@@ -232,7 +232,7 @@ ClGenericLinearExpression<T>::addVariable(ClVariable v, T c)
     }
   else // expression did not contain that variable
     {
-    if (!clApprox(c,0.0))
+    if (!ClApprox(c,0.0))
       {
       _terms[v] = c;
       }
@@ -241,12 +241,12 @@ ClGenericLinearExpression<T>::addVariable(ClVariable v, T c)
 }
 
 // Add a term c*v to this expression.  If the expression already
-// contains a term involving v, add c to the existing coefficient.
+// contains a term involving v, Add c to the existing coefficient.
 // If the new coefficient is approximately 0, delete v.  Notify the
 // solver if v appears or disappears from this expression.
 template <class T>
 ClGenericLinearExpression<T> &
-ClGenericLinearExpression<T>::addVariable(ClVariable v, T c,
+ClGenericLinearExpression<T>::AddVariable(ClVariable v, T c,
                                           ClVariable subject,
                                           ClTableau &solver)
 { // body largely duplicated above
@@ -257,12 +257,12 @@ ClGenericLinearExpression<T>::addVariable(ClVariable v, T c,
   typename ClVarToCoeffMap::iterator i = _terms.find(v);
   if (i != _terms.end())
     {
-    // expression already contains that variable, so add to it
+    // expression already contains that variable, so Add to it
     T new_coefficient = (*i).second + c;
-    if (clApprox(new_coefficient,0.0))
+    if (ClApprox(new_coefficient,0.0))
       {
-      // new coefficient is zero, so erase it
-      solver.noteRemovedVariable((*i).first,subject);
+      // new coefficient is Zero, so erase it
+      solver.NoteRemovedVariable((*i).first,subject);
       _terms.erase(i);
       }
     else
@@ -272,10 +272,10 @@ ClGenericLinearExpression<T>::addVariable(ClVariable v, T c,
     }
   else // expression did not contain that variable
     {
-    if (!clApprox(c,0.0))
+    if (!ClApprox(c,0.0))
       {
       _terms[v] = c;
-      solver.noteAddedVariable(v,subject);
+      solver.NoteAddedVariable(v,subject);
       }
     }
 #ifdef CL_TRACE
@@ -285,20 +285,20 @@ ClGenericLinearExpression<T>::addVariable(ClVariable v, T c,
 }
 
 // Return a variable in this expression.  (It is an error if this
-// expression is constant -- signal ExCLInternalError in that case).
+// expression is Constant -- signal ExCLInternalError in that case).
 template <class T>
 ClVariable
-ClGenericLinearExpression<T>::anyPivotableVariable() const
+ClGenericLinearExpression<T>::AnyPivotableVariable() const
 {
-  if (isConstant())
+  if (IsConstant())
     {
-    throw ExCLInternalError("(ExCLInternalError) No pivotable variables in constant expression");
+    throw ExCLInternalError("(ExCLInternalError) No pivotable variables in Constant expression");
     }
   typename ClVarToCoeffMap::const_iterator i = _terms.begin();
   for ( ; i != _terms.end(); ++i)
     {
     ClVariable v = (*i).first;
-    if (v.isPivotable())
+    if (v.IsPivotable())
       return v;
     }
   return clvNil;
@@ -309,10 +309,10 @@ ClGenericLinearExpression<T>::anyPivotableVariable() const
 // before, or if a variable has been dropped from this expression
 // because it now has a coefficient of 0, inform the solver.
 // PRECONDITIONS:
-//   var occurs with a non-zero coefficient in this expression.
+//   var occurs with a non-Zero coefficient in this expression.
 template <class T>
 void 
-ClGenericLinearExpression<T>::substituteOut(ClVariable var, 
+ClGenericLinearExpression<T>::SubstituteOut(ClVariable var, 
                                             const ClGenericLinearExpression<T> &expr,
                                             ClVariable subject,
                                             ClTableau &solver)
@@ -331,20 +331,20 @@ ClGenericLinearExpression<T>::substituteOut(ClVariable var,
   if (pv == _terms.end())
     {
 #ifndef CL_NO_IO
-    cerr << "substituteOut: pv != _terms.end()" << endl;
+    cerr << "SubstituteOut: pv != _terms.end()" << endl;
     cerr << "(" << var << ", " << expr << ", " << subject << ", " 
          << ")" << endl;
     cerr << "*this == " << *this << endl;
 #endif
-    throw "substituteOut: pv != _terms.end()";
+    throw "SubstituteOut: pv != _terms.end()";
     }
 #endif
   assert(pv != _terms.end());
-  // FIXGJB: this got thrown! assert(!clApprox((*pv).second,0.0));
+  // FIXGJB: this got thrown! assert(!ClApprox((*pv).second,0.0));
 
   T multiplier = (*pv).second;
   _terms.erase(pv);
-  incrementConstant(multiplier * expr._constant);
+  IncrementConstant(multiplier * expr._constant);
   typename ClVarToCoeffMap::const_iterator i = expr._terms.begin();
   for ( ; i != expr._terms.end(); ++i)
     {
@@ -356,11 +356,11 @@ ClGenericLinearExpression<T>::substituteOut(ClVariable var,
 #ifdef CL_TRACE
       cerr << "Considering (*poc) == " << (*poc).second << "*" << (*poc).first << endl;
 #endif
-      // found it, so new coefficient is old one plus what is in *i
+      // found it, so new coefficient is old one Plus what is in *i
       T newCoeff = (*poc).second + (multiplier*c);
-      if (clApprox(newCoeff,0.0))
+      if (ClApprox(newCoeff,0.0))
 	{
-	solver.noteRemovedVariable((*poc).first,subject);
+	solver.NoteRemovedVariable((*poc).first,subject);
 	_terms.erase(poc);
 	}
       else
@@ -374,7 +374,7 @@ ClGenericLinearExpression<T>::substituteOut(ClVariable var,
       cerr << "Adding (*i) == " << (*i).second << "*" << (*i).first << endl;
 #endif
       _terms[v] = multiplier * c;
-      solver.noteAddedVariable(v,subject);
+      solver.NoteAddedVariable(v,subject);
       }
     }
 #ifdef CL_TRACE
@@ -384,29 +384,29 @@ ClGenericLinearExpression<T>::substituteOut(ClVariable var,
 
 // This linear expression currently represents the equation
 // oldSubject=self.  Destructively modify it so that it represents
-// the equation newSubject=self.
+// the equation NewSubject=self.
 //
-// Precondition: newSubject currently has a nonzero coefficient in
+// Precondition: NewSubject currently has a nonzero coefficient in
 // this expression.
 //
 // NOTES
-//   Suppose this expression is c + a*newSubject + a1*v1 + ... + an*vn.
+//   Suppose this expression is c + a*NewSubject + a1*v1 + ... + an*vn.
 //
 //   Then the current equation is 
-//       oldSubject = c + a*newSubject + a1*v1 + ... + an*vn.
+//       oldSubject = c + a*NewSubject + a1*v1 + ... + an*vn.
 //   The new equation will be
-//        newSubject = -c/a + oldSubject/a - (a1/a)*v1 - ... - (an/a)*vn.
-//   Note that the term involving newSubject has been dropped.
+//        NewSubject = -c/a + oldSubject/a - (a1/a)*v1 - ... - (an/a)*vn.
+//   Note that the term involving NewSubject has been dropped.
 // 
 // Basically, we consider the expression to be an equation with oldSubject
-// equal to the expression, then resolve the equation for newSubject,
-// and destructively make the expression what newSubject is then equal to
+// equal to the expression, then Resolve the equation for NewSubject,
+// and destructively make the expression what NewSubject is then equal to
 template <class T>
 void 
-ClGenericLinearExpression<T>::changeSubject(ClVariable old_subject,
+ClGenericLinearExpression<T>::ChangeSubject(ClVariable old_subject,
                                             ClVariable new_subject)
 {
-  _terms[old_subject] = newSubject(new_subject);
+  _terms[old_subject] = NewSubject(new_subject);
 }
 
 inline double ReciprocalOf(double n)
@@ -428,10 +428,10 @@ inline double ReciprocalOf(double n)
 //
 // Note that the term involving subject has been dropped.
 //
-// Returns the reciprocal, so that newSubject can be used by changeSubject
+// Returns the reciprocal, so that NewSubject can be used by ChangeSubject
 template <class T>
 T
-ClGenericLinearExpression<T>::newSubject(ClVariable subject)
+ClGenericLinearExpression<T>::NewSubject(ClVariable subject)
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -439,16 +439,16 @@ ClGenericLinearExpression<T>::newSubject(ClVariable subject)
 #endif
   typename ClVarToCoeffMap::iterator pnewSubject = _terms.find(subject);
   assert(pnewSubject != _terms.end());
-  //  assert(!clApprox((*pnewSubject).second,0.0));
+  //  assert(!ClApprox((*pnewSubject).second,0.0));
   T reciprocal = ReciprocalOf((*pnewSubject).second);
   _terms.erase(pnewSubject);
-  multiplyMe(-reciprocal);
+  MultiplyMe(-reciprocal);
   return reciprocal;
 }
 
 template <class T>
 T
-ClGenericLinearExpression<T>::evaluate() const
+ClGenericLinearExpression<T>::Evaluate() const
 {
   T answer = _constant;
   typename ClVarToCoeffMap::const_iterator i = _terms.begin();
@@ -456,7 +456,7 @@ ClGenericLinearExpression<T>::evaluate() const
   for ( ; i != _terms.end(); ++i)
     {
     ClVariable v = (*i).first;
-    answer += (*i).second * v.value();
+    answer += (*i).second * v.Value();
     }
   return answer;
 }

@@ -59,7 +59,7 @@ addDelSubpart(int csolver = 1, int nCns = 900, int nVars = 900, int nResolves = 
         coeff = UniformRandom()*10 - 5;
         int index = int(UniformRandom()*(nVars/2));
         assert(index < (nVars/2));
-        expr.addExpression(*(rgpclvA[index]) * coeff);
+        expr.AddExpression(*(rgpclvA[index]) * coeff);
         }
       if (UniformRandom() < ineqProb)
         {
@@ -88,7 +88,7 @@ addDelSubpart(int csolver = 1, int nCns = 900, int nVars = 900, int nResolves = 
         coeff = UniformRandom()*10 - 5;
         int index = int(UniformRandom()*(nVars/2));
         assert(index < (nVars/2));
-        expr.addExpression(*(rgpclvB[index]) * coeff);
+        expr.AddExpression(*(rgpclvB[index]) * coeff);
         }
       if (UniformRandom() < ineqProb)
         {
@@ -111,24 +111,24 @@ addDelSubpart(int csolver = 1, int nCns = 900, int nVars = 900, int nResolves = 
     psolverB = new ClSimplexSolver();
 
   for (int i = 0; i < nVars/2; ++i) 
-    psolverA->addStay(*rgpclvA[i]);
+    psolverA->AddStay(*rgpclvA[i]);
 
   for (int i = 0; i < nVars/2; ++i)
-    psolverB->addStay(*rgpclvB[i]);
+    psolverB->AddStay(*rgpclvB[i]);
 
   cout << "done adding stays" << endl;
   cout << "time = " << timer.ElapsedTime() << "\n" << endl;
 
-  psolverA->setAutosolve(false);
-  psolverB->setAutosolve(false);
+  psolverA->SetAutosolve(false);
+  psolverB->SetAutosolve(false);
   timer.Start();
   int cExceptions = 0;
   for (int j = 0; j < nCns/2; j++)
     {
-    // add the constraint -- if it's incompatible, just ignore it
+    // Add the constraint -- if it's incompatible, just ignore it
     try
       {
-      psolverA->addConstraint(*(rgpcnsA[j]));
+      psolverA->AddConstraint(*(rgpcnsA[j]));
       }
     catch (ExCLRequiredFailure &)
       {
@@ -139,10 +139,10 @@ addDelSubpart(int csolver = 1, int nCns = 900, int nVars = 900, int nResolves = 
 
   for (int j = 0; j < nCns/2; j++)
     {
-    // add the constraint -- if it's incompatible, just ignore it
+    // Add the constraint -- if it's incompatible, just ignore it
     try
       {
-      psolverB->addConstraint(*(rgpcnsB[j]));
+      psolverB->AddConstraint(*(rgpcnsB[j]));
       }
     catch (ExCLRequiredFailure &)
       {
@@ -174,26 +174,26 @@ addDelSubpart(int csolver = 1, int nCns = 900, int nVars = 900, int nResolves = 
   ClVariable &clvEA1 = *(rgpclvA[e1Index]);
   ClVariable &clvEA2 = *(rgpclvA[e2Index]);
   
-  ClEditConstraint editA1(clvEA1,clsStrong());
-  ClEditConstraint editA2(clvEA2,clsStrong());
+  ClEditConstraint editA1(clvEA1,ClsStrong());
+  ClEditConstraint editA2(clvEA2,ClsStrong());
 
   (*psolverA)
-    .addConstraint(editA1)
-    .addConstraint(editA2);
+    .AddConstraint(editA1)
+    .AddConstraint(editA2);
 
   // FIXGJB start = Timer.now();
   for (int m = 0; m < nResolves/2; m++)
     {
-    Number n1 = rgpclvA[e1Index]->value() * 1.001;
-    Number n2 = rgpclvA[e2Index]->value() * 1.001;
+    Number n1 = rgpclvA[e1Index]->Value() * 1.001;
+    Number n2 = rgpclvA[e2Index]->Value() * 1.001;
 
     psolverA->
-      suggestValue(clvEA1,n1)
-      .suggestValue(clvEA2,n2)
-      .resolve();
+      SuggestValue(clvEA1,n1)
+      .SuggestValue(clvEA2,n2)
+      .Resolve();
     }
-  psolverA->removeConstraint(editA1);
-  psolverA->removeConstraint(editA2);
+  psolverA->RemoveConstraint(editA1);
+  psolverA->RemoveConstraint(editA2);
 
 
   e1Index = int(UniformRandom()*(nVars/2));
@@ -202,30 +202,30 @@ addDelSubpart(int csolver = 1, int nCns = 900, int nVars = 900, int nResolves = 
   ClVariable &clvEB1 = *(rgpclvB[e1Index]);
   ClVariable &clvEB2 = *(rgpclvB[e2Index]);
   
-  ClEditConstraint editB1(clvEB1,clsStrong());
-  ClEditConstraint editB2(clvEB2,clsStrong());
+  ClEditConstraint editB1(clvEB1,ClsStrong());
+  ClEditConstraint editB2(clvEB2,ClsStrong());
 
   (*psolverB)
-    .addConstraint(editB1)
-    .addConstraint(editB2);
+    .AddConstraint(editB1)
+    .AddConstraint(editB2);
 
   for (int m = 0; m < nResolves/2; m++)
     {
-    Number n1 = rgpclvA[e1Index]->value() * 1.001;
-    Number n2 = rgpclvA[e2Index]->value() * 1.001;
+    Number n1 = rgpclvA[e1Index]->Value() * 1.001;
+    Number n2 = rgpclvA[e2Index]->Value() * 1.001;
 
     psolverB->
-      suggestValue(clvEB1,n1)
-      .suggestValue(clvEB2,n2)
-      .resolve();
+      SuggestValue(clvEB1,n1)
+      .SuggestValue(clvEB2,n2)
+      .Resolve();
     }
 
-  psolverB->removeConstraint(editB1);
-  psolverB->removeConstraint(editB2);
+  psolverB->RemoveConstraint(editB1);
+  psolverB->RemoveConstraint(editB2);
 
   cout << "done resolves" << endl;
   cout << "time = " << timer.ElapsedTime() << "\n" <<endl;
-  cout << "time per resolve = " << timer.ElapsedTime()/nResolves << "\n" <<endl;
+  cout << "time per Resolve = " << timer.ElapsedTime()/nResolves << "\n" <<endl;
 
   cout << "done addDel timing test" << endl;
   cout << "time = " << timer.ElapsedTime() << "\n" <<endl;

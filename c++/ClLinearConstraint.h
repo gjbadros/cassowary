@@ -26,16 +26,16 @@ class ClLinearConstraint : public ClConstraint {
 
   // Constructor
   ClLinearConstraint(const ClLinearExpression &cle,
-		     const ClStrength &strength = clsRequired(),
+		     const ClStrength &strength = ClsRequired(),
 		     double weight = 1.0) :
     ClConstraint(strength, weight),
     _expression(cle)
     { }
 
-  // Return my linear expression.  (For linear equations, this
-  // constraint represents expression=0; for linear inequalities it
-  // represents expression>=0.)
-  ClLinearExpression expression() const
+  // Return my linear Expression.  (For linear equations, this
+  // constraint represents Expression=0; for linear inequalities it
+  // represents Expression>=0.)
+  ClLinearExpression Expression() const
     { return _expression; }
 
  protected:

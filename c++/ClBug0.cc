@@ -5,7 +5,7 @@
 /* This bug fixed --02/15/99 gjb
    Replaced the parallel vectors for edit constraints
    (the errorPlus..., errorMinus..., prevEditConstants vectors)
-   with a ClEditInfo class that is the value of the _editVarMap map.
+   with a ClEditInfo class that is the Value of the _editVarMap map.
 */
 
 int main()
@@ -17,25 +17,25 @@ int main()
   ClVariable z("z",9);
 
   solver
-    .addStay(x)
-    .addStay(y)
-    .addStay(z);
+    .AddStay(x)
+    .AddStay(y)
+    .AddStay(z);
 
   try {
-    solver.addEditVar(x);
-    solver.addEditVar(y);
-    solver.addEditVar(z);
-    solver.beginEdit();
+    solver.AddEditVar(x);
+    solver.AddEditVar(y);
+    solver.AddEditVar(z);
+    solver.BeginEdit();
     
-    solver.suggestValue(x,1);
-    solver.suggestValue(z,2);
+    solver.SuggestValue(x,1);
+    solver.SuggestValue(z,2);
     
-    solver.removeEditVar(y);
+    solver.RemoveEditVar(y);
 
-    solver.suggestValue(x,3);
-    solver.suggestValue(z,4);
+    solver.SuggestValue(x,3);
+    solver.SuggestValue(z,4);
 
-    solver.endEdit();
+    solver.EndEdit();
     
   } catch (ExCLError &e) {
     cerr << e.description() << endl;
@@ -66,10 +66,10 @@ int main()
  I am currently working with the Java implementation of Cassowary and found 
  the following bug: 
   
- If I add several editConstraints, remove some of them again later and 
- perform a 'ClSimplexSolver.suggestValue()', the indices of 
+ If I Add several editConstraints, remove some of them again later and 
+ perform a 'ClSimplexSolver.SuggestValue()', the indices of 
  'ClConstraintAndIndex' in the variable 'cai' are sometimes wrong (see 
- ClSimplexSolver.suggestValue(ClVariable v, double x), the 3rd line). This is 
+ ClSimplexSolver.SuggestValue(ClVariable v, double x), the 3rd line). This is 
  because if you remove an element from a 'java.util.Vector', and the element 
  is somewhere in the middle of the Vector, the indices of the Vector change. 
  (see java.util.Vector.removeElementAt(int index): 
@@ -92,7 +92,7 @@ int main()
   
   
  My workaround now is, that everytime when I remove an EditVariable from the 
- Solver, I have to remove all the EditVariables and add then the ones again, 
+ Solver, I have to remove all the EditVariables and Add then the ones again, 
  that I do not want to remove. 
   
 #endif

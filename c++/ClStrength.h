@@ -17,10 +17,10 @@
 
 class ClStrength;
 
-const ClStrength &clsRequired();
-const ClStrength &clsStrong();
-const ClStrength &clsMedium();
-const ClStrength &clsWeak();
+const ClStrength &ClsRequired();
+const ClStrength &ClsStrong();
+const ClStrength &ClsMedium();
+const ClStrength &ClsWeak();
 
 #ifdef USE_GC_STRENGTH
 class ClStrength : public gc {
@@ -29,50 +29,50 @@ class ClStrength {
 #endif
  public:
 
-  ClStrength(const string &name, const ClSymbolicWeight &symbolicWeight) :
-    _name(name), _symbolicWeight(symbolicWeight)
+  ClStrength(const string &Name, const ClSymbolicWeight &symbolicWeight) :
+    _name(Name), _symbolicWeight(symbolicWeight)
     { }
 
   // special case for when nLevels = 3, should assert nLevels() == 3
-  ClStrength(const string &name, double w1, double w2, double w3);
+  ClStrength(const string &Name, double w1, double w2, double w3);
 
   virtual ~ClStrength()
     { }
 
-  virtual bool isRequired() const
-    { return (_symbolicWeight == clsRequired()._symbolicWeight); }
+  virtual bool IsRequired() const
+    { return (_symbolicWeight == ClsRequired()._symbolicWeight); }
 
 #ifndef CL_NO_IO
-  virtual ostream &printOn(ostream &xo) const
+  virtual ostream &PrintOn(ostream &xo) const
     { 
-    xo << name(); 
-    if (!isRequired())
+    xo << Name(); 
+    if (!IsRequired())
       xo << ":" << symbolicWeight(); 
     return xo; 
     }
 
-  friend ostream& operator<<(ostream &xos, const ClStrength &cls)
-    { cls.printOn(xos); return xos; }
+  friend ostream& operator<<(ostream &xos, const ClStrength &Cls)
+    { Cls.PrintOn(xos); return xos; }
 
 #endif
 
   virtual const ClSymbolicWeight &symbolicWeight() const
     { return _symbolicWeight; }
 
-  void setPv(void *pv)
+  void SetPv(void *pv)
     { _pv = pv; }
 
   void *Pv() const
     { return _pv; }
 
  private:
-  string name() const
+  string Name() const
     { return _name; }
 
-  void set_name(string name)
-    { _name = name; }
+  void SetName(string Name)
+    { _name = Name; }
 
-  void set_symbolicWeight(const ClSymbolicWeight &symbolicWeight)
+  void SetSymbolicWeight(const ClSymbolicWeight &symbolicWeight)
     { _symbolicWeight = symbolicWeight; }
 
   // instance variables

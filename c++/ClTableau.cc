@@ -30,7 +30,7 @@ ClTableau::~ClTableau()
 #ifndef CL_NO_IO
 // Some extra debugging info
 ostream &
-ClTableau::printInternalInfo(ostream &xo) const
+ClTableau::PrintInternalInfo(ostream &xo) const
 {
   xo << "ncns:" << _rows.size() -1
      << "; cols:" << _columns.size()
@@ -75,19 +75,19 @@ ClTableau::addRow(ClVariable var, const ClLinearExpression &expr)
   cerr << "(" << var << ", " << expr << ")" << endl;
 #endif
   _rows[var] = const_cast<ClLinearExpression *>(&expr);
-  ClVarToNumberMap::const_iterator it = expr.terms().begin();
-  // for each variable in expr, add var to the set of rows which have that variable
-  // in their expression
-  for (; it != expr.terms().end(); ++it)
+  ClVarToNumberMap::const_iterator it = expr.Terms().begin();
+  // for each variable in expr, Add var to the set of rows which have that variable
+  // in their Expression
+  for (; it != expr.Terms().end(); ++it)
     {
     ClVariable v = (*it).first;
     _columns[v].insert(var);
-    if (v.isExternal() && !FIsBasicVar(v))
+    if (v.IsExternal() && !FIsBasicVar(v))
       {
       _externalParametricVars.insert(v);
       }
     }
-  if (var.isExternal())
+  if (var.IsExternal())
     {
     _externalRows.insert(var);
     }
@@ -97,11 +97,11 @@ ClTableau::addRow(ClVariable var, const ClLinearExpression &expr)
 }
 
 // Remove var from the tableau -- remove the column cross indices for var
-// and remove var from every expression in rows in which v occurs
+// and remove var from every Expression in rows in which v occurs
 // Remove the parametric variable var, updating the appropriate column and row entries.
 // (Renamed from Smalltalk implementation's `removeParametricVar')
 ClVariable
-ClTableau::removeColumn(ClVariable var)
+ClTableau::RemoveColumn(ClVariable var)
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -117,10 +117,10 @@ ClTableau::removeColumn(ClVariable var)
   for (; it != varset.end(); ++it)
     {
     ClVariable v = (*it);
-    ClVarToNumberMap &terms = _rows[v]->terms();
-    terms.erase(terms.find(var));
+    ClVarToNumberMap &Terms = _rows[v]->Terms();
+    Terms.erase(Terms.find(var));
     }
-  if (var.isExternal())
+  if (var.IsExternal())
     {
     _externalRows.erase(var);
     _externalParametricVars.erase(var);
@@ -132,7 +132,7 @@ ClTableau::removeColumn(ClVariable var)
 // Remove the basic variable v from the tableau row v=expr
 // Then update column cross indices
 ClLinearExpression *
-ClTableau::removeRow(ClVariable var)
+ClTableau::RemoveRow(ClVariable var)
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -141,9 +141,9 @@ ClTableau::removeRow(ClVariable var)
   ClTableauRowsMap::iterator it = _rows.find(var);
   assert(it != _rows.end());
   ClLinearExpression *pexpr = (*it).second;
-  ClVarToNumberMap &terms = pexpr->terms();
-  ClVarToNumberMap::iterator it_term = terms.begin();
-  for (; it_term != terms.end(); ++it_term)
+  ClVarToNumberMap &Terms = pexpr->Terms();
+  ClVarToNumberMap::iterator it_term = Terms.begin();
+  for (; it_term != Terms.end(); ++it_term)
     {
     ClVariable v = (*it_term).first;
     _columns[v].erase(var);
@@ -156,7 +156,7 @@ ClTableau::removeRow(ClVariable var)
 
   _infeasibleRows.erase(var);
 
-  if (var.isExternal())
+  if (var.IsExternal())
     {
     _externalRows.erase(var);
     _externalParametricVars.erase(var);
@@ -171,11 +171,11 @@ ClTableau::removeRow(ClVariable var)
 
 // Replace all occurrences of oldVar with expr, and update column cross indices
 // oldVar should now be a basic variable
-// Uses the columns data structure and calls substituteOut on each
+// Uses the Columns data structure and calls SubstituteOut on each
 // row that has oldVar in it
 // oldVar is leaving the basis, and becoming parametric
 void 
-ClTableau::substituteOut(ClVariable oldVar, const ClLinearExpression &expr)
+ClTableau::SubstituteOut(ClVariable oldVar, const ClLinearExpression &expr)
 {
 #ifdef CL_TRACE
   cerr << "* ClTableau::";
@@ -194,14 +194,14 @@ ClTableau::substituteOut(ClVariable oldVar, const ClLinearExpression &expr)
     {
     ClVariable v = (*it);
     ClLinearExpression *prow = _rows[v];
-    prow->substituteOut(oldVar,expr,v,*this);
-    if (v.isRestricted() && prow->constant() < 0.0)
+    prow->SubstituteOut(oldVar,expr,v,*this);
+    if (v.IsRestricted() && prow->Constant() < 0.0)
       {
       _infeasibleRows.insert(v);
       }
     }
   _columns.erase(it_oldVar);
-  if (oldVar.isExternal())
+  if (oldVar.IsExternal())
     {
     if (_columns[oldVar].size() > 0) 
       {
@@ -215,7 +215,7 @@ ClTableau::substituteOut(ClVariable oldVar, const ClLinearExpression &expr)
 #ifndef CL_NO_IO
 
 ostream &
-printTo(ostream &xo, const ClVarSet & varset)
+PrintTo(ostream &xo, const ClVarSet & varset)
 {
   ClVarSet::const_iterator it = varset.begin();
   xo << "{ ";
@@ -233,10 +233,10 @@ printTo(ostream &xo, const ClVarSet & varset)
 }  
 
 ostream &operator<<(ostream &xo, const ClVarSet & varset)
-{ return printTo(xo,varset); }
+{ return PrintTo(xo,varset); }
 
 ostream &
-printTo(ostream &xo, const ClTableauColumnsMap & varmap)
+PrintTo(ostream &xo, const ClTableauColumnsMap & varmap)
 {
   ClTableauColumnsMap::const_iterator it = varmap.begin();
   for (; it != varmap.end(); ++it) 
@@ -247,10 +247,10 @@ printTo(ostream &xo, const ClTableauColumnsMap & varmap)
 }
 
 ostream &operator<<(ostream &xo, const ClTableauColumnsMap & varmap)
-{ return printTo(xo,varmap); }
+{ return PrintTo(xo,varmap); }
 
 ostream &
-printTo(ostream &xo, const ClTableauRowsMap & rows)
+PrintTo(ostream &xo, const ClTableauRowsMap & rows)
 {
   ClTableauRowsMap::const_iterator it = rows.begin();
   for (; it != rows.end(); ++it) 
@@ -265,10 +265,10 @@ printTo(ostream &xo, const ClTableauRowsMap & rows)
 }
 
 ostream &operator<<(ostream &xo, const ClTableauRowsMap & rows)
-{ return printTo(xo,rows); }
+{ return PrintTo(xo,rows); }
 
 ostream &
-ClTableau::printOn(ostream &xo) const
+ClTableau::PrintOn(ostream &xo) const
 {
   xo << "Tableau:\n" 
      << _rows << endl;
@@ -284,6 +284,6 @@ ClTableau::printOn(ostream &xo) const
 }
 
 ostream &operator<<(ostream &xo, const ClTableau &clt)
-{ return clt.printOn(xo); }
+{ return clt.PrintOn(xo); }
 
 #endif

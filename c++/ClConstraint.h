@@ -27,7 +27,7 @@ class ClConstraint {
 #endif
 public:
 
-  ClConstraint(const ClStrength &strength = clsRequired(), double weight = 1.0 ) :
+  ClConstraint(const ClStrength &strength = ClsRequired(), double weight = 1.0 ) :
     _strength(strength),
     _weight(weight),
     _pv(0),
@@ -41,23 +41,23 @@ public:
       DtrTracer(__FUNCTION__,this);
     }
 
-  // Return my linear expression.  (For linear equations, this
-  // constraint represents expression=0; for linear inequalities it
-  // represents expression>=0.)
-  virtual ClLinearExpression expression() const = 0;
+  // Return my linear Expression.  (For linear equations, this
+  // constraint represents Expression=0; for linear inequalities it
+  // represents Expression>=0.)
+  virtual ClLinearExpression Expression() const = 0;
 
   // Returns true if this is an edit constraint
-  virtual bool isEditConstraint() const
+  virtual bool IsEditConstraint() const
     { return false; }
 
   // Return true if this is an inequality constraint and
   // false if it is an equality constraint.  The default is
   // that it is not.
-  virtual bool isInequality() const
+  virtual bool IsInequality() const
     { return false; }
 
-  virtual bool isRequired() const
-    { return _strength.isRequired(); }
+  virtual bool IsRequired() const
+    { return _strength.IsRequired(); }
 
   virtual bool isStayConstraint() const
     { return false; }
@@ -69,15 +69,15 @@ public:
     { return _weight; }
 
 #ifndef CL_NO_IO
-  virtual ostream &printOn(ostream &xo) const = 0;
+  virtual ostream &PrintOn(ostream &xo) const = 0;
 
   friend ostream& operator<<(ostream &xos, const ClConstraint &constraint)
-    { constraint.printOn(xos); return xos; }
+    { constraint.PrintOn(xos); return xos; }
 
 #endif
 
 
-  void setPv(void *pv)
+  void SetPv(void *pv)
     { _pv = pv; }
 
   void *Pv() const

@@ -33,8 +33,8 @@ protected:
   friend ClTableau;
   friend ClSimplexSolver;
 
-  ClDummyVariable(string name = "") :
-    ClAbstractVariable(name)
+  ClDummyVariable(string Name = "") :
+    ClAbstractVariable(Name)
     { 
 #ifdef CL_FIND_LEAK
       ++cDummyVariables; 
@@ -50,9 +50,9 @@ protected:
     }
 
 #ifndef CL_NO_IO
-  virtual ostream &printOn(ostream &xo) const
+  virtual ostream &PrintOn(ostream &xo) const
   {  
-    xo << "[" << name() << ":dummy]";
+    xo << "[" << Name() << ":dummy]";
     return xo;
   }
 #endif
@@ -60,22 +60,22 @@ protected:
   // Return true if this a dummy variable (used as a marker variable
   // for required equality constraints).  Such variables aren't
   // allowed to enter the basis when pivoting.
-  virtual bool isDummy() const
+  virtual bool IsDummy() const
     { return true; }
 
   // Return true if this a variable known outside the solver.  
-  // (We need to give such variables a value after solving is complete.)
-  virtual bool isExternal() const
+  // (We need to give such variables a Value after solving is complete.)
+  virtual bool IsExternal() const
     { return false; }
 
-  // Return true if we can pivot on this variable.
-  virtual bool isPivotable() const
+  // Return true if we can Pivot on this variable.
+  virtual bool IsPivotable() const
     { return false; }
 
   // Return true if this is a restricted (or slack) variable.  Such
   // variables are constrained to be non-negative and occur only
   // internally to the simplex solver.
-  virtual bool isRestricted() const
+  virtual bool IsRestricted() const
     { return true; }
 
 };

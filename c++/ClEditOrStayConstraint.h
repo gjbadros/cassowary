@@ -21,7 +21,7 @@ class ClEditOrStayConstraint : public ClConstraint {
  public:
 
   ClEditOrStayConstraint(const ClVariable var,
-			 const ClStrength &strength = clsRequired(), double weight = 1.0 ) :
+			 const ClStrength &strength = ClsRequired(), double weight = 1.0 ) :
     ClConstraint(strength,weight),
     _variable(var)
     { }
@@ -29,8 +29,8 @@ class ClEditOrStayConstraint : public ClConstraint {
   const ClVariable variable() const
     { return _variable; }
 
-  ClLinearExpression expression() const
-    { return ClLinearExpression(_variable,-1,_variable.value()); }
+  ClLinearExpression Expression() const
+    { return ClLinearExpression(_variable,-1,_variable.Value()); }
 
  private:
 

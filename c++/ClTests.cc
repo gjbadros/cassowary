@@ -32,12 +32,12 @@ simple1()
    ClSimplexSolver solver;
 
    ClLinearEquation eq(x,y+0.0);
-   solver.addStay(x);
-   solver.addStay(y);
-   solver.addConstraint(eq);
-   cout << "x = " << x.value() << endl
-        << "y = " << y.value() << endl;
-   fOkResult = (x.value() == y.value());
+   solver.AddStay(x);
+   solver.AddStay(y);
+   solver.AddConstraint(eq);
+   cout << "x = " << x.Value() << endl
+        << "y = " << y.Value() << endl;
+   fOkResult = (x.Value() == y.Value());
    return fOkResult;
    } 
  catch (ExCLError &error) 
@@ -53,7 +53,7 @@ simple1()
 }
 
 
-/* add an edit variable to an empty solver */
+/* Add an edit variable to an empty solver */
 bool
 simple2()
 {
@@ -62,12 +62,12 @@ simple2()
    ClVariable x(167);
    ClSimplexSolver solver;
 
-   solver.addEditVar(x);
-   solver.beginEdit();
-   solver.suggestValue(x,100);
-   solver.endEdit();
+   solver.AddEditVar(x);
+   solver.BeginEdit();
+   solver.SuggestValue(x,100);
+   solver.EndEdit();
 
-   cout << "x = " << x.value() << endl;
+   cout << "x = " << x.Value() << endl;
    } 
  catch (ExCLEditMisuse &error)
    {
@@ -100,15 +100,15 @@ justStay1()
    ClSimplexSolver solver;
 
 #if 0
-   solver.addPointStay(x,y,1);
+   solver.AddPointStay(x,y,1);
 #else
-   solver.addStay(x);
-   solver.addStay(y);
+   solver.AddStay(x);
+   solver.AddStay(y);
 #endif
-   fOkResult = fOkResult && clApprox(x,5);
-   fOkResult = fOkResult && clApprox(y,10);
-   cout << "x == " << x.value() << endl;
-   cout << "y == " << y.value() << endl;
+   fOkResult = fOkResult && ClApprox(x,5);
+   fOkResult = fOkResult && ClApprox(y,10);
+   cout << "x == " << x.Value() << endl;
+   cout << "y == " << y.Value() << endl;
 
    return(fOkResult);
    } 
@@ -135,46 +135,46 @@ addDelete1()
    ClVariable x("x");
    ClSimplexSolver solver;
 
-   solver.addConstraint(new ClLinearEquation( x, 100, clsWeak() ));
+   solver.AddConstraint(new ClLinearEquation( x, 100, ClsWeak() ));
     
    ClLinearInequality c10(x,cnLEQ,10.0);
    ClLinearInequality c20(x,cnLEQ,20.0);
    solver
-     .addConstraint(c10)
-     .addConstraint(c20);
+     .AddConstraint(c10)
+     .AddConstraint(c20);
 
-   fOkResult = fOkResult && clApprox(x,10.0);
-   cout << "x == " << x.value() << endl;
-
-   cout << endl << solver << endl;
-
-   solver.removeConstraint(c10);
+   fOkResult = fOkResult && ClApprox(x,10.0);
+   cout << "x == " << x.Value() << endl;
 
    cout << endl << solver << endl;
 
-   fOkResult = fOkResult && clApprox(x,20.0);
-   cout << "x == " << x.value() << endl;
+   solver.RemoveConstraint(c10);
 
-   solver.removeConstraint(c20);
-   fOkResult = fOkResult && clApprox(x,100.0);
-   cout << "x == " << x.value() << endl;
+   cout << endl << solver << endl;
+
+   fOkResult = fOkResult && ClApprox(x,20.0);
+   cout << "x == " << x.Value() << endl;
+
+   solver.RemoveConstraint(c20);
+   fOkResult = fOkResult && ClApprox(x,100.0);
+   cout << "x == " << x.Value() << endl;
 
    ClLinearInequality c10again(x,cnLEQ,10.0);
 
    solver
-     .addConstraint(c10)
-     .addConstraint(c10again);
+     .AddConstraint(c10)
+     .AddConstraint(c10again);
 
-   fOkResult = fOkResult && clApprox(x,10.0);
-   cout << "x == " << x.value() << endl;
+   fOkResult = fOkResult && ClApprox(x,10.0);
+   cout << "x == " << x.Value() << endl;
     
-   solver.removeConstraint(c10);
-   fOkResult = fOkResult && clApprox(x,10.0);
-   cout << "x == " << x.value() << endl;
+   solver.RemoveConstraint(c10);
+   fOkResult = fOkResult && ClApprox(x,10.0);
+   cout << "x == " << x.Value() << endl;
 
-   solver.removeConstraint(c10again);
-   fOkResult = fOkResult && clApprox(x,100.0);
-   cout << "x == " << x.value() << endl;
+   solver.RemoveConstraint(c10again);
+   fOkResult = fOkResult && ClApprox(x,100.0);
+   cout << "x == " << x.Value() << endl;
 
    return(fOkResult);
    } 
@@ -201,34 +201,34 @@ addDelete2()
    ClSimplexSolver solver;
 
    solver
-     .addConstraint(new ClLinearEquation(x, 100.0, clsWeak()))
-     .addConstraint(new ClLinearEquation(y, 120.0, clsStrong()));
+     .AddConstraint(new ClLinearEquation(x, 100.0, ClsWeak()))
+     .AddConstraint(new ClLinearEquation(y, 120.0, ClsStrong()));
 
    ClLinearInequality c10(x,cnLEQ,10.0);
    ClLinearInequality c20(x,cnLEQ,20.0);
 
    solver
-     .addConstraint(c10)
-     .addConstraint(c20);
-   fOkResult = fOkResult && clApprox(x,10.0) && clApprox(y,120.0);
-   cout << "x == " << x.value() << ", y == " << y.value() << endl;
+     .AddConstraint(c10)
+     .AddConstraint(c20);
+   fOkResult = fOkResult && ClApprox(x,10.0) && ClApprox(y,120.0);
+   cout << "x == " << x.Value() << ", y == " << y.Value() << endl;
 
-   solver.removeConstraint(c10);
-   fOkResult = fOkResult && clApprox(x,20.0) && clApprox(y,120.0);
-   cout << "x == " << x.value() << ", y == " << y.value() << endl;
+   solver.RemoveConstraint(c10);
+   fOkResult = fOkResult && ClApprox(x,20.0) && ClApprox(y,120.0);
+   cout << "x == " << x.Value() << ", y == " << y.Value() << endl;
    
    ClLinearEquation cxy( 2*x, y);
-   solver.addConstraint(cxy);
-   fOkResult = fOkResult && clApprox(x,20.0) && clApprox(y,40.0);
-   cout << "x == " << x.value() << ", y == " << y.value() << endl;
+   solver.AddConstraint(cxy);
+   fOkResult = fOkResult && ClApprox(x,20.0) && ClApprox(y,40.0);
+   cout << "x == " << x.Value() << ", y == " << y.Value() << endl;
 
-   solver.removeConstraint(c20);
-   fOkResult = fOkResult && clApprox(x,60.0) && clApprox(y,120.0);
-   cout << "x == " << x.value() << ", y == " << y.value() << endl;
+   solver.RemoveConstraint(c20);
+   fOkResult = fOkResult && ClApprox(x,60.0) && ClApprox(y,120.0);
+   cout << "x == " << x.Value() << ", y == " << y.Value() << endl;
 
-   solver.removeConstraint(cxy);
-   fOkResult = fOkResult && clApprox(x,100.0) && clApprox(y,120.0);
-   cout << "x == " << x.value() << ", y == " << y.value() << endl;
+   solver.RemoveConstraint(cxy);
+   fOkResult = fOkResult && ClApprox(x,100.0) && ClApprox(y,120.0);
+   cout << "x == " << x.Value() << ", y == " << y.Value() << endl;
 
 
    return(fOkResult);
@@ -256,17 +256,17 @@ casso1()
    ClSimplexSolver solver;
 
    solver
-     .addConstraint(new ClLinearInequality(x,cnLEQ,y))
-     .addConstraint(new ClLinearEquation(y, x+3.0))
-     .addConstraint(new ClLinearEquation(x,10.0,clsWeak()))
-     .addConstraint(new ClLinearEquation(y,10.0,clsWeak()))
+     .AddConstraint(new ClLinearInequality(x,cnLEQ,y))
+     .AddConstraint(new ClLinearEquation(y, x+3.0))
+     .AddConstraint(new ClLinearEquation(x,10.0,ClsWeak()))
+     .AddConstraint(new ClLinearEquation(y,10.0,ClsWeak()))
      ;
    
    fOkResult = fOkResult && 
-     ( clApprox(x,10.0) && clApprox(y,13.0) ||
-       clApprox(x,7.0) && clApprox(y,10.0) );
+     ( ClApprox(x,10.0) && ClApprox(y,13.0) ||
+       ClApprox(x,7.0) && ClApprox(y,10.0) );
      
-   cout << "x == " << x.value() << ", y == " << y.value() << endl;
+   cout << "x == " << x.Value() << ", y == " << y.Value() << endl;
 
    return(fOkResult);
    } 
@@ -292,8 +292,8 @@ inconsistent1()
   try 
     {
     
-    solver.addConstraint( eq1 );
-    solver.addConstraint( eq2 );
+    solver.AddConstraint( eq1 );
+    solver.AddConstraint( eq2 );
     
     // no exception, we failed!
     return(false);
@@ -302,7 +302,7 @@ inconsistent1()
     {
     // we want this exception to get thrown
     cout << "Success -- got the exception" << endl;
-    // solver.removeConstraint(eq2); this would throw a constraint not found exception
+    // solver.RemoveConstraint(eq2); this would throw a constraint not found exception
     //    cout << solver << endl;
     return(true);
     }
@@ -327,8 +327,8 @@ inconsistent2()
    ClSimplexSolver solver;
 
    solver
-     .addConstraint(new ClLinearInequality(x,cnGEQ,10.0))
-     .addConstraint(new ClLinearInequality(x,cnLEQ, 5.0));
+     .AddConstraint(new ClLinearInequality(x,cnGEQ,10.0))
+     .AddConstraint(new ClLinearInequality(x,cnLEQ, 5.0));
 
    // no exception, we failed!
    return(false);
@@ -364,11 +364,11 @@ inconsistent3()
    ClSimplexSolver solver;
 
    solver
-     .addConstraint(new ClLinearInequality(w,cnGEQ,10.0))
-     .addConstraint(new ClLinearInequality(x,cnGEQ,w))
-     .addConstraint(new ClLinearInequality(y,cnGEQ,x))
-     .addConstraint(new ClLinearInequality(z,cnGEQ,y))
-     .addConstraint(new ClLinearInequality(z,cnLEQ,4.0));
+     .AddConstraint(new ClLinearInequality(w,cnGEQ,10.0))
+     .AddConstraint(new ClLinearInequality(x,cnGEQ,w))
+     .AddConstraint(new ClLinearInequality(y,cnGEQ,x))
+     .AddConstraint(new ClLinearInequality(z,cnGEQ,y))
+     .AddConstraint(new ClLinearInequality(z,cnLEQ,4.0));
 
    // no exception, we failed!
    return(false);
@@ -407,53 +407,53 @@ multiedit()
    ClSimplexSolver solver;
 
    solver
-     .addStay(x)
-     .addStay(y)
-     .addStay(w)
-     .addStay(h);
+     .AddStay(x)
+     .AddStay(y)
+     .AddStay(w)
+     .AddStay(h);
 
    solver
-     .addEditVar(x)
-     .addEditVar(y)
-     .beginEdit();
+     .AddEditVar(x)
+     .AddEditVar(y)
+     .BeginEdit();
 
    solver
-     .suggestValue(x,10)
-     .suggestValue(y,20)
-     .resolve();
+     .SuggestValue(x,10)
+     .SuggestValue(y,20)
+     .Resolve();
 
-   cout << "x = " << x.value() << "; y = " << y.value() << endl
-        << "w = " << w.value() << "; h = " << h.value() << endl;
+   cout << "x = " << x.Value() << "; y = " << y.Value() << endl
+        << "w = " << w.Value() << "; h = " << h.Value() << endl;
 
    fOkResult = fOkResult &&
-     clApprox(x,10) && clApprox(y,20) && clApprox(w,0) && clApprox(h,0);
+     ClApprox(x,10) && ClApprox(y,20) && ClApprox(w,0) && ClApprox(h,0);
 
    solver
-     .addEditVar(w)
-     .addEditVar(h)
-     .beginEdit();
+     .AddEditVar(w)
+     .AddEditVar(h)
+     .BeginEdit();
 
    solver
-     .suggestValue(w,30)
-     .suggestValue(h,40)
-     .endEdit();
+     .SuggestValue(w,30)
+     .SuggestValue(h,40)
+     .EndEdit();
 
-   cout << "x = " << x.value() << "; y = " << y.value() << endl
-        << "w = " << w.value() << "; h = " << h.value() << endl;
+   cout << "x = " << x.Value() << "; y = " << y.Value() << endl
+        << "w = " << w.Value() << "; h = " << h.Value() << endl;
 
    fOkResult = fOkResult &&
-     clApprox(x,10) && clApprox(y,20) && clApprox(w,30) && clApprox(h,40);
+     ClApprox(x,10) && ClApprox(y,20) && ClApprox(w,30) && ClApprox(h,40);
 
    solver
-     .suggestValue(x,50)
-     .suggestValue(y,60)
-     .endEdit();
+     .SuggestValue(x,50)
+     .SuggestValue(y,60)
+     .EndEdit();
 
-   cout << "x = " << x.value() << "; y = " << y.value() << endl
-        << "w = " << w.value() << "; h = " << h.value() << endl;
+   cout << "x = " << x.Value() << "; y = " << y.Value() << endl
+        << "w = " << w.Value() << "; h = " << h.Value() << endl;
 
    fOkResult = fOkResult &&
-     clApprox(x,50) && clApprox(y,60) && clApprox(w,30) && clApprox(h,40);
+     ClApprox(x,50) && ClApprox(y,60) && ClApprox(w,30) && ClApprox(h,40);
 
    return fOkResult;
    } 
@@ -527,19 +527,19 @@ blackboxsat()
         cin.getline(szCmd,900);
         continue;
         }
-      if (strcasecmp(szCmd,"add") == 0)
+      if (strcasecmp(szCmd,"Add") == 0)
         {
         cin >> i;
-        cout << "eq" << i << ": " << solver.addConstraintNoException(rgpcn[i])
+        cout << "eq" << i << ": " << solver.AddConstraintNoException(rgpcn[i])
              << "\t" << *(rgpcn[i]) << endl;
-        cout << r1 << " = " << r1.value() << endl;
+        cout << r1 << " = " << r1.Value() << endl;
         }
       else if (strcasecmp(szCmd,"del") == 0)
         {
         cin >> i;
         cout << "REMeq" << i << ": " << solver.removeConstraintNoException(rgpcn[i])
              << "\t" << *(rgpcn[i]) << endl;
-        cout << r1 << " = " << r1.value() << endl;
+        cout << r1 << " = " << r1.Value() << endl;
         }
       else if (strcasecmp(szCmd,"dump") == 0)
         {
@@ -547,7 +547,7 @@ blackboxsat()
         }
       else if (strcasecmp(szCmd,"val") == 0)
         {
-        cout << r1 << " = " << r1.value() << endl;
+        cout << r1 << " = " << r1.Value() << endl;
         }
       else if (strcasecmp(szCmd,"solve") == 0)
         {
@@ -555,22 +555,22 @@ blackboxsat()
         }
       else if (strcasecmp(szCmd,"autosolve") == 0)
         {
-        solver.setAutosolve(true);
+        solver.SetAutosolve(true);
         }
       else if (strcasecmp(szCmd,"noautosolve") == 0)
         {
-        solver.setAutosolve(true);
+        solver.SetAutosolve(true);
         }
       }
 
-    cout << r1 << " = " << r1.value() << endl
-         << r2 << " = " << r2.value() << endl
-         << r3 << " = " << r3.value() << endl
-         << r4 << " = " << r4.value() << endl
-         << r5 << " = " << r5.value() << endl
-         << r6 << " = " << r6.value() << endl
-         << r7 << " = " << r7.value() << endl
-         << r8 << " = " << r8.value() << endl;
+    cout << r1 << " = " << r1.Value() << endl
+         << r2 << " = " << r2.Value() << endl
+         << r3 << " = " << r3.Value() << endl
+         << r4 << " = " << r4.Value() << endl
+         << r5 << " = " << r5.Value() << endl
+         << r6 << " = " << r6.Value() << endl
+         << r7 << " = " << r7.Value() << endl
+         << r8 << " = " << r8.Value() << endl;
 
     return false;
     }
@@ -603,13 +603,13 @@ addDel(const int nCns = 900, const int nVars = 900, const int nResolves = 10000)
 
   timer.Start();
   ClSimplexSolver solver;
-  solver.setAutosolve(false);
+  solver.SetAutosolve(false);
 
   ClVariable **rgpclv = new PClVariable[nVars];
   for (int i = 0; i < nVars; i++)
     {
     rgpclv[i] = new ClVariable(i,"x");
-    solver.addStay(*rgpclv[i]);
+    solver.AddStay(*rgpclv[i]);
     }
 
   ClConstraint **rgpcns = new PClConstraint[nCns];
@@ -625,7 +625,7 @@ addDel(const int nCns = 900, const int nVars = 900, const int nResolves = 10000)
     for (k = 0; k < nvs; k++)
        {
        coeff = UniformRandom()*10 - 5;
-       expr.addExpression(*(rgpclv[int(UniformRandom()*nVars)]) * coeff);
+       expr.AddExpression(*(rgpclv[int(UniformRandom()*nVars)]) * coeff);
        }
     if (UniformRandom() < ineqProb)
        {
@@ -649,10 +649,10 @@ addDel(const int nCns = 900, const int nVars = 900, const int nResolves = 10000)
 #endif
   for (j = 0; j < nCns; j++)
     {
-    // add the constraint -- if it's incompatible, just ignore it
+    // Add the constraint -- if it's incompatible, just ignore it
     try
       {
-      solver.addConstraint(rgpcns[j]);
+      solver.AddConstraint(rgpcns[j]);
       }
     catch (ExCLRequiredFailure &)
       {
@@ -680,28 +680,28 @@ addDel(const int nCns = 900, const int nVars = 900, const int nResolves = 10000)
   ClVariable e2 = *(rgpclv[e2Index]);
 
   solver
-    .addEditVar(e1)
-    .addEditVar(e2);
+    .AddEditVar(e1)
+    .AddEditVar(e2);
 
   cout << "done creating edit constraints -- about to start resolves" << endl;
   cout << "time = " << timer.ElapsedTime() << "\n" << endl;
   timer.Start();
 
-  solver.beginEdit();
+  solver.BeginEdit();
   // FIXGJB start = Timer.now();
   for (int m = 0; m < nResolves; ++m)
     {
     solver
-      .suggestValue(e1,e1->value()*1.001)
-      .suggestValue(e2,e2->value()*1.001)
-      .resolve();
+      .SuggestValue(e1,e1->Value()*1.001)
+      .SuggestValue(e2,e2->Value()*1.001)
+      .Resolve();
     }
-  solver.endEdit();
+  solver.EndEdit();
   // cout << "run time: " <<
 
   cout << "done resolves -- now removing constraints" << endl;
   cout << "time = " << timer.ElapsedTime() << "\n" <<endl;
-  cout << "time per resolve = " << timer.ElapsedTime()/nResolves << "\n" <<endl;
+  cout << "time per Resolve = " << timer.ElapsedTime()/nResolves << "\n" <<endl;
   
   timer.Start();
 
@@ -709,7 +709,7 @@ addDel(const int nCns = 900, const int nVars = 900, const int nResolves = 10000)
     {
     if (rgpcns[j])
       {
-      solver.removeConstraint(rgpcns[j]);
+      solver.RemoveConstraint(rgpcns[j]);
       }
     }
 

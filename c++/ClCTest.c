@@ -30,7 +30,7 @@ int main(int argc, char *argv[] )
   CL_SimplexSolverAddStrongStay(solver,frameHeight,10);
   x = CL_ClvNew("x",0,solver);
 
-  printf("\"x\" has value %g\n", CL_ClvValue(CL_ClvLookup("x")));
+  printf("\"x\" has Value %g\n", CL_ClvValue(CL_ClvLookup("x")));
  
   printf("x = %g, frameWidth = %g\n",CL_ClvValue(x),CL_ClvValue(frameWidth));
 
@@ -43,7 +43,7 @@ int main(int argc, char *argv[] )
   CL_Solve(solver);
   printf("x = %g, frameWidth = %g\n",CL_ClvValue(x),CL_ClvValue(frameWidth));
 
-  printf("\"x\" has value %g\n", CL_ClvValue(CL_ClvLookup("x")));
+  printf("\"x\" has Value %g\n", CL_ClvValue(CL_ClvLookup("x")));
 
   CL_SimplexSolverPrint(solver,stderr);
 

@@ -33,7 +33,7 @@ main( char **, int )
   ClLinearInequality constraint2(cle2);
   cout << constraint2 << endl;
 
-  cout << constraint2.expression() << endl;
+  cout << constraint2.Expression() << endl;
 
   ClStayConstraint cn(w);
   cout << cn << endl;
@@ -41,7 +41,7 @@ main( char **, int )
   cerr << (cn.variable() == w? "yup" : "nope") << endl;
   cerr << (cn.variable() == a? "yup" : "nope") << endl;
 
-  cerr << "constraint is " << constraint.isRequired() << endl;
+  cerr << "constraint is " << constraint.IsRequired() << endl;
 
   return 0;
 }

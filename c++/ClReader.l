@@ -57,7 +57,7 @@ ws [ \t\n]+
       ClParseData *pclpd = ((ClParseData *) YYLEX_PARAM);
       const string str(yytext);
       ClVariable *pclv = pclpd->_lookup_func(str);
-      if (!pclv->isNil()) {
+      if (!pclv->IsNil()) {
         lvalp->pclv = pclv;
         return VAR;
       } else {

@@ -1,25 +1,25 @@
 define dp
-call (void) (&($arg0)->printOn(cerr))
+call (void) (&($arg0)->PrintOn(cerr))
 echo \n
 end
 document dp
-Executes $arg0->printOn(cerr)
+Executes $arg0->PrintOn(cerr)
 end
 
 define dpv
-call (void) (&$arg0->printOnVerbose(cerr))
+call (void) (&$arg0->PrintOnVerbose(cerr))
 echo \n
 end
 document dpv
-Executes $arg0->printOnVerbose(cerr)
+Executes $arg0->PrintOnVerbose(cerr)
 end
 
 define pt
-call (void) (&printTo(cerr,$arg0))
+call (void) (&PrintTo(cerr,$arg0))
 echo \n
 end
 document pt
-Executes printTo(cerr,$arg0)
+Executes PrintTo(cerr,$arg0)
 end
 
 define ptv

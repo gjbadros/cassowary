@@ -32,25 +32,25 @@ protected:
     { }
 
 #ifndef CL_NO_IO
-  virtual ostream &printOn(ostream &xo) const
+  virtual ostream &PrintOn(ostream &xo) const
   {  
-    xo << "[" << name() << ":obj]";
+    xo << "[" << Name() << ":obj]";
     return xo;
   }
 #endif
 
-  // We don't need to give such variables a value after solving is complete.
-  virtual bool isExternal() const 
+  // We don't need to give such variables a Value after solving is complete.
+  virtual bool IsExternal() const 
     { return false; }
 
-  // Return true if we can pivot on this variable.
-  virtual bool isPivotable() const 
+  // Return true if we can Pivot on this variable.
+  virtual bool IsPivotable() const 
     { return false; }
 
   // Return true if this is a restricted (or slack) variable.  Such
   // variables are constrained to be non-negative and occur only
   // internally to the simplex solver.
-  virtual bool isRestricted() const 
+  virtual bool IsRestricted() const 
     { return false; }
 
 };

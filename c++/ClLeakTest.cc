@@ -31,25 +31,25 @@ leakTest()
    ClSimplexSolver solver;
 
    ClLinearEquation eq(x,y+0.0);
-   solver.setAutosolve(false);
-   solver.addStay(x);
-   solver.addStay(y);
+   solver.SetAutosolve(false);
+   solver.AddStay(x);
+   solver.AddStay(y);
    for (int i = 0; i < 100000; ++i) {
 #ifdef DEBUG_ADD_REMOVE
      cerr << "i = " << i << endl;
-     cerr << "before add: " << solver << "\n" << endl;
+     cerr << "before Add: " << solver << "\n" << endl;
 #endif
-     solver.addConstraint(eq);
+     solver.AddConstraint(eq);
 #ifdef DEBUG_ADD_REMOVE
      cerr << "before remove: " << solver << "\n" << endl;
 #endif
-     solver.removeConstraint(eq);
+     solver.RemoveConstraint(eq);
 #ifdef DEBUG_ADD_REMOVE
      cerr << "---------------------------" << "\n\n" << endl;
 #endif
    }
    solver.solve();
-   fOkResult = (x.value() == y.value());
+   fOkResult = (x.Value() == y.Value());
    return fOkResult;
    } 
  catch (ExCLError &error) 

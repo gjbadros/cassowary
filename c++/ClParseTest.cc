@@ -31,7 +31,7 @@ int main()
     {
     if (szLine == "-") {
       cerr << "Now renamed x to foo -- enter more constraints" << endl;
-      x.setName("foo");
+      x.SetName("foo");
       continue;
     }
 
@@ -39,7 +39,7 @@ int main()
     try {
       if ((pcn = PcnParseConstraint(xiLine,ClVarLookupInMap(&mapVars,false)))
           != NULL) {
-        solver.addConstraint(*pcn);
+        solver.AddConstraint(*pcn);
       }
     }
     catch (const ExCLParseError &e) {

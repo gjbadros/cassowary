@@ -25,35 +25,35 @@ class ClSymbolicWeight {
   ClSymbolicWeight() 
     { }
 
-  ClSymbolicWeight(int cLevels, Number value = 0.0);
+  ClSymbolicWeight(int CLevels, Number value = 0.0);
 
   ClSymbolicWeight(Number w1, Number w2 = 0.0, Number w3 = 0.0);
 
   ClSymbolicWeight(const vector<Number> &weights);
 
-  static ClSymbolicWeight &zero();
+  static ClSymbolicWeight &Zero();
 
   ClSymbolicWeight &negated();
 
-  ClSymbolicWeight &multiplyMe(Number n);
+  ClSymbolicWeight &MultiplyMe(Number n);
 
-  ClSymbolicWeight times(Number n) const
-    { ClSymbolicWeight cl = *this; cl.multiplyMe(n); return cl; }
+  ClSymbolicWeight Times(Number n) const
+    { ClSymbolicWeight cl = *this; cl.MultiplyMe(n); return cl; }
 
-  ClSymbolicWeight divideBy(Number n) const;
+  ClSymbolicWeight DivideBy(Number n) const;
 
   ClSymbolicWeight &addtoMe(const ClSymbolicWeight &cl);
 
-  ClSymbolicWeight add(const ClSymbolicWeight &cl) const
+  ClSymbolicWeight Add(const ClSymbolicWeight &cl) const
     { ClSymbolicWeight clRet = *this; clRet.addtoMe(cl); return clRet; }
 
-  ClSymbolicWeight subtract(const ClSymbolicWeight &cl) const;
+  ClSymbolicWeight Subtract(const ClSymbolicWeight &cl) const;
 
   ClSymbolicWeight operator*(const Number &n) const
-    { return times(n); }
+    { return Times(n); }
 
   ClSymbolicWeight operator/(const Number &n) const
-    { return divideBy(n); }
+    { return DivideBy(n); }
 
   // FIXGJB: can we express this statically?
   ClSymbolicWeight operator*(ClSymbolicWeight &w) const
@@ -66,15 +66,15 @@ class ClSymbolicWeight {
   // FIXGJB: can we express this statically?
   ClSymbolicWeight operator-() const
     { throw ExCLInternalError("Can not negate a symbolic weight");
-      return ClSymbolicWeight::zero(); }
+      return ClSymbolicWeight::Zero(); }
 
   friend ClSymbolicWeight ReciprocalOf(const ClSymbolicWeight &);
 
   ClSymbolicWeight &operator*=(const Number &n)
-    { return multiplyMe(n); }
+    { return MultiplyMe(n); }
 
   ClSymbolicWeight operator+(const ClSymbolicWeight &cl) const
-    { return add(cl); }
+    { return Add(cl); }
 
   ClSymbolicWeight operator+=(const ClSymbolicWeight &cl)
     { return addtoMe(cl); }
@@ -100,7 +100,7 @@ class ClSymbolicWeight {
 
   // function.h provides operator>, >=, <= from operator<
 
-  double asDouble() const
+  double AsDouble() const
     {
     vector<Number>::const_reverse_iterator i = _values.rbegin();
     Number sum  = 0;
@@ -115,7 +115,7 @@ class ClSymbolicWeight {
     }
 
 #ifndef CL_NO_IO
-  ostream &printOn(ostream &xo) const
+  ostream &PrintOn(ostream &xo) const
     { 
     vector<Number>::const_iterator i = _values.begin();
     if (i == _values.end())
@@ -131,14 +131,14 @@ class ClSymbolicWeight {
 
   // FIXGJB: use a template function to generate these automatically
   friend ostream& operator<<(ostream &xos, const ClSymbolicWeight &clsw)
-    { clsw.printOn(xos); return xos; }
+    { clsw.PrintOn(xos); return xos; }
 #endif
 
-  int cLevels() const
+  int CLevels() const
     { return _values.size(); }
 
-  friend bool clApprox(const ClSymbolicWeight &cl, Number n);
-  friend bool clApprox(const ClSymbolicWeight &cl1, const ClSymbolicWeight &cl2);
+  friend bool ClApprox(const ClSymbolicWeight &cl, Number n);
+  friend bool ClApprox(const ClSymbolicWeight &cl1, const ClSymbolicWeight &cl2);
 
  private:
   vector<Number> _values;
@@ -148,23 +148,23 @@ class ClSymbolicWeight {
 
 };
 
-inline bool clApprox(const ClSymbolicWeight &cl, Number n)
+inline bool ClApprox(const ClSymbolicWeight &cl, Number n)
 {
   vector<Number>::const_iterator it = cl._values.begin();
-  if (!clApprox(*it,n))
+  if (!ClApprox(*it,n))
     return false;
 
   ++it;
   for (; it != cl._values.end(); ++it)
     {
-    if (!clApprox(*it,0))
+    if (!ClApprox(*it,0))
       return false;
     }
 
   return true;
 }
 
-inline bool clApprox(const ClSymbolicWeight &cl1, const ClSymbolicWeight &cl2)
+inline bool ClApprox(const ClSymbolicWeight &cl1, const ClSymbolicWeight &cl2)
 {
   vector<Number>::const_iterator it1 = cl1._values.begin();
   vector<Number>::const_iterator it2 = cl2._values.begin();
@@ -172,7 +172,7 @@ inline bool clApprox(const ClSymbolicWeight &cl1, const ClSymbolicWeight &cl2)
   for (; it1 != cl1._values.end() && it2 != cl2._values.end(); 
        ++it1, ++it2)
     {
-    if (!clApprox(*it1,*it2))
+    if (!ClApprox(*it1,*it2))
       return false;
     }
 
@@ -184,6 +184,6 @@ inline bool clApprox(const ClSymbolicWeight &cl1, const ClSymbolicWeight &cl2)
 
 inline ClSymbolicWeight ReciprocalOf(const ClSymbolicWeight &)
 { throw(ExCLInternalError("Cannot take ReciprocalOf symbolic weight"));
-  return ClSymbolicWeight::zero(); }
+  return ClSymbolicWeight::Zero(); }
 
 #endif

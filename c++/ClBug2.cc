@@ -18,11 +18,11 @@ void main()
 { 
   ClSimplexSolver *solver = new ClSimplexSolver(); 
   ClVariable *var = new ClVariable(); 
-  ClStayConstraint *stcn = new ClStayConstraint(*var,clsWeak(),1.0); 
+  ClStayConstraint *stcn = new ClStayConstraint(*var,ClsWeak(),1.0); 
  
-  solver->addConstraint(*stcn); 
+  solver->AddConstraint(*stcn); 
   cout << *solver; 
-  solver->removeConstraint(*stcn); 
+  solver->RemoveConstraint(*stcn); 
   cout << *solver; 
 } 
 -------------------------------------------------------------------------------- 
@@ -37,16 +37,16 @@ void main()
 { 
   ClSimplexSolver *solver = new ClSimplexSolver(); 
   ClVariable *var = new ClVariable(); 
-  ClStayConstraint *stcn = new ClStayConstraint(*var,clsWeak(),2.0); 
+  ClStayConstraint *stcn = new ClStayConstraint(*var,ClsWeak(),2.0); 
  
-  solver->addConstraint(*stcn); 
+  solver->AddConstraint(*stcn); 
   cout << *solver; 
-  solver->removeConstraint(*stcn); 
+  solver->RemoveConstraint(*stcn); 
   cout << *solver; 
 } 
 -------------------------------------------------------------------------------- 
 The result is: 
-test2: ClSimplexSolver.cc:1199: void ClSimplexSolver::optimize(class ClVariable): Assertion \
+test2: ClSimplexSolver.cc:1199: void ClSimplexSolver::Optimize(class ClVariable): Assertion \
 `pzRow != __null' failed. 
 Aborted 
  
@@ -59,11 +59,11 @@ void main()
 { 
   ClVariable *var = new ClVariable(); 
   ClSimplexSolver *solver = new ClSimplexSolver(); 
-  ClStayConstraint *stcn = new ClStayConstraint(*var,clsWeak(),2.0); 
+  ClStayConstraint *stcn = new ClStayConstraint(*var,ClsWeak(),2.0); 
  
-  solver->addConstraint(*stcn); 
+  solver->AddConstraint(*stcn); 
   cout << *solver; 
-  solver->removeConstraint(*stcn); 
+  solver->RemoveConstraint(*stcn); 
   cout << *solver; 
 } 
 -------------------------------------------------------------------------------- 
@@ -81,11 +81,11 @@ void foo1()
 { 
   ClSimplexSolver *solver = new ClSimplexSolver(); 
   ClVariable *var = new ClVariable(); 
-  ClStayConstraint *stcn = new ClStayConstraint(*var,clsWeak(),1.0); 
+  ClStayConstraint *stcn = new ClStayConstraint(*var,ClsWeak(),1.0); 
  
-  solver->addConstraint(*stcn); 
+  solver->AddConstraint(*stcn); 
   cout << *solver; 
-  solver->removeConstraint(*stcn); 
+  solver->RemoveConstraint(*stcn); 
   cout << *solver; 
 } 
 
@@ -94,11 +94,11 @@ void foo2()
 { 
   ClSimplexSolver *solver = new ClSimplexSolver(); 
   ClVariable *var = new ClVariable(); 
-  ClStayConstraint *stcn = new ClStayConstraint(*var,clsWeak(),2.0); 
+  ClStayConstraint *stcn = new ClStayConstraint(*var,ClsWeak(),2.0); 
  
-  solver->addConstraint(*stcn); 
+  solver->AddConstraint(*stcn); 
   cout << *solver; 
-  solver->removeConstraint(*stcn); 
+  solver->RemoveConstraint(*stcn); 
   cout << *solver; 
 } 
 
@@ -107,11 +107,11 @@ void foo3()
 { 
   ClVariable *var = new ClVariable(); 
   ClSimplexSolver *solver = new ClSimplexSolver(); 
-  ClStayConstraint *stcn = new ClStayConstraint(*var,clsWeak(),2.0); 
+  ClStayConstraint *stcn = new ClStayConstraint(*var,ClsWeak(),2.0); 
  
-  solver->addConstraint(*stcn); 
+  solver->AddConstraint(*stcn); 
   cout << *solver; 
-  solver->removeConstraint(*stcn); 
+  solver->RemoveConstraint(*stcn); 
   cout << *solver; 
 } 
 

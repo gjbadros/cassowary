@@ -34,55 +34,55 @@ public:
   ClVariable(const ClVariable &clv_) : pclv(clv_.pclv) { }
 
   /// These ctrs build ClFloatVariable-s
-  ClVariable(string name, Number value = 0.0) 
-      : pclv(new ClFloatVariable(name,value)) 
+  ClVariable(string name, Number Value = 0.0) 
+      : pclv(new ClFloatVariable(name,Value)) 
     { if (pmapStrPclv) { (*pmapStrPclv)[name] = *this; }  }
-  ClVariable(Number value = 0.0) 
-      : pclv(new ClFloatVariable(value)) { }
-  ClVariable(long number, char *prefix, Number value = 0.0)
-      : pclv(new ClFloatVariable(number,prefix,value)) { }
+  ClVariable(Number Value = 0.0) 
+      : pclv(new ClFloatVariable(Value)) { }
+  ClVariable(long number, char *prefix, Number Value = 0.0)
+      : pclv(new ClFloatVariable(number,prefix,Value)) { }
 
   /// permit ClVariables to be used as pointers to pclvs
   ClAbstractVariable *operator->() { return pclv; }
 
   /// and also forward the function calls along
 
-  bool isDummy() const { assert(pclv); return pclv->isDummy(); }
-  bool isExternal() const { assert(pclv); return pclv->isExternal(); }
-  bool isPivotable() const { assert(pclv); return pclv->isPivotable(); }
-  bool isRestricted() const { assert(pclv); return pclv->isRestricted(); }
+  bool IsDummy() const { assert(pclv); return pclv->IsDummy(); }
+  bool IsExternal() const { assert(pclv); return pclv->IsExternal(); }
+  bool IsPivotable() const { assert(pclv); return pclv->IsPivotable(); }
+  bool IsRestricted() const { assert(pclv); return pclv->IsRestricted(); }
 
-  string name() const { assert(pclv); return pclv->name(); }
+  string Name() const { assert(pclv); return pclv->Name(); }
 
-  Number value() const { assert(pclv); return pclv->value(); }
-  int intValue() const { assert(pclv); return pclv->intValue(); }
-  void set_value(Number value) 
-    { assert(pclv); pclv->set_value(value); }
-  void change_value(Number value) 
-    { assert(pclv); pclv->change_value(value); }
-  void setPv(void *pv) 
-    { assert(pclv); pclv->setPv(pv); }
+  Number Value() const { assert(pclv); return pclv->Value(); }
+  int IntValue() const { assert(pclv); return pclv->IntValue(); }
+  void SetValue(Number Value) 
+    { assert(pclv); pclv->SetValue(Value); }
+  void ChangeValue(Number Value) 
+    { assert(pclv); pclv->ChangeValue(Value); }
+  void SetPv(void *pv) 
+    { assert(pclv); pclv->SetPv(pv); }
   void *Pv() const 
     { assert(pclv); return pclv->Pv(); }
 
-  void setName(string const &nm) {
+  void SetName(string const &nm) {
     assert(pclv);
     if (pmapStrPclv) {
-      pmapStrPclv->erase(name());
+      pmapStrPclv->erase(Name());
       (*pmapStrPclv)[nm] = *this;
     }
-    pclv->setName(nm);
+    pclv->SetName(nm);
   }
 
   ClAbstractVariable *get_pclv() const { return pclv; } 
-  bool isNil() const { return pclv == NULL; }
+  bool IsNil() const { return pclv == NULL; }
 
   static void SetVarMap(StringToVarMap *pmap) { pmapStrPclv = pmap; }
   static StringToVarMap *VarMap() { return pmapStrPclv; }
   static StringToVarMap *pmapStrPclv;
 #ifndef CL_NO_IO
-  ostream &printOn(ostream &xo) const
-    { return pclv->printOn(xo); /* return xo << "@" << pclv << endl; */}
+  ostream &PrintOn(ostream &xo) const
+    { return pclv->PrintOn(xo); /* return xo << "@" << pclv << endl; */}
 #endif
 
   friend bool operator<(ClVariable cl1, ClVariable cl2)
@@ -98,7 +98,7 @@ public:
 
 #ifndef CL_NO_IO
 inline ostream &operator<<(ostream &xo, const ClVariable &clv)
-{ return clv.printOn(xo); }
+{ return clv.PrintOn(xo); }
 #endif
 
 #ifdef CL_USE_HASH_MAP_AND_SET
@@ -112,7 +112,7 @@ struct hash<ClVariable> {
 #include <math.h>
 
 // Compare two double-s approximately, since equality is no good
-inline bool clApprox(double a, double b)
+inline bool ClApprox(double a, double b)
 {
   const double epsilon = 1.0e-8;
   if (a > b) {
@@ -124,14 +124,14 @@ inline bool clApprox(double a, double b)
 
 // Can remove these if I decide to 
 // autoconvert from ClVariable-s to double-s
-inline bool clApprox(ClVariable clv, double b)
+inline bool ClApprox(ClVariable clv, double b)
 {
-  return clApprox(clv->value(),b);
+  return ClApprox(clv->Value(),b);
 }
 
-inline bool clApprox(double a, ClVariable clv)
+inline bool ClApprox(double a, ClVariable clv)
 {
-  return clApprox(a,clv->value());
+  return ClApprox(a,clv->Value());
 }
 
 extern ClVariable clvNil;

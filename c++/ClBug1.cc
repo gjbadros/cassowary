@@ -4,12 +4,12 @@ int main()
 {
   ClVariable *var = new ClVariable();
   ClSimplexSolver *solver = new ClSimplexSolver();
-  ClStayConstraint *stcn = new ClStayConstraint(*var,clsWeak(),1.0);
+  ClStayConstraint *stcn = new ClStayConstraint(*var,ClsWeak(),1.0);
 
   cout << *solver;
-  solver->addConstraint(*stcn);
+  solver->AddConstraint(*stcn);
   cout << *solver;
-  solver->removeConstraint(*stcn);
+  solver->RemoveConstraint(*stcn);
   cout << *solver;
 }
 /*

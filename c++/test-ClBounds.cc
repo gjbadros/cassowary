@@ -9,8 +9,8 @@ main( char **, int  )
     {
     ClSimplexSolver s;
     ClVariable x(1);
-    s.addLowerBound(x,0);
-    s.addUpperBound(x,10);
+    s.AddLowerBound(x,0);
+    s.AddUpperBound(x,10);
     } 
   catch (ExCLError &err)
     {

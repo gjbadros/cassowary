@@ -35,7 +35,7 @@ public:
 // Returns constraint (freshly allocated, client responsibility to deallocate)
 // if succesful. Otherwise, returns 0.
 ClConstraint *PcnParseConstraint(istream &xi, const ClVarLookupFunction &lookup_func,
-                                 const ClStrength &strength = clsRequired());
+                                 const ClStrength &strength = ClsRequired());
 
 class ClVarLookupInMap : public ClVarLookupFunction {
 public:
@@ -86,13 +86,13 @@ inline
 const ClStrength
 &ClsFromSz(const char *sz)
 {
-  const ClStrength *pcls = &clsRequired();
+  const ClStrength *pcls = &ClsRequired();
   double n1, n2, n3;
   if (strcmp("required",sz) == 0)
-    ; /* initialized to clsRequired, above */
-  else if (strcasecmp("strong",sz) == 0) { pcls = &clsStrong(); }
-  else if (strcasecmp("medium",sz) == 0) { pcls = &clsMedium(); }
-  else if (strcasecmp("weak",sz) == 0) { pcls = &clsWeak(); }
+    ; /* initialized to ClsRequired, above */
+  else if (strcasecmp("strong",sz) == 0) { pcls = &ClsStrong(); }
+  else if (strcasecmp("medium",sz) == 0) { pcls = &ClsMedium(); }
+  else if (strcasecmp("weak",sz) == 0) { pcls = &ClsWeak(); }
   else if (sscanf(sz,"(%lf,%lf,%lf)",&n1,&n2,&n3) == 3) {
     pcls = new ClStrength("parsed",n1,n2,n3);
   } else {

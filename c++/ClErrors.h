@@ -134,7 +134,7 @@ class ExCLRequiredFailureWithExplanation : public ExCLRequiredFailure
 public:
   virtual string description() const
     { return "(ExCLRequiredFailureWithExplanation) A required constraint cannot be satisfied"; }
-  virtual void addConstraint(const ClConstraint *cnExpl)
+  virtual void AddConstraint(const ClConstraint *cnExpl)
     { _explanation.insert(cnExpl); }
   virtual const ClConstraintSet & explanation() const
     { return _explanation; }

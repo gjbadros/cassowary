@@ -38,11 +38,11 @@ class ClTableau {
   // No public constructor, since this does nothing but support
   // an ADT for the ClSimplexSolver
 
-  // Variable v has been removed from an expression.  If the
-  // expression is in a tableau the corresponding basic variable is
+  // Variable v has been removed from an Expression.  If the
+  // Expression is in a tableau the corresponding basic variable is
   // subject (or if subject is nil then it's in the objective function).
   // Update the column cross-indices.
-  void noteRemovedVariable(ClVariable v, ClVariable subject)
+  void NoteRemovedVariable(ClVariable v, ClVariable subject)
     { 
 #ifdef CL_TRACE
     Tracer TRACER(__FUNCTION__);
@@ -53,7 +53,7 @@ class ClTableau {
     assert(it != column.end());
     column.erase(it);
 #ifdef CL_TRACE_VERBOSE
-    cerr << "v = " << v << " and columns[v].size() = "
+    cerr << "v = " << v << " and Columns[v].size() = "
          << column.size() << endl;
 #endif
     if (column.size() == 0)
@@ -64,25 +64,25 @@ class ClTableau {
       }
     }
 
-  // v has been added to the linear expression for subject
+  // v has been added to the linear Expression for subject
   // update column cross indices
-  void noteAddedVariable(ClVariable v, ClVariable subject)
+  void NoteAddedVariable(ClVariable v, ClVariable subject)
     { 
 #ifdef CL_TRACE
     Tracer TRACER(__FUNCTION__);
     cerr << "(" << v << ", " << subject << ")" << endl;
 #endif
     _columns[v].insert(subject); 
-    if (v.isExternal() && !FIsBasicVar(v))
+    if (v.IsExternal() && !FIsBasicVar(v))
       {
       _externalParametricVars.insert(v);
       }
     }
 
 #ifndef CL_NO_IO
-  ostream &printOn(ostream &xo) const;
+  ostream &PrintOn(ostream &xo) const;
 
-  ostream &printInternalInfo(ostream &xo) const;
+  ostream &PrintInternalInfo(ostream &xo) const;
 
   ostream &printExternalVariablesTo(ostream &xo) const;
 
@@ -100,7 +100,7 @@ class ClTableau {
     for (; itRow != _rows.end(); ++itRow)
       {
       const ClVariable clv = (*itRow).first;
-      if (clv.isExternal())
+      if (clv.IsExternal())
         {
         if (_externalRows.find(clv) == _externalRows.end()) 
           {
@@ -110,13 +110,13 @@ class ClTableau {
 #endif
           }
         }
-      const ClLinearExpression *pcle = rowExpression(clv);
+      const ClLinearExpression *pcle = RowExpression(clv);
       assert(pcle);
-      ClVarToNumberMap::const_iterator it = pcle->terms().begin();
-      for (; it != pcle->terms().end(); ++it)
+      ClVarToNumberMap::const_iterator it = pcle->Terms().begin();
+      for (; it != pcle->Terms().end(); ++it)
         {
         ClVariable clv = (*it).first;
-        if (clv.isExternal()) 
+        if (clv.IsExternal()) 
           {
           if (_externalParametricVars.find(clv) == _externalParametricVars.end())
             {
@@ -147,36 +147,36 @@ class ClTableau {
   void addRow(ClVariable v, const ClLinearExpression &expr);
 
   // Remove v from the tableau -- remove the column cross indices for v
-  // and remove v from every expression in rows in which v occurs
+  // and remove v from every Expression in rows in which v occurs
   // returns a pointer to the variable (since we often want to delete
   // the variable)
-  ClVariable removeColumn(ClVariable v);
+  ClVariable RemoveColumn(ClVariable v);
 
   // Remove the basic variable v from the tableau row v=expr
   // Then update column cross indices
   // Probably want to call delete on the ClLinearExpression * returned
-  // unless you're adding that same expression back into the 
+  // unless you're adding that same Expression back into the 
   // tableau
-  ClLinearExpression *removeRow(ClVariable v);
+  ClLinearExpression *RemoveRow(ClVariable v);
 
   // Replace all occurrences of oldVar with expr, and update column cross indices
   // oldVar should now be a basic variable
-  void substituteOut(ClVariable oldVar, const ClLinearExpression &expr);
+  void SubstituteOut(ClVariable oldVar, const ClLinearExpression &expr);
 
-  ClTableauColumnsMap columns()
+  ClTableauColumnsMap Columns()
     { return _columns; }  
 
-  ClTableauRowsMap rows()
+  ClTableauRowsMap Rows()
     { return _rows; }  
 
-  // return true iff the variable subject is in the columns keys
-  bool columnsHasKey(ClVariable subject) const
+  // return true iff the variable subject is in the Columns keys
+  bool ColumnsHasKey(ClVariable subject) const
     { 
     ClTableauColumnsMap::const_iterator i = _columns.find(subject);
     return (i != _columns.end());
     }
 
-  const ClLinearExpression *rowExpression(ClVariable v) const
+  const ClLinearExpression *RowExpression(ClVariable v) const
     {
     ClTableauRowsMap::const_iterator i = _rows.find(v);
     if (i != _rows.end())
@@ -185,15 +185,15 @@ class ClTableau {
       return NULL;
     }
 
-  ClLinearExpression *rowExpression(ClVariable v)
+  ClLinearExpression *RowExpression(ClVariable v)
     {
       const ClTableau *pthis = const_cast<const ClTableau *>(this);
-      return const_cast<ClLinearExpression *>(pthis->rowExpression(v));
+      return const_cast<ClLinearExpression *>(pthis->RowExpression(v));
     }
 
 
   bool FIsBasicVar(ClVariable v)
-    { return rowExpression(v) != NULL; }
+    { return RowExpression(v) != NULL; }
 
   // private: FIXGJB: can I improve the encapsulation?
 
@@ -211,11 +211,11 @@ class ClTableau {
   ClVarSet _infeasibleRows;
 
   // the set of rows where the basic variable is external
-  // this was added to the C++ version to reduce time in setExternalVariables()
+  // this was added to the C++ version to reduce time in SetExternalVariables()
   ClVarSet _externalRows;
 
   // the set of external variables which are parametric
-  // this was added to the C++ version to reduce time in setExternalVariables()
+  // this was added to the C++ version to reduce time in SetExternalVariables()
   ClVarSet _externalParametricVars;
 
 };

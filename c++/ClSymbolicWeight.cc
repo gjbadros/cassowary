@@ -15,8 +15,8 @@
 // Help g++ out, tell it to instantiate this
 //template vector<double> &vector<double>::operator =(const vector<double> &);
 
-ClSymbolicWeight::ClSymbolicWeight(int cLevels, double value) :
-  _values(cLevels, value)
+ClSymbolicWeight::ClSymbolicWeight(int CLevels, double value) :
+  _values(CLevels, value)
 { }
 
 ClSymbolicWeight::ClSymbolicWeight(double w1, double w2, double w3)
@@ -32,7 +32,7 @@ ClSymbolicWeight::ClSymbolicWeight(const vector<double> &weights) :
 { }
 
 ClSymbolicWeight &
-ClSymbolicWeight::zero()
+ClSymbolicWeight::Zero()
 {
   static ClSymbolicWeight Zero(0.0, 0.0, 0.0);
   return Zero;
@@ -51,7 +51,7 @@ ClSymbolicWeight::negated()
 }
 
 ClSymbolicWeight &
-ClSymbolicWeight::multiplyMe(Number n)
+ClSymbolicWeight::MultiplyMe(Number n)
 {
   vector<double>::iterator it = _values.begin();
   for (; it != _values.end(); ++it)
@@ -63,7 +63,7 @@ ClSymbolicWeight::multiplyMe(Number n)
 
 
 ClSymbolicWeight 
-ClSymbolicWeight::divideBy(Number n) const
+ClSymbolicWeight::DivideBy(Number n) const
 {
   assert(n!=0);
   ClSymbolicWeight clsw(0);
@@ -78,7 +78,7 @@ ClSymbolicWeight::divideBy(Number n) const
 ClSymbolicWeight &
 ClSymbolicWeight::addtoMe(const ClSymbolicWeight &cl)
 {
-  assert(cl.cLevels() == cLevels());
+  assert(cl.CLevels() == CLevels());
 
   vector<double>::iterator i1 = _values.begin();
   vector<double>::const_iterator i2 = cl._values.begin();
@@ -90,9 +90,9 @@ ClSymbolicWeight::addtoMe(const ClSymbolicWeight &cl)
 }
 
 ClSymbolicWeight 
-ClSymbolicWeight::subtract(const ClSymbolicWeight &cl) const
+ClSymbolicWeight::Subtract(const ClSymbolicWeight &cl) const
 {
-  assert(cl.cLevels() == cLevels());
+  assert(cl.CLevels() == CLevels());
 
   ClSymbolicWeight clsw(0);
   vector<double>::const_iterator i1 = _values.begin();
@@ -138,5 +138,5 @@ ClSymbolicWeight::greaterThanOrEqual(const ClSymbolicWeight &cl) const
 bool 
 ClSymbolicWeight::isNegative() const
 {
-  return _values < zero()._values;
+  return _values < Zero()._values;
 }

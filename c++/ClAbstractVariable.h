@@ -22,14 +22,14 @@ class ClAbstractVariable : public gc {
 class ClAbstractVariable {
 #endif
 public:
-  ClAbstractVariable(string name = "") :
-    _name(name)
+  ClAbstractVariable(string Name = "") :
+    _name(Name)
     { 
     ++iVariableNumber;
 #ifdef CL_FIND_LEAK
     ++cAbstractVariables;
 #endif
-    if (name.length() == 0)
+    if (Name.length() == 0)
       {
       char sz[16];
       sprintf(sz,"v%ld",iVariableNumber);
@@ -57,44 +57,44 @@ public:
   { }
 #endif
 
-  // Return the name of the variable
-  string name() const
+  // Return the Name of the variable
+  string Name() const
     { return _name; }
 
-  // Set the name of the variable
-  virtual void setName(string const &name)
-    { _name = name; }
+  // Set the Name of the variable
+  virtual void SetName(string const &Name)
+    { _name = Name; }
 
   // Return true if this a dummy variable (used as a marker variable
   // for required equality constraints).  Such variables aren't
   // allowed to enter the basis when pivoting.
-  virtual bool isDummy() const
+  virtual bool IsDummy() const
     { return false; }
 
   // Return true if this a variable known outside the solver.  
-  // (We need to give such variables a value after solving is complete.)
-  virtual bool isExternal() const = 0;
+  // (We need to give such variables a Value after solving is complete.)
+  virtual bool IsExternal() const = 0;
 
-  // Return true if we can pivot on this variable.
-  virtual bool isPivotable() const = 0;
+  // Return true if we can Pivot on this variable.
+  virtual bool IsPivotable() const = 0;
 
   // Return true if this is a restricted (or slack) variable.  Such
   // variables are constrained to be non-negative and occur only
   // internally to the simplex solver.
-  virtual bool isRestricted() const = 0;
+  virtual bool IsRestricted() const = 0;
 
 #ifndef CL_NO_IO
   // Prints a semi-descriptive representation to the stream, using the
-  // name if there is one, and otherwise the hash number of this
+  // Name if there is one, and otherwise the hash number of this
   // object.
   //	EXAMPLES
-  //	  x[10.0]		-- w/ name
-  //	  x[0.0,100]		-- w/ name, bounds but no value yet
-  //	  CV#345(10.0)		-- w/o name
-  virtual ostream &printOn(ostream &xo) const = 0;
+  //	  x[10.0]		-- w/ Name
+  //	  x[0.0,100]		-- w/ Name, bounds but no Value yet
+  //	  CV#345(10.0)		-- w/o Name
+  virtual ostream &PrintOn(ostream &xo) const = 0;
 
   friend ostream& operator<<(ostream &xos, const ClAbstractVariable &clv)
-    { clv.printOn(xos); return xos; }
+    { clv.PrintOn(xos); return xos; }
 
 #endif // CL_NO_IO
 
@@ -111,16 +111,16 @@ public:
     return !(cl1 == cl2);
     }
 
-  virtual Number value() const { return 0; }
-  virtual int intValue() const { return 0; }
+  virtual Number Value() const { return 0; }
+  virtual int IntValue() const { return 0; }
 
-  virtual void set_value(Number) 
+  virtual void SetValue(Number) 
     { assert(false); }
 
-  virtual void change_value(Number)
+  virtual void ChangeValue(Number)
     { assert(false); }
 
-  virtual void setPv(void *)
+  virtual void SetPv(void *)
     { assert(false); }
 
   virtual void *Pv() const
