@@ -536,7 +536,7 @@ blackboxsat()
       else if (strcasecmp(szCmd,"del") == 0)
         {
         cin >> i;
-        cout << "REMeq" << i << ": " << solver.removeConstraintNoException(rgpcn[i])
+        cout << "REMeq" << i << ": " << solver.RemoveConstraintNoException(rgpcn[i])
              << "\t" << *(rgpcn[i]) << endl;
         cout << r1 << " = " << r1.Value() << endl;
         }

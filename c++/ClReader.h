@@ -49,6 +49,8 @@ public:
 
   ClVariable *operator()(const string &str) const
     { 
+      if (!_pmapVars)
+        return &clvNil;
       StringToVarMap &_mapVars = *_pmapVars;
       StringToVarMap::iterator it = _mapVars.find(str);
       if (it != _mapVars.end()) {

@@ -175,7 +175,7 @@ CL_Constraint CL_ParseConstraint(const char *szConstraintRule, const char *szCon
   try {
     istrstream xiLine(szConstraintRule);
     ClConstraint *pcn = PcnParseConstraint(xiLine,ClVarLookupInMap(varmap,false),
-                                           ClsFromSz(szConstraintStrength));
+                                           ClsFromSz(szConstraintStrength);
     return pcn;
   } catch (ExCLError &e) {
     fprintf(stderr,"%s\n",e.description().c_str());
@@ -194,6 +194,16 @@ boolean CL_AddConstraint(CL_SimplexSolver solver, CL_Constraint cn)
 {
   try {
     return (solver->AddConstraintNoException(cn)?1:0);
+  } catch (...) {
+    return 0;
+  }
+}
+
+/* Add a constraint to the solver; return 1 on success, 0 on failure */
+boolean CL_RemoveConstraint(CL_SimplexSolver solver, CL_Constraint cn)
+{
+  try {
+    return (solver->RemoveConstraintNoException(cn)?1:0);
   } catch (...) {
     return 0;
   }

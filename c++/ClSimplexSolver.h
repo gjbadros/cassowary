@@ -197,12 +197,12 @@ class ClSimplexSolver : public ClTableau {
   // Same as above, but returns false if the constraint dne
   // The above function "RemoveConstraint" throws an exception in that case
   // which may be inconvenient
-  bool removeConstraintNoException(ClConstraint *const pcn);
+  bool RemoveConstraintNoException(ClConstraint *const pcn);
 
 #ifndef CL_NO_DEPRECATED
   // Deprecated --02/22/99 gjb
-  bool removeConstraintNoException(ClConstraint &cn)
-    { return removeConstraintNoException(&cn); }
+  bool RemoveConstraintNoException(ClConstraint &cn)
+    { return RemoveConstraintNoException(&cn); }
 #endif
 
 

@@ -51,7 +51,10 @@ CL_VarMap CL_SetVarMap(CL_VarMap varmap_);
 CL_VarMap CL_GetVarMap();
 
 CL_VarMap CL_VarMapNew();
+
 #endif
+
+boolean CL_VarMapDelete(const char *sz);
 
 /* Must call this before any others */
 void CL_Init();
@@ -67,6 +70,9 @@ CLV CL_ClvNew(const char *szName, double Value, CL_SimplexSolver solver);
 void CL_VariableSetPv(CLV var, void *pv);
 
 void *CL_VariablePv(CLV var);
+
+const char *CL_VariableName(CLV var);
+
 
 /* Return a new ClSimplexSolver object */
 CL_SimplexSolver CL_SimplexSolverNew();
@@ -100,6 +106,8 @@ boolean CL_FIsSatisfied(CL_Constraint pcn);
 
 /* Add a constraint to the solver */
 int CL_AddConstraint(CL_SimplexSolver solver, CL_Constraint cn);
+
+int CL_RemoveConstraint(CL_SimplexSolver solver, CL_Constraint cn);
 
 void CL_Solve(CL_SimplexSolver solver);
 

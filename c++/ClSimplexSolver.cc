@@ -476,7 +476,7 @@ ClSimplexSolver::RemoveConstraintInternal(const ClConstraint *const pcn)
   // The above function "RemoveConstraint" throws an exception in that case
   // which may be inconvenient
 bool
-ClSimplexSolver::removeConstraintNoException(ClConstraint *const pcn)
+ClSimplexSolver::RemoveConstraintNoException(ClConstraint *const pcn)
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);

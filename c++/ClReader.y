@@ -33,6 +33,10 @@ string current;  /* Global to help in debugging/error messages */
 /* Get yyparse, yylex to have an extra argument (type void *) */
 #define YYPARSE_PARAM cl_parse_data
 #define YYLEX_PARAM cl_parse_data
+#ifndef YYERROR_VERBOSE
+#define YYERROR_VERBOSE
+#endif
+#define YYDEBUG 1
 
 %}
 
@@ -52,6 +56,8 @@ string current;  /* Global to help in debugging/error messages */
 int yylex(YYSTYPE *lvalp, void *YYLEX_PARAM);
 void yyerror(const char *sz);
 %}
+
+%start constraint
 
 %token <num> NUM
 %token <pclv> VAR
