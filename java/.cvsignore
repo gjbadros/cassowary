@@ -13,6 +13,7 @@ ClSlackVariable.class
 ClStayConstraint.class
 ClStrength.class
 ClSymbolicWeight.class
+ClTableau.class
 ClVariable.class
 ExCLConstraintNotFound.class
 ExCLError.class
