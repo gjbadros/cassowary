@@ -18,6 +18,7 @@
 #include "ClStrength.h"
 #include "ClStayConstraint.h"
 #include "ClEditConstraint.h"
+#include "ClSlackVariable.h"
 #include "ClObjectiveVariable.h"
 #include "ClErrors.h"
 #include <stack>
@@ -26,28 +27,46 @@ class ClVariable;
 class ClPoint;
 class ExCLRequiredFailureWithExplanation;
 
-// ClConstraintAndIndex is a privately used class
-// that just wraps a constraint and an index into
-// the parallel vectors containing error variables
-// and edit constants
-class ClConstraintAndIndex {
+// ClEditInfo is a privately-used class
+// that just wraps a constraint, its positive and negative
+// error variables, and its prior edit constant.
+// It is used as values in _editVarMap, and replaces
+// the parallel vectors of error variables and previous edit
+// constants from the smalltalk version of the code.
+class ClEditInfo {
   friend ClSimplexSolver;
 public:
-  ClConstraintAndIndex()
-      :pconstraint(NULL), index(-1)
+  // This class owns the pointers passed in --
+  // they get deleted when the class is deleted
+  ClEditInfo(const ClEditConstraint *pconstraint, 
+             ClSlackVariable *peplus, ClSlackVariable *peminus,
+             Number prevEditConstant,
+             int index)
+      :_pconstraint(pconstraint),
+       _pclvEditPlus(peplus), _pclvEditMinus(peminus),
+       _prevEditConstant(prevEditConstant),
+       _index(index)
     { }
-  ClConstraintAndIndex(const ClConstraint *pconstraint_, int i)
-      :pconstraint(pconstraint_), index(i)
-    { }
+
+  ~ClEditInfo() 
+    { 
+      /* FIXNOWGJB: Leak?     delete _pconstraint; 
+      delete _pclvEditPlus; 
+      delete _pclvEditMinus; */
+    }
+
 private:
-  const ClConstraint *pconstraint;
-  int index;
+  const ClConstraint *_pconstraint;
+  ClSlackVariable *_pclvEditPlus;
+  ClSlackVariable *_pclvEditMinus;
+  Number _prevEditConstant;
+  int _index;
 };
 
 // Give a bunch of simpler names to the various useful maps
 typedef ClMap<const ClConstraint *, ClTableauVarSet > ClConstraintToVarSetMap;
 typedef ClMap<const ClConstraint *, const ClAbstractVariable *> ClConstraintToVarMap;
-typedef ClMap<const ClVariable *, const ClConstraintAndIndex *> ClVarToConstraintAndIndexMap;
+typedef ClMap<const ClVariable *, ClEditInfo *> ClVarToEditInfoMap;
 typedef ClMap<const ClAbstractVariable *, const ClConstraint *> ClVarToConstraintMap;
 typedef vector<const ClAbstractVariable *> ClVarVector;
 
@@ -117,10 +136,10 @@ class ClSimplexSolver : public ClTableau {
 
   ClSimplexSolver &removeEditVar(const ClVariable &v)
     {
-      const ClConstraintAndIndex *pcai = _editVarMap[&v];
-      const ClConstraint *pcnEdit = pcai->pconstraint;
+      const ClEditInfo *pcei = _editVarMap[&v];
+      const ClConstraint *pcnEdit = pcei->_pconstraint;
       removeConstraint(*pcnEdit);
-      delete pcnEdit;
+      /* FIXNOWGJB: should above do the delete?      delete pcei; */
       return *this;
     }
 
@@ -193,8 +212,19 @@ class ClSimplexSolver : public ClTableau {
   // haven't definitely observed any such problems yet)
   void reset();
 
+  // Re-solve the cuurent collection of constraints, given the new
+  // values for the edit variables that have already been
+  // suggested (see suggestValue() method)
+  // This is not guaranteed to work if you remove an edit constraint
+  // from the middle of the edit constraints you added
+  // (e.g., edit A, edit B, edit C, remove B -> this will fail!)
+  // DEPRECATED
+  void resolve();
+
   // Re-solve the current collection of constraints for new values for
   // the constants of the edit variables.
+  // This is implemented in terms of suggestValue-s, and is
+  // less efficient than that more natural interface
   void resolve(const vector<Number> &newEditConstants);
 
   // Convenience function for resolve-s of two variables
@@ -205,11 +235,6 @@ class ClSimplexSolver : public ClTableau {
     vals.push_back(y);
     resolve(vals);
     }
-
-  // Re-solve the cuurent collection of constraints, given the new
-  // values for the edit variables that have already been
-  // suggested (see suggestValue() method)
-  void resolve();
 
   // Suggest a new value for an edit variable
   // the variable needs to be added as an edit variable
@@ -383,27 +408,6 @@ class ClSimplexSolver : public ClTableau {
   // 'newExpression:', which is called before this method.
   const ClAbstractVariable *chooseSubject(ClLinearExpression &pexpr);
   
-  void deltaEditConstant(Number delta, const ClAbstractVariable &pv1, const ClAbstractVariable &pv2);
-  
-  // We have set new values for the constants in the edit constraints.
-  // Re-optimize using the dual simplex algorithm.
-  void dualOptimize();
-
-  // Make a new linear expression representing the constraint cn,
-  // replacing any basic variables with their defining expressions.
-  // Normalize if necessary so that the constant is non-negative.  If
-  // the constraint is non-required give its error variables an
-  // appropriate weight in the objective function.
-  ClLinearExpression *newExpression(const ClConstraint &cn);
-
-  // Minimize the value of the objective.  (The tableau should already
-  // be feasible.)
-  void optimize(const ClObjectiveVariable &pzVar);
-
-  // Do a pivot.  Move entryVar into the basis (i.e. make it a basic variable),
-  // and move exitVar out of the basis (i.e., make it a parametric variable)
-  void pivot(const ClAbstractVariable &pentryVar, const ClAbstractVariable &pexitVar);
-
   // Each of the non-required edits will be represented by an equation
   // of the form
   //    v = c + eplus - eminus 
@@ -416,8 +420,33 @@ class ClSimplexSolver : public ClTableau {
   // error variable.  (They can't both be basic.)  Fix the constant in
   // this expression.  Otherwise they are both nonbasic.  Find all of
   // the expressions in which they occur, and fix the constants in
-  // those.  See the UIST paper for details.  void
-  void resetEditConstants(const vector<Number> &newEditConstants);
+  // those.  See the UIST paper for details.  
+  // (This comment was for resetEditConstants(), but that is now
+  // gone since it was part of the screwey vector-based interface
+  // to resolveing. --02/15/99 gjb)
+  void deltaEditConstant(Number delta, const ClAbstractVariable &pv1, const ClAbstractVariable &pv2);
+  
+  // We have set new values for the constants in the edit constraints.
+  // Re-optimize using the dual simplex algorithm.
+  void dualOptimize();
+
+  // Make a new linear expression representing the constraint cn,
+  // replacing any basic variables with their defining expressions.
+  // Normalize if necessary so that the constant is non-negative.  If
+  // the constraint is non-required give its error variables an
+  // appropriate weight in the objective function.
+  ClLinearExpression *newExpression(const ClConstraint &cn,
+                                    ClSlackVariable *&pclvEplus,
+                                    ClSlackVariable *&pclvEminus,
+                                    Number &prevEConstant);
+
+  // Minimize the value of the objective.  (The tableau should already
+  // be feasible.)
+  void optimize(const ClObjectiveVariable &pzVar);
+
+  // Do a pivot.  Move entryVar into the basis (i.e. make it a basic variable),
+  // and move exitVar out of the basis (i.e., make it a parametric variable)
+  void pivot(const ClAbstractVariable &pentryVar, const ClAbstractVariable &pexitVar);
 
   // Each of the non-required stays will be represented by an equation
   // of the form
@@ -455,20 +484,10 @@ class ClSimplexSolver : public ClTableau {
 
   /// instance variables
 
-  // the arrays of positive and negative error vars for the edit constraints
-  // (need both positive and negative since they have only non-negative values)
-  ClVarVector _editMinusErrorVars;
-  ClVarVector _editPlusErrorVars;
-
   // the arrays of positive and negative error vars for the stay constraints
   // (need both positive and negative since they have only non-negative values)
   ClVarVector _stayMinusErrorVars;
   ClVarVector _stayPlusErrorVars;
-
-  // The array of constants for the edit constraints on the previous
-  // iteration.  These must be in the same order as editPlusErrorVars
-  // and editMinusErrorVars
-  vector<Number> _prevEditConstants;
 
   // give error variables for a non required constraint,
   // maps to ClSlackVariable-s
@@ -484,9 +503,9 @@ class ClSimplexSolver : public ClTableau {
 
   ClObjectiveVariable &_objective;
 
-  // Map edit variables to their constraints and the index into
-  // the parallel ClVarVector arrays, above
-  ClVarToConstraintAndIndexMap _editVarMap;
+  // Map edit variables to their constraints, errors, and prior
+  // values
+  ClVarToEditInfoMap _editVarMap;
 
   int _slackCounter;
   int _artificialCounter;

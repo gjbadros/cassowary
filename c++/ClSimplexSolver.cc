@@ -31,9 +31,7 @@ ClSimplexSolver::~ClSimplexSolver()
   cerr << "_slackCounter == " << _slackCounter
        << "\n_artificialCounter == " << _artificialCounter
        << "\n_dummyCounter == " << _dummyCounter << endl;
-  cerr << "editMinusErrorVars " << _editMinusErrorVars.size() << ", "
-       << "editPlusErrorVars " << _editPlusErrorVars.size() << ", "
-       << "stayMinusErrorVars " << _stayMinusErrorVars.size() << ", "
+  cerr << "stayMinusErrorVars " << _stayMinusErrorVars.size() << ", "
        << "stayPlusErrorVars " << _stayPlusErrorVars.size() << ", "
        << "errorVars " << _errorVars.size() << ", "
        << "markerVars " << _markerVars.size() << endl;
@@ -66,7 +64,11 @@ ClSimplexSolver::addConstraint(const ClConstraint &cn)
       }
     }
 
-  ClLinearExpression *pexpr = newExpression(cn);
+  ClSlackVariable *pclvEplus, *pclvEminus;
+  Number prevEConstant;
+  ClLinearExpression *pexpr = newExpression(cn, /* output to: */
+                                            pclvEplus,pclvEminus,
+                                            prevEConstant);
   bool fAddedOkDirectly = false;
 
   try 
@@ -107,9 +109,13 @@ ClSimplexSolver::addConstraint(const ClConstraint &cn)
 
   if (cn.isEditConstraint())
     {
-    int i = _prevEditConstants.size() - 1;
     const ClEditConstraint *pcnEdit = dynamic_cast<const ClEditConstraint *>(&cn);
-    _editVarMap[&pcnEdit->variable()] = new ClConstraintAndIndex(&cn,i);
+    int ccnEdit = _editVarMap.size();
+    _editVarMap[&pcnEdit->variable()] = new ClEditInfo(pcnEdit,
+                                                       pclvEplus,
+                                                       pclvEminus,
+                                                       prevEConstant,
+                                                       ccnEdit);
     }
 
   if (_fOptimizeAutomatically)
@@ -179,14 +185,14 @@ ClSimplexSolver::removeEditVarsTo(int n)
 {
   while (true)
     {
-    ClVarToConstraintAndIndexMap::const_iterator it = _editVarMap.begin();
+    ClVarToEditInfoMap::const_iterator it = _editVarMap.begin();
     if (it == _editVarMap.end() || _editVarMap.size() == static_cast<unsigned int>(n))
       break;
-    const ClConstraintAndIndex *pcai = (*it).second;
-    assert(pcai);
-    if (pcai->index >= n)
+    const ClEditInfo *pcei = (*it).second;
+    assert(pcei);
+    if (pcei->_index >= n)
       {
-      const ClEditConstraint *pcnEdit = dynamic_cast<const ClEditConstraint *>(pcai->pconstraint);
+      const ClEditConstraint *pcnEdit = dynamic_cast<const ClEditConstraint *>(pcei->_pconstraint);
 #ifndef CL_NO_TRACE
       cerr << __FUNCTION__ << ": Removing " << pcnEdit->variable() << endl;
 #endif
@@ -412,40 +418,10 @@ ClSimplexSolver::removeConstraint(const ClConstraint &cnconst)
     }
   else if (cn.isEditConstraint())
     {
-    // remove the error variable for this constraint
-    // need to update _editPlusErrorVars,
-    //                _editMinusErrorVars, and
-    //                _prevEditConstants
-    assert(it_eVars != _errorVars.end());
-    ClTableauVarSet &eVars = (*it_eVars).second;
-    ClTableauVarSet::iterator it_v = eVars.begin();
-    for ( ; it_v != eVars.end(); ++it_v)
-      {
-      const ClAbstractVariable *pvar = *it_v;
-      // find var in _editPlusErrorVars
-      ClVarVector::iterator 
-	itEditPlusErrorVars = _editPlusErrorVars.begin();
-      for ( ; itEditPlusErrorVars != _editPlusErrorVars.end(); ++itEditPlusErrorVars )
-	{
-	if (*itEditPlusErrorVars == pvar) break;
-	}
-      if (itEditPlusErrorVars != _editPlusErrorVars.end())
-	{ // found it
-	int index = itEditPlusErrorVars - _editPlusErrorVars.begin();
-	ClVarVector::iterator 
-	  itEditMinusErrorVars = _editMinusErrorVars.begin() + index;
-	vector<Number>::iterator 
-	  itPrevEditConstants = _prevEditConstants.begin() + index;
-	_editPlusErrorVars.erase(itEditPlusErrorVars);
-	_editMinusErrorVars.erase(itEditMinusErrorVars);
-	_prevEditConstants.erase(itPrevEditConstants);
-	// done -- can exit the iteration
-	break;
-	}
-      }
     const ClEditConstraint *pcnEdit = dynamic_cast<const ClEditConstraint *>(&cn);
-    delete _editVarMap[&pcnEdit->variable()];
-    _editVarMap.erase(&pcnEdit->variable());
+    const ClVariable *pclv = &pcnEdit->variable();
+    delete _editVarMap[pclv];
+    _editVarMap.erase(pclv);
     }
 
   if (it_eVars != _errorVars.end())
@@ -514,26 +490,6 @@ ClSimplexSolver::reset()
   assert(false);
 }
 
-// Re-solve the current collection of constraints for new values for
-// the constants of the edit variables.
-// Note that I benchmarked isolating the common case of two
-// edit constants just being passed as two double arguments,
-// and there was no noticeable difference on the 900 constraint problem
-// --01/21/98 gjb
-void 
-ClSimplexSolver::resolve(const vector<Number> &newEditConstants)
-{ // CODE DUPLICATED BELOW
-#ifndef CL_NO_TRACE
-  Tracer TRACER(__FUNCTION__);
-  cerr << "(" << newEditConstants << ")" << endl;
-#endif
-  _infeasibleRows.clear();
-  resetStayConstants();
-  resetEditConstants(newEditConstants);
-  dualOptimize();
-  setExternalVariables();
-}
-
 
 // Re-solve the cuurent collection of constraints, given the new
 // values for the edit variables that have already been
@@ -556,7 +512,7 @@ ClSimplexSolver::suggestValue(ClVariable &v, Number x)
 #ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
 #endif
-  ClVarToConstraintAndIndexMap::const_iterator itEditVarMap = _editVarMap.find(&v);
+  ClVarToEditInfoMap::const_iterator itEditVarMap = _editVarMap.find(&v);
   if (itEditVarMap == _editVarMap.end())
     {
 #ifndef CL_NO_IO
@@ -567,20 +523,38 @@ ClSimplexSolver::suggestValue(ClVariable &v, Number x)
     throw ExCLEditMisuse(v.name().c_str());
 #endif
     }
-  const ClConstraintAndIndex *pcai = (*itEditVarMap).second;
-  unsigned int i = pcai->index;
-
-  assert(i < _editPlusErrorVars.size());
-  assert(i < _editMinusErrorVars.size());
-  assert(i < _prevEditConstants.size());
-  const ClAbstractVariable *pvarErrorPlus = _editPlusErrorVars[i];
-  const ClAbstractVariable *pvarErrorMinus = _editMinusErrorVars[i];
-
-  Number delta = x - _prevEditConstants[i];
-  _prevEditConstants[i] = x;
+  ClEditInfo *pcei = (*itEditVarMap).second;
+  const ClAbstractVariable *pvarErrorPlus = pcei->_pclvEditPlus;
+  const ClAbstractVariable *pvarErrorMinus = pcei->_pclvEditMinus;
+  Number delta = x - pcei->_prevEditConstant;
+  pcei->_prevEditConstant = x;
   deltaEditConstant(delta,*pvarErrorPlus,*pvarErrorMinus);
   return *this;
 }
+
+// Re-solve the cuurent collection of constraints, given the new
+// values for the edit variables that have already been
+// suggested (see suggestValue() method)
+// This is not guaranteed to work if you remove an edit constraint
+// from the middle of the edit constraints you added
+// (e.g., edit A, edit B, edit C, remove B -> this will fail!)
+// DEPRECATED
+void 
+ClSimplexSolver::resolve(const vector<Number> &newEditConstants)
+{
+  ClVarToEditInfoMap::iterator it = _editVarMap.begin();
+  for (; it != _editVarMap.end(); ++it)
+    {
+    ClVariable *pclv = const_cast<ClVariable *>((*it).first);
+    ClEditInfo *pcei = (*it).second;
+    unsigned i = pcei->_index;
+    if (i < newEditConstants.size())
+      {
+      suggestValue(*pclv,newEditConstants[i]);
+      }
+    }
+}
+
 
 //// protected
 
@@ -899,6 +873,22 @@ ClSimplexSolver::chooseSubject(ClLinearExpression &expr)
   return psubject;
 }
   
+// Each of the non-required edits will be represented by an equation
+// of the form
+//    v = c + eplus - eminus 
+// where v is the variable with the edit, c is the previous edit
+// value, and eplus and eminus are slack variables that hold the
+// error in satisfying the edit constraint.  We are about to change
+// something, and we want to fix the constants in the equations
+// representing the edit constraints.  If one of eplus and eminus is
+// basic, the other must occur only in the expression for that basic
+// error variable.  (They can't both be basic.)  Fix the constant in
+// this expression.  Otherwise they are both nonbasic.  Find all of
+// the expressions in which they occur, and fix the constants in
+// those.  See the UIST paper for details.  
+// (This comment was for resetEditConstants(), but that is now
+// gone since it was part of the screwey vector-based interface
+// to resolveing. --02/15/99 gjb)
 void 
 ClSimplexSolver::deltaEditConstant(Number delta,
 				   const ClAbstractVariable &plusErrorVar,
@@ -1015,7 +1005,10 @@ ClSimplexSolver::dualOptimize()
 // the constraint is non-required give its error variables an
 // appropriate weight in the objective function.
 ClLinearExpression *
-ClSimplexSolver::newExpression(const ClConstraint &cn)
+ClSimplexSolver::newExpression(const ClConstraint &cn,
+                               ClSlackVariable *&pclvEplus,
+                               ClSlackVariable *&pclvEminus,
+                               Number &prevEConstant)
 {
 #ifndef CL_NO_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -1027,8 +1020,8 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
   auto_ptr<ClLinearExpression> pexpr ( new ClLinearExpression(cnExpr.constant()) );
   auto_ptr<ClSlackVariable> pslackVar;
   auto_ptr<ClDummyVariable> pdummyVar;
-  auto_ptr<ClSlackVariable> peminus;
-  auto_ptr<ClSlackVariable> peplus;
+  auto_ptr<ClSlackVariable> peminus(0);
+  auto_ptr<ClSlackVariable> peplus(0);
   const ClVarToNumberMap &cnTerms = cnExpr.terms();
   ClVarToNumberMap::const_iterator it = cnTerms.begin();
   for ( ; it != cnTerms.end(); ++it)
@@ -1137,9 +1130,9 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
 	}
       else if (cn.isEditConstraint())
 	{
-	_editPlusErrorVars.push_back(peplus.get());
-	_editMinusErrorVars.push_back(peminus.get());
-	_prevEditConstants.push_back(cnExpr.constant());
+        pclvEplus = peplus.get();
+        pclvEminus = peminus.get();
+        prevEConstant = cnExpr.constant();
 	}
       }
     }
@@ -1294,53 +1287,6 @@ ClSimplexSolver::pivot(const ClAbstractVariable &entryVar, const ClAbstractVaria
 }
 
 
-// Each of the non-required edits will be represented by an equation
-// of the form
-//    v = c + eplus - eminus 
-// where v is the variable with the edit, c is the previous edit
-// value, and eplus and eminus are slack variables that hold the
-// error in satisfying the edit constraint.  We are about to change
-// something, and we want to fix the constants in the equations
-// representing the edit constraints.  If one of eplus and eminus is
-// basic, the other must occur only in the expression for that basic
-// error variable.  (They can't both be basic.)  Fix the constant in
-// this expression.  Otherwise they are both nonbasic.  Find all of
-// the expressions in which they occur, and fix the constants in
-// those.  See the UIST paper for details.
-void 
-ClSimplexSolver::resetEditConstants(const vector<Number> &newEditConstants)
-{
-#ifndef CL_NO_TRACE
-  Tracer TRACER(__FUNCTION__);
-  cerr << "(" << newEditConstants << ")" << endl;
-#endif
-  if (newEditConstants.size() != _editPlusErrorVars.size())
-    { // number of edit constants doesn't match the number of edit error variables
-#ifndef CL_NO_IO
-    strstream ss;
-    ss << "newEditConstants == " << newEditConstants
-       << "; _editPlusErrorVars == " << _editPlusErrorVars
-       << ": Sizes do not match!" << ends;
-    throw ExCLBadResolve(ss.str());
-#else
-    throw ExCLBadResolve("Sizes do not match");
-#endif
-    }
-  vector<Number>::const_iterator itNew = newEditConstants.begin();
-  vector<Number>::iterator itPrev = _prevEditConstants.begin();
-  ClVarVector::const_iterator 
-    itEditPlusErrorVars = _editPlusErrorVars.begin();
-  ClVarVector::const_iterator
-    itEditMinusErrorVars = _editMinusErrorVars.begin();
-
-  for ( ; itNew != newEditConstants.end(); 
-	++itNew, ++itPrev, ++itEditPlusErrorVars, ++itEditMinusErrorVars )
-    {
-    Number delta = (*itNew) - (*itPrev);
-    (*itPrev) = (*itNew);
-    deltaEditConstant(delta,*(*itEditPlusErrorVars),*(*itEditMinusErrorVars));
-    }
-}
 
 // Each of the non-required stays will be represented by an equation
 // of the form
@@ -1469,19 +1415,10 @@ ClSimplexSolver::printOn(ostream &xo) const
 {
   super::printOn(xo);
 
-  xo << "_editPlusErrorVars: "
-     << _editPlusErrorVars << endl;
-  xo << "_editMinusErrorVars: "
-     << _editMinusErrorVars << endl;
-
   xo << "_stayPlusErrorVars: "
      << _stayPlusErrorVars << endl;
   xo << "_stayMinusErrorVars: "
      << _stayMinusErrorVars << endl;
-
-  xo << "_prevEditConstants: " 
-     << _prevEditConstants << endl;
-
   return xo;
 }
 
