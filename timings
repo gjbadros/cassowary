@@ -28,3 +28,4 @@ Java w/ Vortex (extrapolated)
 Python C++ wrapper
 64 ms for add
 16 ms for re-solve
+36 ms for remove
