@@ -1,0 +1,43 @@
+Java version, before adding final-s
+
+starting timing test. nCns = 30, nVars = 30, nResolves = 100
+done building data structures
+time = 5.521
+done adding constraints [5 exceptions]
+time = 55.102
+
+done creating edit constraints -- about to start resolves
+time = 7.029
+
+done resolves -- now removing constraints
+time = 42.242
+
+done removing constraints and addDel timing test
+time = 39.437
+
+java ClTests  152.74s user 0.38s system 97% cpu 2:36.78 total
+
+
+
+after adding final-s
+
+(note more exceptiosn ===> fewer constraints, so this should be faster 
+-- I need to unrandomize the rnd # generator)
+
+addDel:
+starting timing test. nCns = 30, nVars = 30, nResolves = 100
+done building data structures
+time = 5.484
+done adding constraints [8 exceptions]
+time = 57.829
+
+done creating edit constraints -- about to start resolves
+time = 6.061
+
+done resolves -- now removing constraints
+time = 28.57
+
+done removing constraints and addDel timing test
+time = 25.779
+
+java ClTests  127.77s user 0.35s system 98% cpu 2:09.64 total
