@@ -19,8 +19,8 @@ cassowary_scm.o: cassowary_scm.cc cassowary_scm.x
 cassowary_scm.x: cassowary_scm.cc
 	CC=$(CPP) guile-snarf $(INCLUDES)  $<  >$@
 
-cassowary_scm.sgml: cassowary_scm.cc
-	 $(EXTRACT_DOCS) $^ > $@
+cassowary_scm.sgml cassowary_scm-procedures.txt: cassowary_scm.cc
+	 $(EXTRACT_DOCS) -o cassowary_scm.sgml $^ > cassowary_scm-procedures.txt
 
 clean:
 	rm -f cassowary_scm.o cassowary_scm.x cassowary_scm.sgml
