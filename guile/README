@@ -8,11 +8,13 @@ use with guile scheme.
 See cassowary_scm-procedures.txt for a list of the scheme procedures
 that are defined, or cassowary_scm.sgml for an SGML markup of that
 documentation (follows the DocBook DTD -- use Jade to convert to HTML).
+Also see cassowary_scm-variables.txt for a list of the scheme global
+variables that are defined.
 
 This wrapping was motivated by the desire to embed Cassowary in SCWM --
 the Scheme Constraints Window Managers.  See:
 
-http://web.mit.edu/mstachow/www/scwm.html
+http://vicarious-existence.mit.edu/scwm
 
 also see the guile page at:
 
@@ -21,3 +23,4 @@ http://www.red-bean.com/guile/
 and the Jade page at:
 
 http://www.jclark.com/jade/
+
