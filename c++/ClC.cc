@@ -108,6 +108,13 @@ CL_SimplexSolver CL_SimplexSolverNew()
 }
 
 
+CL_FDSolver CL_FDSolverNew()
+{
+  ClFDSolver *psolver = new ClFDSolver();
+  return psolver;
+}
+
+
 /* Print the ClSolver object out to the given FILE * */
 void 
 CL_SolverPrint(CL_Solver solver, FILE *out)
