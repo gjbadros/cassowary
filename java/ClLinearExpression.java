@@ -20,44 +20,43 @@ import java.util.*;
 class ClLinearExpression extends CL
 {
 
+  public ClLinearExpression(ClAbstractVariable clv, double value, double constant)
+    {
+      if (CL.fGC)
+	System.err.println("new ClLinearExpression");
+
+      my_constant = new ClDouble(constant);
+      my_terms = new Hashtable(1);
+      if (clv != null)
+	my_terms.put(clv,new ClDouble(value));
+    }
+
   public ClLinearExpression(double num)
     {
-      my_constant = new ClDouble(num);
-      my_terms = new Hashtable();
+      this(null,0,num);
     }
 
   public ClLinearExpression()
     {
-      my_constant = new ClDouble(0);
-      my_terms = new Hashtable();
-    }
-
-
-  public ClLinearExpression(ClAbstractVariable clv, double value, double constant)
-    {
-      my_constant = new ClDouble(constant);
-      my_terms = new Hashtable();
-      my_terms.put(clv,new ClDouble(value));
+      this(0);
     }
 
   public ClLinearExpression(ClAbstractVariable clv, double value)
     {
-      my_constant = new ClDouble(0);
-      my_terms = new Hashtable();
-      my_terms.put(clv,new ClDouble(value));
+      this(clv,value,0.0);
     }
 
   public ClLinearExpression(ClAbstractVariable clv)
     {
-      my_constant = new ClDouble(0);
-      my_terms = new Hashtable();
-      my_terms.put(clv,new ClDouble(1));
+      this(clv,1,0);
     }
 
 
   // for use by the clone method
   protected ClLinearExpression(ClDouble constant, Hashtable terms)
     {
+      if (CL.fGC)
+	System.err.println("clone ClLinearExpression");
       my_constant = (ClDouble) constant.clone();
       my_terms = new Hashtable();
       // need to unalias the ClDouble-s that we clone (do a deep clone)
@@ -70,18 +69,12 @@ class ClLinearExpression extends CL
 
   public ClLinearExpression multiplyMe(double x)
     {
-      if (safe)
-	my_constant = new ClDouble(my_constant.doubleValue() * x);
-      else
-	my_constant.setValue(my_constant.doubleValue() * x);
+      my_constant.setValue(my_constant.doubleValue() * x);
       
       for (Enumeration e = my_terms.keys() ; e.hasMoreElements(); ) {
         ClAbstractVariable clv = (ClAbstractVariable) e.nextElement();
 	ClDouble cld = (ClDouble) my_terms.get(clv);
-	if (safe)
-	  my_terms.put(clv,new ClDouble(cld.doubleValue() * x));
-	else
-	  cld.setValue(cld.doubleValue() * x);
+	cld.setValue(cld.doubleValue() * x);
       } 
       return  this;
     }
@@ -208,10 +201,7 @@ class ClLinearExpression extends CL
 	  my_terms.remove(v);
 	}
 	else {
-	  if (safe)
-	    my_terms.put(v,new ClDouble(new_coefficient));
-	  else
-	    coeff.setValue(new_coefficient);
+	  coeff.setValue(new_coefficient);
 	}
       } else {
 	if (!CL.approx(c,0.0)) {
@@ -229,7 +219,7 @@ class ClLinearExpression extends CL
     { 
       //assert(c != 0.0);  
       ClDouble coeff = (ClDouble) my_terms.get(v);
-      if (coeff != null && !safe) 
+      if (coeff != null) 
 	coeff.setValue(c);
       else
 	my_terms.put(v,new ClDouble(c)); 
@@ -248,10 +238,7 @@ class ClLinearExpression extends CL
 	   solver.noteRemovedVariable(v,subject);
 	   my_terms.remove(v);
 	 } else { 
-	   if (safe)
-	     my_terms.put(v,new ClDouble(new_coefficient));
-	   else
-	     coeff.setValue(new_coefficient);
+	   coeff.setValue(new_coefficient);
 	 }
        } else {
 	 if (!CL.approx(c,0.0)) {
@@ -291,10 +278,7 @@ class ClLinearExpression extends CL
 	  solver.noteRemovedVariable(clv,subject);
 	  my_terms.remove(clv);
 	} else {
-	  if (safe)
-	    my_terms.put(clv,new ClDouble(newCoeff));
-	  else
-	    d_old_coeff.setValue(newCoeff);
+	  d_old_coeff.setValue(newCoeff);
 	}
       } else {
 	// did not have that variable already
@@ -308,7 +292,7 @@ class ClLinearExpression extends CL
   public final void changeSubject(ClAbstractVariable old_subject, ClAbstractVariable new_subject)
     {
       ClDouble cld = (ClDouble) my_terms.get(old_subject);
-      if (cld != null && !safe)
+      if (cld != null)
 	cld.setValue(newSubject(new_subject));
       else
 	my_terms.put(old_subject,new ClDouble(newSubject(new_subject)));
@@ -337,10 +321,7 @@ class ClLinearExpression extends CL
 
   public final void set_constant(double c)
     { 
-      if (safe) 
-	my_constant = new ClDouble(c);
-      else 
-	my_constant.setValue(c);
+      my_constant.setValue(c);
     }
 
   public final Hashtable terms()
@@ -348,10 +329,7 @@ class ClLinearExpression extends CL
 
   public final void incrementConstant(double c)
     { 
-      if (safe)
-	set_constant(my_constant.doubleValue() + c);
-      else  
-	my_constant.setValue(my_constant.doubleValue() + c);
+      my_constant.setValue(my_constant.doubleValue() + c);
     }
 
   public final boolean isConstant()
@@ -402,7 +380,6 @@ class ClLinearExpression extends CL
   public final static boolean FEquals(ClLinearExpression e1, ClLinearExpression e2)
     { return e1 == e2; }
 
-  public final boolean safe = false;
   private ClDouble my_constant;
   private Hashtable my_terms; // from ClVariable to ClDouble
 
