@@ -15,8 +15,8 @@
 # Makefile for cassowary, java version
 
 JAVAC = javac
-JAVAC_FLAGS = -g
-#JAVAC_FLAGS = -O
+#JAVAC_FLAGS = -g
+JAVAC_FLAGS = -O
 
 TESTS = test-ClStrength test-ClVariable test-ClLinearExpression test-ClConstraint \
 	test-ClSimplexSolver ClTests
