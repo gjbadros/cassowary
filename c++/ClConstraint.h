@@ -19,7 +19,7 @@
 class ClConstraint {
 public:
 
-  ClConstraint(double weight = 1.0, const ClStrength &strength = clsRequired() ) :
+  ClConstraint(const ClStrength &strength = clsRequired(), double weight = 1.0 ) :
     my_strength(strength),
     my_weight(weight)
     { }
@@ -56,7 +56,7 @@ public:
 
   virtual ostream &printOn(ostream &xo) const
     {
-    xo << my_strength << " (" << expression() << " = 0 )";
+    xo << my_strength << " {" << my_weight << "} (" << expression() << " = 0 )";
     return xo;
     }
 

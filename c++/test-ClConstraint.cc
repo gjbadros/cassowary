@@ -13,6 +13,6 @@ main( char **argv, int argc )
   ClVariable y("y");
 
   ClLinearExpression cle = a * 3 + b * 2 + c;
-  ClLinearConstraint constraint(cle,1.0);
+  ClLinearConstraint constraint(cle);
   cout << constraint << endl;
 }
