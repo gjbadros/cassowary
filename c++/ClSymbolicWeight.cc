@@ -44,16 +44,15 @@ ClSymbolicWeight::zero()
 }
 
 
-ClSymbolicWeight 
-ClSymbolicWeight::times(Number n) const
+ClSymbolicWeight &
+ClSymbolicWeight::multiplyMe(Number n)
 {
-  ClSymbolicWeight clsw(0);
-  vector<double>::const_iterator i = my_values.begin();
-  for (; i != my_values.end(); ++i)
+  vector<double>::iterator it = my_values.begin();
+  for (; it != my_values.end(); ++it)
     {
-    clsw.push_back(*i * n);
+    *it *= n;
     }
-  return clsw;
+  return *this;
 }
 
 
@@ -70,19 +69,18 @@ ClSymbolicWeight::divideBy(Number n) const
   return clsw;
 }
 
-ClSymbolicWeight 
-ClSymbolicWeight::add(const ClSymbolicWeight &cl) const
+ClSymbolicWeight &
+ClSymbolicWeight::addtoMe(const ClSymbolicWeight &cl)
 {
   assert(cl.cLevels() == cLevels());
 
-  ClSymbolicWeight clsw(0);
-  vector<double>::const_iterator i1 = my_values.begin();
+  vector<double>::iterator i1 = my_values.begin();
   vector<double>::const_iterator i2 = cl.my_values.begin();
   for (; i1 != my_values.end(); ++i1, ++i2)
     {
-    clsw.push_back(*i1 + *i2);
+    *i1 += *i2;
     }
-  return clsw;
+  return *this;
 }
 
 ClSymbolicWeight 
