@@ -66,13 +66,15 @@ class ClTableau {
 
   ostream &printOn(ostream &xo) const;
 
+  ostream &printInternalInfo(ostream &xo) const;
+  
  protected:
   // Constructor -- want to start with empty objects so not much to do
   ClTableau()
     { }
 
   ~ClTableau();
-  
+
   // Add v=expr to the tableau, update column cross indices
   // v becomes a basic variable
   // expr is now owned by ClTableau class, 
