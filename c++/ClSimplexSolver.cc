@@ -1235,7 +1235,7 @@ ClSimplexSolver::Optimize(ClVariable zVar)
 	entryVar = v;
 	// A. Beurive' Tue Jul 13 23:03:05 CEST 1999 Why the most
 	// negative?  I encountered unending cycles of pivots!
-	break;
+	// break; Pulled out to do Bland's rule properly --03/31/01 gjb
 	}
       }
     // if all coefficients were positive (or if the objective
@@ -1270,7 +1270,13 @@ ClSimplexSolver::Optimize(ClVariable zVar)
 	if (coeff < 0.0)
 	  {
 	  r = - pexpr->Constant() / coeff;
-	  if (r < minRatio)
+          // Bland's anti-cycling rule:
+          // if multiple variables are about the same,
+          // always pick the lowest via some total
+          // ordering -- I use their addresses in memory
+	  if (r < minRatio || 
+              (ClApprox(r,minRatio) &&
+               v.get_pclv() < exitVar.get_pclv()))
 	    {
 #ifdef CL_TRACE
 	    cerr << "New minRatio == " << r << endl;
