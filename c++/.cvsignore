@@ -1,3 +1,5 @@
+ClTests
+output
 test-ClConstraint
 test-ClLinearExpression
 test-ClSimplexSolver
