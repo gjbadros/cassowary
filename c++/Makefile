@@ -11,8 +11,8 @@ CC = gcc
 CPP = egcs-g++
 CFLAGS = -g -Wall
 EGCSDIR = /uns/egcs
-CPPFLAGS = -g -Wall -L$(EGCSDIR)/lib -I$(EGCSDIR)/include
-#CPPFLAGS = -g -DCL_NO_TRACE -Wall -L$(EGCSDIR)/lib -I$(EGCSDIR)/include
+#CPPFLAGS = -g -Wall -L$(EGCSDIR)/lib -I$(EGCSDIR)/include
+CPPFLAGS = -g -DCL_NO_TRACE -Wall -L$(EGCSDIR)/lib -I$(EGCSDIR)/include
 CXX = $(CPP)
 # -falt-external-templates
 LDFLAGS = -L/uns/lib/egcs
