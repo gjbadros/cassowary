@@ -564,7 +564,7 @@ ClSimplexSolver::dualOptimize()
 	      }
 	    else
 	      {
-	      // FIXGJB r := [ClSymbolicWeight zero]
+	      r = 0; // FIXGJB r := [ClSymbolicWeight zero]
 	      }
 	    if (ratio == MAXDOUBLE || r < ratio)
 	      {
@@ -635,6 +635,8 @@ ClSimplexSolver::makeExpression(ClLinearConstraint &cn)
       // add emnius to the objective function with the appropriate weight
       ClLinearExpression &zRow = rowExpression(my_objective);
       // FIXGJB: zRow.addVariable(eminus,cn.strength().symbolicWeight() * cn.weight());
+      ClSymbolicWeight sw = cn.strength().symbolicWeight().times(cn.weight());
+      zRow.addVariable(eminus,sw.asDouble());
       my_errorVars[&cn].insert(eminus);
       noteAddedVariable(eminus,my_objective);
       }
@@ -666,8 +668,12 @@ ClSimplexSolver::makeExpression(ClLinearConstraint &cn)
       my_markerVars[&cn] = eplus;
       ClLinearExpression &zRow = rowExpression(my_objective);
       // FIXGJB: zRow.addVariable(eplus,cn.strength().symbolicWeight() * cn.weight());
+      ClSymbolicWeight sw = cn.strength().symbolicWeight().times(cn.weight());
+      double swCoeff = sw.asDouble();
+      zRow.addVariable(eplus,swCoeff);
       noteAddedVariable(eplus,my_objective);
       // FIXGJB: zRow.addVariable(eminus,cn.strength().symbolicWeight() * cn.weight());
+      zRow.addVariable(eminus,swCoeff);
       noteAddedVariable(eminus,my_objective);
       if (cn.isStayConstraint()) 
 	{
@@ -698,8 +704,70 @@ ClSimplexSolver::makeExpression(ClLinearConstraint &cn)
 void 
 ClSimplexSolver::optimize(const ClVariable &zVar)
 {
-  // FIXGJB
-  assert(false);
+  assert(zVar.isCLObjective());
+  ClLinearExpression &zRow = rowExpression(zVar);
+  assert(zRow != cleNil());
+  Number objectiveCoeff = -MAXDOUBLE;
+  ClVariable &entryVar = clvNil();
+  ClVariable &exitVar = clvNil();
+  while (true)
+    {
+    // Find the most negative coefficient in the objective function
+    // (ignoring dummy variables).  If all coefficients are positive
+    // we're done
+    map<ClVariable,Number> &terms = zRow.terms();
+    map<ClVariable,Number>::iterator it = terms.begin();
+    for (; it != terms.end(); ++it)
+      {
+      const ClVariable &v = (*it).first;
+      Number c = (*it).second;
+      if (v.isPivotable() && objectiveCoeff == -MAXDOUBLE ||
+	  ( c < objectiveCoeff))
+	{
+	objectiveCoeff = c;
+	entryVar = v;
+	}
+      }
+    // if all coefficients were positive (or if the objective
+    // function has no pivotable variables)
+    // we are at an optimum
+    if (objectiveCoeff == -MAXDOUBLE)
+      return;
+    if (!(objectiveCoeff < 0.0))
+      return;
+    // choose which variable to move out of the basis
+    // Only consider pivotable basic variables
+    // (i.e. restricted, non-dummy variables)
+    double minRatio = MAXDOUBLE;
+    set<ClVariable> &columnVars = my_columns[entryVar];
+    set<ClVariable>::iterator it_rowvars = columnVars.begin();
+    Number r = 0.0;
+    for (; it_rowvars != columnVars.end(); ++it_rowvars)
+      {
+      const ClVariable &v = (*it_rowvars);
+      const ClLinearExpression &expr = rowExpression(v);
+      Number coeff = expr.coefficientFor(entryVar);
+      // only consider negative coefficients
+      if (coeff < 0.0)
+	{
+	r = - expr.constant() / coeff;
+	if (r < minRatio)
+	  {
+	  minRatio = r;
+	  exitVar = v;
+	  }
+	}
+      }
+    // If minRatio is still nil at this point, it means that the
+    // objective function is unbounded, i.e. it can become
+    // arbitrarily negative.  This should never happen in this
+    // application.
+    if (minRatio == MAXDOUBLE)
+      {
+      throw new ExCLInternalError;
+      }
+    pivot(entryVar, exitVar);
+    }
 }
 
 // Do a pivot.  Move entryVar into the basis (i.e. make it a basic variable),

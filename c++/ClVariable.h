@@ -60,6 +60,9 @@ public:
 
   bool isCLVar() const
     { return my_kind == CLVar; }
+
+  bool isCLObjective() const
+    { return my_kind == CLObjectiveVar; }
     
   // Return the name of the variable
   String name() const

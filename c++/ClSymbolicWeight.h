@@ -47,6 +47,20 @@ class ClSymbolicWeight {
 
   // function.h provides operator>, >=, <= from operator<
 
+  double asDouble() const
+    {
+    vector<double>::const_reverse_iterator i = my_values.rbegin();
+    double sum  = 0;
+    double factor = 1;
+    double multiplier = 1000;
+    for (++i; i != my_values.rend(); ++i) 
+      {
+      sum += *i * factor;
+      factor *= multiplier;
+      }
+    return sum;
+    }
+
   ostream &printOn(ostream &xo) const
     { 
     vector<double>::const_iterator i = my_values.begin();
