@@ -88,7 +88,7 @@ const ClStrength &clsWeak();
 	try{
 		$function
 	} catch (ExCLError &err) {
-		PyErr_SetString(PyExc_RuntimeError, err.description());
+		PyErr_SetString(PyExc_RuntimeError, err.description().c_str());
 		return NULL;
 	}
 }
