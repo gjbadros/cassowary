@@ -147,7 +147,7 @@ class App(Frame):
 	def unhighlight(self, e):
 		self._canvas.itemconfig('current', fill=self._oldcolor)
 
-	# On button-down, add edit constraints on this point
+	# On button-down, Add edit constraints on this point
 	def btnDown(self, event, point):
 		self._curpoint = point
 		pass
@@ -156,14 +156,14 @@ class App(Frame):
 	def btnUp(self, event):
 		self._curpoint = None
 		if self._editX:
-			self._solver.removeConstraint(self._editX)
+			self._solver.RemoveConstraint(self._editX)
 			self._editX = None
 		if self._editY:
-			self._solver.removeConstraint(self._editY)
+			self._solver.RemoveConstraint(self._editY)
 			self._editY = None
 		self.draw_update()
 
-	# On mouse motion, if edit constraints are registered: resolve
+	# On mouse motion, if edit constraints are registered: Resolve
 	def btnMove(self, event):
 		if self._curpoint:
 			self._curpoint.setX(event.x)

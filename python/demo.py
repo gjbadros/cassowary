@@ -39,36 +39,36 @@ class App(Frame):
 		s = self._solver = ClSimplexSolver()
 		weight = 0.5
 		for p in self._p:
-			s.addPointStay(p, weight)
+			s.AddPointStay(p, weight)
 			weight = weight * 2
 
 		# Midpoints
 		for i in range(4):
 			a = i
 			b = (i+1) % 4
-			s.addConstraint(ClLinearEquation(self._mp[a].X(),
+			s.AddConstraint(ClLinearEquation(self._mp[a].X(),
 				(self._p[b].X() + self._p[a].X())/2))
-			s.addConstraint(ClLinearEquation(self._mp[a].Y(),
+			s.AddConstraint(ClLinearEquation(self._mp[a].Y(),
 				(self._p[b].Y() + self._p[a].Y())/2))
 
 		# Keep from turning inside out
 		for (p1, p2) in [(0, 2), (0, 3), (1, 2), (1, 3)]:
 			c = ClLinearInequality(self._p[p1].X() + DOTSIZE,
 				cnLEQ, self._p[p2].X())
-			s.addConstraint(c)
+			s.AddConstraint(c)
 		for (p1, p2) in [(0, 1), (0, 2), (3, 1), (3, 2)]:
 			c = ClLinearInequality(self._p[p1].Y() + DOTSIZE,
 				cnLEQ, self._p[p2].Y())
-			s.addConstraint(c)
+			s.AddConstraint(c)
 
 		# Boundaries
 		for p in self._p:
 			x = p.X()
 			y = p.Y()
-			s.addConstraint(ClLinearInequality(x, cnGEQ, DOTSIZE))
-			s.addConstraint(ClLinearInequality(y, cnGEQ, DOTSIZE))
-			s.addConstraint(ClLinearInequality(x, cnLEQ, MAXX-DOTSIZE))
-			s.addConstraint(ClLinearInequality(y, cnLEQ, MAXY-DOTSIZE))
+			s.AddConstraint(ClLinearInequality(x, cnGEQ, DOTSIZE))
+			s.AddConstraint(ClLinearInequality(y, cnGEQ, DOTSIZE))
+			s.AddConstraint(ClLinearInequality(x, cnLEQ, MAXX-DOTSIZE))
+			s.AddConstraint(ClLinearInequality(y, cnLEQ, MAXY-DOTSIZE))
 
 		self._canvas.pack()
 
@@ -168,34 +168,34 @@ class App(Frame):
 	def unhighlight(self, e):
 		self._canvas.itemconfig('current', fill=self._oldcolor)
 
-	# On button-down, add edit constraints on this point
+	# On button-down, Add edit constraints on this point
 	def btnDown(self, event, point):
 		# Edit constraints
 		if self._editX:
-			self._solver.removeConstraint(self._editX)
+			self._solver.RemoveConstraint(self._editX)
 			self._editX = None
 		if self._editY:
-			self._solver.removeConstraint(self._editY)
+			self._solver.RemoveConstraint(self._editY)
 			self._editY = None
 		self._editX = ClEditConstraint(point.X())
 		self._editY = ClEditConstraint(point.Y())
-		self._solver.addConstraint(self._editX)
-		self._solver.addConstraint(self._editY)
+		self._solver.AddConstraint(self._editX)
+		self._solver.AddConstraint(self._editY)
 
 	# On button-up, remove edit constraints
 	def btnUp(self, event):
 		if self._editX:
-			self._solver.removeConstraint(self._editX)
+			self._solver.RemoveConstraint(self._editX)
 			self._editX = None
 		if self._editY:
-			self._solver.removeConstraint(self._editY)
+			self._solver.RemoveConstraint(self._editY)
 			self._editY = None
 		self.draw_update()
 
-	# On mouse motion, if edit constraints are registered: resolve
+	# On mouse motion, if edit constraints are registered: Resolve
 	def btnMove(self, event):
 		if self._editX:
-			self._solver.resolve(event.x, event.y)
+			self._solver.Resolve(event.x, event.y)
 		self.draw_update()
 
 def main():

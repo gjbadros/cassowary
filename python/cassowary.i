@@ -41,18 +41,18 @@ typedef double Number;
 class ClVariable {
 public:
 
-  ClVariable(Number value);
-  %name(ClVariableNamed) ClVariable(char *name = "", Number value = 0.0);
+  ClVariable(Number Value);
+  %name(ClVariableNamed) ClVariable(char *Name = "", Number Value = 0.0);
   %name(ClVariablePrefix) ClVariable(
-  	long number, char *prefix, Number value = 0.0);
+  	long number, char *prefix, Number Value = 0.0);
 
 
-  // Return the current value I hold.
-  Number value() const
+  // Return the current Value I hold.
+  Number Value() const
     { return my_value; }
 
-  void set_value(Number value)
-    { my_value = value; }
+  void SetValue(Number Value)
+    { my_value = Value; }
 };
 
 class ClPoint {
@@ -69,20 +69,20 @@ class ClPoint {
     { return clv_y; }
 
   Number Xvalue() const
-    { return X().value(); }
+    { return X().Value(); }
 
   Number Yvalue() const
-    { return Y().value(); }
+    { return Y().Value(); }
 
 };
 
 class ClStrength {
 };
 
-const ClStrength &clsRequired();
-const ClStrength &clsStrong();
-const ClStrength &clsMedium();
-const ClStrength &clsWeak();
+const ClStrength &ClsRequired();
+const ClStrength &ClsStrong();
+const ClStrength &ClsMedium();
+const ClStrength &ClsWeak();
 
 %except(python) {
 	try{
@@ -137,79 +137,79 @@ class ClLinearExpression  {
 
   // Convert from ClVariable to a ClLinearExpression
   // this replaces ClVariable::asLinearExpression
-  ClLinearExpression(ClVariable clv, Number value = 1.0,
-	  Number constant = 0.0);
+  ClLinearExpression(ClVariable clv, Number Value = 1.0,
+	  Number Constant = 0.0);
   %name(ClLinearExpressionNum) ClLinearExpression(Number num = 0.0);
 
   virtual ~ClLinearExpression();
 
-  // Return a new linear expression formed by multiplying self by x.
+  // Return a new linear Expression formed by multiplying self by x.
   // (Note that this result must be linear.)
-  ClLinearExpression times(Number x) const;
+  ClLinearExpression Times(Number x) const;
 
-  // Return a new linear expression formed by multiplying self by x.
+  // Return a new linear Expression formed by multiplying self by x.
   // (Note that this result must be linear.)
-  %name(timesE) ClLinearExpression times(const ClLinearExpression &expr)
+  %name(TimesE) ClLinearExpression Times(const ClLinearExpression &expr)
 	const;
 
-  // Return a new linear expression formed by adding x to self.
-  ClLinearExpression plus(const ClLinearExpression &expr) const;
+  // Return a new linear Expression formed by adding x to self.
+  ClLinearExpression Plus(const ClLinearExpression &expr) const;
 
-  // Return a new linear expression formed by subtracting x from self.
-  ClLinearExpression minus(const ClLinearExpression &expr) const;
+  // Return a new linear Expression formed by subtracting x from self.
+  ClLinearExpression Minus(const ClLinearExpression &expr) const;
 
-  // Return a new linear expression formed by dividing self by x.
+  // Return a new linear Expression formed by dividing self by x.
   // (Note that this result must be linear.)
-  ClLinearExpression divide(Number x) const;
+  ClLinearExpression Divide(Number x) const;
 
-  // Return a new linear expression formed by dividing self by x.
+  // Return a new linear Expression formed by dividing self by x.
   // (Note that this result must be linear.)
-  %name(divideE) ClLinearExpression divide(const ClLinearExpression &expr)
+  %name(DivideE) ClLinearExpression Divide(const ClLinearExpression &expr)
 	const;
 
-  // Return a new linear expression (aNumber/this).  Since the result
-  // must be linear, this is permissible only if 'this' is a constant.
-  ClLinearExpression divFrom(const ClLinearExpression &expr) const;
+  // Return a new linear Expression (aNumber/this).  Since the result
+  // must be linear, this is permissible only if 'this' is a Constant.
+  ClLinearExpression DivFrom(const ClLinearExpression &expr) const;
 
-  // Return a new linear expression (aNumber-this).
-  ClLinearExpression subtractFrom(const ClLinearExpression &expr) const
-  { return expr.minus(*this); }
+  // Return a new linear Expression (aNumber-this).
+  ClLinearExpression SubtractFrom(const ClLinearExpression &expr) const
+  { return expr.Minus(*this); }
 
-  // Add n*expr to this expression for another expression expr.
-  ClLinearExpression &addExpression(const ClLinearExpression &expr, 
+  // Add n*expr to this Expression for another Expression expr.
+  ClLinearExpression &AddExpression(const ClLinearExpression &expr, 
 				    Number n = 1.0);
 
-  // Add n*expr to this expression for another expression expr.
+  // Add n*expr to this Expression for another Expression expr.
   // Notify the solver if a variable is added or deleted from this
-  // expression.
+  // Expression.
   %name(addExpression1) ClLinearExpression
-  	&addExpression(const ClLinearExpression &expr, Number n,
+  	&AddExpression(const ClLinearExpression &expr, Number n,
 				    ClVariable subject,
 				    ClSimplexSolver &solver);
 
-  // Add a term c*v to this expression.  If the expression already
-  // contains a term involving v, add c to the existing coefficient.
+  // Add a term c*v to this Expression.  If the Expression already
+  // contains a term involving v, Add c to the existing coefficient.
   // If the new coefficient is approximately 0, delete v.
-  ClLinearExpression &addVariable(ClVariable v, Number c);
+  ClLinearExpression &AddVariable(ClVariable v, Number c);
 
-  // Add a term c*v to this expression.  If the expression already
-  // contains a term involving v, add c to the existing coefficient.
+  // Add a term c*v to this Expression.  If the Expression already
+  // contains a term involving v, Add c to the existing coefficient.
   // If the new coefficient is approximately 0, delete v.  Notify the
-  // solver if v appears or disappears from this expression.
-  %name(addVariable1) ClLinearExpression &addVariable(ClVariable v,
+  // solver if v appears or disappears from this Expression.
+  %name(addVariable1) ClLinearExpression &AddVariable(ClVariable v,
 				  Number c,
 				  ClVariable subject,
 				  ClSimplexSolver &solver);
 
-  // Add a term c*v to this expression.  If the expression already
-  // contains a term involving v, add c to the existing coefficient.
+  // Add a term c*v to this Expression.  If the Expression already
+  // contains a term involving v, Add c to the existing coefficient.
   // If the new coefficient is approximately 0, delete v.
   ClLinearExpression &setVariable(ClVariable v, Number c)
     {assert(c != 0.0);  my_terms[&v] = c; return *this; }
 
-  // Return a variable in this expression.  (It is an error if this
-  // expression is constant -- signal ExCLInternalError in that case).
-  ClVariable anyPivotableVariable() const;
+  // Return a variable in this Expression.  (It is an error if this
+  // Expression is Constant -- signal ExCLInternalError in that case).
+  ClVariable AnyPivotableVariable() const;
 };
 
 class ClSimplexSolver {
@@ -222,49 +222,49 @@ class ClSimplexSolver {
   ~ClSimplexSolver();
   
   // Add constraints so that lower<=var<=upper.  (nil means no  bound.)
-  ClSimplexSolver &addLowerBound(ClVariable v, Number lower);
+  ClSimplexSolver &AddLowerBound(ClVariable v, Number lower);
 
-  ClSimplexSolver &addUpperBound(ClVariable v, Number upper);
+  ClSimplexSolver &AddUpperBound(ClVariable v, Number upper);
 
-  ClSimplexSolver &addBounds(ClVariable v, Number lower,
+  ClSimplexSolver &AddBounds(ClVariable v, Number lower,
   	Number upper);
 
   // Add the constraint cn to the tableau
-  ClSimplexSolver &addConstraint(const ClConstraint &cn);
+  ClSimplexSolver &AddConstraint(const ClConstraint &cn);
 
   // Add weak stays to the x and y parts of each point. These have
   // increasing weights so that the solver will try to satisfy the x
   // and y stays on the same point, rather than the x stay on one and
   // the y stay on another.
   // !!! Find some way to turn a Python list into a vector !!!
-  ClSimplexSolver &addPointStays(const vector<const ClPoint *> &listOfPoints);
+  ClSimplexSolver &AddPointStays(const vector<const ClPoint *> &listOfPoints);
 
-  ClSimplexSolver &addPointStay(const ClPoint &clp, Number weight);
+  ClSimplexSolver &AddPointStay(const ClPoint &clp, Number weight);
 
-  %name(addPointStayXY) ClSimplexSolver &addPointStay(ClVariable vx,
+  %name(addPointStayXY) ClSimplexSolver &AddPointStay(ClVariable vx,
   	ClVariable vy, Number weight);
 
   // Add a stay of the given strength (default to weak) of v to the tableau
-  ClSimplexSolver &addStay(ClVariable v,
+  ClSimplexSolver &AddStay(ClVariable v,
 			   const ClStrength &strength, Number weight =
 			   1.0 );
 
   // Remove the constraint cn from the tableau
   // Also remove any error variable associated with cn
-  ClSimplexSolver &removeConstraint(const ClConstraint &pcn);
+  ClSimplexSolver &RemoveConstraint(const ClConstraint &pcn);
 
   // Re-initialize this solver from the original constraints, thus
   // getting rid of any accumulated numerical problems.  (Actually,
   // Alan hasn't observed any such problems yet, but here's the method
   // anyway.)
-  void reset();
+  void Reset();
 
   // Re-solve the current collection of constraints for new values for
   // the constants of the edit variables.
-//  void resolve(vector<double> &newEditConstants);
-  void resolve(vector<double> &INPUT);
+//  void Resolve(vector<double> &newEditConstants);
+  void Resolve(vector<double> &INPUT);
 
-  %name(resolveXY) void resolve(Number x, Number y);
+  %name(resolveXY) void Resolve(Number x, Number y);
 
 };
 

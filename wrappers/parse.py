@@ -3,7 +3,7 @@
 import string, os
 import cass
 
-# Various constant strings
+# Various Constant strings
 MARSHALLEDFILENAME = "grammar.mar"
 STRREGEX = '[_a-zA-Z]+'
 INTREGEX = '[0-9]+'
@@ -35,8 +35,8 @@ class Parser:
 		self._variables = {}
 
 	# Set up some variables
-	def add_variable(self, name, var):
-		self._variables[name] = var
+	def add_variable(self, Name, var):
+		self._variables[Name] = var
 
 	# Clear the set of variables
 	def clear(self):

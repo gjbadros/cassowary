@@ -20,7 +20,7 @@ def addDel(nCns = 900, nVars = 900, nResolves = 10000):
 
 	rgpclv = map(lambda i: ClVariable('x', i), range(nVars))
 	for p in rgpclv:
-		solver.addStay(p)
+		solver.AddStay(p)
 
 	# Create a list of length nCns, to be filled in below
 	rgpcns = map(None, range(nCns))
@@ -30,7 +30,7 @@ def addDel(nCns = 900, nVars = 900, nResolves = 10000):
 		for k in range(nvs):
 			coeff = UniformRandom()*10-5
 			e1 = rgpclv[int(UniformRandom()*nVars)] * coeff
-			expr.addExpression(e1)
+			expr.AddExpression(e1)
 		if UniformRandom() < ineqProb:
 			rgpcns[j] = ClLinearInequality(expr, cnLEQ, 0)
 		else:
@@ -44,7 +44,7 @@ def addDel(nCns = 900, nVars = 900, nResolves = 10000):
 	cExceptions = 0
 	for c in range(len(rgpcns)):
 		try:
-			solver.addConstraint(rgpcns[c])
+			solver.AddConstraint(rgpcns[c])
 		except:
 			# Assume it's an ExCLError, though it could be something
 			# internal to SWIG...
@@ -59,10 +59,10 @@ def addDel(nCns = 900, nVars = 900, nResolves = 10000):
 	e1Index = int(UniformRandom()*nVars)
 	e2Index = int(UniformRandom()*nVars)
 
-	edit1 = ClEditConstraint(rgpclv[e1Index], clsStrong())
-	edit2 = ClEditConstraint(rgpclv[e2Index], clsStrong())
-	solver.addConstraint(edit1)
-	solver.addConstraint(edit2)
+	edit1 = ClEditConstraint(rgpclv[e1Index], ClsStrong())
+	edit2 = ClEditConstraint(rgpclv[e2Index], ClsStrong())
+	solver.AddConstraint(edit1)
+	solver.AddConstraint(edit2)
 
 	print "done creating edit constraints -- about to start resolves"
 	print "time = %f" % timer.ElapsedTime()
@@ -70,22 +70,22 @@ def addDel(nCns = 900, nVars = 900, nResolves = 10000):
 	timer.Start()
 
 	for m in range(nResolves):
-		val1 = rgpclv[e1Index].value() * 1.001
-		val2 = rgpclv[e2Index].value() * 1.001
-		solver.resolve(val1, val2)
+		val1 = rgpclv[e1Index].Value() * 1.001
+		val2 = rgpclv[e2Index].Value() * 1.001
+		solver.Resolve(val1, val2)
 	
 	print "done resolves -- now removing constraints"
 	print "time = %f" % timer.ElapsedTime()
 	print
-	solver.removeConstraint(edit1)
-	solver.removeConstraint(edit2)
+	solver.RemoveConstraint(edit1)
+	solver.RemoveConstraint(edit2)
 
 	timer.Start()
 
 	for j in range(nCns):
 		if rgpcns[j]:
-			solver.removeConstraint(rgpcns[j])
-		print "removed number %d" % j
+			solver.RemoveConstraint(rgpcns[j])
+#		print "removed number %d" % j
 
 	print "done removing constraints and addDel timing test"
 	print "time = %f" % timer.ElapsedTime()
