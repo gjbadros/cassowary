@@ -6,6 +6,7 @@ ClSubgraphTest
 ClTestColumns
 ClTests
 ClTests-good
+ClTests-hash
 ClTests-setExtOpt
 ClTests-trace
 Makefile.dependencies
