@@ -1,20 +1,100 @@
 Cassowary Constraint Solver for Smalltalk, C++, and Java
 Version 0.1
 
-Alan Borning <borning@cs.washington.edu> and
-Greg J. Badros <gjb@cs.washington.edu>
+Web Page: http://www.cs.washington.edu/research/constraints/cassowary
+Contact: cassowary@cs.washington.edu
+
+Greg J. Badros <gjb@cs.washington.edu> and
+Alan Borning <borning@cs.washington.edu>
 University of Washington
 Computer Science and Engineering
 Seattle, WA 98195-2350
-19-June-1998
+26-June-1998
 
 with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
+and wrapper for Python Interface by Tessa Lau <tlau@cs.washington.edu>
 
-http://www.cs.washington.edu/research/constraints/cassowary
-
-Contact: cassowary@cs.washington.edu
-
+See ANNOUNCE for a brief description and announcement of this distribution.
 See COPYRIGHT for legalese regarding use of this distribution.
 
 ------------------------------------------------------------------
 
+WHAT THE DISTRIBUTION CONTAINS
+
+This distribution contains 3 implementations of the Cassowary constraint
+solver:
+
+o C++
+o Java
+o Smalltalk
+
+For each implementation language, there is at least one example program; 
+for some there are many.
+
+There is also a SWIG-generated wrapper of the C++ library making the
+solver available from the Python language.
+
+A technical report describing the solver, its interface, and its
+implementation is in cassowary-tr.ps (pdf version in cassowary-tr.pdf).
+This paper is required reading if you intend to use the solver in your
+own project(s).
+
+
+------------------------------------------------------------------
+
+HOW TO GET STARTED
+
+First, you should try to build the implementation that you're most
+interested in.
+
+Note that the included Makefiles depend upon features of GNU Make.  See:
+
+ftp://ftp.gnu.org/pub/gnu/
+
+for a version of make that you can build first to then build Cassowary.
+
+Example applications exist in subdirectories of the top-level
+implementation subdirectories (e.g., c++/qdemos contains demos for C++
+that use the Qt Widget toolkit.
+
+------------------------------------------------------------------
+
+VARIOUS IMPLEMENTATION NOTES
+
+Cassowary/C++ needs to be compiled using a modern C++ compiler.
+At one time or another, it has compiled using:
+  o egcs-1.0.1, egcs-1.0.3   (likely will work with gcc-2.8.1)
+  o Visual C++ 5.0
+
+See c++/README for more details about building the C++ version.
+
+
+Cassowary/Java was developed using Sun's JDK-1.1.3, ported to Linux
+More recent versions should work fine.
+
+See java/README for more details about building the Java version.
+
+
+Cassowary/Smalltalk was written under OTI Smalltalk-- other versions of
+smalltalk will likely require (possibly significant) changes.
+
+See smalltalk/README for more details about the Smalltalk version.
+
+
+The Python bindings (by Tessa Lau) and experimental guile-scheme
+bindings for the Cassowary library are in the wrappers/ subdirectory.
+SWIG was used in wrapping the library.  
+
+For more information about SWIG, see:
+
+http://www.cs.utah.edu/~beazley/SWIG/swig.html
+
+
+For more information about the Python language, see:
+
+http://www.python.org/
+
+
+For more information about the Guile-Scheme language, see:
+
+http://www.fsf.org/software/guile/guile.html
