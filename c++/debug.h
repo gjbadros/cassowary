@@ -24,9 +24,4 @@ class Tracer {
   const char *const sz_;
 };
 
-
-// Don't define this if exceptions work!  They do w/ egcs-1.01 for me
-//#define EXCEPTION_ABORT abort()
-#define EXCEPTION_ABORT
-
 #endif
