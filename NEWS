@@ -14,6 +14,8 @@ with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
 15-Dec-1999: Version 0.54 released.
 * Bug fixes
 * auto-configuration improvements
+* Support Java 2 (jdk-1.2)
+* Improved ease of building Java demos
 * Build guile wrapper as long as guile-config works, use new --disable-guile-build to force off
 * Alpha-version of Java constraint parser contributed by Will Portnoy
 

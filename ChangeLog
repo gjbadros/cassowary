@@ -1,3 +1,31 @@
+Wed Dec 15 18:13:14 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* java/Makefile.am: Put SUBDIRS demo cda back in since they
+	compile now.
+
+	* scripts/recreate-symlinks: Update with links to ../../EDU from
+	demo directories for Java code.  Use ln -sf, not just ln -s, to avoid 
+	warnings.
+
+	* Makefile.am (EXTRA_DIST): Include scripts/recreate-symlinks
+
+	* configure.in: Run recreate-symlinks script.
+
+Wed Dec 15 18:07:27 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* java/cda/Makefile.am:  Put Constraint/*, Main/* files into the
+	distribution and build with them. 
+
+	* java/demos/*.java: Move everything into the
+	EDU.Washington.grad.gjb.cassowary_demos package.
+
+	* java/cda/classes/run.html, java/demos/quaddemo.htm: Fix nl
+ 	convention, name class explicitly w/ package in front, w/o
+ 	trailing .class.
+
+	* java/cda/**: Move everything into the
+	EDU.Washington.grad.noth.cda package.
+
 Wed Dec 15 17:21:08 1999  Greg J. Badros  <gjb@cs.washington.edu>
 
 	* java/Makefile.am: Build java parser.
