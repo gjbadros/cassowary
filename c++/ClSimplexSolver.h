@@ -388,7 +388,17 @@ class ClSimplexSolver : public ClTableau {
       { }
     
     ~ClEditInfo() 
-      { }
+     { }
+
+    ostream &printOn(ostream &xo) const
+      { xo << "[" << _clvEditPlus << ", " << _clvEditMinus << "](" 
+           << _prevEditConstant << ")@" << _index << " -- " 
+           << *_pconstraint; 
+      return xo; }
+    
+    friend ostream &operator<<(ostream &xo, const ClEditInfo &cei)
+      { return cei.printOn(xo); }
+
   private:
     ClConstraint *_pconstraint;
     ClVariable _clvEditPlus;
@@ -472,8 +482,9 @@ class ClSimplexSolver : public ClTableau {
   // the constraint is non-required give its error variables an
   // appropriate weight in the objective function.
   ClLinearExpression *newExpression(const ClConstraint *pcn,
-                                    ClVariable clvEplus,
-                                    ClVariable clvEminus,
+                                    /* output to */
+                                    ClVariable &clvEplus,
+                                    ClVariable &clvEminus,
                                     Number &prevEConstant);
 
   // Minimize the value of the objective.  (The tableau should already
@@ -581,6 +592,10 @@ ostream &operator<<(ostream &xo, const ClVarVector &varlist);
 
 ostream &printTo(ostream &xo, const ClConstraintToVarSetMap &mapCnToVarSet);
 ostream &operator<<(ostream &xo, const ClConstraintToVarSetMap &mapCnToVarSet);
+
+ostream &printTo(ostream &xo, const ClSimplexSolver::ClVarToEditInfoMap &mapVarToEditInfo);
+ostream &operator<<(ostream &xo, const ClSimplexSolver::ClVarToEditInfoMap &mapVarToEditInfo);
+
 #endif
 
 

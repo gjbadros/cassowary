@@ -26,8 +26,12 @@ typedef map<const string,ClVariable> StringToVarMap;
 class ClVariable {
   ClAbstractVariable *pclv;
 public:
+  // converters from raw ClAbstractVariable
   ClVariable(ClAbstractVariable *pclv_) : pclv(pclv_) { }
   ClVariable(ClAbstractVariable &clv_) : pclv(&clv_) { }
+
+  // Copy ctr
+  ClVariable(const ClVariable &clv_) : pclv(clv_.pclv) { }
 
   /// These ctrs build ClFloatVariable-s
   ClVariable(string name, Number value = 0.0) 

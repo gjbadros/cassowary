@@ -1028,8 +1028,9 @@ ClSimplexSolver::dualOptimize()
 // appropriate weight in the objective function.
 ClLinearExpression *
 ClSimplexSolver::newExpression(const ClConstraint *pcn,
-                               ClVariable clvEplus,
-                               ClVariable clvEminus,
+                               /* output to */
+                               ClVariable &clvEplus,
+                               ClVariable &clvEminus,
                                Number &prevEConstant)
 {
 #ifdef CL_TRACE
@@ -1458,6 +1459,8 @@ ClSimplexSolver::printOn(ostream &xo) const
      << _stayPlusErrorVars << endl;
   xo << "_stayMinusErrorVars: "
      << _stayMinusErrorVars << endl;
+  xo << "_editVarMap:\n"
+     << _editVarMap << endl;
   return xo;
 }
 
@@ -1516,4 +1519,25 @@ ClSimplexSolver::FIsConstraintSatisfied(const ClConstraint *const pcn) const
 #endif
   return true;
 }
+
+
+
+#ifndef CL_NO_ID
+
+ostream &printTo(ostream &xo, const ClSimplexSolver::ClVarToEditInfoMap &mapVarToEditInfo)
+{
+  ClSimplexSolver::ClVarToEditInfoMap::const_iterator it = mapVarToEditInfo.begin();
+  for ( ; it != mapVarToEditInfo.end(); ++it) {
+    const ClVariable &clv = (*it).first;
+    const ClSimplexSolver::ClEditInfo *pcei = (*it).second;
+    xo << clv << " -> " << *pcei << endl;
+  }
+  return xo;
+}
+  
+
+ostream &operator<<(ostream &xo, const ClSimplexSolver::ClVarToEditInfoMap &mapVarToEditInfo)
+{ return printTo(xo,mapVarToEditInfo); }
+
+#endif
 
