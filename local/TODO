@@ -1,0 +1,33 @@
+* Specifying constraints interactively
+** metaphor
+** toolbox
+
+* debugging solutions
+** visualization for understanding solution
+** unexpected solutions
+** bugs
+
+* predicting behaviour
+** user studies on expected behaviour
+** dynamically changing stay constraint weights to make last moved point least likely to move again
+** Resetting of stay constraints -- maybe have last set of stay constraints at a lesser strength makes sense
+** Hidden state -> make visible somehow
+*** if invisible state matches state in user's head, it's ok
+*** if not, it's bad, and need some what to see and manipulate that state
+
+* Compound constraints (x,y for a point satisfied together)
+
+* Disjunctions
+
+* implementation issues
+** automatic stays on variables? automatic weighting
+** variables connected to a solver
+
+* Detect and remove redundant constraints for efficiency
+** especially web application, where constraints are more static
+
+* callbacks for internal happenings
+** pivoting
+
+* user-control of choosing alternate solutions
+** direct control over, e.g., pivoting
