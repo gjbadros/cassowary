@@ -18,6 +18,11 @@ import java.lang.*;
 import java.util.Random;
 
 class ClTests extends CL {
+  public ClTests()
+  {
+    RND = new Random(123456789);
+  }
+
   public final static boolean justStay1()
        throws ExCLInternalError, ExCLRequiredFailure
   {
@@ -201,7 +206,6 @@ class ClTests extends CL {
     // FIXGJB: from where did .12 come?
     final double ineqProb = 0.12;
     final int maxVars = 3;
-    Random RND = new Random(123456789);
 
     System.out.println("starting timing test. nCns = " + nCns +
         ", nVars = " + nVars + ", nResolves = " + nResolves);
@@ -222,13 +226,13 @@ class ClTests extends CL {
     double coeff;
     for (j = 0; j < nCns; j++) {
       // number of variables in this constraint
-      nvs = (int) (RND.nextDouble()*maxVars) + 1;
-      ClLinearExpression expr = new ClLinearExpression(RND.nextDouble() * 20.0 - 10.0);
+      nvs = (int) (UniformRandomDiscretized()*maxVars) + 1;
+      ClLinearExpression expr = new ClLinearExpression(UniformRandomDiscretized() * 20.0 - 10.0);
       for (k = 0; k < nvs; k++) {
-        coeff = RND.nextDouble()*10 - 5;
-        expr.addExpression(CL.Times(rgpclv[(int) (RND.nextDouble()*nVars)], coeff));
+        coeff = UniformRandomDiscretized()*10 - 5;
+        expr.addExpression(CL.Times(rgpclv[(int) (UniformRandomDiscretized()*nVars)], coeff));
       }
-      if (RND.nextDouble() < ineqProb) {
+      if (UniformRandomDiscretized() < ineqProb) {
         rgpcns[j] = new ClLinearInequality(expr);
       } else {  
         rgpcns[j] = new ClLinearEquation(expr);
@@ -260,8 +264,8 @@ class ClTests extends CL {
    System.out.println("time = " + timer.ElapsedTime() + "\n");
    timer.Start();
 
-   int e1Index = (int) (RND.nextDouble()*nVars);
-   int e2Index = (int) (RND.nextDouble()*nVars);
+   int e1Index = (int) (UniformRandomDiscretized()*nVars);
+   int e2Index = (int) (UniformRandomDiscretized()*nVars);
 
    System.out.println("indices " + e1Index + ", " + e2Index);
    
@@ -308,6 +312,12 @@ class ClTests extends CL {
    
    return true;
  }
+
+  public final static double UniformRandomDiscretized()
+  {
+    double n = RND.nextInt();
+    return n/Integer.MAX_VALUE;
+  }
 
 
   public final static void main( String[] args )
@@ -365,4 +375,6 @@ class ClTests extends CL {
     //      System.err.println("Exception: " + err);
     //      }
   }
+
+  static private Random RND;
 }
