@@ -1,3 +1,52 @@
+Wed Apr 28 17:15:47 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSymbolicWeight.h: Make CLevels unsigned, not int, and
+	require all 3 args to the 3 double ctr to remove ambiguity.
+
+	* c++/ClSimplexSolver.h: Check constraint before adding and throw
+	an error if the constraint is no good for the SimplexSolver.
+
+	* c++/ClParseTest.cc: Don't assume a failed add is due to an
+	inconsistent system-- could be wrong kind of constraint was read
+	in.
+
+	* c++/ClLinearInequality.h: Store the strictness of the
+	inequality, since other solvers may be able to use strict ones.
+
+	* c++/ClFDSolver.cc: Fine-tune the exception objects thrown... use 
+	the richer hierarchy.
+
+	* c++/ClFDBinaryOneWayConstraint.c,
+	c++/ClFDBinaryOneWayConstraint.h:  Added IsStrictInequality(), get 
+	the direction of the inequality correct.
+
+	* c++/ClErrors.h: Richer hierarchy of exceptions to cope with
+	solver limitations.
+
+	* c++/ClConstraint.h: Added IsStrictInequality(); have
+	ReadOnlyVars return a const ClVarSet&, not value.
+
+Wed Apr 28 12:20:47 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile.am: Added ClFDBinaryOneWayConstraint.cc.
+
+	* c++/ClReader.y, c++/ClReader.l: Added tokens GT, LT, and handle
+	them (for >, <, resp).
+
+	* c++/ClParseTest.cc: try converting to a FD constraint, and show
+	what that object is.
+
+	* c++/ClFDBinaryOneWayConstraint.h: Added ctr from a
+	ClLinearConstraint.  Added IsInequality().
+
+Wed Apr 28 12:08:16 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ro-test.in: Added for testing below.
+
+	* c++/ClFDBinaryOneWayConstraint.cc: Added -- so far just a ctr
+	from a ClLinearConstraint object (since the parser hands me a
+	constraint object that is a ClLinearConstraint object).
+
 Tue Apr 27 20:35:23 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* c++/ClSymbolicWeight.h, c++/ClSymbolicWeight.cc: Drop default
