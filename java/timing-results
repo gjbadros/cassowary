@@ -111,3 +111,43 @@ time = 32.443
 kaffe ClTests  110.24s user 0.49s system 93% cpu 1:59.03 total
 
 ------
+[Craig C. changed the Java cassowary benchmark to use Random directly and to set the
+seed to 0 to start, so that the constraint system being solved is repeatable.
+You might want to get my changes: see
+/projects/cecil/java/src/cassowary/ClTests.java.]
+
+On klamath (an Ultra-1/170), I get the following typical timing for Vortex:
+
+starting timing test. nCns = 300, nVars = 300, nResolves = 1000
+done building data structures
+time = 1.787
+done adding constraints [32 exceptions]
+time = 10.054
+ 
+done creating edit constraints -- about to start resolves
+time = 0.011
+ 
+done resolves -- now removing constraints
+time = 4.331
+ 
+done removing constraints and addDel timing test
+time = 7.005
+
+
+For regular java (I don't know if this is an interpreter or a JIT), I get
+the following typical timings:
+
+starting timing test. nCns = 300, nVars = 300, nResolves = 1000
+done building data structures
+time = 3.658
+done adding constraints [32 exceptions]
+time = 25.165
+ 
+done creating edit constraints -- about to start resolves
+time = 0.115
+ 
+done resolves -- now removing constraints
+time = 16.641
+ 
+done removing constraints and addDel timing test
+time = 23.153
