@@ -1,3 +1,13 @@
+Fri May  5 17:24:25 2000  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* java/ClReader.cup: Fix the precedence.  Put time/divide higher
+	(later in the file) than plus/minus
+
+Thu May  4 10:59:52 2000  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* java/ClReader.lex: Untabify, and only write "Already in Hash."
+	message if m_debug_lex.
+
 Mon Apr 10 09:35:42 2000  Greg J. Badros  <gjb@cs.washington.edu>
 
 	* configure.in, README: Bump to 0.61
