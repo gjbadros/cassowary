@@ -13,7 +13,7 @@ DIGIT		= [0-9]
 
 ALPHA		= [A-Za-z]
 
-ALPHANUM	= [A-Za-z0-9]
+ALPHANUM	= [A-Za-z0-9_]
 
 ID		= {ALPHA}{ALPHANUM}*
 
