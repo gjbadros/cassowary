@@ -67,10 +67,16 @@ build.  E.g., if you do not have the JDK installed, the Java version of
 Cassowary might not compile; if you still want the guile version, just
 "cd guile; make -k".
 
-You may need to use the "-fpermissive" flag of more recent g++/egcs
-compilers to work around some const-discrepancies between the
-const-challenged guile header files and Cassowary's more const-correct
-usage.   Also, you may need to change libguile/gsubr.h from:
+Be sure that configure detects the validity of using the "-fpermissive"
+flag of more recent g++/egcs compilers to work around some
+const-discrepancies between the const-challenged guile header files and
+Cassowary's more const-correct usage.  You should get a message like:
+
+  checking whether gcc understands -fpermissive option... yes
+
+when running configure if you're using, e.g., gcc-2.95 or later.
+
+Also, you may need to change libguile/gsubr.h from:
 
      extern SCM scm_make_gsubr SCM_P ((char *name, int req, int opt, 
                                        int rst, SCM (*fcn)()));
@@ -105,7 +111,7 @@ solving toolkit:
 
 o C++
 o Java
-o Smalltalk (v0.1)
+o Smalltalk
 
 For each implementation language, there is at least one example program; 
 for some there are many.
