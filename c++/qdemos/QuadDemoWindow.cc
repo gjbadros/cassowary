@@ -29,8 +29,7 @@
 
 QuadDemoWindow::QuadDemoWindow( QWidget *parent, const char *name )
   : QWidget(parent,name),
-    mp(db+4),
-    peditX(NULL), peditY(NULL),
+    mp(db+4), // mid-point draggable boxes are aliased with db[4..7]
     idbDragging(-1)
 {
   resize( 450, 450 );
@@ -99,19 +98,17 @@ QuadDemoWindow::QuadDemoWindow( QWidget *parent, const char *name )
 
 QuadDemoWindow::~QuadDemoWindow()
 {
-  if (peditX) delete peditX;
-  if (peditY) delete peditY;
+  solver.removeAllEditVars();
 }
 
 void QuadDemoWindow::mousePressEvent( QMouseEvent *e )
 {
   int x = e->x();
   int y = e->y();
-  if (peditX != NULL || peditY != NULL)
-    {
-    assert(peditX != NULL && peditY != NULL);
+
+  // Already got edit constraints?
+  if (solver.numEditVars() > 0)
     return;
-    }
   
   for (int i = 0; i < cdb; i++)
     {
@@ -124,12 +121,10 @@ void QuadDemoWindow::mousePressEvent( QMouseEvent *e )
   if (idbDragging != -1)
     {
     imbUsed = e->button();
-    peditX = new ClEditConstraint(db[idbDragging].X(),clsStrong());
-    peditY = new ClEditConstraint(db[idbDragging].Y(),clsStrong());
     solver
-      .addConstraint(*peditX)
-      .addConstraint(*peditY)
-      ;
+      .addEditVar(db[idbDragging].X())
+      .addEditVar(db[idbDragging].Y())
+      .beginEdit();
     }
 }
 
@@ -143,16 +138,9 @@ void QuadDemoWindow::mouseReleaseEvent( QMouseEvent *e )
         {
         // Only remove the constraints if the button
         // that we initiated the drag with is released
-        assert(peditX != NULL);
-        assert(peditY != NULL);
         idbDragging = -1;
         solver
-          .removeConstraint(*peditX)
-          .removeConstraint(*peditY)
-          ;
-        delete peditX;
-        delete peditY;
-        peditX = peditY = NULL;
+          .endEdit();
         repaint();
         }
 #ifndef NDEBUG
@@ -178,7 +166,11 @@ void QuadDemoWindow::mouseMoveEvent( QMouseEvent *e )
 {
   if (idbDragging != -1)
     {
-    solver.resolve(e->x(),e->y());
+    solver
+      .suggestValue(db[idbDragging].X(),e->x())
+      .suggestValue(db[idbDragging].Y(),e->y())
+      .resolve();
+
     repaint();
     }
 }
