@@ -12,6 +12,11 @@
 #ifndef ClFloatVariable_H
 #define ClFloatVariable_H
 
+#if defined(HAVE_CONFIG_H) && !defined(CONFIG_H_INCLUDED) && !defined(CONFIG_INLINE_H_INCLUDED)
+#include <cassowary/config-inline.h>
+#define CONFIG_INLINE_H_INCLUDED
+#endif
+
 #include <stdio.h>
 #include <map>
 #include <string>

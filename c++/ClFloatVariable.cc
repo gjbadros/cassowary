@@ -11,11 +11,19 @@
 
 #include "ClFloatVariable.h"
 
+#ifdef HAVE_CONFIG_H
+#include <cassowary/config.h>
+#define CONFIG_H_INCLUDED
+#endif
+
+#ifndef CL_NO_IO
 ostream &ClFloatVariable::PrintOn(ostream &xo) const
 {  
   xo << "[" << Name() << ":" << _value << "]";
   return xo;
 }
+#endif
+
 
 void ClFloatVariable::SetName(string const &name)
 { 

@@ -18,6 +18,11 @@
 #include <strstream.h>
 #include <stdio.h>
 
+#ifdef HAVE_CONFIG_H
+#include <cassowary/config.h>
+#define CONFIG_H_INCLUDED
+#endif
+
 extern "C" {
 
 typedef StringToVarMap *CL_VarMap;

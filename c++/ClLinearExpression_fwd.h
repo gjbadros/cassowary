@@ -12,6 +12,11 @@
 #ifndef ClLinearExpression_fwd_H
 #define ClLinearExpression_fwd_H
 
+#if defined(HAVE_CONFIG_H) && !defined(CONFIG_H_INCLUDED) && !defined(CONFIG_INLINE_H_INCLUDED)
+#include <cassowary/config-inline.h>
+#define CONFIG_INLINE_H_INCLUDED
+#endif
+
 #include "Cassowary.h"
 
 template <class T> class ClGenericLinearExpression;

@@ -11,6 +11,11 @@
 
 #include "ClStrength.h"
 
+#ifdef HAVE_CONFIG_H
+#include <cassowary/config.h>
+#define CONFIG_H_INCLUDED
+#endif
+
 // Use the singleton pattern for the strength objects
 const ClStrength &ClsRequired()
 {

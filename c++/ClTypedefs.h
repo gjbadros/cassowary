@@ -12,6 +12,11 @@
 #ifndef CL_TYPEDEFS_H__
 #define CL_TYPEDEFS_H__
 
+#if defined(HAVE_CONFIG_H) && !defined(CONFIG_H_INCLUDED) && !defined(CONFIG_INLINE_H_INCLUDED)
+#include <cassowary/config-inline.h>
+#define CONFIG_INLINE_H_INCLUDED
+#endif
+
 #include "ClMap.h"
 #include "ClSet.h"
 #include "ClLinearExpression_fwd.h"

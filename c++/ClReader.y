@@ -21,6 +21,11 @@
 #include <string>
 #include <map>
 
+#ifdef HAVE_CONFIG_H
+#include <cassowary/config.h>
+#define CONFIG_H_INCLUDED
+#endif
+
 #ifdef USE_CRUMMY_LEXER
 string current;  /* Global to help in debugging/error messages */
 #endif

@@ -12,6 +12,11 @@
 #ifndef ClLinearInequality_H
 #define ClLinearInequality_H
 
+#if defined(HAVE_CONFIG_H) && !defined(CONFIG_H_INCLUDED) && !defined(CONFIG_INLINE_H_INCLUDED)
+#include <cassowary/config-inline.h>
+#define CONFIG_INLINE_H_INCLUDED
+#endif
+
 #include "ClLinearConstraint.h"
 
 enum ClInequalityOperator { cnLEQ, cnGEQ };

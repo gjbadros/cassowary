@@ -11,6 +11,11 @@
 
 #include "ClConstraint.h"
 
+#ifdef HAVE_CONFIG_H
+#include <cassowary/config.h>
+#define CONFIG_H_INCLUDED
+#endif
+
 #ifndef CL_NO_IO
 
 ostream &

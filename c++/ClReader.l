@@ -17,6 +17,11 @@
 #include "ClReader.h"
 #include "ClReader.cc.h"
 
+#ifdef HAVE_CONFIG_H
+#include <cassowary/config.h>
+#define CONFIG_H_INCLUDED
+#endif
+
 /* global variable for the istream we are reading from;
    gets set by PcnParseConstraint */
 istream *pxi_lexer;

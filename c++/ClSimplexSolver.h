@@ -12,6 +12,11 @@
 #ifndef ClSimplexSolver_H
 #define ClSimplexSolver_H
 
+#if defined(HAVE_CONFIG_H) && !defined(CONFIG_H_INCLUDED) && !defined(CONFIG_INLINE_H_INCLUDED)
+#include <cassowary/config-inline.h>
+#define CONFIG_INLINE_H_INCLUDED
+#endif
+
 #include <stack>
 #include "Cassowary.h"
 #include "ClTableau.h"

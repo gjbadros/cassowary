@@ -12,14 +12,13 @@
 #ifndef Cassowary_H
 #define Cassowary_H
 
-#ifndef CL_PTR_HASH_DIVISOR
-#define CL_PTR_HASH_DIVISOR 4
+#if defined(HAVE_CONFIG_H) && !defined(CONFIG_H_INCLUDED) && !defined(CONFIG_INLINE_H_INCLUDED)
+#include <cassowary/config-inline.h>
+#define CONFIG_INLINE_H_INCLUDED
 #endif
 
-#undef PACKAGE
-#undef VERSION
-#ifdef HAVE_CONFIG_H
-#include <cassowary/config.h>
+#ifndef CL_PTR_HASH_DIVISOR
+#define CL_PTR_HASH_DIVISOR 4
 #endif
 
 #include "ClConstraintHash.h"

@@ -12,6 +12,11 @@
 #include "Cassowary.h"
 #include "ClSymbolicWeight.h"
 
+#ifdef HAVE_CONFIG_H
+#include <cassowary/config.h>
+#define CONFIG_H_INCLUDED
+#endif
+
 // Help g++ out, tell it to instantiate this
 //template vector<double> &vector<double>::operator =(const vector<double> &);
 

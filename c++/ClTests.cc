@@ -12,7 +12,6 @@
 #include "Cl.h"
 #include <stdlib.h>
 #include "timer.h"
-#include "ClDummyVariable.h"
 #include <iostream>
 #include <iomanip>
 

@@ -23,6 +23,11 @@
 #include <strstream>
 #include <queue>
 
+#ifdef HAVE_CONFIG_H
+#include <cassowary/config.h>
+#define CONFIG_H_INCLUDED
+#endif
+
 char *szCassowaryVersion = VERSION;
 
 

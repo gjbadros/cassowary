@@ -11,6 +11,11 @@
 
 #include "ClAbstractVariable.h"
 
+#ifdef HAVE_CONFIG_H
+#include <cassowary/config.h>
+#define CONFIG_H_INCLUDED
+#endif
+
 long ClAbstractVariable::iVariableNumber = 0;
 #ifdef CL_FIND_LEAK
 long ClAbstractVariable::cAbstractVariables = 0;

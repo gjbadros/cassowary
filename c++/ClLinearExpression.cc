@@ -9,11 +9,17 @@
 //
 // ClLinearExpression.cc
 
+
 #include "ClLinearExpression.h"
 #include "ClSymbolicWeight.h"  /// needed only to instantiate with T=ClSymbolicWeight
 #include "ClVariable.h"
 #include "ClTableau.h"
 #include "ClErrors.h"
+
+#ifdef HAVE_CONFIG_H
+#include <cassowary/config.h>
+#define CONFIG_H_INCLUDED
+#endif
 
 template <class T>
 ClGenericLinearExpression<T>::ClGenericLinearExpression(T num) :

@@ -11,6 +11,11 @@
 
 #include "ClVariable.h"
 
+#ifdef HAVE_CONFIG_H
+#include <cassowary/config.h>
+#define CONFIG_H_INCLUDED
+#endif
+
 StringToVarMap *ClVariable::pmapStrPclv = NULL;
 ClVariable clvNil(static_cast<ClAbstractVariable*>(0));
 

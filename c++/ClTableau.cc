@@ -12,6 +12,12 @@
 #include "ClTableau.h"
 #include "debug.h"
 
+#ifdef HAVE_CONFIG_H
+#include <cassowary/config.h>
+#define CONFIG_H_INCLUDED
+#endif
+
+
 // delete the linear expressions
 // let ClSimplexSolver worry about deleting the variables
 ClTableau::~ClTableau()

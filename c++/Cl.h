@@ -13,11 +13,21 @@
 #ifndef CL_H
 #define CL_H
 
+#if defined(HAVE_CONFIG_H) && !defined(CONFIG_H_INCLUDED) && !defined(CONFIG_INLINE_H_INCLUDED)
+#include <cassowary/config-inline.h>
+#define CONFIG_INLINE_H_INCLUDED
+#endif
+
 #ifdef CL_NO_IO
 #undef CL_TRACE
 #undef CL_SOLVER_STATS
 #undef CL_DEBUG_FAILURES
 #undef CL_TRACE_VERBOSE
+#endif
+
+#if defined(HAVE_CONFIG_H) && !defined(CONFIG_H_INCLUDED) && !defined(CONFIG_INLINE_H_INCLUDED)
+#include <cassowary/config-inline.h>
+#define CONFIG_INLINE_H_INCLUDED
 #endif
 
 #include "cassowary/ClVariable.h"
