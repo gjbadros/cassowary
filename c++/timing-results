@@ -1,4 +1,26 @@
 -g, NO_TRACE: 3x-6x slower than w/ -O6
+addDel:
+starting timing test. nCns = 900, nVars = 900, nResolves = 10000
+done building data structures
+time = 3.34
+
+done adding constraints [120 exceptions]
+time = 87.91
+
+done creating edit constraints -- about to start resolves
+time = 0.23
+
+done resolves -- now removing constraints
+time = 163.17
+
+done removing constraints and addDel timing test
+time = 33.77
+
+my_slackCounter == 1017
+my_artificialCounter == 770
+my_dummyCounter == 785
+editMinusErrorVars 2, editPlusErrorVars 2, stayMinusErrorVars 900, stayPlusErrorVars 900, errorVars 0, markerVars 1022
+
 --------------
 
 -O6, NO_TRACE:
