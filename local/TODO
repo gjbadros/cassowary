@@ -10,9 +10,12 @@
 
 * squashing and exploding aliased variables when equality constrained
 
+* permit multiple beginEdit()'s and have the endEdit() only remove the appropriate edit variables
+This will fix the problem in changing the virtual desktop while moving a window in scwm.
 
+* Envelope/letter or handle/body idiom for variables, constraints, and expressions, at least
 
-* Consider going back to virtual function and normal subclassing with slightly more complicated wrapping of variables for scwm
+* Consider going back to virtual function and normal subclassing with slightly more complicated wrapping of variables for scwm, or use functors
 
 * Add operator= on solver for saving solver state
 
