@@ -213,7 +213,7 @@ class ClSimplexSolver : public ClTableau {
   // about 20% in runtime, from 68sec to 54sec for 900 constraints,
   // with 126 failed adds)
   ClSimplexSolver &setAutosolve(bool f)
-    { _fOptimizeAutomatically = f; return *this; }
+    { _fOptimizeAutomatically = f; if (f) solve(); return *this; }
 
   // Tell whether we are autosolving
   bool FIsAutosolving() const
