@@ -64,27 +64,27 @@ CLASSFILES = $(JAVAFILES:%.java=$(CLASSES)/%.class)
 
 TESTCLASSFILES = $(TESTFILES:%.java=$(CLASSES_TESTS)/%.class)
 
-$(CLASSES)/%.class: $(JAVAFILES)
+$(CLASSES)/%.class: .built-package
+
+$(CLASSES_TESTS)/%.class: .built-test
+
+all:	.built-package .built-test
+
+
+.built-package: $(JAVAFILES)
 	$(JAVAC) -d $(CLASSES) $(JAVAC_FLAGS) $(JAVAFILES)
+	touch $@
 
-$(CLASSES_TESTS)/%.class: $(TESTFILES)
+.built-test: .built-package $(TESTFILES)
 	$(JAVAC) -d $(CLASSES_TESTS) $(JAVAC_FLAGS) $(TESTFILES)
-
-all:	package test
-
-
-package:
-	$(JAVAC) -d $(CLASSES) $(JAVAC_FLAGS) $(JAVAFILES)
-
-test:
-	$(JAVAC) -d $(CLASSES_TESTS) $(JAVAC_FLAGS) $(TESTFILES)
+	touch $@
 
 clean:	
-	rm -f *.class
+	rm -f *.class .built-*
 
 TAGS: $(JAVAFILES)
 	jtags $^
 
 tags: TAGS
 
-.PHONY:	all package test cassowary-tests lib tags ntsources
+.PHONY:	all cassowary-tests lib tags ntsources
