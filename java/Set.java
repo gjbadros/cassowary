@@ -41,6 +41,12 @@ class Set {
   public void clear()
     { hash.clear(); }
 
+  public int size()
+    { return hash.size(); }
+
+  public boolean isEmpty()
+    { return hash.isEmpty(); }
+
   public Object clone()
     { return new Set((Hashtable) hash.clone()); }
 
@@ -49,6 +55,3 @@ class Set {
   
   private Hashtable hash;
 }
-
-      
-
