@@ -36,6 +36,10 @@ class ClSimplexSolver extends ClTableau
     _artificialCounter = 0;
     _dummyCounter = 0;
     _epsilon = 1e-8;
+    
+    _fOptimizeAutomatically = true;
+    _fNeedsSolving = false;
+    
     ClLinearExpression e = new ClLinearExpression();
     _rows.put(_objective,e);
     if (fTraceOn) traceprint("objective expr == " + rowExpression(_objective));
@@ -82,13 +86,20 @@ class ClSimplexSolver extends ClTableau
       // could not add directly
       addWithArtificialVariable(expr);
     }
-    optimize(_objective);
-    setExternalVariables();
+
+    _fNeedsSolving = true;
+
     if (cn.isEditConstraint()) {
       int i = _prevEditConstants.size() - 1;
       ClEditConstraint cnEdit = (ClEditConstraint) cn;
       _editVarMap.put(cnEdit.variable(), new ClConstraintAndIndex(cnEdit,i));
     }
+
+    if (_fOptimizeAutomatically) {
+      optimize(_objective);
+      setExternalVariables();
+    }
+
     return  this;
   }
 
@@ -248,6 +259,8 @@ class ClSimplexSolver extends ClTableau
     if (fTraceOn) fnenterprint("removeConstraint: " + cn);
     if (fTraceOn) traceprint(this.toString());
 
+    _fNeedsSolving = true;
+
     resetStayConstants();
     
     ClLinearExpression zRow = rowExpression(_objective);
@@ -383,8 +396,11 @@ class ClSimplexSolver extends ClTableau
     }
     marker = null;
 
-    optimize(_objective);
-    setExternalVariables();
+    if (_fOptimizeAutomatically) {
+      optimize(_objective);
+      setExternalVariables();
+    }
+
     return  this;
   }
   
@@ -442,6 +458,22 @@ class ClSimplexSolver extends ClTableau
     return this;
   }
 
+  public final ClSimplexSolver setAutosolve(boolean f)
+  { _fOptimizeAutomatically = f; return this; }
+
+  public final boolean FIsAutosolving()
+  { return _fOptimizeAutomatically; }
+
+  public final ClSimplexSolver solve()
+    throws ExCLInternalError
+  {
+    if (_fNeedsSolving) {
+      optimize(_objective);
+      setExternalVariables();
+    }
+    return this;
+  }
+        
   // from Michael Noth <noth@cs>
   public final String getInternalInfo() {
     StringBuffer retstr = new StringBuffer(super.getInternalInfo());
@@ -903,6 +935,8 @@ class ClSimplexSolver extends ClTableau
       if (fTraceOn) debugprint("expr == " + expr);
       v.set_value(expr.constant());
     }
+
+    _fNeedsSolving = false;
   }
 
   protected final void insertErrorVar(ClConstraint cn, ClAbstractVariable var)
@@ -937,6 +971,9 @@ class ClSimplexSolver extends ClTableau
   private Vector _resolve_pair;
 
   private double _epsilon;
+
+  boolean _fOptimizeAutomatically;
+  boolean _fNeedsSolving;
 }
 
 class ClConstraintAndIndex {
