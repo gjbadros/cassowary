@@ -4,13 +4,8 @@
 # Original Smalltalk Implementation by Alan Borning
 # This C++ Implementation by Greg J. Badros, <gjb@cs.washington.edu>
 # http://www.cs.washington.edu/homes/gjb
-# (C) 1998, All Rights Reserved.
-#
-# (C) 1998 Alan Borning and Greg Badros.  This code is provided for use by
-# students for course projects in the course CSE 595 in the Department of
-# Computer Science and Engineering, University of Washington, during winter
-# quarter 1998.  Any other use requires written permission from the copyright
-# holders.
+# (C) 1998 Alan Borning and Greg Badros
+# See ../COPYRIGHT for legal details regarding this software
 
 # Makefile for cassowary
 
@@ -20,7 +15,7 @@ CFLAGS = -g -Wall
 EGCSDIR = /uns/egcs
 CXX = $(CPP)
 SWIG = swig
-PYTHON_INCLUDE = /usr/include/python1.4
+PYTHON_INCLUDE = /uns/include/python1.5
 
 #CPPFLAGS = -O6 -DCL_NO_TRACE -DNO_SOLVER_STATS -DNDEBUG -Wall -pedantic -W
 #CPPFLAGS = -O6 -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W
@@ -98,21 +93,23 @@ all:	lib ClTests ClTestColumns
 
 lib:    $(CL_LIBRARY)
 
-swig: cassowary.i
+# swig-python, swig-guile, and module are phony targets
+
+swig-python: cassowary.py cassowary_wrap.c cassowary_wrap.doc
+
+cassowary.py cassowary_wrap.c cassowary_wrap.doc: cassowary.i
 	$(SWIG) -c++ -python -shadow cassowary.i
-
-swig-guile: cassowary.i
-	$(SWIG) -c++ -guile cassowary.i
-
-module: $(CL_LIBRARY) cassowary_wrap.o
-	$(CPP) -shared -o cassowarycmodule.so cassowary_wrap.o $(CL_LIBRARY)
-
-module-guile: $(CL_LIBRARY) cassowary_wrap.o
-	$(CPP) -shared -o cassowarycmodule.so cassowary_wrap.o $(CL_LIBRARY)
-
 
 cassowary_wrap.o: cassowary_wrap.c
 	$(CPP) -I$(PYTHON_INCLUDE) -fpic -c cassowary_wrap.c
+
+#swig-guile: cassowary.i
+#	$(SWIG) -c++ -guile cassowary.i
+
+module: cassowarycmodule.so
+
+cassowarycmodule.so: cassowary_wrap.o $(CL_LIBRARY)
+	$(CPP) -shared -o $@ $^
 
 $(CL_LIBRARY): $(OBJS)
 	rm -f $@
@@ -170,14 +167,14 @@ ntsources: $(NT_SOURCES)
 	modpod2texinfo $< >$@
 
 
-.PHONY:	all cassowary-tests lib tags ntsources tests depend swig
+.PHONY:	all cassowary-tests lib tags ntsources tests depend swig module module-guile
 
 %.cpp: %.cc
 	ln -s $< $@
 
 # How to make dependencies:
 # -------------------------
-depend: $(TEST_SRCS) $(SOURCES) $(HEADERS)
+depend Makefile.dependencies: $(TEST_SRCS) $(SOURCES) $(HEADERS)
 	rm -f Makefile.dependencies
 	$(CPP) -M $(TEST_SRCS) $(SOURCES) >> Makefile.dependencies
 
