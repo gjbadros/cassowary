@@ -33,6 +33,8 @@ class ClSymbolicWeight {
 
   static ClSymbolicWeight &zero();
 
+  ClSymbolicWeight &negated();
+
   ClSymbolicWeight &multiplyMe(Number n);
 
   ClSymbolicWeight times(Number n) const
@@ -49,6 +51,9 @@ class ClSymbolicWeight {
 
   ClSymbolicWeight operator*(const Number &n) const
     { return times(n); }
+
+  ClSymbolicWeight operator/(const Number &n) const
+    { return divideBy(n); }
 
   // FIXGJB: can we express this statically?
   ClSymbolicWeight operator*(const ClSymbolicWeight &) const

@@ -45,6 +45,17 @@ ClSymbolicWeight::zero()
 
 
 ClSymbolicWeight &
+ClSymbolicWeight::negated()
+{
+  vector<double>::iterator it = my_values.begin();
+  for (; it != my_values.end(); ++it)
+    {
+    *it = -*it;
+    }
+  return *this;
+}
+
+ClSymbolicWeight &
 ClSymbolicWeight::multiplyMe(Number n)
 {
   vector<double>::iterator it = my_values.begin();
