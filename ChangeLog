@@ -1,3 +1,19 @@
+Sun Sep 19 14:45:59 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSimplexSolver.h, c++/ClSimplexSolver.cc: Replace
+ 	_editVarMap with _editInfoList, a list.  Make ClEditInfo class
+ 	contain the variable since its no longer stored as values in a
+ 	hash where the key is the variable.  Drop the index from
+ 	ClEditInfo.  Rename ClVarToEditInfoMap to ClEditInfoList.
+
+Sun Sep 19 14:44:00 1999  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/ClTests.cc (multiedit2): Added this new test to check nested
+ 	edits that share an existing variable better.  This tests the fix
+ 	for the ScwmButtons auto-orientation seg-fault bug in Scwm.
+
+	* c++/ClBug0.cc: Added comment re: new bug fix.
+
 Sat Sep 18 22:31:54 1999  Greg J. Badros  <gjb@cs.washington.edu>
 
 	* configure.in:  Added GUILE_LIBS setting.
