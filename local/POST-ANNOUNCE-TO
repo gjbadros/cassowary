@@ -1,3 +1,8 @@
+Cc: constraints@cs
+Bcc: samf@central.sun.com, joyot@univ-tln.fr, dvanden@rational.com, bernd.meyer@acm.org, art06@uow.edu.au, emmanuel.pietriga@xrce.xerox.com,  gdlone@globalnet.co.uk, Anthony Beurive' <beurive@labri.u-bordeaux.fr>
+Newsgroups: comp.os.linux.announce, comp.constraints, comp.ai, comp.lang.prolog
+Subject: Cassowary Constraint Solving Toolkit v. 0.60 is Released!
+
  comp.constraints
  comp.os.linux.announce
  comp.ai
