@@ -1,0 +1,31 @@
+dnl Process this file with autoconf to produce a configure script.
+
+dnl $Id$
+dnl configure.in
+dnl Autoconf script for Cassowary
+dnl (C) 1999 Greg J. Badros
+
+dnl ## Initialize autoconf ##
+AC_INIT(c++/ClSimplexSolver.cc)
+AC_PREREQ(2.4)
+
+dnl ## Initialize automake ##
+AM_INIT_AUTOMAKE(cassowary, 0.31)
+AM_MAINTAINER_MODE
+AM_CONFIG_HEADER(c++/config.h)
+
+dnl ## Checks for programs ##
+
+AC_PROG_CC
+AC_PROG_CXX
+AC_PROG_RANLIB
+
+
+AC_OUTPUT(
+		Makefile \
+		c++/Makefile \
+		java/Makefile \
+		guile/Makefile \
+		docs/Makefile \
+	)
+

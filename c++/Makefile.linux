@@ -1,0 +1,252 @@
+# $Id$
+#
+# Cassowary Incremental Constraint Solver
+# Original Smalltalk Implementation by Alan Borning
+# This C++ Implementation by Greg J. Badros, <gjb@cs.washington.edu>
+# http://www.cs.washington.edu/homes/gjb
+# (C) 1998, 1999 Alan Borning and Greg Badros
+# See ../LICENSE for legal details regarding this software
+
+# Makefile for cassowary
+
+CC = gcc
+CPP = g++
+CPP_SO_LINK = g++ -shared
+CFLAGS = -g -Wall
+EGCSDIR = /uns/egcs
+CXX = $(CPP)
+FLEX = flex
+BISON = bison
+SWIG = swig
+PYTHON_INCLUDE = /uns/include/python1.5
+DYNLINK = no
+#DYNLINK = yes
+
+EXTRA_LD_ARGS_FOR_DYNLINK=
+
+ifeq ($(DYNLINK),yes)
+	EXTRA_LD_ARGS_FOR_DYNLINK=$(LDLIBS)
+endif
+
+#FLEX_FLAGS = -d
+FLEX_FLAGS = 
+
+#LDFLAGS = -L. -pg
+LDFLAGS = -L.
+
+## NOTE: the egcs-1.1b release's g++ will get a parse error
+## with -pedantic -- just remove that option for compilation
+## with egcs-1.1b, until they fix the problem (bug was reported --09/06/98 gjb)
+
+CPPFLAGS = -Wall -pedantic -W
+
+#CPPFLAGS += -DCL_SOLVER_CHECK_INTEGRITY
+
+#CPPFLAGS += -DCL_NO_DEPRECATED
+
+#CPPFLAGS += -O6 -DNEBUG
+#CPPFLAGS += -O6
+#CPPFLAGS += -O2
+CPPFLAGS += -g
+
+CPPFLAGS += -pg
+LDFLAGS += -pg
+
+#CPPFLAGS += -DCL_USE_HASH_MAP_AND_SET
+
+#CPPFLAGS += -DCL_TRACE
+
+#CPPFLAGS += -DCL_SOLVER_STATS
+
+#CPPFLAGS += -DCL_NO_IO   # The tests will not work if I/O is disabled (by enabling this define)
+
+#CPPFLAGS += -DCL_PTR_HASH_DIVISOR=1  #defaults to 4
+
+OTHER_LIBS = 
+#OTHER_LIBS = ../../gc/gc.a
+
+LIB=cassowary
+#LIB=cassowary-optimized
+#LIB=cassowary-notrace
+#LIB=cassowary-trace
+#LIB=cassowary-debug
+
+LDLIBS = -l$(LIB)
+
+CL_LIBRARY = lib$(LIB).a
+CL_SHARED_LIBRARY = lib$(LIB).so
+
+OBJS = 	ClAbstractVariable.o \
+	ClConstraint.o \
+	ClLinearExpression.o \
+	ClSimplexSolver.o \
+	ClStrength.o \
+	ClSymbolicWeight.o \
+	ClTableau.o \
+	ClVariable.o \
+	ClFloatVariable.o \
+	ClSlackVariable.o \
+	ClDummyVariable.o \
+	ClReader-lex.o \
+	ClReader.o
+
+
+TEST_OBJS = test-ClConstraint.o    \
+	test-ClLinearExpression.o  \
+	test-ClSimplexSolver.o     \
+	test-ClStrength.o          \
+	test-ClVariable.o	   \
+	test-ClBounds.o	           \
+	ClTests.o                  \
+	ClBug0.o                  \
+	ClBug1.o                  \
+	ClLeakTest.o		   \
+	ClParseTest.o              \
+	ClSubgraphTest.o           \
+	ClTestColumns.o            \
+	QocaBench.o
+
+CTEST_OBJS = ClCTest.o
+
+
+SOURCES = $(OBJS:.o=.cc)
+
+TEST_SRCS = $(TEST_OBJS:.o=.cc)
+
+CTEST_SRCS = $(CTEST_OBJS:.o=.c)
+
+NT_SOURCES = $(OBJS:.o=.cpp) $(TEST_OBJS:.o=.cpp)
+
+TESTS = test-ClStrength test-ClVariable test-ClLinearExpression test-ClConstraint \
+	test-ClSimplexSolver ClTests ClBug0 ClBug1 ClLeakTest ClSubgraphTest ClParseTest QocaBench
+
+CTESTS = ClCTest
+
+C_SOURCES = ClC.cc
+
+HEADERS = Cassowary.h \
+	Cl.h \
+	ClAbstractVariable.h \
+	ClDummyVariable.h \
+	ClObjectiveVariable.h \
+	ClSlackVariable.h \
+	ClConstraint.h \
+	ClConstraintHash.h \
+	ClEditConstraint.h \
+	ClEditOrStayConstraint.h \
+	ClErrors.h \
+	ClLinearConstraint.h \
+	ClLinearEquation.h \
+	ClLinearExpression.h \
+	ClLinearExpression_fwd.h \
+	ClLinearInequality.h \
+	ClSimplexSolver.h \
+	ClStayConstraint.h \
+	ClStrength.h \
+	ClSymbolicWeight.h \
+	ClTableau.h \
+	ClFloatVariable.h \
+	ClVariable.h \
+	ClTypedefs.h \
+	ClMap.h \
+	ClSet.h \
+	ClPoint.h \
+	auto_ptr.h \
+	debug.h \
+	timer.h \
+	ClReader.h
+
+C_HEADERS = ClC.h
+
+#Default rule is to just build the static library
+lib:    $(CL_LIBRARY) libc$(LIB).a
+
+all-notests: lib shared_lib
+
+all-tests: $(TESTS)
+
+bugtests: ClBug0 ClBug1
+
+all: all-notests all-tests
+
+shared_lib:	$(CL_SHARED_LIBRARY) libc$(LIB).so
+
+$(CL_LIBRARY): $(OBJS)
+	rm -f $@
+	ar ruv $@ $^
+
+$(CL_SHARED_LIBRARY): $(OBJS)
+	rm -f $@
+	$(CPP_SO_LINK) -o $@ $(OBJS)
+
+libccassowary.so: $(OBJS) ClC.o
+	$(CPP_SO_LINK) -o $@ $(OBJS) ClC.o
+
+libccassowary.a: $(OBJS) ClC.o
+	ar ruv $@ $(OBJS) ClC.o
+
+
+ClCTest: ClC.o ClCTest.o libc$(LIB).a
+	$(CPP) -o $@ $^
+
+clean:	
+	rm -f $(TESTS) $(CTESTS) $(CL_LIBRARY) $(CL_SHARED_LIBRARY) *.o ClReader.cc ClReader-lex.cc
+	@echo "Consider doing a \`make depend'"
+
+TAGS: $(SOURCES) $(HEADERS)
+	etags $^
+
+cassowary-tests: $(TESTS)
+
+%: %.o $(CL_LIBRARY) $(OTHER_LIBS)
+	$(CPP) $(LDFLAGS) -o $@ $^ $(EXTRA_LD_ARGS_FOR_DYNLINK)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+cassowary-test:	$(TEST_OBJS)
+
+ClReader.cc: ClReader.y ClReader.h
+	$(BISON) -d -pcl --output-file $@ $<
+
+ClReader.cc.h: ClReader.cc
+
+ClReader-lex.cc: ClReader.cc.h
+
+ClReader-lex.cc: ClReader.l ClReader.h
+	$(FLEX) $(FLEX_FLAGS) -Pcl -o$@ $<
+
+ClReader.o: ClReader.h
+
+ClReader-lex.o: ClReader.h
+
+tags: TAGS
+
+ntsources: $(NT_SOURCES)
+
+# Perl-related targets
+.man: .pm
+	pod2man $< >$@
+
+.html: .pm
+	pod2html $< >$@
+
+.texi: .pm
+	modpod2texinfo $< >$@
+
+
+.PHONY:	all bugtests cassowary-tests lib shared_lib tags ntsources tests depend 
+
+%.cpp: %.cc
+	ln -s $< $@
+
+# How to make dependencies:
+# -------------------------
+# (Can add Makefile.dependencies to the left of below colon
+#  to auto-build dependencies)
+depend: $(TEST_SRCS) $(SOURCES) $(C_SOURCES) $(HEADERS) $(C_HEADERS)
+	rm -f Makefile.dependencies
+	$(CPP) -M $(TEST_SRCS) $(SOURCES) $(C_SOURCES) >> Makefile.dependencies
+	$(CC) -M $(CTEST_SRCS) >> Makefile.dependencies
+
+-include Makefile.dependencies

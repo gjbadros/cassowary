@@ -1,0 +1,93 @@
+# $Id$
+#
+# Cassowary Incremental Constraint Solver
+# Original Smalltalk Implementation by Alan Borning
+# This Java Implementation by Greg J. Badros, <gjb@cs.washington.edu>
+# http://www.cs.washington.edu/homes/gjb
+# (C) 1998 Alan Borning and Greg Badros
+# See ../LICENSE for legal details regarding this software
+
+# Makefile for cassowary, java version
+
+JAVAC = javac
+JAVAC_FLAGS = -g
+#JAVAC_FLAGS = -O
+
+
+CLASSES = ./classes
+CLASSES_TESTS = ./classes
+
+TESTS = test-ClStrength test-ClVariable test-ClLinearExpression test-ClConstraint \
+	test-ClSimplexSolver ClTests ClTestColumns
+
+# For java, keep ClErrors.java first, since it defines multiple
+# classes that are used by the others (javac does not get
+# dependences right if multiple classes are in one file)
+JAVAFILES = \
+	ClAbstractVariable.java \
+	ClDummyVariable.java \
+	ClObjectiveVariable.java \
+	ClSlackVariable.java \
+	ClConstraint.java \
+	ClEditConstraint.java \
+	ClEditInfo.java \
+	ClEditOrStayConstraint.java \
+	ClLinearConstraint.java \
+	ClLinearEquation.java \
+	ClLinearExpression.java \
+	ClLinearInequality.java \
+	ClStayConstraint.java \
+	ClStrength.java \
+	ClSymbolicWeight.java \
+	ClVariable.java \
+	ClPoint.java \
+	ClDouble.java \
+	ClTableau.java \
+	ClSimplexSolver.java \
+	ExCLConstraintNotFound.java \
+	ExCLError.java \
+	ExCLInternalError.java \
+	ExCLNonlinearExpression.java \
+	ExCLNotEnoughStays.java \
+	ExCLRequiredFailure.java \
+	ExCLTooDifficult.java \
+	CL.java \
+	Set.java \
+	Timer.java
+
+TESTFILES = \
+	testClStrength.java \
+	testClLinearExpression.java \
+	ClTests.java \
+	ClTestColumns.java
+
+CLASSFILES = $(JAVAFILES:%.java=$(CLASSES)/%.class)
+
+TESTCLASSFILES = $(TESTFILES:%.java=$(CLASSES_TESTS)/%.class)
+
+$(CLASSES)/%.class: .built-package
+
+$(CLASSES_TESTS)/%.class: .built-test
+
+all:	.built-package .built-test
+
+install:
+	echo "*****Copy class files to appropriate place"
+
+.built-package: $(JAVAFILES)
+	$(JAVAC) -d $(CLASSES) $(JAVAC_FLAGS) $(JAVAFILES)
+	touch $@
+
+.built-test: .built-package $(TESTFILES)
+	$(JAVAC) -d $(CLASSES_TESTS) $(JAVAC_FLAGS) $(TESTFILES)
+	touch $@
+
+clean:	
+	rm -f *.class .built-*
+
+TAGS: $(JAVAFILES)
+	jtags $^
+
+tags: TAGS
+
+.PHONY:	all cassowary-tests lib tags install
