@@ -1,4 +1,32 @@
-Thu Mar  4 18:41:03 1999  Greg J Badros  <gjb@cs.washington.edu>
+Fri Mar  5 16:24:05 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile, c++/Cl.h: Fix for renaming of creader.* ->
+ 	ClReader.*; make C libraries as part of lib, shared_lib rules.
+
+	* c++/ClReader.*: Added, renamed from creader.h, creader.y,
+	creader.l
+
+	* c++/ClTableau.h, c++/ClTableau.cc: Added
+	printExternalVariablesTo() fn.
+
+	* c++/ClSimplexSolver.cc:  printExternalVariablesTo in
+	printInternalInfo.
+
+	* c++/ClParseTest.cc: DO not include ClReader.h-- Cl.h includes it
+
+	* c++/ClCTest.c: Make more like a browser-related test, use new
+	CL_TableauPrintExternalVariables()
+
+	* c++/ClC.h, ClC.cc: Added CL_Tableau,
+	CL_TableauPrintExternalVariables.  Use "ends" to terminate
+	strstreams.  Make Strong Stays use medium strength stays.  Make
+	CL_ParseConstraint call ClsFromSz instead of parsing the char *
+	itself.
+
+Thu Mar  4 19:08:23 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/ClVariable.h: Add assert(pclv) before dereferencing through
+	ClVariable's pclv member.
 
 	* c++/Makefile: Added DYNLINK = yes/no variable for controlling
 	dynamic linking more easily.
