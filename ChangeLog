@@ -1,7 +1,42 @@
+Tue Feb 16 15:04:06 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/Cassowary.h,ClAbstractVariable.h,ClMap.h,ClSet.h,Makefile: Use 
+	CL_USE_HASH_MAP_AND_SET, not USE_HASH_MAP_AND_SET. 
+
+	* c++/Cl.h: #undef CL_TRACE_VERBOSE ifdef CL_NO_IO
+
+Tue Feb 16 14:55:12 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* java/ClVariable.java: Add setVarMap(..), getVarMap() for
+	maintaining symbol table of ClVariables.  Added
+	setAttachedObject(..), getAttachedObject() for hanging something
+	off of a variable.
+
+	* java/ClConstraint.java: Added setAttachedObject(..),
+ 	getAttachedObject() for hanging something off of a constraint.
+
+	* java/ClTests.java:  Added inconsistent3() and multiedit() tests
+
+	* java/ClSimplexSolver.java: Manage multiple (nested) edits
+	properly.  Provide access to the _markerVars var through
+	getConstraintMap() accessor.  Deprecate resolve(Vector) fn.
+
+Tue Feb 16 14:29:46 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* README: Updated reference to swig web site.
+
+Tue Feb 16 12:45:04 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* java/ClSimplexSolver.java, java/ClEditInfo.java, java/Makefile: 
+	Fixed Michael Kaufmann's bug.  (See Feb 15 note for C++ version
+	two entries below.)
+
+	* java/*.java: Updated copyright to include 1999. 
+
 Tue Feb 16 10:51:01 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* c++/*: Added CL_FIND_LEAK guard and ctr/ctr counters for
-	tracking various variable kinds 
+	tracking various variable kinds.
 
 Mon Feb 15 18:38:06 1999  Greg J Badros  <gjb@cs.washington.edu>
 
@@ -17,6 +52,8 @@ Mon Feb 15 18:38:06 1999  Greg J Badros  <gjb@cs.washington.edu>
 	code up a bit.  The resolve(vector<Number>) function is
 	deprecated, and now implemented in terms of the indices stored in
 	the new ClEditInfo class.
+
+	* c++/*: Updated copyright to include 1999.
 
 1999-02-15  Greg J Badros  <gjb@cs.washington.edu>
 
