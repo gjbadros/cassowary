@@ -3,6 +3,13 @@
 //
 // A Guile Scheme wrapper for the Cassowary Constraint Solving Toolkit
 //
+// TODO
+// Catch internal errors throughout
+// convenience wrappers (e.g., cl-half)
+// expression-side-effecting
+// standard strength variables
+// extra strength args to add-constraint, add-editvar
+// cl-begin-edit, cl-end-edit, cl-suggest-value
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -199,7 +206,7 @@ print_cl_weight(SCM scm, SCM port, scm_print_state *pstate)
 {
   strstream ss;
   ClSymbolicWeight *pclsw = PclswFromScm(scm);
-  ss << "#<cl-weight" << *pclsw << ">" << ends;
+  ss << "#<cl-weight " << *pclsw << ">" << ends;
   scm_puts(ss.str(), port);
   return 1;
 }
@@ -238,16 +245,111 @@ SCWM_PROC (make_cl_weight, "make-cl-weight", 3, 0, 0,
 }
 #undef FUNC_NAME
 
-#if 0 // FUNCTION_TEMPLATE
-SCWM_PROC (, , 0, 0, 0,
-           ())
-#define FUNC_NAME s_
+
+//// ClStrength wrapper
+#undef SCMTYPEID
+#define SCMTYPEID scm_tc16_cl_strength
+
+long SCMTYPEID;
+
+inline bool FIsClStrengthSCM(SCM scm) 
+{ return SCM_NIMP(scm) && SCM_CAR(scm) == (SCM) SCMTYPEID; }
+
+inline ClStrength *PclsFromScm(SCM scm)
+{ return (ClStrength *)(SCM_CDR(scm)); }
+
+SCM
+mark_cl_strength(SCM scm)
 {
-  return SCM_UNDEFINED;
+  SCM_SETGC8MARK(scm);
+  return SCM_BOOL_F;
+}
+
+size_t
+free_cl_strength(SCM scm)
+{
+  ClStrength *pcls = PclsFromScm(scm);
+  delete pcls;
+  return 0;
+}
+
+int
+print_cl_strength(SCM scm, SCM port, scm_print_state *pstate)
+{
+  strstream ss;
+  ClStrength *pcls = PclsFromScm(scm);
+  ss << "#<cl-strength " << *pcls << ">" << ends;
+  scm_puts(ss.str(), port);
+  return 1;
+}
+
+SCWM_PROC (cl_strength_p, "cl-strength?", 1, 0, 0,
+           (SCM scm))
+#define FUNC_NAME s_cl_strength_p
+{
+  return SCM_BOOL_FromF(FIsClStrengthSCM(scm));
 }
 #undef FUNC_NAME
-#endif
 
+SCWM_PROC (make_cl_strength, "make-cl-strength", 2, 0, 0,
+           (SCM name, SCM weight))
+#define FUNC_NAME s_make_cl_strength
+{
+  int iarg = 1;
+
+  if (!gh_string_p(name))
+    scm_wrong_type_arg(FUNC_NAME,iarg++,name);
+
+  if (!FIsClSymbolicWeightSCM(weight))
+    scm_wrong_type_arg(FUNC_NAME,iarg++,weight);
+  
+  char *szName = gh_scm2newstr(name,NULL);
+  ClSymbolicWeight *pclsw = PclswFromScm(weight);
+  ClStrength *pcls = new ClStrength(szName,*pclsw);
+  delete szName;
+
+  SCM answer;
+
+  SCM_DEFER_INTS;
+  SCM_NEWCELL(answer);
+  SCM_SETCAR(answer, (SCM) SCMTYPEID);
+  SCM_SETCDR(answer, (SCM) pcls);
+  SCM_ALLOW_INTS;
+
+  return answer;
+}
+#undef FUNC_NAME
+
+
+SCWM_PROC (make_cl_strength_3, "make-cl-strength-3", 4, 0, 0,
+           (SCM name, SCM w1, SCM w2, SCM w3))
+#define FUNC_NAME s_make_cl_strength_3
+{
+  int iarg = 1;
+
+  if (!gh_string_p(name)) scm_wrong_type_arg(FUNC_NAME,iarg++,name);
+  if (!gh_number_p(w1)) scm_wrong_type_arg(FUNC_NAME, iarg++, w1);
+  if (!gh_number_p(w2)) scm_wrong_type_arg(FUNC_NAME, iarg++, w2);
+  if (!gh_number_p(w3)) scm_wrong_type_arg(FUNC_NAME, iarg++, w3);
+
+  char *szName = gh_scm2newstr(name,NULL);
+  ClStrength *pcls = new ClStrength(szName,
+                                    gh_scm2double(w1),
+                                    gh_scm2double(w2),
+                                    gh_scm2double(w3));
+  delete szName;
+
+  SCM answer;
+
+  SCM_DEFER_INTS;
+  SCM_NEWCELL(answer);
+  SCM_SETCAR(answer, (SCM) SCMTYPEID);
+  SCM_SETCDR(answer, (SCM) pcls);
+  SCM_ALLOW_INTS;
+
+  return answer;
+}
+#undef FUNC_NAME
 
 
 
@@ -534,10 +636,15 @@ SCWM_PROC (make_cl_equation, "make-cl-equation", 1, 0, 0,
   int iarg = 1;
   ClLinearExpression *pexpr = NULL;
 
-  if (!FIsClLinearExpressionSCM(scmExpr)) {
+  if (!FIsClLinearExpressionSCM(scmExpr) && !FIsClVariableSCM(scmExpr)) {
     scm_wrong_type_arg(FUNC_NAME, iarg++, scmExpr);
   }
-  pexpr = PexprFromScm(scmExpr);
+  if (FIsClLinearExpressionSCM(scmExpr)) {
+    pexpr = PexprFromScm(scmExpr);
+  }
+  if (FIsClVariableSCM(scmExpr)) {
+    pexpr = new ClLinearExpression(*PclvFromScm(scmExpr));
+  }
 
   ClLinearEquation *peq = new ClLinearEquation(*pexpr);
 
@@ -619,7 +726,7 @@ print_cl_inequality(SCM scm, SCM port, scm_print_state *pstate)
 {
   strstream ss;
   ClLinearInequality *pineq = PineqFromScm(scm);
-  ss << "#<cl-inequality" << *pineq << ">" << ends;
+  ss << "#<cl-inequality " << *pineq << ">" << ends;
   scm_puts(ss.str(), port);
   return 1;
 }
@@ -699,6 +806,26 @@ print_cl_solver(SCM scm, SCM port, scm_print_state *pstate)
   scm_puts(ss.str(), port);
   return 1;
 }
+
+
+SCWM_PROC (cl_solver_debug_print, "cl-solver-debug-print", 1, 1, 0,
+           (SCM solver, SCM port))
+#define FUNC_NAME s_cl_solver_debug_print
+{
+  int iarg = 1;
+  if (!FIsClSimplexSolverSCM(solver))
+    scm_wrong_type_arg(FUNC_NAME,iarg++,solver);
+  if (scm_output_port_p(port) == SCM_BOOL_F)
+    scm_wrong_type_arg(FUNC_NAME,iarg++,port);
+  strstream ss;
+  ClSimplexSolver *psolver = PsolverFromScm(solver);
+  psolver->printDebugInfo(ss);
+  ss << ends;
+  scm_puts(ss.str(), port);
+  return SCM_UNDEFINED;
+}
+#undef FUNC_NAME
+
 
 SCWM_PROC (cl_solver_p, "cl-solver?", 1, 0, 0,
            (SCM scm))
@@ -788,6 +915,7 @@ SCWM_PROC (cl_add_editvar, "cl-add-editvar", 2, 0, 0,
 
 MAKE_SMOBFUNS(cl_variable);
 MAKE_SMOBFUNS(cl_weight);
+MAKE_SMOBFUNS(cl_strength);
 MAKE_SMOBFUNS(cl_expression);
 MAKE_SMOBFUNS(cl_equation);
 MAKE_SMOBFUNS(cl_inequality);
@@ -798,6 +926,7 @@ init_cassowary_scm()
 {
   REGISTER_SMOBFUNS(cl_variable);
   REGISTER_SMOBFUNS(cl_weight);
+  REGISTER_SMOBFUNS(cl_strength);
   REGISTER_SMOBFUNS(cl_expression);
   REGISTER_SMOBFUNS(cl_equation);
   REGISTER_SMOBFUNS(cl_inequality);
