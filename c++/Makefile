@@ -18,17 +18,17 @@ SWIG = swig
 PYTHON_INCLUDE = /uns/include/python1.5
 
 #CPPFLAGS = -O6 -DCL_NO_TRACE -DNO_SOLVER_STATS -DNDEBUG -Wall -pedantic -W
-#CPPFLAGS = -O6 -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W
+CPPFLAGS = -O6 -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W
 #CPPFLAGS = -O6 -DNO_REQUIRED_EXCEPTIONS -DCL_NO_TRACE -Wall -pedantic -W
 #CPPFLAGS = -O6 -pg -DCL_NO_TRACE -Wall -pedantic -W
-CPPFLAGS = -g -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W
+#CPPFLAGS = -g -DCL_NO_TRACE -DNO_SOLVER_STATS -Wall -pedantic -W
 #CPPFLAGS = -g -Wall -pedantic -W
 
 #LIB=cassowary-optimized
 #LIB=cassowary-notrace
 #LIB=cassowary-trace
-LIB=cassowary-debug
-#LIB=cassowary
+#LIB=cassowary-debug
+LIB=cassowary
 LIB_FILE=lib$(LIB).a
 
 LDLIBS = -l$(LIB)
