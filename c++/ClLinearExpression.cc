@@ -315,7 +315,18 @@ ClGenericLinearExpression<T>::substituteOut(const ClAbstractVariable &var,
        << solver << ")" << endl;
   cerr << "*this == " << *this << endl;
 #endif
+
   ClVarToCoeffMap::iterator pv = _terms.find(&var);
+
+#ifndef NDEBUG
+  if (pv == _terms.end())
+    {
+    cerr << "substituteOut: pv != _terms.end()" << endl;
+    cerr << "(" << var << ", " << expr << ", " << subject << ", " 
+         << ")" << endl;
+    cerr << "*this == " << *this << endl;
+    }
+#endif
   assert(pv != _terms.end());
   // FIXGJB: this got thrown! assert(!clApprox((*pv).second,0.0));
 
