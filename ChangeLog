@@ -1,3 +1,27 @@
+Mon Apr 10 09:35:42 2000  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* configure.in, README: Bump to 0.61
+
+Mon Apr 10 08:53:03 2000  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* java/ClSimplexSolver.java:  Rename removeConstraint() to
+	removeConstraintInternal and make new removeConstraint just a
+	wrapper around removeConstraintInternal (like change to C++ --
+	still need to call removeConstraintInternal on failed
+	addConstraints).   Invoke ClConstraint.addedTo()/removedFrom()
+	when constraints are added/removed so that they know if they can
+	have their strength changed.
+
+	* java/ClConstraint.java: Added _times_added member var, and
+	addedTo()/removedFrom() memfns to support new changeStrength()
+	member function.
+
+Thu Apr  6 08:20:09 2000  Greg J. Badros  <gjb@cs.washington.edu>
+
+	* c++/ClSimplexSolver.cc (ChangeStrengthAndWeight): Set
+	_fNeedsSolving so that we get the right answer after this function 
+	call.  Thanks Anthony Beurivé!
+
 Sun Mar 12 13:40:44 2000  Greg J. Badros  <gjb@cs.washington.edu>
 
 	* guile/cassowary_scm.cc: Give docstrings as arguments
