@@ -67,7 +67,16 @@ this toolkit that we are aware of.
 HOW TO GET STARTED
 
 First, you should try to build the implementation that you're most
-interested in.
+interested in.  There is some partial autoconf/automake support which
+means that you may be able to just:
+
+./configure
+make
+
+and everything will work.  Alternatively, you can "cd" into the
+directories of interest and try "make -f Makefile.linux all".  See the
+file "INSTALL" for more details about autoconf support and the options
+that the "configure" takes.
 
 Note that the included Makefiles depend upon features of GNU Make.  See:
 
