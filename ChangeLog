@@ -1,3 +1,42 @@
+Wed Mar 17 18:54:16 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* c++/Makefile.am: Use libtool, and added lib_LTLIBRARIES.  Put
+	benchmarks, bugs, and test programs all under $libdir/cassowary.
+	Drop cassoincludedir, as that's just pkginclude, and use
+	include_HEADERS for Cl.h and ClC.h, the main top-level includes.
+	Also install config.h.
+
+	* c++/Cassowary.h:  #undef PACKAGE, VERSION before #including
+	cassowary/config.h as a cheezy workaround. (Switched from "" to
+	<>, and ../ to cassowary/ also).
+
+Wed Mar 17 18:50:49 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* configure.in: Put config.h in c++/cassowary so cassowary must do 
+	#include <cassowary/config.h> so there is no filename conflict
+	with other packages including cassowary header files (e.g.,
+	Scwm).  Added AM_PROG_LIBTOOL call.  Set GUILE variables outside
+	of the guile-prefix ACE_ARG_PATH macro, and set GUILE_PKGDATA_DIR
+	use guile-config to find out where we should install the .so file.
+
+Wed Mar 17 18:43:08 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* guile/Makefile.am: Updated to build using libtool, and to
+	install header files.  Changes name to libconstraints.* so that
+	the guile module name (cassowary constraints) works out, and set
+	it to install in the right place.
+
+Wed Mar 17 18:39:13 1999  Greg J Badros  <gjb@cs.washington.edu>
+
+	* guile/cltests.scm: Added #! lines, change name of module to
+	(cassowary constraints), remove redundant `use-modules' call.
+
+	* guile/cassowary_scm.hpp: #include
+	cassowary/ClLinearExpression_fwd.h, not ClLinearExpression_fwd.h
+
+	* guile/cassowary_scm.cc: Change name of module to (cassowary
+	constraints).  Make the init_cassowary_scm fn static.
+
 Wed Mar 17 07:39:10 1999  Greg J Badros  <gjb@cs.washington.edu>
 
 	* c++/Cassowary.h, c++/ClSimplexSolver.cc: Switch back to
