@@ -2,12 +2,14 @@
 ## Process this file with automake to create Makefile.in
 
 lib_LIBRARIES = libcassowary.a
+lib_LTLIBRARIES = libcassowary.la
+
 LDADD = libcassowary.a
 AM_CPPFLAGS = $(CPPEXTRAFLAGS)
 
-benchdir=$(libdir)/bench
-bugsdir=$(libdir)/bench
-testdir=$(libdir)/test
+benchdir=$(libdir)/cassowary/bench
+bugsdir=$(libdir)/cassowary/bugs
+testdir=$(libdir)/cassowary/tests
 
 bench_PROGRAMS = ClTests QocaBench
 
@@ -45,12 +47,25 @@ libcassowary_a_SOURCES = \
 	ClReader-lex.cc \
 	ClReader.cc
 
+libcassowary_la_SOURCES = \
+	ClAbstractVariable.cc \
+	ClConstraint.cc \
+	ClLinearExpression.cc \
+	ClSimplexSolver.cc \
+	ClStrength.cc \
+	ClSymbolicWeight.cc \
+	ClTableau.cc \
+	ClVariable.cc \
+	ClFloatVariable.cc \
+	ClSlackVariable.cc \
+	ClDummyVariable.cc \
+	ClReader-lex.cc \
+	ClReader.cc
 
-cassoincludedir = $(includedir)/cassowary
 
-pkginclude_HEADERS = Cl.h ClC.h
+include_HEADERS = Cl.h ClC.h
 
-cassoinclude_HEADERS = \
+pkginclude_HEADERS = \
 	Cassowary.h \
 	ClAbstractVariable.h \
 	ClDummyVariable.h \
@@ -79,6 +94,7 @@ cassoinclude_HEADERS = \
 	ClSet.h \
 	ClPoint.h \
 	auto_ptr.h \
+	config.h \
 	debug.h
 
 

@@ -16,7 +16,11 @@
 #define CL_PTR_HASH_DIVISOR 4
 #endif
 
-#include "../config.h"
+#undef PACKAGE
+#undef VERSION
+#ifdef HAVE_CONFIG_H
+#include <cassowary/config.h>
+#endif
 
 #include "ClConstraintHash.h"
 
