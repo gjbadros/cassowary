@@ -25,8 +25,8 @@
 #include "ClObjectiveVariable.h"
 
 class ClVariable;
+class ClPoint;
 
-typedef pair<ClVariable,ClVariable> ClPoint;
 typedef map<const ClConstraint *, ClTableauVarSet > ClConstraintToVarSetMap;
 typedef map<const ClConstraint *, const ClAbstractVariable *> ClConstraintToVarMap;
 typedef vector<const ClAbstractVariable *> ClVarVector;
@@ -73,12 +73,16 @@ class ClSimplexSolver : public ClTableau {
   // and y stays on the same point, rather than the x stay on one and
   // the y stay on another.
   ClSimplexSolver &addPointStays(const vector<const ClPoint *> &listOfPoints);
-  ClSimplexSolver &addPointStay(const ClAbstractVariable &vx, const ClAbstractVariable &vy, double weight)
+
+  ClSimplexSolver &addPointStay(const ClVariable &vx, const ClVariable &vy, double weight)
     { addStay(vx,clsWeak(),weight); addStay(vy,clsWeak(),weight); return *this; }
 
+  ClSimplexSolver &addPointStay(const ClPoint &clp, double weight);
+
+
   // Add a stay of the given strength (default to weak) of v to the tableau
-  ClSimplexSolver &addStay(const ClAbstractVariable &v,
-	       const ClStrength &strength = clsWeak(), double weight = 1.0 )
+  ClSimplexSolver &addStay(const ClVariable &v,
+			   const ClStrength &strength = clsWeak(), double weight = 1.0 )
     { 
     ClStayConstraint *pcn = new ClStayConstraint(v,strength,weight); 
     return addConstraint(*pcn); 
@@ -97,6 +101,15 @@ class ClSimplexSolver : public ClTableau {
   // Re-solve the current collection of constraints for new values for
   // the constants of the edit variables.
   void resolve(const vector<Number> &newEditConstants);
+
+  // Convenience function for resolve-s of two variables
+  void resolve(Number x, Number y)
+    {
+    vector<Number> vals;
+    vals.push_back(x);
+    vals.push_back(y);
+    resolve(vals);
+    }
 
   friend ostream &operator<<(ostream &xo, const ClSimplexSolver &tableau);
   ostream &printOn(ostream &xo) const;
