@@ -90,8 +90,8 @@ sources = \
 	ClSlackVariable.cc \
 	ClDummyVariable.cc \
 	ClReader-lex.cc \
+        ClReader.cc \
 	ClC.cc
-
 
 libcassowary_a_SOURCES = \
 	$(sources) \
