@@ -29,10 +29,14 @@ JAVAFILES = \
 
 CLASSFILES = $(JAVAFILES:.java=.class)
 
-%.class: $(JAVAFILES)
-	$(JAVAC) $(JAVAC_FLAGS) $(JAVAFILES)
-
 all:	$(CLASSFILES)
+
+%.class: $(JAVAFILES)
+	CLASSPATH=$(CLASSPATH):.. $(JAVAC) $(JAVAC_FLAGS) $(JAVAFILES)
+
+run:
+	CLASSPATH=$(CLASSPATH):.. appletviewer quaddemo.htm
+
 
 test:	$(TESTCLASSFILES)
 
@@ -44,4 +48,4 @@ TAGS: $(JAVAFILES)
 
 tags: TAGS
 
-.PHONY:	all cassowary-tests lib tags ntsources tests depend
+.PHONY:	all cassowary-tests lib tags ntsources tests depend run
