@@ -5,6 +5,9 @@ Also see ../IMPORTANT for some important notes that you mustn't overlook.
 This directory (wrappers/) contains SWIG source to generate a wrapper of
 the C++ implementation of cassowary for use with Python and guile.
 
+Python Swig Interface specification and
+Python demonstration/benchmark applications by Tessa Lau <tlau@cs.washington.edu>
+
 At one point the Python wrappers were usable with Python 1.4
 
 bench.py is a benchmark program to test its performance, and demo.py and
@@ -14,4 +17,4 @@ demonstration.
 The Python interface is no longer working (neither with Python 1.4, nor
 Python 1.5).  They may be updated in the future to fix the problems that 
 currently exist.  If you make these fixes yourself, please pass your
-enhancements along to the authors.
+enhancements along to the authors via <cassowary@cs.washington.edu>. Thanks!
