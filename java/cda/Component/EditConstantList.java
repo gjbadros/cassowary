@@ -6,6 +6,8 @@
  * $Id$
  */
 
+package EDU.Washington.grad.noth.cda;
+
 import java.util.Vector;
 import java.awt.Point;
 
@@ -117,6 +119,10 @@ public class EditConstantList {
 
 /*
  * $Log$
+ * Revision 1.3  1998/06/23 02:08:38  gjb
+ * Added import of cassowary package so that the cda doesn't need to be
+ * in the same package as the solver.
+ *
  * Revision 1.2  1998/05/09 00:30:20  gjb
  * Remove cr-s
  *

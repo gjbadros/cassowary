@@ -13,11 +13,14 @@
 //
 // QuadDemo.java
 
+package EDU.Washington.grad.gjb.cassowary_demos;
+
 import java.awt.*;
 import java.applet.*;
 import java.util.Vector;
 
 import EDU.Washington.grad.gjb.cassowary.*;
+
 
 public class QuadDemo extends Applet {
   DraggableBox db[];  // Line endpoints

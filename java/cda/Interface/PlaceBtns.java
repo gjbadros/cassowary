@@ -7,6 +7,8 @@
  *
  */
 
+package EDU.Washington.grad.noth.cda;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -63,6 +65,9 @@ public class PlaceBtns extends Panel {
 
 /*
  * $Log$
+ * Revision 1.2  1998/05/09 00:30:35  gjb
+ * Remove cr-s
+ *
  * Revision 1.1  1998/05/09 00:11:16  gjb
  * Added
  *

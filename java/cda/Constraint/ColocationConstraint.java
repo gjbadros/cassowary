@@ -6,9 +6,11 @@
  *
  */
 
+package EDU.Washington.grad.noth.cda;
+
 import java.awt.Graphics;
 import java.awt.Color;
-import CDA_G;
+//import CDA_G;
 
 import EDU.Washington.grad.gjb.cassowary.*;
 
@@ -123,6 +125,10 @@ public class ColocationConstraint extends Constraint {
 
 /*
  * $Log$
+ * Revision 1.3  1998/06/23 02:08:48  gjb
+ * Added import of cassowary package so that the cda doesn't need to be
+ * in the same package as the solver.
+ *
  * Revision 1.2  1998/05/09 00:30:27  gjb
  * Remove cr-s
  *

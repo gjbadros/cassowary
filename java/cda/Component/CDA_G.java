@@ -5,6 +5,8 @@
  *
  */
 
+package EDU.Washington.grad.noth.cda;
+
 import java.awt.Color;
 
 public class CDA_G {
@@ -20,6 +22,9 @@ public class CDA_G {
 
 /*
  * $Log$
+ * Revision 1.2  1998/05/09 00:30:18  gjb
+ * Remove cr-s
+ *
  * Revision 1.1  1998/05/09 00:10:54  gjb
  * Added
  *

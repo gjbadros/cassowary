@@ -14,6 +14,8 @@
  *
  */
 
+package EDU.Washington.grad.noth.cda;
+
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -407,6 +409,10 @@ public class SelPoint implements Cloneable {
 
 /*
  * $Log$
+ * Revision 1.3  1998/06/23 02:08:41  gjb
+ * Added import of cassowary package so that the cda doesn't need to be
+ * in the same package as the solver.
+ *
  * Revision 1.2  1998/05/09 00:30:22  gjb
  * Remove cr-s
  *

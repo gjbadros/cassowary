@@ -21,6 +21,8 @@
  *
  */
 
+package EDU.Washington.grad.noth.cda;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.AWTEvent;
@@ -30,6 +32,7 @@ import java.util.Enumeration;
 import java.awt.image.*;
 
 import EDU.Washington.grad.gjb.cassowary.*;
+
 
 class DrawPanel extends Panel {
   DPMouseMotionListener drawPanelMML;
@@ -1676,6 +1679,10 @@ class DrawPanel extends Panel {
 
 /*
  * $Log$
+ * Revision 1.4  1998/06/23 02:08:54  gjb
+ * Added import of cassowary package so that the cda doesn't need to be
+ * in the same package as the solver.
+ *
  * Revision 1.3  1998/05/14 22:34:22  gjb
  * Print full solver information upon "i" keystroke
  *

@@ -12,6 +12,8 @@
 //
 // DraggableBox.java
 
+package EDU.Washington.grad.gjb.cassowary_demos;
+
 import java.awt.Graphics;
 
 import EDU.Washington.grad.gjb.cassowary.*;

@@ -4,6 +4,8 @@
  * $Id$
  */
 
+package EDU.Washington.grad.noth.cda;
+
 import java.awt.image.ImageObserver;
 import java.awt.Image;
 
@@ -31,6 +33,9 @@ public class ImageButtonImageObserver implements ImageObserver {
 
 /*
  * $Log$
+ * Revision 1.2  1998/05/09 00:30:34  gjb
+ * Remove cr-s
+ *
  * Revision 1.1  1998/05/09 00:11:15  gjb
  * Added
  *

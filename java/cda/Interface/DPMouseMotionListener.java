@@ -5,6 +5,8 @@
  *
  */
 
+package EDU.Washington.grad.noth.cda;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseEvent;
@@ -65,6 +67,9 @@ public final class DPMouseMotionListener extends MouseAdapter
 
 /*
  * $Log$
+ * Revision 1.2  1998/05/09 00:30:31  gjb
+ * Remove cr-s
+ *
  * Revision 1.1  1998/05/09 00:11:13  gjb
  * Added
  *

@@ -5,6 +5,8 @@
  *
  */
 
+package EDU.Washington.grad.noth.cda;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -42,6 +44,10 @@ public final class PlaceBtnsActionListener implements ActionListener {
 
 /*
  * $Log$
+ * Revision 1.3  1998/05/14 23:40:06  gjb
+ * Patch from noth to redraw the buttons after they are clicked to fix
+ * the disappearing icon bug that appears (only) on linux
+ *
  * Revision 1.2  1998/05/09 00:30:35  gjb
  * Remove cr-s
  *

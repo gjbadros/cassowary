@@ -26,9 +26,26 @@ COMPONENT_FILES = \
   Component/CircleCC.java \
   Component/CDA_G.java 
 
+CONSTRAINT_FILES = \
+  Constraint/AboveConstraint.java \
+  Constraint/AdjacencyConstraint.java \
+  Constraint/AlignmentConstraint.java \
+  Constraint/AnchorConstraint.java \
+  Constraint/BelowConstraint.java \
+  Constraint/ColocationConstraint.java \
+  Constraint/Constraint.java \
+  Constraint/LeftOfConstraint.java \
+  Constraint/RightOfConstraint.java
+
+MAIN_FILES = \
+  Main/Main.java \
+  Main/MainComponentListener.java
+
+ALL_FILES = $(INTERFACE_FILES) $(COMPONENT_FILES) $(CONSTRAINT_FILES) $(MAIN_FILES)
+
+
 if HAVE_JAVA
-java_JAVA = \
-  $(INTERFACE_FILES) $(COMPONENT_FILES)
+java_JAVA = $(ALL_FILES)
 else
 classjava.stamp:
 	echo timestamp > classjava.stamp
@@ -54,7 +71,7 @@ ICON_BMPS = \
   Icons/BottomAlign.bmp \
   Icons/Blank.bmp 
 
-EXTRA_DIST = $(INTERFACE_FILES) $(COMPONENT_FILES) $(ICON_BMPS)
+EXTRA_DIST = $(ALL_FILES) $(ICON_BMPS)
 
 ALL_ICON_FILES = $(patsubst %.bmp,Icons/%.bmp,$(ICON_BMPS))
 
