@@ -13,9 +13,18 @@
 
 #include "Cassowary.h"
 
+class ClVariable;
+
 class ClSimplexSolver {
  public:
-  ClSimplexSolver();
+  ClSimplexSolver()
+    { }
+
+  void noteRemovedVariable(const ClVariable &v, const ClVariable &subject)
+    { }
+
+  void noteAddedVariable(const ClVariable &v, const ClVariable &subject)
+    { }
 
  private:
 };

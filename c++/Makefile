@@ -15,14 +15,13 @@ CXX = $(CPP)
 # -falt-external-templates
 LDFLAGS = -L/uns/lib/egcs
 
-TEST_OBJS = ClStrength.o ClSymbolicWeight.o ClLinearExpression.o ClAbstractVariable.o
+TEST_OBJS = ClStrength.o ClSymbolicWeight.o ClLinearExpression.o ClVariable.o
 TEST_SRCS = $(OBJS:.o=.cc)
 
 SOURCES = $(wildcard *.cc)
 
 HEADERS = Cassowary.h ClErrors.h \
-	  ClAbstractVariable.h ClDummyVariable.h ClObjectVariable.h \
-	  ClSlackVariable.h ClVariable.h \
+	  ClVariable.h \
 	  ClConstraint.h ClStrength.h
 
 all:	libcassowary.a cassowary-tests
@@ -30,7 +29,7 @@ all:	libcassowary.a cassowary-tests
 TAGS: $(SOURCES)
 	etags $^
 
-cassowary-tests: test-ClStrength test-ClVariable
+cassowary-tests: test-ClStrength test-ClVariable test-ClLinearExpression test-ClConstraint
 
 test-ClStrength: test-ClStrength.o ClStrength.o ClSymbolicWeight.o
 	$(CPP) $(LDFLAGS) -o $@ $^
@@ -41,6 +40,8 @@ test-ClLinearExpression: test-ClLinearExpression.o $(TEST_OBJS)
 test-ClVariable: test-ClVariable.o $(TEST_OBJS)
 	$(CPP) $(LDFLAGS) -o $@ $^
 
+test-ClConstraint: test-ClConstraint.o $(TEST_OBJS)
+	$(CPP) $(LDFLAGS) -o $@ $^
 
 cassowary-test:	$(TEST_OBJS)
 

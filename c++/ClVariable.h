@@ -11,45 +11,90 @@
 #ifndef ClVariable_H
 #define ClVariable_H
 
+#include <iostream.h>
+#include <stdio.h>
+#include <assert.h>
 #include "Cassowary.h"
-#include "ClAbstractVariable.h"
-#ifdef FIXGJB_OLD_SMALLTALK_WAY
-#include "ClLinearExpression.h"
-#include "ClLinearEquation.h"
-#endif
 
-class ClVariable: public ClAbstractVariable {
+typedef enum { CLAbstractVar, CLSlackVar, CLObjectiveVar, CLDummyVar, CLVar } ClVariableKind;
+
+class ClVariable {
 public:
-
-  // Constructor
-  ClVariable(const String &name, Number value = 0.0) :
+  ClVariable(String name = "", ClVariableKind kind = CLVar, Number value = 0.0) :
+    my_kind(kind),
     my_name(name),
-    my_value(value)
-    { } 
+    my_value(value),
+    my_fDummy(false),
+    my_fExternal(false),
+    my_fPivotable(false),
+    my_fRestricted(false)
+    { 
+    if (name.length() == 0)
+      {
+      char sz[16];
+      sprintf(sz,"%ld",iVariableNumber++);
+      my_name = String(sz);
+      }
+    switch (kind)
+      {
+      case CLAbstractVar:
+	break;
+      case CLSlackVar:
+	my_fPivotable = true;
+	my_fRestricted = true;
+	break;
+      case CLObjectiveVar:
+	break;
+      case CLDummyVar:
+	my_fDummy = true;
+	my_fRestricted = true;
+	break;
+      case CLVar:
+	my_fExternal = true;
+	break;
+      }
+    assert (isCLVar() || my_value == 0.0);
+    }
 
-  ClVariable() :
-    my_name(String("<NO_NAME>")),
-    my_value(0.0)
-    { } 
+  bool isCLVar() const
+    { return my_kind == CLVar; }
+    
+  // Return the name of the variable
+  String name() const
+    { return my_name; }
 
-  virtual ~ClVariable()
-    { }
+  // Set the name of the variable
+  void setName(String const &name)
+    { my_name = name; }
+
+  // Return true if this a dummy variable (used as a marker variable
+  // for required equality constraints).  Such variables aren't
+  // allowed to enter the basis when pivoting.
+  bool isDummy() const
+    { return my_fDummy; }
 
   // Return true if this a variable known outside the solver.  
   // (We need to give such variables a value after solving is complete.)
   bool isExternal() const
-    { return true; }
+    { return my_fExternal; }
 
   // Return true if we can pivot on this variable.
   bool isPivotable() const
-    { return false; }
+    { return my_fPivotable; }
 
   // Return true if this is a restricted (or slack) variable.  Such
   // variables are constrained to be non-negative and occur only
   // internally to the simplex solver.
   bool isRestricted() const
-    { return false; }
+    { return my_fRestricted; }
 
+  // Prints a semi-descriptive representation to the stream, using the
+  // name if there is one, and otherwise the hash number of this
+  // object.
+  //	EXAMPLES
+  //	  x[10.0]		-- w/ name
+  //	  x[0.0,100]		-- w/ name, bounds but no value yet
+  //	  CV#345(10.0)		-- w/o name
   ostream &printOn(ostream &xo) const
   {  
     xo << "[" << my_name << ":" << my_value << "]";
@@ -58,9 +103,10 @@ public:
   
   // Return the current value I hold.
   Number value() const
-    { return my_value; }
+    { assert(isCLVar()); return my_value; }
+
   void set_value(Number const &value)
-    { my_value = value; }
+    { assert(isCLVar()); my_value = value; }
 
   friend ostream& operator<<(ostream &xos, const ClVariable &clv)
     { clv.printOn(xos); return xos; }
@@ -68,74 +114,16 @@ public:
   friend bool operator<(const ClVariable &cl1, const ClVariable &cl2)
     { return cl1.my_name < cl2.my_name; }
 
-
-#ifdef FIXGJB_OLD_SMALLTALK_WAY
-  // These get replaced by a conversion from ClVariable to ClLinearExpression
-
-  ClLinearExpression asLinearExpression() const;
-  
-  ClLinearExpression times(Number n) const
-    { return asLinearExpression().times(n); }
-
-  ClLinearExpression plus(const ClLinearExpression &expr) const
-    { return asLinearExpression().plus(expr); }
-
-  ClLinearExpression minus(const ClLinearExpression &expr) const
-    { return asLinearExpression().minus(expr); }
-
-  ClLinearExpression divide(Number n) const
-    { return asLinearExpression().divide(n); }
-
-  // We should return a new linear expression (aNumber/self) -- but
-  // since the result must be linear, this is always an error.
-  ClLinearExpression divFrom(Number n) const
-    { throw ExCLNonlinearExpression; }
-
-  ClLinearExpression subtractFrom(const ClLinearExpression &expr) const
-    { times(-1.0).plus(expr); }
-
-  // Return a linear constraint self=expr with given strength and weight
-  ClLinearEquation cnEqual(const ClLinearExpression &expr, 
-			   const ClStrength &strength = ClStrength::required(),
-			   double weight = 1.0);
-  ClLinearEquation cnEqual(const ClVariable &expr,
-			   const ClStrength &strength = ClStrength::required(),
-			   double weight = 1.0);
-  ClLinearEquation cnEqual(Number expr,
-			   const ClStrength &strength = ClStrength::required(),
-			   double weight = 1.0);
-
-  // Return a linear constraint self>=expr with given strength and weight
-  ClLinearInequality cnGEQ(const ClLinearExpression &expr, 
-			   const ClStrength &strength = ClStrength::required(), 
-			   double weight = 1.0);
-  ClLinearInequality cnGEQ(const ClVariable &expr,
-			   const ClStrength &strength = ClStrength::required(),
-			   double weight = 1.0);
-  ClLinearInequality cnGEQ(Number expr,
-			   const ClStrength &strength = ClStrength::required(),
-			   double weight = 1.0);
-
-
-  // Return a linear constraint self<=expr with given strength and weight
-  ClLinearInequality cnLEQ(const ClLinearExpression &expr, 
-			   const ClStrength &strength = ClStrength::required(),
-			   double weight = 1.0);
-  ClLinearInequality cnLEQ(const ClVariable &expr,
-			   const ClStrength &strength = ClStrength::required(),
-			   double weight = 1.0);
-  ClLinearInequality cnLEQ(Number expr,
-			   const ClStrength &strength = ClStrength::required(),
-			   double weight = 1.0);
-
-#endif
-  /* Also has "@" for creating point pairs */
-  /* arithmetic linear expression builders */
-  /* constraint creators */ 
-
 private:
+  ClVariableKind my_kind;
   String my_name;
   Number my_value;
+  bool my_fDummy;
+  bool my_fExternal;
+  bool my_fPivotable;
+  bool my_fRestricted;
+  
+  static long iVariableNumber;
 };
 
 #endif

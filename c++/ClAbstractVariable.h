@@ -18,9 +18,9 @@
 
 typedef enum { CLAbstractVar, CLSlackVar, CLObjectiveVar, CLDummyVar, CLVar } ClVariableKind;
 
-class ClAbstractVariable {
+class ClVariable {
 public:
-  ClAbstractVariable(ClVariableKind kind = CLAbstractVar, String name = "", Number value = 0.0) :
+  ClVariable(ClVariableKind kind = CLVar, String name = "", Number value = 0.0) :
     my_kind(kind),
     my_name(name),
     my_value(value),

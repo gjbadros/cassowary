@@ -17,19 +17,20 @@
 
 
 class ClConstraint {
-private:
-
-  /// instance variables
-  ClStrength my_strength;
-
-  double my_weight;
-
 public:
+
+  ClConstraint(double weight = 1.0, const ClStrength &strength = clsRequired() ) :
+    my_strength(strength),
+    my_weight(weight)
+    { }
+
+  virtual ~ClConstraint()
+    { }
 
   // Return my linear expression.  (For linear equations, this
   // constraint represents expression=0; for linear inequalities it
   // represents expression>=0.)
-  ClLinearExpression expression() const = 0;
+  virtual ClLinearExpression expression() const = 0;
 
   // Returns true if this is an edit constraint
   virtual bool isEditConstraint() const
@@ -53,6 +54,16 @@ public:
   virtual double weight() const
     { return my_weight; }
 
+  virtual ostream &printOn(ostream &xo) const
+    {
+    xo << my_strength << " (" << expression() << " = 0 )";
+    return xo;
+    }
+
+  friend ostream& operator<<(ostream &xos, const ClConstraint &constraint)
+    { constraint.printOn(xos); return xos; }
+
+
 private:
 
   void setStrength( const ClStrength &strength )
@@ -61,7 +72,10 @@ private:
   void setWeight( double weight )
     { my_weight = weight; }
 
+  /// instance variables
+  ClStrength my_strength;
 
+  double my_weight;
 };
 
 #endif

@@ -19,12 +19,17 @@ class ClLinearConstraint : public ClConstraint {
  public:
 
   // Constructor
-  ClLinearConstraint()
+  ClLinearConstraint(const ClLinearExpression &cle,
+		     double weight = 1.0,
+		     const ClStrength strength = clsRequired() ) :
+    ClConstraint(weight, strength),
+    my_expression(cle)
+    { }
   
   // Return my linear expression.  (For linear equations, this
   // constraint represents expression=0; for linear inequalities it
   // represents expression>=0.)
-  ClLinearExpression expression() 
+  ClLinearExpression expression() const
     { return my_expression; }
 
  private:
@@ -34,6 +39,6 @@ class ClLinearConstraint : public ClConstraint {
   virtual void setExpression( const ClLinearExpression &expr)
     { my_expression = expr; }
 
-}
+};
 
 #endif
