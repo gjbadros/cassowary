@@ -121,6 +121,8 @@ ClTableau::removeRow(const ClAbstractVariable &var)
     {
     const ClAbstractVariable *pv = (*it_term).first;
     _columns[pv].erase(&var);
+    if (_columns[pv].size() == 0)
+      _columns.erase(pv);
     }
 
   _infeasibleRows.erase(&var);
@@ -151,7 +153,9 @@ ClTableau::substituteOut(const ClAbstractVariable &oldVar, const ClLinearExpress
 #endif
 
   ClTableauColumnsMap::iterator it_oldVar = _columns.find(&oldVar);
-  assert(it_oldVar != _columns.end());
+  if (it_oldVar == _columns.end())
+    return;
+
   ClTableauVarSet &varset = (*it_oldVar).second;
   ClTableauVarSet::iterator it = varset.begin();
   for (; it != varset.end(); ++it)
