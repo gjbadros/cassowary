@@ -18,6 +18,7 @@
 #include "ClSimplexSolver.h"
 #include "ClErrors.h"
 #include "ClVariable.h"
+#include "ClPoint.h"
 #include "ClSlackVariable.h"
 #include "ClObjectiveVariable.h"
 #include "ClDummyVariable.h"
@@ -82,11 +83,20 @@ ClSimplexSolver::addPointStays(const vector<const ClPoint *> &listOfPoints)
   static const double multiplier = 2.0;
   for ( ; it != listOfPoints.end(); it++ )
     {
-    addPointStay((*it)->first,(*it)->second,weight);
+    addPointStay((*it)->Xvar(),(*it)->Yvar(),weight);
     weight *= multiplier;
     }
   return *this;
 }
+
+ClSimplexSolver &
+ClSimplexSolver::addPointStay(const ClPoint &clp, double weight)
+{ 
+  addStay(clp.Xvar(),clsWeak(),weight);
+  addStay(clp.Yvar(),clsWeak(),weight);
+  return *this;
+}
+
 
 // Remove the constraint cn from the tableau
 // Also remove any error variable associated with cn
@@ -833,6 +843,8 @@ ClSimplexSolver::newExpression(const ClConstraint &cn)
       // FIXGJB: pzRow->addVariable(eminus,cn.strength().symbolicWeight() * cn.weight());
       pzRow->setVariable(*peminus,swCoeff);
       noteAddedVariable(*peminus,my_objective);
+      my_errorVars[&cn].insert(peminus.get());
+      my_errorVars[&cn].insert(peplus.get());
       if (cn.isStayConstraint()) 
 	{
 	my_stayPlusErrorVars.push_back(peplus.get());
