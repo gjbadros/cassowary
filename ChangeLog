@@ -1,3 +1,9 @@
+Wed Sep  9 09:46:35 1998  Greg Badros  <gjb@cs.washington.edu>
+
+	* c++/ClLinearExpression.h, c++/ClLinearExpression.cc: added uses
+	of 'typename' keyword as needed by egcs-1.1b's -pedantic (and the
+	C++ FDIS)
+
 Sun Sep  6 13:19:01 1998  Greg Badros  <gjb@cs.washington.edu>
 
 	* c++/ClSimplexSolver.h: Added _pv field, and Pv() setPv() getter
