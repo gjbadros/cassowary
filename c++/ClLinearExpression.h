@@ -21,109 +21,112 @@
 #include "Cassowary.h"
 #include "debug.h"
 #include "ClAbstractVariable.h"
+#include "ClLinearExpression_fwd.h"
 
 class ClSimplexSolver;
 class ClTableau;
-class ClLinearExpression;
+class ClSymbolicWeight;
 
 ClLinearExpression &cleNil();
 
-typedef map<const ClAbstractVariable *,Number> ClVarToNumberMap;
 
-class ClLinearExpression  {
+template <class T>
+class ClGenericLinearExpression  {
  public:
+  typedef map<const ClAbstractVariable *,T> ClVarToCoeffMap;
+
   // convert Number-s into ClLinearExpression-s
-  ClLinearExpression(Number num = 0.0);
+  ClGenericLinearExpression(T num = 0.0);
 
   // Convert from ClVariable to a ClLinearExpression
   // this replaces ClVariable::asLinearExpression
-  ClLinearExpression(const ClAbstractVariable &clv, Number value = 1.0, Number constant = 0.0);
+  ClGenericLinearExpression(const ClAbstractVariable &clv, T value = 1.0, T constant = 0.0);
 
   // copy ctr
-  ClLinearExpression(const ClLinearExpression &expr) :
+  ClGenericLinearExpression(const ClGenericLinearExpression<T> &expr) :
     my_constant(expr.my_constant),
     my_terms(expr.my_terms)
     { }
 
-  virtual ~ClLinearExpression();
+  virtual ~ClGenericLinearExpression();
 
   // Return a new linear expression formed by multiplying self by x.
   // (Note that this result must be linear.)
-  ClLinearExpression times(Number x) const;
+  ClGenericLinearExpression<T> times(Number x) const;
 
   // Return a new linear expression formed by multiplying self by x.
   // (Note that this result must be linear.)
-  ClLinearExpression times(const ClLinearExpression &expr) const;
+  ClGenericLinearExpression<T> times(const ClGenericLinearExpression<T> &expr) const;
 
   // Return a new linear expression formed by adding x to self.
-  ClLinearExpression plus(const ClLinearExpression &expr) const;
+  ClGenericLinearExpression<T> plus(const ClGenericLinearExpression<T> &expr) const;
 
   // Return a new linear expression formed by subtracting x from self.
-  ClLinearExpression minus(const ClLinearExpression &expr) const;
+  ClGenericLinearExpression<T> minus(const ClGenericLinearExpression<T> &expr) const;
 
   // Return a new linear expression formed by dividing self by x.
   // (Note that this result must be linear.)
-  ClLinearExpression divide(Number x) const;
+  ClGenericLinearExpression<T> divide(Number x) const;
 
 
 
   // Return a new linear expression formed by multiplying self by x.
   // (Note that this result must be linear.)
-  ClLinearExpression *p_times(Number x) const
-    { return new ClLinearExpression(times(x)); }
+  ClGenericLinearExpression<T> *p_times(Number x) const
+    { return new ClGenericLinearExpression<T>(times(x)); }
 
   // Return a new linear expression formed by adding x to self.
-  ClLinearExpression *p_plus(const ClLinearExpression &expr) const
-    { return new ClLinearExpression(plus(expr)); }
+  ClGenericLinearExpression<T> *p_plus(const ClGenericLinearExpression<T> &expr) const
+    { return new ClGenericLinearExpression<T>(plus(expr)); }
 
   // Return a new linear expression formed by subtracting x from self.
-  ClLinearExpression *p_minus(const ClLinearExpression &expr) const
-    { return new ClLinearExpression(minus(expr)); }
+  ClGenericLinearExpression<T> *p_minus(const ClGenericLinearExpression<T> &expr) const
+    { return new ClGenericLinearExpression<T>(minus(expr)); }
 
   // Return a new linear expression formed by dividing self by x.
   // (Note that this result must be linear.)
-  ClLinearExpression *p_divide(Number x) const
-    { return new ClLinearExpression(divide(x)); }
+  ClGenericLinearExpression<T> *p_divide(Number x) const
+    { return new ClGenericLinearExpression<T>(divide(x)); }
 
   // Return a new linear expression formed by dividing self by x.
   // (Note that this result must be linear.)
-  ClLinearExpression divide(const ClLinearExpression &expr) const;
+  ClGenericLinearExpression<T> divide(const ClGenericLinearExpression<T> &expr) const;
 
   // Return a new linear expression (aNumber/this).  Since the result
   // must be linear, this is permissible only if 'this' is a constant.
-  ClLinearExpression divFrom(const ClLinearExpression &expr) const;
+  ClGenericLinearExpression<T> divFrom(const ClGenericLinearExpression<T> &expr) const;
 
   // Return a new linear expression (aNumber-this).
-  ClLinearExpression subtractFrom(const ClLinearExpression &expr) const
+  ClGenericLinearExpression<T> subtractFrom(const ClGenericLinearExpression<T> &expr) const
   { return expr.minus(*this); }
 
   // Add n*expr to this expression for another expression expr.
-  ClLinearExpression &addExpression(const ClLinearExpression &expr, 
+  ClGenericLinearExpression<T> &addExpression(const ClGenericLinearExpression<T> &expr, 
 				    Number n = 1.0);
 
   // Add n*expr to this expression for another expression expr.
   // Notify the solver if a variable is added or deleted from this
   // expression.
-  ClLinearExpression &addExpression(const ClLinearExpression &expr, Number n,
+  ClGenericLinearExpression<T> &addExpression(const ClGenericLinearExpression<T> &expr, Number n,
 				    const ClAbstractVariable &subject,
 				    ClTableau &solver);
 
   // Add a term c*v to this expression.  If the expression already
   // contains a term involving v, add c to the existing coefficient.
   // If the new coefficient is approximately 0, delete v.
-  ClLinearExpression &addVariable(const ClAbstractVariable &v, Number c = 1.0);
+  ClGenericLinearExpression<T> &addVariable(const ClAbstractVariable &v, T c = 1.0);
 
   // Add a term c*v to this expression.  If the expression already
   // contains a term involving v, add c to the existing coefficient.
   // If the new coefficient is approximately 0, delete v.
-  ClLinearExpression &setVariable(const ClAbstractVariable &v, Number c)
+  ClGenericLinearExpression<T> &setVariable(const ClAbstractVariable &v, T c)
     {assert(c != 0.0);  my_terms[&v] = c; return *this; }
 
   // Add a term c*v to this expression.  If the expression already
   // contains a term involving v, add c to the existing coefficient.
   // If the new coefficient is approximately 0, delete v.  Notify the
   // solver if v appears or disappears from this expression.
-  ClLinearExpression &addVariable(const ClAbstractVariable &v, Number c,
+  ClGenericLinearExpression<T> &addVariable(const ClAbstractVariable &v, T c,
 				  const ClAbstractVariable &subject,
 				  ClTableau &solver);
 
@@ -138,7 +141,7 @@ class ClLinearExpression  {
   // PRECONDITIONS:
   //   var occurs with a non-zero coefficient in this expression.
   void substituteOut(const ClAbstractVariable &v, 
-		     const ClLinearExpression &expr,
+		     const ClGenericLinearExpression<T> &expr,
 		     const ClAbstractVariable &subject,
 		     ClTableau &solver);
 
@@ -176,32 +179,32 @@ class ClLinearExpression  {
   //
   // Note that the term involving subject has been dropped.
   // Returns the reciprocal, so changeSubject can use it, too
-  Number newSubject(const ClAbstractVariable &subject);
+  T newSubject(const ClAbstractVariable &subject);
 
   // Return the coefficient corresponding to variable var, i.e.,
   // the 'ci' corresponding to the 'vi' that var is:
   //     v1*c1 + v2*c2 + .. + vn*cn + c
-  Number coefficientFor(const ClAbstractVariable &var) const
+  T coefficientFor(const ClAbstractVariable &var) const
     { 
-    map<const ClAbstractVariable *, Number>::const_iterator it = my_terms.find(&var);
+    map<const ClAbstractVariable *, T>::const_iterator it = my_terms.find(&var);
     if (it != my_terms.end())
       return (*it).second;
     return 0.0;
     }
 
-  Number constant() const
+  T constant() const
     { return my_constant; }
 
-  void set_constant(Number c)
+  void set_constant(T c)
     { my_constant = c; }
 
-  const ClVarToNumberMap &terms() const
+  const ClVarToCoeffMap &terms() const
     { return my_terms; }
 
-  ClVarToNumberMap &terms() 
+  ClVarToCoeffMap &terms() 
     { return my_terms; }
 
-  void incrementConstant(Number c)
+  void incrementConstant(T c)
     { my_constant += c; }
 
   bool isConstant() const
@@ -209,82 +212,82 @@ class ClLinearExpression  {
 
   virtual ostream &printOn(ostream &xo) const;
 
-  friend ostream &operator<<(ostream &xo,const ClLinearExpression &cle)
+  friend ostream &operator<<(ostream &xo,const ClGenericLinearExpression<T> &cle)
     { return cle.printOn(xo); }
 
-  friend ClLinearExpression operator+(const ClLinearExpression &e1,
-				      const ClLinearExpression &e2)
+  friend ClGenericLinearExpression<T> operator+(const ClGenericLinearExpression<T> &e1,
+				      const ClGenericLinearExpression<T> &e2)
     { return e1.plus(e2); }
 
-  friend ClLinearExpression operator-(const ClLinearExpression &e1,
-				      const ClLinearExpression &e2)
+  friend ClGenericLinearExpression<T> operator-(const ClGenericLinearExpression<T> &e1,
+				      const ClGenericLinearExpression<T> &e2)
     { return e1.minus(e2); }
 
-  friend ClLinearExpression operator*(const ClLinearExpression &e1,
-				      const ClLinearExpression &e2)
+  friend ClGenericLinearExpression<T> operator*(const ClGenericLinearExpression<T> &e1,
+				      const ClGenericLinearExpression<T> &e2)
     { return e1.times(e2); }
 
 
-  friend ClLinearExpression operator/(const ClLinearExpression &e1,
-				      const ClLinearExpression &e2)
+  friend ClGenericLinearExpression<T> operator/(const ClGenericLinearExpression<T> &e1,
+				      const ClGenericLinearExpression<T> &e2)
     { return e1.divide(e2); }
 
   // FIXGJB -- this may be wrong -- should test underlying expression for equality
-  friend bool operator==(const ClLinearExpression &e1,
-			 const ClLinearExpression &e2)
+  friend bool operator==(const ClGenericLinearExpression<T> &e1,
+			 const ClGenericLinearExpression<T> &e2)
     { return &e1 == &e2; }
 
   /// Named versions of the operator functions for ease of
   /// wrapping, or expressing using prefix notation
 
-  friend ClLinearExpression Plus(const ClLinearExpression &e1,
-				 const ClLinearExpression &e2)
+  friend ClGenericLinearExpression<T> Plus(const ClGenericLinearExpression<T> &e1,
+				 const ClGenericLinearExpression<T> &e2)
     { return e1.plus(e2); }
 
-  friend ClLinearExpression Minus(const ClLinearExpression &e1,
-				  const ClLinearExpression &e2)
+  friend ClGenericLinearExpression<T> Minus(const ClGenericLinearExpression<T> &e1,
+				  const ClGenericLinearExpression<T> &e2)
     { return e1.minus(e2); }
 
-  friend ClLinearExpression Times(const ClLinearExpression &e1,
-				  const ClLinearExpression &e2)
+  friend ClGenericLinearExpression<T> Times(const ClGenericLinearExpression<T> &e1,
+				  const ClGenericLinearExpression<T> &e2)
     { return e1.times(e2); }
 
 
-  friend ClLinearExpression *Divide(const ClLinearExpression &e1,
-				   const ClLinearExpression &e2)
-    { return new ClLinearExpression(e1.divide(e2)); }
+  friend ClGenericLinearExpression<T> *Divide(const ClGenericLinearExpression<T> &e1,
+				   const ClGenericLinearExpression<T> &e2)
+    { return new ClGenericLinearExpression<T>(e1.divide(e2)); }
 
-  friend ClLinearExpression *p_Plus(const ClLinearExpression &e1,
-				   const ClLinearExpression &e2)
-    { return new ClLinearExpression(e1.plus(e2)); }
+  friend ClGenericLinearExpression<T> *p_Plus(const ClGenericLinearExpression<T> &e1,
+				   const ClGenericLinearExpression<T> &e2)
+    { return new ClGenericLinearExpression<T>(e1.plus(e2)); }
 
-  friend ClLinearExpression *p_Minus(const ClLinearExpression &e1,
-				    const ClLinearExpression &e2)
-    { return new ClLinearExpression(e1.minus(e2)); }
+  friend ClGenericLinearExpression<T> *p_Minus(const ClGenericLinearExpression<T> &e1,
+				    const ClGenericLinearExpression<T> &e2)
+    { return new ClGenericLinearExpression<T>(e1.minus(e2)); }
 
-  friend ClLinearExpression *p_Times(const ClLinearExpression &e1,
-				    const ClLinearExpression &e2)
-    { return new ClLinearExpression(e1.times(e2)); }
+  friend ClGenericLinearExpression<T> *p_Times(const ClGenericLinearExpression<T> &e1,
+				    const ClGenericLinearExpression<T> &e2)
+    { return new ClGenericLinearExpression<T>(e1.times(e2)); }
 
-  friend ClLinearExpression *p_Divide(const ClLinearExpression &e1,
-				     const ClLinearExpression &e2)
-    { return new ClLinearExpression(e1.divide(e2)); }
+  friend ClGenericLinearExpression<T> *p_Divide(const ClGenericLinearExpression<T> &e1,
+				     const ClGenericLinearExpression<T> &e2)
+    { return new ClGenericLinearExpression<T>(e1.divide(e2)); }
 
 
   // FIXGJB -- this may be wrong -- should test underlying expression for equality
-  friend bool FEquals(const ClLinearExpression &e1,
-		      const ClLinearExpression &e2)
+  friend bool FEquals(const ClGenericLinearExpression<T> &e1,
+		      const ClGenericLinearExpression<T> &e2)
     { return &e1 == &e2; }
 
-  ClLinearExpression &multiplyMe(Number x);
+  ClGenericLinearExpression<T> &multiplyMe(T x);
 
  private:
 
-  Number my_constant;
-  ClVarToNumberMap my_terms;
+  T my_constant;
+  ClVarToCoeffMap my_terms;
 
 };
 
-typedef ClLinearExpression *PClLinearExpression;
+typedef ClGenericLinearExpression<Number>::ClVarToCoeffMap ClVarToNumberMap;
 
 #endif
