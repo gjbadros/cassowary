@@ -24,8 +24,10 @@ COMPONENT_FILES = \
   CircleCC.java \
   CDA_G.java 
 
+if HAVE_JAVA
 java_JAVA = \
   $(INTERFACE_FILES) $(COMPONENT_FILES)
+endif
 
 ICON_BMPS = \
   LineCC.bmp \
@@ -49,5 +51,3 @@ ICON_GIFS = $(ICON_BMPS:%.bmp=classes/%.gif)
 
 demo: all
 	tar -cf cdademo.tar $(ALL_CLASSES) $(ICON_GIFS) classes/*.htm*
-
-CDA_HOME = /scratch/gjb/cassowary/java/cda

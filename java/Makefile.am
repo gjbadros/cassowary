@@ -1,9 +1,7 @@
 ## $Id$
 ## Process this file with automake to create Makefile.in
 
-SUBDIRS=demos cda
-
-java_JAVA = \
+JAVAFILES = \
 	ClAbstractVariable.java \
 	ClDummyVariable.java \
 	ClObjectiveVariable.java \
@@ -34,3 +32,9 @@ java_JAVA = \
 	CL.java \
 	Set.java \
 	Timer.java
+
+SUBDIRS=demos cda
+
+if HAVE_JAVA
+java_JAVA = $(JAVAFILES)
+endif
