@@ -93,7 +93,7 @@ inline ostream &operator<<(ostream &xo, const ClVariable &clv)
 #ifdef CL_USE_HASH_MAP_AND_SET
 struct hash<ClVariable> { 
   size_t operator()(const ClVariable & v) const
-    { return size_t(v.get_pclv());  }
+    { return size_t((unsigned long)v.get_pclv()/CL_PTR_HASH_DIVISOR);  }
 };
 #endif
 

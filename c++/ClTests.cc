@@ -635,12 +635,18 @@ addDel(const int nCns = 900, const int nVars = 900, const int nResolves = 10000)
        {  
        rgpcns[j] = new ClLinearEquation(expr);
        }
+#ifdef CL_SHOW_CNS_IN_BENCHMARK
+    cout << "Cn[" << j << "]: " << *rgpcns[j] << endl;
+#endif
     }
 
   cout << "done building data structures" << endl;
   cout << "time = " << timer.ElapsedTime() << "\n" << endl;
   timer.Start();
   int cExceptions = 0;
+#ifdef CL_SHOW_CNS_IN_BENCHMARK
+  cout << "Exceptions on: ";
+#endif
   for (j = 0; j < nCns; j++)
     {
     // add the constraint -- if it's incompatible, just ignore it
@@ -652,8 +658,14 @@ addDel(const int nCns = 900, const int nVars = 900, const int nResolves = 10000)
       {
       cExceptions++;
       rgpcns[j] = NULL;
+#ifdef CL_SHOW_CNS_IN_BENCHMARK
+      cout << j << " ";
+#endif
       }
     }
+#ifdef CL_SHOW_CNS_IN_BENCHMARK
+  cout << "\n" << endl;
+#endif
   solver.solve();
   cout << "done adding constraints [" << cExceptions << " exceptions]" << endl;
   cout << "time = " << timer.ElapsedTime() << "\n" << endl;
@@ -698,7 +710,7 @@ addDel(const int nCns = 900, const int nVars = 900, const int nResolves = 10000)
     {
     if (rgpcns[j])
       {
-      solver.removeConstraint(*(rgpcns[j]));
+      solver.removeConstraint(rgpcns[j]);
       }
     }
 

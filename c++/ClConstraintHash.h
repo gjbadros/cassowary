@@ -20,12 +20,12 @@ class ClConstraint;
 
 struct hash<const ClConstraint *> {
   size_t operator()(const ClConstraint * const p) const 
-    { return size_t(p); }
+    { return size_t((unsigned long)p/CL_PTR_HASH_DIVISOR); }
 };
 
 struct hash<ClConstraint *> {
   size_t operator()(ClConstraint * const p) const 
-    { return size_t(p); }
+    { return size_t((unsigned long)p/CL_PTR_HASH_DIVISOR); }
 };
 
 #endif // CL_USE_HASH_MAP_AND_SET

@@ -39,4 +39,10 @@ typedef double Number;
 #define NEWVAR(x) do { cerr << "line " << __LINE__ << ": new " << x << endl; } while (0)
 #define DELVAR(x) do { cerr << "line " << __LINE__ << ": del " << x << endl; } while (0)
 
+
+#ifndef CL_PTR_HASH_DIVISOR
+#define CL_PTR_HASH_DIVISOR 4
+#endif
+
+
 #endif

@@ -30,20 +30,24 @@ FLEX_FLAGS =
 
 CPPFLAGS = -Wall -pedantic -W
 
-CPPFLAGS += -DCL_SOLVER_CHECK_INTEGRITY
+#CPPFLAGS += -DCL_SOLVER_CHECK_INTEGRITY
 
-#CPPFLAGS += -O6 -DNEBUG
+#CPPFLAGS += -DCL_NO_DEPRECATED
+
+CPPFLAGS += -O6 -DNEBUG
 #CPPFLAGS += -O6
 #CPPFLAGS += -O2
-CPPFLAGS += -g
+#CPPFLAGS += -g
 
-#CPPFLAGS += -DCL_USE_HASH_MAP_AND_SET
+CPPFLAGS += -DCL_USE_HASH_MAP_AND_SET
 
 #CPPFLAGS += -DCL_TRACE
 
 #CPPFLAGS += -DCL_SOLVER_STATS
 
 #CPPFLAGS += -DCL_NO_IO   # The tests will not work if I/O is disabled (by enabling this define)
+
+#CPPFLAGS += -DCL_PTR_HASH_DIVISOR=1  #defaults to 4
 
 OTHER_LIBS = 
 #OTHER_LIBS = ../../gc/gc.a
@@ -53,7 +57,6 @@ LIB=cassowary-notrace
 #LIB=cassowary-trace
 #LIB=cassowary-debug
 #LIB=cassowary
-LIB_FILE=lib$(LIB).a
 
 LDLIBS = -l$(LIB)
 
@@ -158,7 +161,7 @@ TAGS: $(SOURCES) $(HEADERS)
 
 cassowary-tests: $(TESTS)
 
-%: %.o $(LIB_FILE) $(OTHER_LIBS)
+%: %.o $(CL_LIBRARY) $(OTHER_LIBS)
 	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 cassowary-test:	$(TEST_OBJS)
@@ -169,7 +172,7 @@ creader.cc: creader.y
 creader-lex.cc: creader.l
 	$(FLEX) $(FLEX_FLAGS) -Pcl -o$@ $^ 
 
-ClParseTest: $(LIB_FILE) $(OTHER_LIBS) ClParseTest.o creader-lex.o creader.o
+ClParseTest: $(CL_LIBRARY) $(OTHER_LIBS) ClParseTest.o creader-lex.o creader.o
 	$(CPP) $(LDFLAGS) -o $@ $^ $(LDLIBS) -lfl
 
 libcassowary.a:	
