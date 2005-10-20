@@ -18,7 +18,6 @@
 #endif
 
 #include "Cassowary.h"
-#include "ClVariable.h"
 #include "ClErrors.h"
 #include "ClTypedefs.h"
 #include <list>
@@ -35,7 +34,15 @@ class ClSolver {
     { } 
 
   // Add the constraint cn to the solver
-  virtual ClSolver &AddConstraint(ClConstraint *const pcn) = 0;
+  virtual ClSolver &AddConstraint(ClConstraint *const pcn) 
+    throw(ExCLTooDifficultSpecial,
+          ExCLStrictInequalityNotAllowed,
+          ExCLReadOnlyNotAllowed,
+          ExCLEditMisuse,
+          ExCLRequiredFailure,
+          ExCLRequiredFailureWithExplanation,
+          ExCLInternalError)
+      = 0;
 
   // Remove the constraint cn from the solver
   virtual ClSolver &RemoveConstraint(ClConstraint *const pcn) = 0;
@@ -50,9 +57,7 @@ class ClSolver {
           AddConstraint(pcn);
           return true;
       }
-      catch (const ExCLRequiredFailure &e)
-        { return false; }
-      catch (const ExCLTooDifficult &e)
+      catch (const ExCLError &e)
         { return false; }
     }
 

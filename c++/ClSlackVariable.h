@@ -33,8 +33,8 @@ public:
 #endif
 
 protected:
-  friend ClTableau;
-  friend ClSimplexSolver;
+  friend class ClTableau;
+  friend class ClSimplexSolver;
 
   ClSlackVariable(string Name = "") :
     ClAbstractVariable(Name)

@@ -13,7 +13,7 @@
 #define CL_TYPEDEFS_H__
 
 #if defined(HAVE_CONFIG_H) && !defined(CONFIG_H_INCLUDED) && !defined(CONFIG_INLINE_H_INCLUDED)
-#include <cassowary/config-inline.h>
+#include <config-inline.h>
 #define CONFIG_INLINE_H_INCLUDED
 #endif
 
@@ -26,6 +26,8 @@
 class ClVariable;
 class ClConstraint;
 class ClEditInfo;
+
+using namespace std;
 
 // For Tableau
 // ClTableauVarSet is not a ClSet, for performance reasons 

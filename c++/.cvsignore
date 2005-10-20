@@ -14,7 +14,7 @@ ClLeakTest
 ClParseTest
 ClReader-lex.cc
 ClReader.cc
-ClReader.cc.h
+ClReader.hh
 ClSubgraphTest
 ClTestColumns
 ClTests

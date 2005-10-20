@@ -39,7 +39,8 @@ class ClLinearInequality : public ClLinearConstraint {
 		    ClCnRelation op,
 		    const ClLinearExpression &cle,
 		    const ClStrength &strength = ClsRequired(),
-		    double weight = 1.0) :
+		    double weight = 1.0)
+     throw (ExCLEditMisuse):
    ClLinearConstraint( cle, strength, weight),
    _fStrictInequality(false)
    { 

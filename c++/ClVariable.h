@@ -24,7 +24,6 @@
 #include "Cassowary.h"
 #include "ClFloatVariable.h"
 #include "ClFDVariable.h"
-#include "ClTypedefs.h"
 
 class ClVariable;
 typedef map<const string,ClVariable> StringToVarMap;
@@ -94,7 +93,7 @@ public:
   bool IsNil() const { return pclv == NULL; }
 
   virtual FDNumber DesiredValue() const
-    { assert(false); }
+    { assert(false); return 0; } 
 
   virtual list<FDNumber> *PlfdnDomain()
     { assert(false); return NULL; }

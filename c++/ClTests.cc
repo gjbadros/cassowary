@@ -1073,7 +1073,6 @@ main( int argc, char **argv )
     fResult = x(); fAllOkResult &= fResult; \
     if (!fResult) cout << "Failed!" << endl;
 
-#if 0
     RUN_TEST(simple1);
     RUN_TEST(simple2);
     RUN_TEST(justStay1);
@@ -1086,7 +1085,6 @@ main( int argc, char **argv )
     RUN_TEST(multiedit);
     RUN_TEST(multiedit2);
     // RUN_TEST(blackboxsat);
-#endif
 
     int testNum = 1, cns = 90, resolves = 100, solvers=10;
     long seed = time(NULL);

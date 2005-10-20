@@ -54,7 +54,7 @@ class ClTableau {
     cerr << "(" << v << ", " << subject << ")" << endl;
 #endif
     ClVarSet &column = _columns[v];
-    ClVarSet::const_iterator it = column.find(subject);
+    ClVarSet::iterator it = column.find(subject);
     assert(it != column.end());
     column.erase(it);
 #ifdef CL_TRACE_VERBOSE

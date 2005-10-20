@@ -51,13 +51,13 @@ ostream &
 ClTableau::printExternalVariablesTo(ostream &xo) const
 {
   xo << "Parametric: ";
-  ClVarSet::iterator itParVars = _externalParametricVars.begin();
+  ClVarSet::const_iterator itParVars = _externalParametricVars.begin();
   for ( ; itParVars != _externalParametricVars.end(); ++itParVars ) {
     ClVariable v = *itParVars;
     xo << v << " ";
   }
   xo << "\nBasic: ";
-  ClVarSet::iterator itRowVars = _externalRows.begin();
+  ClVarSet::const_iterator itRowVars = _externalRows.begin();
   for ( ; itRowVars != _externalRows.end() ; ++itRowVars ) {
     ClVariable v = *itRowVars;
     xo << v << " ";

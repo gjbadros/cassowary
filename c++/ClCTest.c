@@ -31,16 +31,15 @@ int main(int argc, char *argv[] )
   CL_SimplexSolverAddStrongStay(solver,frameWidth,10);
   CL_SimplexSolverAddStrongStay(solver,frameHeight,10);
   x = CL_ClvNew("x",0,solver);
-#if defined(CL_HAVE_GTL) && defined(CL_BUILD_FD_SOLVER)
+#ifdef CL_BUILD_FD_SOLVER_WITH_GTL
   y = CL_CldvNew("y",4,6,9,15,20,FDN_EOL);
 #endif
-
   CL_ClvPrint(x,stdout);
   printf("\n");
-#if defined(CL_HAVE_GTL) && defined(CL_BUILD_FD_SOLVER)
+#ifdef CL_BUILD_FD_SOLVER_WITH_GTL
   CL_ClvPrint(y,stdout);
   printf("\n");
-#endif 
+#endif
   printf("x = %g, frameWidth = %g\n",CL_ClvValue(x),CL_ClvValue(frameWidth));
 
   cn = CL_ParseConstraint("x = frameWidth/3", "strong");

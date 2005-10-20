@@ -33,6 +33,8 @@ class ExCLError : public exception {
   ExCLError() : _msg(NULL) { }
   virtual string description() const
     { return "(ExCLError) An error has occured in CL"; }
+
+  virtual ~ExCLError() throw () { }
  protected:
   char *_msg;
 };
@@ -41,6 +43,8 @@ class ExCLInternalError : public ExCLError {
  public:
   ExCLInternalError(const char *sz)
     { _msg = strdup(sz); }
+  virtual ~ExCLInternalError() throw () { }
+
   virtual string description() const
     { 
       if (_msg) return _msg;
@@ -52,6 +56,8 @@ class ExCLBadResolve : public ExCLError {
  public:
   ExCLBadResolve(const char *sz)
     { _msg = strdup(sz); }
+  virtual ~ExCLBadResolve() throw () { }
+  
   virtual string description() const
     {
       if (_msg) return _msg;
@@ -63,6 +69,9 @@ class ExCLEditMisuse : public ExCLError {
  public:
   ExCLEditMisuse(const char *sz)
     { _msg = strdup(sz); }
+
+  virtual ~ExCLEditMisuse() throw () { }
+  
   virtual string description() const
     {
       if (_msg) return _msg;
@@ -73,6 +82,8 @@ class ExCLEditMisuse : public ExCLError {
 
 class ExCLTooDifficult : public ExCLError {
  public:
+  virtual ~ExCLTooDifficult() throw () { }
+
   virtual string description() const
     { return "(ExCLTooDifficult) The constraints are too difficult to solve"; }
 };
@@ -81,6 +92,9 @@ class ExCLTooDifficultSpecial : public ExCLTooDifficult {
  public:
   ExCLTooDifficultSpecial(const char *sz)
     { _msg = strdup(sz); }
+
+  virtual ~ExCLTooDifficultSpecial() throw () { }
+
   virtual string description() const
     {
       if (_msg) return _msg;
@@ -90,48 +104,58 @@ class ExCLTooDifficultSpecial : public ExCLTooDifficult {
 
 class ExCLReadOnlyNotAllowed : public ExCLTooDifficult {
  public:
+  virtual ~ExCLReadOnlyNotAllowed() throw () { }
+
   virtual string description() const
   { return "(ExCLReadOnlyNotAllowed) The read-only annotation is not permitted by the solver"; }
 };
 
 class ExCLCycleNotAllowed : public ExCLTooDifficult {
  public:
+  virtual ~ExCLCycleNotAllowed() throw () { }
   virtual string description() const
   { return "(ExCLCycleNotAllowed) A cyclic constraint graph is not permitted by the solver"; }
 };
 
 class ExCLStrictInequalityNotAllowed : public ExCLTooDifficult {
  public:
+  virtual ~ExCLStrictInequalityNotAllowed() throw () { }
+
   virtual string description() const
   { return "(ExCLStrictInequalityNotAllowed) The strict inequality is not permitted by the solver"; }
 };
 
 class ExCLRequiredFailure : public ExCLError {
  public:
+  virtual ~ExCLRequiredFailure() throw () { }
   virtual string description() const
     { return "(ExCLRequiredFailure) A required constraint cannot be satisfied"; }
 };
 
 class ExCLNotEnoughStays : public ExCLError {
  public:
+  virtual ~ExCLNotEnoughStays() throw () { }
   virtual string description() const
     { return "(ExCLNotEnoughStays) There are not enough stays to give specific values to every variable"; }
 };
 
 class ExCLNonlinearExpression : public ExCLError {
  public:
+  virtual ~ExCLNonlinearExpression() throw () { }
   virtual string description() const
     { return "(ExCLNonlinearExpression) The resulting expression would be nonlinear"; }
 };
   
 class ExCLConstraintNotFound : public ExCLError {
  public:
+  virtual ~ExCLConstraintNotFound() throw () { }
   virtual string description() const
     { return "(ExCLConstraintNotFound) Tried to remove a constraint that was never added"; }
 };
 
 class ExCLParseError : public ExCLError {
  public:
+  virtual ~ExCLParseError() throw () { }
   virtual string description() const
     { return "(ExCLParseError)"; }
 };
@@ -141,6 +165,7 @@ class ExCLParseErrorMisc : public ExCLParseError {
   ExCLParseErrorMisc(const string &s) 
       : _msg("(ExCLParseError) ")
     { _msg += s; }
+  virtual ~ExCLParseErrorMisc() throw () { }
   virtual string description() const
     { return _msg; }
  private:
@@ -155,6 +180,7 @@ class ExCLParseErrorBadIdentifier : public ExCLParseError {
       _msg += id;
       _msg += "'";
     }
+  virtual ~ExCLParseErrorBadIdentifier() throw () { }
   virtual string description() const
     { return _msg; }
  private:
@@ -166,6 +192,7 @@ class ExCLParseErrorBadIdentifier : public ExCLParseError {
 class ExCLRequiredFailureWithExplanation : public ExCLRequiredFailure 
 {
 public:
+  virtual ~ExCLRequiredFailureWithExplanation() throw () { }
   virtual string description() const
     { return "(ExCLRequiredFailureWithExplanation) A required constraint cannot be satisfied"; }
   virtual void AddConstraint(const ClConstraint *cnExpl)

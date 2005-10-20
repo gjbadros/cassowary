@@ -168,7 +168,7 @@ endif
 ClReader-lex.cc: ClReader.l ClReader.h ClReader.cc.h
 	$(LEX) -Pcl -o$@ $<
 
-ClReader.cc.h ClReader.cc: ClReader.y ClReader.h
-	$(YACC) -d -pcl --output-file $@ $<
+ClReader.cc ClReader.hh: ClReader.y ClReader.h
+	$(YACC) -d -pcl --output-file ClReader.cc $<
 
 cassowary/config-inline.h: cassowary

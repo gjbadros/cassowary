@@ -4,7 +4,7 @@
 // Original Smalltalk Implementation by Alan Borning
 // This C++ Implementation by Greg J. Badros, <gjb@cs.washington.edu>
 // http://www.cs.washington.edu/homes/gjb
-// (C) 1998, 1999 Greg J. Badros and Alan Borning
+// (C) 1998, 1999, 2005 Greg J. Badros and Alan Borning
 // See ../LICENSE for legal details regarding this software
 //
 // ClSimplexSolver.cc
@@ -20,7 +20,7 @@
 #include "cl_auto_ptr.h"
 #include <algorithm>
 #include <float.h>
-#include <strstream>
+#include <sstream>
 #include <queue>
 
 #ifdef HAVE_CONFIG_H
@@ -28,7 +28,7 @@
 #define CONFIG_H_INCLUDED
 #endif
 
-const char *szCassowaryVersion = VERSION;
+const char *szCassowaryVersion = ".60"; // VERSION; 
 
 // Need to delete all expressions
 // and all slack and dummy variables
@@ -51,6 +51,13 @@ ClSimplexSolver::~ClSimplexSolver()
 // Add the constraint cn to the tableau
 ClSimplexSolver &
 ClSimplexSolver::AddConstraint(ClConstraint *const pcn)
+    throw(ExCLTooDifficultSpecial,
+          ExCLStrictInequalityNotAllowed,
+          ExCLReadOnlyNotAllowed,
+          ExCLEditMisuse,
+          ExCLRequiredFailure,
+          ExCLRequiredFailureWithExplanation,
+          ExCLInternalError)
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -248,7 +255,7 @@ ClSimplexSolver::RemoveEditVarsTo(int n)
 /* A predicate used for remove_if */
 class VarInVarSet : public unary_function<ClVariable,bool> {
 public:
-  VarInVarSet(const ClVarSet &clvset) : 
+  VarInVarSet(ClVarSet &clvset) :
       _set(clvset),
       _setEnd(clvset.end()) 
     { }
@@ -268,6 +275,7 @@ private:
 // Also remove any error variable associated with cn
 ClSimplexSolver &
 ClSimplexSolver::RemoveConstraintInternal(const ClConstraint *const pcn)
+    throw (ExCLConstraintNotFound)
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -549,6 +557,7 @@ ClSimplexSolver::Resolve()
 
 ClSimplexSolver &
 ClSimplexSolver::SuggestValue(ClVariable v, Number x)
+    throw (ExCLEditMisuse)
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -557,9 +566,9 @@ ClSimplexSolver::SuggestValue(ClVariable v, Number x)
   if (NULL == pcei)
     {
 #ifndef CL_NO_IO
-    strstream ss;
+    stringstream ss;
     ss << "SuggestValue for variable " << v << ", but var is not an edit variable" << ends;
-    throw ExCLEditMisuse(ss.str());
+    throw ExCLEditMisuse(ss.str().c_str());
 #else
     throw ExCLEditMisuse(v.Name().c_str());
 #endif
@@ -752,6 +761,9 @@ void ClSimplexSolver::BuildExplanation(ExCLRequiredFailureWithExplanation &e,
 // false if not.
 bool 
 ClSimplexSolver::TryAddingDirectly(ClLinearExpression &expr) 
+      throw (ExCLRequiredFailureWithExplanation,
+             ExCLInternalError,
+             ExCLRequiredFailure)
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -798,6 +810,9 @@ ClSimplexSolver::TryAddingDirectly(ClLinearExpression &expr)
 // 'NewExpression:', which is called before this method.
 ClVariable
 ClSimplexSolver::ChooseSubject(ClLinearExpression &expr)
+    throw (ExCLRequiredFailureWithExplanation,
+           ExCLInternalError,
+           ExCLRequiredFailure)
 {
 #ifdef CL_TRACE
   Tracer TRACER(__FUNCTION__);
@@ -1023,8 +1038,7 @@ ClSimplexSolver::DualOptimize()
 	    {
 	    Number zc = pzRow->CoefficientFor(v);
 	    r = zc/c; // FIXGJB r:= zc/c or Zero, as ClSymbolicWeight-s
-	    if (r < ratio || 
-                (ClApprox(r,ratio) && v.get_pclv() < entryVar.get_pclv()))
+	    if (r < ratio)
 	      {
 	      entryVar = v;
 	      ratio = r;
@@ -1033,9 +1047,9 @@ ClSimplexSolver::DualOptimize()
 	  }
 	if (ratio == DBL_MAX)
 	  {
-          strstream ss;
+          stringstream ss;
 	  ss << "ratio == nil (DBL_MAX)" << ends;
-	  throw ExCLInternalError(ss.str());
+	  throw ExCLInternalError(ss.str().c_str());
 	  }
 	Pivot(entryVar,exitVar);
 	}
@@ -1230,10 +1244,14 @@ ClSimplexSolver::Optimize(ClVariable zVar)
       {
       ClVariable v = (*it).first;
       Number c = (*it).second;
-      if (v.IsPivotable() && c < 0.0 && (entryVar == clvNil || v.get_pclv() < entryVar.get_pclv()))
+      //      if (v.IsPivotable() && c < 0.0 && (entryVar == clvNil || v.get_pclv() < entryVar.get_pclv()))
+      if (v.IsPivotable() && c < objectiveCoeff)
 	{
 	objectiveCoeff = c;
 	entryVar = v;
+	// A. Beurive' Tue Jul 13 23:03:05 CEST 1999 Why the most
+	// negative?  I encountered unending cycles of pivots!
+	break;
 	}
       }
     // if all coefficients were positive (or if the objective
@@ -1272,9 +1290,10 @@ ClSimplexSolver::Optimize(ClVariable zVar)
           // if multiple variables are about the same,
           // always pick the lowest via some total
           // ordering -- I use their addresses in memory
-	  if (r < minRatio || 
-              (ClApprox(r,minRatio) &&
-               v.get_pclv() < exitVar.get_pclv()))
+          //	  if (r < minRatio || 
+          //              (ClApprox(r,minRatio) &&
+          //               v.get_pclv() < exitVar.get_pclv()))
+	  if (r < minRatio)
 	    {
 #ifdef CL_TRACE
 	    cerr << "New minRatio == " << r << endl;
@@ -1291,9 +1310,9 @@ ClSimplexSolver::Optimize(ClVariable zVar)
     // application.
     if (minRatio == DBL_MAX)
       {
-      strstream ss;
+      stringstream ss;
       ss << "objective function is unbounded!" << ends;
-      throw ExCLInternalError(ss.str());
+      throw ExCLInternalError(ss.str().c_str());
       }
     Pivot(entryVar, exitVar);
 #ifdef CL_TRACE
@@ -1512,6 +1531,7 @@ ostream &operator<<(ostream &xo, const ClSimplexSolver &clss)
 
 bool 
 ClSimplexSolver::FIsConstraintSatisfied(const ClConstraint *const pcn) const
+    throw (ExCLConstraintNotFound)
 {
   ClConstraintToVarMap::const_iterator it_marker = _markerVars.find(pcn);
   if (it_marker == _markerVars.end())

@@ -15,7 +15,7 @@
 #include "ClC.h"
 
 #include "Cl.h"
-#include <strstream.h>
+#include <sstream>
 #include <stdio.h>
 #include <limits.h>
 
@@ -117,37 +117,37 @@ CL_SimplexSolver CL_SimplexSolverNew()
 void 
 CL_ClvPrint(CLV var, FILE *out)
 {
-  strstream xo;
+  stringstream xo;
   xo << *var << ends;
-  fprintf(out,"%s",xo.str());
+  fprintf(out,"%s",xo.str().c_str());
 }
 
 /* Print the ClSolver object out to the given FILE * */
 void 
 CL_SolverPrint(CL_Solver solver, FILE *out)
 {
-  strstream xo;
+  stringstream xo;
   xo << *solver << ends;
-  fprintf(out,"%s",xo.str());
+  fprintf(out,"%s",xo.str().c_str());
 }
 
 /* Print the constraint object out to the given FILE * */
 void 
 CL_ConstraintPrint(CL_Constraint pcn, FILE *out)
 {
-  strstream xo;
+  stringstream xo;
   xo << *pcn << ends;
-  fprintf(out,"%s",xo.str());
+  fprintf(out,"%s",xo.str().c_str());
 }
 
 
 void 
 CL_TableauPrintExternalVariables(CL_Tableau tableau, FILE *out)
 {
-  strstream xo;
+  stringstream xo;
   tableau->printExternalVariablesTo(xo);
   xo << ends;
-  fprintf(out,"%s",xo.str());
+  fprintf(out,"%s",xo.str().c_str());
 }
 
 
@@ -219,7 +219,7 @@ CL_ClvIsNil(const CLV var)
 CL_Constraint CL_ParseConstraint(const char *szConstraintRule, const char *szConstraintStrength)
 {
   try {
-    istrstream xiLine(szConstraintRule);
+    istringstream xiLine(szConstraintRule);
     ClConstraint *pcn = PcnParseConstraint(xiLine,ClVarLookupInMap(varmap,false),
                                            ClsFromSz(szConstraintStrength));
     return pcn;

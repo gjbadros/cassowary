@@ -15,7 +15,7 @@
    (uses the -d option of bison) */
 
 #include "ClReader.h"
-#include "ClReader.cc.h"
+#include "ClReader.hh"
 
 #ifdef HAVE_CONFIG_H
 #include <cassowary/config.h>

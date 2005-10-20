@@ -36,11 +36,13 @@
 #include <iostream>
 #endif
 #pragma warning(disable : 4786)
+#pragma warning(disable : 4101)
+#pragma warning(disable : 4267)
 using namespace std;
-#define __FUNCTION__ "WIN"
+// #define __FUNCTION__ "WIN"
 #else
 #ifndef CL_NO_IO
-#include <iostream.h>
+#include <iostream>
 #endif
 #endif
 

@@ -14,6 +14,13 @@
 
 ClSolver &
 ClSolver::AddConstraint(ClConstraint *const ) 
+    throw(ExCLTooDifficultSpecial,
+          ExCLStrictInequalityNotAllowed,
+          ExCLReadOnlyNotAllowed,
+          ExCLEditMisuse,
+          ExCLRequiredFailure,
+          ExCLRequiredFailureWithExplanation,
+          ExCLInternalError)
 {
   return *this;
 }
@@ -54,4 +61,3 @@ ostream &operator<<(ostream &xo, const ClSolver &solver)
 
 ostream &operator<<(ostream &xo, const list<FDNumber> &listFDN)
 { return PrintTo(xo,listFDN); }
-

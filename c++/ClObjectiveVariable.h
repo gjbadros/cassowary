@@ -25,8 +25,8 @@ class ClSimplexSolver;
 
 class ClObjectiveVariable : public ClAbstractVariable {
 protected:
-  friend ClTableau;
-  friend ClSimplexSolver;
+  friend class ClTableau;
+  friend class ClSimplexSolver;
 
   ClObjectiveVariable(string name = "") :
     ClAbstractVariable(name)
