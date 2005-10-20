@@ -36,9 +36,11 @@ creader.cc.h
 gmon.out
 gmon.out-setExtOpt
 lib
+lm
 output
 randoms.txt
 stamp-h
+stamp-h1
 test-ClBounds
 test-ClConstraint
 test-ClLinearExpression

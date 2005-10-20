@@ -42,6 +42,13 @@ class ClTimedSimplexSolver :
   
   // Add the constraint cn to the tableau
   ClSimplexSolver &AddConstraint(ClConstraint *const pcn)
+    throw(ExCLTooDifficultSpecial,
+          ExCLStrictInequalityNotAllowed,
+          ExCLReadOnlyNotAllowed,
+          ExCLEditMisuse,
+          ExCLRequiredFailure,
+          ExCLRequiredFailureWithExplanation,
+          ExCLInternalError)
   { 
     _addTimer.Start();
     ++_cAdd;
@@ -51,6 +58,13 @@ class ClTimedSimplexSolver :
   }
 
   ClSimplexSolver &AddConstraint(ClConstraint &cn)
+    throw(ExCLTooDifficultSpecial,
+          ExCLStrictInequalityNotAllowed,
+          ExCLReadOnlyNotAllowed,
+          ExCLEditMisuse,
+          ExCLRequiredFailure,
+          ExCLRequiredFailureWithExplanation,
+          ExCLInternalError)
   { return AddConstraint(&cn); }
   
 
@@ -79,6 +93,7 @@ class ClTimedSimplexSolver :
   // Remove the constraint cn from the tableau
   // Also remove any error variable associated with cn
   ClSimplexSolver &RemoveConstraint(ClConstraint *const pcn)
+      throw (ExCLConstraintNotFound)
   { 
     _removeTimer.Start();
     ++_cRemove;

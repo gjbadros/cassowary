@@ -25,9 +25,9 @@
 
 #include <guile/gh.h>
 
-#include <iostream.h>
+#include <iostream>
 #include <assert.h>
-#include <strstream.h>
+#include <sstream>
 #include "cl-snarf.h"
 
 #include "ClVariable.h"
@@ -41,6 +41,8 @@
 #include "ClTimedSimplexSolver.h"
 
 #include <vector>
+
+using namespace std;
 
 inline ClTimedSimplexSolver *PtimedSolverFromScm(SCM scm)
 { return dynamic_cast<ClTimedSimplexSolver *>
@@ -126,10 +128,10 @@ size_t free_cl_variable(SCM scm)
 
 int print_cl_variable(SCM scm, SCM port, scm_print_state *pstate)
 {
-  strstream ss;
+  stringstream ss;
   ClVariable *pclv = PclvFromScm(scm);
   ss << "#<cl_variable " << *pclv << ">" << ends;
-  scm_puts(ss.str(), port);
+  scm_puts(ss.str().c_str(), port);
   return 1;
 }
 
@@ -280,10 +282,10 @@ free_cl_weight(SCM scm)
 int
 print_cl_weight(SCM scm, SCM port, scm_print_state *pstate)
 {
-  strstream ss;
+  stringstream ss;
   ClSymbolicWeight *pclsw = PclswFromScm(scm);
   ss << "#<cl-weight " << *pclsw << ">" << ends;
-  scm_puts(ss.str(), port);
+  scm_puts(ss.str().c_str(), port);
   return 1;
 }
 
@@ -353,10 +355,10 @@ free_cl_strength(SCM scm)
 int
 print_cl_strength(SCM scm, SCM port, scm_print_state *pstate)
 {
-  strstream ss;
+  stringstream ss;
   ClStrength *pcls = PclsFromScm(scm);
   ss << "#<cl-strength " << *pcls << ">" << ends;
-  scm_puts(ss.str(), port);
+  scm_puts(ss.str().c_str(), port);
   return 1;
 }
 
@@ -471,10 +473,10 @@ free_cl_expression(SCM scm)
 int
 print_cl_expression(SCM scm, SCM port, scm_print_state *pstate)
 {
-  strstream ss;
+  stringstream ss;
   ClLinearExpression *pexpr = PexprFromScm(scm);
   ss << "#<cl_expression " << *pexpr << ">" << ends;
-  scm_puts(ss.str(), port);
+  scm_puts(ss.str().c_str(), port);
   return 1;
 }
 
@@ -702,10 +704,10 @@ free_cl_equation(SCM scm)
 int
 print_cl_equation(SCM scm, SCM port, scm_print_state *pstate)
 {
-  strstream ss;
+  stringstream ss;
   ClLinearEquation *peq = PeqFromScm(scm);
   ss << "#<cl-equation " << *peq << ">" << ends;
-  scm_puts(ss.str(), port);
+  scm_puts(ss.str().c_str(), port);
   return 1;
 }
 
@@ -841,10 +843,10 @@ free_cl_inequality(SCM scm)
 int
 print_cl_inequality(SCM scm, SCM port, scm_print_state *pstate)
 {
-  strstream ss;
+  stringstream ss;
   ClLinearInequality *pineq = PineqFromScm(scm);
   ss << "#<cl-inequality " << *pineq << ">" << ends;
-  scm_puts(ss.str(), port);
+  scm_puts(ss.str().c_str(), port);
   return 1;
 }
 
@@ -939,10 +941,10 @@ free_cl_stay_constraint(SCM scm)
 int
 print_cl_stay_constraint(SCM scm, SCM port, scm_print_state *pstate)
 {
-  strstream ss;
+  stringstream ss;
   ClConstraint *pcn = PcnFromScm(scm);
   ss << "#<cl-stay-constraint " << *pcn << ">" << ends;
-  scm_puts(ss.str(), port);
+  scm_puts(ss.str().c_str(), port);
   return 1;
 }
 
@@ -1132,7 +1134,7 @@ create a return a new `cl-variable' object.")
 #define FUNC_NAME s_make_cl_constraint_from_string
 {
   char *sz = gh_scm2newstr(str,NULL);
-  istrstream xiLine(sz);
+  istringstream xiLine(sz);
 
   if (!gh_procedure_p(lookup_proc)) {
     scm_wrong_type_arg(FUNC_NAME,2,lookup_proc);
@@ -1251,7 +1253,7 @@ free_cl_solver(SCM scm)
 int
 print_cl_solver(SCM scm, SCM port, scm_print_state *pstate)
 {
-  strstream ss;
+  stringstream ss;
   ClSimplexSolver *psolver = PsolverFromScm(scm);
   ClTimedSimplexSolver *ptimedsolver = dynamic_cast<ClTimedSimplexSolver *>(psolver);
   if (ptimedsolver) {
@@ -1261,7 +1263,7 @@ print_cl_solver(SCM scm, SCM port, scm_print_state *pstate)
   }
   psolver->PrintInternalInfo(ss);
   ss << ">" << ends;
-  scm_puts(ss.str(), port);
+  scm_puts(ss.str().c_str(), port);
   return 1;
 }
 
@@ -1282,11 +1284,11 @@ brief summary of the contents of the solver.")
   if (scm_output_port_p(port) == SCM_BOOL_F)
     scm_wrong_type_arg(FUNC_NAME,2,port);
   
-  strstream ss;
+  stringstream ss;
   ClSimplexSolver *psolver = PsolverFromScm(solver);
   psolver->PrintOnVerbose(ss);
   ss << ends;
-  scm_puts(ss.str(), port);
+  scm_puts(ss.str().c_str(), port);
   return SCM_UNSPECIFIED;
 }
 #undef FUNC_NAME

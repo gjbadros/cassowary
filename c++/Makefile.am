@@ -165,7 +165,7 @@ test_ClStrength_SOURCES = test-ClStrength.cc
 test_ClVariable_SOURCES = test-ClVariable.cc
 endif
 
-ClReader-lex.cc: ClReader.l ClReader.h ClReader.cc.h
+ClReader-lex.cc: ClReader.l ClReader.h ClReader.hh
 	$(LEX) -Pcl -o$@ $<
 
 ClReader.cc ClReader.hh: ClReader.y ClReader.h

@@ -1,3 +1,13 @@
+2005-10-19  Greg Badros  <greg@google.com>
+
+	* Numerous changes to make more standard-C++ compliant, now tested
+	to compile and pass regression tests for g++ 3.2.2 on RH Linux.
+
+	* Included adding exception specifications, using sstream
+	appropriately, fixing some const_iterators, using namespace std,
+	dropping the .h from standard headers, fixing some flex/bison
+	build issues, and more.
+
 Fri May  5 17:24:25 2000  Greg J. Badros  <gjb@cs.washington.edu>
 
 	* java/ClReader.cup: Fix the precedence.  Put time/divide higher

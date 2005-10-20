@@ -52,12 +52,11 @@ BUILT_SOURCES=$(guile_snarfs)
 # just use `make CC=g++' and the revised guile-snarf which uses ${CC} will work
 # for C++ prototype extraction
 %.x: %.c
-	guile-snarf $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) $< > $@
+	guile-snarf -o $@ $<  $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 
 %.x: %.cc
 	CC=$(CXX) \
-	guile-snarf $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS) $< > $@
+	guile-snarf -o $@ $<  $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
 
 test:
 	env GUILE_LOAD_PATH=.:$$GUILE_LOAD_PATH guile -s cltests.scm
-

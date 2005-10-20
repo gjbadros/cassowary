@@ -16,10 +16,12 @@
 
 #include <guile/gh.h>
 
-#include <iostream.h>
+#include <iostream>
 #include <assert.h>
-#include <strstream.h>
+#include <sstream>
 #include "cl-snarf.h"
+
+using namespace std;
 
 //// ClVariable wrapper
 class ClVariable;
@@ -229,7 +231,7 @@ inline void *PvFromScm(SCM scm)
 { return reinterpret_cast<void *>(scm); }
 
 inline SCM ScmFromPv(const void *pv)
-{ return reinterpret_cast<SCM>(pv); }
+{ return reinterpret_cast<SCM>(const_cast<void *>(pv)); }
 
 #endif
 
