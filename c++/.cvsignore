@@ -15,6 +15,7 @@ ClParseTest
 ClReader-lex.cc
 ClReader.cc
 ClReader.hh
+ClReader.output
 ClSubgraphTest
 ClTestColumns
 ClTests
