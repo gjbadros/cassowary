@@ -1,7 +1,0 @@
-*.class
-.built-package
-.built-test
-Makefile
-Makefile.in
-classjava.stamp
-java.prof

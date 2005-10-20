@@ -1,6 +1,0 @@
-<!-- $Id$ -->
-<!-- Hooks Chapter Introduction -->
-<para>
-This chapter lists the hooks provided by Cassowary/Guile
-ordered alphabetically by name.
-</para>
