@@ -11,6 +11,9 @@ Seattle, WA 98195-2350
 
 with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
 
+18-November-2005:
+* Migrate CVS repository to SourceForge.net: http://sourceforge.net/projects/cassowary/
+
 10-April-2000: Version 0.61 released.
 * Some bug fixes
 * support building of documentation a bit better.
