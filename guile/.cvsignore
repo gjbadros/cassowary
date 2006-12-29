@@ -1,9 +1,10 @@
-.deps
-*.o
-*.lo
 *.a
 *.la
+*.lo
+*.o
+.deps
 .libs
 Makefile
 Makefile.in
+cassowary_scm.loT
 cassowary_scm.x

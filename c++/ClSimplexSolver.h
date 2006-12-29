@@ -397,8 +397,6 @@ class ClSimplexSolver : public ClSolver, public ClTableau {
   bool FIsAutoResetStayConstants() const
     { return _fResetStayConstantsAutomatically; }
 
- protected:
-
   // ClEditInfo is a privately-used class
   // that just wraps a constraint, its positive and negative
   // error variables, and its prior edit Constant.

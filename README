@@ -1,17 +1,19 @@
 Cassowary Constraint Solving Toolkit for C++, Java, and Smalltalk
-Version 0.61
+Version 0.70
 
 Web Page: http://www.cs.washington.edu/research/constraints/cassowary
 Contact: cassowary@cs.washington.edu
 SourceForge hosting: http://sourceforge.net/projects/cassowary/
 
-Greg J. Badros <gjb@cs.washington.edu> and
+Greg J. Badros (email: my last name at cs.washington.edu) and
 Alan Borning <borning@cs.washington.edu>
 University of Washington
 Computer Science and Engineering
 Seattle, WA 98195-2350
 10-April-2000
 (Hosting moved to SourceForge November 2005)
+v0.70 Update for GCC 4.x 29-December-2006
+
 
 with Constraint Drawing Applet (CDA) by Michael Noth <noth@cs.washington.edu>
 
