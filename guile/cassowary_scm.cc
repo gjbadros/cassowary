@@ -1416,7 +1416,7 @@ CL_PROC(cl_reset_remove_timings, "cl-reset-remove-timings", 1, 0, 0,
 
 CL_PROC(cl_get_resolve_timings, "cl-get-resolve-timings", 1, 0, 0,
         (SCM solver),
-"Get the resolve timer and the number of resolves performed.
+"Get the resolve timer and the number of resolves performed.\n\
 A list of two elements, (ELAPSED-TIME COUNT), is returned.")
 #define FUNC_NAME s_cl_get_resolve_timings
 {
@@ -1436,7 +1436,7 @@ A list of two elements, (ELAPSED-TIME COUNT), is returned.")
 
 CL_PROC(cl_get_add_timings, "cl-get-add-timings", 1, 0, 0,
         (SCM solver),
-"Get the add timer and the number of constraint adds performed.
+"Get the add timer and the number of constraint adds performed.\n\
 A list of two elements, (ELAPSED-TIME COUNT), is returned.")
 #define FUNC_NAME s_cl_get_add_timings
 {
@@ -1456,7 +1456,7 @@ A list of two elements, (ELAPSED-TIME COUNT), is returned.")
 
 CL_PROC(cl_get_remove_timings, "cl-get-remove-timings", 1, 0, 0,
         (SCM solver),
-"Get the remove timer and the number of constraint removes performed.
+"Get the remove timer and the number of constraint removes performed.\n\
 A list of two elements, (ELAPSED-TIME COUNT), is returned.")
 #define FUNC_NAME s_cl_get_remove_timings
 {
