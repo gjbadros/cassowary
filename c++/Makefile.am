@@ -1,18 +1,12 @@
 ## $Id$
 ## Process this file with automake to create Makefile.in
 
-if CL_BUILD_STATIC_LIBRARY
-lib_LIBRARIES = libcassowary.a
-endif
 lib_LTLIBRARIES = libcassowary.la
 
 libcassowary_la_LDFLAGS = -version-info 0:1:0
 
 INCLUDES = @GUILE_INCLUDES@ @GTL_INCLUDES@
-LDADD = libcassowary.a -L@prefix@/lib @GTL_LIB@
-if CL_BUILD_TESTS
-ClCTest_LDADD = $(LDADD) -lstdc++
-endif
+LDADD = -L@prefix@/lib @GTL_LIB@ libcassowary.la
 
 benchdir=$(libdir)/cassowary/bench
 bugsdir=$(libdir)/cassowary/bugs
@@ -60,6 +54,12 @@ test_programs = \
 	$(test_fd_solver)
 
 test_PROGRAMS = ClTests
+
+ClCTest_LDADD = $(LDADD) -lstdc++
+
+ClTests_SOURCES = ClTests.cc
+ClTests_LDADD = $(LDADD) -lstdc++
+
 if CL_BUILD_TESTS
 moretest_PROGRAMS = @TEST_PROGRAMS@
 bench_PROGRAMS = @BENCH_PROGRAMS@
@@ -90,11 +90,8 @@ sources = \
 	ClSlackVariable.cc \
 	ClDummyVariable.cc \
 	ClReader-lex.cc \
+	ClReader.cc \
 	ClC.cc
-
-libcassowary_a_SOURCES = \
-	$(sources) \
-	$(sources_for_fd_solver)
 
 libcassowary_la_SOURCES = \
 	$(sources) \
@@ -141,7 +138,6 @@ pkginclude_HEADERS = \
 	$(headers_for_fd_solver)
 
 
-ClTests_SOURCES = ClTests.cc
 
 if CL_BUILD_TESTS
 ClFDTests_SOURCES = ClFDTests.cc

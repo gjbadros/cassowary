@@ -82,7 +82,7 @@ simple1()
    ClVariable y(2);
    ClSimplexSolver solver;
 
-   ClLinearEquation eq(x,y+0.0);
+   ClLinearEquation eq(x,ClLinearExpression(y));
    solver.AddStay(x);
    solver.AddStay(y);
    solver.AddConstraint(eq);
@@ -268,7 +268,7 @@ addDelete2()
    fOkResult = fOkResult && ClApprox(x,20.0) && ClApprox(y,120.0);
    cout << "x == " << x.Value() << ", y == " << y.Value() << endl;
    
-   ClLinearEquation cxy( 2*x, y);
+   ClLinearEquation cxy( ClLinearExpression(x).Times(2), y);
    solver.AddConstraint(cxy);
    fOkResult = fOkResult && ClApprox(x,20.0) && ClApprox(y,40.0);
    cout << "x == " << x.Value() << ", y == " << y.Value() << endl;
@@ -308,7 +308,7 @@ casso1()
 
    solver
      .AddConstraint(new ClLinearInequality(x,cnLEQ,y))
-     .AddConstraint(new ClLinearEquation(y, x+3.0))
+     .AddConstraint(new ClLinearEquation(y, ClLinearExpression(x)+3.0))
      .AddConstraint(new ClLinearEquation(x,10.0,ClsWeak()))
      .AddConstraint(new ClLinearEquation(y,10.0,ClsWeak()))
      ;
@@ -634,18 +634,18 @@ blackboxsat()
     rgpcn[15] = new ClLinearInequality(r8, cnLEQ, 2.5);
     rgpcn[16] = new ClLinearInequality(r7, cnGEQ, r6);
     rgpcn[17] = new ClLinearInequality(r8, cnGEQ, r7);
-    rgpcn[18] = new ClLinearEquation(r4, r3 - r2/60.0);
-    rgpcn[19] = new ClLinearEquation(r5, r4 - r1/60.0);
+    rgpcn[18] = new ClLinearEquation(r4, r3 - ClLinearExpression(r2).Divide(60.0));
+    rgpcn[19] = new ClLinearEquation(r5, r4 - ClLinearExpression(r1).Divide(60.0));
     rgpcn[20] = new ClLinearInequality(r4, cnGEQ, 0);
     rgpcn[21] = new ClLinearInequality(r5, cnGEQ, 0);
-    rgpcn[22] = new ClLinearEquation(r7, r6 + r2/20.0);
-    rgpcn[23] = new ClLinearEquation(r8, r7 + r1/20.0);
-    rgpcn[24] = new ClLinearEquation(r4, r3 - r2/30.0);
-    rgpcn[25] = new ClLinearEquation(r5, r4 - r1/30.0);
+    rgpcn[22] = new ClLinearEquation(r7, r6 + ClLinearExpression(r2).Divide(20.0));
+    rgpcn[23] = new ClLinearEquation(r8, r7 + ClLinearExpression(r1).Divide(20.0));
+    rgpcn[24] = new ClLinearEquation(r4, r3 - ClLinearExpression(r2).Divide(30.0));
+    rgpcn[25] = new ClLinearEquation(r5, r4 - ClLinearExpression(r1).Divide(30.0));
     rgpcn[26] = new ClLinearInequality(r4, cnGEQ, 0);
     rgpcn[27] = new ClLinearInequality(r5, cnGEQ, 0);
-    rgpcn[28] = new ClLinearEquation(r7, r6 + r2/60.0);
-    rgpcn[29] = new ClLinearEquation(r8, r7 + r1/60.0);
+    rgpcn[28] = new ClLinearEquation(r7, r6 + ClLinearExpression(r2).Divide(60.0));
+    rgpcn[29] = new ClLinearEquation(r8, r7 + ClLinearExpression(r1).Divide(60.0));
 
     while (true)
       {
@@ -763,7 +763,7 @@ addDel(const int nCns = 900, const int nVars = 900, const int nResolves = 10000)
     for (k = 0; k < nvs; k++)
        {
        coeff = UniformRandom()*10 - 5;
-       expr.AddExpression(*(rgpclv[int(UniformRandom()*nVars)]) * coeff);
+       expr.AddExpression(ClLinearExpression(*(rgpclv[int(UniformRandom()*nVars)])).Times(coeff));
        }
     if (UniformRandom() < ineqProb)
        {
@@ -931,7 +931,7 @@ addDelSolvers(const int nCns = 900, const int nResolves = 10000,
     ClLinearExpression expr = GrainedUniformRandom()*20.0 - 10.0;
     for (k = 0; k < nvs; k++) {
       coeff = GrainedUniformRandom()*10 - 5;
-      expr.AddExpression(*(rgpclv[int(UniformRandom()*nVars)]) * coeff);
+      expr.AddExpression(ClLinearExpression(*(rgpclv[int(UniformRandom()*nVars)])).Times(coeff));
     }
     if (UniformRandom() < ineqProb) {
       rgpcns[j] = new ClLinearInequality(expr);

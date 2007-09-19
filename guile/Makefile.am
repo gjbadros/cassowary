@@ -19,8 +19,6 @@ INCLUDES = -I. -I$(top_srcdir)/c++ -I$(prefix)/include -I$(exec_prefix)/include 
 
 EXTRA_DIST = cltests.scm
 
-libconstraints_a_SOURCES = cassowary_scm.cc
-
 libconstraints_la_SOURCES = cassowary_scm.cc
 
 libconstraints_a_LIBADD = $(top_builddir)/c++/libcassowary.a
