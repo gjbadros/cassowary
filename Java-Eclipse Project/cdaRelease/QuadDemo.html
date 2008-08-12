@@ -1,0 +1,27 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type" /><title>QuadDemo</title>
+
+<body>
+<script language="Javascript">
+  if(navigator.appName == 'Microsoft Internet Explorer')
+   {
+    document.write('<OBJECT ',
+                   'classid="clsid:8AD9C840-044E-11D1-B3E9-00805F499D93" codebase="http://java.sun.com/update/1.5.0/jinstall-1_5_0-windows-i586.cab"',
+                   'height="500" width="500">',
+                   '<param name="code" value="EDU.Washington.grad.gjb.cassowary.demos.QuadDemo" />',
+                   '<param name="archive" value="cda.jar" />',
+                   '</OBJECT>');
+    }
+  else if(navigator.appVersion.indexOf("Safari") >= 0)
+   { 
+    document.write('<applet code="EDU.Washington.grad.gjb.cassowary.demos.QuadDemo.class" archive="cda.jar" height="500" width="500"><param name="codebase_lookup" value="false"></applet>');
+   }
+  else
+   {
+    document.write('<object classid="java:EDU.Washington.grad.gjb.cassowary.demos.QuadDemo.class" type="application/x-java-applet" archive="cda.jar"  height="500" width="500" >',
+                   '<param name="archive" value="Cda.jar" />', '</OBJECT>');
+   }
+</script>
+</body></html>

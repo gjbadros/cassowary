@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type" /><title>Cassowary Constraint Solver Demonstration</title>
+
+</head>
+<body style="width: 941px;">
+<br />
+<table style="text-align: left; width: 1001px; height: 167px;" border="0" cellpadding="6" cellspacing="2">
+<tbody>
+<tr>
+<td style="width: 92px;"><img style="width: 73px; height: 98px;" alt="cassowary image" src="image002.png" /></td>
+<td style="text-align: left; vertical-align: middle; width: 652px;">
+<h1 style="margin-left: 0px; width: 676px;"><span style="font-family: 'Franklin Gothic Book','sans-serif';">Cassowary
+Constraint Solver Demonstration</span></h1>
+</td>
+<td style="width: 205px; text-align: center; vertical-align: middle;"><a href="http://java.com/en/"><img style="border: 0px solid ; width: 204px; height: 42px;" alt="download latest java runtime" src="download_button_home_page.gif" /></a></td>
+</tr>
+<tr>
+<td colspan="3" rowspan="1">This
+demonstration highlights the Java implementation of the Cassowary
+Constraint Solver. You can create lines, ovals, and rectangles, and
+impose a number of constraints on these. On the right below
+is&nbsp;an
+explanation
+of the object creation and constraint buttons. They allow you to create, align,
+and place objects in their relative locations (above, below, left of, right of).
+You can see how the solver works by holding your mouse button down while over
+an object's boundary marker and dragging it in different directions. This application
+was originally created by Michael North
+and the
+Cassowary Constraint Solver by Greg Badros and Alan Borning . You will
+need at least version 5
+of &nbsp;the Java runtime.</td>
+</tr>
+</tbody>
+</table>
+<br />
+<table style="text-align: left; background-color: rgb(232, 232, 255); width: 953px; height: 1105px;" border="1" cellpadding="4" cellspacing="2">
+<tbody>
+<tr>
+<td style="width: 489px; height: 239px;" colspan="1" rowspan="2">
+<script language="Javascript">
+  if(navigator.appName == 'Microsoft Internet Explorer')
+   {
+    document.write('<OBJECT ',
+                   'classid="clsid:8AD9C840-044E-11D1-B3E9-00805F499D93" codebase="http://java.sun.com/update/1.5.0/jinstall-1_5_0-windows-i586.cab"',
+                   'height="560" width="100%">',
+                   '<param name="code" value="EDU.Washington.grad.noth.cda.app.Cda" />',
+                   '<param name="archive" value="cda.jar" />',
+                   '</OBJECT>');
+    }
+  else if(navigator.appVersion.indexOf("Safari") >= 0)
+   { 
+    document.write('<applet code="EDU.Washington.grad.noth.cda.app.Cda.class" archive="cda.jar" height="560" width="100%"><param name="codebase_lookup" value="false"></applet>');
+   }
+  else
+   {
+    document.write('<object classid="java:EDU.Washington.grad.noth.cda.app.Cda.class" type="application/x-java-applet" archive="cda.jar"  height="560" width="100%" >',
+                   '<param name="archive" value="cda.jar" />', '</OBJECT>');
+   }
+</script>
+
+
+</td>
+<td style="width: 476px; height: 296px;">
+<h2 style="margin-left: 0px; width: 416px; margin-top: 0px; height: 13px;"><span style="font-family: 'Franklin Gothic Book','sans-serif';">Object
+creation buttons</span></h2>
+<img style="width: 267px; height: 78px;" alt="c1" src="image001.png" /><br />
+To
+create an object, click on the iconic button. then move the cursor into
+the main drawing area (the cursor will change into crosshairs). Click
+to start placing the component and drag the cursor with the mouse
+button held down to shape the object while placing it. Release the
+button to finish placement. <br />
+<br />
+While placing an object, the initial placement point and the point
+being dragged during placement will "snap" to the points of previously
+placed objects, automatially forming a collocation constraint between
+those points.&nbsp;This makes it easier to construct a figure of
+connected
+parts.</td>
+</tr>
+<tr>
+<td style="width: 476px; height: 239px;" colspan="1" rowspan="1">
+<h2 style="margin-top: 0px; height: 13px;"><span style="font-family: 'Franklin Gothic Book','sans-serif';">Constraint
+imposition buttons</span></h2>
+<img style="width: 268px; height: 155px;" alt="c2" src="image003.png" /><br />
+The
+four categories of constraints that can be imposed are anchor,
+collocation, adjacency, and
+alignment <span style="font-size: 10pt; font-family: &quot;Geneva&quot;,&quot;serif&quot;; color: black;">constraints</span>.
+See below for more detail.<br />
+</td>
+</tr>
+<tr>
+<td style="height: 286px;">
+<h2 style="margin-top: 9px; height: 13px;"><span style="font-family: 'Franklin Gothic Book','sans-serif';">Selecting
+points and objects</span></h2>
+To select a point, move the cursor inside the point's box and click the
+mouse. When over a point, the cursor is outlined in green. Clicking
+selects the point and shows it as a solid green box. Multiple points
+can be selected by clicking anywhere and dragging to form a gray
+selection box, or holding down the <tt>control</tt> key
+and clicking on each point.
+<p>To select an entire object, select all of its points, or
+click inside its bounding box while holding down the <tt>shift</tt>
+key.
+</p>
+<p>To select a constraint object, click on it while holding
+down the <tt>shift</tt> key. While the <tt>shift</tt>
+key is held down, a blue box will be drawn around any object or
+constraint object the mouse cursor is over.</p>
+</td>
+<td style="height: 286px;">
+<h2 style="margin-top: 0px; height: 17px;"><span style="font-family: 'Franklin Gothic Book','sans-serif';">Keyboard
+commands and shortcuts</span></h2>
+The following keyboard commands and shortcut keys are available:
+<ul>
+<li><tt>L</tt>: Create a line segment object.
+</li>
+<li><tt>M</tt>: Create a midpoint line
+segment object. </li>
+<li><tt>O</tt>: Create an oval object. </li>
+<li><tt>R</tt>: Create a&nbsp;
+rectangular object </li>
+<li><tt>A</tt>: Establish an anchor
+constraint on all selected points. </li>
+<li><tt>C</tt>: Establish a collocation
+constraint on all selected points. </li>
+<li><tt>D</tt>: Delete the currently selected
+object(s), including any associated constraint objects. </li>
+<li><tt>Q</tt>: Remove all objects. </li>
+</ul>
+</td>
+</tr>
+<tr>
+<td style="width: 489px; vertical-align: top; height: 326px;"><br />
+<h2 style="width: 487px; margin-top: 0px; height: 11px;"><span style="font-family: 'Franklin Gothic Book','sans-serif';">Anchor
+constraints</span></h2>
+An
+anchor constraint keeps a point anchored to its current location. To
+establish an anchor constraint, select one or more points and then
+click on the anchor button. A red anchor under the anchored point
+represents an anchor constraint.<br />
+<h2 style="width: 465px; margin-top: 18px; height: 10px;"><span style="font-family: 'Franklin Gothic Book','sans-serif';">Collocation
+constraints</span></h2>
+A
+collocation constraint is established between two or more points to
+make them stay together. To establish a collocation constraint, select
+two or more points and then press the collocation button. Alternately,
+drag a point with the mouse and it will "snap" to another point,
+establishing a collocation constraint when the button is released. A
+red circle with two inward-pointing arrows represents a collocation
+constraint.<br />
+</td>
+<td style="vertical-align: top; width: 476px; height: 326px;">
+<h2 style="margin-left: 0px; width: 489px; margin-top: 18px; height: 12px;"><span style="font-family: 'Franklin Gothic Book','sans-serif';">Adjacency
+constraints</span></h2>
+An
+adjacency constraint is established between two objects to ensure that
+one stays above, below, to the left of, or to the right of the other.
+To establish an adjacency constraint, select an entire object as the
+source (the black rectangle on the icon), click one of the
+adjacency icon buttons, and then click on the target object. A red line
+connects the centers of objects with adjacency constraints.
+A red circle indicates the source object.<br />
+<h2 style="margin-top: 8px; height: 12px;"><span style="font-family: 'Franklin Gothic Book','sans-serif';">Alignment
+constraints</span></h2>
+An
+alignment constraint ensures that two or more objects stay lined up as
+either of them are moved about. To establish an alignment constraint,
+select two or more objects and then click on the appropriate button. A
+vertical or horizontal line (as appropriate) represents the alignment
+constraint.<br />
+</td>
+</tr>
+</tbody>
+</table>
+<br />
+</body></html>
