@@ -51,8 +51,7 @@ public class CL {
     // public static final byte LEQ = 2;
     public enum Op {
         GEQ, // >=
-        LEQ
-        // <=
+        LEQ  // <=
     }
 
     public static ClLinearExpression Plus(ClLinearExpression e1,
