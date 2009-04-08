@@ -1,0 +1,1 @@
+@java -Xmx256M -cp "%~dp0\src;%~dp0\bin;C:/gwt-windows-1.5/gwt-user.jar;C:/gwt-windows-1.5/gwt-dev-windows.jar" com.google.gwt.dev.GWTCompiler -style PRETTY -out "%~dp0\www" %* gwt.cassowary.TestApp
