@@ -1,0 +1,1 @@
+@java -Xmx256M -cp "%~dp0\src;%~dp0\bin;C:/Program Files (x86)/gwt-windows/gwt-user.jar;C:/Program Files (x86)/gwt-windows/gwt-dev-windows.jar" com.google.gwt.dev.GWTShell -out "%~dp0\www" %* gwt.cassowary.QuadDemo/QuadDemo.html
