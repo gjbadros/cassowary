@@ -22,9 +22,10 @@ var ClLinearExpression = new Class({
   },
   
   multiplyMe: function(x /*double*/) {
+    var that = this;
     this._constant *= x;
     this._terms.each(function(clv, coeff) {
-      this._terms.put(clv, coeff * x);
+      that._terms.put(clv, coeff * x);
     });
     return this;
   },
@@ -144,26 +145,27 @@ var ClLinearExpression = new Class({
   },
   
   substituteOut: function(outvar /*ClAbstractVariable*/, expr /*ClLinearExpression*/, subject /*ClAbstractVariable*/, solver /*ClTableau*/) {
-    if (this.fTraceOn) CL.fnenterprint("CLE:substituteOut: " + outvar + ", " + expr + ", " + subject + ", ...");
-    if (this.fTraceOn) this.traceprint("this = " + this);
+    var that = this;
+    if (CL.fTraceOn) CL.fnenterprint("CLE:substituteOut: " + outvar + ", " + expr + ", " + subject + ", ...");
+    if (CL.fTraceOn) CL.traceprint("this = " + this);
     var multiplier = this._terms.remove(outvar);
     this.incrementConstant(multiplier * expr.constant());
     expr.terms().each(function(clv, coeff) {
-      var old_coeff = this._terms.get(clv);
+      var old_coeff = that._terms.get(clv);
       if (old_coeff) {
         var newCoeff = old_coeff + multiplier * coeff;
         if (CL.approx(newCoeff, 0.0)) {
           solver.noteRemovedVariable(clv, subject);
-          this._terms.remove(clv);
+          that._terms.remove(clv);
         } else {
-          this._terms.put(clv, newCoeff);
+          that._terms.put(clv, newCoeff);
         }
       } else {
-        this._terms.put(clv, multiplier * coeff);
+        that._terms.put(clv, multiplier * coeff);
         solver.noteAddedVariable(clv, subject);
       }
     });
-    if (this.fTraceOn) this.traceprint("Now this is " + this);
+    if (CL.fTraceOn) CL.traceprint("Now this is " + this);
   },
 
   changeSubject: function(old_subject /*ClAbstractVariable*/, new_subject /*ClAbstractVariable*/) {
@@ -171,7 +173,7 @@ var ClLinearExpression = new Class({
   },
 
   newSubject: function(subject /*ClAbstractVariable*/) {
-    if (this.fTraceOn) CL.fnenterprint("newSubject:" + subject);
+    if (CL.fTraceOn) CL.fnenterprint("newSubject:" + subject);
     
     var reciprocal = 1.0 / this._terms.remove(subject);
     this.multiplyMe(-reciprocal);

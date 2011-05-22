@@ -1,11 +1,12 @@
 
 var ClAbstractVariable = new Class({
-  initialize: function(name) {
+  initialize: function(a1,a2) {
     this.hash_code = ClAbstractVariable.iVariableNumber++;
-    if (typeof(name) == "string") {
-      this._name = name;
+    if (typeof(a1) == "string" || !a1) {
+      this._name = a1 || "v" + this.hash_code;
     } else {
-      this._name = "v" + this.hash_code;
+      var varnumber = a1, prefix = a2;
+      this._name = prefix + varnumber;
     }
   },
 

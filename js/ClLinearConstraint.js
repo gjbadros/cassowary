@@ -48,23 +48,41 @@ var ClLinearEquation = new Class({
   Extends: ClLinearConstraint,
 
   initialize: function(a1, a2, a3, a4) {
-    if (a1 instanceof ClLinearExpression && (a2 == undefined || a2 instanceof ClStrength)) {
+    if (a1 instanceof ClLinearExpression) {
       this.parent(a1, a2, a3);
-    } else if (((a1 instanceof ClLinearExpression) || (a1 instanceof ClAbstractVariable)) &&
-               ((a2 instanceof ClLinearExpression) || (a2 instanceof ClAbstractVariable))) {
+    } else if ((a1 instanceof ClAbstractVariable) &&
+               (a2 instanceof ClLinearExpression)) {
+      var clv = a1, cle = a2, strength = a3, weight = a4;
+      this.parent(cle, strength, weight);
+      this._expression.addVariable(clv, -1);
+    } else if ((a1 instanceof ClAbstractVariable) &&
+               (typeof(a2) == 'number')) {
+      var clv = a1, val = a2, strength = a3, weight = a4;
+      this.parent(new ClLinearExpression(val), strength, weight);
+      this._expression.addVariable(clv, -1);
+    } else if ((a1 instanceof ClLinearExpression) &&
+               (a2 instanceof ClAbstractVariable)) {
+      var cle = a1, clv = a2, strength = a3, weight = a4;
+      this.parent(cle.clone(), strength, weight);
+      this._expression.addVariable(clv, -1);
+    } else if (((a1 instanceof ClLinearExpression) || (a1 instanceof ClAbstractVariable) ||
+                (typeof(a1) == 'number')) &&
+               ((a2 instanceof ClLinearExpression) || (a2 instanceof ClAbstractVariable) ||
+                (typeof(a2) == 'number'))) {
       if (a1 instanceof ClLinearExpression) {
         a1 = a1.clone();
       } else {
         a1 = new ClLinearExpression(a1);
       }
-      this.parent(a1, a3, a4);
-      print("this._expression's type = " + typeof(this._expression));
-      CL.Assert(this._expression instanceof ClLinearExpression);
-      if (a2 instanceof ClAbstractVariable) {
-        this._expression.addVariable(a2, -1);
+      if (a2 instanceof ClLinearExpression) {
+        a2 = a2.clone();
       } else {
-        this._expression.addExpression(a2, -1);
+        a2 = new ClLinearExpression(a2);
       }
+      this.parent(a1, a3, a4);
+      this._expression.addExpression(a2, -1);
+    } else {
+      throw "Bad initializer to ClLinearEquation";
     }
   },
 

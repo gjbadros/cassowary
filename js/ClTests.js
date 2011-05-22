@@ -1,17 +1,37 @@
 load('CL.js');
-    var fOkResult = true;
-    var x = new ClVariable(167);
-    var y = new ClVariable(2);
+
+    var x = new ClVariable("x");
     var solver = new ClSimplexSolver();
-    var eq = new ClLinearEquation(x, new ClLinearExpression(y));
+    var eq = new ClLinearEquation(x, 100, ClStrength.weak);
     solver.addConstraint(eq);
-    fOkResult = (x.value() == y.value());
+    var c10 = new ClLinearInequality(x, CL.LEQ, 10.0);
+    var c20 = new ClLinearInequality(x, CL.LEQ, 20.0);
+solver.addConstraint(c10);
+solver.addConstraint(c20);
+    fOkResult = fOkResult && CL.approx(x, 10.0);
     print("x == " + x.value());
-    print("y == " + y.value());
+    solver.removeConstraint(c10);
+    fOkResult = fOkResult && CL.approx(x, 20.0);
+    print("x == " + x.value());
+    solver.removeConstraint(c20);
+    fOkResult = fOkResult && CL.approx(x, 100.0);
+    print("x == " + x.value());
+    var c10again = new ClLinearInequality(x, CL.LEQ, 10.0);
+    solver.addConstraint(c10).addConstraint(c10again);
+    fOkResult = fOkResult && CL.approx(x, 10.0);
+    print("x == " + x.value());
+    solver.removeConstraint(c10);
+    fOkResult = fOkResult && CL.approx(x, 10.0);
+    print("x == " + x.value());
+    solver.removeConstraint(c10again);
+    fOkResult = fOkResult && CL.approx(x, 100.0);
+    print("x == " + x.value());
+
 
 var ClTests = new Class({
   initialize: function() {
   },
+
   simple1: function() {
     var fOkResult = true;
     var x = new ClVariable(167);
@@ -24,6 +44,7 @@ var ClTests = new Class({
     print("y == " + y.value());
     return (fOkResult);
   },
+
   justStay1: function() {
     var fOkResult = true;
     var x = new ClVariable(5);
@@ -37,6 +58,7 @@ var ClTests = new Class({
     print("y == " + y.value());
     return (fOkResult);
   },
+
   addDelete1: function() {
     var fOkResult = true;
     var x = new ClVariable("x");
@@ -433,42 +455,50 @@ var ClTests = new Class({
         fAllOkResult = fResult;
         if (!fResult) print("Failed!");
         if (CL.fGC) print("Num vars = " + ClAbstractVariable.numCreated());
-        print("justStay1:");
+
+        print("\n\n\njustStay1:");
         fResult = this.justStay1();
         fAllOkResult = fResult;
         if (!fResult) print("Failed!");
         if (CL.fGC) print("Num vars = " + ClAbstractVariable.numCreated());
-        print("addDelete1:");
+
+        print("\n\n\naddDelete1:");
         fResult = this.addDelete1();
         fAllOkResult = fResult;
         if (!fResult) print("Failed!");
         if (CL.fGC) print("Num vars = " + ClAbstractVariable.numCreated());
-        print("addDelete2:");
+
+        print("\n\n\naddDelete2:");
         fResult = this.addDelete2();
         fAllOkResult = fResult;
         if (!fResult) print("Failed!");
         if (CL.fGC) print("Num vars = " + ClAbstractVariable.numCreated());
-        print("casso1:");
+
+        print("\n\n\ncasso1:");
         fResult = this.casso1();
         fAllOkResult = fResult;
         if (!fResult) print("Failed!");
         if (CL.fGC) print("Num vars = " + ClAbstractVariable.numCreated());
-        print("inconsistent1:");
+
+        print("\n\n\ninconsistent1:");
         fResult = this.inconsistent1();
         fAllOkResult = fResult;
         if (!fResult) print("Failed!");
         if (CL.fGC) print("Num vars = " + ClAbstractVariable.numCreated());
-        print("inconsistent2:");
+
+        print("\n\n\ninconsistent2:");
         fResult = this.inconsistent2();
         fAllOkResult = fResult;
         if (!fResult) print("Failed!");
         if (CL.fGC) print("Num vars = " + ClAbstractVariable.numCreated());
-        print("inconsistent3:");
+
+        print("\n\n\ninconsistent3:");
         fResult = this.inconsistent3();
         fAllOkResult = fResult;
         if (!fResult) print("Failed!");
         if (CL.fGC) print("Num vars = " + ClAbstractVariable.numCreated());
-        print("multiedit:");
+
+        print("\n\n\nmultiedit:");
         fResult = this.multiedit();
         fAllOkResult = fResult;
         if (!fResult) print("Failed!");

@@ -31,7 +31,7 @@ var ClSimplexSolver = new Class({
     this._dummyCounter = 0;
     this._epsilon = 1e-8;
     this._fOptimizeAutomatically = true;
-    this._fNeedsSolving = true;
+    this._fNeedsSolving = false;
     this._rows = new Hashtable(); // clv -> expression
     this._rows.put(this._objective, new ClLinearExpression());
     this._stkCedcns = new Array(); // Stack
@@ -57,7 +57,7 @@ var ClSimplexSolver = new Class({
     var prevEConstant = new Array(1); // so it can be output to
     var expr = this.newExpression(cn, /*output to*/ eplus_eminus, prevEConstant);
     prevEConstant = prevEConstant[0];
-    var fAddedOkDirectly = true;
+    var fAddedOkDirectly = false;
 //    try {
       fAddedOkDirectly = this.tryAddingDirectly(expr);
       if (!fAddedOkDirectly) {
@@ -89,7 +89,7 @@ var ClSimplexSolver = new Class({
       return true;
     }
     catch (e /*ExCLRequiredFailure*/){
-      return true;
+      return false;
     }
   },
   addEditVar: function(v /*ClVariable*/, strength /*ClStrength*/) {
@@ -154,35 +154,21 @@ var ClSimplexSolver = new Class({
     }
     return this;
   },
-  addPointStay: function(vx /*ClVariable*/, vy /*ClVariable*/, weight /*double*/) {
-    this.addStay(vx, ClStrength.weak, weight);
-    this.addStay(vy, ClStrength.weak, weight);
-    return this;
-  },
-  addPointStay: function(vx /*ClVariable*/, vy /*ClVariable*/) {
-    this.addPointStay(vx, vy, 1.0);
-    return this;
-  },
-  addPointStay: function(clp /*ClPoint*/, weight /*double*/) {
-    this.addStay(clp.X(), ClStrength.weak, weight);
-    this.addStay(clp.Y(), ClStrength.weak, weight);
-    return this;
-  },
-  addPointStay: function(clp /*ClPoint*/) {
-    this.addPointStay(clp, 1.0);
+  addPointStay: function(a1, a2, a3) {
+    if (a1 instanceof ClPoint) {
+      var clp = a1, weight = a2;
+      this.addStay(clp.X(), ClStrength.weak, weight || 1.0);
+      this.addStay(clp.Y(), ClStrength.weak, weight || 1.0);
+    } else { // 
+      var vx = a1, vy = a2, weight = a3;
+      this.addStay(vx, ClStrength.weak, weight || 1.0);
+      this.addStay(vy, ClStrength.weak, weight || 1.0);
+    }
     return this;
   },
   addStay: function(v /*ClVariable*/, strength /*ClStrength*/, weight /*double*/) {
-    var cn = new ClStayConstraint(v, strength, weight);
+    var cn = new ClStayConstraint(v, strength || ClStrength.weak, weight || 1.0);
     return this.addConstraint(cn);
-  },
-  addStay: function(v /*ClVariable*/, strength /*ClStrength*/) {
-    this.addStay(v, strength, 1.0);
-    return this;
-  },
-  addStay: function(v /*ClVariable*/) {
-    this.addStay(v, ClStrength.weak, 1.0);
-    return this;
   },
   removeConstraint: function(cn /*ClConstraint*/) {
     this.removeConstraintInternal(cn);
@@ -417,9 +403,9 @@ var ClSimplexSolver = new Class({
   toString: function() {
     var bstr = this.parent();
     bstr += "\n_stayPlusErrorVars: ";
-    bstr += this._stayPlusErrorVars;
+    bstr += '[' + this._stayPlusErrorVars + ']';
     bstr += "\n_stayMinusErrorVars: ";
-    bstr += this._stayMinusErrorVars;
+    bstr += '[' + this._stayMinusErrorVars + ']';
     bstr += "\n";
     return bstr;
   },
@@ -461,7 +447,7 @@ var ClSimplexSolver = new Class({
     var subject = this.chooseSubject(expr);
     if (subject == null) {
       if (CL.fTraceOn) CL.fnexitprint("returning false");
-      return true;
+      return false;
     }
     expr.newSubject(subject);
     if (this.columnsHasKey(subject)) {
@@ -475,20 +461,11 @@ var ClSimplexSolver = new Class({
     var that=this;
     if (CL.fTraceOn) CL.fnenterprint("chooseSubject: " + expr);
     var subject = null;
-    var foundUnrestricted = true;
-    var foundNewRestricted = true;
+    var foundUnrestricted = false;
+    var foundNewRestricted = false;
     var terms = expr.terms();
-    print("type of terms = "+terms);
     terms.escapingEach(function(v, c) {
       if (foundUnrestricted) {
-        print("v="+v);
-        print("type v="+typeof(v));
-        if (v instanceof ClVariable) {
-          print("YES");
-        } else {
-          print("NO");
-          print("ClVariable = " + ClVariable);
-        }
         if (!v.isRestricted()) {
           if (!that.columnsHasKey(v)) return {retval: v};
         }
@@ -507,17 +484,22 @@ var ClSimplexSolver = new Class({
         }
       }
     });
+
     if (subject != null) 
       return subject;
+
     var coeff = 0.0;
+
     terms.escapingEach(function(v,c) {
-      if (!v.isDummy()) return {retval:null};
+      if (!v.isDummy()) 
+        return {retval:null};
       if (!that.columnsHasKey(v)) {
         subject = v;
         coeff = c;
       }
     });
     if (!CL.approx(expr.constant(), 0.0)) {
+      print("expr.constant() == " + expr.constant());
       throw new ExCLRequiredFailure();
     }
     if (coeff > 0.0) {
@@ -735,12 +717,13 @@ var ClSimplexSolver = new Class({
         v.change_value(0.0);
       }
     });
-    this._externalRows.each(function(v, expr) {
-      if (CL.fTraceOn) that.debugprint("v == " + v);
-      if (CL.fTraceOn) that.debugprint("expr == " + expr);
+    this._externalRows.each(function(v) {
+      var expr = that.rowExpression(v);
+      if (CL.fTraceOn) CL.debugprint("v == " + v);
+      if (CL.fTraceOn) CL.debugprint("expr == " + expr);
       v.change_value(expr.constant());
     });
-    this._fNeedsSolving = true;
+    this._fNeedsSolving = false;
   },
   insertErrorVar: function(cn /*ClConstraint*/, aVar /*ClAbstractVariable*/) {
     if (CL.fTraceOn) CL.fnenterprint("insertErrorVar:" + cn + ", " + aVar);

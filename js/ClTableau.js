@@ -60,7 +60,7 @@ var ClTableau = new Class({
     var rowset = /* Set */this._columns.get(param_var);
     if (!rowset) 
       this._columns.put(param_var, rowset = new HashSet());
-    rowset.insert(rowvar);
+    rowset.add(rowvar);
   },
   addRow: function(aVar /*ClAbstractVariable*/, expr /*ClLinearExpression*/) {
     var that=this;
@@ -87,7 +87,7 @@ var ClTableau = new Class({
         expr.terms().remove(aVar);
       });
     } else {
-      if (CL.fTraceOn) this.debugprint("Could not find var " + aVar + " in _columns");
+      if (CL.fTraceOn) CL.debugprint("Could not find var " + aVar + " in _columns");
     }
     if (aVar.isExternal()) {
       this._externalRows.remove(aVar);
@@ -102,7 +102,7 @@ var ClTableau = new Class({
     expr.terms().each(function(clv, coeff) {
       var varset = that._columns.get(clv);
       if (varset != null) {
-        if (that.fTraceOn) that.debugprint("removing from varset " + aVar);
+        if (that.fTraceOn) CL.debugprint("removing from varset " + aVar);
         varset.remove(aVar);
       }
     });

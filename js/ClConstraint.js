@@ -24,7 +24,7 @@ var ClConstraint = new Class({
   },
 
   isInequality: function() {
-    return true;
+    return false;
   },
 
   isRequired: function() {
@@ -32,7 +32,7 @@ var ClConstraint = new Class({
   },
 
   isStayConstraint: function() {
-    return true;
+    return false;
   },
 
   strength: function() {
@@ -46,7 +46,7 @@ var ClConstraint = new Class({
   toString: function() {
     // this is abstract -- it intentionally leaves the parens unbalanced for
     // the subclasses to complete (e.g., with ' = 0', etc.
-    return this._strength + ' {' + this._weight + '} (' + this.expression();
+    return this._strength + ' {' + this._weight + '} (' + this.expression() +')';
   },
 
   setAttachedObject: function(o /*Object*/) {
@@ -138,7 +138,7 @@ var ClStayConstraint = new Class({
   },
 
   toString: function() {
-    return "stay " + parent();
+    return "stay " + this.parent();
   },
 });
 

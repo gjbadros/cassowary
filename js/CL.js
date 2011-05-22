@@ -108,7 +108,14 @@ var CL = {
     var answer = "";
     CL.Assert(h instanceof Hashtable);
     h.each( function(k,v) {
-      answer += k + " +> " + v + "\n";
+      answer += k + " => ";
+      if (v instanceof Hashtable) {
+        answer += CL.hashToString(v);
+      } else if (v instanceof HashSet) {
+        answer += CL.setToString(v);
+      } else {
+        answer += v + "\n";
+      }
     });
     return answer;
   },
@@ -133,9 +140,11 @@ var CL = {
 };
 
 CL.fDebugOn = false;
+CL.fTraceOn = false;
+CL.fTraceAdded = false;
+CL.fGC = false;
 CL.fTraceOn = true;
 CL.fTraceAdded = true;
-CL.fGC = false;
 CL.GEQ = 1;
 CL.LEQ = 2;
 

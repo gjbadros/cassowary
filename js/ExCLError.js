@@ -5,6 +5,9 @@ var ExCLError = new Class({
   description: function() {
     return "(ExCLError) An error has occured in CL";
   },
+  toString : function() {
+    return this.description();
+  }
 });
 
 var ExCLConstraintNotFound = new Class({
