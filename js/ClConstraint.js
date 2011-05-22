@@ -4,8 +4,6 @@
 // and     ClEditConstraint, ClStayConstraint
 // Linear constraints are in ClLinearConstraint.js
 
-load("mootools-core-1.3.2-server.js");
-load('ClStrength.js')
 
 var ClConstraint = new Class({
   /* FIELDS:
@@ -22,7 +20,7 @@ var ClConstraint = new Class({
   // abstract expression() 
 
   isEditConstraint: function() {
-    return true;
+    return false;
   },
 
   isInequality: function() {

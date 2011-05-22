@@ -1,7 +1,3 @@
-load("mootools-core-1.3.2-server.js");
-
-load('ClConstraint.js');
-
 
 // ABSTRACT
 var ClLinearConstraint = new Class({
@@ -58,8 +54,12 @@ var ClLinearEquation = new Class({
                ((a2 instanceof ClLinearExpression) || (a2 instanceof ClAbstractVariable))) {
       if (a1 instanceof ClLinearExpression) {
         a1 = a1.clone();
+      } else {
+        a1 = new ClLinearExpression(a1);
       }
       this.parent(a1, a3, a4);
+      print("this._expression's type = " + typeof(this._expression));
+      CL.Assert(this._expression instanceof ClLinearExpression);
       if (a2 instanceof ClAbstractVariable) {
         this._expression.addVariable(a2, -1);
       } else {

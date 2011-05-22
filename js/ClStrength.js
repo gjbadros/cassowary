@@ -1,8 +1,6 @@
 // FILE: EDU.Washington.grad.gjb.cassowary
 // package EDU.Washington.grad.gjb.cassowary;
 
-load('ClSymbolicWeight.js')
-
 var ClStrength = new Class({
 
   /* FIELDS:

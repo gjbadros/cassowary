@@ -1,8 +1,6 @@
 // FILE: EDU.Washington.grad.gjb.cassowary
 // package EDU.Washington.grad.gjb.cassowary;
 
-load("mootools-core-1.3.2-server.js");
-
 var ClLinearExpression = new Class({
   /* FIELDS:
      private ClDouble _constant
@@ -11,23 +9,23 @@ var ClLinearExpression = new Class({
   initialize: function(clv /*ClAbstractVariable*/, value /*double*/, constant /*double*/) {
     if (CL.fGC) print("new ClLinearExpression");
     this._constant = constant || 0;
-    this._terms = {};
-    if (clv instanceof ClAbstractVariable) this._terms[clv] = value || 1;
+    this._terms = new Hashtable();
+    if (clv instanceof ClAbstractVariable) this._terms.put(clv, value || 1);
     else if (typeof(clv) == 'number') this._constant = clv;
   },
 
   initializeFromHash: function(constant /*ClDouble*/, terms /*Hashtable*/) {
     if (CL.fGC) print("clone ClLinearExpression");
     this._constant = constant;
-    this._terms = Object.clone(terms);
+    this._terms = terms.clone();
     return this;
   },
   
   multiplyMe: function(x /*double*/) {
     this._constant *= x;
-    for (var clv in this._terms) {
-      this._terms[clv] *= x;
-    }
+    this._terms.each(function(clv, coeff) {
+      this._terms.put(clv, coeff * x);
+    });
     return this;
   },
 
@@ -93,32 +91,34 @@ var ClLinearExpression = new Class({
   },
 
   addExpression: function(expr /*ClLinearExpression*/, n /*double*/, subject /*ClAbstractVariable*/, solver /*ClTableau*/) {
+    if (expr instanceof ClAbstractVariable) {
+      expr = new ClLinearExpression(expr);
+      print("addExpression: Had to cast a var to an expression");
+    }
     this.incrementConstant(n * expr.constant());
     n = n || 1;
-    for (clv in expr.terms()) {
-      coeff = expr.terms()[clv];
-      this.addVariable(clv, coeff*n, subject, solver);
-    }
+    var that = this;
+    expr.terms().each(function(clv, coeff) {
+      that.addVariable(clv, coeff*n, subject, solver);
+    });
     return this;
   },
 
   addVariable: function(v /*ClAbstractVariable*/, c /*double*/, subject, solver) {
     c = c || 1.0;
     if (CL.fTraceOn) CL.fnenterprint("addVariable:" + v + ", " + c);
-    coeff = this._terms[v];
+    coeff = this._terms.get(v);
     if (coeff) {
       new_coefficient = coeff + c;
       if (CL.approx(new_coefficient, 0.0)) {
-        if (solver) {
-          solver.noteRemovedVariable(v, subject);
-        }
-        delete this._terms[v];
+        solver.noteRemovedVariable(v, subject);
+        this._terms.remove(v);
       } else {
-        this._terms[v] = new_coefficient;
+        this._terms.put(v, new_coefficient);
       }
     } else {
       if (!CL.approx(c, 0.0)) {
-        this._terms[v] = c;
+        this._terms.put(v, c);
         if (solver) {
           solver.noteAddedVariable(v, subject);
         }
@@ -128,7 +128,7 @@ var ClLinearExpression = new Class({
   },
 
   setVariable: function(v /*ClAbstractVariable*/, c /*double*/) {
-    this._terms[v] = c;
+    this._terms.put(v, c);
     return this;
   },
 
@@ -137,52 +137,49 @@ var ClLinearExpression = new Class({
       throw new ExCLInternalError("anyPivotableVariable called on a constant");
     } 
     
-    for (clv in this._terms) {
+    this._terms.each(function(clv, c) {
       if (clv.isPivotable()) return clv;
-    }
+    });
     return null;
   },
   
   substituteOut: function(outvar /*ClAbstractVariable*/, expr /*ClLinearExpression*/, subject /*ClAbstractVariable*/, solver /*ClTableau*/) {
     if (this.fTraceOn) CL.fnenterprint("CLE:substituteOut: " + outvar + ", " + expr + ", " + subject + ", ...");
     if (this.fTraceOn) this.traceprint("this = " + this);
-    var multiplier = this._terms[outvar];
-    delete this._terms[outvar];
+    var multiplier = this._terms.remove(outvar);
     this.incrementConstant(multiplier * expr.constant());
-    for (var clv in expr.terms()) {
-      var coeff = expr.terms()[clv];
-      var old_coeff = this._terms[clv];
+    expr.terms().each(function(clv, coeff) {
+      var old_coeff = this._terms.get(clv);
       if (old_coeff) {
         var newCoeff = old_coeff + multiplier * coeff;
         if (CL.approx(newCoeff, 0.0)) {
           solver.noteRemovedVariable(clv, subject);
-          delete this._terms[clv];
+          this._terms.remove(clv);
         } else {
-          this._terms[clv] = newCoeff;
+          this._terms.put(clv, newCoeff);
         }
       } else {
-        this._terms[clv] = multiplier * coeff;
+        this._terms.put(clv, multiplier * coeff);
         solver.noteAddedVariable(clv, subject);
       }
-    }
+    });
     if (this.fTraceOn) this.traceprint("Now this is " + this);
   },
 
   changeSubject: function(old_subject /*ClAbstractVariable*/, new_subject /*ClAbstractVariable*/) {
-    this._terms[old_subject] = this.newSubject(new_subject);
+    this._terms.put(old_subject, this.newSubject(new_subject));
   },
 
   newSubject: function(subject /*ClAbstractVariable*/) {
     if (this.fTraceOn) CL.fnenterprint("newSubject:" + subject);
     
-    var reciprocal = 1.0 / this._terms[subject];
-    delete this._terms[subject];
+    var reciprocal = 1.0 / this._terms.remove(subject);
     this.multiplyMe(-reciprocal);
     return reciprocal;
   },
 
   coefficientFor: function(clv /*ClAbstractVariable*/) {
-    return this._terms[clv] || 0;
+    return this._terms.get(clv) || 0;
   },
 
   constant: function() {
@@ -202,7 +199,7 @@ var ClLinearExpression = new Class({
   },
 
   isConstant: function() {
-    return Object.keys(this._terms).length == 0;
+    return this._terms.size() == 0;
   },
 
   toString: function() {
@@ -216,14 +213,13 @@ var ClLinearExpression = new Class({
         needsplus = true;
       }
     } 
-    for (clv in this._terms) {
-      var coeff = this._terms[clv];
+    this._terms.each( function(clv, coeff) {
       if (needsplus) {
         bstr += " + ";
       }
       bstr += coeff + "*" + clv;
       needsplus = true;
-    }
+    });
     return bstr;
   },
 

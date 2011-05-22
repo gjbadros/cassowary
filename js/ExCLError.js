@@ -1,6 +1,5 @@
 // FILE: EDU.Washington.grad.gjb.cassowary
 // package EDU.Washington.grad.gjb.cassowary;
-load("mootools-core-1.3.2-server.js");
 
 var ExCLError = new Class({
   description: function() {

@@ -1,6 +1,19 @@
 // FILE: EDU.Washington.grad.gjb.cassowary
 // package EDU.Washington.grad.gjb.cassowary;
 load("mootools-core-1.3.2-server.js");
+load('jshashtable-2.1-gjb.js');
+load('jshashset-gjb.js');
+load('ExCLError.js')
+load('ClSymbolicWeight.js')
+load('ClStrength.js')
+load('ClVariable.js')
+load('ClPoint.js')
+load('ClLinearExpression.js')
+load('ClConstraint.js')
+load('ClLinearConstraint.js')
+load('ClEditInfo.js')
+load('ClTableau.js')
+load('ClSimplexSolver.js')
 
 
 // bunch of global functions
@@ -93,26 +106,26 @@ var CL = {
 
   hashToString: function(h) {
     var answer = "";
-    for (var key in h) {
-      if (this.hasOwnProperty(key)) {
-        answer += key + " => " + h[key] + "\n";
-      }
-    }
+    CL.Assert(h instanceof Hashtable);
+    h.each( function(k,v) {
+      answer += k + " +> " + v + "\n";
+    });
     return answer;
   },
 
   setToString: function(s) {
+    CL.Assert(s instanceof HashSet);
     var answer = "{";
+    var values = s.values();
+    var len = values.len;
     var first = true;
-    for (var key in s) {
-      if (this.hasOwnProperty(key)) {
-        if (!first) {
-          answer += ", ";
-        } else {
-          first = false;
-        }
-        answer += key;
+    for (var i = 0; i < len; ++i) {
+      if (!first) {
+        answer += ", ";
+      } else {
+        first = false;
       }
+      answer += values[i];
     }
     answer += "}\n";
     return answer;

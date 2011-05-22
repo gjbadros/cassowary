@@ -1,4 +1,3 @@
-load("mootools-core-1.3.2-server.js");
 
 var ClSymbolicWeight = new Class({
   initialize: function(w1, w2, w3) {
@@ -74,7 +73,7 @@ var ClSymbolicWeight = new Class({
     factor = 1;
     multiplier = 1000;
     for (i = this._values.length - 1; i >= 0; --i) {
-      sum += _values[i] * factor;
+      sum += this._values[i] * factor;
       factor *= multiplier;
     }
     return sum;

@@ -1,4 +1,3 @@
-load("mootools-core-1.3.2-server.js");
 
 var ClAbstractVariable = new Class({
   initialize: function(name) {
@@ -56,6 +55,8 @@ var ClVariable = new Class({
     } else if (typeof(name_or_val) == "number") {
       this.parent();
       this._value = name_or_val;
+    } else {
+      this.parent();
     }
     if (ClVariable._ourVarMap) {
       ClVariable._ourVarMap[this._name] = this;
@@ -99,7 +100,7 @@ var ClVariable = new Class({
   },
 
   getAttachedObject: function() {
-    return _attachedObject;
+    return this._attachedObject;
   },
 });
 

@@ -1,5 +1,3 @@
-load('CL.js')
-
 
 var ClEditInfo = new Class({
   /* FIELDS:

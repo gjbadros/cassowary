@@ -1,5 +1,4 @@
 /* TEST */
-load("ClVariable.js");
 
 ClVariable.setVarMap([]);
 x = new ClVariable("x");

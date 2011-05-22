@@ -1,5 +1,3 @@
-load("ClVariable.js");
-
 
 var ClPoint = new Class({
   initialize: function(x, y, suffix) {

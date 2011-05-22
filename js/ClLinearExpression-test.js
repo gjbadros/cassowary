@@ -1,6 +1,3 @@
-load('ClVariable.js');
-load('ClLinearExpression.js');
-load('CL.js');
 
 x = new ClVariable("x",167);
 y = new ClVariable("y",2);
