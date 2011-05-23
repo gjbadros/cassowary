@@ -217,8 +217,6 @@ var QuadDemo = new Class({
 
 
   mouseup: function(ev) {
-    var x = ev.clientX - this.canvas.offsetLeft;
-    var y = ev.clientY - this.canvas.offsetTop;
     if (this.dbDragging != -1 ) {
 //      try {
         this.dbDragging = -1;
@@ -267,10 +265,7 @@ var QuadDemo = new Class({
       document.write(ev.clientX + "," + ev.clientY);
       document.write("<br/>");
     }
-    this.mouseup(ev.touches.item(0));
-    if (this.dbDragging != -1) {
-      ev.preventDefault();
-    }
+    this.mouseup(ev);
   },
 
   touchmove: function(ev) {
@@ -314,6 +309,8 @@ var QuadDemo = new Class({
     var mp = this.mp;
 
     g.clearRect(0, 0, this.cwidth, this.cheight);
+    g.strokeStyle = 'black';
+
     g.beginPath();
     g.moveTo(db[0].CenterX(), db[0].CenterY());
     g.lineTo(db[1].CenterX(), db[1].CenterY());
