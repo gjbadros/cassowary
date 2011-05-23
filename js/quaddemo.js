@@ -1,7 +1,7 @@
 var DraggableBox = new Class({
   initialize: function(x, y, w, h) {
-    this.width = w || 6;
-    this.height = h || 6;
+    this.width = w || 15;
+    this.height = h || 15;
     if (!y) {
       this.center = new ClPoint(0, 0, x);
     } else {
