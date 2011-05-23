@@ -277,32 +277,32 @@ var QuadDemo = new Class({
 
   touchstart: function(ev) {
     ev.preventDefault();
-    this.mousedown(ev);
-    if (true) {
+    if (false) {
       document.write("touchstart ev = " + ev + "  ");
       document.write(ev.clientX + "," + ev.clientY);
       document.write("<br/>");
     }
+    this.mousedown(ev);
   },
 
   touchend: function(ev) {
     ev.preventDefault();
-    this.mouseup(ev);
-    if (true) {
+    if (false) {
       document.write("touchend ev = " + ev + "  ");
       document.write(ev.clientX + "," + ev.clientY);
       document.write("<br/>");
     }
+    this.mouseup(ev);
   },
 
   touchmove: function(ev) {
     ev.preventDefault();
-    this.mousemove(ev);
-    if (true) {
+    if (false) {
       document.write("touchmove ev = " + ev + "  ");
       document.write(ev.clientX + "," + ev.clientY);
       document.write("<br/>");
     }
+    this.mousemove(ev);
   },
 
 
