@@ -1021,9 +1021,11 @@ public class ClSimplexSolver extends ClTableau
       for (Enumeration e = terms.keys(); e.hasMoreElements() ; ) {
 	ClAbstractVariable v = (ClAbstractVariable) e.nextElement();
 	double c = ((ClDouble) terms.get(v)).doubleValue();
-	if (v.isPivotable() && c < 0.0 && (entryVar == null || v.hashCode() < entryVar.hashCode())) {
+//	if (v.isPivotable() && c < 0.0 && (entryVar == null || v.hashCode() < entryVar.hashCode())) {
+	if (v.isPivotable() && c < objectiveCoeff) {
 	  objectiveCoeff = c;
 	  entryVar = v;
+          break;
 	}
       }
       if (objectiveCoeff >= -_epsilon) // || entryVar == null)
