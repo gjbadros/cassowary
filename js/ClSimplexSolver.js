@@ -393,7 +393,7 @@ var ClSimplexSolver = new Class({
     return this;
   },
   getInternalInfo: function() {
-    var retstr = this.parent.getInternalInfo();
+    var retstr = this.parent();
     retstr += "\nSolver info:\n";
     retstr += "Stay Error Variables: ";
     retstr += this._stayPlusErrorVars.length + this._stayMinusErrorVars.length;

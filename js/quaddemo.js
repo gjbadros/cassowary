@@ -339,11 +339,16 @@ var QuadDemo = new Class({
 
   },
 
+  getSolver: function() {
+    return this.solver;
+  },
+
 });
 
 function runit() {
   var qd = new QuadDemo();
   qd.init();
+  document.getElementById("append").innerHTML = ("<br/>" + qd.getSolver().getInternalInfo());
   qd.draw();
   qd.initEvents();
 }

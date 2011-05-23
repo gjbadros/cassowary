@@ -1,12 +1,38 @@
 <html>
   <head>
     <title>Quadrilateral demo - Cassowary Javascript</title>
+    <style type="text/css">
+      canvas { background-color: lightgray }
+      * { font-family: sans-serif}
+    </style>
   </head>
   <body onload="runit();"> 
     <h1>Quadrilateral demo - Cassowary Javascript</h1>
+    <h3>By <a href="http://www.badros.com/greg">Greg J. Badros</a></h3>
+    <p>The below is a new (as of May 2011) all-javascript implementation of the bounded
+    quadrilateral demonstration that was first released as part of the
+      <a href="http://www.cs.washington.edu/research/constraints/cassowary/">Cassowary
+      constraint solving toolkit</a>.  In addition to Javascript,
+      there are also C++, Java, and Smalltalk implementations, and the
+      C++ implementation is wrapped for use with Guile Scheme (see
+      also <a href="http://scwm.sourceforge.net/">Scwm</a>) and
+      Python.</p>
+
+    <p>Dozens of declarative constraints are used to represent an
+      arbitrary quadrilateral, the midpoints of the four vertices, and
+      the fact that the end points need to stay in the bounding
+      rectangle of the canvas.  Mouse/touch gestures on any of the
+      eight control points allow you to move that control point, and
+      the entire constraint system is incrementally re-solved as you
+      drag the control point.</p>
+
+    <p>Tested on Chrome 11 on Windows, Firefox 4.0.1 on Windows,
+    Safari on an iPad 2.  See the <a href="quaddemo.js">source to the demo</a>.</p>
+      
+    <p id="append"></p>
     <canvas id="c" width="800" height="600" style="background-color: lightgray"></canvas>
   </body>
-  
+
   <script type="text/javascript">
     print = function(s) { console.log(s); }
   </script>
