@@ -68,7 +68,7 @@ var ClSymbolicWeight = new Class({
     return this.lessThan(ClSymbolicWeight.clsZero);
   },
 
-  asDouble: function() {
+  toDouble: function() {
     sum  =  0;
     factor = 1;
     multiplier = 1000;

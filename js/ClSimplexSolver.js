@@ -58,20 +58,26 @@ var ClSimplexSolver = new Class({
     var expr = this.newExpression(cn, /*output to*/ eplus_eminus, prevEConstant);
     prevEConstant = prevEConstant[0];
     var fAddedOkDirectly = false;
-    try {
+//    try {
       fAddedOkDirectly = this.tryAddingDirectly(expr);
       if (!fAddedOkDirectly) {
         this.addWithArtificialVariable(expr);
       }
-    }
-    catch (err /*ExCLRequiredFailure*/){
-      throw err;
-    }
+//    }
+//    catch (err /*ExCLRequiredFailure*/){
+//      throw err;
+//    }
     this._fNeedsSolving = true;
     if (cn.isEditConstraint()) {
       var i = this._editVarMap.size();
       var clvEplus = /* ClSlackVariable */eplus_eminus[0];
       var clvEminus = /* ClSlackVariable */eplus_eminus[1];
+      if (!clvEplus instanceof ClSlackVariable) {
+        print("clvEplus not a slack variable = " + clvEplus);
+      }
+      if (!clvEminus instanceof ClSlackVariable) {
+        print("clvEminus not a slack variable = " + clvEminus);
+      }
       this._editVarMap.put(cn.variable(),
                            new ClEditInfo(cn, clvEplus, clvEminus, prevEConstant, i));
     }
@@ -93,6 +99,7 @@ var ClSimplexSolver = new Class({
     }
   },
   addEditVar: function(v /*ClVariable*/, strength /*ClStrength*/) {
+    if (CL.fTraceOn) CL.fnenterprint("addEditVar: " + v + " @ " + strength);
     strength = strength || ClStrength.strong;
 //    try {
       var cnEdit = new ClEditConstraint(v, strength);
@@ -148,7 +155,7 @@ var ClSimplexSolver = new Class({
     for (var i = 0; i < listOfPoints.length; i++)
     {
       this.addPointStay(/* ClPoint */listOfPoints[i], weight);
-      weight = multiplier;
+      weight *= multiplier;
     }
     return this;
   },
@@ -186,14 +193,14 @@ var ClSimplexSolver = new Class({
       eVars.each(function(clv) {
         var expr = that.rowExpression(clv);
         if (expr == null) {
-          zRow.addVariable(clv, -cn.weight() * cn.strength().symbolicWeight().asDouble(), that._objective, that);
+          zRow.addVariable(clv, -cn.weight() * cn.strength().symbolicWeight().toDouble(), that._objective, that);
         } else {
-          zRow.addExpression(expr, -cn.weight() * cn.strength().symbolicWeight().asDouble(), that._objective, that);
+          zRow.addExpression(expr, -cn.weight() * cn.strength().symbolicWeight().toDouble(), that._objective, that);
         }
         if (CL.fTraceOn) CL.traceprint("now eVars == " + CL.setToString(eVars));
       });
     }
-    var marker = /* ClAbstractVariable */this._markerVars.remove(cn);
+    var marker = this._markerVars.remove(cn);
     if (marker == null) {
       throw new ExCLConstraintNotFound();
     }
@@ -312,6 +319,7 @@ var ClSimplexSolver = new Class({
     this._resolve_pair[1] = y;
     this.resolveArray(this._resolve_pair);
   },
+
   resolve: function() {
     if (CL.fTraceOn) CL.fnenterprint("resolve()");
     this.dualOptimize();
@@ -319,6 +327,7 @@ var ClSimplexSolver = new Class({
     this._infeasibleRows.clear();
     this.resetStayConstants();
   },
+
   suggestValue: function(v /*ClVariable*/, x /*double*/) {
     if (CL.fTraceOn) CL.fnenterprint("suggestValue(" + v + ", " + x + ")");
     var cei = this._editVarMap.get(v);
@@ -436,6 +445,7 @@ var ClSimplexSolver = new Class({
       if (e.isConstant()) {
         this.removeRow(av);
         this.removeRow(az);
+        return;
       }
       var entryVar = e.anyPivotableVariable();
       this.pivot(entryVar, av);
@@ -517,6 +527,7 @@ var ClSimplexSolver = new Class({
     }
     return subject;
   },
+
   deltaEditConstant: function(delta /*double*/, plusErrorVar /*ClAbstractVariable*/, minusErrorVar /*ClAbstractVariable*/) {
     var that = this;
     if (CL.fTraceOn) CL.fnenterprint("deltaEditConstant :" + delta + ", " + plusErrorVar + ", " + minusErrorVar);
@@ -526,6 +537,7 @@ var ClSimplexSolver = new Class({
       if (exprPlus.constant() < 0.0) {
         this._infeasibleRows.add(plusErrorVar);
       }
+      return;
     }
     var exprMinus = this.rowExpression(minusErrorVar);
     if (exprMinus != null) {
@@ -533,8 +545,12 @@ var ClSimplexSolver = new Class({
       if (exprMinus.constant() < 0.0) {
         this._infeasibleRows.add(minusErrorVar);
       }
+      return;
     }
     var columnVars = this._columns.get(minusErrorVar);
+    if (!columnVars) {
+      print("columnVars is null -- tableau is:\n" + this);
+    }
     columnVars.each(function(basicVar) {
       var expr = that.rowExpression(basicVar);
       var c = expr.coefficientFor(minusErrorVar);
@@ -544,10 +560,11 @@ var ClSimplexSolver = new Class({
       }
     });
   },
+
   dualOptimize: function() {
     if (CL.fTraceOn) CL.fnenterprint("dualOptimize:");
     var zRow = this.rowExpression(this._objective);
-    while  (!this._infeasibleRows.isEmpty()) {
+    while (!this._infeasibleRows.isEmpty()) {
       var exitVar = this._infeasibleRows.values()[0];
       this._infeasibleRows.remove(exitVar);
       var entryVar = null;
@@ -588,7 +605,6 @@ var ClSimplexSolver = new Class({
     var eminus = new ClSlackVariable();
     var eplus = new ClSlackVariable();
     var cnTerms = cnExpr.terms();
-    var that = this;
     cnTerms.each(function(v,c) {
       var e = that.rowExpression(v);
       if (e == null) expr.addVariable(v, c);
@@ -605,12 +621,11 @@ var ClSimplexSolver = new Class({
         expr.setVariable(eminus, 1.0);
         var zRow = this.rowExpression(this._objective);
         var sw = cn.strength().symbolicWeight().times(cn.weight());
-        zRow.setVariable(eminus, sw.asDouble());
+        zRow.setVariable(eminus, sw.toDouble());
         this.insertErrorVar(cn, eminus);
         this.noteAddedVariable(eminus, this._objective);
       }
-    }
-    else {
+    } else {
       if (cn.isRequired()) {
         ++this._dummyCounter;
         dummyVar = new ClDummyVariable(this._dummyCounter, "d");
@@ -626,7 +641,7 @@ var ClSimplexSolver = new Class({
         this._markerVars.put(cn, eplus);
         var zRow = this.rowExpression(this._objective);
         var sw = cn.strength().symbolicWeight().times(cn.weight());
-        var swCoeff = sw.asDouble();
+        var swCoeff = sw.toDouble();
         if (swCoeff == 0) {
           if (CL.fTraceOn) CL.traceprint("sw == " + sw);
           if (CL.fTraceOn) CL.traceprint("cn == " + cn);
@@ -663,10 +678,12 @@ var ClSimplexSolver = new Class({
     while  (true) {
       var objectiveCoeff = 0;
       var terms = zRow.terms();
-      terms.each(function(v, c) {
-        if (v.isPivotable() && c < 0.0 && (entryVar == null || v.hashCode() < entryVar.hashCode())) {
+      terms.escapingEach(function(v, c) {
+//        if (v.isPivotable() && c < 0.0 && (entryVar == null || v.hashCode() < entryVar.hashCode())) {
+        if (v.isPivotable() && c < objectiveCoeff) {
           objectiveCoeff = c;
           entryVar = v;
+          return {brk:true};
         }
       });
       if (objectiveCoeff >= -this._epsilon) 
@@ -701,6 +718,12 @@ var ClSimplexSolver = new Class({
   },
   pivot: function(entryVar /*ClAbstractVariable*/, exitVar /*ClAbstractVariable*/) {
     if (CL.fTraceOn) CL.fnenterprint("pivot: " + entryVar + ", " + exitVar);
+    if (entryVar == null) {
+      console.log.warning("pivot: entryVar == null");
+    }
+    if (exitVar == null) {
+      console.log.warning("pivot: exitVar == null");
+    }
     var pexpr = this.removeRow(exitVar);
     pexpr.changeSubject(exitVar, entryVar);
     this.substituteOut(entryVar, pexpr);
