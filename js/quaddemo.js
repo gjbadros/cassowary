@@ -258,6 +258,15 @@ var QuadDemo = new Class({
     this.canvas.addEventListener('mousemove', 
                                  function(ev) { that.mousemove(ev) },
                                  false);
+    this.canvas.addEventListener('touchstart', 
+                                 function(ev) { that.mousedown(ev) },
+                                 false);
+    this.canvas.addEventListener('touchend', 
+                                 function(ev) { that.mouseup(ev) },
+                                 false);
+    this.canvas.addEventListener('touchmove', 
+                                 function(ev) { that.mousemove(ev) },
+                                 false);
   },
   
   draw: function() {
