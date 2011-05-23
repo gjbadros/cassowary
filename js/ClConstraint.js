@@ -147,4 +147,4 @@ var ClStayConstraint = new Class({
   },
 });
 
-ClConstraint.iConstraintNumber = 0;
+ClConstraint.iConstraintNumber = 1;

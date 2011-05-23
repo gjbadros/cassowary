@@ -2,7 +2,7 @@
 var ClAbstractVariable = new Class({
   initialize: function(a1,a2) {
     this.hash_code = ClAbstractVariable.iVariableNumber++;
-    if (typeof(a1) == "string" || !a1) {
+    if (typeof(a1) == "string" || (a1 == null)) {
       this._name = a1 || "v" + this.hash_code;
     } else {
       var varnumber = a1, prefix = a2;
@@ -43,7 +43,7 @@ var ClAbstractVariable = new Class({
   }
 });
 
-ClAbstractVariable.iVariableNumber = 0;
+ClAbstractVariable.iVariableNumber = 1;
 
 var ClVariable = new Class({
   Extends: ClAbstractVariable,
