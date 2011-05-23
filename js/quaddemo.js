@@ -145,44 +145,44 @@ var QuadDemo = new Class({
     solver.addConstraint(cleq);
     
 
-    cle = CL.Plus(db[0].X(),10);
+    cle = CL.Plus(db[0].X(),20);
     solver
     .addConstraint(new ClLinearInequality(cle,CL.LEQ,db[2].X()))
     .addConstraint(new ClLinearInequality(cle,CL.LEQ,db[3].X()));
     
-    cle = CL.Plus(db[1].X(),10);
+    cle = CL.Plus(db[1].X(),20);
     solver
     .addConstraint(new ClLinearInequality(cle,CL.LEQ,db[2].X()))
     .addConstraint(new ClLinearInequality(cle,CL.LEQ,db[3].X()));
 
-    cle = CL.Plus(db[0].Y(),10);
+    cle = CL.Plus(db[0].Y(),20);
     solver
     .addConstraint(new ClLinearInequality(cle,CL.LEQ,db[1].Y()))
     .addConstraint(new ClLinearInequality(cle,CL.LEQ,db[2].Y()));
 
-    cle = CL.Plus(db[3].Y(),10);
+    cle = CL.Plus(db[3].Y(),20);
     solver
     .addConstraint(new ClLinearInequality(cle,CL.LEQ,db[1].Y()))
     .addConstraint(new ClLinearInequality(cle,CL.LEQ,db[2].Y()));
 
     // Add constraints to keep points inside window
-    solver.addConstraint(new ClLinearInequality(db[0].X(), CL.GEQ, 0.0));
-    solver.addConstraint(new ClLinearInequality(db[0].Y(), CL.GEQ, 0.0));
-    solver.addConstraint(new ClLinearInequality(db[1].X(), CL.GEQ, 0.0));
-    solver.addConstraint(new ClLinearInequality(db[1].Y(), CL.GEQ, 0.0));
-    solver.addConstraint(new ClLinearInequality(db[2].X(), CL.GEQ, 0.0));
-    solver.addConstraint(new ClLinearInequality(db[2].Y(), CL.GEQ, 0.0));
-    solver.addConstraint(new ClLinearInequality(db[3].X(), CL.GEQ, 0.0));
-    solver.addConstraint(new ClLinearInequality(db[3].Y(), CL.GEQ, 0.0));
+    solver.addConstraint(new ClLinearInequality(db[0].X(), CL.GEQ, 10));
+    solver.addConstraint(new ClLinearInequality(db[0].Y(), CL.GEQ, 10));
+    solver.addConstraint(new ClLinearInequality(db[1].X(), CL.GEQ, 10));
+    solver.addConstraint(new ClLinearInequality(db[1].Y(), CL.GEQ, 10));
+    solver.addConstraint(new ClLinearInequality(db[2].X(), CL.GEQ, 10));
+    solver.addConstraint(new ClLinearInequality(db[2].Y(), CL.GEQ, 10));
+    solver.addConstraint(new ClLinearInequality(db[3].X(), CL.GEQ, 10));
+    solver.addConstraint(new ClLinearInequality(db[3].Y(), CL.GEQ, 10));
     
-    solver.addConstraint(new ClLinearInequality(db[0].X(), CL.LEQ, this.cwidth));
-    solver.addConstraint(new ClLinearInequality(db[0].Y(), CL.LEQ, this.cheight));
-    solver.addConstraint(new ClLinearInequality(db[1].X(), CL.LEQ, this.cwidth));
-    solver.addConstraint(new ClLinearInequality(db[1].Y(), CL.LEQ, this.cheight));
-    solver.addConstraint(new ClLinearInequality(db[2].X(), CL.LEQ, this.cwidth));
-    solver.addConstraint(new ClLinearInequality(db[2].Y(), CL.LEQ, this.cheight));
-    solver.addConstraint(new ClLinearInequality(db[3].X(), CL.LEQ, this.cwidth));
-    solver.addConstraint(new ClLinearInequality(db[3].Y(), CL.LEQ, this.cheight));
+    solver.addConstraint(new ClLinearInequality(db[0].X(), CL.LEQ, this.cwidth - 10));
+    solver.addConstraint(new ClLinearInequality(db[0].Y(), CL.LEQ, this.cheight - 10));
+    solver.addConstraint(new ClLinearInequality(db[1].X(), CL.LEQ, this.cwidth - 10));
+    solver.addConstraint(new ClLinearInequality(db[1].Y(), CL.LEQ, this.cheight - 10));
+    solver.addConstraint(new ClLinearInequality(db[2].X(), CL.LEQ, this.cwidth - 10));
+    solver.addConstraint(new ClLinearInequality(db[2].Y(), CL.LEQ, this.cheight - 10));
+    solver.addConstraint(new ClLinearInequality(db[3].X(), CL.LEQ, this.cwidth - 10));
+    solver.addConstraint(new ClLinearInequality(db[3].Y(), CL.LEQ, this.cheight - 10));
 
     //  } catch (e) {
     //    print("EXCEPTION: e = " + e);
