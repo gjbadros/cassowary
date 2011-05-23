@@ -277,7 +277,7 @@ var QuadDemo = new Class({
 
   touchstart: function(ev) {
     ev.preventDefault();
-    mousedown(ev);
+    this.mousedown(ev);
     if (false) {
       document.write("touchstart ev = " + ev + "  ");
       document.write(ev.pageX + "," + ev.pageY);
@@ -287,7 +287,7 @@ var QuadDemo = new Class({
 
   touchend: function(ev) {
     ev.preventDefault();
-    mouseup(ev);
+    this.mouseup(ev);
     if (false) {
       document.write("touchend ev = " + ev + "  ");
       document.write(ev.offsetX + "," + ev.offsetY);
@@ -297,7 +297,7 @@ var QuadDemo = new Class({
 
   touchmove: function(ev) {
     ev.preventDefault();
-    mousemove(ev);
+    this.mousemove(ev);
     if (false) {
       document.write("touchmove ev = " + ev + "  ");
       document.write(ev.offsetX + "," + ev.offsetY);
