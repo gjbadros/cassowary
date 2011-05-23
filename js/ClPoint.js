@@ -36,6 +36,10 @@ var ClPoint = new Class({
     }
   },
 
+  X: function() { return this.x; },
+
+  Y: function() { return this.y; },
+
   Xvalue: function() {
     return this.x.value();
   },
@@ -48,8 +52,3 @@ var ClPoint = new Class({
     return "(" + this.x + ", " + this.y + ")";
   },
 });
-
-
-
-
-    

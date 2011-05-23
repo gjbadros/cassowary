@@ -1,35 +1,9 @@
-load('CL.js');
-
-    var x = new ClVariable("x");
-    var solver = new ClSimplexSolver();
-    var eq = new ClLinearEquation(x, 100, ClStrength.weak);
-    solver.addConstraint(eq);
-    var c10 = new ClLinearInequality(x, CL.LEQ, 10.0);
-    var c20 = new ClLinearInequality(x, CL.LEQ, 20.0);
-solver.addConstraint(c10);
-solver.addConstraint(c20);
-    fOkResult = fOkResult && CL.approx(x, 10.0);
-    print("x == " + x.value());
-    solver.removeConstraint(c10);
-    fOkResult = fOkResult && CL.approx(x, 20.0);
-    print("x == " + x.value());
-    solver.removeConstraint(c20);
-    fOkResult = fOkResult && CL.approx(x, 100.0);
-    print("x == " + x.value());
-    var c10again = new ClLinearInequality(x, CL.LEQ, 10.0);
-    solver.addConstraint(c10).addConstraint(c10again);
-    fOkResult = fOkResult && CL.approx(x, 10.0);
-    print("x == " + x.value());
-    solver.removeConstraint(c10);
-    fOkResult = fOkResult && CL.approx(x, 10.0);
-    print("x == " + x.value());
-    solver.removeConstraint(c10again);
-    fOkResult = fOkResult && CL.approx(x, 100.0);
-    print("x == " + x.value());
-
 
 var ClTests = new Class({
   initialize: function() {
+  },
+
+  InitializeRandoms: function() {
   },
 
   simple1: function() {
@@ -113,6 +87,7 @@ var ClTests = new Class({
     print("x == " + x.value() + ", y == " + y.value());
     return (fOkResult);
   },
+
   casso1: function() {
     var fOkResult = true;
     var x = new ClVariable("x");
@@ -127,8 +102,9 @@ var ClTests = new Class({
     try {
       var x = new ClVariable("x");
       var solver = new ClSimplexSolver();
-      solver.addConstraint(new ClLinearEquation(x, 10.0)).addConstraint(new ClLinearEquation(x, 5.0));
-      return (true);
+      solver.addConstraint(new ClLinearEquation(x, 10.0))
+            .addConstraint(new ClLinearEquation(x, 5.0));
+      return false;
     }
     catch (err /*ExCLRequiredFailure*/){
       print("Success -- got the exception");
@@ -140,7 +116,7 @@ var ClTests = new Class({
       var x = new ClVariable("x");
       var solver = new ClSimplexSolver();
       solver.addConstraint(new ClLinearInequality(x, CL.GEQ, 10.0)).addConstraint(new ClLinearInequality(x, CL.LEQ, 5.0));
-      return (true);
+      return false;
     }
     catch (err /*ExCLRequiredFailure*/){
       print("Success -- got the exception");
@@ -185,11 +161,11 @@ var ClTests = new Class({
       var z = new ClVariable("z");
       var solver = new ClSimplexSolver();
       solver.addConstraint(new ClLinearInequality(w, CL.GEQ, 10.0)).addConstraint(new ClLinearInequality(x, CL.GEQ, w)).addConstraint(new ClLinearInequality(y, CL.GEQ, x)).addConstraint(new ClLinearInequality(z, CL.GEQ, y)).addConstraint(new ClLinearInequality(z, CL.GEQ, 8.0)).addConstraint(new ClLinearInequality(z, CL.LEQ, 4.0));
-      return (true);
+      return false;
     }
     catch (err /*ExCLRequiredFailure*/){
       print("Success -- got the exception");
-      return (true);
+      return true;
     }
   },
   addDel: function(nCns /*int*/, nVars /*int*/, nResolves /*int*/) {
@@ -200,7 +176,7 @@ var ClTests = new Class({
     print("starting timing test. nCns = " + nCns + ", nVars = " + nVars + ", nResolves = " + nResolves);
     timer.Start();
     var solver = new ClSimplexSolver();
-    solver.setAutosolve(true);
+    solver.setAutosolve(false);
     var rgpclv = new ClVariable[nVars];
     for (var i = 0; i < nVars; i++)
     {
@@ -222,7 +198,7 @@ var ClTests = new Class({
       for (k = 0; k < nvs; k++)
       {
         coeff = this.UniformRandomDiscretized() * 10 - 5;
-        var iclv = /* int */(this.UniformRandomDiscretized() * nVars);
+        var iclv = this.RandomInRange(0, nVars);
         expr.addExpression(CL.Times(rgpclv[iclv], coeff));
       }
       if (this.UniformRandomDiscretized() < ineqProb) {
@@ -259,8 +235,8 @@ var ClTests = new Class({
     print("done adding " + cCns + " constraints [" + j + " attempted, " + cExceptions + " exceptions]");
     print("time = " + timer.ElapsedTime() + "\n");
     print("time per Add cn = " + timer.ElapsedTime() / cCns);
-    var e1Index = /* int */(this.UniformRandomDiscretized() * nVars);
-    var e2Index = /* int */(this.UniformRandomDiscretized() * nVars);
+    var e1Index = this.RandomInRange(0, nVars);
+    var e2Index = this.RandomInRange(0, nVars);
     print("Editing vars with indices " + e1Index + ", " + e2Index);
     var edit1 = new ClEditConstraint(rgpclv[e1Index], ClStrength.strong);
     var edit2 = new ClEditConstraint(rgpclv[e2Index], ClStrength.strong);
@@ -271,7 +247,8 @@ var ClTests = new Class({
     timer.Stop();
     for (var m = 0; m < nResolves; m++)
     {
-      solver.resolve(rgpclv[e1Index].value() * 1.001, rgpclv[e2Index].value() * 1.001);
+      solver.resolvePair(rgpclv[e1Index].value() * 1.001, 
+                         rgpclv[e2Index].value() * 1.001);
     }
     solver.removeConstraint(edit1);
     solver.removeConstraint(edit2);
@@ -316,14 +293,14 @@ var ClTests = new Class({
     this.InitializeRandoms();
     print("starting timing test. nCns = " + nCns + ", nSolvers = " + nSolvers + ", nResolves = " + nResolves);
     timer.Start();
-    var rgsolvers = new ClSimplexSolver[nSolvers + 1];
+    var rgsolvers = new Array(nSolvers+1);
     for (var is = 0; is < nSolvers + 1; ++is)
     {
       rgsolvers[is] = new ClSimplexSolver();
-      rgsolvers[is].setAutosolve(true);
+      rgsolvers[is].setAutosolve(false);
     }
-    var rgpclv = new ClVariable[nVars];
-    for (var i = 0; i < nVars; i++)
+    var rgpclv = new Array(nVars+1);
+    for (var i = 0; i < nVars + 1; ++i)
     {
       rgpclv[i] = new ClVariable(i, "x");
       for (var is = 0; is < nSolvers + 1; ++is)
@@ -332,8 +309,8 @@ var ClTests = new Class({
       }
     }
     var nCnsMade = nCns * 5;
-    var rgpcns = new ClConstraint[nCnsMade];
-    var rgpcnsAdded = new ClConstraint[nCns];
+    var rgpcns = new Array(nCnsMade); // ClConstraints
+    var rgpcnsAdded = new Array(nCns); // ClConstraint
     var nvs = 0;
     var k;
     var j;
@@ -346,13 +323,12 @@ var ClTests = new Class({
       for (k = 0; k < nvs; k++)
       {
         coeff = this.GrainedUniformRandom() * 10 - 5;
-        var iclv = /* int */(this.UniformRandomDiscretized() * nVars);
+        var iclv = this.RandomInRange(0, nVars);
         expr.addExpression(CL.Times(rgpclv[iclv], coeff));
       }
       if (this.UniformRandomDiscretized() < ineqProb) {
         rgpcns[j] = new ClLinearInequality(expr);
-      }
-      else {
+      } else {
         rgpcns[j] = new ClLinearEquation(expr);
       }
       if (this.fTraceOn) this.traceprint("Constraint " + j + " is " + rgpcns[j]);
@@ -405,8 +381,8 @@ var ClTests = new Class({
     }
     timer.Stop();
     tmAdd = timer.ElapsedTime();
-    var e1Index = /* int */(this.UniformRandomDiscretized() * nVars);
-    var e2Index = /* int */(this.UniformRandomDiscretized() * nVars);
+    var e1Index = this.RandomInRange(0, nVars);
+    var e2Index = this.RandomInRange(0, nVars);
     print("Editing vars with indices " + e1Index + ", " + e2Index);
     var edit1 = new ClEditConstraint(rgpclv[e1Index], ClStrength.strong);
     var edit2 = new ClEditConstraint(rgpclv[e2Index], ClStrength.strong);
@@ -426,7 +402,7 @@ var ClTests = new Class({
       var solver = rgsolvers[is];
       for (var m = 0; m < nResolves; m++)
       {
-        solver.resolve(rgpclv[e1Index].value() * 1.001, rgpclv[e2Index].value() * 1.001);
+        solver.resolvePair(rgpclv[e1Index].value() * 1.001, rgpclv[e2Index].value() * 1.001);
       }
     }
     timer.Stop();
@@ -446,82 +422,82 @@ var ClTests = new Class({
   },
 
   main: function(args /*String[]*/) {
-      var clt = new ClTests();
-      var fAllOkResult = true;
-      var fResult;
-      if (true) {
-        print("simple1:");
-        fResult = this.simple1();
-        fAllOkResult = fResult;
-        if (!fResult) print("Failed!");
-        if (CL.fGC) print("Num vars = " + ClAbstractVariable.numCreated());
+    var clt = new ClTests();
+    var fAllOkResult = true;
+    var fResult;
+    if (true) {
+      print("simple1:");
+      fResult = this.simple1();
+      fAllOkResult = fResult;
+      if (!fResult) print("Failed!");
+      if (CL.fGC) print("Num vars = " + ClAbstractVariable.numCreated());
 
-        print("\n\n\njustStay1:");
-        fResult = this.justStay1();
-        fAllOkResult = fResult;
-        if (!fResult) print("Failed!");
-        if (CL.fGC) print("Num vars = " + ClAbstractVariable.numCreated());
+      print("\n\n\njustStay1:");
+      fResult = this.justStay1();
+      fAllOkResult = fResult;
+      if (!fResult) print("Failed!");
+      if (CL.fGC) print("Num vars = " + ClAbstractVariable.numCreated());
 
-        print("\n\n\naddDelete1:");
-        fResult = this.addDelete1();
-        fAllOkResult = fResult;
-        if (!fResult) print("Failed!");
-        if (CL.fGC) print("Num vars = " + ClAbstractVariable.numCreated());
+      print("\n\n\naddDelete1:");
+      fResult = this.addDelete1();
+      fAllOkResult = fResult;
+      if (!fResult) print("Failed!");
+      if (CL.fGC) print("Num vars = " + ClAbstractVariable.numCreated());
 
-        print("\n\n\naddDelete2:");
-        fResult = this.addDelete2();
-        fAllOkResult = fResult;
-        if (!fResult) print("Failed!");
-        if (CL.fGC) print("Num vars = " + ClAbstractVariable.numCreated());
+      print("\n\n\naddDelete2:");
+      fResult = this.addDelete2();
+      fAllOkResult = fResult;
+      if (!fResult) print("Failed!");
+      if (CL.fGC) print("Num vars = " + ClAbstractVariable.numCreated());
 
-        print("\n\n\ncasso1:");
-        fResult = this.casso1();
-        fAllOkResult = fResult;
-        if (!fResult) print("Failed!");
-        if (CL.fGC) print("Num vars = " + ClAbstractVariable.numCreated());
+      print("\n\n\ncasso1:");
+      fResult = this.casso1();
+      fAllOkResult = fResult;
+      if (!fResult) print("Failed!");
+      if (CL.fGC) print("Num vars = " + ClAbstractVariable.numCreated());
 
-        print("\n\n\ninconsistent1:");
-        fResult = this.inconsistent1();
-        fAllOkResult = fResult;
-        if (!fResult) print("Failed!");
-        if (CL.fGC) print("Num vars = " + ClAbstractVariable.numCreated());
+      print("\n\n\ninconsistent1:");
+      fResult = this.inconsistent1();
+      fAllOkResult = fResult;
+      if (!fResult) print("Failed!");
+      if (CL.fGC) print("Num vars = " + ClAbstractVariable.numCreated());
 
-        print("\n\n\ninconsistent2:");
-        fResult = this.inconsistent2();
-        fAllOkResult = fResult;
-        if (!fResult) print("Failed!");
-        if (CL.fGC) print("Num vars = " + ClAbstractVariable.numCreated());
+      print("\n\n\ninconsistent2:");
+      fResult = this.inconsistent2();
+      fAllOkResult = fResult;
+      if (!fResult) print("Failed!");
+      if (CL.fGC) print("Num vars = " + ClAbstractVariable.numCreated());
 
-        print("\n\n\ninconsistent3:");
-        fResult = this.inconsistent3();
-        fAllOkResult = fResult;
-        if (!fResult) print("Failed!");
-        if (CL.fGC) print("Num vars = " + ClAbstractVariable.numCreated());
+      print("\n\n\ninconsistent3:");
+      fResult = this.inconsistent3();
+      fAllOkResult = fResult;
+      if (!fResult) print("Failed!");
+      if (CL.fGC) print("Num vars = " + ClAbstractVariable.numCreated());
 
-        print("\n\n\nmultiedit:");
-        fResult = this.multiedit();
-        fAllOkResult = fResult;
-        if (!fResult) print("Failed!");
-        if (CL.fGC) print("Num vars = " + ClAbstractVariable.numCreated());
-        print("addDel:");
-      }
+      print("\n\n\nmultiedit:");
+      fResult = this.multiedit();
+      fAllOkResult = fResult;
+      if (!fResult) print("Failed!");
+      if (CL.fGC) print("Num vars = " + ClAbstractVariable.numCreated());
+    }
 
-      var testNum = 1;
-      var cns = 900;
-      var resolves = 100;
-      var solvers = 10;
+    print("\n\n\naddDel:");
+    var testNum = 1;
+    var cns = 900;
+    var resolves = 100;
+    var solvers = 10;
 
-      if (args.length > 0) testNum = Integer.parseInt(args[0]);
-      if (args.length > 1) cns = Integer.parseInt(args[1]);
-      if (args.length > 2) solvers = Integer.parseInt(args[2]);
-      if (args.length > 3) resolves = Integer.parseInt(args[3]);
-      if (true) {
-        fResult = this.addDel(cns, cns, resolves);
-        fAllOkResult = fResult;
-        if (!fResult) print("Failed!");
-        if (CL.fGC) print("Num vars = " + ClAbstractVariable.numCreated());
-      }
-      this.addDelSolvers(cns, resolves, solvers, testNum);
+    if (args.length > 0) testNum = args[0];
+    if (args.length > 1) cns = args[1];
+    if (args.length > 2) solvers = args[2];
+    if (args.length > 3) resolves = args[3];
+    if (false) {
+      fResult = this.addDel(cns, cns, resolves);
+      fAllOkResult = fResult;
+      if (!fResult) print("Failed!");
+      if (CL.fGC) print("Num vars = " + ClAbstractVariable.numCreated());
+    }
+    this.addDelSolvers(cns, resolves, solvers, testNum);
   },
 });
 
@@ -533,4 +509,5 @@ ClTests.cRandom = 0;
 ClTests.vRandom;
 
 clt = new ClTests();
-// clt.main(new Array());
+clt.main(new Array(1,100,10,50));
+//clt.main(new Array());

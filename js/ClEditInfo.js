@@ -32,4 +32,8 @@ var ClEditInfo = new Class({
   SetPrevEditConstant: function(prevEditConstant_ /*double*/) {
     this.prevEditConstant = prevEditConstant_;
   },
+
+  toString: function() {
+    return "<cn="+this.cn+",ep="+this.clvEditPlus+",em="+this.clvEditMinus+",pec="+this.prevEditConstant+",i="+i+">";
+  }
 });

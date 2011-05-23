@@ -1,19 +1,5 @@
 // FILE: EDU.Washington.grad.gjb.cassowary
 // package EDU.Washington.grad.gjb.cassowary;
-load("mootools-core-1.3.2-server.js");
-load('jshashtable-2.1-gjb.js');
-load('jshashset-gjb.js');
-load('ExCLError.js')
-load('ClSymbolicWeight.js')
-load('ClStrength.js')
-load('ClVariable.js')
-load('ClPoint.js')
-load('ClLinearExpression.js')
-load('ClConstraint.js')
-load('ClLinearConstraint.js')
-load('ClEditInfo.js')
-load('ClTableau.js')
-load('ClSimplexSolver.js')
 
 
 // bunch of global functions
@@ -122,18 +108,16 @@ var CL = {
 
   setToString: function(s) {
     CL.Assert(s instanceof HashSet);
-    var answer = "{";
-    var values = s.values();
-    var len = values.len;
+    var answer = s.size() + " {";
     var first = true;
-    for (var i = 0; i < len; ++i) {
+    s.each(function(e) {
       if (!first) {
         answer += ", ";
       } else {
         first = false;
       }
-      answer += values[i];
-    }
+      answer += e;
+    });
     answer += "}\n";
     return answer;
   }       
@@ -143,8 +127,8 @@ CL.fDebugOn = false;
 CL.fTraceOn = false;
 CL.fTraceAdded = false;
 CL.fGC = false;
-CL.fTraceOn = true;
-CL.fTraceAdded = true;
+//CL.fTraceOn = true;
+//CL.fTraceAdded = true;
 CL.GEQ = 1;
 CL.LEQ = 2;
 

@@ -24,7 +24,19 @@ var ClLinearInequality = new Class({
   Extends: ClLinearConstraint,
 
   initialize: function(a1, a2, a3, a4, a5) {
-    if (a1 instanceof ClLinearExpression) {
+    if (a1 instanceof ClLinearExpression &&
+        a3 instanceof ClAbstractVariable) {
+      var cle = a1, op = a2, clv = a3, strength = a4, weight = a5;
+      this.parent(cle.clone(), strength, weight);
+      if (op == CL.LEQ) {
+        this._expression.multiplyMe(-1);
+        this._expression.addVariable(clv);
+      } else if (op == CL.GEQ) {
+        this._expression.addVariable(clv, -1);
+      } else {
+        throw new ExCLInternalError("Invalid operator in ClLinearInequality constructor");
+      }
+    } else if (a1 instanceof ClLinearExpression) {
       return this.parent(a1, a2, a3);
     } else if (a2 == CL.GEQ) {
       this.parent(new ClLinearExpression(a3), a4, a5);
@@ -38,6 +50,10 @@ var ClLinearInequality = new Class({
     }
   },
 
+  isInequality: function() {
+    return true;
+  },
+
   toString: function() {
     return this.parent() + " >= 0 )";
   },
@@ -48,7 +64,7 @@ var ClLinearEquation = new Class({
   Extends: ClLinearConstraint,
 
   initialize: function(a1, a2, a3, a4) {
-    if (a1 instanceof ClLinearExpression) {
+    if (a1 instanceof ClLinearExpression && !a2 || a2 instanceof ClStrength) {
       this.parent(a1, a2, a3);
     } else if ((a1 instanceof ClAbstractVariable) &&
                (a2 instanceof ClLinearExpression)) {
@@ -84,6 +100,7 @@ var ClLinearEquation = new Class({
     } else {
       throw "Bad initializer to ClLinearEquation";
     }
+    CL.Assert(this._strength instanceof ClStrength, "_strength not set");
   },
 
   toString: function() {

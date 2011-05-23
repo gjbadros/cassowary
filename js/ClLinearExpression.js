@@ -71,7 +71,7 @@ var ClLinearExpression = new Class({
       if (CL.approx(x, 0.0)) {
         throw new ExCLNonlinearExpression();
       }
-      return times(1.0 / x);
+      return this.times(1.0 / x);
     } else if (x instanceof ClLinearExpression) {
       if (!x.isConstant) {
         throw new ExCLNonlinearExpression();
@@ -112,7 +112,9 @@ var ClLinearExpression = new Class({
     if (coeff) {
       new_coefficient = coeff + c;
       if (CL.approx(new_coefficient, 0.0)) {
-        solver.noteRemovedVariable(v, subject);
+        if (solver) {
+          solver.noteRemovedVariable(v, subject);
+        }
         this._terms.remove(v);
       } else {
         this._terms.put(v, new_coefficient);

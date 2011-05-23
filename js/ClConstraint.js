@@ -13,11 +13,16 @@ var ClConstraint = new Class({
     var _times_added
  */
   initialize: function(strength /*ClStrength*/, weight /*double*/) {
+    this.hash_code = ClConstraint.iConstraintNumber++;
     this._strength = strength || ClStrength.required;
     this._weight = weight || 1.0;
     this._times_added = 0;
   },
   // abstract expression() 
+
+  hashCode: function() {
+    return this.hash_code;
+  },
 
   isEditConstraint: function() {
     return false;
@@ -142,3 +147,4 @@ var ClStayConstraint = new Class({
   },
 });
 
+ClConstraint.iConstraintNumber = 0;

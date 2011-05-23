@@ -58,22 +58,22 @@ var ClSimplexSolver = new Class({
     var expr = this.newExpression(cn, /*output to*/ eplus_eminus, prevEConstant);
     prevEConstant = prevEConstant[0];
     var fAddedOkDirectly = false;
-//    try {
+    try {
       fAddedOkDirectly = this.tryAddingDirectly(expr);
       if (!fAddedOkDirectly) {
         this.addWithArtificialVariable(expr);
       }
-//    }
-//    catch (err /*ExCLRequiredFailure*/){
-//      throw err;
-//    }
+    }
+    catch (err /*ExCLRequiredFailure*/){
+      throw err;
+    }
     this._fNeedsSolving = true;
     if (cn.isEditConstraint()) {
       var i = this._editVarMap.size();
       var clvEplus = /* ClSlackVariable */eplus_eminus[0];
       var clvEminus = /* ClSlackVariable */eplus_eminus[1];
       this._editVarMap.put(cn.variable(),
-                           new ClEditInfo(cnEdit, clvEplus, clvEminus, prevEConstant, i));
+                           new ClEditInfo(cn, clvEplus, clvEminus, prevEConstant, i));
     }
     if (this._fOptimizeAutomatically) {
       this.optimize(this._objective);
@@ -93,16 +93,14 @@ var ClSimplexSolver = new Class({
     }
   },
   addEditVar: function(v /*ClVariable*/, strength /*ClStrength*/) {
-    try {
+    strength = strength || ClStrength.strong;
+//    try {
       var cnEdit = new ClEditConstraint(v, strength);
       return this.addConstraint(cnEdit);
-    }
-    catch (e /*ExCLRequiredFailure*/){
-      throw new ExCLInternalError("Required failure when adding an edit variable");
-    }
-  },
-  addEditVar: function(v /*ClVariable*/) {
-    return this.addEditVar(v, ClStrength.strong);
+//    }
+//    catch (e /*ExCLRequiredFailure*/){
+//      throw new ExCLInternalError("Required failure when adding an edit variable");
+//    }
   },
   removeEditVar: function(v /*ClVariable*/) {
     var cei = /* ClEditInfo */this._editVarMap.get(v);
@@ -183,16 +181,16 @@ var ClSimplexSolver = new Class({
     this.resetStayConstants();
     var zRow = this.rowExpression(this._objective);
     var eVars = /* Set */this._errorVars.get(cn);
-    if (CL.fTraceOn) CL.traceprint("eVars == " + eVars);
+    if (CL.fTraceOn) CL.traceprint("eVars == " + CL.setToString(eVars));
     if (eVars != null) {
       eVars.each(function(clv) {
         var expr = that.rowExpression(clv);
         if (expr == null) {
           zRow.addVariable(clv, -cn.weight() * cn.strength().symbolicWeight().asDouble(), that._objective, that);
-        }
-        else {
+        } else {
           zRow.addExpression(expr, -cn.weight() * cn.strength().symbolicWeight().asDouble(), that._objective, that);
         }
+        if (CL.fTraceOn) CL.traceprint("now eVars == " + CL.setToString(eVars));
       });
     }
     var marker = /* ClAbstractVariable */this._markerVars.remove(cn);
@@ -275,7 +273,7 @@ var ClSimplexSolver = new Class({
       CL.Assert(eVars != null, "eVars != null");
       var cnEdit = /* ClEditConstraint */cn;
       var clv = cnEdit.variable();
-      var cei = /* ClEditInfo */this._editVarMap[clv];
+      var cei = this._editVarMap.get(clv);
       var clvEditMinus = cei.ClvEditMinus();
       this.removeColumn(clvEditMinus);
       this._editVarMap.remove(clv);
@@ -294,23 +292,25 @@ var ClSimplexSolver = new Class({
     if (CL.fTraceOn) CL.fnenterprint("reset");
     throw new ExCLInternalError("reset not implemented");
   },
-  resolve: function(newEditConstants /*Vector*/) {
-    if (CL.fTraceOn) CL.fnenterprint("resolve" + newEditConstants);
+  resolveArray: function(newEditConstants /*Vector*/) {
+    if (CL.fTraceOn) CL.fnenterprint("resolveArray" + newEditConstants);
+    var that = this;
     this._editVarMap.each(function(v, cei) {
       var i = cei.Index();
-      try {
-        if (i < newEditConstants.length) that.suggestValue(v, newEditConstants[i]);
-      }
-      catch (err /*ExCLError*/){
-        throw new ExCLInternalError("Error during resolve");
-      }
+//      try {
+        if (i < newEditConstants.length) 
+          that.suggestValue(v, newEditConstants[i]);
+//      }
+//      catch (err /*ExCLError*/){
+//        throw new ExCLInternalError("Error during resolve");
+//      }
     });
     this.resolve();
   },
-  resolve: function(x /*double*/, y /*double*/) {
-    (/* ClDouble */this._resolve_pair[0]).setValue(x);
-    (/* ClDouble */this._resolve_pair[1]).setValue(y);
-    this.resolve(this._resolve_pair);
+  resolvePair: function(x /*double*/, y /*double*/) {
+    this._resolve_pair[0] = x;
+    this._resolve_pair[1] = y;
+    this.resolveArray(this._resolve_pair);
   },
   resolve: function() {
     if (CL.fTraceOn) CL.fnenterprint("resolve()");
@@ -321,7 +321,7 @@ var ClSimplexSolver = new Class({
   },
   suggestValue: function(v /*ClVariable*/, x /*double*/) {
     if (CL.fTraceOn) CL.fnenterprint("suggestValue(" + v + ", " + x + ")");
-    var cei = /* ClEditInfo */this._editVarMap[v];
+    var cei = this._editVarMap.get(v);
     if (cei == null) {
       print("suggestValue for variable " + v + ", but var is not an edit variable\n");
       throw new ExCLError();
@@ -407,6 +407,8 @@ var ClSimplexSolver = new Class({
     bstr += "\n_stayMinusErrorVars: ";
     bstr += '[' + this._stayMinusErrorVars + ']';
     bstr += "\n";
+    bstr += "_editVarMap:\n" + CL.hashToString(this._editVarMap);
+    bstr += "\n";
     return bstr;
   },
   getConstraintMap: function() {
@@ -464,10 +466,12 @@ var ClSimplexSolver = new Class({
     var foundUnrestricted = false;
     var foundNewRestricted = false;
     var terms = expr.terms();
-    terms.escapingEach(function(v, c) {
+    var rv = terms.escapingEach(function(v, c) {
       if (foundUnrestricted) {
         if (!v.isRestricted()) {
-          if (!that.columnsHasKey(v)) return {retval: v};
+          if (!that.columnsHasKey(v)) {
+            return {retval: v};
+          }
         }
       } else {
         if (v.isRestricted()) {
@@ -484,22 +488,28 @@ var ClSimplexSolver = new Class({
         }
       }
     });
+    if (rv && rv.retval !== undefined) return rv.retval;
 
     if (subject != null) 
       return subject;
 
     var coeff = 0.0;
 
-    terms.escapingEach(function(v,c) {
-      if (!v.isDummy()) 
+  // subject is nil. 
+  // Make one last check -- if all of the variables in expr are dummy
+  // variables, then we can pick a dummy variable as the subject
+    var rv = terms.escapingEach(function(v,c) {
+      if (!v.isDummy())  {
         return {retval:null};
+      }
       if (!that.columnsHasKey(v)) {
         subject = v;
         coeff = c;
       }
     });
+    if (rv && rv.retval !== undefined) return rv.retval;
+
     if (!CL.approx(expr.constant(), 0.0)) {
-      print("expr.constant() == " + expr.constant());
       throw new ExCLRequiredFailure();
     }
     if (coeff > 0.0) {
@@ -514,23 +524,23 @@ var ClSimplexSolver = new Class({
     if (exprPlus != null) {
       exprPlus.incrementConstant(delta);
       if (exprPlus.constant() < 0.0) {
-        this._infeasibleRows.insert(plusErrorVar);
+        this._infeasibleRows.add(plusErrorVar);
       }
     }
     var exprMinus = this.rowExpression(minusErrorVar);
     if (exprMinus != null) {
       exprMinus.incrementConstant(-delta);
       if (exprMinus.constant() < 0.0) {
-        this._infeasibleRows.insert(minusErrorVar);
+        this._infeasibleRows.add(minusErrorVar);
       }
     }
     var columnVars = this._columns.get(minusErrorVar);
-    columnVars.each(function(baicVar) {
+    columnVars.each(function(basicVar) {
       var expr = that.rowExpression(basicVar);
       var c = expr.coefficientFor(minusErrorVar);
       expr.incrementConstant(c * delta);
       if (basicVar.isRestricted() && expr.constant() < 0.0) {
-        that._infeasibleRows.insert(basicVar);
+        that._infeasibleRows.add(basicVar);
       }
     });
   },
@@ -538,7 +548,7 @@ var ClSimplexSolver = new Class({
     if (CL.fTraceOn) CL.fnenterprint("dualOptimize:");
     var zRow = this.rowExpression(this._objective);
     while  (!this._infeasibleRows.isEmpty()) {
-      var exitVar = /* ClAbstractVariable */this._infeasibleRows.elements().nextElement();
+      var exitVar = this._infeasibleRows.values()[0];
       this._infeasibleRows.remove(exitVar);
       var entryVar = null;
       var expr = this.rowExpression(exitVar);
@@ -588,7 +598,7 @@ var ClSimplexSolver = new Class({
       ++this._slackCounter;
       slackVar = new ClSlackVariable(this._slackCounter, "s");
       expr.setVariable(slackVar, -1);
-      this._markerVars[cn] = slackVar;
+      this._markerVars.put(cn, slackVar);
       if (!cn.isRequired()) {
         ++this._slackCounter;
         eminus = new ClSlackVariable(this._slackCounter, "em");
@@ -605,16 +615,15 @@ var ClSimplexSolver = new Class({
         ++this._dummyCounter;
         dummyVar = new ClDummyVariable(this._dummyCounter, "d");
         expr.setVariable(dummyVar, 1.0);
-        this._markerVars[cn] = dummyVar;
+        this._markerVars.put(cn, dummyVar);
         if (CL.fTraceOn) CL.traceprint("Adding dummyVar == d" + this._dummyCounter);
-      }
-      else {
+      } else {
         ++this._slackCounter;
         eplus = new ClSlackVariable(this._slackCounter, "ep");
         eminus = new ClSlackVariable(this._slackCounter, "em");
         expr.setVariable(eplus, -1.0);
         expr.setVariable(eminus, 1.0);
-        this._markerVars[cn] = eplus;
+        this._markerVars.put(cn, eplus);
         var zRow = this.rowExpression(this._objective);
         var sw = cn.strength().symbolicWeight().times(cn.weight());
         var swCoeff = sw.asDouble();
@@ -632,11 +641,10 @@ var ClSimplexSolver = new Class({
         if (cn.isStayConstraint()) {
           this._stayPlusErrorVars.push(eplus);
           this._stayMinusErrorVars.push(eminus);
-        }
-        else if (cn.isEditConstraint()) {
-          eplus_eminus.push(eplus);
-          eplus_eminus.push(eminus);
-          prevEConstant.setValue(cnExpr.constant());
+        } else if (cn.isEditConstraint()) {
+          eplus_eminus[0] = eplus;
+          eplus_eminus[1] = eminus;
+          prevEConstant[0] = cnExpr.constant();
         }
       }
     }
@@ -663,8 +671,9 @@ var ClSimplexSolver = new Class({
       });
       if (objectiveCoeff >= -this._epsilon) 
         return;
-      if (CL.fTraceOn) ;
-      CL.traceprint("entryVar == " + entryVar + ", objectiveCoeff == " + objectiveCoeff);
+      if (CL.fTraceOn) {
+        CL.traceprint("entryVar == " + entryVar + ", objectiveCoeff == " + objectiveCoeff);
+      }
       var minRatio = Number.MAX_VALUE;
       var columnVars = this._columns.get(entryVar);
       var r = 0.0;
