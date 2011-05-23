@@ -216,8 +216,8 @@ var QuadDemo = new Class({
   },
 
   mousedown: function(ev) {
-    var x = ev.pageX - this.canvas.offsetLeft;
-    var y = ev.pageY - this.canvas.offsetTop;
+    var x = ev.clientX - this.canvas.offsetLeft;
+    var y = ev.clientY - this.canvas.offsetTop;
     console.log('mousedown x,y='+x+','+y);
     for ( var a = 0; a < this.db.length; a++ ) {
       if ( this.db[a].Contains(x, y) ) {
@@ -243,8 +243,8 @@ var QuadDemo = new Class({
 
 
   mouseup: function(ev) {
-    var x = ev.pageX - this.canvas.offsetLeft;
-    var y = ev.pageY - this.canvas.offsetTop;
+    var x = ev.clientX - this.canvas.offsetLeft;
+    var y = ev.clientY - this.canvas.offsetTop;
     if (this.dbDragging != -1 ) {
       try {
         this.dbDragging = -1;
@@ -258,8 +258,8 @@ var QuadDemo = new Class({
   },
 
   mousemove: function(ev) {
-    var x = ev.pageX - this.canvas.offsetLeft;
-    var y = ev.pageY - this.canvas.offsetTop;
+    var x = ev.clientX - this.canvas.offsetLeft;
+    var y = ev.clientY - this.canvas.offsetTop;
     if ( this.dbDragging != -1 ) {
       try {
         this.solver
@@ -278,9 +278,9 @@ var QuadDemo = new Class({
   touchstart: function(ev) {
     ev.preventDefault();
     this.mousedown(ev);
-    if (false) {
+    if (true) {
       document.write("touchstart ev = " + ev + "  ");
-      document.write(ev.pageX + "," + ev.pageY);
+      document.write(ev.clientX + "," + ev.clientY);
       document.write("<br/>");
     }
   },
@@ -288,9 +288,9 @@ var QuadDemo = new Class({
   touchend: function(ev) {
     ev.preventDefault();
     this.mouseup(ev);
-    if (false) {
+    if (true) {
       document.write("touchend ev = " + ev + "  ");
-      document.write(ev.offsetX + "," + ev.offsetY);
+      document.write(ev.clientX + "," + ev.clientY);
       document.write("<br/>");
     }
   },
@@ -298,9 +298,9 @@ var QuadDemo = new Class({
   touchmove: function(ev) {
     ev.preventDefault();
     this.mousemove(ev);
-    if (false) {
+    if (true) {
       document.write("touchmove ev = " + ev + "  ");
-      document.write(ev.offsetX + "," + ev.offsetY);
+      document.write(ev.clientX + "," + ev.clientY);
       document.write("<br/>");
     }
   },
