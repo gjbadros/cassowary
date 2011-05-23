@@ -5,10 +5,14 @@
 // bunch of global functions
 var CL = {
   debugprint: function(s /*String*/) {
-    print(s);
+    if (CL.fVerboseTraceOn) {
+      print(s);
+    }
   },
   traceprint: function(s /*String*/) {
-    print(s);
+    if (CL.fVerboseTraceOn) {
+      print(s);
+    }
   },
   fnenterprint: function(s /*String*/) {
     print("* " + s);
@@ -124,6 +128,7 @@ var CL = {
 };
 
 CL.fDebugOn = false;
+CL.fVerboseTraceOn = false;
 CL.fTraceOn = false;
 CL.fTraceAdded = false;
 CL.fGC = false;
