@@ -716,55 +716,55 @@ public class ClTests extends CL {
       boolean fAllOkResult = true;
       boolean fResult;
 
-      if (false) {
-        System.out.println("simple1:");
+      if (true) {
+        System.out.println("\n\n\nsimple1:");
         fResult = simple1(); fAllOkResult &= fResult;
         if (!fResult) System.out.println("Failed!");
         if (CL.fGC) System.out.println("Num vars = " + ClAbstractVariable.numCreated() );
         
-        System.out.println("justStay1:");
+        System.out.println("\n\n\njustStay1:");
         fResult = justStay1(); fAllOkResult &= fResult;
         if (!fResult) System.out.println("Failed!");
         if (CL.fGC) System.out.println("Num vars = " + ClAbstractVariable.numCreated() );
 	
-        System.out.println("addDelete1:");
+        System.out.println("\n\n\naddDelete1:");
         fResult = addDelete1(); fAllOkResult &= fResult;
         if (!fResult) System.out.println("Failed!");
         if (CL.fGC) System.out.println("Num vars = " + ClAbstractVariable.numCreated() );
         
-        System.out.println("addDelete2:");
+        System.out.println("\n\n\naddDelete2:");
         fResult = addDelete2(); fAllOkResult &= fResult;
         if (!fResult) System.out.println("Failed!");
         if (CL.fGC) System.out.println("Num vars = " + ClAbstractVariable.numCreated() );
         
-        System.out.println("casso1:");
+        System.out.println("\n\n\ncasso1:");
         fResult = casso1(); fAllOkResult &= fResult;
         if (!fResult) System.out.println("Failed!");
         if (CL.fGC) System.out.println("Num vars = " + ClAbstractVariable.numCreated() );
     
-        System.out.println("inconsistent1:");
+        System.out.println("\n\n\ninconsistent1:");
         fResult = inconsistent1(); fAllOkResult &= fResult;
         if (!fResult) System.out.println("Failed!");
         if (CL.fGC) System.out.println("Num vars = " + ClAbstractVariable.numCreated() );
         
-        System.out.println("inconsistent2:");
+        System.out.println("\n\n\ninconsistent2:");
         fResult = inconsistent2(); fAllOkResult &= fResult;
         if (!fResult) System.out.println("Failed!");
         if (CL.fGC) System.out.println("Num vars = " + ClAbstractVariable.numCreated() );
         
-        System.out.println("inconsistent3:");
+        System.out.println("\n\n\ninconsistent3:");
         fResult = inconsistent3(); fAllOkResult &= fResult;
         if (!fResult) System.out.println("Failed!");
         if (CL.fGC) System.out.println("Num vars = " + ClAbstractVariable.numCreated() );
 
-        System.out.println("multiedit:");
+        System.out.println("\n\n\nmultiedit:");
         fResult = multiedit(); fAllOkResult &= fResult;
         if (!fResult) System.out.println("Failed!");
         if (CL.fGC) System.out.println("Num vars = " + ClAbstractVariable.numCreated() );
-        
-      System.out.println("addDel:");
+
       }
       
+      System.out.println("\n\n\naddDel:");
       int testNum = 1, cns = 900, resolves = 100, solvers = 10;
         
 
