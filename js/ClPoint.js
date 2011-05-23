@@ -1,12 +1,10 @@
 
 var ClPoint = new Class({
   initialize: function(x, y, suffix) {
-    this.x = new ClVariable();
-    this.y = new ClVariable();
     if (x instanceof ClVariable) {
       this.x = x;
     } else {
-      if (suffix) {
+      if (suffix != null) {
         this.x = new ClVariable("x"+suffix, x);
       } else {
         this.x = new ClVariable(x);
@@ -15,7 +13,7 @@ var ClPoint = new Class({
     if (y instanceof ClVariable) {
       this.y = y;
     } else {
-      if (suffix) {
+      if (suffix != null) {
         this.y = new ClVariable("y"+suffix, y);
       } else {
         this.y = new ClVariable(y);
