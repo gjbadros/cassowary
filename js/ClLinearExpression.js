@@ -107,7 +107,7 @@ var ClLinearExpression = new Class({
 
   addVariable: function(v /*ClAbstractVariable*/, c /*double*/, subject, solver) {
     c = c || 1.0;
-    if (CL.fTraceOn) CL.fnenterprint("addVariable:" + v + ", " + c);
+    if (CL.fTraceOn) CL.fnenterprint("CLE: addVariable:" + v + ", " + c);
     coeff = this._terms.get(v);
     if (coeff) {
       new_coefficient = coeff + c;

@@ -15,13 +15,13 @@ var ClTableau = new Class({
     this._externalParametricVars = new HashSet();
   },
   noteRemovedVariable: function(v /*ClAbstractVariable*/, subject /*ClAbstractVariable*/) {
-    if (CL.fTraceOn) CL.fnenterprint("noteRemovedVariable: " + v + ", " + subject);
+    if (CL.fVerboseTraceOn) CL.fnenterprint("noteRemovedVariable: " + v + ", " + subject);
     if (subject != null) {
       this._columns.get(v).remove(subject);
     }
   },
   noteAddedVariable: function(v /*ClAbstractVariable*/, subject /*ClAbstractVariable*/) {
-    if (CL.fTraceOn) CL.fnenterprint("noteAddedVariable: " + v + ", " + subject);
+    if (CL.fVerboseTraceOn) CL.fnenterprint("noteAddedVariable: " + v + ", " + subject);
     if (subject) {
       this.insertColVar(v, subject);
     }
