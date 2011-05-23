@@ -2,7 +2,7 @@ var DraggableBox = new Class({
   initialize: function(x, y, w, h) {
     this.width = w || 15;
     this.height = h || 15;
-    if (!y) {
+    if (y == null ) {
       this.center = new ClPoint(0, 0, x);
     } else {
       this.center = new ClPoint(x, y);
@@ -84,18 +84,18 @@ var QuadDemo = new Class({
       mp[a] = db[a+4];
     }
     
-    db[0].SetCenter(5, 5);
-    db[1].SetCenter(5, 200);
+    db[0].SetCenter(10, 10);
+    db[1].SetCenter(10, 200);
     db[2].SetCenter(200, 200);
-    db[3].SetCenter(200, 5);
+    db[3].SetCenter(200, 10);
     
     // Add constraints
     //  try {
     // Add stay constraints on line endpoints
-    solver.addPointStay(db[0].CenterPt(), 1.0);
-    solver.addPointStay(db[1].CenterPt(), 2.0);
-    solver.addPointStay(db[2].CenterPt(), 4.0);
-    solver.addPointStay(db[3].CenterPt(), 8.0);
+    solver.addPointStays([db[0].CenterPt(),
+                          db[1].CenterPt(),
+                          db[2].CenterPt(),
+                          db[3].CenterPt()]);
     
     var cle, cleq;
 
@@ -103,45 +103,45 @@ var QuadDemo = new Class({
     cle = new ClLinearExpression(db[0].X());
     cle = (cle.plus(db[1].X())).divide(2);
     cleq = new ClLinearEquation(mp[0].X(), cle);
-    // System.out.println("Adding " + cleq);
+
     solver.addConstraint(cleq);
     cle = new ClLinearExpression(db[0].Y());
     cle = (cle.plus(db[1].Y())).divide(2);
     cleq = new ClLinearEquation(mp[0].Y(), cle);
-    // System.out.println("Adding " + cleq);
+
     solver.addConstraint(cleq);
     
     cle = new ClLinearExpression(db[1].X());
     cle = (cle.plus(db[2].X())).divide(2);
     cleq = new ClLinearEquation(mp[1].X(), cle);
-    // System.out.println("Adding " + cleq);
+
     solver.addConstraint(cleq);
     cle = new ClLinearExpression(db[1].Y());
     cle = (cle.plus(db[2].Y())).divide(2);
     cleq = new ClLinearEquation(mp[1].Y(), cle);
-    // System.out.println("Adding " + cleq);
+
     solver.addConstraint(cleq);
     
     cle = new ClLinearExpression(db[2].X());
     cle = (cle.plus(db[3].X())).divide(2);
     cleq = new ClLinearEquation(mp[2].X(), cle);
-    // System.out.println("Adding " + cleq);
+
     solver.addConstraint(cleq);
     cle = new ClLinearExpression(db[2].Y());
     cle = (cle.plus(db[3].Y())).divide(2);
     cleq = new ClLinearEquation(mp[2].Y(), cle);
-    // System.out.println("Adding " + cleq);
+
     solver.addConstraint(cleq);
     
     cle = new ClLinearExpression(db[3].X());
     cle = (cle.plus(db[0].X())).divide(2);
     cleq = new ClLinearEquation(mp[3].X(), cle);
-    // System.out.println("Adding " + cleq);
+
     solver.addConstraint(cleq);
     cle = new ClLinearExpression(db[3].Y());
     cle = (cle.plus(db[0].Y())).divide(2);
     cleq = new ClLinearEquation(mp[3].Y(), cle);
-    // System.out.println("Adding " + cleq);
+
     solver.addConstraint(cleq);
     
 
@@ -190,53 +190,27 @@ var QuadDemo = new Class({
   },
 
   mousedown: function(ev) {
-    var x = ev.offsetX;
-    var y = ev.offsetY;
-    console.log('mousedown x,y='+x+','+y);
-    for ( var a = 0; a < this.db.length; a++ ) {
-      if ( this.db[a].Contains(x, y) ) {
-        this.dbDragging = a;
-        console.log('dragging #' + a);
-        break;
-      }
-    }
-    this.draw();
-
-    if ( this.dbDragging != -1 ) {
-      try {
-        this.solver
-          .addEditVar(this.db[this.dbDragging].X())
-          .addEditVar(this.db[this.dbDragging].Y())
-          .beginEdit();
-      } catch (ex) {
-        console.log("mouseDown exception = " + ex);
-      }
-    }
-    return true;
-  },
-
-  mousedown: function(ev) {
     var x = ev.clientX - this.canvas.offsetLeft;
     var y = ev.clientY - this.canvas.offsetTop;
-    console.log('mousedown x,y='+x+','+y);
+    // console.log('mousedown x,y='+x+','+y);
     for ( var a = 0; a < this.db.length; a++ ) {
       if ( this.db[a].Contains(x, y) ) {
         this.dbDragging = a;
-        console.log('dragging #' + a);
+        // console.log('dragging #' + a);
         break;
       }
     }
-    this.draw();
 
     if ( this.dbDragging != -1 ) {
-      try {
+      this.draw();
+//      try {
         this.solver
           .addEditVar(this.db[this.dbDragging].X())
           .addEditVar(this.db[this.dbDragging].Y())
           .beginEdit();
-      } catch (ex) {
-        console.log("mouseDown exception = " + ex);
-      }
+//      } catch (ex) {
+//        console.log("mouseDown exception = " + ex);
+//      }
     }
     return true;
   },
@@ -246,12 +220,12 @@ var QuadDemo = new Class({
     var x = ev.clientX - this.canvas.offsetLeft;
     var y = ev.clientY - this.canvas.offsetTop;
     if (this.dbDragging != -1 ) {
-      try {
+//      try {
         this.dbDragging = -1;
         this.solver.endEdit();
-      } catch (ex) {
-        console.log("mouseup exception = " + ex);
-      }
+//      } catch (ex) {
+//        console.log("mouseup exception = " + ex);
+//      }
     }
     this.draw();
     return true;
@@ -261,14 +235,14 @@ var QuadDemo = new Class({
     var x = ev.clientX - this.canvas.offsetLeft;
     var y = ev.clientY - this.canvas.offsetTop;
     if ( this.dbDragging != -1 ) {
-      try {
+//      try {
         this.solver
           .suggestValue(this.db[this.dbDragging].X(),x)
           .suggestValue(this.db[this.dbDragging].Y(),y)
           .resolve();
-      } catch (ex) {
-        console.log("mousemove: ex = " + ex);
-      }
+//      } catch (ex) {
+//        console.log("mousemove: ex = " + ex);
+//      }
       this.draw();
     }
     return true;
