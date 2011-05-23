@@ -276,33 +276,39 @@ var QuadDemo = new Class({
 
 
   touchstart: function(ev) {
-    ev.preventDefault();
     if (false) {
       document.write("touchstart ev = " + ev + "  ");
       document.write(ev.clientX + "," + ev.clientY);
       document.write("<br/>");
     }
-    this.mousedown(ev);
+    this.mousedown(ev.touches.item(0));
+    if (this.dbDragging != -1) {
+      ev.preventDefault();
+    }
   },
 
   touchend: function(ev) {
-    ev.preventDefault();
     if (false) {
       document.write("touchend ev = " + ev + "  ");
       document.write(ev.clientX + "," + ev.clientY);
       document.write("<br/>");
     }
-    this.mouseup(ev);
+    this.mouseup(ev.touches.item(0));
+    if (this.dbDragging != -1) {
+      ev.preventDefault();
+    }
   },
 
   touchmove: function(ev) {
-    ev.preventDefault();
     if (false) {
       document.write("touchmove ev = " + ev + "  ");
       document.write(ev.clientX + "," + ev.clientY);
       document.write("<br/>");
     }
-    this.mousemove(ev);
+    this.mousemove(ev.touches.item(0));
+    if (this.dbDragging != -1) {
+      ev.preventDefault();
+    }
   },
 
 
