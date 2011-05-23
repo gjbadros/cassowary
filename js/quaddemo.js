@@ -276,15 +276,21 @@ var QuadDemo = new Class({
 
 
   touchstart: function(ev) {
-    document.write("touchstart ev = " + ev + "<br/>");
+    document.write("touchstart ev = " + ev + "  ");
+    document.write(ev.offsetX + "," + ev.offsetY);
+    document.write("<br/>");
   },
 
   touchend: function(ev) {
-    document.write("touchend ev = " + ev + "<br/>");
+    document.write("touchend ev = " + ev + "  ");
+    document.write(ev.offsetX + "," + ev.offsetY);
+    document.write("<br/>");
   },
 
   touchmove: function(ev) {
-    document.write("touchmove ev = " + ev + "<br/>");
+    document.write("touchmove ev = " + ev + "  ");
+    document.write(ev.offsetX + "," + ev.offsetY);
+    document.write("<br/>");
   },
 
 
