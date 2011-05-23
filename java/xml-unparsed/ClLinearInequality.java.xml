@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="ClLinearInequality.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<class name="ClLinearInequality" visibility="public">
+<superclass class="ClLinearConstraint"/>
+<constructor name="ClLinearInequality" visibility="public" id="ctr-8286">
+<formal-arguments>
+<formal-argument name="cle" id="frmarg-8274"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="strength" id="frmarg-8278"><type name="ClStrength"/></formal-argument>
+<formal-argument name="weight" id="frmarg-8282"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<super-call><arguments><var-ref name="cle"/><var-ref name="strength"/><var-ref name="weight"/></arguments></super-call>
+</constructor>
+<constructor name="ClLinearInequality" visibility="public" id="ctr-8299">
+<formal-arguments>
+<formal-argument name="cle" id="frmarg-8291"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="strength" id="frmarg-8295"><type name="ClStrength"/></formal-argument>
+</formal-arguments>
+<super-call><arguments><var-ref name="cle"/><var-ref name="strength"/></arguments></super-call>
+</constructor>
+<constructor name="ClLinearInequality" visibility="public" id="ctr-8308">
+<formal-arguments>
+<formal-argument name="cle" id="frmarg-8304"><type name="ClLinearExpression"/></formal-argument>
+</formal-arguments>
+<super-call><arguments><var-ref name="cle"/></arguments></super-call>
+</constructor>
+<constructor name="ClLinearInequality" visibility="public" id="ctr-8334">
+<formal-arguments>
+<formal-argument name="clv1" id="frmarg-8313"><type name="ClVariable"/></formal-argument>
+<formal-argument name="op_enum" id="frmarg-8317"><type name="byte" primitive="true"/></formal-argument>
+<formal-argument name="clv2" id="frmarg-8321"><type name="ClVariable"/></formal-argument>
+<formal-argument name="strength" id="frmarg-8325"><type name="ClStrength"/></formal-argument>
+<formal-argument name="weight" id="frmarg-8329"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLInternalError"/>
+<super-call><arguments><new><type name="ClLinearExpression"/><arguments><var-ref name="clv2"/></arguments></new>
+<var-ref name="strength"/><var-ref name="weight"/></arguments></super-call>
+<if><test><binary-expr op="=="><var-ref name="op_enum"/><field-access field="GEQ"><var-ref name="CL"/></field-access></binary-expr></test>
+<true-case><statements>
+<send message="multiplyMe">
+<target><var-ref name="_expression"/></target>
+<arguments><unary-expr op="-"><literal-number kind="double" value="1.0"/></unary-expr></arguments>
+</send>
+<send message="addVariable">
+<target><var-ref name="_expression"/></target>
+<arguments><var-ref name="clv1"/></arguments>
+</send>
+</statements>
+</true-case>
+<false-case><if><test><binary-expr op="=="><var-ref name="op_enum"/><field-access field="LEQ"><var-ref name="CL"/></field-access></binary-expr></test>
+<true-case><statements>
+<send message="addVariable">
+<target><var-ref name="_expression"/></target>
+<arguments><var-ref name="clv1"/><unary-expr op="-"><literal-number kind="double" value="1.0"/></unary-expr></arguments>
+</send>
+</statements>
+</true-case>
+<false-case><throw><new><type name="ExCLInternalError"/><arguments><literal-string length="50">Invalid operator in ClLinearInequality constructor</literal-string></arguments></new>
+</throw>
+</false-case>
+</if>
+</false-case>
+</if>
+</constructor>
+<constructor name="ClLinearInequality" visibility="public" id="ctr-8356">
+<formal-arguments>
+<formal-argument name="clv1" id="frmarg-8339"><type name="ClVariable"/></formal-argument>
+<formal-argument name="op_enum" id="frmarg-8343"><type name="byte" primitive="true"/></formal-argument>
+<formal-argument name="clv2" id="frmarg-8347"><type name="ClVariable"/></formal-argument>
+<formal-argument name="strength" id="frmarg-8351"><type name="ClStrength"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLInternalError"/>
+<this-call><arguments><var-ref name="clv1"/><var-ref name="op_enum"/><var-ref name="clv2"/><var-ref name="strength"/><literal-number kind="double" value="1.0"/></arguments></this-call></constructor>
+<constructor name="ClLinearInequality" visibility="public" id="ctr-8374">
+<formal-arguments>
+<formal-argument name="clv1" id="frmarg-8361"><type name="ClVariable"/></formal-argument>
+<formal-argument name="op_enum" id="frmarg-8365"><type name="byte" primitive="true"/></formal-argument>
+<formal-argument name="clv2" id="frmarg-8369"><type name="ClVariable"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLInternalError"/>
+<this-call><arguments><var-ref name="clv1"/><var-ref name="op_enum"/><var-ref name="clv2"/><field-access field="required"><var-ref name="ClStrength"/></field-access><literal-number kind="double" value="1.0"/></arguments></this-call></constructor>
+<constructor name="ClLinearInequality" visibility="public" id="ctr-8400">
+<formal-arguments>
+<formal-argument name="clv" id="frmarg-8379"><type name="ClVariable"/></formal-argument>
+<formal-argument name="op_enum" id="frmarg-8383"><type name="byte" primitive="true"/></formal-argument>
+<formal-argument name="val" id="frmarg-8387"><type name="double" primitive="true"/></formal-argument>
+<formal-argument name="strength" id="frmarg-8391"><type name="ClStrength"/></formal-argument>
+<formal-argument name="weight" id="frmarg-8395"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLInternalError"/>
+<super-call><arguments><new><type name="ClLinearExpression"/><arguments><var-ref name="val"/></arguments></new>
+<var-ref name="strength"/><var-ref name="weight"/></arguments></super-call>
+<if><test><binary-expr op="=="><var-ref name="op_enum"/><field-access field="GEQ"><var-ref name="CL"/></field-access></binary-expr></test>
+<true-case><statements>
+<send message="multiplyMe">
+<target><var-ref name="_expression"/></target>
+<arguments><unary-expr op="-"><literal-number kind="double" value="1.0"/></unary-expr></arguments>
+</send>
+<send message="addVariable">
+<target><var-ref name="_expression"/></target>
+<arguments><var-ref name="clv"/></arguments>
+</send>
+</statements>
+</true-case>
+<false-case><if><test><binary-expr op="=="><var-ref name="op_enum"/><field-access field="LEQ"><var-ref name="CL"/></field-access></binary-expr></test>
+<true-case><statements>
+<send message="addVariable">
+<target><var-ref name="_expression"/></target>
+<arguments><var-ref name="clv"/><unary-expr op="-"><literal-number kind="double" value="1.0"/></unary-expr></arguments>
+</send>
+</statements>
+</true-case>
+<false-case><throw><new><type name="ExCLInternalError"/><arguments><literal-string length="50">Invalid operator in ClLinearInequality constructor</literal-string></arguments></new>
+</throw>
+</false-case>
+</if>
+</false-case>
+</if>
+</constructor>
+<constructor name="ClLinearInequality" visibility="public" id="ctr-8422">
+<formal-arguments>
+<formal-argument name="clv" id="frmarg-8405"><type name="ClVariable"/></formal-argument>
+<formal-argument name="op_enum" id="frmarg-8409"><type name="byte" primitive="true"/></formal-argument>
+<formal-argument name="val" id="frmarg-8413"><type name="double" primitive="true"/></formal-argument>
+<formal-argument name="strength" id="frmarg-8417"><type name="ClStrength"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLInternalError"/>
+<this-call><arguments><var-ref name="clv"/><var-ref name="op_enum"/><var-ref name="val"/><var-ref name="strength"/><literal-number kind="double" value="1.0"/></arguments></this-call></constructor>
+<constructor name="ClLinearInequality" visibility="public" id="ctr-8440">
+<formal-arguments>
+<formal-argument name="clv" id="frmarg-8427"><type name="ClVariable"/></formal-argument>
+<formal-argument name="op_enum" id="frmarg-8431"><type name="byte" primitive="true"/></formal-argument>
+<formal-argument name="val" id="frmarg-8435"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLInternalError"/>
+<this-call><arguments><var-ref name="clv"/><var-ref name="op_enum"/><var-ref name="val"/><field-access field="required"><var-ref name="ClStrength"/></field-access><literal-number kind="double" value="1.0"/></arguments></this-call></constructor>
+<constructor name="ClLinearInequality" visibility="public" id="ctr-8466">
+<formal-arguments>
+<formal-argument name="cle1" id="frmarg-8445"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="op_enum" id="frmarg-8449"><type name="byte" primitive="true"/></formal-argument>
+<formal-argument name="cle2" id="frmarg-8453"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="strength" id="frmarg-8457"><type name="ClStrength"/></formal-argument>
+<formal-argument name="weight" id="frmarg-8461"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLInternalError"/>
+<super-call><arguments><paren><cast-expr><type name="ClLinearExpression"/><send message="clone">
+<target><var-ref name="cle2"/></target>
+<arguments/>
+</send>
+</cast-expr></paren><var-ref name="strength"/><var-ref name="weight"/></arguments></super-call>
+<if><test><binary-expr op="=="><var-ref name="op_enum"/><field-access field="GEQ"><var-ref name="CL"/></field-access></binary-expr></test>
+<true-case><statements>
+<send message="multiplyMe">
+<target><var-ref name="_expression"/></target>
+<arguments><unary-expr op="-"><literal-number kind="double" value="1.0"/></unary-expr></arguments>
+</send>
+<send message="addExpression">
+<target><var-ref name="_expression"/></target>
+<arguments><var-ref name="cle1"/></arguments>
+</send>
+</statements>
+</true-case>
+<false-case><if><test><binary-expr op="=="><var-ref name="op_enum"/><field-access field="LEQ"><var-ref name="CL"/></field-access></binary-expr></test>
+<true-case><statements>
+<send message="addExpression">
+<target><var-ref name="_expression"/></target>
+<arguments><var-ref name="cle1"/><unary-expr op="-"><literal-number kind="double" value="1.0"/></unary-expr></arguments>
+</send>
+</statements>
+</true-case>
+<false-case><throw><new><type name="ExCLInternalError"/><arguments><literal-string length="50">Invalid operator in ClLinearInequality constructor</literal-string></arguments></new>
+</throw>
+</false-case>
+</if>
+</false-case>
+</if>
+</constructor>
+<constructor name="ClLinearInequality" visibility="public" id="ctr-8488">
+<formal-arguments>
+<formal-argument name="cle1" id="frmarg-8471"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="op_enum" id="frmarg-8475"><type name="byte" primitive="true"/></formal-argument>
+<formal-argument name="cle2" id="frmarg-8479"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="strength" id="frmarg-8483"><type name="ClStrength"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLInternalError"/>
+<this-call><arguments><var-ref name="cle1"/><var-ref name="op_enum"/><var-ref name="cle2"/><var-ref name="strength"/><literal-number kind="double" value="1.0"/></arguments></this-call></constructor>
+<constructor name="ClLinearInequality" visibility="public" id="ctr-8506">
+<formal-arguments>
+<formal-argument name="cle1" id="frmarg-8493"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="op_enum" id="frmarg-8497"><type name="byte" primitive="true"/></formal-argument>
+<formal-argument name="cle2" id="frmarg-8501"><type name="ClLinearExpression"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLInternalError"/>
+<this-call><arguments><var-ref name="cle1"/><var-ref name="op_enum"/><var-ref name="cle2"/><field-access field="required"><var-ref name="ClStrength"/></field-access><literal-number kind="double" value="1.0"/></arguments></this-call></constructor>
+<constructor name="ClLinearInequality" visibility="public" id="ctr-8532">
+<formal-arguments>
+<formal-argument name="clv" id="frmarg-8511"><type name="ClAbstractVariable"/></formal-argument>
+<formal-argument name="op_enum" id="frmarg-8515"><type name="byte" primitive="true"/></formal-argument>
+<formal-argument name="cle" id="frmarg-8519"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="strength" id="frmarg-8523"><type name="ClStrength"/></formal-argument>
+<formal-argument name="weight" id="frmarg-8527"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLInternalError"/>
+<super-call><arguments><paren><cast-expr><type name="ClLinearExpression"/><send message="clone">
+<target><var-ref name="cle"/></target>
+<arguments/>
+</send>
+</cast-expr></paren><var-ref name="strength"/><var-ref name="weight"/></arguments></super-call>
+<if><test><binary-expr op="=="><var-ref name="op_enum"/><field-access field="GEQ"><var-ref name="CL"/></field-access></binary-expr></test>
+<true-case><statements>
+<send message="multiplyMe">
+<target><var-ref name="_expression"/></target>
+<arguments><unary-expr op="-"><literal-number kind="double" value="1.0"/></unary-expr></arguments>
+</send>
+<send message="addVariable">
+<target><var-ref name="_expression"/></target>
+<arguments><var-ref name="clv"/></arguments>
+</send>
+</statements>
+</true-case>
+<false-case><if><test><binary-expr op="=="><var-ref name="op_enum"/><field-access field="LEQ"><var-ref name="CL"/></field-access></binary-expr></test>
+<true-case><statements>
+<send message="addVariable">
+<target><var-ref name="_expression"/></target>
+<arguments><var-ref name="clv"/><unary-expr op="-"><literal-number kind="double" value="1.0"/></unary-expr></arguments>
+</send>
+</statements>
+</true-case>
+<false-case><throw><new><type name="ExCLInternalError"/><arguments><literal-string length="50">Invalid operator in ClLinearInequality constructor</literal-string></arguments></new>
+</throw>
+</false-case>
+</if>
+</false-case>
+</if>
+</constructor>
+<constructor name="ClLinearInequality" visibility="public" id="ctr-8554">
+<formal-arguments>
+<formal-argument name="clv" id="frmarg-8537"><type name="ClAbstractVariable"/></formal-argument>
+<formal-argument name="op_enum" id="frmarg-8541"><type name="byte" primitive="true"/></formal-argument>
+<formal-argument name="cle" id="frmarg-8545"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="strength" id="frmarg-8549"><type name="ClStrength"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLInternalError"/>
+<this-call><arguments><var-ref name="clv"/><var-ref name="op_enum"/><var-ref name="cle"/><var-ref name="strength"/><literal-number kind="double" value="1.0"/></arguments></this-call></constructor>
+<constructor name="ClLinearInequality" visibility="public" id="ctr-8572">
+<formal-arguments>
+<formal-argument name="clv" id="frmarg-8559"><type name="ClAbstractVariable"/></formal-argument>
+<formal-argument name="op_enum" id="frmarg-8563"><type name="byte" primitive="true"/></formal-argument>
+<formal-argument name="cle" id="frmarg-8567"><type name="ClLinearExpression"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLInternalError"/>
+<this-call><arguments><var-ref name="clv"/><var-ref name="op_enum"/><var-ref name="cle"/><field-access field="required"><var-ref name="ClStrength"/></field-access><literal-number kind="double" value="1.0"/></arguments></this-call></constructor>
+<constructor name="ClLinearInequality" visibility="public" id="ctr-8598">
+<formal-arguments>
+<formal-argument name="cle" id="frmarg-8577"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="op_enum" id="frmarg-8581"><type name="byte" primitive="true"/></formal-argument>
+<formal-argument name="clv" id="frmarg-8585"><type name="ClAbstractVariable"/></formal-argument>
+<formal-argument name="strength" id="frmarg-8589"><type name="ClStrength"/></formal-argument>
+<formal-argument name="weight" id="frmarg-8593"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLInternalError"/>
+<super-call><arguments><paren><cast-expr><type name="ClLinearExpression"/><send message="clone">
+<target><var-ref name="cle"/></target>
+<arguments/>
+</send>
+</cast-expr></paren><var-ref name="strength"/><var-ref name="weight"/></arguments></super-call>
+<if><test><binary-expr op="=="><var-ref name="op_enum"/><field-access field="LEQ"><var-ref name="CL"/></field-access></binary-expr></test>
+<true-case><statements>
+<send message="multiplyMe">
+<target><var-ref name="_expression"/></target>
+<arguments><unary-expr op="-"><literal-number kind="double" value="1.0"/></unary-expr></arguments>
+</send>
+<send message="addVariable">
+<target><var-ref name="_expression"/></target>
+<arguments><var-ref name="clv"/></arguments>
+</send>
+</statements>
+</true-case>
+<false-case><if><test><binary-expr op="=="><var-ref name="op_enum"/><field-access field="GEQ"><var-ref name="CL"/></field-access></binary-expr></test>
+<true-case><statements>
+<send message="addVariable">
+<target><var-ref name="_expression"/></target>
+<arguments><var-ref name="clv"/><unary-expr op="-"><literal-number kind="double" value="1.0"/></unary-expr></arguments>
+</send>
+</statements>
+</true-case>
+<false-case><throw><new><type name="ExCLInternalError"/><arguments><literal-string length="50">Invalid operator in ClLinearInequality constructor</literal-string></arguments></new>
+</throw>
+</false-case>
+</if>
+</false-case>
+</if>
+</constructor>
+<constructor name="ClLinearInequality" visibility="public" id="ctr-8620">
+<formal-arguments>
+<formal-argument name="cle" id="frmarg-8603"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="op_enum" id="frmarg-8607"><type name="byte" primitive="true"/></formal-argument>
+<formal-argument name="clv" id="frmarg-8611"><type name="ClAbstractVariable"/></formal-argument>
+<formal-argument name="strength" id="frmarg-8615"><type name="ClStrength"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLInternalError"/>
+<this-call><arguments><var-ref name="cle"/><var-ref name="op_enum"/><var-ref name="clv"/><var-ref name="strength"/><literal-number kind="double" value="1.0"/></arguments></this-call></constructor>
+<constructor name="ClLinearInequality" visibility="public" id="ctr-8638">
+<formal-arguments>
+<formal-argument name="cle" id="frmarg-8625"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="op_enum" id="frmarg-8629"><type name="byte" primitive="true"/></formal-argument>
+<formal-argument name="clv" id="frmarg-8633"><type name="ClAbstractVariable"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLInternalError"/>
+<this-call><arguments><var-ref name="cle"/><var-ref name="op_enum"/><var-ref name="clv"/><field-access field="required"><var-ref name="ClStrength"/></field-access><literal-number kind="double" value="1.0"/></arguments></this-call></constructor>
+<method name="isInequality" visibility="public" final="true" id="meth-8643">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><literal-true/></return>
+</statements>
+</method>
+<method name="toString" visibility="public" final="true" id="meth-8649">
+<type name="String"/>
+<formal-arguments/>
+<statements>
+<return><binary-expr op="+"><send message="toString">
+<target><super/></target>
+<arguments/>
+</send>
+<literal-string length="7"> &gt;= 0 )</literal-string></binary-expr></return>
+</statements>
+</method>
+</class>
+</java-source-program>

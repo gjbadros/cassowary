@@ -1,0 +1,694 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="Yylex.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<import module="java_cup.runtime.Symbol"/>
+<class name="Yylex" visibility="public">
+<superclass class="Object"/>
+<implement class="java_cup.runtime.Scanner"/>
+<field name="YY_BUFFER_SIZE" visibility="private" final="true"><type name="int" primitive="true"/><literal-number kind="integer" value="512"/></field>
+<field name="YY_F" visibility="private" final="true"><type name="int" primitive="true"/><unary-expr op="-"><literal-number kind="integer" value="1"/></unary-expr></field>
+<field name="YY_NO_STATE" visibility="private" final="true"><type name="int" primitive="true"/><unary-expr op="-"><literal-number kind="integer" value="1"/></unary-expr></field>
+<field name="YY_NOT_ACCEPT" visibility="private" final="true"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></field>
+<field name="YY_START" visibility="private" final="true"><type name="int" primitive="true"/><literal-number kind="integer" value="1"/></field>
+<field name="YY_END" visibility="private" final="true"><type name="int" primitive="true"/><literal-number kind="integer" value="2"/></field>
+<field name="YY_NO_ANCHOR" visibility="private" final="true"><type name="int" primitive="true"/><literal-number kind="integer" value="4"/></field>
+<field name="YY_BOL" visibility="private" final="true"><type name="int" primitive="true"/><literal-number kind="integer" value="128"/></field>
+<field name="YY_EOF" visibility="private" final="true"><type name="int" primitive="true"/><literal-number kind="integer" value="129"/></field>
+<field name="m_variable_name_object_hash" visibility="private"><type name="java.util.Hashtable"/></field>
+<field name="m_debug_lex" visibility="public"><type name="boolean" primitive="true"/><literal-false/></field>
+<method name="setVariableNameObjectHash" visibility="public" id="meth-12952">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="variable_name_object_hash" id="frmarg-12950"><type name="java.util.Hashtable"/></formal-argument>
+</formal-arguments>
+<statements>
+<assignment-expr><lvalue><var-set name="m_variable_name_object_hash"/></lvalue><var-ref name="variable_name_object_hash" idref="frmarg-12950"/></assignment-expr>
+</statements>
+</method>
+<field name="yy_reader" visibility="private"><type name="java.io.BufferedReader"/></field>
+<field name="yy_buffer_index" visibility="private"><type name="int" primitive="true"/></field>
+<field name="yy_buffer_read" visibility="private"><type name="int" primitive="true"/></field>
+<field name="yy_buffer_start" visibility="private"><type name="int" primitive="true"/></field>
+<field name="yy_buffer_end" visibility="private"><type name="int" primitive="true"/></field>
+<field name="yy_buffer[]" visibility="private"><type name="char" primitive="true"/></field>
+<field name="yy_at_bol" visibility="private"><type name="boolean" primitive="true"/></field>
+<field name="yy_lexical_state" visibility="private"><type name="int" primitive="true"/></field>
+<constructor name="Yylex" visibility="public" id="ctr-13008">
+<formal-arguments>
+<formal-argument name="reader" id="frmarg-13004"><type name="java.io.Reader"/></formal-argument>
+</formal-arguments>
+<this-call><arguments/></this-call><if><test><binary-expr op="=="><literal-null/><var-ref name="reader"/></binary-expr></test>
+<true-case><statements>
+<throw><paren><new><type name="Error"/><arguments><literal-string length="36">Error: Bad input stream initializer.</literal-string></arguments></new>
+</paren></throw>
+</statements>
+</true-case>
+</if>
+<assignment-expr><lvalue><var-set name="yy_reader"/></lvalue><new><type name="java.io.BufferedReader"/><arguments><var-ref name="reader"/></arguments></new>
+</assignment-expr>
+</constructor>
+<constructor name="Yylex" visibility="public" id="ctr-13019">
+<formal-arguments>
+<formal-argument name="instream" id="frmarg-13015"><type name="java.io.InputStream"/></formal-argument>
+</formal-arguments>
+<this-call><arguments/></this-call><if><test><binary-expr op="=="><literal-null/><var-ref name="instream"/></binary-expr></test>
+<true-case><statements>
+<throw><paren><new><type name="Error"/><arguments><literal-string length="36">Error: Bad input stream initializer.</literal-string></arguments></new>
+</paren></throw>
+</statements>
+</true-case>
+</if>
+<assignment-expr><lvalue><var-set name="yy_reader"/></lvalue><new><type name="java.io.BufferedReader"/><arguments><new><type name="java.io.InputStreamReader"/><arguments><var-ref name="instream"/></arguments></new>
+</arguments></new>
+</assignment-expr>
+</constructor>
+<constructor name="Yylex" visibility="private" id="ctr-13024">
+<formal-arguments/>
+<assignment-expr><lvalue><var-set name="yy_buffer"/></lvalue><new-array dimensions="1"><type name="char" primitive="true"/><dim-expr><var-ref name="YY_BUFFER_SIZE"/></dim-expr></new-array></assignment-expr>
+<assignment-expr><lvalue><var-set name="yy_buffer_read"/></lvalue><literal-number kind="integer" value="0"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="yy_buffer_index"/></lvalue><literal-number kind="integer" value="0"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="yy_buffer_start"/></lvalue><literal-number kind="integer" value="0"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="yy_buffer_end"/></lvalue><literal-number kind="integer" value="0"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="yy_at_bol"/></lvalue><literal-true/></assignment-expr>
+<assignment-expr><lvalue><var-set name="yy_lexical_state"/></lvalue><var-ref name="YYINITIAL"/></assignment-expr>
+</constructor>
+<field name="yy_eof_done" visibility="private"><type name="boolean" primitive="true"/><literal-false/></field>
+<field name="YYINITIAL" visibility="private" final="true"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></field>
+<field name="yy_state_dtrans[]" visibility="private" final="true"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></field>
+<method name="yybegin" visibility="private" id="meth-13053">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="state" id="frmarg-13051"><type name="int" primitive="true"/></formal-argument>
+</formal-arguments>
+<statements>
+<assignment-expr><lvalue><var-set name="yy_lexical_state"/></lvalue><var-ref name="state" idref="frmarg-13051"/></assignment-expr>
+</statements>
+</method>
+<method name="yy_advance" visibility="private" id="meth-13062">
+<type name="int" primitive="true"/>
+<formal-arguments/>
+<throws exception="java.io.IOException"/>
+<statements>
+<local-variable name="next_read" id="locvar-13678"><type name="int" primitive="true"/></local-variable>
+<local-variable name="i" id="locvar-13682"><type name="int" primitive="true"/></local-variable>
+<local-variable name="j" id="locvar-13686"><type name="int" primitive="true"/></local-variable>
+<if><test><binary-expr op="lt"><var-ref name="yy_buffer_index"/><var-ref name="yy_buffer_read"/></binary-expr></test>
+<true-case><statements>
+<return><array-ref><base><var-ref name="yy_buffer"/></base><offset><unary-expr op="++" post="true"><var-ref name="yy_buffer_index"/></unary-expr></offset></array-ref></return>
+</statements>
+</true-case>
+</if>
+<if><test><binary-expr op="!="><literal-number kind="integer" value="0"/><var-ref name="yy_buffer_start"/></binary-expr></test>
+<true-case><statements>
+<assignment-expr><lvalue><var-set name="i"/></lvalue><var-ref name="yy_buffer_start"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="j"/></lvalue><literal-number kind="integer" value="0"/></assignment-expr>
+<loop kind="while"><test><binary-expr op="lt"><var-ref name="i"/><var-ref name="yy_buffer_read"/></binary-expr></test><statements>
+<assignment-expr><lvalue><array-ref><base><var-ref name="yy_buffer"/></base><offset><var-ref name="j"/></offset></array-ref></lvalue><array-ref><base><var-ref name="yy_buffer"/></base><offset><var-ref name="i"/></offset></array-ref></assignment-expr>
+<unary-expr op="++"><var-ref name="i"/></unary-expr><unary-expr op="++"><var-ref name="j"/></unary-expr></statements>
+</loop>
+<assignment-expr><lvalue><var-set name="yy_buffer_end"/></lvalue><binary-expr op="-"><var-ref name="yy_buffer_end"/><var-ref name="yy_buffer_start"/></binary-expr></assignment-expr>
+<assignment-expr><lvalue><var-set name="yy_buffer_start"/></lvalue><literal-number kind="integer" value="0"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="yy_buffer_read"/></lvalue><var-ref name="j"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="yy_buffer_index"/></lvalue><var-ref name="j"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="next_read"/></lvalue><send message="read">
+<target><var-ref name="yy_reader"/></target>
+<arguments><var-ref name="yy_buffer"/><var-ref name="yy_buffer_read"/><binary-expr op="-"><field-access field="length"><var-ref name="yy_buffer"/></field-access><var-ref name="yy_buffer_read"/></binary-expr></arguments>
+</send>
+</assignment-expr>
+<if><test><binary-expr op="=="><unary-expr op="-"><literal-number kind="integer" value="1"/></unary-expr><var-ref name="next_read"/></binary-expr></test>
+<true-case><statements>
+<return><var-ref name="YY_EOF"/></return>
+</statements>
+</true-case>
+</if>
+<assignment-expr><lvalue><var-set name="yy_buffer_read"/></lvalue><binary-expr op="+"><var-ref name="yy_buffer_read"/><var-ref name="next_read"/></binary-expr></assignment-expr>
+</statements>
+</true-case>
+</if>
+<loop kind="while"><test><binary-expr op=">="><var-ref name="yy_buffer_index"/><var-ref name="yy_buffer_read"/></binary-expr></test><statements>
+<if><test><binary-expr op=">="><var-ref name="yy_buffer_index"/><field-access field="length"><var-ref name="yy_buffer"/></field-access></binary-expr></test>
+<true-case><statements>
+<assignment-expr><lvalue><var-set name="yy_buffer"/></lvalue><send message="yy_double">
+<arguments><var-ref name="yy_buffer"/></arguments>
+</send>
+</assignment-expr>
+</statements>
+</true-case>
+</if>
+<assignment-expr><lvalue><var-set name="next_read"/></lvalue><send message="read">
+<target><var-ref name="yy_reader"/></target>
+<arguments><var-ref name="yy_buffer"/><var-ref name="yy_buffer_read"/><binary-expr op="-"><field-access field="length"><var-ref name="yy_buffer"/></field-access><var-ref name="yy_buffer_read"/></binary-expr></arguments>
+</send>
+</assignment-expr>
+<if><test><binary-expr op="=="><unary-expr op="-"><literal-number kind="integer" value="1"/></unary-expr><var-ref name="next_read"/></binary-expr></test>
+<true-case><statements>
+<return><var-ref name="YY_EOF"/></return>
+</statements>
+</true-case>
+</if>
+<assignment-expr><lvalue><var-set name="yy_buffer_read"/></lvalue><binary-expr op="+"><var-ref name="yy_buffer_read"/><var-ref name="next_read"/></binary-expr></assignment-expr>
+</statements>
+</loop>
+<return><array-ref><base><var-ref name="yy_buffer"/></base><offset><unary-expr op="++" post="true"><var-ref name="yy_buffer_index"/></unary-expr></offset></array-ref></return>
+</statements>
+</method>
+<method name="yy_move_end" visibility="private" id="meth-13066">
+<type name="void" primitive="true"/>
+<formal-arguments/>
+<statements>
+<if><test><binary-expr op="logand"><binary-expr op=">"><var-ref name="yy_buffer_end"/><var-ref name="yy_buffer_start"/></binary-expr><binary-expr op="==">'\n'<array-ref><base><var-ref name="yy_buffer"/></base><offset><binary-expr op="-"><var-ref name="yy_buffer_end"/><literal-number kind="integer" value="1"/></binary-expr></offset></array-ref></binary-expr></binary-expr></test>
+<true-case><unary-expr op="--" post="true"><var-ref name="yy_buffer_end"/></unary-expr></true-case>
+</if>
+<if><test><binary-expr op="logand"><binary-expr op=">"><var-ref name="yy_buffer_end"/><var-ref name="yy_buffer_start"/></binary-expr><binary-expr op="==">'\r'<array-ref><base><var-ref name="yy_buffer"/></base><offset><binary-expr op="-"><var-ref name="yy_buffer_end"/><literal-number kind="integer" value="1"/></binary-expr></offset></array-ref></binary-expr></binary-expr></test>
+<true-case><unary-expr op="--" post="true"><var-ref name="yy_buffer_end"/></unary-expr></true-case>
+</if>
+</statements>
+</method>
+<field name="yy_last_was_cr" visibility="private"><type name="boolean" primitive="true"/><literal-false/></field>
+<method name="yy_mark_start" visibility="private" id="meth-13077">
+<type name="void" primitive="true"/>
+<formal-arguments/>
+<statements>
+<assignment-expr><lvalue><var-set name="yy_buffer_start"/></lvalue><var-ref name="yy_buffer_index"/></assignment-expr>
+</statements>
+</method>
+<method name="yy_mark_end" visibility="private" id="meth-13082">
+<type name="void" primitive="true"/>
+<formal-arguments/>
+<statements>
+<assignment-expr><lvalue><var-set name="yy_buffer_end"/></lvalue><var-ref name="yy_buffer_index"/></assignment-expr>
+</statements>
+</method>
+<method name="yy_to_mark" visibility="private" id="meth-13087">
+<type name="void" primitive="true"/>
+<formal-arguments/>
+<statements>
+<assignment-expr><lvalue><var-set name="yy_buffer_index"/></lvalue><var-ref name="yy_buffer_end"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="yy_at_bol"/></lvalue><binary-expr op="logand"><paren><binary-expr op=">"><var-ref name="yy_buffer_end"/><var-ref name="yy_buffer_start"/></binary-expr></paren><paren><binary-expr op="||"><binary-expr op="||"><binary-expr op="||"><binary-expr op="==">'\r'<array-ref><base><var-ref name="yy_buffer"/></base><offset><binary-expr op="-"><var-ref name="yy_buffer_end"/><literal-number kind="integer" value="1"/></binary-expr></offset></array-ref></binary-expr><binary-expr op="==">'\n'<array-ref><base><var-ref name="yy_buffer"/></base><offset><binary-expr op="-"><var-ref name="yy_buffer_end"/><literal-number kind="integer" value="1"/></binary-expr></offset></array-ref></binary-expr></binary-expr><binary-expr op="=="><literal-number kind="integer" value="2028"/><array-ref><base><var-ref name="yy_buffer"/></base><offset><binary-expr op="-"><var-ref name="yy_buffer_end"/><literal-number kind="integer" value="1"/></binary-expr></offset></array-ref></binary-expr></binary-expr><binary-expr op="=="><literal-number kind="integer" value="2029"/><array-ref><base><var-ref name="yy_buffer"/></base><offset><binary-expr op="-"><var-ref name="yy_buffer_end"/><literal-number kind="integer" value="1"/></binary-expr></offset></array-ref></binary-expr></binary-expr></paren></binary-expr></assignment-expr>
+</statements>
+</method>
+<method name="yytext" visibility="private" id="meth-13095">
+<type name="java.lang.String"/>
+<formal-arguments/>
+<statements>
+<return><paren><new><type name="java.lang.String"/><arguments><var-ref name="yy_buffer"/><var-ref name="yy_buffer_start"/><binary-expr op="-"><var-ref name="yy_buffer_end"/><var-ref name="yy_buffer_start"/></binary-expr></arguments></new>
+</paren></return>
+</statements>
+</method>
+<method name="yylength" visibility="private" id="meth-13100">
+<type name="int" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><binary-expr op="-"><var-ref name="yy_buffer_end"/><var-ref name="yy_buffer_start"/></binary-expr></return>
+</statements>
+</method>
+<method name="yy_double" visibility="private" id="meth-13112">
+<type name="char" dimensions="1"/>
+<formal-arguments>
+<formal-argument name="buf[]" id="frmarg-13110"><type name="char" primitive="true"/></formal-argument>
+</formal-arguments>
+<statements>
+<local-variable name="i" id="locvar-13933"><type name="int" primitive="true"/></local-variable>
+<local-variable name="newbuf[]" id="locvar-13938"><type name="char" primitive="true"/></local-variable>
+<assignment-expr><lvalue><var-set name="newbuf"/></lvalue><new-array dimensions="1"><type name="char" primitive="true"/><dim-expr><binary-expr op="*"><literal-number kind="integer" value="2"/><field-access field="length"><var-ref name="buf" idref="frmarg-13110"/></field-access></binary-expr></dim-expr></new-array></assignment-expr>
+<loop kind="for"><init><assignment-expr><lvalue><var-set name="i"/></lvalue><literal-number kind="integer" value="0"/></assignment-expr>
+</init>
+<test><binary-expr op="lt"><var-ref name="i"/><field-access field="length"><var-ref name="buf" idref="frmarg-13110"/></field-access></binary-expr></test>
+<update><unary-expr op="++"><var-ref name="i"/></unary-expr></update>
+<statements>
+<assignment-expr><lvalue><array-ref><base><var-ref name="newbuf"/></base><offset><var-ref name="i"/></offset></array-ref></lvalue><array-ref><base><var-ref name="buf" idref="frmarg-13110"/></base><offset><var-ref name="i"/></offset></array-ref></assignment-expr>
+</statements>
+</loop>
+<return><var-ref name="newbuf" idref="locvar-13938"/></return>
+</statements>
+</method>
+<field name="YY_E_INTERNAL" visibility="private" final="true"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></field>
+<field name="YY_E_MATCH" visibility="private" final="true"><type name="int" primitive="true"/><literal-number kind="integer" value="1"/></field>
+<field name="yy_error_string[]" visibility="private"><type name="java.lang.String"/><literal-string length="24">Error: Internal error.\n</literal-string><literal-string length="25">Error: Unmatched input.\n</literal-string></field>
+<method name="yy_error" visibility="private" id="meth-13149">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="code" id="frmarg-13143"><type name="int" primitive="true"/></formal-argument>
+<formal-argument name="fatal" id="frmarg-13147"><type name="boolean" primitive="true"/></formal-argument>
+</formal-arguments>
+<statements>
+<send message="print">
+<target><field-access field="out"><field-access field="System"><field-access field="lang"><var-ref name="java"/></field-access></field-access></field-access></target>
+<arguments><array-ref><base><var-ref name="yy_error_string"/></base><offset><var-ref name="code" idref="frmarg-13143"/></offset></array-ref></arguments>
+</send>
+<send message="flush">
+<target><field-access field="out"><field-access field="System"><field-access field="lang"><var-ref name="java"/></field-access></field-access></field-access></target>
+<arguments/>
+</send>
+<if><test><var-ref name="fatal" idref="frmarg-13147"/></test>
+<true-case><statements>
+<throw><new><type name="Error"/><arguments><literal-string length="14">Fatal Error.\n</literal-string></arguments></new>
+</throw>
+</statements>
+</true-case>
+</if>
+</statements>
+</method>
+<method name="unpackFromString" visibility="private" id="meth-13170">
+<type name="int" dimensions="2"/>
+<formal-arguments>
+<formal-argument name="size1" id="frmarg-13160"><type name="int" primitive="true"/></formal-argument>
+<formal-argument name="size2" id="frmarg-13164"><type name="int" primitive="true"/></formal-argument>
+<formal-argument name="st" id="frmarg-13168"><type name="String"/></formal-argument>
+</formal-arguments>
+<statements>
+<local-variable name="colonIndex" id="locvar-14005"><type name="int" primitive="true"/><unary-expr op="-"><literal-number kind="integer" value="1"/></unary-expr></local-variable>
+<local-variable name="lengthString" id="locvar-14009"><type name="String"/></local-variable>
+<local-variable name="sequenceLength" id="locvar-14014"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></local-variable>
+<local-variable name="sequenceInteger" id="locvar-14019"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></local-variable>
+<local-variable name="commaIndex" id="locvar-14023"><type name="int" primitive="true"/></local-variable>
+<local-variable name="workString" id="locvar-14027"><type name="String"/></local-variable>
+<local-variable name="res[][]" id="locvar-14039"><type name="int" primitive="true"/><new-array dimensions="2"><type name="int" primitive="true"/><dim-expr><var-ref name="size1" idref="frmarg-13160"/></dim-expr><dim-expr><var-ref name="size2" idref="frmarg-13164"/></dim-expr></new-array></local-variable>
+<loop kind="for"><init><local-variable name="i" id="locvar-14044"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></local-variable>
+</init>
+<test><binary-expr op="lt"><var-ref name="i" idref="locvar-14044"/><var-ref name="size1" idref="frmarg-13160"/></binary-expr></test>
+<update><unary-expr op="++" post="true"><var-ref name="i" idref="locvar-14044"/></unary-expr></update>
+<statements>
+<loop kind="for"><init><local-variable name="j" id="locvar-14055"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></local-variable>
+</init>
+<test><binary-expr op="lt"><var-ref name="j" idref="locvar-14055"/><var-ref name="size2" idref="frmarg-13164"/></binary-expr></test>
+<update><unary-expr op="++" post="true"><var-ref name="j" idref="locvar-14055"/></unary-expr></update>
+<statements>
+<if><test><binary-expr op="!="><var-ref name="sequenceLength"/><literal-number kind="integer" value="0"/></binary-expr></test>
+<true-case><statements>
+<assignment-expr><lvalue><array-ref><base><array-ref><base><var-ref name="res"/></base><offset><var-ref name="i"/></offset></array-ref></base><offset><var-ref name="j"/></offset></array-ref></lvalue><var-ref name="sequenceInteger"/></assignment-expr>
+<unary-expr op="--" post="true"><var-ref name="sequenceLength"/></unary-expr><continue/></statements>
+</true-case>
+</if>
+<assignment-expr><lvalue><var-set name="commaIndex"/></lvalue><send message="indexOf">
+<target><var-ref name="st" idref="frmarg-13168"/></target>
+<arguments>','</arguments>
+</send>
+</assignment-expr>
+<assignment-expr><lvalue><var-set name="workString"/></lvalue><conditional-expr><paren><binary-expr op="=="><var-ref name="commaIndex"/><unary-expr op="-"><literal-number kind="integer" value="1"/></unary-expr></binary-expr></paren>st<send message="substring">
+<target><var-ref name="st" idref="frmarg-13168"/></target>
+<arguments><literal-number kind="integer" value="0"/><var-ref name="commaIndex"/></arguments>
+</send>
+</conditional-expr></assignment-expr>
+<assignment-expr><lvalue><var-set name="st"/></lvalue><send message="substring">
+<target><var-ref name="st" idref="frmarg-13168"/></target>
+<arguments><binary-expr op="+"><var-ref name="commaIndex"/><literal-number kind="integer" value="1"/></binary-expr></arguments>
+</send>
+</assignment-expr>
+<assignment-expr><lvalue><var-set name="colonIndex"/></lvalue><send message="indexOf">
+<target><var-ref name="workString"/></target>
+<arguments>':'</arguments>
+</send>
+</assignment-expr>
+<if><test><binary-expr op="=="><var-ref name="colonIndex"/><unary-expr op="-"><literal-number kind="integer" value="1"/></unary-expr></binary-expr></test>
+<true-case><statements>
+<assignment-expr><lvalue><array-ref><base><array-ref><base><var-ref name="res"/></base><offset><var-ref name="i"/></offset></array-ref></base><offset><var-ref name="j"/></offset></array-ref></lvalue><send message="parseInt">
+<target><var-ref name="Integer"/></target>
+<arguments><var-ref name="workString"/></arguments>
+</send>
+</assignment-expr>
+<continue/></statements>
+</true-case>
+</if>
+<assignment-expr><lvalue><var-set name="lengthString"/></lvalue><send message="substring">
+<target><var-ref name="workString"/></target>
+<arguments><binary-expr op="+"><var-ref name="colonIndex"/><literal-number kind="integer" value="1"/></binary-expr></arguments>
+</send>
+</assignment-expr>
+<assignment-expr><lvalue><var-set name="sequenceLength"/></lvalue><send message="parseInt">
+<target><var-ref name="Integer"/></target>
+<arguments><var-ref name="lengthString"/></arguments>
+</send>
+</assignment-expr>
+<assignment-expr><lvalue><var-set name="workString"/></lvalue><send message="substring">
+<target><var-ref name="workString"/></target>
+<arguments><literal-number kind="integer" value="0"/><var-ref name="colonIndex"/></arguments>
+</send>
+</assignment-expr>
+<assignment-expr><lvalue><var-set name="sequenceInteger"/></lvalue><send message="parseInt">
+<target><var-ref name="Integer"/></target>
+<arguments><var-ref name="workString"/></arguments>
+</send>
+</assignment-expr>
+<assignment-expr><lvalue><array-ref><base><array-ref><base><var-ref name="res"/></base><offset><var-ref name="i"/></offset></array-ref></base><offset><var-ref name="j"/></offset></array-ref></lvalue><var-ref name="sequenceInteger"/></assignment-expr>
+<unary-expr op="--" post="true"><var-ref name="sequenceLength"/></unary-expr></statements>
+</loop>
+</statements>
+</loop>
+<return><var-ref name="res" idref="locvar-14039"/></return>
+</statements>
+</method>
+<field name="yy_acpt[]" visibility="private"><type name="int" primitive="true"/>YY_NOT_ACCEPTYY_NO_ANCHORYY_NO_ANCHORYY_NO_ANCHORYY_NO_ANCHORYY_NO_ANCHORYY_NO_ANCHORYY_NO_ANCHORYY_NO_ANCHORYY_NO_ANCHORYY_NO_ANCHORYY_NO_ANCHORYY_NO_ANCHORYY_NO_ANCHORYY_NO_ANCHORYY_NO_ANCHORYY_NO_ANCHORYY_NO_ANCHORYY_NO_ANCHOR</field>
+<field name="yy_cmap[]" visibility="private"><type name="int" primitive="true"/><array-ref><base><send message="unpackFromString">
+<arguments><literal-number kind="integer" value="1"/><literal-number kind="integer" value="130"/><binary-expr op="+"><literal-string length="75">15:9,1:2,15,1:2,15:18,1,15:7,9,10,7,5,15,6,12,8,11:10,15:2,4,3,2,15:2,13:26</literal-string><literal-string length="26">,15:4,14,15,13:26,15:5,0:2</literal-string></binary-expr></arguments>
+</send>
+</base><offset><literal-number kind="integer" value="0"/></offset></array-ref></field>
+<field name="yy_rmap[]" visibility="private"><type name="int" primitive="true"/><array-ref><base><send message="unpackFromString">
+<arguments><literal-number kind="integer" value="1"/><literal-number kind="integer" value="19"/><literal-string length="27">0,1,2,3,1:7,4,5,1:2,6,7:2,1</literal-string></arguments>
+</send>
+</base><offset><literal-number kind="integer" value="0"/></offset></array-ref></field>
+<field name="yy_nxt[][]" visibility="private"><type name="int" primitive="true"/><send message="unpackFromString">
+<arguments><literal-number kind="integer" value="8"/><literal-number kind="integer" value="16"/><binary-expr op="+"><literal-string length="75">1,2,3,4,15,5,6,7,8,9,10,11,17,12,18:2,-1:17,2,-1:17,13,-1:23,11,16,-1:14,12</literal-string><literal-string length="30">,-1,12:2,-1:4,14,-1:23,16,-1:4</literal-string></binary-expr></arguments>
+</send>
+</field>
+<method name="next_token" visibility="public" id="meth-13248">
+<type name="java_cup.runtime.Symbol"/>
+<formal-arguments/>
+<throws exception="java.io.IOException"/>
+<statements>
+<local-variable name="yy_lookahead" id="locvar-14189"><type name="int" primitive="true"/></local-variable>
+<local-variable name="yy_anchor" id="locvar-14194"><type name="int" primitive="true"/><var-ref name="YY_NO_ANCHOR"/></local-variable>
+<local-variable name="yy_state" id="locvar-14201"><type name="int" primitive="true"/><array-ref><base><var-ref name="yy_state_dtrans"/></base><offset><var-ref name="yy_lexical_state"/></offset></array-ref></local-variable>
+<local-variable name="yy_next_state" id="locvar-14206"><type name="int" primitive="true"/><var-ref name="YY_NO_STATE"/></local-variable>
+<local-variable name="yy_last_accept_state" id="locvar-14211"><type name="int" primitive="true"/><var-ref name="YY_NO_STATE"/></local-variable>
+<local-variable name="yy_initial" id="locvar-14216"><type name="boolean" primitive="true"/><literal-true/></local-variable>
+<local-variable name="yy_this_accept" id="locvar-14220"><type name="int" primitive="true"/></local-variable>
+<send message="yy_mark_start">
+<arguments/>
+</send>
+<assignment-expr><lvalue><var-set name="yy_this_accept"/></lvalue><array-ref><base><var-ref name="yy_acpt"/></base><offset><var-ref name="yy_state" idref="locvar-14201"/></offset></array-ref></assignment-expr>
+<if><test><binary-expr op="!="><var-ref name="YY_NOT_ACCEPT"/><var-ref name="yy_this_accept" idref="locvar-14220"/></binary-expr></test>
+<true-case><statements>
+<assignment-expr><lvalue><var-set name="yy_last_accept_state"/></lvalue><var-ref name="yy_state"/></assignment-expr>
+<send message="yy_mark_end">
+<arguments/>
+</send>
+</statements>
+</true-case>
+</if>
+<loop kind="while"><test><literal-true/></test><statements>
+<if><test><binary-expr op="logand"><var-ref name="yy_initial"/><var-ref name="yy_at_bol"/></binary-expr></test>
+<true-case><assignment-expr><lvalue><var-set name="yy_lookahead"/></lvalue><var-ref name="YY_BOL"/></assignment-expr>
+</true-case>
+<false-case><assignment-expr><lvalue><var-set name="yy_lookahead"/></lvalue><send message="yy_advance">
+<arguments/>
+</send>
+</assignment-expr>
+</false-case>
+</if>
+<assignment-expr><lvalue><var-set name="yy_next_state"/></lvalue><var-ref name="YY_F"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="yy_next_state"/></lvalue><array-ref><base><array-ref><base><var-ref name="yy_nxt"/></base><offset><array-ref><base><var-ref name="yy_rmap"/></base><offset><var-ref name="yy_state"/></offset></array-ref></offset></array-ref></base><offset><array-ref><base><var-ref name="yy_cmap"/></base><offset><var-ref name="yy_lookahead"/></offset></array-ref></offset></array-ref></assignment-expr>
+<if><test><binary-expr op="logand"><binary-expr op="=="><var-ref name="YY_EOF"/><var-ref name="yy_lookahead"/></binary-expr><binary-expr op="=="><literal-true/><var-ref name="yy_initial"/></binary-expr></binary-expr></test>
+<true-case><statements>
+<return><literal-null/></return>
+</statements>
+</true-case>
+</if>
+<if><test><binary-expr op="!="><var-ref name="YY_F"/><var-ref name="yy_next_state"/></binary-expr></test>
+<true-case><statements>
+<assignment-expr><lvalue><var-set name="yy_state"/></lvalue><var-ref name="yy_next_state"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="yy_initial"/></lvalue><literal-false/></assignment-expr>
+<assignment-expr><lvalue><var-set name="yy_this_accept"/></lvalue><array-ref><base><var-ref name="yy_acpt"/></base><offset><var-ref name="yy_state"/></offset></array-ref></assignment-expr>
+<if><test><binary-expr op="!="><var-ref name="YY_NOT_ACCEPT"/><var-ref name="yy_this_accept"/></binary-expr></test>
+<true-case><statements>
+<assignment-expr><lvalue><var-set name="yy_last_accept_state"/></lvalue><var-ref name="yy_state"/></assignment-expr>
+<send message="yy_mark_end">
+<arguments/>
+</send>
+</statements>
+</true-case>
+</if>
+</statements>
+</true-case>
+<false-case><statements>
+<if><test><binary-expr op="=="><var-ref name="YY_NO_STATE"/><var-ref name="yy_last_accept_state"/></binary-expr></test>
+<true-case><statements>
+<throw><paren><new><type name="Error"/><arguments><literal-string length="31">Lexical Error: Unmatched Input.</literal-string></arguments></new>
+</paren></throw>
+</statements>
+</true-case>
+<false-case><statements>
+<assignment-expr><lvalue><var-set name="yy_anchor"/></lvalue><array-ref><base><var-ref name="yy_acpt"/></base><offset><var-ref name="yy_last_accept_state"/></offset></array-ref></assignment-expr>
+<if><test><binary-expr op="!="><literal-number kind="integer" value="0"/><paren><binary-expr op="&"><var-ref name="YY_END"/><var-ref name="yy_anchor"/></binary-expr></paren></binary-expr></test>
+<true-case><statements>
+<send message="yy_move_end">
+<arguments/>
+</send>
+</statements>
+</true-case>
+</if>
+<send message="yy_to_mark">
+<arguments/>
+</send>
+switch(yy_last_accept_state)<statements>
+case <literal-number kind="integer" value="1"/>:
+case <unary-expr op="-"><literal-number kind="integer" value="2"/></unary-expr>:
+<break/>case <literal-number kind="integer" value="2"/>:
+case <unary-expr op="-"><literal-number kind="integer" value="3"/></unary-expr>:
+<break/>case <literal-number kind="integer" value="3"/>:
+<statements>
+<send message="println">
+<target><field-access field="err"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="19">Illegal character: </literal-string><send message="yytext">
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+</statements>
+case <unary-expr op="-"><literal-number kind="integer" value="4"/></unary-expr>:
+<break/>case <literal-number kind="integer" value="4"/>:
+<statements>
+<return><new><type name="Symbol"/><arguments><field-access field="EQ"><var-ref name="sym"/></field-access></arguments></new>
+</return>
+</statements>
+case <unary-expr op="-"><literal-number kind="integer" value="5"/></unary-expr>:
+<break/>case <literal-number kind="integer" value="5"/>:
+<statements>
+<return><new><type name="Symbol"/><arguments><field-access field="PLUS"><var-ref name="sym"/></field-access></arguments></new>
+</return>
+</statements>
+case <unary-expr op="-"><literal-number kind="integer" value="6"/></unary-expr>:
+<break/>case <literal-number kind="integer" value="6"/>:
+<statements>
+<return><new><type name="Symbol"/><arguments><field-access field="MINUS"><var-ref name="sym"/></field-access></arguments></new>
+</return>
+</statements>
+case <unary-expr op="-"><literal-number kind="integer" value="7"/></unary-expr>:
+<break/>case <literal-number kind="integer" value="7"/>:
+<statements>
+<return><new><type name="Symbol"/><arguments><field-access field="TIMES"><var-ref name="sym"/></field-access></arguments></new>
+</return>
+</statements>
+case <unary-expr op="-"><literal-number kind="integer" value="8"/></unary-expr>:
+<break/>case <literal-number kind="integer" value="8"/>:
+<statements>
+<return><new><type name="Symbol"/><arguments><field-access field="DIVIDE"><var-ref name="sym"/></field-access></arguments></new>
+</return>
+</statements>
+case <unary-expr op="-"><literal-number kind="integer" value="9"/></unary-expr>:
+<break/>case <literal-number kind="integer" value="9"/>:
+<statements>
+<return><new><type name="Symbol"/><arguments><field-access field="LPAREN"><var-ref name="sym"/></field-access></arguments></new>
+</return>
+</statements>
+case <unary-expr op="-"><literal-number kind="integer" value="10"/></unary-expr>:
+<break/>case <literal-number kind="integer" value="10"/>:
+<statements>
+<return><new><type name="Symbol"/><arguments><field-access field="RPAREN"><var-ref name="sym"/></field-access></arguments></new>
+</return>
+</statements>
+case <unary-expr op="-"><literal-number kind="integer" value="11"/></unary-expr>:
+<break/>case <literal-number kind="integer" value="11"/>:
+<statements>
+<return><new><type name="Symbol"/><arguments><field-access field="NUMBER"><var-ref name="sym"/></field-access><new><type name="Double"/><arguments><send message="yytext">
+<arguments/>
+</send>
+</arguments></new>
+</arguments></new>
+</return>
+</statements>
+case <unary-expr op="-"><literal-number kind="integer" value="12"/></unary-expr>:
+<break/>case <literal-number kind="integer" value="12"/>:
+<statements>
+<local-variable name="variable_name" id="locvar-14515"><type name="String"/><new><type name="String"/><arguments><send message="yytext">
+<arguments/>
+</send>
+</arguments></new>
+</local-variable>
+<if><test><var-ref name="m_debug_lex"/></test>
+<true-case><statements>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><binary-expr op="+"><literal-string length="24">Lexical analysis found &lt;</literal-string><var-ref name="variable_name"/></binary-expr><literal-string length="1">&gt;</literal-string></binary-expr></arguments>
+</send>
+</statements>
+</true-case>
+</if>
+<if><test><unary-expr op="!"><send message="containsKey">
+<target><var-ref name="m_variable_name_object_hash"/></target>
+<arguments><var-ref name="variable_name" idref="locvar-14515"/></arguments>
+</send>
+</unary-expr></test>
+<true-case><statements>
+<if><test><var-ref name="m_debug_lex"/></test>
+<true-case><statements>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="40">  Putting it in hash for the first time.</literal-string></arguments>
+</send>
+</statements>
+</true-case>
+</if>
+<local-variable name="variable" id="locvar-14549"><type name="ClVariable"/><new><type name="ClVariable"/><arguments/></new>
+</local-variable>
+<local-variable name="return_value" id="locvar-14558"><type name="Object"/><send message="put">
+<target><var-ref name="m_variable_name_object_hash"/></target>
+<arguments><var-ref name="variable_name"/><var-ref name="variable" idref="locvar-14549"/></arguments>
+</send>
+</local-variable>
+<if><test><binary-expr op="!="><var-ref name="return_value" idref="locvar-14558"/><literal-null/></binary-expr></test>
+<true-case><statements>
+<send message="println">
+<target><field-access field="err"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="33">Variable was already in hash!!!!!</literal-string></arguments>
+</send>
+</statements>
+</true-case>
+</if>
+<if><test><var-ref name="m_debug_lex"/></test>
+<true-case><statements>
+<if><test><send message="containsKey">
+<target><var-ref name="m_variable_name_object_hash"/></target>
+<arguments><var-ref name="variable_name"/></arguments>
+</send>
+</test>
+<true-case><statements>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="33">  Hash table now contains object.</literal-string></arguments>
+</send>
+</statements>
+</true-case>
+<false-case><statements>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="37">  Hash table does not contain object.</literal-string></arguments>
+</send>
+</statements>
+</false-case>
+</if>
+</statements>
+</true-case>
+</if>
+<if><test><send message="isEmpty">
+<target><var-ref name="m_variable_name_object_hash"/></target>
+<arguments/>
+</send>
+</test>
+<true-case><statements>
+<send message="println">
+<target><field-access field="err"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="59">  How can the hashtable be empty after inserting something?</literal-string></arguments>
+</send>
+</statements>
+</true-case>
+</if>
+</statements>
+</true-case>
+<false-case><statements>
+<if><test><var-ref name="m_debug_lex"/></test>
+<true-case><send message="println">
+<target><field-access field="err"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="18">  Already in Hash.</literal-string></arguments>
+</send>
+</true-case>
+</if>
+</statements>
+</false-case>
+</if>
+<return><new><type name="Symbol"/><arguments><field-access field="VARIABLE"><var-ref name="sym"/></field-access><var-ref name="variable_name" idref="locvar-14515"/></arguments></new>
+</return>
+</statements>
+case <unary-expr op="-"><literal-number kind="integer" value="13"/></unary-expr>:
+<break/>case <literal-number kind="integer" value="13"/>:
+<statements>
+<return><new><type name="Symbol"/><arguments><field-access field="GEQ"><var-ref name="sym"/></field-access></arguments></new>
+</return>
+</statements>
+case <unary-expr op="-"><literal-number kind="integer" value="14"/></unary-expr>:
+<break/>case <literal-number kind="integer" value="14"/>:
+<statements>
+<return><new><type name="Symbol"/><arguments><field-access field="LEQ"><var-ref name="sym"/></field-access></arguments></new>
+</return>
+</statements>
+case <unary-expr op="-"><literal-number kind="integer" value="15"/></unary-expr>:
+<break/>case <literal-number kind="integer" value="15"/>:
+<statements>
+<send message="println">
+<target><field-access field="err"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="19">Illegal character: </literal-string><send message="yytext">
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+</statements>
+case <unary-expr op="-"><literal-number kind="integer" value="16"/></unary-expr>:
+<break/>case <literal-number kind="integer" value="16"/>:
+<statements>
+<return><new><type name="Symbol"/><arguments><field-access field="NUMBER"><var-ref name="sym"/></field-access><new><type name="Double"/><arguments><send message="yytext">
+<arguments/>
+</send>
+</arguments></new>
+</arguments></new>
+</return>
+</statements>
+case <unary-expr op="-"><literal-number kind="integer" value="17"/></unary-expr>:
+<break/>case <literal-number kind="integer" value="17"/>:
+<statements>
+<send message="println">
+<target><field-access field="err"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="19">Illegal character: </literal-string><send message="yytext">
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+</statements>
+case <unary-expr op="-"><literal-number kind="integer" value="18"/></unary-expr>:
+<break/>case <literal-number kind="integer" value="18"/>:
+<statements>
+<send message="println">
+<target><field-access field="err"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="19">Illegal character: </literal-string><send message="yytext">
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+</statements>
+case <unary-expr op="-"><literal-number kind="integer" value="19"/></unary-expr>:
+<break/>default:
+<send message="yy_error">
+<arguments><var-ref name="YY_E_INTERNAL"/><literal-false/></arguments>
+</send>
+case <unary-expr op="-"><literal-number kind="integer" value="1"/></unary-expr>:
+</statements>
+<assignment-expr><lvalue><var-set name="yy_initial"/></lvalue><literal-true/></assignment-expr>
+<assignment-expr><lvalue><var-set name="yy_state"/></lvalue><array-ref><base><var-ref name="yy_state_dtrans"/></base><offset><var-ref name="yy_lexical_state"/></offset></array-ref></assignment-expr>
+<assignment-expr><lvalue><var-set name="yy_next_state"/></lvalue><var-ref name="YY_NO_STATE"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="yy_last_accept_state"/></lvalue><var-ref name="YY_NO_STATE"/></assignment-expr>
+<send message="yy_mark_start">
+<arguments/>
+</send>
+<assignment-expr><lvalue><var-set name="yy_this_accept"/></lvalue><array-ref><base><var-ref name="yy_acpt"/></base><offset><var-ref name="yy_state"/></offset></array-ref></assignment-expr>
+<if><test><binary-expr op="!="><var-ref name="YY_NOT_ACCEPT"/><var-ref name="yy_this_accept"/></binary-expr></test>
+<true-case><statements>
+<assignment-expr><lvalue><var-set name="yy_last_accept_state"/></lvalue><var-ref name="yy_state"/></assignment-expr>
+<send message="yy_mark_end">
+<arguments/>
+</send>
+</statements>
+</true-case>
+</if>
+</statements>
+</false-case>
+</if>
+</statements>
+</false-case>
+</if>
+</statements>
+</loop>
+</statements>
+</method>
+</class>
+</java-source-program>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="ClDouble.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<class name="ClDouble" visibility="public">
+<superclass class="Number"/>
+<constructor name="ClDouble" visibility="public" id="ctr-3041">
+<formal-arguments>
+<formal-argument name="val" id="frmarg-3037"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<assignment-expr><lvalue><var-set name="value"/></lvalue><var-ref name="val"/></assignment-expr>
+</constructor>
+<constructor name="ClDouble" visibility="public" id="ctr-3046">
+<formal-arguments/>
+<this-call><arguments><literal-number kind="double" value="0.0"/></arguments></this-call></constructor>
+<method name="clone" visibility="public" final="true" id="meth-3051">
+<type name="Object"/>
+<formal-arguments/>
+<statements>
+<return><new><type name="ClDouble"/><arguments><var-ref name="value"/></arguments></new>
+</return>
+</statements>
+</method>
+<method name="doubleValue" visibility="public" final="true" id="meth-3057">
+<type name="double" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><var-ref name="value"/></return>
+</statements>
+</method>
+<method name="intValue" visibility="public" final="true" id="meth-3063">
+<type name="int" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><cast-expr><type name="int" primitive="true"/><var-ref name="value"/></cast-expr></return>
+</statements>
+</method>
+<method name="longValue" visibility="public" final="true" id="meth-3069">
+<type name="long" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><cast-expr><type name="long" primitive="true"/><var-ref name="value"/></cast-expr></return>
+</statements>
+</method>
+<method name="floatValue" visibility="public" final="true" id="meth-3075">
+<type name="float" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><cast-expr><type name="float" primitive="true"/><var-ref name="value"/></cast-expr></return>
+</statements>
+</method>
+<method name="byteValue" visibility="public" final="true" id="meth-3081">
+<type name="byte" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><cast-expr><type name="byte" primitive="true"/><var-ref name="value"/></cast-expr></return>
+</statements>
+</method>
+<method name="shortValue" visibility="public" final="true" id="meth-3087">
+<type name="short" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><cast-expr><type name="short" primitive="true"/><var-ref name="value"/></cast-expr></return>
+</statements>
+</method>
+<method name="setValue" visibility="public" final="true" id="meth-3096">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="val" id="frmarg-3094"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<statements>
+<assignment-expr><lvalue><var-set name="value"/></lvalue><var-ref name="val" idref="frmarg-3094"/></assignment-expr>
+</statements>
+</method>
+<method name="toString" visibility="public" final="true" id="meth-3103">
+<type name="String"/>
+<formal-arguments/>
+<statements>
+<return><send message="toString">
+<target><field-access field="Double"><field-access field="lang"><var-ref name="java"/></field-access></field-access></target>
+<arguments><var-ref name="value"/></arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="equals" visibility="public" final="true" id="meth-3113">
+<type name="boolean" primitive="true"/>
+<formal-arguments>
+<formal-argument name="o" id="frmarg-3111"><type name="Object"/></formal-argument>
+</formal-arguments>
+<statements>
+<try><statements>
+<return><binary-expr op="=="><var-ref name="value"/><field-access field="value"><paren><cast-expr><type name="ClDouble"/><var-ref name="o" idref="frmarg-3111"/></cast-expr></paren></field-access></binary-expr></return>
+</statements>
+<catch><formal-argument name="err" id="locvar-11207"><type name="Exception"/></formal-argument>
+<statements>
+<return><literal-false/></return>
+</statements>
+</catch></try></statements>
+</method>
+<method name="hashCode" visibility="public" final="true" id="meth-3119">
+<type name="int" primitive="true"/>
+<formal-arguments/>
+<statements>
+<send message="println">
+<target><field-access field="err"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="27">ClDouble.hashCode() called!</literal-string></arguments>
+</send>
+<return><cast-expr><type name="int" primitive="true"/><send message="doubleToLongBits">
+<target><field-access field="Double"><field-access field="lang"><var-ref name="java"/></field-access></field-access></target>
+<arguments><var-ref name="value"/></arguments>
+</send>
+</cast-expr></return>
+</statements>
+</method>
+<field name="value" visibility="private"><type name="double" primitive="true"/></field>
+</class>
+</java-source-program>

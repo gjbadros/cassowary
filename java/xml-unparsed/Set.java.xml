@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="Set.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<import module="java.util.*"/>
+<class name="Set">
+<superclass class="Object"/>
+<constructor name="Set" visibility="public" id="ctr-2782">
+<formal-arguments/>
+<assignment-expr><lvalue><var-set name="hash"/></lvalue><new><type name="Hashtable"/><arguments/></new>
+</assignment-expr>
+</constructor>
+<constructor name="Set" visibility="public" id="ctr-2791">
+<formal-arguments>
+<formal-argument name="i" id="frmarg-2787"><type name="int" primitive="true"/></formal-argument>
+</formal-arguments>
+<assignment-expr><lvalue><var-set name="hash"/></lvalue><new><type name="Hashtable"/><arguments><var-ref name="i"/></arguments></new>
+</assignment-expr>
+</constructor>
+<constructor name="Set" visibility="public" id="ctr-2804">
+<formal-arguments>
+<formal-argument name="i" id="frmarg-2796"><type name="int" primitive="true"/></formal-argument>
+<formal-argument name="f" id="frmarg-2800"><type name="float" primitive="true"/></formal-argument>
+</formal-arguments>
+<assignment-expr><lvalue><var-set name="hash"/></lvalue><new><type name="Hashtable"/><arguments><var-ref name="i"/><var-ref name="f"/></arguments></new>
+</assignment-expr>
+</constructor>
+<constructor name="Set" visibility="public" id="ctr-2813">
+<formal-arguments>
+<formal-argument name="h" id="frmarg-2809"><type name="Hashtable"/></formal-argument>
+</formal-arguments>
+<assignment-expr><lvalue><var-set name="hash"/></lvalue><var-ref name="h"/></assignment-expr>
+</constructor>
+<method name="containsKey" visibility="public" id="meth-2821">
+<type name="boolean" primitive="true"/>
+<formal-arguments>
+<formal-argument name="o" id="frmarg-2819"><type name="Object"/></formal-argument>
+</formal-arguments>
+<statements>
+<return><send message="containsKey">
+<target><var-ref name="hash"/></target>
+<arguments><var-ref name="o" idref="frmarg-2819"/></arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="insert" visibility="public" id="meth-2830">
+<type name="boolean" primitive="true"/>
+<formal-arguments>
+<formal-argument name="o" id="frmarg-2828"><type name="Object"/></formal-argument>
+</formal-arguments>
+<statements>
+<return><conditional-expr><binary-expr op="=="><send message="put">
+<target><var-ref name="hash"/></target>
+<arguments><var-ref name="o" idref="frmarg-2828"/><var-ref name="o" idref="frmarg-2828"/></arguments>
+</send>
+<literal-null/></binary-expr><literal-true/><literal-false/></conditional-expr></return>
+</statements>
+</method>
+<method name="remove" visibility="public" id="meth-2839">
+<type name="boolean" primitive="true"/>
+<formal-arguments>
+<formal-argument name="o" id="frmarg-2837"><type name="Object"/></formal-argument>
+</formal-arguments>
+<statements>
+<return><conditional-expr><binary-expr op="=="><send message="remove">
+<target><var-ref name="hash"/></target>
+<arguments><var-ref name="o" idref="frmarg-2837"/></arguments>
+</send>
+<literal-null/></binary-expr><literal-true/><literal-false/></conditional-expr></return>
+</statements>
+</method>
+<method name="clear" visibility="public" id="meth-2843">
+<type name="void" primitive="true"/>
+<formal-arguments/>
+<statements>
+<send message="clear">
+<target><var-ref name="hash"/></target>
+<arguments/>
+</send>
+</statements>
+</method>
+<method name="size" visibility="public" id="meth-2849">
+<type name="int" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><send message="size">
+<target><var-ref name="hash"/></target>
+<arguments/>
+</send>
+</return>
+</statements>
+</method>
+<method name="isEmpty" visibility="public" id="meth-2854">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><send message="isEmpty">
+<target><var-ref name="hash"/></target>
+<arguments/>
+</send>
+</return>
+</statements>
+</method>
+<method name="clone" visibility="public" id="meth-2859">
+<type name="Object"/>
+<formal-arguments/>
+<statements>
+<return><new><type name="Set"/><arguments><cast-expr><type name="Hashtable"/><send message="clone">
+<target><var-ref name="hash"/></target>
+<arguments/>
+</send>
+</cast-expr></arguments></new>
+</return>
+</statements>
+</method>
+<method name="elements" visibility="public" id="meth-2864">
+<type name="Enumeration"/>
+<formal-arguments/>
+<statements>
+<return><send message="elements">
+<target><var-ref name="hash"/></target>
+<arguments/>
+</send>
+</return>
+</statements>
+</method>
+<method name="toString" visibility="public" id="meth-2869">
+<type name="String"/>
+<formal-arguments/>
+<statements>
+<local-variable name="bstr" id="locvar-11450"><type name="StringBuffer"/><new><type name="StringBuffer"/><arguments><literal-string length="2">{ </literal-string></arguments></new>
+</local-variable>
+<local-variable name="e" id="locvar-11457"><type name="Enumeration"/><send message="keys">
+<target><var-ref name="hash"/></target>
+<arguments/>
+</send>
+</local-variable>
+<if><test><send message="hasMoreElements">
+<target><var-ref name="e" idref="locvar-11457"/></target>
+<arguments/>
+</send>
+</test>
+<true-case><send message="append">
+<target><var-ref name="bstr"/></target>
+<arguments><send message="toString">
+<target><send message="nextElement">
+<target><var-ref name="e"/></target>
+<arguments/>
+</send>
+</target>
+<arguments/>
+</send>
+</arguments>
+</send>
+</true-case>
+</if>
+<loop kind="while"><test><send message="hasMoreElements">
+<target><var-ref name="e"/></target>
+<arguments/>
+</send>
+</test><statements>
+<send message="append">
+<target><var-ref name="bstr"/></target>
+<arguments><binary-expr op="+"><literal-string length="2">, </literal-string><send message="nextElement">
+<target><var-ref name="e"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+</statements>
+</loop>
+<send message="append">
+<target><var-ref name="bstr" idref="locvar-11450"/></target>
+<arguments><literal-string length="4"> }\n</literal-string></arguments>
+</send>
+<return><send message="toString">
+<target><var-ref name="bstr" idref="locvar-11450"/></target>
+<arguments/>
+</send>
+</return>
+</statements>
+</method>
+<field name="hash" visibility="private"><type name="Hashtable"/></field>
+</class>
+</java-source-program>

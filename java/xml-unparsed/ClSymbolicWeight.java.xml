@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="ClSymbolicWeight.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<import module="java.util.*"/>
+<class name="ClSymbolicWeight" visibility="public">
+<superclass class="Object"/>
+<constructor name="ClSymbolicWeight" visibility="public" id="ctr-3199">
+<formal-arguments>
+<formal-argument name="cLevels" id="frmarg-3195"><type name="int" primitive="true"/></formal-argument>
+</formal-arguments>
+<assignment-expr><lvalue><var-set name="_values"/></lvalue><new-array dimensions="1"><type name="double" primitive="true"/><dim-expr><var-ref name="cLevels"/></dim-expr></new-array></assignment-expr>
+</constructor>
+<constructor name="ClSymbolicWeight" visibility="public" id="ctr-3216">
+<formal-arguments>
+<formal-argument name="w1" id="frmarg-3204"><type name="double" primitive="true"/></formal-argument>
+<formal-argument name="w2" id="frmarg-3208"><type name="double" primitive="true"/></formal-argument>
+<formal-argument name="w3" id="frmarg-3212"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<assignment-expr><lvalue><var-set name="_values"/></lvalue><new-array dimensions="1"><type name="double" primitive="true"/><dim-expr><literal-number kind="integer" value="3"/></dim-expr></new-array></assignment-expr>
+<assignment-expr><lvalue><array-ref><base><var-ref name="_values"/></base><offset><literal-number kind="integer" value="0"/></offset></array-ref></lvalue><var-ref name="w1"/></assignment-expr>
+<assignment-expr><lvalue><array-ref><base><var-ref name="_values"/></base><offset><literal-number kind="integer" value="1"/></offset></array-ref></lvalue><var-ref name="w2"/></assignment-expr>
+<assignment-expr><lvalue><array-ref><base><var-ref name="_values"/></base><offset><literal-number kind="integer" value="2"/></offset></array-ref></lvalue><var-ref name="w3"/></assignment-expr>
+</constructor>
+<constructor name="ClSymbolicWeight" visibility="public" id="ctr-3227">
+<formal-arguments>
+<formal-argument name="weights" id="frmarg-3223"><type name="double" dimensions="1"/></formal-argument>
+</formal-arguments>
+<local-variable name="cLevels" final="true" id="locvar-10671"><type name="int" primitive="true"/><field-access field="length"><var-ref name="weights"/></field-access></local-variable>
+<assignment-expr><lvalue><var-set name="_values"/></lvalue><new-array dimensions="1"><type name="double" primitive="true"/><dim-expr><var-ref name="cLevels" idref="locvar-10671"/></dim-expr></new-array></assignment-expr>
+<loop kind="for"><init><local-variable name="i" id="locvar-10683"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></local-variable>
+</init>
+<test><binary-expr op="lt"><var-ref name="i" idref="locvar-10683"/><var-ref name="cLevels"/></binary-expr></test>
+<update><unary-expr op="++" post="true"><var-ref name="i" idref="locvar-10683"/></unary-expr></update>
+<statements>
+<assignment-expr><lvalue><array-ref><base><var-ref name="_values"/></base><offset><var-ref name="i"/></offset></array-ref></lvalue><array-ref><base><var-ref name="weights"/></base><offset><var-ref name="i"/></offset></array-ref></assignment-expr>
+</statements>
+</loop>
+</constructor>
+<field name="clsZero" visibility="public" final="true" static="true"><type name="ClSymbolicWeight"/><new><type name="ClSymbolicWeight"/><arguments><literal-number kind="double" value="0.0"/><literal-number kind="double" value="0.0"/><literal-number kind="double" value="0.0"/></arguments></new>
+</field>
+<method name="clone" visibility="public" id="meth-3244">
+<type name="Object"/>
+<formal-arguments/>
+<statements>
+<return><new><type name="ClSymbolicWeight"/><arguments><var-ref name="_values"/></arguments></new>
+</return>
+</statements>
+</method>
+<method name="times" visibility="public" id="meth-3253">
+<type name="ClSymbolicWeight"/>
+<formal-arguments>
+<formal-argument name="n" id="frmarg-3251"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<statements>
+<local-variable name="clsw" id="locvar-10716"><type name="ClSymbolicWeight"/><cast-expr><type name="ClSymbolicWeight"/><send message="clone">
+<arguments/>
+</send>
+</cast-expr></local-variable>
+<loop kind="for"><init><local-variable name="i" id="locvar-10721"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></local-variable>
+</init>
+<test><binary-expr op="lt"><var-ref name="i" idref="locvar-10721"/><field-access field="length"><var-ref name="_values"/></field-access></binary-expr></test>
+<update><unary-expr op="++" post="true"><var-ref name="i" idref="locvar-10721"/></unary-expr></update>
+<statements>
+<assignment-expr><lvalue><array-ref><base><field-access field="_values"><var-ref name="clsw"/></field-access></base><offset><var-ref name="i"/></offset></array-ref></lvalue><var-ref name="n" idref="frmarg-3251"/></assignment-expr>
+</statements>
+</loop>
+<return><var-ref name="clsw" idref="locvar-10716"/></return>
+</statements>
+</method>
+<method name="divideBy" visibility="public" id="meth-3262">
+<type name="ClSymbolicWeight"/>
+<formal-arguments>
+<formal-argument name="n" id="frmarg-3260"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<statements>
+<local-variable name="clsw" id="locvar-10749"><type name="ClSymbolicWeight"/><cast-expr><type name="ClSymbolicWeight"/><send message="clone">
+<arguments/>
+</send>
+</cast-expr></local-variable>
+<loop kind="for"><init><local-variable name="i" id="locvar-10754"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></local-variable>
+</init>
+<test><binary-expr op="lt"><var-ref name="i" idref="locvar-10754"/><field-access field="length"><var-ref name="_values"/></field-access></binary-expr></test>
+<update><unary-expr op="++" post="true"><var-ref name="i" idref="locvar-10754"/></unary-expr></update>
+<statements>
+<assignment-expr><lvalue><array-ref><base><field-access field="_values"><var-ref name="clsw"/></field-access></base><offset><var-ref name="i"/></offset></array-ref></lvalue><var-ref name="n" idref="frmarg-3260"/></assignment-expr>
+</statements>
+</loop>
+<return><var-ref name="clsw" idref="locvar-10749"/></return>
+</statements>
+</method>
+<method name="add" visibility="public" id="meth-3271">
+<type name="ClSymbolicWeight"/>
+<formal-arguments>
+<formal-argument name="cl" id="frmarg-3269"><type name="ClSymbolicWeight"/></formal-argument>
+</formal-arguments>
+<statements>
+<local-variable name="clsw" id="locvar-10782"><type name="ClSymbolicWeight"/><cast-expr><type name="ClSymbolicWeight"/><send message="clone">
+<arguments/>
+</send>
+</cast-expr></local-variable>
+<loop kind="for"><init><local-variable name="i" id="locvar-10787"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></local-variable>
+</init>
+<test><binary-expr op="lt"><var-ref name="i" idref="locvar-10787"/><field-access field="length"><var-ref name="_values"/></field-access></binary-expr></test>
+<update><unary-expr op="++" post="true"><var-ref name="i" idref="locvar-10787"/></unary-expr></update>
+<statements>
+<assignment-expr><lvalue><array-ref><base><field-access field="_values"><var-ref name="clsw"/></field-access></base><offset><var-ref name="i"/></offset></array-ref></lvalue><array-ref><base><field-access field="_values"><var-ref name="cl" idref="frmarg-3269"/></field-access></base><offset><var-ref name="i"/></offset></array-ref></assignment-expr>
+</statements>
+</loop>
+<return><var-ref name="clsw" idref="locvar-10782"/></return>
+</statements>
+</method>
+<method name="subtract" visibility="public" id="meth-3280">
+<type name="ClSymbolicWeight"/>
+<formal-arguments>
+<formal-argument name="cl" id="frmarg-3278"><type name="ClSymbolicWeight"/></formal-argument>
+</formal-arguments>
+<statements>
+<local-variable name="clsw" id="locvar-10818"><type name="ClSymbolicWeight"/><cast-expr><type name="ClSymbolicWeight"/><send message="clone">
+<arguments/>
+</send>
+</cast-expr></local-variable>
+<loop kind="for"><init><local-variable name="i" id="locvar-10823"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></local-variable>
+</init>
+<test><binary-expr op="lt"><var-ref name="i" idref="locvar-10823"/><field-access field="length"><var-ref name="_values"/></field-access></binary-expr></test>
+<update><unary-expr op="++" post="true"><var-ref name="i" idref="locvar-10823"/></unary-expr></update>
+<statements>
+<assignment-expr><lvalue><array-ref><base><field-access field="_values"><var-ref name="clsw"/></field-access></base><offset><var-ref name="i"/></offset></array-ref></lvalue><array-ref><base><field-access field="_values"><var-ref name="cl" idref="frmarg-3278"/></field-access></base><offset><var-ref name="i"/></offset></array-ref></assignment-expr>
+</statements>
+</loop>
+<return><var-ref name="clsw" idref="locvar-10818"/></return>
+</statements>
+</method>
+<method name="lessThan" visibility="public" id="meth-3289">
+<type name="boolean" primitive="true"/>
+<formal-arguments>
+<formal-argument name="cl" id="frmarg-3287"><type name="ClSymbolicWeight"/></formal-argument>
+</formal-arguments>
+<statements>
+<loop kind="for"><init><local-variable name="i" id="locvar-10851"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></local-variable>
+</init>
+<test><binary-expr op="lt"><var-ref name="i" idref="locvar-10851"/><field-access field="length"><var-ref name="_values"/></field-access></binary-expr></test>
+<update><unary-expr op="++" post="true"><var-ref name="i" idref="locvar-10851"/></unary-expr></update>
+<statements>
+<if><test><binary-expr op="lt"><array-ref><base><var-ref name="_values"/></base><offset><var-ref name="i"/></offset></array-ref><array-ref><base><field-access field="_values"><var-ref name="cl" idref="frmarg-3287"/></field-access></base><offset><var-ref name="i"/></offset></array-ref></binary-expr></test>
+<true-case><return><literal-true/></return>
+</true-case>
+<false-case><if><test><binary-expr op=">"><array-ref><base><var-ref name="_values"/></base><offset><var-ref name="i"/></offset></array-ref><array-ref><base><field-access field="_values"><var-ref name="cl" idref="frmarg-3287"/></field-access></base><offset><var-ref name="i"/></offset></array-ref></binary-expr></test>
+<true-case><return><literal-false/></return>
+</true-case>
+</if>
+</false-case>
+</if>
+</statements>
+</loop>
+<return><literal-false/></return>
+</statements>
+</method>
+<method name="lessThanOrEqual" visibility="public" id="meth-3298">
+<type name="boolean" primitive="true"/>
+<formal-arguments>
+<formal-argument name="cl" id="frmarg-3296"><type name="ClSymbolicWeight"/></formal-argument>
+</formal-arguments>
+<statements>
+<loop kind="for"><init><local-variable name="i" id="locvar-10894"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></local-variable>
+</init>
+<test><binary-expr op="lt"><var-ref name="i" idref="locvar-10894"/><field-access field="length"><var-ref name="_values"/></field-access></binary-expr></test>
+<update><unary-expr op="++" post="true"><var-ref name="i" idref="locvar-10894"/></unary-expr></update>
+<statements>
+<if><test><binary-expr op="lt"><array-ref><base><var-ref name="_values"/></base><offset><var-ref name="i"/></offset></array-ref><array-ref><base><field-access field="_values"><var-ref name="cl" idref="frmarg-3296"/></field-access></base><offset><var-ref name="i"/></offset></array-ref></binary-expr></test>
+<true-case><return><literal-true/></return>
+</true-case>
+<false-case><if><test><binary-expr op=">"><array-ref><base><var-ref name="_values"/></base><offset><var-ref name="i"/></offset></array-ref><array-ref><base><field-access field="_values"><var-ref name="cl" idref="frmarg-3296"/></field-access></base><offset><var-ref name="i"/></offset></array-ref></binary-expr></test>
+<true-case><return><literal-false/></return>
+</true-case>
+</if>
+</false-case>
+</if>
+</statements>
+</loop>
+<return><literal-true/></return>
+</statements>
+</method>
+<method name="equal" visibility="public" id="meth-3307">
+<type name="boolean" primitive="true"/>
+<formal-arguments>
+<formal-argument name="cl" id="frmarg-3305"><type name="ClSymbolicWeight"/></formal-argument>
+</formal-arguments>
+<statements>
+<loop kind="for"><init><local-variable name="i" id="locvar-10937"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></local-variable>
+</init>
+<test><binary-expr op="lt"><var-ref name="i" idref="locvar-10937"/><field-access field="length"><var-ref name="_values"/></field-access></binary-expr></test>
+<update><unary-expr op="++" post="true"><var-ref name="i" idref="locvar-10937"/></unary-expr></update>
+<statements>
+<if><test><binary-expr op="!="><array-ref><base><var-ref name="_values"/></base><offset><var-ref name="i"/></offset></array-ref><array-ref><base><field-access field="_values"><var-ref name="cl" idref="frmarg-3305"/></field-access></base><offset><var-ref name="i"/></offset></array-ref></binary-expr></test>
+<true-case><return><literal-false/></return>
+</true-case>
+</if>
+</statements>
+</loop>
+<return><literal-true/></return>
+</statements>
+</method>
+<method name="greaterThan" visibility="public" id="meth-3316">
+<type name="boolean" primitive="true"/>
+<formal-arguments>
+<formal-argument name="cl" id="frmarg-3314"><type name="ClSymbolicWeight"/></formal-argument>
+</formal-arguments>
+<statements>
+<return><unary-expr op="!"><send message="lessThanOrEqual">
+<target><this/></target>
+<arguments><var-ref name="cl" idref="frmarg-3314"/></arguments>
+</send>
+</unary-expr></return>
+</statements>
+</method>
+<method name="greaterThanOrEqual" visibility="public" id="meth-3325">
+<type name="boolean" primitive="true"/>
+<formal-arguments>
+<formal-argument name="cl" id="frmarg-3323"><type name="ClSymbolicWeight"/></formal-argument>
+</formal-arguments>
+<statements>
+<return><unary-expr op="!"><send message="lessThan">
+<target><this/></target>
+<arguments><var-ref name="cl" idref="frmarg-3323"/></arguments>
+</send>
+</unary-expr></return>
+</statements>
+</method>
+<method name="isNegative" visibility="public" id="meth-3330">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><send message="lessThan">
+<target><this/></target>
+<arguments><var-ref name="clsZero"/></arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="asDouble" visibility="public" id="meth-3335">
+<type name="double" primitive="true"/>
+<formal-arguments/>
+<statements>
+<local-variable name="clsw" id="locvar-10990"><type name="ClSymbolicWeight"/><cast-expr><type name="ClSymbolicWeight"/><send message="clone">
+<arguments/>
+</send>
+</cast-expr></local-variable>
+<local-variable name="sum" id="locvar-10995"><type name="double" primitive="true"/><literal-number kind="integer" value="0"/></local-variable>
+<local-variable name="factor" id="locvar-11000"><type name="double" primitive="true"/><literal-number kind="integer" value="1"/></local-variable>
+<local-variable name="multiplier" id="locvar-11005"><type name="double" primitive="true"/><literal-number kind="integer" value="1000"/></local-variable>
+<loop kind="for"><init><local-variable name="i" id="locvar-11013"><type name="int" primitive="true"/><binary-expr op="-"><field-access field="length"><var-ref name="_values"/></field-access><literal-number kind="integer" value="1"/></binary-expr></local-variable>
+</init>
+<test><binary-expr op=">="><var-ref name="i" idref="locvar-11013"/><literal-number kind="integer" value="0"/></binary-expr></test>
+<update><unary-expr op="--" post="true"><var-ref name="i" idref="locvar-11013"/></unary-expr></update>
+<statements>
+<assignment-expr><lvalue><var-set name="sum"/></lvalue><binary-expr op="*"><array-ref><base><var-ref name="_values"/></base><offset><var-ref name="i"/></offset></array-ref><var-ref name="factor"/></binary-expr></assignment-expr>
+<assignment-expr><lvalue><var-set name="factor"/></lvalue><var-ref name="multiplier"/></assignment-expr>
+</statements>
+</loop>
+<return><var-ref name="sum" idref="locvar-10995"/></return>
+</statements>
+</method>
+<method name="toString" visibility="public" id="meth-3340">
+<type name="String"/>
+<formal-arguments/>
+<statements>
+<local-variable name="bstr" id="locvar-11045"><type name="StringBuffer"/><new><type name="StringBuffer"/><arguments><literal-string length="1">[</literal-string></arguments></new>
+</local-variable>
+<loop kind="for"><init><local-variable name="i" id="locvar-11050"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></local-variable>
+</init>
+<test><binary-expr op="lt"><var-ref name="i" idref="locvar-11050"/><binary-expr op="-"><field-access field="length"><var-ref name="_values"/></field-access><literal-number kind="integer" value="1"/></binary-expr></binary-expr></test>
+<update><unary-expr op="++" post="true"><var-ref name="i" idref="locvar-11050"/></unary-expr></update>
+<statements>
+<send message="append">
+<target><var-ref name="bstr"/></target>
+<arguments><array-ref><base><var-ref name="_values"/></base><offset><var-ref name="i"/></offset></array-ref></arguments>
+</send>
+<send message="append">
+<target><var-ref name="bstr"/></target>
+<arguments><literal-string length="1">,</literal-string></arguments>
+</send>
+</statements>
+</loop>
+<send message="append">
+<target><var-ref name="bstr" idref="locvar-11045"/></target>
+<arguments><array-ref><base><var-ref name="_values"/></base><offset><binary-expr op="-"><field-access field="length"><var-ref name="_values"/></field-access><literal-number kind="integer" value="1"/></binary-expr></offset></array-ref></arguments>
+</send>
+<send message="append">
+<target><var-ref name="bstr" idref="locvar-11045"/></target>
+<arguments><literal-string length="1">]</literal-string></arguments>
+</send>
+<return><send message="toString">
+<target><var-ref name="bstr" idref="locvar-11045"/></target>
+<arguments/>
+</send>
+</return>
+</statements>
+</method>
+<method name="cLevels" visibility="public" id="meth-3345">
+<type name="int" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><field-access field="length"><var-ref name="_values"/></field-access></return>
+</statements>
+</method>
+<field name="_values" visibility="private"><type name="double" dimensions="1"/></field>
+</class>
+</java-source-program>

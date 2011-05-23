@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="ExCLNotEnoughStays.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<class name="ExCLNotEnoughStays" visibility="public">
+<superclass class="ExCLError"/>
+<method name="description" visibility="public" id="meth-21608">
+<type name="String"/>
+<formal-arguments/>
+<statements>
+<return><literal-string length="89">(ExCLNotEnoughStays) There are not enough stays to give specific values to every variable</literal-string></return>
+</statements>
+</method>
+</class>
+</java-source-program>

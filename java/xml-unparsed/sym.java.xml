@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="sym.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<class name="sym" visibility="public">
+<superclass class="Object"/>
+<field name="EQ" visibility="public" final="true" static="true"><type name="int" primitive="true"/><literal-number kind="integer" value="4"/></field>
+<field name="PLUS" visibility="public" final="true" static="true"><type name="int" primitive="true"/><literal-number kind="integer" value="5"/></field>
+<field name="MINUS" visibility="public" final="true" static="true"><type name="int" primitive="true"/><literal-number kind="integer" value="6"/></field>
+<field name="TIMES" visibility="public" final="true" static="true"><type name="int" primitive="true"/><literal-number kind="integer" value="8"/></field>
+<field name="NUMBER" visibility="public" final="true" static="true"><type name="int" primitive="true"/><literal-number kind="integer" value="12"/></field>
+<field name="GEQ" visibility="public" final="true" static="true"><type name="int" primitive="true"/><literal-number kind="integer" value="2"/></field>
+<field name="LPAREN" visibility="public" final="true" static="true"><type name="int" primitive="true"/><literal-number kind="integer" value="10"/></field>
+<field name="VARIABLE" visibility="public" final="true" static="true"><type name="int" primitive="true"/><literal-number kind="integer" value="13"/></field>
+<field name="EOF" visibility="public" final="true" static="true"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></field>
+<field name="error" visibility="public" final="true" static="true"><type name="int" primitive="true"/><literal-number kind="integer" value="1"/></field>
+<field name="UMINUS" visibility="public" final="true" static="true"><type name="int" primitive="true"/><literal-number kind="integer" value="7"/></field>
+<field name="RPAREN" visibility="public" final="true" static="true"><type name="int" primitive="true"/><literal-number kind="integer" value="11"/></field>
+<field name="LEQ" visibility="public" final="true" static="true"><type name="int" primitive="true"/><literal-number kind="integer" value="3"/></field>
+<field name="DIVIDE" visibility="public" final="true" static="true"><type name="int" primitive="true"/><literal-number kind="integer" value="9"/></field>
+</class>
+</java-source-program>

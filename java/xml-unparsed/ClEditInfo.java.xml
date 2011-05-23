@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="ClEditInfo.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<import module="java.util.*"/>
+<class name="ClEditInfo">
+<superclass class="Object"/>
+<constructor name="ClEditInfo" visibility="public" id="ctr-8954">
+<formal-arguments>
+<formal-argument name="cn_" id="frmarg-8934"><type name="ClConstraint"/></formal-argument>
+<formal-argument name="eplus_" id="frmarg-8938"><type name="ClSlackVariable"/></formal-argument>
+<formal-argument name="eminus_" id="frmarg-8942"><type name="ClSlackVariable"/></formal-argument>
+<formal-argument name="prevEditConstant_" id="frmarg-8946"><type name="double" primitive="true"/></formal-argument>
+<formal-argument name="i_" id="frmarg-8950"><type name="int" primitive="true"/></formal-argument>
+</formal-arguments>
+<assignment-expr><lvalue><var-set name="cn"/></lvalue><var-ref name="cn_"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="clvEditPlus"/></lvalue><var-ref name="eplus_"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="clvEditMinus"/></lvalue><var-ref name="eminus_"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="prevEditConstant"/></lvalue><var-ref name="prevEditConstant_"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="i"/></lvalue><var-ref name="i_"/></assignment-expr>
+</constructor>
+<method name="Index" visibility="public" id="meth-8958">
+<type name="int" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><var-ref name="i"/></return>
+</statements>
+</method>
+<method name="Constraint" visibility="public" id="meth-8963">
+<type name="ClConstraint"/>
+<formal-arguments/>
+<statements>
+<return><var-ref name="cn"/></return>
+</statements>
+</method>
+<method name="ClvEditPlus" visibility="public" id="meth-8968">
+<type name="ClSlackVariable"/>
+<formal-arguments/>
+<statements>
+<return><var-ref name="clvEditPlus"/></return>
+</statements>
+</method>
+<method name="ClvEditMinus" visibility="public" id="meth-8973">
+<type name="ClSlackVariable"/>
+<formal-arguments/>
+<statements>
+<return><var-ref name="clvEditMinus"/></return>
+</statements>
+</method>
+<method name="PrevEditConstant" visibility="public" id="meth-8978">
+<type name="double" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><var-ref name="prevEditConstant"/></return>
+</statements>
+</method>
+<method name="SetPrevEditConstant" visibility="public" id="meth-8986">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="prevEditConstant_" id="frmarg-8984"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<statements>
+<assignment-expr><lvalue><var-set name="prevEditConstant"/></lvalue><var-ref name="prevEditConstant_" idref="frmarg-8984"/></assignment-expr>
+</statements>
+</method>
+<field name="cn" visibility="private"><type name="ClConstraint"/></field>
+<field name="clvEditPlus" visibility="private"><type name="ClSlackVariable"/></field>
+<field name="clvEditMinus" visibility="private"><type name="ClSlackVariable"/></field>
+<field name="prevEditConstant" visibility="private"><type name="double" primitive="true"/></field>
+<field name="i" visibility="private"><type name="int" primitive="true"/></field>
+</class>
+</java-source-program>

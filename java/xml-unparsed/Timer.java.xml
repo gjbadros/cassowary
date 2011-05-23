@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="Timer.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<class name="Timer" visibility="public">
+<superclass class="Object"/>
+<constructor name="Timer" visibility="public" id="ctr-21363">
+<formal-arguments/>
+<assignment-expr><lvalue><var-set name="TimerIsRunning"/></lvalue><literal-false/></assignment-expr>
+<assignment-expr><lvalue><var-set name="ElapsedMs"/></lvalue><literal-number kind="integer" value="0"/></assignment-expr>
+</constructor>
+<method name="Start" visibility="public" id="meth-21366">
+<type name="void" primitive="true"/>
+<formal-arguments/>
+<statements>
+<assignment-expr><lvalue><var-set name="TimerIsRunning"/></lvalue><literal-true/></assignment-expr>
+<assignment-expr><lvalue><var-set name="StartReading"/></lvalue><send message="currentTimeMillis">
+<target><var-ref name="System"/></target>
+<arguments/>
+</send>
+</assignment-expr>
+</statements>
+</method>
+<method name="Stop" visibility="public" id="meth-21371">
+<type name="void" primitive="true"/>
+<formal-arguments/>
+<statements>
+<assignment-expr><lvalue><var-set name="TimerIsRunning"/></lvalue><literal-false/></assignment-expr>
+<assignment-expr><lvalue><var-set name="ElapsedMs"/></lvalue><binary-expr op="-"><send message="currentTimeMillis">
+<target><var-ref name="System"/></target>
+<arguments/>
+</send>
+<var-ref name="StartReading"/></binary-expr></assignment-expr>
+</statements>
+</method>
+<method name="Reset" visibility="public" id="meth-21376">
+<type name="void" primitive="true"/>
+<formal-arguments/>
+<statements>
+<assignment-expr><lvalue><var-set name="TimerIsRunning"/></lvalue><literal-false/></assignment-expr>
+<assignment-expr><lvalue><var-set name="ElapsedMs"/></lvalue><literal-number kind="integer" value="0"/></assignment-expr>
+</statements>
+</method>
+<method name="IsRunning" visibility="public" id="meth-21382">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><var-ref name="TimerIsRunning"/></return>
+</statements>
+</method>
+<method name="ElapsedTime" visibility="public" id="meth-21387">
+<type name="double" primitive="true"/>
+<formal-arguments/>
+<statements>
+<if><test><unary-expr op="!"><var-ref name="TimerIsRunning"/></unary-expr></test>
+<true-case><return><binary-expr op="/"><cast-expr><type name="double" primitive="true"/><var-ref name="ElapsedMs"/></cast-expr><literal-number kind="integer" value="1000"/></binary-expr></return>
+</true-case>
+<false-case><return><binary-expr op="/"><cast-expr><type name="double" primitive="true"/><paren><binary-expr op="-"><binary-expr op="+"><var-ref name="ElapsedMs"/><send message="currentTimeMillis">
+<target><var-ref name="System"/></target>
+<arguments/>
+</send>
+</binary-expr><var-ref name="StartReading"/></binary-expr></paren></cast-expr><literal-number kind="integer" value="1000"/></binary-expr></return>
+</false-case>
+</if>
+</statements>
+</method>
+<field name="TimerIsRunning" visibility="private"><type name="boolean" primitive="true"/></field>
+<field name="ElapsedMs" visibility="private"><type name="long" primitive="true"/></field>
+<field name="StartReading" visibility="private"><type name="long" primitive="true"/></field>
+</class>
+</java-source-program>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="ClEditConstraint.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<class name="ClEditConstraint" visibility="public">
+<superclass class="ClEditOrStayConstraint"/>
+<constructor name="ClEditConstraint" visibility="public" id="ctr-8749">
+<formal-arguments>
+<formal-argument name="clv" id="frmarg-8737"><type name="ClVariable"/></formal-argument>
+<formal-argument name="strength" id="frmarg-8741"><type name="ClStrength"/></formal-argument>
+<formal-argument name="weight" id="frmarg-8745"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<super-call><arguments><var-ref name="clv"/><var-ref name="strength"/><var-ref name="weight"/></arguments></super-call>
+</constructor>
+<constructor name="ClEditConstraint" visibility="public" id="ctr-8762">
+<formal-arguments>
+<formal-argument name="clv" id="frmarg-8754"><type name="ClVariable"/></formal-argument>
+<formal-argument name="strength" id="frmarg-8758"><type name="ClStrength"/></formal-argument>
+</formal-arguments>
+<super-call><arguments><var-ref name="clv"/><var-ref name="strength"/></arguments></super-call>
+</constructor>
+<constructor name="ClEditConstraint" visibility="public" id="ctr-8771">
+<formal-arguments>
+<formal-argument name="clv" id="frmarg-8767"><type name="ClVariable"/></formal-argument>
+</formal-arguments>
+<super-call><arguments><var-ref name="clv"/></arguments></super-call>
+</constructor>
+<method name="isEditConstraint" visibility="public" id="meth-8775">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><literal-true/></return>
+</statements>
+</method>
+<method name="toString" visibility="public" id="meth-8780">
+<type name="String"/>
+<formal-arguments/>
+<statements>
+<return><binary-expr op="+"><literal-string length="4">edit</literal-string><send message="toString">
+<target><super/></target>
+<arguments/>
+</send>
+</binary-expr></return>
+</statements>
+</method>
+</class>
+</java-source-program>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="ExCLNonlinearExpression.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<class name="ExCLNonlinearExpression" visibility="public">
+<superclass class="ExCLError"/>
+<method name="description" visibility="public" id="meth-2764">
+<type name="String"/>
+<formal-arguments/>
+<statements>
+<return><literal-string length="69">(ExCLNonlinearExpression) The resulting expression would be nonlinear</literal-string></return>
+</statements>
+</method>
+</class>
+</java-source-program>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="ClVariable.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<import module="java.util.*"/>
+<class name="ClVariable" visibility="public">
+<superclass class="ClAbstractVariable"/>
+<constructor name="ClVariable" visibility="public" id="ctr-2600">
+<formal-arguments>
+<formal-argument name="name" id="frmarg-2592"><type name="String"/></formal-argument>
+<formal-argument name="value" id="frmarg-2596"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<super-call><arguments><var-ref name="name"/></arguments></super-call>
+<assignment-expr><lvalue><var-set name="_value"/></lvalue><var-ref name="value"/></assignment-expr>
+<if><test><binary-expr op="!="><var-ref name="_ourVarMap"/><literal-null/></binary-expr></test>
+<true-case><statements>
+<send message="put">
+<target><var-ref name="_ourVarMap"/></target>
+<arguments><var-ref name="name"/><this/></arguments>
+</send>
+</statements>
+</true-case>
+</if>
+</constructor>
+<constructor name="ClVariable" visibility="public" id="ctr-2609">
+<formal-arguments>
+<formal-argument name="name" id="frmarg-2605"><type name="String"/></formal-argument>
+</formal-arguments>
+<super-call><arguments><var-ref name="name"/></arguments></super-call>
+<assignment-expr><lvalue><var-set name="_value"/></lvalue><literal-number kind="double" value="0.0"/></assignment-expr>
+<if><test><binary-expr op="!="><var-ref name="_ourVarMap"/><literal-null/></binary-expr></test>
+<true-case><statements>
+<send message="put">
+<target><var-ref name="_ourVarMap"/></target>
+<arguments><var-ref name="name"/><this/></arguments>
+</send>
+</statements>
+</true-case>
+</if>
+</constructor>
+<constructor name="ClVariable" visibility="public" id="ctr-2618">
+<formal-arguments>
+<formal-argument name="value" id="frmarg-2614"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<assignment-expr><lvalue><var-set name="_value"/></lvalue><var-ref name="value"/></assignment-expr>
+</constructor>
+<constructor name="ClVariable" visibility="public" id="ctr-2623">
+<formal-arguments/>
+<assignment-expr><lvalue><var-set name="_value"/></lvalue><literal-number kind="double" value="0.0"/></assignment-expr>
+</constructor>
+<constructor name="ClVariable" visibility="public" id="ctr-2640">
+<formal-arguments>
+<formal-argument name="number" id="frmarg-2628"><type name="long" primitive="true"/></formal-argument>
+<formal-argument name="prefix" id="frmarg-2632"><type name="String"/></formal-argument>
+<formal-argument name="value" id="frmarg-2636"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<super-call><arguments><var-ref name="number"/><var-ref name="prefix"/></arguments></super-call>
+<assignment-expr><lvalue><var-set name="_value"/></lvalue><var-ref name="value"/></assignment-expr>
+</constructor>
+<constructor name="ClVariable" visibility="public" id="ctr-2653">
+<formal-arguments>
+<formal-argument name="number" id="frmarg-2645"><type name="long" primitive="true"/></formal-argument>
+<formal-argument name="prefix" id="frmarg-2649"><type name="String"/></formal-argument>
+</formal-arguments>
+<super-call><arguments><var-ref name="number"/><var-ref name="prefix"/></arguments></super-call>
+<assignment-expr><lvalue><var-set name="_value"/></lvalue><literal-number kind="double" value="0.0"/></assignment-expr>
+</constructor>
+<method name="isDummy" visibility="public" id="meth-2657">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><literal-false/></return>
+</statements>
+</method>
+<method name="isExternal" visibility="public" id="meth-2662">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><literal-true/></return>
+</statements>
+</method>
+<method name="isPivotable" visibility="public" id="meth-2667">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><literal-false/></return>
+</statements>
+</method>
+<method name="isRestricted" visibility="public" id="meth-2672">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><literal-false/></return>
+</statements>
+</method>
+<method name="toString" visibility="public" id="meth-2677">
+<type name="String"/>
+<formal-arguments/>
+<statements>
+<return><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="1">[</literal-string><send message="name">
+<arguments/>
+</send>
+</binary-expr><literal-string length="1">:</literal-string></binary-expr><var-ref name="_value"/></binary-expr><literal-string length="1">]</literal-string></binary-expr></return>
+</statements>
+</method>
+<method name="value" visibility="public" final="true" id="meth-2683">
+<type name="double" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><var-ref name="_value"/></return>
+</statements>
+</method>
+<method name="set_value" visibility="public" final="true" id="meth-2692">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="value" id="frmarg-2690"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<statements>
+<assignment-expr><lvalue><var-set name="_value"/></lvalue><var-ref name="value" idref="frmarg-2690"/></assignment-expr>
+</statements>
+</method>
+<method name="change_value" visibility="public" id="meth-2701">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="value" id="frmarg-2699"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<statements>
+<assignment-expr><lvalue><var-set name="_value"/></lvalue><var-ref name="value" idref="frmarg-2699"/></assignment-expr>
+</statements>
+</method>
+<method name="setAttachedObject" visibility="public" id="meth-2710">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="o" id="frmarg-2708"><type name="Object"/></formal-argument>
+</formal-arguments>
+<statements>
+<assignment-expr><lvalue><var-set name="_attachedObject"/></lvalue><var-ref name="o" idref="frmarg-2708"/></assignment-expr>
+</statements>
+</method>
+<method name="getAttachedObject" visibility="public" id="meth-2716">
+<type name="Object"/>
+<formal-arguments/>
+<statements>
+<return><var-ref name="_attachedObject"/></return>
+</statements>
+</method>
+<method name="setVarMap" visibility="public" static="true" id="meth-2725">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="map" id="frmarg-2723"><type name="Hashtable"/></formal-argument>
+</formal-arguments>
+<statements>
+<assignment-expr><lvalue><var-set name="_ourVarMap"/></lvalue><var-ref name="map" idref="frmarg-2723"/></assignment-expr>
+</statements>
+</method>
+<method name="getVarMap" visibility="public" static="true" id="meth-2732">
+<type name="Hashtable"/>
+<formal-arguments/>
+<statements>
+<return><var-ref name="_ourVarMap"/></return>
+</statements>
+</method>
+<field name="_ourVarMap" visibility="private" static="true"><type name="Hashtable"/></field>
+<field name="_value" visibility="private"><type name="double" primitive="true"/></field>
+<field name="_attachedObject" visibility="private"><type name="Object"/></field>
+</class>
+</java-source-program>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="ClEditOrStayConstraint.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<class name="ClEditOrStayConstraint" abstract="true">
+<superclass class="ClConstraint"/>
+<constructor name="ClEditOrStayConstraint" visibility="public" id="ctr-8809">
+<formal-arguments>
+<formal-argument name="var" id="frmarg-8797"><type name="ClVariable"/></formal-argument>
+<formal-argument name="strength" id="frmarg-8801"><type name="ClStrength"/></formal-argument>
+<formal-argument name="weight" id="frmarg-8805"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<super-call><arguments><var-ref name="strength"/><var-ref name="weight"/></arguments></super-call>
+<assignment-expr><lvalue><var-set name="_variable"/></lvalue><var-ref name="var"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="_expression"/></lvalue><new><type name="ClLinearExpression"/><arguments><var-ref name="_variable"/><unary-expr op="-"><literal-number kind="double" value="1.0"/></unary-expr><send message="value">
+<target><var-ref name="_variable"/></target>
+<arguments/>
+</send>
+</arguments></new>
+</assignment-expr>
+</constructor>
+<constructor name="ClEditOrStayConstraint" visibility="public" id="ctr-8822">
+<formal-arguments>
+<formal-argument name="var" id="frmarg-8814"><type name="ClVariable"/></formal-argument>
+<formal-argument name="strength" id="frmarg-8818"><type name="ClStrength"/></formal-argument>
+</formal-arguments>
+<this-call><arguments><var-ref name="var"/><var-ref name="strength"/><literal-number kind="double" value="1.0"/></arguments></this-call></constructor>
+<constructor name="ClEditOrStayConstraint" visibility="public" id="ctr-8831">
+<formal-arguments>
+<formal-argument name="var" id="frmarg-8827"><type name="ClVariable"/></formal-argument>
+</formal-arguments>
+<this-call><arguments><var-ref name="var"/><field-access field="required"><var-ref name="ClStrength"/></field-access><literal-number kind="double" value="1.0"/></arguments></this-call><assignment-expr><lvalue><var-set name="_variable"/></lvalue><var-ref name="var"/></assignment-expr>
+</constructor>
+<method name="variable" visibility="public" id="meth-8835">
+<type name="ClVariable"/>
+<formal-arguments/>
+<statements>
+<return><var-ref name="_variable"/></return>
+</statements>
+</method>
+<method name="expression" visibility="public" id="meth-8840">
+<type name="ClLinearExpression"/>
+<formal-arguments/>
+<statements>
+<return><var-ref name="_expression"/></return>
+</statements>
+</method>
+<method name="setVariable" visibility="private" id="meth-8848">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="v" id="frmarg-8846"><type name="ClVariable"/></formal-argument>
+</formal-arguments>
+<statements>
+<assignment-expr><lvalue><var-set name="_variable"/></lvalue><var-ref name="v" idref="frmarg-8846"/></assignment-expr>
+</statements>
+</method>
+<field name="_variable" visibility="protected"><type name="ClVariable"/></field>
+<field name="_expression" visibility="private"><type name="ClLinearExpression"/></field>
+</class>
+</java-source-program>

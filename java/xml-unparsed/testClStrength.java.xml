@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="testClStrength.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<class name="testClStrength">
+<superclass class="Object"/>
+<method name="main" visibility="public" static="true" id="meth-21825">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="args" id="frmarg-21823"><type name="String" dimensions="1"/></formal-argument>
+</formal-arguments>
+<statements>
+<local-variable name="clsw" id="locvar-21845"><type name="ClSymbolicWeight"/><new><type name="ClSymbolicWeight"/><arguments><literal-number kind="double" value="0.0"/><literal-number kind="double" value="1.0"/><literal-number kind="double" value="0.0"/></arguments></new>
+</local-variable>
+<local-variable name="clsw2" id="locvar-21855"><type name="ClSymbolicWeight"/><new><type name="ClSymbolicWeight"/><arguments><literal-number kind="double" value="2.0"/><literal-number kind="double" value="0.5"/><literal-number kind="double" value="0.5"/></arguments></new>
+</local-variable>
+<local-variable name="clsw3" id="locvar-21865"><type name="ClSymbolicWeight"/><new><type name="ClSymbolicWeight"/><arguments><literal-number kind="double" value="2.0"/><literal-number kind="double" value="0.5"/><literal-number kind="double" value="0.5"/></arguments></new>
+</local-variable>
+<local-variable name="clsw4" id="locvar-21875"><type name="ClSymbolicWeight"/><new><type name="ClSymbolicWeight"/><arguments><literal-number kind="double" value="2.0"/><literal-number kind="double" value="0.4"/><literal-number kind="double" value="0.5"/></arguments></new>
+</local-variable>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><field-access field="required"><var-ref name="ClStrength"/></field-access></arguments>
+</send>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><send message="asDouble">
+<target><var-ref name="clsw2" idref="locvar-21855"/></target>
+<arguments/>
+</send>
+</arguments>
+</send>
+<local-variable name="cls" id="locvar-21899"><type name="ClStrength"/><new><type name="ClStrength"/><arguments><literal-string length="3">cls</literal-string><var-ref name="clsw" idref="locvar-21845"/></arguments></new>
+</local-variable>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><var-ref name="cls" idref="locvar-21899"/></arguments>
+</send>
+<local-variable name="cls2" id="locvar-21917"><type name="ClStrength"/><new><type name="ClStrength"/><arguments><literal-string length="4">cls2</literal-string><send message="times">
+<target><var-ref name="clsw" idref="locvar-21845"/></target>
+<arguments><literal-number kind="integer" value="2"/></arguments>
+</send>
+</arguments></new>
+</local-variable>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><var-ref name="cls2" idref="locvar-21917"/></arguments>
+</send>
+</statements>
+</method>
+</class>
+</java-source-program>

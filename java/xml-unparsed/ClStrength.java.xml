@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="ClStrength.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<class name="ClStrength" visibility="public">
+<superclass class="Object"/>
+<constructor name="ClStrength" visibility="public" id="ctr-622">
+<formal-arguments>
+<formal-argument name="name" id="frmarg-614"><type name="String"/></formal-argument>
+<formal-argument name="symbolicWeight" id="frmarg-618"><type name="ClSymbolicWeight"/></formal-argument>
+</formal-arguments>
+<assignment-expr><lvalue><var-set name="_name"/></lvalue><var-ref name="name"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="_symbolicWeight"/></lvalue><var-ref name="symbolicWeight"/></assignment-expr>
+</constructor>
+<constructor name="ClStrength" visibility="public" id="ctr-643">
+<formal-arguments>
+<formal-argument name="name" id="frmarg-627"><type name="String"/></formal-argument>
+<formal-argument name="w1" id="frmarg-631"><type name="double" primitive="true"/></formal-argument>
+<formal-argument name="w2" id="frmarg-635"><type name="double" primitive="true"/></formal-argument>
+<formal-argument name="w3" id="frmarg-639"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<assignment-expr><lvalue><var-set name="_name"/></lvalue><var-ref name="name"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="_symbolicWeight"/></lvalue><new><type name="ClSymbolicWeight"/><arguments><var-ref name="w1"/><var-ref name="w2"/><var-ref name="w3"/></arguments></new>
+</assignment-expr>
+</constructor>
+<method name="isRequired" visibility="public" id="meth-647">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><paren><binary-expr op="=="><this/><var-ref name="required"/></binary-expr></paren></return>
+</statements>
+</method>
+<method name="toString" visibility="public" id="meth-652">
+<type name="String"/>
+<formal-arguments/>
+<statements>
+<return><binary-expr op="+"><send message="name">
+<arguments/>
+</send>
+<paren><conditional-expr><unary-expr op="!"><send message="isRequired">
+<arguments/>
+</send>
+</unary-expr><paren><binary-expr op="+"><literal-string length="1">:</literal-string><send message="symbolicWeight">
+<arguments/>
+</send>
+</binary-expr></paren><literal-string length="0"></literal-string></conditional-expr></paren></binary-expr></return>
+</statements>
+</method>
+<method name="symbolicWeight" visibility="public" id="meth-657">
+<type name="ClSymbolicWeight"/>
+<formal-arguments/>
+<statements>
+<return><var-ref name="_symbolicWeight"/></return>
+</statements>
+</method>
+<method name="name" visibility="public" id="meth-662">
+<type name="String"/>
+<formal-arguments/>
+<statements>
+<return><var-ref name="_name"/></return>
+</statements>
+</method>
+<method name="set_name" visibility="public" id="meth-670">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="name" id="frmarg-668"><type name="String"/></formal-argument>
+</formal-arguments>
+<statements>
+<assignment-expr><lvalue><var-set name="_name"/></lvalue><var-ref name="name" idref="frmarg-668"/></assignment-expr>
+</statements>
+</method>
+<method name="set_symbolicWeight" visibility="public" id="meth-679">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="symbolicWeight" id="frmarg-677"><type name="ClSymbolicWeight"/></formal-argument>
+</formal-arguments>
+<statements>
+<assignment-expr><lvalue><var-set name="_symbolicWeight"/></lvalue><var-ref name="symbolicWeight" idref="frmarg-677"/></assignment-expr>
+</statements>
+</method>
+<field name="required" visibility="public" final="true" static="true"><type name="ClStrength"/><new><type name="ClStrength"/><arguments><literal-string length="10">&lt;Required&gt;</literal-string><literal-number kind="integer" value="1000"/><literal-number kind="integer" value="1000"/><literal-number kind="integer" value="1000"/></arguments></new>
+</field>
+<field name="strong" visibility="public" final="true" static="true"><type name="ClStrength"/><new><type name="ClStrength"/><arguments><literal-string length="6">strong</literal-string><literal-number kind="double" value="1.0"/><literal-number kind="double" value="0.0"/><literal-number kind="double" value="0.0"/></arguments></new>
+</field>
+<field name="medium" visibility="public" final="true" static="true"><type name="ClStrength"/><new><type name="ClStrength"/><arguments><literal-string length="6">medium</literal-string><literal-number kind="double" value="0.0"/><literal-number kind="double" value="1.0"/><literal-number kind="double" value="0.0"/></arguments></new>
+</field>
+<field name="weak" visibility="public" final="true" static="true"><type name="ClStrength"/><new><type name="ClStrength"/><arguments><literal-string length="4">weak</literal-string><literal-number kind="double" value="0.0"/><literal-number kind="double" value="0.0"/><literal-number kind="double" value="1.0"/></arguments></new>
+</field>
+<field name="_name" visibility="private"><type name="String"/></field>
+<field name="_symbolicWeight" visibility="private"><type name="ClSymbolicWeight"/></field>
+</class>
+</java-source-program>

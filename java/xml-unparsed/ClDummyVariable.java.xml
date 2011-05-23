@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="ClDummyVariable.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<class name="ClDummyVariable">
+<superclass class="ClAbstractVariable"/>
+<constructor name="ClDummyVariable" visibility="public" id="ctr-9222">
+<formal-arguments>
+<formal-argument name="name" id="frmarg-9218"><type name="String"/></formal-argument>
+</formal-arguments>
+<super-call><arguments><var-ref name="name"/></arguments></super-call>
+</constructor>
+<constructor name="ClDummyVariable" visibility="public" id="ctr-9227">
+<formal-arguments/>
+</constructor>
+<constructor name="ClDummyVariable" visibility="public" id="ctr-9240">
+<formal-arguments>
+<formal-argument name="number" id="frmarg-9232"><type name="long" primitive="true"/></formal-argument>
+<formal-argument name="prefix" id="frmarg-9236"><type name="String"/></formal-argument>
+</formal-arguments>
+<super-call><arguments><var-ref name="number"/><var-ref name="prefix"/></arguments></super-call>
+</constructor>
+<method name="toString" visibility="public" id="meth-9244">
+<type name="String"/>
+<formal-arguments/>
+<statements>
+<return><binary-expr op="+"><binary-expr op="+"><literal-string length="1">[</literal-string><send message="name">
+<arguments/>
+</send>
+</binary-expr><literal-string length="7">:dummy]</literal-string></binary-expr></return>
+</statements>
+</method>
+<method name="isDummy" visibility="public" id="meth-9249">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><literal-true/></return>
+</statements>
+</method>
+<method name="isExternal" visibility="public" id="meth-9254">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><literal-false/></return>
+</statements>
+</method>
+<method name="isPivotable" visibility="public" id="meth-9259">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><literal-false/></return>
+</statements>
+</method>
+<method name="isRestricted" visibility="public" id="meth-9264">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><literal-true/></return>
+</statements>
+</method>
+</class>
+</java-source-program>

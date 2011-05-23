@@ -1,0 +1,1205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="ClLinearExpression.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<import module="java.util.*"/>
+<class name="ClLinearExpression" visibility="public">
+<superclass class="CL"/>
+<constructor name="ClLinearExpression" visibility="public" id="ctr-778">
+<formal-arguments>
+<formal-argument name="clv" id="frmarg-766"><type name="ClAbstractVariable"/></formal-argument>
+<formal-argument name="value" id="frmarg-770"><type name="double" primitive="true"/></formal-argument>
+<formal-argument name="constant" id="frmarg-774"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<if><test><field-access field="fGC"><var-ref name="CL"/></field-access></test>
+<true-case><send message="println">
+<target><field-access field="err"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="22">new ClLinearExpression</literal-string></arguments>
+</send>
+</true-case>
+</if>
+<assignment-expr><lvalue><var-set name="_constant"/></lvalue><new><type name="ClDouble"/><arguments><var-ref name="constant"/></arguments></new>
+</assignment-expr>
+<assignment-expr><lvalue><var-set name="_terms"/></lvalue><new><type name="Hashtable"/><arguments><literal-number kind="integer" value="1"/></arguments></new>
+</assignment-expr>
+<if><test><binary-expr op="!="><var-ref name="clv"/><literal-null/></binary-expr></test>
+<true-case><send message="put">
+<target><var-ref name="_terms"/></target>
+<arguments><var-ref name="clv"/><new><type name="ClDouble"/><arguments><var-ref name="value"/></arguments></new>
+</arguments>
+</send>
+</true-case>
+</if>
+</constructor>
+<constructor name="ClLinearExpression" visibility="public" id="ctr-787">
+<formal-arguments>
+<formal-argument name="num" id="frmarg-783"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<this-call><arguments><literal-null/><literal-number kind="integer" value="0"/><var-ref name="num"/></arguments></this-call></constructor>
+<constructor name="ClLinearExpression" visibility="public" id="ctr-792">
+<formal-arguments/>
+<this-call><arguments><literal-number kind="integer" value="0"/></arguments></this-call></constructor>
+<constructor name="ClLinearExpression" visibility="public" id="ctr-805">
+<formal-arguments>
+<formal-argument name="clv" id="frmarg-797"><type name="ClAbstractVariable"/></formal-argument>
+<formal-argument name="value" id="frmarg-801"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<this-call><arguments><var-ref name="clv"/><var-ref name="value"/><literal-number kind="double" value="0.0"/></arguments></this-call></constructor>
+<constructor name="ClLinearExpression" visibility="public" id="ctr-814">
+<formal-arguments>
+<formal-argument name="clv" id="frmarg-810"><type name="ClAbstractVariable"/></formal-argument>
+</formal-arguments>
+<this-call><arguments><var-ref name="clv"/><literal-number kind="integer" value="1"/><literal-number kind="integer" value="0"/></arguments></this-call></constructor>
+<constructor name="ClLinearExpression" visibility="protected" id="ctr-827">
+<formal-arguments>
+<formal-argument name="constant" id="frmarg-819"><type name="ClDouble"/></formal-argument>
+<formal-argument name="terms" id="frmarg-823"><type name="Hashtable"/></formal-argument>
+</formal-arguments>
+<if><test><field-access field="fGC"><var-ref name="CL"/></field-access></test>
+<true-case><send message="println">
+<target><field-access field="err"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="24">clone ClLinearExpression</literal-string></arguments>
+</send>
+</true-case>
+</if>
+<assignment-expr><lvalue><var-set name="_constant"/></lvalue><cast-expr><type name="ClDouble"/><send message="clone">
+<target><var-ref name="constant"/></target>
+<arguments/>
+</send>
+</cast-expr></assignment-expr>
+<assignment-expr><lvalue><var-set name="_terms"/></lvalue><new><type name="Hashtable"/><arguments/></new>
+</assignment-expr>
+<loop kind="for"><init><local-variable name="e" id="locvar-9427"><type name="Enumeration"/><send message="keys">
+<target><var-ref name="terms"/></target>
+<arguments/>
+</send>
+</local-variable>
+</init>
+<test><send message="hasMoreElements">
+<target><var-ref name="e" idref="locvar-9427"/></target>
+<arguments/>
+</send>
+</test>
+<statements>
+<local-variable name="clv" id="locvar-9439"><type name="ClAbstractVariable"/><cast-expr><type name="ClAbstractVariable"/><send message="nextElement">
+<target><var-ref name="e"/></target>
+<arguments/>
+</send>
+</cast-expr></local-variable>
+<send message="put">
+<target><var-ref name="_terms"/></target>
+<arguments><var-ref name="clv" idref="locvar-9439"/><send message="clone">
+<target><paren><cast-expr><type name="ClDouble"/><send message="get">
+<target><var-ref name="terms"/></target>
+<arguments><var-ref name="clv" idref="locvar-9439"/></arguments>
+</send>
+</cast-expr></paren></target>
+<arguments/>
+</send>
+</arguments>
+</send>
+</statements>
+</loop>
+</constructor>
+<method name="multiplyMe" visibility="public" id="meth-835">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="x" id="frmarg-833"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<statements>
+<send message="setValue">
+<target><var-ref name="_constant"/></target>
+<arguments><binary-expr op="*"><send message="doubleValue">
+<target><var-ref name="_constant"/></target>
+<arguments/>
+</send>
+<var-ref name="x" idref="frmarg-833"/></binary-expr></arguments>
+</send>
+<loop kind="for"><init><local-variable name="e" id="locvar-9474"><type name="Enumeration"/><send message="keys">
+<target><var-ref name="_terms"/></target>
+<arguments/>
+</send>
+</local-variable>
+</init>
+<test><send message="hasMoreElements">
+<target><var-ref name="e" idref="locvar-9474"/></target>
+<arguments/>
+</send>
+</test>
+<statements>
+<local-variable name="clv" id="locvar-9486"><type name="ClAbstractVariable"/><cast-expr><type name="ClAbstractVariable"/><send message="nextElement">
+<target><var-ref name="e"/></target>
+<arguments/>
+</send>
+</cast-expr></local-variable>
+<local-variable name="cld" id="locvar-9496"><type name="ClDouble"/><cast-expr><type name="ClDouble"/><send message="get">
+<target><var-ref name="_terms"/></target>
+<arguments><var-ref name="clv" idref="locvar-9486"/></arguments>
+</send>
+</cast-expr></local-variable>
+<send message="setValue">
+<target><var-ref name="cld" idref="locvar-9496"/></target>
+<arguments><binary-expr op="*"><send message="doubleValue">
+<target><var-ref name="cld" idref="locvar-9496"/></target>
+<arguments/>
+</send>
+<var-ref name="x" idref="frmarg-833"/></binary-expr></arguments>
+</send>
+</statements>
+</loop>
+<return><this/></return>
+</statements>
+</method>
+<method name="clone" visibility="public" final="true" id="meth-841">
+<type name="Object"/>
+<formal-arguments/>
+<statements>
+<return><new><type name="ClLinearExpression"/><arguments><var-ref name="_constant"/><var-ref name="_terms"/></arguments></new>
+</return>
+</statements>
+</method>
+<method name="times" visibility="public" final="true" id="meth-851">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="x" id="frmarg-849"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<statements>
+<return><send message="multiplyMe">
+<target><paren><cast-expr><type name="ClLinearExpression"/><send message="clone">
+<arguments/>
+</send>
+</cast-expr></paren></target>
+<arguments><var-ref name="x" idref="frmarg-849"/></arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="times" visibility="public" final="true" id="meth-862">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="expr" id="frmarg-859"><type name="ClLinearExpression"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLNonlinearExpression"/>
+<statements>
+<if><test><send message="isConstant">
+<arguments/>
+</send>
+</test>
+<true-case><statements>
+<return><send message="times">
+<target><var-ref name="expr" idref="frmarg-859"/></target>
+<arguments><send message="doubleValue">
+<target><var-ref name="_constant"/></target>
+<arguments/>
+</send>
+</arguments>
+</send>
+</return>
+</statements>
+</true-case>
+<false-case><if><test><unary-expr op="!"><send message="isConstant">
+<target><var-ref name="expr" idref="frmarg-859"/></target>
+<arguments/>
+</send>
+</unary-expr></test>
+<true-case><statements>
+<throw><new><type name="ExCLNonlinearExpression"/><arguments/></new>
+</throw>
+</statements>
+</true-case>
+</if>
+</false-case>
+</if>
+<return><send message="times">
+<arguments><send message="doubleValue">
+<target><field-access field="_constant"><var-ref name="expr" idref="frmarg-859"/></field-access></target>
+<arguments/>
+</send>
+</arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="plus" visibility="public" final="true" id="meth-872">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="expr" id="frmarg-870"><type name="ClLinearExpression"/></formal-argument>
+</formal-arguments>
+<statements>
+<return><send message="addExpression">
+<target><paren><cast-expr><type name="ClLinearExpression"/><send message="clone">
+<arguments/>
+</send>
+</cast-expr></paren></target>
+<arguments><var-ref name="expr" idref="frmarg-870"/><literal-number kind="double" value="1.0"/></arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="plus" visibility="public" final="true" id="meth-883">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="var" id="frmarg-880"><type name="ClVariable"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLNonlinearExpression"/>
+<statements>
+<return><send message="addVariable">
+<target><paren><cast-expr><type name="ClLinearExpression"/><send message="clone">
+<arguments/>
+</send>
+</cast-expr></paren></target>
+<arguments><var-ref name="var" idref="frmarg-880"/><literal-number kind="double" value="1.0"/></arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="minus" visibility="public" final="true" id="meth-893">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="expr" id="frmarg-891"><type name="ClLinearExpression"/></formal-argument>
+</formal-arguments>
+<statements>
+<return><send message="addExpression">
+<target><paren><cast-expr><type name="ClLinearExpression"/><send message="clone">
+<arguments/>
+</send>
+</cast-expr></paren></target>
+<arguments><var-ref name="expr" idref="frmarg-891"/><unary-expr op="-"><literal-number kind="double" value="1.0"/></unary-expr></arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="minus" visibility="public" final="true" id="meth-904">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="var" id="frmarg-901"><type name="ClVariable"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLNonlinearExpression"/>
+<statements>
+<return><send message="addVariable">
+<target><paren><cast-expr><type name="ClLinearExpression"/><send message="clone">
+<arguments/>
+</send>
+</cast-expr></paren></target>
+<arguments><var-ref name="var" idref="frmarg-901"/><unary-expr op="-"><literal-number kind="double" value="1.0"/></unary-expr></arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="divide" visibility="public" final="true" id="meth-915">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="x" id="frmarg-912"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLNonlinearExpression"/>
+<statements>
+<if><test><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="x" idref="frmarg-912"/><literal-number kind="double" value="0.0"/></arguments>
+</send>
+</test>
+<true-case><statements>
+<throw><new><type name="ExCLNonlinearExpression"/><arguments/></new>
+</throw>
+</statements>
+</true-case>
+</if>
+<return><send message="times">
+<arguments><binary-expr op="/"><literal-number kind="double" value="1.0"/><var-ref name="x" idref="frmarg-912"/></binary-expr></arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="divide" visibility="public" final="true" id="meth-926">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="expr" id="frmarg-923"><type name="ClLinearExpression"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLNonlinearExpression"/>
+<statements>
+<if><test><unary-expr op="!"><send message="isConstant">
+<target><var-ref name="expr" idref="frmarg-923"/></target>
+<arguments/>
+</send>
+</unary-expr></test>
+<true-case><statements>
+<throw><new><type name="ExCLNonlinearExpression"/><arguments/></new>
+</throw>
+</statements>
+</true-case>
+</if>
+<return><send message="divide">
+<arguments><send message="doubleValue">
+<target><field-access field="_constant"><var-ref name="expr" idref="frmarg-923"/></field-access></target>
+<arguments/>
+</send>
+</arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="divFrom" visibility="public" final="true" id="meth-937">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="expr" id="frmarg-934"><type name="ClLinearExpression"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLNonlinearExpression"/>
+<statements>
+<if><test><binary-expr op="||"><unary-expr op="!"><send message="isConstant">
+<arguments/>
+</send>
+</unary-expr><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><send message="doubleValue">
+<target><var-ref name="_constant"/></target>
+<arguments/>
+</send>
+<literal-number kind="double" value="0.0"/></arguments>
+</send>
+</binary-expr></test>
+<true-case><statements>
+<throw><new><type name="ExCLNonlinearExpression"/><arguments/></new>
+</throw>
+</statements>
+</true-case>
+</if>
+<return><send message="divide">
+<target><var-ref name="expr" idref="frmarg-934"/></target>
+<arguments><send message="doubleValue">
+<target><var-ref name="_constant"/></target>
+<arguments/>
+</send>
+</arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="subtractFrom" visibility="public" final="true" id="meth-947">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="expr" id="frmarg-945"><type name="ClLinearExpression"/></formal-argument>
+</formal-arguments>
+<statements>
+<return><send message="minus">
+<target><var-ref name="expr" idref="frmarg-945"/></target>
+<arguments><this/></arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="addExpression" visibility="public" final="true" id="meth-969">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="expr" id="frmarg-955"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="n" id="frmarg-959"><type name="double" primitive="true"/></formal-argument>
+<formal-argument name="subject" id="frmarg-963"><type name="ClAbstractVariable"/></formal-argument>
+<formal-argument name="solver" id="frmarg-967"><type name="ClTableau"/></formal-argument>
+</formal-arguments>
+<statements>
+<send message="incrementConstant">
+<arguments><binary-expr op="*"><var-ref name="n" idref="frmarg-959"/><send message="constant">
+<target><var-ref name="expr" idref="frmarg-955"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<loop kind="for"><init><local-variable name="e" id="locvar-9688"><type name="Enumeration"/><send message="keys">
+<target><send message="terms">
+<target><var-ref name="expr" idref="frmarg-955"/></target>
+<arguments/>
+</send>
+</target>
+<arguments/>
+</send>
+</local-variable>
+</init>
+<test><send message="hasMoreElements">
+<target><var-ref name="e" idref="locvar-9688"/></target>
+<arguments/>
+</send>
+</test>
+<statements>
+<local-variable name="clv" id="locvar-9700"><type name="ClAbstractVariable"/><cast-expr><type name="ClAbstractVariable"/><send message="nextElement">
+<target><var-ref name="e"/></target>
+<arguments/>
+</send>
+</cast-expr></local-variable>
+<local-variable name="coeff" id="locvar-9715"><type name="double" primitive="true"/><send message="doubleValue">
+<target><paren><cast-expr><type name="ClDouble"/><send message="get">
+<target><send message="terms">
+<target><var-ref name="expr" idref="frmarg-955"/></target>
+<arguments/>
+</send>
+</target>
+<arguments><var-ref name="clv" idref="locvar-9700"/></arguments>
+</send>
+</cast-expr></paren></target>
+<arguments/>
+</send>
+</local-variable>
+<send message="addVariable">
+<arguments><var-ref name="clv" idref="locvar-9700"/><binary-expr op="*"><var-ref name="coeff" idref="locvar-9715"/><var-ref name="n" idref="frmarg-959"/></binary-expr><var-ref name="subject" idref="frmarg-963"/><var-ref name="solver" idref="frmarg-967"/></arguments>
+</send>
+</statements>
+</loop>
+<return><this/></return>
+</statements>
+</method>
+<method name="addExpression" visibility="public" final="true" id="meth-983">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="expr" id="frmarg-977"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="n" id="frmarg-981"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<statements>
+<send message="incrementConstant">
+<arguments><binary-expr op="*"><var-ref name="n" idref="frmarg-981"/><send message="constant">
+<target><var-ref name="expr" idref="frmarg-977"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<loop kind="for"><init><local-variable name="e" id="locvar-9747"><type name="Enumeration"/><send message="keys">
+<target><send message="terms">
+<target><var-ref name="expr" idref="frmarg-977"/></target>
+<arguments/>
+</send>
+</target>
+<arguments/>
+</send>
+</local-variable>
+</init>
+<test><send message="hasMoreElements">
+<target><var-ref name="e" idref="locvar-9747"/></target>
+<arguments/>
+</send>
+</test>
+<statements>
+<local-variable name="clv" id="locvar-9759"><type name="ClAbstractVariable"/><cast-expr><type name="ClAbstractVariable"/><send message="nextElement">
+<target><var-ref name="e"/></target>
+<arguments/>
+</send>
+</cast-expr></local-variable>
+<local-variable name="coeff" id="locvar-9774"><type name="double" primitive="true"/><send message="doubleValue">
+<target><paren><cast-expr><type name="ClDouble"/><send message="get">
+<target><send message="terms">
+<target><var-ref name="expr" idref="frmarg-977"/></target>
+<arguments/>
+</send>
+</target>
+<arguments><var-ref name="clv" idref="locvar-9759"/></arguments>
+</send>
+</cast-expr></paren></target>
+<arguments/>
+</send>
+</local-variable>
+<send message="addVariable">
+<arguments><var-ref name="clv" idref="locvar-9759"/><binary-expr op="*"><var-ref name="coeff" idref="locvar-9774"/><var-ref name="n" idref="frmarg-981"/></binary-expr></arguments>
+</send>
+</statements>
+</loop>
+<return><this/></return>
+</statements>
+</method>
+<method name="addExpression" visibility="public" final="true" id="meth-993">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="expr" id="frmarg-991"><type name="ClLinearExpression"/></formal-argument>
+</formal-arguments>
+<statements>
+<return><send message="addExpression">
+<arguments><var-ref name="expr" idref="frmarg-991"/><literal-number kind="double" value="1.0"/></arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="addVariable" visibility="public" final="true" id="meth-1007">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="v" id="frmarg-1001"><type name="ClAbstractVariable"/></formal-argument>
+<formal-argument name="c" id="frmarg-1005"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<statements>
+<if><test><var-ref name="fTraceOn"/></test>
+<true-case><send message="fnenterprint">
+<arguments><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="12">addVariable:</literal-string><var-ref name="v" idref="frmarg-1001"/></binary-expr><literal-string length="2">, </literal-string></binary-expr><var-ref name="c" idref="frmarg-1005"/></binary-expr></arguments>
+</send>
+</true-case>
+</if>
+<local-variable name="coeff" id="locvar-9816"><type name="ClDouble"/><cast-expr><type name="ClDouble"/><send message="get">
+<target><var-ref name="_terms"/></target>
+<arguments><var-ref name="v" idref="frmarg-1001"/></arguments>
+</send>
+</cast-expr></local-variable>
+<if><test><binary-expr op="!="><var-ref name="coeff" idref="locvar-9816"/><literal-null/></binary-expr></test>
+<true-case><statements>
+<local-variable name="new_coefficient" id="locvar-9828"><type name="double" primitive="true"/><binary-expr op="+"><send message="doubleValue">
+<target><var-ref name="coeff"/></target>
+<arguments/>
+</send>
+<var-ref name="c" idref="frmarg-1005"/></binary-expr></local-variable>
+<if><test><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="new_coefficient" idref="locvar-9828"/><literal-number kind="double" value="0.0"/></arguments>
+</send>
+</test>
+<true-case><statements>
+<send message="remove">
+<target><var-ref name="_terms"/></target>
+<arguments><var-ref name="v" idref="frmarg-1001"/></arguments>
+</send>
+</statements>
+</true-case>
+<false-case><statements>
+<send message="setValue">
+<target><var-ref name="coeff"/></target>
+<arguments><var-ref name="new_coefficient"/></arguments>
+</send>
+</statements>
+</false-case>
+</if>
+</statements>
+</true-case>
+<false-case><statements>
+<if><test><unary-expr op="!"><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="c" idref="frmarg-1005"/><literal-number kind="double" value="0.0"/></arguments>
+</send>
+</unary-expr></test>
+<true-case><statements>
+<send message="put">
+<target><var-ref name="_terms"/></target>
+<arguments><var-ref name="v" idref="frmarg-1001"/><new><type name="ClDouble"/><arguments><var-ref name="c" idref="frmarg-1005"/></arguments></new>
+</arguments>
+</send>
+</statements>
+</true-case>
+</if>
+</statements>
+</false-case>
+</if>
+<return><this/></return>
+</statements>
+</method>
+<method name="addVariable" visibility="public" final="true" id="meth-1017">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="v" id="frmarg-1015"><type name="ClAbstractVariable"/></formal-argument>
+</formal-arguments>
+<statements>
+<return><send message="addVariable">
+<arguments><var-ref name="v" idref="frmarg-1015"/><literal-number kind="double" value="1.0"/></arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="setVariable" visibility="public" final="true" id="meth-1031">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="v" id="frmarg-1025"><type name="ClAbstractVariable"/></formal-argument>
+<formal-argument name="c" id="frmarg-1029"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<statements>
+<local-variable name="coeff" id="locvar-9885"><type name="ClDouble"/><cast-expr><type name="ClDouble"/><send message="get">
+<target><var-ref name="_terms"/></target>
+<arguments><var-ref name="v" idref="frmarg-1025"/></arguments>
+</send>
+</cast-expr></local-variable>
+<if><test><binary-expr op="!="><var-ref name="coeff" idref="locvar-9885"/><literal-null/></binary-expr></test>
+<true-case><send message="setValue">
+<target><var-ref name="coeff"/></target>
+<arguments><var-ref name="c" idref="frmarg-1029"/></arguments>
+</send>
+</true-case>
+<false-case><send message="put">
+<target><var-ref name="_terms"/></target>
+<arguments><var-ref name="v" idref="frmarg-1025"/><new><type name="ClDouble"/><arguments><var-ref name="c" idref="frmarg-1029"/></arguments></new>
+</arguments>
+</send>
+</false-case>
+</if>
+<return><this/></return>
+</statements>
+</method>
+<method name="addVariable" visibility="public" final="true" id="meth-1053">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="v" id="frmarg-1039"><type name="ClAbstractVariable"/></formal-argument>
+<formal-argument name="c" id="frmarg-1043"><type name="double" primitive="true"/></formal-argument>
+<formal-argument name="subject" id="frmarg-1047"><type name="ClAbstractVariable"/></formal-argument>
+<formal-argument name="solver" id="frmarg-1051"><type name="ClTableau"/></formal-argument>
+</formal-arguments>
+<statements>
+<if><test><var-ref name="fTraceOn"/></test>
+<true-case><send message="fnenterprint">
+<arguments><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="12">addVariable:</literal-string><var-ref name="v" idref="frmarg-1039"/></binary-expr><literal-string length="2">, </literal-string></binary-expr><var-ref name="c" idref="frmarg-1043"/></binary-expr><literal-string length="2">, </literal-string></binary-expr><var-ref name="subject" idref="frmarg-1047"/></binary-expr><literal-string length="5">, ...</literal-string></binary-expr></arguments>
+</send>
+</true-case>
+</if>
+<local-variable name="coeff" id="locvar-9937"><type name="ClDouble"/><cast-expr><type name="ClDouble"/><send message="get">
+<target><var-ref name="_terms"/></target>
+<arguments><var-ref name="v" idref="frmarg-1039"/></arguments>
+</send>
+</cast-expr></local-variable>
+<if><test><binary-expr op="!="><var-ref name="coeff" idref="locvar-9937"/><literal-null/></binary-expr></test>
+<true-case><statements>
+<local-variable name="new_coefficient" id="locvar-9949"><type name="double" primitive="true"/><binary-expr op="+"><send message="doubleValue">
+<target><var-ref name="coeff"/></target>
+<arguments/>
+</send>
+<var-ref name="c" idref="frmarg-1043"/></binary-expr></local-variable>
+<if><test><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="new_coefficient" idref="locvar-9949"/><literal-number kind="double" value="0.0"/></arguments>
+</send>
+</test>
+<true-case><statements>
+<send message="noteRemovedVariable">
+<target><var-ref name="solver" idref="frmarg-1051"/></target>
+<arguments><var-ref name="v" idref="frmarg-1039"/><var-ref name="subject" idref="frmarg-1047"/></arguments>
+</send>
+<send message="remove">
+<target><var-ref name="_terms"/></target>
+<arguments><var-ref name="v" idref="frmarg-1039"/></arguments>
+</send>
+</statements>
+</true-case>
+<false-case><statements>
+<send message="setValue">
+<target><var-ref name="coeff"/></target>
+<arguments><var-ref name="new_coefficient"/></arguments>
+</send>
+</statements>
+</false-case>
+</if>
+</statements>
+</true-case>
+<false-case><statements>
+<if><test><unary-expr op="!"><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="c" idref="frmarg-1043"/><literal-number kind="double" value="0.0"/></arguments>
+</send>
+</unary-expr></test>
+<true-case><statements>
+<send message="put">
+<target><var-ref name="_terms"/></target>
+<arguments><var-ref name="v" idref="frmarg-1039"/><new><type name="ClDouble"/><arguments><var-ref name="c" idref="frmarg-1043"/></arguments></new>
+</arguments>
+</send>
+<send message="noteAddedVariable">
+<target><var-ref name="solver" idref="frmarg-1051"/></target>
+<arguments><var-ref name="v" idref="frmarg-1039"/><var-ref name="subject" idref="frmarg-1047"/></arguments>
+</send>
+</statements>
+</true-case>
+</if>
+</statements>
+</false-case>
+</if>
+<return><this/></return>
+</statements>
+</method>
+<method name="anyPivotableVariable" visibility="public" final="true" id="meth-1060">
+<type name="ClAbstractVariable"/>
+<formal-arguments/>
+<throws exception="ExCLInternalError"/>
+<statements>
+<if><test><send message="isConstant">
+<arguments/>
+</send>
+</test>
+<true-case><statements>
+<throw><new><type name="ExCLInternalError"/><arguments><literal-string length="41">anyPivotableVariable called on a constant</literal-string></arguments></new>
+</throw>
+</statements>
+</true-case>
+</if>
+<loop kind="for"><init><local-variable name="e" id="locvar-10018"><type name="Enumeration"/><send message="keys">
+<target><var-ref name="_terms"/></target>
+<arguments/>
+</send>
+</local-variable>
+</init>
+<test><send message="hasMoreElements">
+<target><var-ref name="e" idref="locvar-10018"/></target>
+<arguments/>
+</send>
+</test>
+<statements>
+<local-variable name="clv" id="locvar-10030"><type name="ClAbstractVariable"/><cast-expr><type name="ClAbstractVariable"/><send message="nextElement">
+<target><var-ref name="e"/></target>
+<arguments/>
+</send>
+</cast-expr></local-variable>
+<if><test><send message="isPivotable">
+<target><var-ref name="clv" idref="locvar-10030"/></target>
+<arguments/>
+</send>
+</test>
+<true-case><return><var-ref name="clv"/></return>
+</true-case>
+</if>
+</statements>
+</loop>
+<return><literal-null/></return>
+</statements>
+</method>
+<method name="substituteOut" visibility="public" final="true" id="meth-1081">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="var" id="frmarg-1067"><type name="ClAbstractVariable"/></formal-argument>
+<formal-argument name="expr" id="frmarg-1071"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="subject" id="frmarg-1075"><type name="ClAbstractVariable"/></formal-argument>
+<formal-argument name="solver" id="frmarg-1079"><type name="ClTableau"/></formal-argument>
+</formal-arguments>
+<statements>
+<if><test><var-ref name="fTraceOn"/></test>
+<true-case><send message="fnenterprint">
+<arguments><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="19">CLE:substituteOut: </literal-string><var-ref name="var" idref="frmarg-1067"/></binary-expr><literal-string length="2">, </literal-string></binary-expr><var-ref name="expr" idref="frmarg-1071"/></binary-expr><literal-string length="2">, </literal-string></binary-expr><var-ref name="subject" idref="frmarg-1075"/></binary-expr><literal-string length="5">, ...</literal-string></binary-expr></arguments>
+</send>
+</true-case>
+</if>
+<if><test><var-ref name="fTraceOn"/></test>
+<true-case><send message="traceprint">
+<arguments><binary-expr op="+"><literal-string length="7">this = </literal-string><this/></binary-expr></arguments>
+</send>
+</true-case>
+</if>
+<local-variable name="multiplier" id="locvar-10084"><type name="double" primitive="true"/><send message="doubleValue">
+<target><paren><cast-expr><type name="ClDouble"/><send message="remove">
+<target><var-ref name="_terms"/></target>
+<arguments><var-ref name="var" idref="frmarg-1067"/></arguments>
+</send>
+</cast-expr></paren></target>
+<arguments/>
+</send>
+</local-variable>
+<send message="incrementConstant">
+<arguments><binary-expr op="*"><var-ref name="multiplier" idref="locvar-10084"/><send message="constant">
+<target><var-ref name="expr" idref="frmarg-1071"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<loop kind="for"><init><local-variable name="e" id="locvar-10101"><type name="Enumeration"/><send message="keys">
+<target><send message="terms">
+<target><var-ref name="expr" idref="frmarg-1071"/></target>
+<arguments/>
+</send>
+</target>
+<arguments/>
+</send>
+</local-variable>
+</init>
+<test><send message="hasMoreElements">
+<target><var-ref name="e" idref="locvar-10101"/></target>
+<arguments/>
+</send>
+</test>
+<statements>
+<local-variable name="clv" id="locvar-10113"><type name="ClAbstractVariable"/><cast-expr><type name="ClAbstractVariable"/><send message="nextElement">
+<target><var-ref name="e"/></target>
+<arguments/>
+</send>
+</cast-expr></local-variable>
+<local-variable name="coeff" id="locvar-10128"><type name="double" primitive="true"/><send message="doubleValue">
+<target><paren><cast-expr><type name="ClDouble"/><send message="get">
+<target><send message="terms">
+<target><var-ref name="expr" idref="frmarg-1071"/></target>
+<arguments/>
+</send>
+</target>
+<arguments><var-ref name="clv" idref="locvar-10113"/></arguments>
+</send>
+</cast-expr></paren></target>
+<arguments/>
+</send>
+</local-variable>
+<local-variable name="d_old_coeff" id="locvar-10138"><type name="ClDouble"/><cast-expr><type name="ClDouble"/><send message="get">
+<target><var-ref name="_terms"/></target>
+<arguments><var-ref name="clv" idref="locvar-10113"/></arguments>
+</send>
+</cast-expr></local-variable>
+<if><test><binary-expr op="!="><var-ref name="d_old_coeff" idref="locvar-10138"/><literal-null/></binary-expr></test>
+<true-case><statements>
+<local-variable name="old_coeff" id="locvar-10148"><type name="double" primitive="true"/><send message="doubleValue">
+<target><var-ref name="d_old_coeff"/></target>
+<arguments/>
+</send>
+</local-variable>
+<local-variable name="newCoeff" id="locvar-10157"><type name="double" primitive="true"/><binary-expr op="+"><var-ref name="old_coeff" idref="locvar-10148"/><binary-expr op="*"><var-ref name="multiplier"/><var-ref name="coeff"/></binary-expr></binary-expr></local-variable>
+<if><test><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="newCoeff" idref="locvar-10157"/><literal-number kind="double" value="0.0"/></arguments>
+</send>
+</test>
+<true-case><statements>
+<send message="noteRemovedVariable">
+<target><var-ref name="solver" idref="frmarg-1079"/></target>
+<arguments><var-ref name="clv"/><var-ref name="subject" idref="frmarg-1075"/></arguments>
+</send>
+<send message="remove">
+<target><var-ref name="_terms"/></target>
+<arguments><var-ref name="clv"/></arguments>
+</send>
+</statements>
+</true-case>
+<false-case><statements>
+<send message="setValue">
+<target><var-ref name="d_old_coeff"/></target>
+<arguments><var-ref name="newCoeff"/></arguments>
+</send>
+</statements>
+</false-case>
+</if>
+</statements>
+</true-case>
+<false-case><statements>
+<send message="put">
+<target><var-ref name="_terms"/></target>
+<arguments><var-ref name="clv"/><new><type name="ClDouble"/><arguments><binary-expr op="*"><var-ref name="multiplier"/><var-ref name="coeff"/></binary-expr></arguments></new>
+</arguments>
+</send>
+<send message="noteAddedVariable">
+<target><var-ref name="solver" idref="frmarg-1079"/></target>
+<arguments><var-ref name="clv"/><var-ref name="subject" idref="frmarg-1075"/></arguments>
+</send>
+</statements>
+</false-case>
+</if>
+</statements>
+</loop>
+<if><test><var-ref name="fTraceOn"/></test>
+<true-case><send message="traceprint">
+<arguments><binary-expr op="+"><literal-string length="12">Now this is </literal-string><this/></binary-expr></arguments>
+</send>
+</true-case>
+</if>
+</statements>
+</method>
+<method name="changeSubject" visibility="public" final="true" id="meth-1095">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="old_subject" id="frmarg-1089"><type name="ClAbstractVariable"/></formal-argument>
+<formal-argument name="new_subject" id="frmarg-1093"><type name="ClAbstractVariable"/></formal-argument>
+</formal-arguments>
+<statements>
+<local-variable name="cld" id="locvar-10224"><type name="ClDouble"/><cast-expr><type name="ClDouble"/><send message="get">
+<target><var-ref name="_terms"/></target>
+<arguments><var-ref name="old_subject" idref="frmarg-1089"/></arguments>
+</send>
+</cast-expr></local-variable>
+<if><test><binary-expr op="!="><var-ref name="cld" idref="locvar-10224"/><literal-null/></binary-expr></test>
+<true-case><send message="setValue">
+<target><var-ref name="cld"/></target>
+<arguments><send message="newSubject">
+<arguments><var-ref name="new_subject" idref="frmarg-1093"/></arguments>
+</send>
+</arguments>
+</send>
+</true-case>
+<false-case><send message="put">
+<target><var-ref name="_terms"/></target>
+<arguments><var-ref name="old_subject" idref="frmarg-1089"/><new><type name="ClDouble"/><arguments><send message="newSubject">
+<arguments><var-ref name="new_subject" idref="frmarg-1093"/></arguments>
+</send>
+</arguments></new>
+</arguments>
+</send>
+</false-case>
+</if>
+</statements>
+</method>
+<method name="newSubject" visibility="public" final="true" id="meth-1106">
+<type name="double" primitive="true"/>
+<formal-arguments>
+<formal-argument name="subject" id="frmarg-1104"><type name="ClAbstractVariable"/></formal-argument>
+</formal-arguments>
+<statements>
+<if><test><var-ref name="fTraceOn"/></test>
+<true-case><send message="fnenterprint">
+<arguments><binary-expr op="+"><literal-string length="11">newSubject:</literal-string><var-ref name="subject" idref="frmarg-1104"/></binary-expr></arguments>
+</send>
+</true-case>
+</if>
+<local-variable name="coeff" id="locvar-10268"><type name="ClDouble"/><cast-expr><type name="ClDouble"/><send message="remove">
+<target><var-ref name="_terms"/></target>
+<arguments><var-ref name="subject" idref="frmarg-1104"/></arguments>
+</send>
+</cast-expr></local-variable>
+<local-variable name="reciprocal" id="locvar-10277"><type name="double" primitive="true"/><binary-expr op="/"><literal-number kind="double" value="1.0"/><send message="doubleValue">
+<target><var-ref name="coeff" idref="locvar-10268"/></target>
+<arguments/>
+</send>
+</binary-expr></local-variable>
+<send message="multiplyMe">
+<arguments><unary-expr op="-"><var-ref name="reciprocal" idref="locvar-10277"/></unary-expr></arguments>
+</send>
+<return><var-ref name="reciprocal" idref="locvar-10277"/></return>
+</statements>
+</method>
+<method name="coefficientFor" visibility="public" final="true" id="meth-1116">
+<type name="double" primitive="true"/>
+<formal-arguments>
+<formal-argument name="var" id="frmarg-1114"><type name="ClAbstractVariable"/></formal-argument>
+</formal-arguments>
+<statements>
+<local-variable name="coeff" id="locvar-10295"><type name="ClDouble"/><cast-expr><type name="ClDouble"/><send message="get">
+<target><var-ref name="_terms"/></target>
+<arguments><var-ref name="var" idref="frmarg-1114"/></arguments>
+</send>
+</cast-expr></local-variable>
+<if><test><binary-expr op="!="><var-ref name="coeff" idref="locvar-10295"/><literal-null/></binary-expr></test>
+<true-case><return><send message="doubleValue">
+<target><var-ref name="coeff"/></target>
+<arguments/>
+</send>
+</return>
+</true-case>
+<false-case><return><literal-number kind="double" value="0.0"/></return>
+</false-case>
+</if>
+</statements>
+</method>
+<method name="constant" visibility="public" final="true" id="meth-1122">
+<type name="double" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><send message="doubleValue">
+<target><var-ref name="_constant"/></target>
+<arguments/>
+</send>
+</return>
+</statements>
+</method>
+<method name="set_constant" visibility="public" final="true" id="meth-1131">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="c" id="frmarg-1129"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<statements>
+<send message="setValue">
+<target><var-ref name="_constant"/></target>
+<arguments><var-ref name="c" idref="frmarg-1129"/></arguments>
+</send>
+</statements>
+</method>
+<method name="terms" visibility="public" final="true" id="meth-1138">
+<type name="Hashtable"/>
+<formal-arguments/>
+<statements>
+<return><var-ref name="_terms"/></return>
+</statements>
+</method>
+<method name="incrementConstant" visibility="public" final="true" id="meth-1147">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="c" id="frmarg-1145"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<statements>
+<send message="setValue">
+<target><var-ref name="_constant"/></target>
+<arguments><binary-expr op="+"><send message="doubleValue">
+<target><var-ref name="_constant"/></target>
+<arguments/>
+</send>
+<var-ref name="c" idref="frmarg-1145"/></binary-expr></arguments>
+</send>
+</statements>
+</method>
+<method name="isConstant" visibility="public" final="true" id="meth-1154">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><binary-expr op="=="><send message="size">
+<target><var-ref name="_terms"/></target>
+<arguments/>
+</send>
+<literal-number kind="integer" value="0"/></binary-expr></return>
+</statements>
+</method>
+<method name="toString" visibility="public" final="true" id="meth-1160">
+<type name="String"/>
+<formal-arguments/>
+<statements>
+<local-variable name="bstr" id="locvar-10346"><type name="StringBuffer"/><new><type name="StringBuffer"/><arguments/></new>
+</local-variable>
+<local-variable name="e" id="locvar-10353"><type name="Enumeration"/><send message="keys">
+<target><var-ref name="_terms"/></target>
+<arguments/>
+</send>
+</local-variable>
+<if><test><binary-expr op="||"><unary-expr op="!"><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><send message="doubleValue">
+<target><var-ref name="_constant"/></target>
+<arguments/>
+</send>
+<literal-number kind="double" value="0.0"/></arguments>
+</send>
+</unary-expr><binary-expr op="=="><send message="size">
+<target><var-ref name="_terms"/></target>
+<arguments/>
+</send>
+<literal-number kind="integer" value="0"/></binary-expr></binary-expr></test>
+<true-case><statements>
+<send message="append">
+<target><var-ref name="bstr"/></target>
+<arguments><send message="toString">
+<target><var-ref name="_constant"/></target>
+<arguments/>
+</send>
+</arguments>
+</send>
+</statements>
+</true-case>
+<false-case><statements>
+<if><test><binary-expr op="=="><send message="size">
+<target><var-ref name="_terms"/></target>
+<arguments/>
+</send>
+<literal-number kind="integer" value="0"/></binary-expr></test>
+<true-case><statements>
+<return><send message="toString">
+<target><var-ref name="bstr"/></target>
+<arguments/>
+</send>
+</return>
+</statements>
+</true-case>
+</if>
+<local-variable name="clv" id="locvar-10395"><type name="ClAbstractVariable"/><cast-expr><type name="ClAbstractVariable"/><send message="nextElement">
+<target><var-ref name="e"/></target>
+<arguments/>
+</send>
+</cast-expr></local-variable>
+<local-variable name="coeff" id="locvar-10405"><type name="ClDouble"/><cast-expr><type name="ClDouble"/><send message="get">
+<target><var-ref name="_terms"/></target>
+<arguments><var-ref name="clv" idref="locvar-10395"/></arguments>
+</send>
+</cast-expr></local-variable>
+<send message="append">
+<target><var-ref name="bstr"/></target>
+<arguments><binary-expr op="+"><binary-expr op="+"><send message="toString">
+<target><var-ref name="coeff" idref="locvar-10405"/></target>
+<arguments/>
+</send>
+<literal-string length="1">*</literal-string></binary-expr><send message="toString">
+<target><var-ref name="clv" idref="locvar-10395"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+</statements>
+</false-case>
+</if>
+<loop kind="for"><test><send message="hasMoreElements">
+<target><var-ref name="e"/></target>
+<arguments/>
+</send>
+</test>
+<statements>
+<local-variable name="clv" id="locvar-10432"><type name="ClAbstractVariable"/><cast-expr><type name="ClAbstractVariable"/><send message="nextElement">
+<target><var-ref name="e"/></target>
+<arguments/>
+</send>
+</cast-expr></local-variable>
+<local-variable name="coeff" id="locvar-10442"><type name="ClDouble"/><cast-expr><type name="ClDouble"/><send message="get">
+<target><var-ref name="_terms"/></target>
+<arguments><var-ref name="clv" idref="locvar-10432"/></arguments>
+</send>
+</cast-expr></local-variable>
+<send message="append">
+<target><var-ref name="bstr"/></target>
+<arguments><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="3"> + </literal-string><send message="toString">
+<target><var-ref name="coeff" idref="locvar-10442"/></target>
+<arguments/>
+</send>
+</binary-expr><literal-string length="1">*</literal-string></binary-expr><send message="toString">
+<target><var-ref name="clv" idref="locvar-10432"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+</statements>
+</loop>
+<return><send message="toString">
+<target><var-ref name="bstr" idref="locvar-10346"/></target>
+<arguments/>
+</send>
+</return>
+</statements>
+</method>
+<method name="Plus" visibility="public" final="true" static="true" id="meth-1175">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="e1" id="frmarg-1169"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="e2" id="frmarg-1173"><type name="ClLinearExpression"/></formal-argument>
+</formal-arguments>
+<statements>
+<return><send message="plus">
+<target><var-ref name="e1" idref="frmarg-1169"/></target>
+<arguments><var-ref name="e2" idref="frmarg-1173"/></arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="Minus" visibility="public" final="true" static="true" id="meth-1190">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="e1" id="frmarg-1184"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="e2" id="frmarg-1188"><type name="ClLinearExpression"/></formal-argument>
+</formal-arguments>
+<statements>
+<return><send message="minus">
+<target><var-ref name="e1" idref="frmarg-1184"/></target>
+<arguments><var-ref name="e2" idref="frmarg-1188"/></arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="Times" visibility="public" final="true" static="true" id="meth-1206">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="e1" id="frmarg-1199"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="e2" id="frmarg-1203"><type name="ClLinearExpression"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLNonlinearExpression"/>
+<statements>
+<return><send message="times">
+<target><var-ref name="e1" idref="frmarg-1199"/></target>
+<arguments><var-ref name="e2" idref="frmarg-1203"/></arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="Divide" visibility="public" final="true" static="true" id="meth-1222">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="e1" id="frmarg-1215"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="e2" id="frmarg-1219"><type name="ClLinearExpression"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLNonlinearExpression"/>
+<statements>
+<return><send message="divide">
+<target><var-ref name="e1" idref="frmarg-1215"/></target>
+<arguments><var-ref name="e2" idref="frmarg-1219"/></arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="FEquals" visibility="public" final="true" static="true" id="meth-1237">
+<type name="boolean" primitive="true"/>
+<formal-arguments>
+<formal-argument name="e1" id="frmarg-1231"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="e2" id="frmarg-1235"><type name="ClLinearExpression"/></formal-argument>
+</formal-arguments>
+<statements>
+<return><binary-expr op="=="><var-ref name="e1" idref="frmarg-1231"/><var-ref name="e2" idref="frmarg-1235"/></binary-expr></return>
+</statements>
+</method>
+<field name="_constant" visibility="private"><type name="ClDouble"/></field>
+<field name="_terms" visibility="private"><type name="Hashtable"/></field>
+</class>
+</java-source-program>

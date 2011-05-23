@@ -1,0 +1,2052 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="ClTests.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<import module="java.lang.*"/>
+<import module="java.util.Random"/>
+<import module="java.util.Vector"/>
+<import module="java.io.FileReader"/>
+<import module="java.io.BufferedReader"/>
+<class name="ClTests" visibility="public">
+<superclass class="CL"/>
+<constructor name="ClTests" visibility="public" id="ctr-17444">
+<formal-arguments/>
+<assignment-expr><lvalue><var-set name="RND"/></lvalue><new><type name="Random"/><arguments/></new>
+</assignment-expr>
+</constructor>
+<method name="simple1" visibility="public" final="true" static="true" id="meth-17452">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<throws exception="ExCLInternalError"/>
+<throws exception="ExCLRequiredFailure"/>
+<statements>
+<local-variable name="fOkResult" id="locvar-17688"><type name="boolean" primitive="true"/><literal-true/></local-variable>
+<local-variable name="x" id="locvar-17696"><type name="ClVariable"/><new><type name="ClVariable"/><arguments><literal-number kind="integer" value="167"/></arguments></new>
+</local-variable>
+<local-variable name="y" id="locvar-17704"><type name="ClVariable"/><new><type name="ClVariable"/><arguments><literal-number kind="integer" value="2"/></arguments></new>
+</local-variable>
+<local-variable name="solver" id="locvar-17711"><type name="ClSimplexSolver"/><new><type name="ClSimplexSolver"/><arguments/></new>
+</local-variable>
+<local-variable name="eq" id="locvar-17723"><type name="ClLinearEquation"/><new><type name="ClLinearEquation"/><arguments><var-ref name="x" idref="locvar-17696"/><new><type name="ClLinearExpression"/><arguments><var-ref name="y" idref="locvar-17704"/></arguments></new>
+</arguments></new>
+</local-variable>
+<send message="addConstraint">
+<target><var-ref name="solver" idref="locvar-17711"/></target>
+<arguments><var-ref name="eq" idref="locvar-17723"/></arguments>
+</send>
+<assignment-expr><lvalue><var-set name="fOkResult"/></lvalue><paren><binary-expr op="=="><send message="value">
+<target><var-ref name="x" idref="locvar-17696"/></target>
+<arguments/>
+</send>
+<send message="value">
+<target><var-ref name="y" idref="locvar-17704"/></target>
+<arguments/>
+</send>
+</binary-expr></paren></assignment-expr>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="5">x == </literal-string><send message="value">
+<target><var-ref name="x" idref="locvar-17696"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="5">y == </literal-string><send message="value">
+<target><var-ref name="y" idref="locvar-17704"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<return><paren><var-ref name="fOkResult" idref="locvar-17688"/></paren></return>
+</statements>
+</method>
+<method name="justStay1" visibility="public" final="true" static="true" id="meth-17461">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<throws exception="ExCLInternalError"/>
+<throws exception="ExCLRequiredFailure"/>
+<statements>
+<local-variable name="fOkResult" id="locvar-17768"><type name="boolean" primitive="true"/><literal-true/></local-variable>
+<local-variable name="x" id="locvar-17776"><type name="ClVariable"/><new><type name="ClVariable"/><arguments><literal-number kind="integer" value="5"/></arguments></new>
+</local-variable>
+<local-variable name="y" id="locvar-17784"><type name="ClVariable"/><new><type name="ClVariable"/><arguments><literal-number kind="integer" value="10"/></arguments></new>
+</local-variable>
+<local-variable name="solver" id="locvar-17791"><type name="ClSimplexSolver"/><new><type name="ClSimplexSolver"/><arguments/></new>
+</local-variable>
+<send message="addStay">
+<target><var-ref name="solver" idref="locvar-17791"/></target>
+<arguments><var-ref name="x" idref="locvar-17776"/></arguments>
+</send>
+<send message="addStay">
+<target><var-ref name="solver" idref="locvar-17791"/></target>
+<arguments><var-ref name="y" idref="locvar-17784"/></arguments>
+</send>
+<assignment-expr><lvalue><var-set name="fOkResult"/></lvalue><binary-expr op="logand"><var-ref name="fOkResult" idref="locvar-17768"/><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="x" idref="locvar-17776"/><literal-number kind="integer" value="5"/></arguments>
+</send>
+</binary-expr></assignment-expr>
+<assignment-expr><lvalue><var-set name="fOkResult"/></lvalue><binary-expr op="logand"><var-ref name="fOkResult" idref="locvar-17768"/><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="y" idref="locvar-17784"/><literal-number kind="integer" value="10"/></arguments>
+</send>
+</binary-expr></assignment-expr>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="5">x == </literal-string><send message="value">
+<target><var-ref name="x" idref="locvar-17776"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="5">y == </literal-string><send message="value">
+<target><var-ref name="y" idref="locvar-17784"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<return><paren><var-ref name="fOkResult" idref="locvar-17768"/></paren></return>
+</statements>
+</method>
+<method name="addDelete1" visibility="public" final="true" static="true" id="meth-17471">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<throws exception="ExCLInternalError"/>
+<throws exception="ExCLRequiredFailure"/>
+<throws exception="ExCLConstraintNotFound"/>
+<statements>
+<local-variable name="fOkResult" id="locvar-17850"><type name="boolean" primitive="true"/><literal-true/></local-variable>
+<local-variable name="x" id="locvar-17858"><type name="ClVariable"/><new><type name="ClVariable"/><arguments><literal-string length="1">x</literal-string></arguments></new>
+</local-variable>
+<local-variable name="solver" id="locvar-17865"><type name="ClSimplexSolver"/><new><type name="ClSimplexSolver"/><arguments/></new>
+</local-variable>
+<send message="addConstraint">
+<target><var-ref name="solver" idref="locvar-17865"/></target>
+<arguments><new><type name="ClLinearEquation"/><arguments><var-ref name="x" idref="locvar-17858"/><literal-number kind="integer" value="100"/><field-access field="weak"><var-ref name="ClStrength"/></field-access></arguments></new>
+</arguments>
+</send>
+<local-variable name="c10" id="locvar-17887"><type name="ClLinearInequality"/><new><type name="ClLinearInequality"/><arguments><var-ref name="x" idref="locvar-17858"/><field-access field="LEQ"><var-ref name="CL"/></field-access><literal-number kind="double" value="10.0"/></arguments></new>
+</local-variable>
+<local-variable name="c20" id="locvar-17898"><type name="ClLinearInequality"/><new><type name="ClLinearInequality"/><arguments><var-ref name="x" idref="locvar-17858"/><field-access field="LEQ"><var-ref name="CL"/></field-access><literal-number kind="double" value="20.0"/></arguments></new>
+</local-variable>
+<send message="addConstraint">
+<target><send message="addConstraint">
+<target><var-ref name="solver" idref="locvar-17865"/></target>
+<arguments><var-ref name="c10" idref="locvar-17887"/></arguments>
+</send>
+</target>
+<arguments><var-ref name="c20" idref="locvar-17898"/></arguments>
+</send>
+<assignment-expr><lvalue><var-set name="fOkResult"/></lvalue><binary-expr op="logand"><var-ref name="fOkResult" idref="locvar-17850"/><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="x" idref="locvar-17858"/><literal-number kind="double" value="10.0"/></arguments>
+</send>
+</binary-expr></assignment-expr>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="5">x == </literal-string><send message="value">
+<target><var-ref name="x" idref="locvar-17858"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<send message="removeConstraint">
+<target><var-ref name="solver" idref="locvar-17865"/></target>
+<arguments><var-ref name="c10" idref="locvar-17887"/></arguments>
+</send>
+<assignment-expr><lvalue><var-set name="fOkResult"/></lvalue><binary-expr op="logand"><var-ref name="fOkResult" idref="locvar-17850"/><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="x" idref="locvar-17858"/><literal-number kind="double" value="20.0"/></arguments>
+</send>
+</binary-expr></assignment-expr>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="5">x == </literal-string><send message="value">
+<target><var-ref name="x" idref="locvar-17858"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<send message="removeConstraint">
+<target><var-ref name="solver" idref="locvar-17865"/></target>
+<arguments><var-ref name="c20" idref="locvar-17898"/></arguments>
+</send>
+<assignment-expr><lvalue><var-set name="fOkResult"/></lvalue><binary-expr op="logand"><var-ref name="fOkResult" idref="locvar-17850"/><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="x" idref="locvar-17858"/><literal-number kind="double" value="100.0"/></arguments>
+</send>
+</binary-expr></assignment-expr>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="5">x == </literal-string><send message="value">
+<target><var-ref name="x" idref="locvar-17858"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<local-variable name="c10again" id="locvar-17987"><type name="ClLinearInequality"/><new><type name="ClLinearInequality"/><arguments><var-ref name="x" idref="locvar-17858"/><field-access field="LEQ"><var-ref name="CL"/></field-access><literal-number kind="double" value="10.0"/></arguments></new>
+</local-variable>
+<send message="addConstraint">
+<target><send message="addConstraint">
+<target><var-ref name="solver" idref="locvar-17865"/></target>
+<arguments><var-ref name="c10" idref="locvar-17887"/></arguments>
+</send>
+</target>
+<arguments><var-ref name="c10again" idref="locvar-17987"/></arguments>
+</send>
+<assignment-expr><lvalue><var-set name="fOkResult"/></lvalue><binary-expr op="logand"><var-ref name="fOkResult" idref="locvar-17850"/><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="x" idref="locvar-17858"/><literal-number kind="double" value="10.0"/></arguments>
+</send>
+</binary-expr></assignment-expr>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="5">x == </literal-string><send message="value">
+<target><var-ref name="x" idref="locvar-17858"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<send message="removeConstraint">
+<target><var-ref name="solver" idref="locvar-17865"/></target>
+<arguments><var-ref name="c10" idref="locvar-17887"/></arguments>
+</send>
+<assignment-expr><lvalue><var-set name="fOkResult"/></lvalue><binary-expr op="logand"><var-ref name="fOkResult" idref="locvar-17850"/><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="x" idref="locvar-17858"/><literal-number kind="double" value="10.0"/></arguments>
+</send>
+</binary-expr></assignment-expr>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="5">x == </literal-string><send message="value">
+<target><var-ref name="x" idref="locvar-17858"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<send message="removeConstraint">
+<target><var-ref name="solver" idref="locvar-17865"/></target>
+<arguments><var-ref name="c10again" idref="locvar-17987"/></arguments>
+</send>
+<assignment-expr><lvalue><var-set name="fOkResult"/></lvalue><binary-expr op="logand"><var-ref name="fOkResult" idref="locvar-17850"/><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="x" idref="locvar-17858"/><literal-number kind="double" value="100.0"/></arguments>
+</send>
+</binary-expr></assignment-expr>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="5">x == </literal-string><send message="value">
+<target><var-ref name="x" idref="locvar-17858"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<return><paren><var-ref name="fOkResult" idref="locvar-17850"/></paren></return>
+</statements>
+</method>
+<method name="addDelete2" visibility="public" final="true" static="true" id="meth-17482">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<throws exception="ExCLInternalError"/>
+<throws exception="ExCLRequiredFailure"/>
+<throws exception="ExCLConstraintNotFound"/>
+<throws exception="ExCLNonlinearExpression"/>
+<statements>
+<local-variable name="fOkResult" id="locvar-18074"><type name="boolean" primitive="true"/><literal-true/></local-variable>
+<local-variable name="x" id="locvar-18082"><type name="ClVariable"/><new><type name="ClVariable"/><arguments><literal-string length="1">x</literal-string></arguments></new>
+</local-variable>
+<local-variable name="y" id="locvar-18090"><type name="ClVariable"/><new><type name="ClVariable"/><arguments><literal-string length="1">y</literal-string></arguments></new>
+</local-variable>
+<local-variable name="solver" id="locvar-18097"><type name="ClSimplexSolver"/><new><type name="ClSimplexSolver"/><arguments/></new>
+</local-variable>
+<send message="addConstraint">
+<target><send message="addConstraint">
+<target><var-ref name="solver" idref="locvar-18097"/></target>
+<arguments><new><type name="ClLinearEquation"/><arguments><var-ref name="x" idref="locvar-18082"/><literal-number kind="double" value="100.0"/><field-access field="weak"><var-ref name="ClStrength"/></field-access></arguments></new>
+</arguments>
+</send>
+</target>
+<arguments><new><type name="ClLinearEquation"/><arguments><var-ref name="y" idref="locvar-18090"/><literal-number kind="double" value="120.0"/><field-access field="strong"><var-ref name="ClStrength"/></field-access></arguments></new>
+</arguments>
+</send>
+<local-variable name="c10" id="locvar-18128"><type name="ClLinearInequality"/><new><type name="ClLinearInequality"/><arguments><var-ref name="x" idref="locvar-18082"/><field-access field="LEQ"><var-ref name="CL"/></field-access><literal-number kind="double" value="10.0"/></arguments></new>
+</local-variable>
+<local-variable name="c20" id="locvar-18139"><type name="ClLinearInequality"/><new><type name="ClLinearInequality"/><arguments><var-ref name="x" idref="locvar-18082"/><field-access field="LEQ"><var-ref name="CL"/></field-access><literal-number kind="double" value="20.0"/></arguments></new>
+</local-variable>
+<send message="addConstraint">
+<target><send message="addConstraint">
+<target><var-ref name="solver" idref="locvar-18097"/></target>
+<arguments><var-ref name="c10" idref="locvar-18128"/></arguments>
+</send>
+</target>
+<arguments><var-ref name="c20" idref="locvar-18139"/></arguments>
+</send>
+<assignment-expr><lvalue><var-set name="fOkResult"/></lvalue><binary-expr op="logand"><binary-expr op="logand"><var-ref name="fOkResult" idref="locvar-18074"/><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="x" idref="locvar-18082"/><literal-number kind="double" value="10.0"/></arguments>
+</send>
+</binary-expr><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="y" idref="locvar-18090"/><literal-number kind="double" value="120.0"/></arguments>
+</send>
+</binary-expr></assignment-expr>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="5">x == </literal-string><send message="value">
+<target><var-ref name="x" idref="locvar-18082"/></target>
+<arguments/>
+</send>
+</binary-expr><literal-string length="7">, y == </literal-string></binary-expr><send message="value">
+<target><var-ref name="y" idref="locvar-18090"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<send message="removeConstraint">
+<target><var-ref name="solver" idref="locvar-18097"/></target>
+<arguments><var-ref name="c10" idref="locvar-18128"/></arguments>
+</send>
+<assignment-expr><lvalue><var-set name="fOkResult"/></lvalue><binary-expr op="logand"><binary-expr op="logand"><var-ref name="fOkResult" idref="locvar-18074"/><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="x" idref="locvar-18082"/><literal-number kind="double" value="20.0"/></arguments>
+</send>
+</binary-expr><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="y" idref="locvar-18090"/><literal-number kind="double" value="120.0"/></arguments>
+</send>
+</binary-expr></assignment-expr>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="5">x == </literal-string><send message="value">
+<target><var-ref name="x" idref="locvar-18082"/></target>
+<arguments/>
+</send>
+</binary-expr><literal-string length="7">, y == </literal-string></binary-expr><send message="value">
+<target><var-ref name="y" idref="locvar-18090"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<local-variable name="cxy" id="locvar-18229"><type name="ClLinearEquation"/><new><type name="ClLinearEquation"/><arguments><send message="Times">
+<target><var-ref name="CL"/></target>
+<arguments><literal-number kind="double" value="2.0"/><var-ref name="x" idref="locvar-18082"/></arguments>
+</send>
+<var-ref name="y" idref="locvar-18090"/></arguments></new>
+</local-variable>
+<send message="addConstraint">
+<target><var-ref name="solver" idref="locvar-18097"/></target>
+<arguments><var-ref name="cxy" idref="locvar-18229"/></arguments>
+</send>
+<assignment-expr><lvalue><var-set name="fOkResult"/></lvalue><binary-expr op="logand"><binary-expr op="logand"><var-ref name="fOkResult" idref="locvar-18074"/><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="x" idref="locvar-18082"/><literal-number kind="double" value="20.0"/></arguments>
+</send>
+</binary-expr><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="y" idref="locvar-18090"/><literal-number kind="double" value="40.0"/></arguments>
+</send>
+</binary-expr></assignment-expr>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="5">x == </literal-string><send message="value">
+<target><var-ref name="x" idref="locvar-18082"/></target>
+<arguments/>
+</send>
+</binary-expr><literal-string length="7">, y == </literal-string></binary-expr><send message="value">
+<target><var-ref name="y" idref="locvar-18090"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<send message="removeConstraint">
+<target><var-ref name="solver" idref="locvar-18097"/></target>
+<arguments><var-ref name="c20" idref="locvar-18139"/></arguments>
+</send>
+<assignment-expr><lvalue><var-set name="fOkResult"/></lvalue><binary-expr op="logand"><binary-expr op="logand"><var-ref name="fOkResult" idref="locvar-18074"/><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="x" idref="locvar-18082"/><literal-number kind="double" value="60.0"/></arguments>
+</send>
+</binary-expr><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="y" idref="locvar-18090"/><literal-number kind="double" value="120.0"/></arguments>
+</send>
+</binary-expr></assignment-expr>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="5">x == </literal-string><send message="value">
+<target><var-ref name="x" idref="locvar-18082"/></target>
+<arguments/>
+</send>
+</binary-expr><literal-string length="7">, y == </literal-string></binary-expr><send message="value">
+<target><var-ref name="y" idref="locvar-18090"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<send message="removeConstraint">
+<target><var-ref name="solver" idref="locvar-18097"/></target>
+<arguments><var-ref name="cxy" idref="locvar-18229"/></arguments>
+</send>
+<assignment-expr><lvalue><var-set name="fOkResult"/></lvalue><binary-expr op="logand"><binary-expr op="logand"><var-ref name="fOkResult" idref="locvar-18074"/><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="x" idref="locvar-18082"/><literal-number kind="double" value="100.0"/></arguments>
+</send>
+</binary-expr><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="y" idref="locvar-18090"/><literal-number kind="double" value="120.0"/></arguments>
+</send>
+</binary-expr></assignment-expr>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="5">x == </literal-string><send message="value">
+<target><var-ref name="x" idref="locvar-18082"/></target>
+<arguments/>
+</send>
+</binary-expr><literal-string length="7">, y == </literal-string></binary-expr><send message="value">
+<target><var-ref name="y" idref="locvar-18090"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<return><paren><var-ref name="fOkResult" idref="locvar-18074"/></paren></return>
+</statements>
+</method>
+<method name="casso1" visibility="public" final="true" static="true" id="meth-17491">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<throws exception="ExCLInternalError"/>
+<throws exception="ExCLRequiredFailure"/>
+<statements>
+<local-variable name="fOkResult" id="locvar-18349"><type name="boolean" primitive="true"/><literal-true/></local-variable>
+<local-variable name="x" id="locvar-18357"><type name="ClVariable"/><new><type name="ClVariable"/><arguments><literal-string length="1">x</literal-string></arguments></new>
+</local-variable>
+<local-variable name="y" id="locvar-18365"><type name="ClVariable"/><new><type name="ClVariable"/><arguments><literal-string length="1">y</literal-string></arguments></new>
+</local-variable>
+<local-variable name="solver" id="locvar-18372"><type name="ClSimplexSolver"/><new><type name="ClSimplexSolver"/><arguments/></new>
+</local-variable>
+<send message="addConstraint">
+<target><send message="addConstraint">
+<target><send message="addConstraint">
+<target><send message="addConstraint">
+<target><var-ref name="solver" idref="locvar-18372"/></target>
+<arguments><new><type name="ClLinearInequality"/><arguments><var-ref name="x" idref="locvar-18357"/><field-access field="LEQ"><var-ref name="CL"/></field-access><var-ref name="y" idref="locvar-18365"/></arguments></new>
+</arguments>
+</send>
+</target>
+<arguments><new><type name="ClLinearEquation"/><arguments><var-ref name="y" idref="locvar-18365"/><send message="Plus">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="x" idref="locvar-18357"/><literal-number kind="double" value="3.0"/></arguments>
+</send>
+</arguments></new>
+</arguments>
+</send>
+</target>
+<arguments><new><type name="ClLinearEquation"/><arguments><var-ref name="x" idref="locvar-18357"/><literal-number kind="double" value="10.0"/><field-access field="weak"><var-ref name="ClStrength"/></field-access></arguments></new>
+</arguments>
+</send>
+</target>
+<arguments><new><type name="ClLinearEquation"/><arguments><var-ref name="y" idref="locvar-18365"/><literal-number kind="double" value="10.0"/><field-access field="weak"><var-ref name="ClStrength"/></field-access></arguments></new>
+</arguments>
+</send>
+<assignment-expr><lvalue><var-set name="fOkResult"/></lvalue><binary-expr op="logand"><var-ref name="fOkResult" idref="locvar-18349"/><paren><binary-expr op="||"><binary-expr op="logand"><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="x" idref="locvar-18357"/><literal-number kind="double" value="10.0"/></arguments>
+</send>
+<send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="y" idref="locvar-18365"/><literal-number kind="double" value="13.0"/></arguments>
+</send>
+</binary-expr><binary-expr op="logand"><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="x" idref="locvar-18357"/><literal-number kind="double" value="7.0"/></arguments>
+</send>
+<send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="y" idref="locvar-18365"/><literal-number kind="double" value="10.0"/></arguments>
+</send>
+</binary-expr></binary-expr></paren></binary-expr></assignment-expr>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="5">x == </literal-string><send message="value">
+<target><var-ref name="x" idref="locvar-18357"/></target>
+<arguments/>
+</send>
+</binary-expr><literal-string length="7">, y == </literal-string></binary-expr><send message="value">
+<target><var-ref name="y" idref="locvar-18365"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<return><paren><var-ref name="fOkResult" idref="locvar-18349"/></paren></return>
+</statements>
+</method>
+<method name="inconsistent1" visibility="public" final="true" static="true" id="meth-17500">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<throws exception="ExCLInternalError"/>
+<throws exception="ExCLRequiredFailure"/>
+<statements>
+<try><statements>
+<local-variable name="x" id="locvar-18469"><type name="ClVariable"/><new><type name="ClVariable"/><arguments><literal-string length="1">x</literal-string></arguments></new>
+</local-variable>
+<local-variable name="solver" id="locvar-18476"><type name="ClSimplexSolver"/><new><type name="ClSimplexSolver"/><arguments/></new>
+</local-variable>
+<send message="addConstraint">
+<target><send message="addConstraint">
+<target><var-ref name="solver" idref="locvar-18476"/></target>
+<arguments><new><type name="ClLinearEquation"/><arguments><var-ref name="x" idref="locvar-18469"/><literal-number kind="double" value="10.0"/></arguments></new>
+</arguments>
+</send>
+</target>
+<arguments><new><type name="ClLinearEquation"/><arguments><var-ref name="x" idref="locvar-18469"/><literal-number kind="double" value="5.0"/></arguments></new>
+</arguments>
+</send>
+<return><paren><literal-false/></paren></return>
+</statements>
+<catch><formal-argument name="err" id="locvar-18501"><type name="ExCLRequiredFailure"/></formal-argument>
+<statements>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="28">Success -- got the exception</literal-string></arguments>
+</send>
+<return><paren><literal-true/></paren></return>
+</statements>
+</catch></try></statements>
+</method>
+<method name="inconsistent2" visibility="public" final="true" static="true" id="meth-17509">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<throws exception="ExCLInternalError"/>
+<throws exception="ExCLRequiredFailure"/>
+<statements>
+<try><statements>
+<local-variable name="x" id="locvar-18521"><type name="ClVariable"/><new><type name="ClVariable"/><arguments><literal-string length="1">x</literal-string></arguments></new>
+</local-variable>
+<local-variable name="solver" id="locvar-18528"><type name="ClSimplexSolver"/><new><type name="ClSimplexSolver"/><arguments/></new>
+</local-variable>
+<send message="addConstraint">
+<target><send message="addConstraint">
+<target><var-ref name="solver" idref="locvar-18528"/></target>
+<arguments><new><type name="ClLinearInequality"/><arguments><var-ref name="x" idref="locvar-18521"/><field-access field="GEQ"><var-ref name="CL"/></field-access><literal-number kind="double" value="10.0"/></arguments></new>
+</arguments>
+</send>
+</target>
+<arguments><new><type name="ClLinearInequality"/><arguments><var-ref name="x" idref="locvar-18521"/><field-access field="LEQ"><var-ref name="CL"/></field-access><literal-number kind="double" value="5.0"/></arguments></new>
+</arguments>
+</send>
+<return><paren><literal-false/></paren></return>
+</statements>
+<catch><formal-argument name="err" id="locvar-18557"><type name="ExCLRequiredFailure"/></formal-argument>
+<statements>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="28">Success -- got the exception</literal-string></arguments>
+</send>
+<return><paren><literal-true/></paren></return>
+</statements>
+</catch></try></statements>
+</method>
+<method name="multiedit" visibility="public" final="true" static="true" id="meth-17519">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<throws exception="ExCLInternalError"/>
+<throws exception="ExCLRequiredFailure"/>
+<throws exception="ExCLError"/>
+<statements>
+<try><statements>
+<local-variable name="fOkResult" id="locvar-18574"><type name="boolean" primitive="true"/><literal-true/></local-variable>
+<local-variable name="x" id="locvar-18582"><type name="ClVariable"/><new><type name="ClVariable"/><arguments><literal-string length="1">x</literal-string></arguments></new>
+</local-variable>
+<local-variable name="y" id="locvar-18590"><type name="ClVariable"/><new><type name="ClVariable"/><arguments><literal-string length="1">y</literal-string></arguments></new>
+</local-variable>
+<local-variable name="w" id="locvar-18598"><type name="ClVariable"/><new><type name="ClVariable"/><arguments><literal-string length="1">w</literal-string></arguments></new>
+</local-variable>
+<local-variable name="h" id="locvar-18606"><type name="ClVariable"/><new><type name="ClVariable"/><arguments><literal-string length="1">h</literal-string></arguments></new>
+</local-variable>
+<local-variable name="solver" id="locvar-18613"><type name="ClSimplexSolver"/><new><type name="ClSimplexSolver"/><arguments/></new>
+</local-variable>
+<send message="addStay">
+<target><send message="addStay">
+<target><send message="addStay">
+<target><send message="addStay">
+<target><var-ref name="solver" idref="locvar-18613"/></target>
+<arguments><var-ref name="x" idref="locvar-18582"/></arguments>
+</send>
+</target>
+<arguments><var-ref name="y" idref="locvar-18590"/></arguments>
+</send>
+</target>
+<arguments><var-ref name="w" idref="locvar-18598"/></arguments>
+</send>
+</target>
+<arguments><var-ref name="h" idref="locvar-18606"/></arguments>
+</send>
+<send message="beginEdit">
+<target><send message="addEditVar">
+<target><send message="addEditVar">
+<target><var-ref name="solver" idref="locvar-18613"/></target>
+<arguments><var-ref name="x" idref="locvar-18582"/></arguments>
+</send>
+</target>
+<arguments><var-ref name="y" idref="locvar-18590"/></arguments>
+</send>
+</target>
+<arguments/>
+</send>
+<send message="resolve">
+<target><send message="suggestValue">
+<target><send message="suggestValue">
+<target><var-ref name="solver" idref="locvar-18613"/></target>
+<arguments><var-ref name="x" idref="locvar-18582"/><literal-number kind="integer" value="10"/></arguments>
+</send>
+</target>
+<arguments><var-ref name="y" idref="locvar-18590"/><literal-number kind="integer" value="20"/></arguments>
+</send>
+</target>
+<arguments/>
+</send>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="4">x = </literal-string><send message="value">
+<target><var-ref name="x" idref="locvar-18582"/></target>
+<arguments/>
+</send>
+</binary-expr><literal-string length="6">; y = </literal-string></binary-expr><send message="value">
+<target><var-ref name="y" idref="locvar-18590"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="4">w = </literal-string><send message="value">
+<target><var-ref name="w" idref="locvar-18598"/></target>
+<arguments/>
+</send>
+</binary-expr><literal-string length="6">; h = </literal-string></binary-expr><send message="value">
+<target><var-ref name="h" idref="locvar-18606"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<assignment-expr><lvalue><var-set name="fOkResult"/></lvalue><binary-expr op="logand"><binary-expr op="logand"><binary-expr op="logand"><binary-expr op="logand"><var-ref name="fOkResult" idref="locvar-18574"/><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="x" idref="locvar-18582"/><literal-number kind="integer" value="10"/></arguments>
+</send>
+</binary-expr><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="y" idref="locvar-18590"/><literal-number kind="integer" value="20"/></arguments>
+</send>
+</binary-expr><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="w" idref="locvar-18598"/><literal-number kind="integer" value="0"/></arguments>
+</send>
+</binary-expr><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="h" idref="locvar-18606"/><literal-number kind="integer" value="0"/></arguments>
+</send>
+</binary-expr></assignment-expr>
+<send message="beginEdit">
+<target><send message="addEditVar">
+<target><send message="addEditVar">
+<target><var-ref name="solver" idref="locvar-18613"/></target>
+<arguments><var-ref name="w" idref="locvar-18598"/></arguments>
+</send>
+</target>
+<arguments><var-ref name="h" idref="locvar-18606"/></arguments>
+</send>
+</target>
+<arguments/>
+</send>
+<send message="endEdit">
+<target><send message="suggestValue">
+<target><send message="suggestValue">
+<target><var-ref name="solver" idref="locvar-18613"/></target>
+<arguments><var-ref name="w" idref="locvar-18598"/><literal-number kind="integer" value="30"/></arguments>
+</send>
+</target>
+<arguments><var-ref name="h" idref="locvar-18606"/><literal-number kind="integer" value="40"/></arguments>
+</send>
+</target>
+<arguments/>
+</send>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="4">x = </literal-string><send message="value">
+<target><var-ref name="x" idref="locvar-18582"/></target>
+<arguments/>
+</send>
+</binary-expr><literal-string length="6">; y = </literal-string></binary-expr><send message="value">
+<target><var-ref name="y" idref="locvar-18590"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="4">w = </literal-string><send message="value">
+<target><var-ref name="w" idref="locvar-18598"/></target>
+<arguments/>
+</send>
+</binary-expr><literal-string length="6">; h = </literal-string></binary-expr><send message="value">
+<target><var-ref name="h" idref="locvar-18606"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<assignment-expr><lvalue><var-set name="fOkResult"/></lvalue><binary-expr op="logand"><binary-expr op="logand"><binary-expr op="logand"><binary-expr op="logand"><var-ref name="fOkResult" idref="locvar-18574"/><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="x" idref="locvar-18582"/><literal-number kind="integer" value="10"/></arguments>
+</send>
+</binary-expr><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="y" idref="locvar-18590"/><literal-number kind="integer" value="20"/></arguments>
+</send>
+</binary-expr><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="w" idref="locvar-18598"/><literal-number kind="integer" value="30"/></arguments>
+</send>
+</binary-expr><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="h" idref="locvar-18606"/><literal-number kind="integer" value="40"/></arguments>
+</send>
+</binary-expr></assignment-expr>
+<send message="endEdit">
+<target><send message="suggestValue">
+<target><send message="suggestValue">
+<target><var-ref name="solver" idref="locvar-18613"/></target>
+<arguments><var-ref name="x" idref="locvar-18582"/><literal-number kind="integer" value="50"/></arguments>
+</send>
+</target>
+<arguments><var-ref name="y" idref="locvar-18590"/><literal-number kind="integer" value="60"/></arguments>
+</send>
+</target>
+<arguments/>
+</send>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="4">x = </literal-string><send message="value">
+<target><var-ref name="x" idref="locvar-18582"/></target>
+<arguments/>
+</send>
+</binary-expr><literal-string length="6">; y = </literal-string></binary-expr><send message="value">
+<target><var-ref name="y" idref="locvar-18590"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="4">w = </literal-string><send message="value">
+<target><var-ref name="w" idref="locvar-18598"/></target>
+<arguments/>
+</send>
+</binary-expr><literal-string length="6">; h = </literal-string></binary-expr><send message="value">
+<target><var-ref name="h" idref="locvar-18606"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<assignment-expr><lvalue><var-set name="fOkResult"/></lvalue><binary-expr op="logand"><binary-expr op="logand"><binary-expr op="logand"><binary-expr op="logand"><var-ref name="fOkResult" idref="locvar-18574"/><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="x" idref="locvar-18582"/><literal-number kind="integer" value="50"/></arguments>
+</send>
+</binary-expr><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="y" idref="locvar-18590"/><literal-number kind="integer" value="60"/></arguments>
+</send>
+</binary-expr><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="w" idref="locvar-18598"/><literal-number kind="integer" value="30"/></arguments>
+</send>
+</binary-expr><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="h" idref="locvar-18606"/><literal-number kind="integer" value="40"/></arguments>
+</send>
+</binary-expr></assignment-expr>
+<return><paren><var-ref name="fOkResult" idref="locvar-18574"/></paren></return>
+</statements>
+<catch><formal-argument name="err" id="locvar-18872"><type name="ExCLRequiredFailure"/></formal-argument>
+<statements>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="28">Success -- got the exception</literal-string></arguments>
+</send>
+<return><paren><literal-true/></paren></return>
+</statements>
+</catch></try></statements>
+</method>
+<method name="inconsistent3" visibility="public" final="true" static="true" id="meth-17528">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<throws exception="ExCLInternalError"/>
+<throws exception="ExCLRequiredFailure"/>
+<statements>
+<try><statements>
+<local-variable name="w" id="locvar-18892"><type name="ClVariable"/><new><type name="ClVariable"/><arguments><literal-string length="1">w</literal-string></arguments></new>
+</local-variable>
+<local-variable name="x" id="locvar-18900"><type name="ClVariable"/><new><type name="ClVariable"/><arguments><literal-string length="1">x</literal-string></arguments></new>
+</local-variable>
+<local-variable name="y" id="locvar-18908"><type name="ClVariable"/><new><type name="ClVariable"/><arguments><literal-string length="1">y</literal-string></arguments></new>
+</local-variable>
+<local-variable name="z" id="locvar-18916"><type name="ClVariable"/><new><type name="ClVariable"/><arguments><literal-string length="1">z</literal-string></arguments></new>
+</local-variable>
+<local-variable name="solver" id="locvar-18923"><type name="ClSimplexSolver"/><new><type name="ClSimplexSolver"/><arguments/></new>
+</local-variable>
+<send message="addConstraint">
+<target><send message="addConstraint">
+<target><send message="addConstraint">
+<target><send message="addConstraint">
+<target><send message="addConstraint">
+<target><send message="addConstraint">
+<target><var-ref name="solver" idref="locvar-18923"/></target>
+<arguments><new><type name="ClLinearInequality"/><arguments><var-ref name="w" idref="locvar-18892"/><field-access field="GEQ"><var-ref name="CL"/></field-access><literal-number kind="double" value="10.0"/></arguments></new>
+</arguments>
+</send>
+</target>
+<arguments><new><type name="ClLinearInequality"/><arguments><var-ref name="x" idref="locvar-18900"/><field-access field="GEQ"><var-ref name="CL"/></field-access><var-ref name="w" idref="locvar-18892"/></arguments></new>
+</arguments>
+</send>
+</target>
+<arguments><new><type name="ClLinearInequality"/><arguments><var-ref name="y" idref="locvar-18908"/><field-access field="GEQ"><var-ref name="CL"/></field-access><var-ref name="x" idref="locvar-18900"/></arguments></new>
+</arguments>
+</send>
+</target>
+<arguments><new><type name="ClLinearInequality"/><arguments><var-ref name="z" idref="locvar-18916"/><field-access field="GEQ"><var-ref name="CL"/></field-access><var-ref name="y" idref="locvar-18908"/></arguments></new>
+</arguments>
+</send>
+</target>
+<arguments><new><type name="ClLinearInequality"/><arguments><var-ref name="z" idref="locvar-18916"/><field-access field="GEQ"><var-ref name="CL"/></field-access><literal-number kind="double" value="8.0"/></arguments></new>
+</arguments>
+</send>
+</target>
+<arguments><new><type name="ClLinearInequality"/><arguments><var-ref name="z" idref="locvar-18916"/><field-access field="LEQ"><var-ref name="CL"/></field-access><literal-number kind="double" value="4.0"/></arguments></new>
+</arguments>
+</send>
+<return><paren><literal-false/></paren></return>
+</statements>
+<catch><formal-argument name="err" id="locvar-18988"><type name="ExCLRequiredFailure"/></formal-argument>
+<statements>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="28">Success -- got the exception</literal-string></arguments>
+</send>
+<return><paren><literal-true/></paren></return>
+</statements>
+</catch></try></statements>
+</method>
+<method name="addDel" visibility="public" final="true" static="true" id="meth-17551">
+<type name="boolean" primitive="true"/>
+<formal-arguments>
+<formal-argument name="nCns" id="frmarg-17537"><type name="int" primitive="true"/></formal-argument>
+<formal-argument name="nVars" id="frmarg-17541"><type name="int" primitive="true"/></formal-argument>
+<formal-argument name="nResolves" id="frmarg-17545"><type name="int" primitive="true"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLInternalError"/>
+<throws exception="ExCLRequiredFailure"/>
+<throws exception="ExCLNonlinearExpression"/>
+<throws exception="ExCLConstraintNotFound"/>
+<statements>
+<local-variable name="timer" id="locvar-19007"><type name="Timer"/><new><type name="Timer"/><arguments/></new>
+</local-variable>
+<local-variable name="ineqProb" final="true" id="locvar-19013"><type name="double" primitive="true"/><literal-number kind="double" value="0.12"/></local-variable>
+<local-variable name="maxVars" final="true" id="locvar-19019"><type name="int" primitive="true"/><literal-number kind="integer" value="3"/></local-variable>
+<send message="InitializeRandoms">
+<arguments/>
+</send>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="29">starting timing test. nCns = </literal-string><var-ref name="nCns" idref="frmarg-17537"/></binary-expr><literal-string length="10">, nVars = </literal-string></binary-expr><var-ref name="nVars" idref="frmarg-17541"/></binary-expr><literal-string length="14">, nResolves = </literal-string></binary-expr><var-ref name="nResolves" idref="frmarg-17545"/></binary-expr></arguments>
+</send>
+<send message="Start">
+<target><var-ref name="timer" idref="locvar-19007"/></target>
+<arguments/>
+</send>
+<local-variable name="solver" id="locvar-19049"><type name="ClSimplexSolver"/><new><type name="ClSimplexSolver"/><arguments/></new>
+</local-variable>
+<send message="setAutosolve">
+<target><var-ref name="solver" idref="locvar-19049"/></target>
+<arguments><literal-false/></arguments>
+</send>
+<local-variable name="rgpclv" id="locvar-19064"><type name="ClVariable" dimensions="1"/><new-array dimensions="1"><type name="ClVariable"/><dim-expr><var-ref name="nVars" idref="frmarg-17541"/></dim-expr></new-array></local-variable>
+<loop kind="for"><init><local-variable name="i" id="locvar-19069"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></local-variable>
+</init>
+<test><binary-expr op="lt"><var-ref name="i" idref="locvar-19069"/><var-ref name="nVars" idref="frmarg-17541"/></binary-expr></test>
+<update><unary-expr op="++" post="true"><var-ref name="i" idref="locvar-19069"/></unary-expr></update>
+<statements>
+<assignment-expr><lvalue><array-ref><base><var-ref name="rgpclv"/></base><offset><var-ref name="i"/></offset></array-ref></lvalue><new><type name="ClVariable"/><arguments><var-ref name="i"/><literal-string length="1">x</literal-string></arguments></new>
+</assignment-expr>
+<send message="addStay">
+<target><var-ref name="solver"/></target>
+<arguments><array-ref><base><var-ref name="rgpclv"/></base><offset><var-ref name="i"/></offset></array-ref></arguments>
+</send>
+</statements>
+</loop>
+<local-variable name="nCnsMade" id="locvar-19102"><type name="int" primitive="true"/><binary-expr op="*"><var-ref name="nCns" idref="frmarg-17537"/><literal-number kind="integer" value="2"/></binary-expr></local-variable>
+<local-variable name="rgpcns" id="locvar-19112"><type name="ClConstraint" dimensions="1"/><new-array dimensions="1"><type name="ClConstraint"/><dim-expr><var-ref name="nCnsMade" idref="locvar-19102"/></dim-expr></new-array></local-variable>
+<local-variable name="rgpcnsAdded" id="locvar-19122"><type name="ClConstraint" dimensions="1"/><new-array dimensions="1"><type name="ClConstraint"/><dim-expr><var-ref name="nCns" idref="frmarg-17537"/></dim-expr></new-array></local-variable>
+<local-variable name="nvs" id="locvar-19127"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></local-variable>
+<local-variable name="k" id="locvar-19131"><type name="int" primitive="true"/></local-variable>
+<local-variable name="j" id="locvar-19135"><type name="int" primitive="true"/></local-variable>
+<local-variable name="coeff" id="locvar-19139"><type name="double" primitive="true"/></local-variable>
+<loop kind="for"><init><assignment-expr><lvalue><var-set name="j"/></lvalue><literal-number kind="integer" value="0"/></assignment-expr>
+</init>
+<test><binary-expr op="lt"><var-ref name="j"/><var-ref name="nCnsMade"/></binary-expr></test>
+<update><unary-expr op="++"><var-ref name="j"/></unary-expr></update>
+<statements>
+<assignment-expr><lvalue><var-set name="nvs"/></lvalue><send message="RandomInRange">
+<arguments><literal-number kind="integer" value="1"/><var-ref name="maxVars"/></arguments>
+</send>
+</assignment-expr>
+<if><test><var-ref name="fTraceOn"/></test>
+<true-case><send message="traceprint">
+<arguments><binary-expr op="+"><literal-string length="12">Using nvs = </literal-string><var-ref name="nvs"/></binary-expr></arguments>
+</send>
+</true-case>
+</if>
+<local-variable name="expr" id="locvar-19178"><type name="ClLinearExpression"/><new><type name="ClLinearExpression"/><arguments><binary-expr op="-"><binary-expr op="*"><send message="UniformRandomDiscretized">
+<arguments/>
+</send>
+<literal-number kind="double" value="20.0"/></binary-expr><literal-number kind="double" value="10.0"/></binary-expr></arguments></new>
+</local-variable>
+<loop kind="for"><init><assignment-expr><lvalue><var-set name="k"/></lvalue><literal-number kind="integer" value="0"/></assignment-expr>
+</init>
+<test><binary-expr op="lt"><var-ref name="k"/><var-ref name="nvs"/></binary-expr></test>
+<update><unary-expr op="++" post="true"><var-ref name="k"/></unary-expr></update>
+<statements>
+<assignment-expr><lvalue><var-set name="coeff"/></lvalue><binary-expr op="-"><binary-expr op="*"><send message="UniformRandomDiscretized">
+<arguments/>
+</send>
+<literal-number kind="integer" value="10"/></binary-expr><literal-number kind="integer" value="5"/></binary-expr></assignment-expr>
+<local-variable name="iclv" id="locvar-19208"><type name="int" primitive="true"/><cast-expr><type name="int" primitive="true"/><paren><binary-expr op="*"><send message="UniformRandomDiscretized">
+<arguments/>
+</send>
+<var-ref name="nVars" idref="frmarg-17541"/></binary-expr></paren></cast-expr></local-variable>
+<send message="addExpression">
+<target><var-ref name="expr"/></target>
+<arguments><send message="Times">
+<target><var-ref name="CL"/></target>
+<arguments><array-ref><base><var-ref name="rgpclv"/></base><offset><var-ref name="iclv" idref="locvar-19208"/></offset></array-ref><var-ref name="coeff"/></arguments>
+</send>
+</arguments>
+</send>
+</statements>
+</loop>
+<if><test><binary-expr op="lt"><send message="UniformRandomDiscretized">
+<arguments/>
+</send>
+<var-ref name="ineqProb"/></binary-expr></test>
+<true-case><statements>
+<assignment-expr><lvalue><array-ref><base><var-ref name="rgpcns"/></base><offset><var-ref name="j"/></offset></array-ref></lvalue><new><type name="ClLinearInequality"/><arguments><var-ref name="expr"/></arguments></new>
+</assignment-expr>
+</statements>
+</true-case>
+<false-case><statements>
+<assignment-expr><lvalue><array-ref><base><var-ref name="rgpcns"/></base><offset><var-ref name="j"/></offset></array-ref></lvalue><new><type name="ClLinearEquation"/><arguments><var-ref name="expr"/></arguments></new>
+</assignment-expr>
+</statements>
+</false-case>
+</if>
+<if><test><var-ref name="fTraceOn"/></test>
+<true-case><send message="traceprint">
+<arguments><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="11">Constraint </literal-string><var-ref name="j"/></binary-expr><literal-string length="4"> is </literal-string></binary-expr><array-ref><base><var-ref name="rgpcns"/></base><offset><var-ref name="j"/></offset></array-ref></binary-expr></arguments>
+</send>
+</true-case>
+</if>
+</statements>
+</loop>
+<send message="Stop">
+<target><var-ref name="timer" idref="locvar-19007"/></target>
+<arguments/>
+</send>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="29">done building data structures</literal-string></arguments>
+</send>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="7">time = </literal-string><send message="ElapsedTime">
+<target><var-ref name="timer" idref="locvar-19007"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<send message="Reset">
+<target><var-ref name="timer" idref="locvar-19007"/></target>
+<arguments/>
+</send>
+<send message="Start">
+<target><var-ref name="timer" idref="locvar-19007"/></target>
+<arguments/>
+</send>
+<local-variable name="cExceptions" id="locvar-19298"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></local-variable>
+<local-variable name="cCns" id="locvar-19303"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></local-variable>
+<loop kind="for"><init><assignment-expr><lvalue><var-set name="j"/></lvalue><literal-number kind="integer" value="0"/></assignment-expr>
+</init>
+<test><binary-expr op="logand"><binary-expr op="lt"><var-ref name="j"/><var-ref name="nCnsMade"/></binary-expr><binary-expr op="lt"><var-ref name="cCns"/><var-ref name="nCns" idref="frmarg-17537"/></binary-expr></binary-expr></test>
+<update><unary-expr op="++" post="true"><var-ref name="j"/></unary-expr></update>
+<statements>
+<try><statements>
+<send message="addConstraint">
+<target><var-ref name="solver"/></target>
+<arguments><array-ref><base><var-ref name="rgpcns"/></base><offset><var-ref name="j"/></offset></array-ref></arguments>
+</send>
+<assignment-expr><lvalue><array-ref><base><var-ref name="rgpcnsAdded"/></base><offset><unary-expr op="++" post="true"><var-ref name="cCns"/></unary-expr></offset></array-ref></lvalue><array-ref><base><var-ref name="rgpcns"/></base><offset><var-ref name="j"/></offset></array-ref></assignment-expr>
+<if><test><var-ref name="fTraceAdded"/></test>
+<true-case><send message="traceprint">
+<arguments><binary-expr op="+"><literal-string length="10">Added cn: </literal-string><array-ref><base><var-ref name="rgpcns"/></base><offset><var-ref name="j"/></offset></array-ref></binary-expr></arguments>
+</send>
+</true-case>
+</if>
+</statements>
+<catch><formal-argument name="err" id="locvar-19350"><type name="ExCLRequiredFailure"/></formal-argument>
+<statements>
+<unary-expr op="++" post="true"><var-ref name="cExceptions"/></unary-expr><if><test><var-ref name="fTraceOn"/></test>
+<true-case><send message="traceprint">
+<arguments><binary-expr op="+"><literal-string length="21">got exception adding </literal-string><array-ref><base><var-ref name="rgpcns"/></base><offset><var-ref name="j"/></offset></array-ref></binary-expr></arguments>
+</send>
+</true-case>
+</if>
+<if><test><var-ref name="fTraceAdded"/></test>
+<true-case><send message="traceprint">
+<arguments><binary-expr op="+"><literal-string length="21">got exception adding </literal-string><array-ref><base><var-ref name="rgpcns"/></base><offset><var-ref name="j"/></offset></array-ref></binary-expr></arguments>
+</send>
+</true-case>
+</if>
+<assignment-expr><lvalue><array-ref><base><var-ref name="rgpcns"/></base><offset><var-ref name="j"/></offset></array-ref></lvalue><literal-null/></assignment-expr>
+</statements>
+</catch></try></statements>
+</loop>
+<send message="solve">
+<target><var-ref name="solver" idref="locvar-19049"/></target>
+<arguments/>
+</send>
+<send message="Stop">
+<target><var-ref name="timer" idref="locvar-19007"/></target>
+<arguments/>
+</send>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="12">done adding </literal-string><var-ref name="cCns" idref="locvar-19303"/></binary-expr><literal-string length="14"> constraints [</literal-string></binary-expr><var-ref name="j" idref="locvar-19135"/></binary-expr><literal-string length="12"> attempted, </literal-string></binary-expr><var-ref name="cExceptions" idref="locvar-19298"/></binary-expr><literal-string length="12"> exceptions]</literal-string></binary-expr></arguments>
+</send>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><binary-expr op="+"><literal-string length="7">time = </literal-string><send message="ElapsedTime">
+<target><var-ref name="timer" idref="locvar-19007"/></target>
+<arguments/>
+</send>
+</binary-expr><literal-string length="2">\n</literal-string></binary-expr></arguments>
+</send>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="18">time per Add cn = </literal-string><binary-expr op="/"><send message="ElapsedTime">
+<target><var-ref name="timer" idref="locvar-19007"/></target>
+<arguments/>
+</send>
+<var-ref name="cCns" idref="locvar-19303"/></binary-expr></binary-expr></arguments>
+</send>
+<local-variable name="e1Index" id="locvar-19447"><type name="int" primitive="true"/><cast-expr><type name="int" primitive="true"/><paren><binary-expr op="*"><send message="UniformRandomDiscretized">
+<arguments/>
+</send>
+<var-ref name="nVars" idref="frmarg-17541"/></binary-expr></paren></cast-expr></local-variable>
+<local-variable name="e2Index" id="locvar-19458"><type name="int" primitive="true"/><cast-expr><type name="int" primitive="true"/><paren><binary-expr op="*"><send message="UniformRandomDiscretized">
+<arguments/>
+</send>
+<var-ref name="nVars" idref="frmarg-17541"/></binary-expr></paren></cast-expr></local-variable>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="26">Editing vars with indices </literal-string><var-ref name="e1Index" idref="locvar-19447"/></binary-expr><literal-string length="2">, </literal-string></binary-expr><var-ref name="e2Index" idref="locvar-19458"/></binary-expr></arguments>
+</send>
+<local-variable name="edit1" id="locvar-19482"><type name="ClEditConstraint"/><new><type name="ClEditConstraint"/><arguments><array-ref><base><var-ref name="rgpclv" idref="locvar-19064"/></base><offset><var-ref name="e1Index" idref="locvar-19447"/></offset></array-ref><field-access field="strong"><var-ref name="ClStrength"/></field-access></arguments></new>
+</local-variable>
+<local-variable name="edit2" id="locvar-19494"><type name="ClEditConstraint"/><new><type name="ClEditConstraint"/><arguments><array-ref><base><var-ref name="rgpclv" idref="locvar-19064"/></base><offset><var-ref name="e2Index" idref="locvar-19458"/></offset></array-ref><field-access field="strong"><var-ref name="ClStrength"/></field-access></arguments></new>
+</local-variable>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="23">about to start resolves</literal-string></arguments>
+</send>
+<send message="Reset">
+<target><var-ref name="timer" idref="locvar-19007"/></target>
+<arguments/>
+</send>
+<send message="Start">
+<target><var-ref name="timer" idref="locvar-19007"/></target>
+<arguments/>
+</send>
+<send message="addConstraint">
+<target><send message="addConstraint">
+<target><var-ref name="solver" idref="locvar-19049"/></target>
+<arguments><var-ref name="edit1" idref="locvar-19482"/></arguments>
+</send>
+</target>
+<arguments><var-ref name="edit2" idref="locvar-19494"/></arguments>
+</send>
+<send message="Stop">
+<target><var-ref name="timer" idref="locvar-19007"/></target>
+<arguments/>
+</send>
+<loop kind="for"><init><local-variable name="m" id="locvar-19525"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></local-variable>
+</init>
+<test><binary-expr op="lt"><var-ref name="m" idref="locvar-19525"/><var-ref name="nResolves" idref="frmarg-17545"/></binary-expr></test>
+<update><unary-expr op="++" post="true"><var-ref name="m" idref="locvar-19525"/></unary-expr></update>
+<statements>
+<send message="resolve">
+<target><var-ref name="solver"/></target>
+<arguments><binary-expr op="*"><send message="value">
+<target><array-ref><base><var-ref name="rgpclv"/></base><offset><var-ref name="e1Index"/></offset></array-ref></target>
+<arguments/>
+</send>
+<literal-number kind="double" value="1.001"/></binary-expr><binary-expr op="*"><send message="value">
+<target><array-ref><base><var-ref name="rgpclv"/></base><offset><var-ref name="e2Index"/></offset></array-ref></target>
+<arguments/>
+</send>
+<literal-number kind="double" value="1.001"/></binary-expr></arguments>
+</send>
+</statements>
+</loop>
+<send message="removeConstraint">
+<target><var-ref name="solver" idref="locvar-19049"/></target>
+<arguments><var-ref name="edit1" idref="locvar-19482"/></arguments>
+</send>
+<send message="removeConstraint">
+<target><var-ref name="solver" idref="locvar-19049"/></target>
+<arguments><var-ref name="edit2" idref="locvar-19494"/></arguments>
+</send>
+<send message="Stop">
+<target><var-ref name="timer" idref="locvar-19007"/></target>
+<arguments/>
+</send>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="41">done resolves -- now removing constraints</literal-string></arguments>
+</send>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><binary-expr op="+"><literal-string length="7">time = </literal-string><send message="ElapsedTime">
+<target><var-ref name="timer" idref="locvar-19007"/></target>
+<arguments/>
+</send>
+</binary-expr><literal-string length="2">\n</literal-string></binary-expr></arguments>
+</send>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="19">time per Resolve = </literal-string><binary-expr op="/"><send message="ElapsedTime">
+<target><var-ref name="timer" idref="locvar-19007"/></target>
+<arguments/>
+</send>
+<var-ref name="nResolves" idref="frmarg-17545"/></binary-expr></binary-expr></arguments>
+</send>
+<send message="Reset">
+<target><var-ref name="timer" idref="locvar-19007"/></target>
+<arguments/>
+</send>
+<send message="Start">
+<target><var-ref name="timer" idref="locvar-19007"/></target>
+<arguments/>
+</send>
+<loop kind="for"><init><assignment-expr><lvalue><var-set name="j"/></lvalue><literal-number kind="integer" value="0"/></assignment-expr>
+</init>
+<test><binary-expr op="lt"><var-ref name="j"/><var-ref name="cCns"/></binary-expr></test>
+<update><unary-expr op="++" post="true"><var-ref name="j"/></unary-expr></update>
+<statements>
+<send message="removeConstraint">
+<target><var-ref name="solver"/></target>
+<arguments><array-ref><base><var-ref name="rgpcnsAdded"/></base><offset><var-ref name="j"/></offset></array-ref></arguments>
+</send>
+</statements>
+</loop>
+<send message="Stop">
+<target><var-ref name="timer" idref="locvar-19007"/></target>
+<arguments/>
+</send>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="48">done removing constraints and addDel timing test</literal-string></arguments>
+</send>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><binary-expr op="+"><literal-string length="7">time = </literal-string><send message="ElapsedTime">
+<target><var-ref name="timer" idref="locvar-19007"/></target>
+<arguments/>
+</send>
+</binary-expr><literal-string length="2">\n</literal-string></binary-expr></arguments>
+</send>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="21">time per Remove cn = </literal-string><binary-expr op="/"><send message="ElapsedTime">
+<target><var-ref name="timer" idref="locvar-19007"/></target>
+<arguments/>
+</send>
+<var-ref name="cCns" idref="locvar-19303"/></binary-expr></binary-expr></arguments>
+</send>
+<return><literal-true/></return>
+</statements>
+</method>
+<method name="InitializeRandomsFromFile" visibility="public" final="true" static="true" id="meth-17557">
+<type name="void" primitive="true"/>
+<formal-arguments/>
+<statements>
+<try><statements>
+<assignment-expr><lvalue><var-set name="iRandom"/></lvalue><literal-number kind="integer" value="0"/></assignment-expr>
+<local-variable name="s" id="locvar-19669"><type name="String"/></local-variable>
+<local-variable name="in" id="locvar-19677"><type name="FileReader"/><new><type name="FileReader"/><arguments><literal-string length="11">randoms.txt</literal-string></arguments></new>
+</local-variable>
+<local-variable name="reader" id="locvar-19685"><type name="BufferedReader"/><new><type name="BufferedReader"/><arguments><var-ref name="in" idref="locvar-19677"/></arguments></new>
+</local-variable>
+<assignment-expr><lvalue><var-set name="vRandom"/></lvalue><new><type name="Vector"/><arguments><literal-number kind="integer" value="20001"/></arguments></new>
+</assignment-expr>
+<send message="readLine">
+<target><var-ref name="reader" idref="locvar-19685"/></target>
+<arguments/>
+</send>
+<send message="readLine">
+<target><var-ref name="reader" idref="locvar-19685"/></target>
+<arguments/>
+</send>
+<local-variable name="f" id="locvar-19704"><type name="Double"/></local-variable>
+<loop kind="while"><test><binary-expr op="!="><paren><assignment-expr><lvalue><var-set name="s"/></lvalue><send message="readLine">
+<target><var-ref name="reader"/></target>
+<arguments/>
+</send>
+</assignment-expr>
+</paren><literal-null/></binary-expr></test><statements>
+<assignment-expr><lvalue><var-set name="f"/></lvalue><send message="valueOf">
+<target><var-ref name="Double"/></target>
+<arguments><var-ref name="s"/></arguments>
+</send>
+</assignment-expr>
+<send message="add">
+<target><var-ref name="vRandom"/></target>
+<arguments><var-ref name="f"/></arguments>
+</send>
+<unary-expr op="++"><var-ref name="cRandom"/></unary-expr></statements>
+</loop>
+<send message="println">
+<target><field-access field="err"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><binary-expr op="+"><literal-string length="8">Read in </literal-string><var-ref name="cRandom"/></binary-expr><literal-string length="15"> random numbers</literal-string></binary-expr></arguments>
+</send>
+</statements>
+<catch><formal-argument name="e" id="locvar-19748"><type name="java.io.IOException"/></formal-argument>
+</catch></try></statements>
+</method>
+<method name="InitializeRandoms" visibility="public" final="true" static="true" id="meth-17564">
+<type name="void" primitive="true"/>
+<formal-arguments/>
+</method>
+<method name="UniformRandomDiscretized" visibility="public" final="true" static="true" id="meth-17572">
+<type name="double" primitive="true"/>
+<formal-arguments/>
+<statements>
+<local-variable name="n" id="locvar-19762"><type name="double" primitive="true"/><send message="abs">
+<target><var-ref name="Math"/></target>
+<arguments><send message="nextInt">
+<target><var-ref name="RND"/></target>
+<arguments/>
+</send>
+</arguments>
+</send>
+</local-variable>
+<return><paren><binary-expr op="/"><var-ref name="n" idref="locvar-19762"/><field-access field="MAX_VALUE"><var-ref name="Integer"/></field-access></binary-expr></paren></return>
+</statements>
+</method>
+<method name="UniformRandomDiscretizedFromFile" visibility="public" final="true" static="true" id="meth-17579">
+<type name="double" primitive="true"/>
+<formal-arguments/>
+<statements>
+<if><test><binary-expr op=">="><var-ref name="iRandom"/><var-ref name="cRandom"/></binary-expr></test>
+<true-case><statements>
+<return><unary-expr op="-"><literal-number kind="integer" value="1"/></unary-expr></return>
+</statements>
+</true-case>
+</if>
+<local-variable name="f" id="locvar-19791"><type name="double" primitive="true"/><send message="doubleValue">
+<target><paren><cast-expr><type name="Double"/><send message="elementAt">
+<target><var-ref name="vRandom"/></target>
+<arguments><unary-expr op="++" post="true"><var-ref name="iRandom"/></unary-expr></arguments>
+</send>
+</cast-expr></paren></target>
+<arguments/>
+</send>
+</local-variable>
+<return><var-ref name="f" idref="locvar-19791"/></return>
+</statements>
+</method>
+<method name="GrainedUniformRandom" visibility="public" final="true" static="true" id="meth-17586">
+<type name="double" primitive="true"/>
+<formal-arguments/>
+<statements>
+<local-variable name="grain" final="true" id="locvar-19800"><type name="double" primitive="true"/><literal-number kind="double" value="1.0e-4"/></local-variable>
+<local-variable name="n" id="locvar-19806"><type name="double" primitive="true"/><send message="UniformRandomDiscretized">
+<arguments/>
+</send>
+</local-variable>
+<local-variable name="answer" id="locvar-19819"><type name="double" primitive="true"/><binary-expr op="*"><paren><cast-expr><type name="int" primitive="true"/><paren><binary-expr op="/"><var-ref name="n" idref="locvar-19806"/><var-ref name="grain" idref="locvar-19800"/></binary-expr></paren></cast-expr></paren><var-ref name="grain" idref="locvar-19800"/></binary-expr></local-variable>
+<return><var-ref name="answer" idref="locvar-19819"/></return>
+</statements>
+</method>
+<method name="RandomInRange" visibility="public" final="true" static="true" id="meth-17601">
+<type name="int" primitive="true"/>
+<formal-arguments>
+<formal-argument name="low" id="frmarg-17595"><type name="int" primitive="true"/></formal-argument>
+<formal-argument name="high" id="frmarg-17599"><type name="int" primitive="true"/></formal-argument>
+</formal-arguments>
+<statements>
+<return><binary-expr op="+"><cast-expr><type name="int" primitive="true"/><paren><binary-expr op="*"><send message="UniformRandomDiscretized">
+<arguments/>
+</send>
+<paren><binary-expr op="+"><binary-expr op="-"><var-ref name="high" idref="frmarg-17599"/><var-ref name="low" idref="frmarg-17595"/></binary-expr><literal-number kind="integer" value="1"/></binary-expr></paren></binary-expr></paren></cast-expr><var-ref name="low" idref="frmarg-17595"/></binary-expr></return>
+</statements>
+</method>
+<method name="addDelSolvers" visibility="public" final="true" static="true" id="meth-17628">
+<type name="boolean" primitive="true"/>
+<formal-arguments>
+<formal-argument name="nCns" id="frmarg-17610"><type name="int" primitive="true"/></formal-argument>
+<formal-argument name="nResolves" id="frmarg-17614"><type name="int" primitive="true"/></formal-argument>
+<formal-argument name="nSolvers" id="frmarg-17618"><type name="int" primitive="true"/></formal-argument>
+<formal-argument name="testNum" id="frmarg-17622"><type name="int" primitive="true"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLInternalError"/>
+<throws exception="ExCLRequiredFailure"/>
+<throws exception="ExCLNonlinearExpression"/>
+<throws exception="ExCLConstraintNotFound"/>
+<statements>
+<local-variable name="timer" id="locvar-19845"><type name="Timer"/><new><type name="Timer"/><arguments/></new>
+</local-variable>
+<local-variable name="tmAdd" id="locvar-19849"><type name="double" primitive="true"/></local-variable>
+<local-variable name="tmEdit" continued="true" id="locvar-19851"><type name="double" primitive="true"/></local-variable>
+<local-variable name="tmResolve" continued="true" id="locvar-19853"><type name="double" primitive="true"/></local-variable>
+<local-variable name="tmEndEdit" continued="true" id="locvar-19855"><type name="double" primitive="true"/></local-variable>
+<local-variable name="ineqProb" final="true" id="locvar-19861"><type name="double" primitive="true"/><literal-number kind="double" value="0.12"/></local-variable>
+<local-variable name="maxVars" final="true" id="locvar-19867"><type name="int" primitive="true"/><literal-number kind="integer" value="3"/></local-variable>
+<local-variable name="nVars" final="true" id="locvar-19873"><type name="int" primitive="true"/><var-ref name="nCns" idref="frmarg-17610"/></local-variable>
+<send message="InitializeRandoms">
+<arguments/>
+</send>
+<send message="println">
+<target><field-access field="err"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="29">starting timing test. nCns = </literal-string><var-ref name="nCns" idref="frmarg-17610"/></binary-expr><literal-string length="13">, nSolvers = </literal-string></binary-expr><var-ref name="nSolvers" idref="frmarg-17618"/></binary-expr><literal-string length="14">, nResolves = </literal-string></binary-expr><var-ref name="nResolves" idref="frmarg-17614"/></binary-expr></arguments>
+</send>
+<send message="Start">
+<target><var-ref name="timer" idref="locvar-19845"/></target>
+<arguments/>
+</send>
+<local-variable name="rgsolvers" id="locvar-19908"><type name="ClSimplexSolver" dimensions="1"/><new-array dimensions="1"><type name="ClSimplexSolver"/><dim-expr><binary-expr op="+"><var-ref name="nSolvers" idref="frmarg-17618"/><literal-number kind="integer" value="1"/></binary-expr></dim-expr></new-array></local-variable>
+<loop kind="for"><init><local-variable name="is" id="locvar-19913"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></local-variable>
+</init>
+<test><binary-expr op="lt"><var-ref name="is" idref="locvar-19913"/><binary-expr op="+"><var-ref name="nSolvers" idref="frmarg-17618"/><literal-number kind="integer" value="1"/></binary-expr></binary-expr></test>
+<update><unary-expr op="++"><var-ref name="is" idref="locvar-19913"/></unary-expr></update>
+<statements>
+<assignment-expr><lvalue><array-ref><base><var-ref name="rgsolvers"/></base><offset><var-ref name="is"/></offset></array-ref></lvalue><new><type name="ClSimplexSolver"/><arguments/></new>
+</assignment-expr>
+<send message="setAutosolve">
+<target><array-ref><base><var-ref name="rgsolvers"/></base><offset><var-ref name="is"/></offset></array-ref></target>
+<arguments><literal-false/></arguments>
+</send>
+</statements>
+</loop>
+<local-variable name="rgpclv" id="locvar-19949"><type name="ClVariable" dimensions="1"/><new-array dimensions="1"><type name="ClVariable"/><dim-expr><var-ref name="nVars" idref="locvar-19873"/></dim-expr></new-array></local-variable>
+<loop kind="for"><init><local-variable name="i" id="locvar-19954"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></local-variable>
+</init>
+<test><binary-expr op="lt"><var-ref name="i" idref="locvar-19954"/><var-ref name="nVars"/></binary-expr></test>
+<update><unary-expr op="++" post="true"><var-ref name="i" idref="locvar-19954"/></unary-expr></update>
+<statements>
+<assignment-expr><lvalue><array-ref><base><var-ref name="rgpclv"/></base><offset><var-ref name="i"/></offset></array-ref></lvalue><new><type name="ClVariable"/><arguments><var-ref name="i"/><literal-string length="1">x</literal-string></arguments></new>
+</assignment-expr>
+<loop kind="for"><init><local-variable name="is" id="locvar-19975"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></local-variable>
+</init>
+<test><binary-expr op="lt"><var-ref name="is" idref="locvar-19975"/><binary-expr op="+"><var-ref name="nSolvers" idref="frmarg-17618"/><literal-number kind="integer" value="1"/></binary-expr></binary-expr></test>
+<update><unary-expr op="++"><var-ref name="is" idref="locvar-19975"/></unary-expr></update>
+<statements>
+<send message="addStay">
+<target><array-ref><base><var-ref name="rgsolvers"/></base><offset><var-ref name="is"/></offset></array-ref></target>
+<arguments><array-ref><base><var-ref name="rgpclv"/></base><offset><var-ref name="i"/></offset></array-ref></arguments>
+</send>
+</statements>
+</loop>
+</statements>
+</loop>
+<local-variable name="nCnsMade" id="locvar-20005"><type name="int" primitive="true"/><binary-expr op="*"><var-ref name="nCns" idref="frmarg-17610"/><literal-number kind="integer" value="5"/></binary-expr></local-variable>
+<local-variable name="rgpcns" id="locvar-20015"><type name="ClConstraint" dimensions="1"/><new-array dimensions="1"><type name="ClConstraint"/><dim-expr><var-ref name="nCnsMade" idref="locvar-20005"/></dim-expr></new-array></local-variable>
+<local-variable name="rgpcnsAdded" id="locvar-20025"><type name="ClConstraint" dimensions="1"/><new-array dimensions="1"><type name="ClConstraint"/><dim-expr><var-ref name="nCns" idref="frmarg-17610"/></dim-expr></new-array></local-variable>
+<local-variable name="nvs" id="locvar-20030"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></local-variable>
+<local-variable name="k" id="locvar-20034"><type name="int" primitive="true"/></local-variable>
+<local-variable name="j" id="locvar-20038"><type name="int" primitive="true"/></local-variable>
+<local-variable name="coeff" id="locvar-20042"><type name="double" primitive="true"/></local-variable>
+<loop kind="for"><init><assignment-expr><lvalue><var-set name="j"/></lvalue><literal-number kind="integer" value="0"/></assignment-expr>
+</init>
+<test><binary-expr op="lt"><var-ref name="j"/><var-ref name="nCnsMade"/></binary-expr></test>
+<update><unary-expr op="++"><var-ref name="j"/></unary-expr></update>
+<statements>
+<assignment-expr><lvalue><var-set name="nvs"/></lvalue><send message="RandomInRange">
+<arguments><literal-number kind="integer" value="1"/><var-ref name="maxVars"/></arguments>
+</send>
+</assignment-expr>
+<if><test><var-ref name="fTraceOn"/></test>
+<true-case><send message="traceprint">
+<arguments><binary-expr op="+"><literal-string length="12">Using nvs = </literal-string><var-ref name="nvs"/></binary-expr></arguments>
+</send>
+</true-case>
+</if>
+<local-variable name="expr" id="locvar-20081"><type name="ClLinearExpression"/><new><type name="ClLinearExpression"/><arguments><binary-expr op="-"><binary-expr op="*"><send message="GrainedUniformRandom">
+<arguments/>
+</send>
+<literal-number kind="double" value="20.0"/></binary-expr><literal-number kind="double" value="10.0"/></binary-expr></arguments></new>
+</local-variable>
+<loop kind="for"><init><assignment-expr><lvalue><var-set name="k"/></lvalue><literal-number kind="integer" value="0"/></assignment-expr>
+</init>
+<test><binary-expr op="lt"><var-ref name="k"/><var-ref name="nvs"/></binary-expr></test>
+<update><unary-expr op="++" post="true"><var-ref name="k"/></unary-expr></update>
+<statements>
+<assignment-expr><lvalue><var-set name="coeff"/></lvalue><binary-expr op="-"><binary-expr op="*"><send message="GrainedUniformRandom">
+<arguments/>
+</send>
+<literal-number kind="integer" value="10"/></binary-expr><literal-number kind="integer" value="5"/></binary-expr></assignment-expr>
+<local-variable name="iclv" id="locvar-20111"><type name="int" primitive="true"/><cast-expr><type name="int" primitive="true"/><paren><binary-expr op="*"><send message="UniformRandomDiscretized">
+<arguments/>
+</send>
+<var-ref name="nVars"/></binary-expr></paren></cast-expr></local-variable>
+<send message="addExpression">
+<target><var-ref name="expr"/></target>
+<arguments><send message="Times">
+<target><var-ref name="CL"/></target>
+<arguments><array-ref><base><var-ref name="rgpclv"/></base><offset><var-ref name="iclv" idref="locvar-20111"/></offset></array-ref><var-ref name="coeff"/></arguments>
+</send>
+</arguments>
+</send>
+</statements>
+</loop>
+<if><test><binary-expr op="lt"><send message="UniformRandomDiscretized">
+<arguments/>
+</send>
+<var-ref name="ineqProb"/></binary-expr></test>
+<true-case><statements>
+<assignment-expr><lvalue><array-ref><base><var-ref name="rgpcns"/></base><offset><var-ref name="j"/></offset></array-ref></lvalue><new><type name="ClLinearInequality"/><arguments><var-ref name="expr"/></arguments></new>
+</assignment-expr>
+</statements>
+</true-case>
+<false-case><statements>
+<assignment-expr><lvalue><array-ref><base><var-ref name="rgpcns"/></base><offset><var-ref name="j"/></offset></array-ref></lvalue><new><type name="ClLinearEquation"/><arguments><var-ref name="expr"/></arguments></new>
+</assignment-expr>
+</statements>
+</false-case>
+</if>
+<if><test><var-ref name="fTraceOn"/></test>
+<true-case><send message="traceprint">
+<arguments><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="11">Constraint </literal-string><var-ref name="j"/></binary-expr><literal-string length="4"> is </literal-string></binary-expr><array-ref><base><var-ref name="rgpcns"/></base><offset><var-ref name="j"/></offset></array-ref></binary-expr></arguments>
+</send>
+</true-case>
+</if>
+</statements>
+</loop>
+<send message="Stop">
+<target><var-ref name="timer" idref="locvar-19845"/></target>
+<arguments/>
+</send>
+<send message="println">
+<target><field-access field="err"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="29">done building data structures</literal-string></arguments>
+</send>
+<loop kind="for"><init><local-variable name="is" id="locvar-20183"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></local-variable>
+</init>
+<test><binary-expr op="lt"><var-ref name="is" idref="locvar-20183"/><var-ref name="nSolvers" idref="frmarg-17618"/></binary-expr></test>
+<update><unary-expr op="++"><var-ref name="is" idref="locvar-20183"/></unary-expr></update>
+<statements>
+<local-variable name="cCns" id="locvar-20194"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></local-variable>
+<local-variable name="cExceptions" id="locvar-20199"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></local-variable>
+<local-variable name="solver" id="locvar-20206"><type name="ClSimplexSolver"/><array-ref><base><var-ref name="rgsolvers"/></base><offset><var-ref name="nSolvers" idref="frmarg-17618"/></offset></array-ref></local-variable>
+<assignment-expr><lvalue><var-set name="cExceptions"/></lvalue><literal-number kind="integer" value="0"/></assignment-expr>
+<loop kind="for"><init><assignment-expr><lvalue><var-set name="j"/></lvalue><literal-number kind="integer" value="0"/></assignment-expr>
+</init>
+<test><binary-expr op="logand"><binary-expr op="lt"><var-ref name="j"/><var-ref name="nCnsMade"/></binary-expr><binary-expr op="lt"><var-ref name="cCns"/><var-ref name="nCns" idref="frmarg-17610"/></binary-expr></binary-expr></test>
+<update><unary-expr op="++" post="true"><var-ref name="j"/></unary-expr></update>
+<statements>
+<try><statements>
+<if><test><binary-expr op="!="><literal-null/><array-ref><base><var-ref name="rgpcns"/></base><offset><var-ref name="j"/></offset></array-ref></binary-expr></test>
+<true-case><statements>
+<send message="addConstraint">
+<target><var-ref name="solver"/></target>
+<arguments><array-ref><base><var-ref name="rgpcns"/></base><offset><var-ref name="j"/></offset></array-ref></arguments>
+</send>
+<unary-expr op="++"><var-ref name="cCns"/></unary-expr></statements>
+</true-case>
+</if>
+</statements>
+<catch><formal-argument name="err" id="locvar-20247"><type name="ExCLRequiredFailure"/></formal-argument>
+<statements>
+<unary-expr op="++" post="true"><var-ref name="cExceptions"/></unary-expr><assignment-expr><lvalue><array-ref><base><var-ref name="rgpcns"/></base><offset><var-ref name="j"/></offset></array-ref></lvalue><literal-null/></assignment-expr>
+</statements>
+</catch></try></statements>
+</loop>
+</statements>
+</loop>
+<send message="Reset">
+<target><var-ref name="timer" idref="locvar-19845"/></target>
+<arguments/>
+</send>
+<send message="Start">
+<target><var-ref name="timer" idref="locvar-19845"/></target>
+<arguments/>
+</send>
+<loop kind="for"><init><local-variable name="is" id="locvar-20277"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></local-variable>
+</init>
+<test><binary-expr op="lt"><var-ref name="is" idref="locvar-20277"/><var-ref name="nSolvers" idref="frmarg-17618"/></binary-expr></test>
+<update><unary-expr op="++"><var-ref name="is" idref="locvar-20277"/></unary-expr></update>
+<statements>
+<local-variable name="cCns" id="locvar-20288"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></local-variable>
+<local-variable name="cExceptions" id="locvar-20293"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></local-variable>
+<local-variable name="solver" id="locvar-20300"><type name="ClSimplexSolver"/><array-ref><base><var-ref name="rgsolvers"/></base><offset><var-ref name="is"/></offset></array-ref></local-variable>
+<assignment-expr><lvalue><var-set name="cExceptions"/></lvalue><literal-number kind="integer" value="0"/></assignment-expr>
+<loop kind="for"><init><assignment-expr><lvalue><var-set name="j"/></lvalue><literal-number kind="integer" value="0"/></assignment-expr>
+</init>
+<test><binary-expr op="logand"><binary-expr op="lt"><var-ref name="j"/><var-ref name="nCnsMade"/></binary-expr><binary-expr op="lt"><var-ref name="cCns"/><var-ref name="nCns" idref="frmarg-17610"/></binary-expr></binary-expr></test>
+<update><unary-expr op="++" post="true"><var-ref name="j"/></unary-expr></update>
+<statements>
+<try><statements>
+<if><test><binary-expr op="!="><literal-null/><array-ref><base><var-ref name="rgpcns"/></base><offset><var-ref name="j"/></offset></array-ref></binary-expr></test>
+<true-case><statements>
+<send message="addConstraint">
+<target><var-ref name="solver"/></target>
+<arguments><array-ref><base><var-ref name="rgpcns"/></base><offset><var-ref name="j"/></offset></array-ref></arguments>
+</send>
+<unary-expr op="++"><var-ref name="cCns"/></unary-expr></statements>
+</true-case>
+</if>
+</statements>
+<catch><formal-argument name="err" id="locvar-20341"><type name="ExCLRequiredFailure"/></formal-argument>
+<statements>
+<unary-expr op="++" post="true"><var-ref name="cExceptions"/></unary-expr><assignment-expr><lvalue><array-ref><base><var-ref name="rgpcns"/></base><offset><var-ref name="j"/></offset></array-ref></lvalue><literal-null/></assignment-expr>
+</statements>
+</catch></try></statements>
+</loop>
+<send message="println">
+<target><field-access field="err"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="12">done adding </literal-string><var-ref name="cCns" idref="locvar-20288"/></binary-expr><literal-string length="14"> constraints [</literal-string></binary-expr><var-ref name="j"/></binary-expr><literal-string length="12"> attempted, </literal-string></binary-expr><var-ref name="cExceptions" idref="locvar-20293"/></binary-expr><literal-string length="12"> exceptions]</literal-string></binary-expr></arguments>
+</send>
+<send message="solve">
+<target><var-ref name="solver" idref="locvar-20300"/></target>
+<arguments/>
+</send>
+</statements>
+</loop>
+<send message="Stop">
+<target><var-ref name="timer" idref="locvar-19845"/></target>
+<arguments/>
+</send>
+<assignment-expr><lvalue><var-set name="tmAdd"/></lvalue><send message="ElapsedTime">
+<target><var-ref name="timer" idref="locvar-19845"/></target>
+<arguments/>
+</send>
+</assignment-expr>
+<local-variable name="e1Index" id="locvar-20401"><type name="int" primitive="true"/><cast-expr><type name="int" primitive="true"/><paren><binary-expr op="*"><send message="UniformRandomDiscretized">
+<arguments/>
+</send>
+<var-ref name="nVars" idref="locvar-19873"/></binary-expr></paren></cast-expr></local-variable>
+<local-variable name="e2Index" id="locvar-20412"><type name="int" primitive="true"/><cast-expr><type name="int" primitive="true"/><paren><binary-expr op="*"><send message="UniformRandomDiscretized">
+<arguments/>
+</send>
+<var-ref name="nVars" idref="locvar-19873"/></binary-expr></paren></cast-expr></local-variable>
+<send message="println">
+<target><field-access field="err"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="26">Editing vars with indices </literal-string><var-ref name="e1Index" idref="locvar-20401"/></binary-expr><literal-string length="2">, </literal-string></binary-expr><var-ref name="e2Index" idref="locvar-20412"/></binary-expr></arguments>
+</send>
+<local-variable name="edit1" id="locvar-20436"><type name="ClEditConstraint"/><new><type name="ClEditConstraint"/><arguments><array-ref><base><var-ref name="rgpclv" idref="locvar-19949"/></base><offset><var-ref name="e1Index" idref="locvar-20401"/></offset></array-ref><field-access field="strong"><var-ref name="ClStrength"/></field-access></arguments></new>
+</local-variable>
+<local-variable name="edit2" id="locvar-20448"><type name="ClEditConstraint"/><new><type name="ClEditConstraint"/><arguments><array-ref><base><var-ref name="rgpclv" idref="locvar-19949"/></base><offset><var-ref name="e2Index" idref="locvar-20412"/></offset></array-ref><field-access field="strong"><var-ref name="ClStrength"/></field-access></arguments></new>
+</local-variable>
+<send message="println">
+<target><field-access field="err"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="23">about to start resolves</literal-string></arguments>
+</send>
+<send message="Reset">
+<target><var-ref name="timer" idref="locvar-19845"/></target>
+<arguments/>
+</send>
+<send message="Start">
+<target><var-ref name="timer" idref="locvar-19845"/></target>
+<arguments/>
+</send>
+<loop kind="for"><init><local-variable name="is" id="locvar-20467"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></local-variable>
+</init>
+<test><binary-expr op="lt"><var-ref name="is" idref="locvar-20467"/><var-ref name="nSolvers" idref="frmarg-17618"/></binary-expr></test>
+<update><unary-expr op="++"><var-ref name="is" idref="locvar-20467"/></unary-expr></update>
+<statements>
+<send message="addConstraint">
+<target><send message="addConstraint">
+<target><array-ref><base><var-ref name="rgsolvers"/></base><offset><var-ref name="is"/></offset></array-ref></target>
+<arguments><var-ref name="edit1"/></arguments>
+</send>
+</target>
+<arguments><var-ref name="edit2"/></arguments>
+</send>
+</statements>
+</loop>
+<send message="Stop">
+<target><var-ref name="timer" idref="locvar-19845"/></target>
+<arguments/>
+</send>
+<assignment-expr><lvalue><var-set name="tmEdit"/></lvalue><send message="ElapsedTime">
+<target><var-ref name="timer" idref="locvar-19845"/></target>
+<arguments/>
+</send>
+</assignment-expr>
+<send message="Reset">
+<target><var-ref name="timer" idref="locvar-19845"/></target>
+<arguments/>
+</send>
+<send message="Start">
+<target><var-ref name="timer" idref="locvar-19845"/></target>
+<arguments/>
+</send>
+<loop kind="for"><init><local-variable name="is" id="locvar-20509"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></local-variable>
+</init>
+<test><binary-expr op="lt"><var-ref name="is" idref="locvar-20509"/><var-ref name="nSolvers" idref="frmarg-17618"/></binary-expr></test>
+<update><unary-expr op="++"><var-ref name="is" idref="locvar-20509"/></unary-expr></update>
+<statements>
+<local-variable name="solver" id="locvar-20522"><type name="ClSimplexSolver"/><array-ref><base><var-ref name="rgsolvers"/></base><offset><var-ref name="is"/></offset></array-ref></local-variable>
+<loop kind="for"><init><local-variable name="m" id="locvar-20527"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></local-variable>
+</init>
+<test><binary-expr op="lt"><var-ref name="m" idref="locvar-20527"/><var-ref name="nResolves" idref="frmarg-17614"/></binary-expr></test>
+<update><unary-expr op="++" post="true"><var-ref name="m" idref="locvar-20527"/></unary-expr></update>
+<statements>
+<send message="resolve">
+<target><var-ref name="solver"/></target>
+<arguments><binary-expr op="*"><send message="value">
+<target><array-ref><base><var-ref name="rgpclv"/></base><offset><var-ref name="e1Index"/></offset></array-ref></target>
+<arguments/>
+</send>
+<literal-number kind="double" value="1.001"/></binary-expr><binary-expr op="*"><send message="value">
+<target><array-ref><base><var-ref name="rgpclv"/></base><offset><var-ref name="e2Index"/></offset></array-ref></target>
+<arguments/>
+</send>
+<literal-number kind="double" value="1.001"/></binary-expr></arguments>
+</send>
+</statements>
+</loop>
+</statements>
+</loop>
+<send message="Stop">
+<target><var-ref name="timer" idref="locvar-19845"/></target>
+<arguments/>
+</send>
+<assignment-expr><lvalue><var-set name="tmResolve"/></lvalue><send message="ElapsedTime">
+<target><var-ref name="timer" idref="locvar-19845"/></target>
+<arguments/>
+</send>
+</assignment-expr>
+<send message="println">
+<target><field-access field="err"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="33">done resolves -- now ending edits</literal-string></arguments>
+</send>
+<send message="Reset">
+<target><var-ref name="timer" idref="locvar-19845"/></target>
+<arguments/>
+</send>
+<send message="Start">
+<target><var-ref name="timer" idref="locvar-19845"/></target>
+<arguments/>
+</send>
+<loop kind="for"><init><local-variable name="is" id="locvar-20586"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></local-variable>
+</init>
+<test><binary-expr op="lt"><var-ref name="is" idref="locvar-20586"/><var-ref name="nSolvers" idref="frmarg-17618"/></binary-expr></test>
+<update><unary-expr op="++"><var-ref name="is" idref="locvar-20586"/></unary-expr></update>
+<statements>
+<send message="removeConstraint">
+<target><send message="removeConstraint">
+<target><array-ref><base><var-ref name="rgsolvers"/></base><offset><var-ref name="is"/></offset></array-ref></target>
+<arguments><var-ref name="edit1"/></arguments>
+</send>
+</target>
+<arguments><var-ref name="edit2"/></arguments>
+</send>
+</statements>
+</loop>
+<send message="Stop">
+<target><var-ref name="timer" idref="locvar-19845"/></target>
+<arguments/>
+</send>
+<assignment-expr><lvalue><var-set name="tmEndEdit"/></lvalue><send message="ElapsedTime">
+<target><var-ref name="timer" idref="locvar-19845"/></target>
+<arguments/>
+</send>
+</assignment-expr>
+<local-variable name="mspersec" final="true" id="locvar-20621"><type name="int" primitive="true"/><literal-number kind="integer" value="1000"/></local-variable>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><var-ref name="nCns" idref="frmarg-17610"/><literal-string length="1">,</literal-string></binary-expr><var-ref name="nSolvers" idref="frmarg-17618"/></binary-expr><literal-string length="1">,</literal-string></binary-expr><var-ref name="nResolves" idref="frmarg-17614"/></binary-expr><literal-string length="1">,</literal-string></binary-expr><var-ref name="testNum" idref="frmarg-17622"/></binary-expr><literal-string length="1">,</literal-string></binary-expr><binary-expr op="*"><var-ref name="tmAdd" idref="locvar-19849"/><var-ref name="mspersec" idref="locvar-20621"/></binary-expr></binary-expr><literal-string length="1">,</literal-string></binary-expr><binary-expr op="*"><var-ref name="tmEdit" idref="locvar-19851"/><var-ref name="mspersec" idref="locvar-20621"/></binary-expr></binary-expr><literal-string length="1">,</literal-string></binary-expr><binary-expr op="*"><var-ref name="tmResolve" idref="locvar-19853"/><var-ref name="mspersec" idref="locvar-20621"/></binary-expr></binary-expr><literal-string length="1">,</literal-string></binary-expr><binary-expr op="*"><var-ref name="tmEndEdit" idref="locvar-19855"/><var-ref name="mspersec" idref="locvar-20621"/></binary-expr></binary-expr><literal-string length="1">,</literal-string></binary-expr><binary-expr op="*"><binary-expr op="/"><binary-expr op="/"><var-ref name="tmAdd" idref="locvar-19849"/><var-ref name="nCns" idref="frmarg-17610"/></binary-expr><var-ref name="nSolvers" idref="frmarg-17618"/></binary-expr><var-ref name="mspersec" idref="locvar-20621"/></binary-expr></binary-expr><literal-string length="1">,</literal-string></binary-expr><binary-expr op="*"><binary-expr op="/"><binary-expr op="/"><var-ref name="tmEdit" idref="locvar-19851"/><var-ref name="nSolvers" idref="frmarg-17618"/></binary-expr><literal-number kind="integer" value="2"/></binary-expr><var-ref name="mspersec" idref="locvar-20621"/></binary-expr></binary-expr><literal-string length="1">,</literal-string></binary-expr><binary-expr op="*"><binary-expr op="/"><binary-expr op="/"><var-ref name="tmResolve" idref="locvar-19853"/><var-ref name="nResolves" idref="frmarg-17614"/></binary-expr><var-ref name="nSolvers" idref="frmarg-17618"/></binary-expr><var-ref name="mspersec" idref="locvar-20621"/></binary-expr></binary-expr><literal-string length="1">,</literal-string></binary-expr><binary-expr op="*"><binary-expr op="/"><binary-expr op="/"><var-ref name="tmEndEdit" idref="locvar-19855"/><var-ref name="nSolvers" idref="frmarg-17618"/></binary-expr><literal-number kind="integer" value="2"/></binary-expr><var-ref name="mspersec" idref="locvar-20621"/></binary-expr></binary-expr></arguments>
+</send>
+<return><literal-true/></return>
+</statements>
+</method>
+<method name="main" visibility="public" final="true" static="true" id="meth-17645">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="args" id="frmarg-17638"><type name="String" dimensions="1"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLInternalError"/>
+<throws exception="ExCLNonlinearExpression"/>
+<throws exception="ExCLRequiredFailure"/>
+<throws exception="ExCLConstraintNotFound"/>
+<throws exception="ExCLError"/>
+<statements>
+<try><statements>
+<local-variable name="clt" id="locvar-20713"><type name="ClTests"/><new><type name="ClTests"/><arguments/></new>
+</local-variable>
+<local-variable name="fAllOkResult" id="locvar-20718"><type name="boolean" primitive="true"/><literal-true/></local-variable>
+<local-variable name="fResult" id="locvar-20722"><type name="boolean" primitive="true"/></local-variable>
+<if><test><literal-false/></test>
+<true-case><statements>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="8">simple1:</literal-string></arguments>
+</send>
+<assignment-expr><lvalue><var-set name="fResult"/></lvalue><send message="simple1">
+<arguments/>
+</send>
+</assignment-expr>
+<assignment-expr><lvalue><var-set name="fAllOkResult"/></lvalue><var-ref name="fResult"/></assignment-expr>
+<if><test><unary-expr op="!"><var-ref name="fResult"/></unary-expr></test>
+<true-case><send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="7">Failed!</literal-string></arguments>
+</send>
+</true-case>
+</if>
+<if><test><field-access field="fGC"><var-ref name="CL"/></field-access></test>
+<true-case><send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="11">Num vars = </literal-string><send message="numCreated">
+<target><var-ref name="ClAbstractVariable"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+</true-case>
+</if>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="10">justStay1:</literal-string></arguments>
+</send>
+<assignment-expr><lvalue><var-set name="fResult"/></lvalue><send message="justStay1">
+<arguments/>
+</send>
+</assignment-expr>
+<assignment-expr><lvalue><var-set name="fAllOkResult"/></lvalue><var-ref name="fResult"/></assignment-expr>
+<if><test><unary-expr op="!"><var-ref name="fResult"/></unary-expr></test>
+<true-case><send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="7">Failed!</literal-string></arguments>
+</send>
+</true-case>
+</if>
+<if><test><field-access field="fGC"><var-ref name="CL"/></field-access></test>
+<true-case><send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="11">Num vars = </literal-string><send message="numCreated">
+<target><var-ref name="ClAbstractVariable"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+</true-case>
+</if>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="11">addDelete1:</literal-string></arguments>
+</send>
+<assignment-expr><lvalue><var-set name="fResult"/></lvalue><send message="addDelete1">
+<arguments/>
+</send>
+</assignment-expr>
+<assignment-expr><lvalue><var-set name="fAllOkResult"/></lvalue><var-ref name="fResult"/></assignment-expr>
+<if><test><unary-expr op="!"><var-ref name="fResult"/></unary-expr></test>
+<true-case><send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="7">Failed!</literal-string></arguments>
+</send>
+</true-case>
+</if>
+<if><test><field-access field="fGC"><var-ref name="CL"/></field-access></test>
+<true-case><send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="11">Num vars = </literal-string><send message="numCreated">
+<target><var-ref name="ClAbstractVariable"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+</true-case>
+</if>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="11">addDelete2:</literal-string></arguments>
+</send>
+<assignment-expr><lvalue><var-set name="fResult"/></lvalue><send message="addDelete2">
+<arguments/>
+</send>
+</assignment-expr>
+<assignment-expr><lvalue><var-set name="fAllOkResult"/></lvalue><var-ref name="fResult"/></assignment-expr>
+<if><test><unary-expr op="!"><var-ref name="fResult"/></unary-expr></test>
+<true-case><send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="7">Failed!</literal-string></arguments>
+</send>
+</true-case>
+</if>
+<if><test><field-access field="fGC"><var-ref name="CL"/></field-access></test>
+<true-case><send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="11">Num vars = </literal-string><send message="numCreated">
+<target><var-ref name="ClAbstractVariable"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+</true-case>
+</if>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="7">casso1:</literal-string></arguments>
+</send>
+<assignment-expr><lvalue><var-set name="fResult"/></lvalue><send message="casso1">
+<arguments/>
+</send>
+</assignment-expr>
+<assignment-expr><lvalue><var-set name="fAllOkResult"/></lvalue><var-ref name="fResult"/></assignment-expr>
+<if><test><unary-expr op="!"><var-ref name="fResult"/></unary-expr></test>
+<true-case><send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="7">Failed!</literal-string></arguments>
+</send>
+</true-case>
+</if>
+<if><test><field-access field="fGC"><var-ref name="CL"/></field-access></test>
+<true-case><send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="11">Num vars = </literal-string><send message="numCreated">
+<target><var-ref name="ClAbstractVariable"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+</true-case>
+</if>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="14">inconsistent1:</literal-string></arguments>
+</send>
+<assignment-expr><lvalue><var-set name="fResult"/></lvalue><send message="inconsistent1">
+<arguments/>
+</send>
+</assignment-expr>
+<assignment-expr><lvalue><var-set name="fAllOkResult"/></lvalue><var-ref name="fResult"/></assignment-expr>
+<if><test><unary-expr op="!"><var-ref name="fResult"/></unary-expr></test>
+<true-case><send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="7">Failed!</literal-string></arguments>
+</send>
+</true-case>
+</if>
+<if><test><field-access field="fGC"><var-ref name="CL"/></field-access></test>
+<true-case><send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="11">Num vars = </literal-string><send message="numCreated">
+<target><var-ref name="ClAbstractVariable"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+</true-case>
+</if>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="14">inconsistent2:</literal-string></arguments>
+</send>
+<assignment-expr><lvalue><var-set name="fResult"/></lvalue><send message="inconsistent2">
+<arguments/>
+</send>
+</assignment-expr>
+<assignment-expr><lvalue><var-set name="fAllOkResult"/></lvalue><var-ref name="fResult"/></assignment-expr>
+<if><test><unary-expr op="!"><var-ref name="fResult"/></unary-expr></test>
+<true-case><send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="7">Failed!</literal-string></arguments>
+</send>
+</true-case>
+</if>
+<if><test><field-access field="fGC"><var-ref name="CL"/></field-access></test>
+<true-case><send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="11">Num vars = </literal-string><send message="numCreated">
+<target><var-ref name="ClAbstractVariable"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+</true-case>
+</if>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="14">inconsistent3:</literal-string></arguments>
+</send>
+<assignment-expr><lvalue><var-set name="fResult"/></lvalue><send message="inconsistent3">
+<arguments/>
+</send>
+</assignment-expr>
+<assignment-expr><lvalue><var-set name="fAllOkResult"/></lvalue><var-ref name="fResult"/></assignment-expr>
+<if><test><unary-expr op="!"><var-ref name="fResult"/></unary-expr></test>
+<true-case><send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="7">Failed!</literal-string></arguments>
+</send>
+</true-case>
+</if>
+<if><test><field-access field="fGC"><var-ref name="CL"/></field-access></test>
+<true-case><send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="11">Num vars = </literal-string><send message="numCreated">
+<target><var-ref name="ClAbstractVariable"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+</true-case>
+</if>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="10">multiedit:</literal-string></arguments>
+</send>
+<assignment-expr><lvalue><var-set name="fResult"/></lvalue><send message="multiedit">
+<arguments/>
+</send>
+</assignment-expr>
+<assignment-expr><lvalue><var-set name="fAllOkResult"/></lvalue><var-ref name="fResult"/></assignment-expr>
+<if><test><unary-expr op="!"><var-ref name="fResult"/></unary-expr></test>
+<true-case><send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="7">Failed!</literal-string></arguments>
+</send>
+</true-case>
+</if>
+<if><test><field-access field="fGC"><var-ref name="CL"/></field-access></test>
+<true-case><send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="11">Num vars = </literal-string><send message="numCreated">
+<target><var-ref name="ClAbstractVariable"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+</true-case>
+</if>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="7">addDel:</literal-string></arguments>
+</send>
+</statements>
+</true-case>
+</if>
+<local-variable name="testNum" id="locvar-21087"><type name="int" primitive="true"/><literal-number kind="integer" value="1"/></local-variable>
+<local-variable name="cns" continued="true" id="locvar-21090"><type name="int" primitive="true"/><literal-number kind="integer" value="900"/></local-variable>
+<local-variable name="resolves" continued="true" id="locvar-21093"><type name="int" primitive="true"/><literal-number kind="integer" value="100"/></local-variable>
+<local-variable name="solvers" continued="true" id="locvar-21096"><type name="int" primitive="true"/><literal-number kind="integer" value="10"/></local-variable>
+<if><test><binary-expr op=">"><field-access field="length"><var-ref name="args" idref="frmarg-17638"/></field-access><literal-number kind="integer" value="0"/></binary-expr></test>
+<true-case><assignment-expr><lvalue><var-set name="testNum"/></lvalue><send message="parseInt">
+<target><var-ref name="Integer"/></target>
+<arguments><array-ref><base><var-ref name="args" idref="frmarg-17638"/></base><offset><literal-number kind="integer" value="0"/></offset></array-ref></arguments>
+</send>
+</assignment-expr>
+</true-case>
+</if>
+<if><test><binary-expr op=">"><field-access field="length"><var-ref name="args" idref="frmarg-17638"/></field-access><literal-number kind="integer" value="1"/></binary-expr></test>
+<true-case><assignment-expr><lvalue><var-set name="cns"/></lvalue><send message="parseInt">
+<target><var-ref name="Integer"/></target>
+<arguments><array-ref><base><var-ref name="args" idref="frmarg-17638"/></base><offset><literal-number kind="integer" value="1"/></offset></array-ref></arguments>
+</send>
+</assignment-expr>
+</true-case>
+</if>
+<if><test><binary-expr op=">"><field-access field="length"><var-ref name="args" idref="frmarg-17638"/></field-access><literal-number kind="integer" value="2"/></binary-expr></test>
+<true-case><assignment-expr><lvalue><var-set name="solvers"/></lvalue><send message="parseInt">
+<target><var-ref name="Integer"/></target>
+<arguments><array-ref><base><var-ref name="args" idref="frmarg-17638"/></base><offset><literal-number kind="integer" value="2"/></offset></array-ref></arguments>
+</send>
+</assignment-expr>
+</true-case>
+</if>
+<if><test><binary-expr op=">"><field-access field="length"><var-ref name="args" idref="frmarg-17638"/></field-access><literal-number kind="integer" value="3"/></binary-expr></test>
+<true-case><assignment-expr><lvalue><var-set name="resolves"/></lvalue><send message="parseInt">
+<target><var-ref name="Integer"/></target>
+<arguments><array-ref><base><var-ref name="args" idref="frmarg-17638"/></base><offset><literal-number kind="integer" value="3"/></offset></array-ref></arguments>
+</send>
+</assignment-expr>
+</true-case>
+</if>
+<if><test><literal-false/></test>
+<true-case><statements>
+<assignment-expr><lvalue><var-set name="fResult"/></lvalue><send message="addDel">
+<arguments><var-ref name="cns"/><var-ref name="cns"/><var-ref name="resolves"/></arguments>
+</send>
+</assignment-expr>
+<assignment-expr><lvalue><var-set name="fAllOkResult"/></lvalue><var-ref name="fResult"/></assignment-expr>
+<if><test><unary-expr op="!"><var-ref name="fResult"/></unary-expr></test>
+<true-case><send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="7">Failed!</literal-string></arguments>
+</send>
+</true-case>
+</if>
+<if><test><field-access field="fGC"><var-ref name="CL"/></field-access></test>
+<true-case><send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="11">Num vars = </literal-string><send message="numCreated">
+<target><var-ref name="ClAbstractVariable"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+</true-case>
+</if>
+</statements>
+</true-case>
+</if>
+<send message="addDelSolvers">
+<arguments><var-ref name="cns" idref="locvar-21090"/><var-ref name="resolves" idref="locvar-21093"/><var-ref name="solvers" idref="locvar-21096"/><var-ref name="testNum" idref="locvar-21087"/></arguments>
+</send>
+</statements>
+<catch><formal-argument name="err" id="locvar-21208"><type name="Exception"/></formal-argument>
+<statements>
+<local-variable name="myerr" id="locvar-21214"><type name="ExCLError"/><cast-expr><type name="ExCLError"/><var-ref name="err" idref="locvar-21208"/></cast-expr></local-variable>
+<if><test><binary-expr op="!="><literal-null/><var-ref name="myerr" idref="locvar-21214"/></binary-expr></test>
+<true-case><statements>
+<send message="println">
+<target><field-access field="err"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="11">Exception: </literal-string><var-ref name="myerr"/></binary-expr><literal-string length="2">: </literal-string></binary-expr><send message="description">
+<target><var-ref name="myerr"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+</statements>
+</true-case>
+<false-case><statements>
+<send message="println">
+<target><field-access field="err"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="11">Exception: </literal-string><var-ref name="err"/></binary-expr></arguments>
+</send>
+</statements>
+</false-case>
+</if>
+</statements>
+</catch></try></statements>
+</method>
+<field name="iRandom" visibility="private" static="true"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></field>
+<field name="cRandom" visibility="private" static="true"><type name="int" primitive="true"/><literal-number kind="integer" value="0"/></field>
+<field name="vRandom" visibility="private" static="true"><type name="Vector"/></field>
+<field name="RND" visibility="private" static="true"><type name="Random"/></field>
+</class>
+</java-source-program>

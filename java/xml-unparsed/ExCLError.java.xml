@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="ExCLError.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<class name="ExCLError" visibility="public">
+<superclass class="Exception"/>
+<method name="description" visibility="public" id="meth-1702">
+<type name="String"/>
+<formal-arguments/>
+<statements>
+<return><literal-string length="38">(ExCLError) An error has occured in CL</literal-string></return>
+</statements>
+</method>
+</class>
+</java-source-program>

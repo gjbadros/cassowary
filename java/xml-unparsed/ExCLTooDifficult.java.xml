@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="ExCLTooDifficult.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<class name="ExCLTooDifficult" visibility="public">
+<superclass class="ExCLError"/>
+<method name="description" visibility="public" id="meth-1686">
+<type name="String"/>
+<formal-arguments/>
+<statements>
+<return><literal-string length="61">(ExCLTooDifficult) The constraints are too difficult to solve</literal-string></return>
+</statements>
+</method>
+</class>
+</java-source-program>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="ClPoint.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<class name="ClPoint" visibility="public">
+<superclass class="Object"/>
+<constructor name="ClPoint" visibility="public" id="ctr-2930">
+<formal-arguments>
+<formal-argument name="x" id="frmarg-2922"><type name="double" primitive="true"/></formal-argument>
+<formal-argument name="y" id="frmarg-2926"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<assignment-expr><lvalue><var-set name="_clv_x"/></lvalue><new><type name="ClVariable"/><arguments><var-ref name="x"/></arguments></new>
+</assignment-expr>
+<assignment-expr><lvalue><var-set name="_clv_y"/></lvalue><new><type name="ClVariable"/><arguments><var-ref name="y"/></arguments></new>
+</assignment-expr>
+</constructor>
+<constructor name="ClPoint" visibility="public" id="ctr-2947">
+<formal-arguments>
+<formal-argument name="x" id="frmarg-2935"><type name="double" primitive="true"/></formal-argument>
+<formal-argument name="y" id="frmarg-2939"><type name="double" primitive="true"/></formal-argument>
+<formal-argument name="a" id="frmarg-2943"><type name="int" primitive="true"/></formal-argument>
+</formal-arguments>
+<assignment-expr><lvalue><var-set name="_clv_x"/></lvalue><new><type name="ClVariable"/><arguments><binary-expr op="+"><literal-string length="1">x</literal-string><var-ref name="a"/></binary-expr><var-ref name="x"/></arguments></new>
+</assignment-expr>
+<assignment-expr><lvalue><var-set name="_clv_y"/></lvalue><new><type name="ClVariable"/><arguments><binary-expr op="+"><literal-string length="1">y</literal-string><var-ref name="a"/></binary-expr><var-ref name="y"/></arguments></new>
+</assignment-expr>
+</constructor>
+<constructor name="ClPoint" visibility="public" id="ctr-2960">
+<formal-arguments>
+<formal-argument name="clv_x" id="frmarg-2952"><type name="ClVariable"/></formal-argument>
+<formal-argument name="clv_y" id="frmarg-2956"><type name="ClVariable"/></formal-argument>
+</formal-arguments>
+<assignment-expr><lvalue><var-set name="_clv_x"/></lvalue><var-ref name="clv_x"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="_clv_y"/></lvalue><var-ref name="clv_y"/></assignment-expr>
+</constructor>
+<method name="X" visibility="public" id="meth-2964">
+<type name="ClVariable"/>
+<formal-arguments/>
+<statements>
+<return><var-ref name="_clv_x"/></return>
+</statements>
+</method>
+<method name="Y" visibility="public" id="meth-2969">
+<type name="ClVariable"/>
+<formal-arguments/>
+<statements>
+<return><var-ref name="_clv_y"/></return>
+</statements>
+</method>
+<method name="SetXY" visibility="public" id="meth-2981">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="x" id="frmarg-2975"><type name="double" primitive="true"/></formal-argument>
+<formal-argument name="y" id="frmarg-2979"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<statements>
+<send message="set_value">
+<target><var-ref name="_clv_x"/></target>
+<arguments><var-ref name="x" idref="frmarg-2975"/></arguments>
+</send>
+<send message="set_value">
+<target><var-ref name="_clv_y"/></target>
+<arguments><var-ref name="y" idref="frmarg-2979"/></arguments>
+</send>
+</statements>
+</method>
+<method name="SetXY" visibility="public" id="meth-2994">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="clv_x" id="frmarg-2988"><type name="ClVariable"/></formal-argument>
+<formal-argument name="clv_y" id="frmarg-2992"><type name="ClVariable"/></formal-argument>
+</formal-arguments>
+<statements>
+<assignment-expr><lvalue><var-set name="_clv_x"/></lvalue><var-ref name="clv_x" idref="frmarg-2988"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="_clv_y"/></lvalue><var-ref name="clv_y" idref="frmarg-2992"/></assignment-expr>
+</statements>
+</method>
+<method name="Xvalue" visibility="public" id="meth-3000">
+<type name="double" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><send message="value">
+<target><send message="X">
+<arguments/>
+</send>
+</target>
+<arguments/>
+</send>
+</return>
+</statements>
+</method>
+<method name="Yvalue" visibility="public" id="meth-3005">
+<type name="double" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><send message="value">
+<target><send message="Y">
+<arguments/>
+</send>
+</target>
+<arguments/>
+</send>
+</return>
+</statements>
+</method>
+<method name="toString" visibility="public" id="meth-3010">
+<type name="String"/>
+<formal-arguments/>
+<statements>
+<return><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="1">(</literal-string><send message="toString">
+<target><var-ref name="_clv_x"/></target>
+<arguments/>
+</send>
+</binary-expr><literal-string length="2">, </literal-string></binary-expr><send message="toString">
+<target><var-ref name="_clv_y"/></target>
+<arguments/>
+</send>
+</binary-expr><literal-string length="1">)</literal-string></binary-expr></return>
+</statements>
+</method>
+<field name="_clv_x" visibility="private"><type name="ClVariable"/></field>
+<field name="_clv_y" visibility="private"><type name="ClVariable"/></field>
+</class>
+</java-source-program>

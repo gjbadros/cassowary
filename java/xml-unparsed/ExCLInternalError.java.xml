@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="ExCLInternalError.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<class name="ExCLInternalError" visibility="public">
+<superclass class="ExCLError"/>
+<constructor name="ExCLInternalError" visibility="public" id="ctr-2563">
+<formal-arguments>
+<formal-argument name="s" id="frmarg-2559"><type name="String"/></formal-argument>
+</formal-arguments>
+<assignment-expr><lvalue><var-set name="description_"/></lvalue><var-ref name="s"/></assignment-expr>
+</constructor>
+<method name="description" visibility="public" id="meth-2567">
+<type name="String"/>
+<formal-arguments/>
+<statements>
+<return><binary-expr op="+"><literal-string length="20">(ExCLInternalError) </literal-string><var-ref name="description_"/></binary-expr></return>
+</statements>
+</method>
+<field name="description_" visibility="private"><type name="String"/></field>
+</class>
+</java-source-program>

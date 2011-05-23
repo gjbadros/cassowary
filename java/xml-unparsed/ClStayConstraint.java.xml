@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="ClStayConstraint.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<class name="ClStayConstraint" visibility="public">
+<superclass class="ClEditOrStayConstraint"/>
+<constructor name="ClStayConstraint" visibility="public" id="ctr-9085">
+<formal-arguments>
+<formal-argument name="var" id="frmarg-9073"><type name="ClVariable"/></formal-argument>
+<formal-argument name="strength" id="frmarg-9077"><type name="ClStrength"/></formal-argument>
+<formal-argument name="weight" id="frmarg-9081"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<super-call><arguments><var-ref name="var"/><var-ref name="strength"/><var-ref name="weight"/></arguments></super-call>
+</constructor>
+<constructor name="ClStayConstraint" visibility="public" id="ctr-9098">
+<formal-arguments>
+<formal-argument name="var" id="frmarg-9090"><type name="ClVariable"/></formal-argument>
+<formal-argument name="strength" id="frmarg-9094"><type name="ClStrength"/></formal-argument>
+</formal-arguments>
+<super-call><arguments><var-ref name="var"/><var-ref name="strength"/><literal-number kind="double" value="1.0"/></arguments></super-call>
+</constructor>
+<constructor name="ClStayConstraint" visibility="public" id="ctr-9107">
+<formal-arguments>
+<formal-argument name="var" id="frmarg-9103"><type name="ClVariable"/></formal-argument>
+</formal-arguments>
+<super-call><arguments><var-ref name="var"/><field-access field="weak"><var-ref name="ClStrength"/></field-access><literal-number kind="double" value="1.0"/></arguments></super-call>
+</constructor>
+<method name="isStayConstraint" visibility="public" id="meth-9111">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><literal-true/></return>
+</statements>
+</method>
+<method name="toString" visibility="public" id="meth-9116">
+<type name="String"/>
+<formal-arguments/>
+<statements>
+<return><binary-expr op="+"><literal-string length="5">stay </literal-string><send message="toString">
+<target><super/></target>
+<arguments/>
+</send>
+</binary-expr></return>
+</statements>
+</method>
+</class>
+</java-source-program>

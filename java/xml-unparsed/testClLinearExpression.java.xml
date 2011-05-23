@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="testClLinearExpression.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<class name="testClLinearExpression" visibility="public">
+<superclass class="Object"/>
+<method name="main" visibility="public" final="true" static="true" id="meth-21639">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="args" id="frmarg-21637"><type name="String" dimensions="1"/></formal-argument>
+</formal-arguments>
+<statements>
+<local-variable name="a" id="locvar-21657"><type name="ClVariable"/><new><type name="ClVariable"/><arguments><literal-string length="1">a</literal-string></arguments></new>
+</local-variable>
+<local-variable name="cle" id="locvar-21665"><type name="ClLinearExpression"/><new><type name="ClLinearExpression"/><arguments><var-ref name="a" idref="locvar-21657"/></arguments></new>
+</local-variable>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><send message="toString">
+<target><var-ref name="cle" idref="locvar-21665"/></target>
+<arguments/>
+</send>
+</arguments>
+</send>
+<local-variable name="b" id="locvar-21681"><type name="ClVariable"/><new><type name="ClVariable"/><arguments><literal-string length="1">b</literal-string></arguments></new>
+</local-variable>
+<send message="addVariable">
+<target><var-ref name="cle" idref="locvar-21665"/></target>
+<arguments><var-ref name="b" idref="locvar-21681"/><literal-number kind="integer" value="2"/></arguments>
+</send>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><send message="toString">
+<target><var-ref name="cle" idref="locvar-21665"/></target>
+<arguments/>
+</send>
+</arguments>
+</send>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><send message="toString">
+<target><send message="times">
+<target><var-ref name="cle" idref="locvar-21665"/></target>
+<arguments><literal-number kind="integer" value="2"/></arguments>
+</send>
+</target>
+<arguments/>
+</send>
+</arguments>
+</send>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><send message="toString">
+<target><send message="times">
+<target><paren><send message="addVariable">
+<target><send message="times">
+<target><var-ref name="cle" idref="locvar-21665"/></target>
+<arguments><literal-number kind="integer" value="2"/></arguments>
+</send>
+</target>
+<arguments><new><type name="ClVariable"/><arguments><literal-string length="1">c</literal-string></arguments></new>
+<literal-number kind="integer" value="3"/></arguments>
+</send>
+</paren></target>
+<arguments><unary-expr op="-"><literal-number kind="integer" value="1"/></unary-expr></arguments>
+</send>
+</target>
+<arguments/>
+</send>
+</arguments>
+</send>
+<assignment-expr><lvalue><var-set name="cle"/></lvalue><send message="Plus">
+<target><var-ref name="ClLinearExpression"/></target>
+<arguments><var-ref name="cle" idref="locvar-21665"/><new><type name="ClLinearExpression"/><arguments><literal-number kind="integer" value="8"/></arguments></new>
+</arguments>
+</send>
+</assignment-expr>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><send message="toString">
+<target><var-ref name="cle" idref="locvar-21665"/></target>
+<arguments/>
+</send>
+</arguments>
+</send>
+<send message="changeSubject">
+<target><var-ref name="cle" idref="locvar-21665"/></target>
+<arguments><var-ref name="a" idref="locvar-21657"/><var-ref name="b" idref="locvar-21681"/></arguments>
+</send>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><send message="toString">
+<target><var-ref name="cle" idref="locvar-21665"/></target>
+<arguments/>
+</send>
+</arguments>
+</send>
+<local-variable name="cle2" id="locvar-21771"><type name="ClLinearExpression"/><cast-expr><type name="ClLinearExpression"/><send message="clone">
+<target><var-ref name="cle" idref="locvar-21665"/></target>
+<arguments/>
+</send>
+</cast-expr></local-variable>
+<send message="addExpression">
+<target><var-ref name="cle" idref="locvar-21665"/></target>
+<arguments><var-ref name="cle" idref="locvar-21665"/><unary-expr op="-"><literal-number kind="integer" value="1"/></unary-expr></arguments>
+</send>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><send message="toString">
+<target><var-ref name="cle" idref="locvar-21665"/></target>
+<arguments/>
+</send>
+</arguments>
+</send>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><send message="toString">
+<target><var-ref name="b" idref="locvar-21681"/></target>
+<arguments/>
+</send>
+</arguments>
+</send>
+</statements>
+</method>
+</class>
+</java-source-program>

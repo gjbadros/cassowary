@@ -1,0 +1,682 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="ClTableau.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<import module="java.util.*"/>
+<class name="ClTableau">
+<superclass class="CL"/>
+<constructor name="ClTableau" visibility="protected" id="ctr-2367">
+<formal-arguments/>
+<assignment-expr><lvalue><var-set name="_columns"/></lvalue><new><type name="Hashtable"/><arguments/></new>
+</assignment-expr>
+<assignment-expr><lvalue><var-set name="_rows"/></lvalue><new><type name="Hashtable"/><arguments/></new>
+</assignment-expr>
+<assignment-expr><lvalue><var-set name="_infeasibleRows"/></lvalue><new><type name="Set"/><arguments/></new>
+</assignment-expr>
+<assignment-expr><lvalue><var-set name="_externalRows"/></lvalue><new><type name="Set"/><arguments/></new>
+</assignment-expr>
+<assignment-expr><lvalue><var-set name="_externalParametricVars"/></lvalue><new><type name="Set"/><arguments/></new>
+</assignment-expr>
+</constructor>
+<method name="noteRemovedVariable" visibility="public" final="true" id="meth-2379">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="v" id="frmarg-2373"><type name="ClAbstractVariable"/></formal-argument>
+<formal-argument name="subject" id="frmarg-2377"><type name="ClAbstractVariable"/></formal-argument>
+</formal-arguments>
+<statements>
+<if><test><var-ref name="fTraceOn"/></test>
+<true-case><send message="fnenterprint">
+<arguments><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="21">noteRemovedVariable: </literal-string><var-ref name="v" idref="frmarg-2373"/></binary-expr><literal-string length="2">, </literal-string></binary-expr><var-ref name="subject" idref="frmarg-2377"/></binary-expr></arguments>
+</send>
+</true-case>
+</if>
+<if><test><binary-expr op="!="><var-ref name="subject" idref="frmarg-2377"/><literal-null/></binary-expr></test>
+<true-case><statements>
+    <send message="remove">
+      <target>
+        <paren>
+          <cast-expr><type name="Set"/>
+            <send message="get">
+              <target><var-ref name="_columns"/></target>
+              <arguments><var-ref name="v" idref="frmarg-2373"/></arguments>
+            </send>
+          </cast-expr>
+      </paren>
+      </target>
+      <arguments><var-ref name="subject" idref="frmarg-2377"/></arguments>
+</send>
+</statements>
+</true-case>
+</if>
+</statements>
+</method>
+<method name="noteAddedVariable" visibility="public" final="true" id="meth-2393">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="v" id="frmarg-2387"><type name="ClAbstractVariable"/></formal-argument>
+<formal-argument name="subject" id="frmarg-2391"><type name="ClAbstractVariable"/></formal-argument>
+</formal-arguments>
+<statements>
+<if><test><var-ref name="fTraceOn"/></test>
+<true-case><send message="fnenterprint">
+<arguments><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="19">noteAddedVariable: </literal-string><var-ref name="v" idref="frmarg-2387"/></binary-expr><literal-string length="2">, </literal-string></binary-expr><var-ref name="subject" idref="frmarg-2391"/></binary-expr></arguments>
+</send>
+</true-case>
+</if>
+<if><test><binary-expr op="!="><var-ref name="subject" idref="frmarg-2391"/><literal-null/></binary-expr></test>
+<true-case><statements>
+<send message="insertColVar">
+<arguments><var-ref name="v" idref="frmarg-2387"/><var-ref name="subject" idref="frmarg-2391"/></arguments>
+</send>
+</statements>
+</true-case>
+</if>
+</statements>
+</method>
+<method name="getInternalInfo" visibility="public" id="meth-2399">
+<type name="String"/>
+<formal-arguments/>
+<statements>
+<local-variable name="retstr" id="locvar-3912"><type name="StringBuffer"/><new><type name="StringBuffer"/><arguments><literal-string length="22">Tableau Information:\n</literal-string></arguments></new>
+</local-variable>
+<send message="append">
+<target><var-ref name="retstr" idref="locvar-3912"/></target>
+<arguments><binary-expr op="+"><literal-string length="6">Rows: </literal-string><send message="size">
+<target><var-ref name="_rows"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<send message="append">
+<target><var-ref name="retstr" idref="locvar-3912"/></target>
+<arguments><binary-expr op="+"><binary-expr op="+"><literal-string length="4"> (= </literal-string><paren><binary-expr op="-"><send message="size">
+<target><var-ref name="_rows"/></target>
+<arguments/>
+</send>
+<literal-number kind="integer" value="1"/></binary-expr></paren></binary-expr><literal-string length="13"> constraints)</literal-string></binary-expr></arguments>
+</send>
+<send message="append">
+<target><var-ref name="retstr" idref="locvar-3912"/></target>
+<arguments><binary-expr op="+"><literal-string length="11">\nColumns: </literal-string><send message="size">
+<target><var-ref name="_columns"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<send message="append">
+<target><var-ref name="retstr" idref="locvar-3912"/></target>
+<arguments><binary-expr op="+"><literal-string length="19">\nInfeasible Rows: </literal-string><send message="size">
+<target><var-ref name="_infeasibleRows"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<send message="append">
+<target><var-ref name="retstr" idref="locvar-3912"/></target>
+<arguments><binary-expr op="+"><literal-string length="28">\nExternal basic variables: </literal-string><send message="size">
+<target><var-ref name="_externalRows"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<send message="append">
+<target><var-ref name="retstr" idref="locvar-3912"/></target>
+<arguments><literal-string length="33">\nExternal parametric variables: </literal-string></arguments>
+</send>
+<send message="append">
+<target><var-ref name="retstr" idref="locvar-3912"/></target>
+<arguments><send message="size">
+<target><var-ref name="_externalParametricVars"/></target>
+<arguments/>
+</send>
+</arguments>
+</send>
+<send message="append">
+<target><var-ref name="retstr" idref="locvar-3912"/></target>
+<arguments><literal-string length="2">\n</literal-string></arguments>
+</send>
+<return><send message="toString">
+<target><var-ref name="retstr" idref="locvar-3912"/></target>
+<arguments/>
+</send>
+</return>
+</statements>
+</method>
+<method name="toString" visibility="public" id="meth-2404">
+<type name="String"/>
+<formal-arguments/>
+<statements>
+<local-variable name="bstr" id="locvar-3992"><type name="StringBuffer"/><new><type name="StringBuffer"/><arguments><literal-string length="10">Tableau:\n</literal-string></arguments></new>
+</local-variable>
+<loop kind="for"><init><local-variable name="e" id="locvar-3999"><type name="Enumeration"/><send message="keys">
+<target><var-ref name="_rows"/></target>
+<arguments/>
+</send>
+</local-variable>
+</init>
+<test><send message="hasMoreElements">
+<target><var-ref name="e" idref="locvar-3999"/></target>
+<arguments/>
+</send>
+</test>
+<statements>
+<local-variable name="clv" id="locvar-4011"><type name="ClAbstractVariable"/><cast-expr><type name="ClAbstractVariable"/><send message="nextElement">
+<target><var-ref name="e"/></target>
+<arguments/>
+</send>
+</cast-expr></local-variable>
+<local-variable name="expr" id="locvar-4021"><type name="ClLinearExpression"/><cast-expr><type name="ClLinearExpression"/><send message="get">
+<target><var-ref name="_rows"/></target>
+<arguments><var-ref name="clv" idref="locvar-4011"/></arguments>
+</send>
+</cast-expr></local-variable>
+<send message="append">
+<target><var-ref name="bstr"/></target>
+<arguments><send message="toString">
+<target><var-ref name="clv" idref="locvar-4011"/></target>
+<arguments/>
+</send>
+</arguments>
+</send>
+<send message="append">
+<target><var-ref name="bstr"/></target>
+<arguments><literal-string length="6"> &lt;==&gt; </literal-string></arguments>
+</send>
+<send message="append">
+<target><var-ref name="bstr"/></target>
+<arguments><send message="toString">
+<target><var-ref name="expr" idref="locvar-4021"/></target>
+<arguments/>
+</send>
+</arguments>
+</send>
+<send message="append">
+<target><var-ref name="bstr"/></target>
+<arguments><literal-string length="2">\n</literal-string></arguments>
+</send>
+</statements>
+</loop>
+<send message="append">
+<target><var-ref name="bstr" idref="locvar-3992"/></target>
+<arguments><literal-string length="12">\nColumns:\n</literal-string></arguments>
+</send>
+<send message="append">
+<target><var-ref name="bstr" idref="locvar-3992"/></target>
+<arguments><send message="toString">
+<target><var-ref name="_columns"/></target>
+<arguments/>
+</send>
+</arguments>
+</send>
+<send message="append">
+<target><var-ref name="bstr" idref="locvar-3992"/></target>
+<arguments><literal-string length="19">\nInfeasible rows: </literal-string></arguments>
+</send>
+<send message="append">
+<target><var-ref name="bstr" idref="locvar-3992"/></target>
+<arguments><send message="toString">
+<target><var-ref name="_infeasibleRows"/></target>
+<arguments/>
+</send>
+</arguments>
+</send>
+<send message="append">
+<target><var-ref name="bstr" idref="locvar-3992"/></target>
+<arguments><literal-string length="26">External basic variables: </literal-string></arguments>
+</send>
+<send message="append">
+<target><var-ref name="bstr" idref="locvar-3992"/></target>
+<arguments><send message="toString">
+<target><var-ref name="_externalRows"/></target>
+<arguments/>
+</send>
+</arguments>
+</send>
+<send message="append">
+<target><var-ref name="bstr" idref="locvar-3992"/></target>
+<arguments><literal-string length="31">External parametric variables: </literal-string></arguments>
+</send>
+<send message="append">
+<target><var-ref name="bstr" idref="locvar-3992"/></target>
+<arguments><send message="toString">
+<target><var-ref name="_externalParametricVars"/></target>
+<arguments/>
+</send>
+</arguments>
+</send>
+<return><send message="toString">
+<target><var-ref name="bstr" idref="locvar-3992"/></target>
+<arguments/>
+</send>
+</return>
+</statements>
+</method>
+<method name="insertColVar" visibility="private" final="true" id="meth-2417">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="param_var" id="frmarg-2411"><type name="ClAbstractVariable"/></formal-argument>
+<formal-argument name="rowvar" id="frmarg-2415"><type name="ClAbstractVariable"/></formal-argument>
+</formal-arguments>
+<statements>
+<local-variable name="rowset" id="locvar-4111"><type name="Set"/><cast-expr><type name="Set"/><send message="get">
+<target><var-ref name="_columns"/></target>
+<arguments><var-ref name="param_var" idref="frmarg-2411"/></arguments>
+</send>
+</cast-expr></local-variable>
+<if><test><binary-expr op="=="><var-ref name="rowset" idref="locvar-4111"/><literal-null/></binary-expr></test>
+<true-case><send message="put">
+<target><var-ref name="_columns"/></target>
+<arguments><var-ref name="param_var" idref="frmarg-2411"/><assignment-expr><lvalue><var-set name="rowset"/></lvalue><new><type name="Set"/><arguments/></new>
+</assignment-expr>
+</arguments>
+</send>
+</true-case>
+</if>
+<send message="insert">
+<target><var-ref name="rowset" idref="locvar-4111"/></target>
+<arguments><var-ref name="rowvar" idref="frmarg-2415"/></arguments>
+</send>
+</statements>
+</method>
+<method name="addRow" visibility="protected" final="true" id="meth-2431">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="var" id="frmarg-2425"><type name="ClAbstractVariable"/></formal-argument>
+<formal-argument name="expr" id="frmarg-2429"><type name="ClLinearExpression"/></formal-argument>
+</formal-arguments>
+<statements>
+<if><test><var-ref name="fTraceOn"/></test>
+<true-case><send message="fnenterprint">
+<arguments><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="8">addRow: </literal-string><var-ref name="var" idref="frmarg-2425"/></binary-expr><literal-string length="2">, </literal-string></binary-expr><var-ref name="expr" idref="frmarg-2429"/></binary-expr></arguments>
+</send>
+</true-case>
+</if>
+<send message="put">
+<target><var-ref name="_rows"/></target>
+<arguments><var-ref name="var" idref="frmarg-2425"/><var-ref name="expr" idref="frmarg-2429"/></arguments>
+</send>
+<loop kind="for"><init><local-variable name="e" id="locvar-4160"><type name="Enumeration"/><send message="keys">
+<target><send message="terms">
+<target><var-ref name="expr" idref="frmarg-2429"/></target>
+<arguments/>
+</send>
+</target>
+<arguments/>
+</send>
+</local-variable>
+</init>
+<test><send message="hasMoreElements">
+<target><var-ref name="e" idref="locvar-4160"/></target>
+<arguments/>
+</send>
+</test>
+<statements>
+<local-variable name="clv" id="locvar-4172"><type name="ClAbstractVariable"/><cast-expr><type name="ClAbstractVariable"/><send message="nextElement">
+<target><var-ref name="e"/></target>
+<arguments/>
+</send>
+</cast-expr></local-variable>
+<send message="insertColVar">
+<arguments><var-ref name="clv" idref="locvar-4172"/><var-ref name="var" idref="frmarg-2425"/></arguments>
+</send>
+<if><test><send message="isExternal">
+<target><var-ref name="clv" idref="locvar-4172"/></target>
+<arguments/>
+</send>
+</test>
+<true-case><statements>
+<send message="insert">
+<target><var-ref name="_externalParametricVars"/></target>
+<arguments><var-ref name="clv"/></arguments>
+</send>
+</statements>
+</true-case>
+</if>
+</statements>
+</loop>
+<if><test><send message="isExternal">
+<target><var-ref name="var" idref="frmarg-2425"/></target>
+<arguments/>
+</send>
+</test>
+<true-case><statements>
+<send message="insert">
+<target><var-ref name="_externalRows"/></target>
+<arguments><var-ref name="var" idref="frmarg-2425"/></arguments>
+</send>
+</statements>
+</true-case>
+</if>
+<if><test><var-ref name="fTraceOn"/></test>
+<true-case><send message="traceprint">
+<arguments><send message="toString">
+<target><this/></target>
+<arguments/>
+</send>
+</arguments>
+</send>
+</true-case>
+</if>
+</statements>
+</method>
+<method name="removeColumn" visibility="protected" final="true" id="meth-2441">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="var" id="frmarg-2439"><type name="ClAbstractVariable"/></formal-argument>
+</formal-arguments>
+<statements>
+<if><test><var-ref name="fTraceOn"/></test>
+<true-case><send message="fnenterprint">
+<arguments><binary-expr op="+"><literal-string length="13">removeColumn:</literal-string><var-ref name="var" idref="frmarg-2439"/></binary-expr></arguments>
+</send>
+</true-case>
+</if>
+<local-variable name="rows" id="locvar-4229"><type name="Set"/><cast-expr><type name="Set"/><send message="remove">
+<target><var-ref name="_columns"/></target>
+<arguments><var-ref name="var" idref="frmarg-2439"/></arguments>
+</send>
+</cast-expr></local-variable>
+<if><test><binary-expr op="!="><var-ref name="rows" idref="locvar-4229"/><literal-null/></binary-expr></test>
+<true-case><statements>
+<loop kind="for"><init><local-variable name="e" id="locvar-4239"><type name="Enumeration"/><send message="elements">
+<target><var-ref name="rows"/></target>
+<arguments/>
+</send>
+</local-variable>
+</init>
+<test><send message="hasMoreElements">
+<target><var-ref name="e" idref="locvar-4239"/></target>
+<arguments/>
+</send>
+</test>
+<statements>
+<local-variable name="clv" id="locvar-4251"><type name="ClAbstractVariable"/><cast-expr><type name="ClAbstractVariable"/><send message="nextElement">
+<target><var-ref name="e"/></target>
+<arguments/>
+</send>
+</cast-expr></local-variable>
+<local-variable name="expr" id="locvar-4261"><type name="ClLinearExpression"/><cast-expr><type name="ClLinearExpression"/><send message="get">
+<target><var-ref name="_rows"/></target>
+<arguments><var-ref name="clv" idref="locvar-4251"/></arguments>
+</send>
+</cast-expr></local-variable>
+<send message="remove">
+<target><send message="terms">
+<target><var-ref name="expr" idref="locvar-4261"/></target>
+<arguments/>
+</send>
+</target>
+<arguments><var-ref name="var" idref="frmarg-2439"/></arguments>
+</send>
+</statements>
+</loop>
+</statements>
+</true-case>
+<false-case><statements>
+<if><test><var-ref name="fTraceOn"/></test>
+<true-case><send message="debugprint">
+<arguments><binary-expr op="+"><binary-expr op="+"><literal-string length="19">Could not find var </literal-string><var-ref name="var" idref="frmarg-2439"/></binary-expr><literal-string length="12"> in _columns</literal-string></binary-expr></arguments>
+</send>
+</true-case>
+</if>
+</statements>
+</false-case>
+</if>
+<if><test><send message="isExternal">
+<target><var-ref name="var" idref="frmarg-2439"/></target>
+<arguments/>
+</send>
+</test>
+<true-case><statements>
+<send message="remove">
+<target><var-ref name="_externalRows"/></target>
+<arguments><var-ref name="var" idref="frmarg-2439"/></arguments>
+</send>
+<send message="remove">
+<target><var-ref name="_externalParametricVars"/></target>
+<arguments><var-ref name="var" idref="frmarg-2439"/></arguments>
+</send>
+</statements>
+</true-case>
+</if>
+</statements>
+</method>
+<method name="removeRow" visibility="protected" final="true" id="meth-2453">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="var" id="frmarg-2450"><type name="ClAbstractVariable"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLInternalError"/>
+<statements>
+<if><test><var-ref name="fTraceOn"/></test>
+<true-case><send message="fnenterprint">
+<arguments><binary-expr op="+"><literal-string length="10">removeRow:</literal-string><var-ref name="var" idref="frmarg-2450"/></binary-expr></arguments>
+</send>
+</true-case>
+</if>
+<local-variable name="expr" id="locvar-4320"><type name="ClLinearExpression"/><cast-expr><type name="ClLinearExpression"/><send message="get">
+<target><var-ref name="_rows"/></target>
+<arguments><var-ref name="var" idref="frmarg-2450"/></arguments>
+</send>
+</cast-expr></local-variable>
+<send message="assert">
+<arguments><binary-expr op="!="><var-ref name="expr" idref="locvar-4320"/><literal-null/></binary-expr></arguments>
+</send>
+<loop kind="for"><init><local-variable name="e" id="locvar-4335"><type name="Enumeration"/><send message="keys">
+<target><send message="terms">
+<target><var-ref name="expr"/></target>
+<arguments/>
+</send>
+</target>
+<arguments/>
+</send>
+</local-variable>
+</init>
+<test><send message="hasMoreElements">
+<target><var-ref name="e" idref="locvar-4335"/></target>
+<arguments/>
+</send>
+</test>
+<statements>
+<local-variable name="clv" id="locvar-4347"><type name="ClAbstractVariable"/><cast-expr><type name="ClAbstractVariable"/><send message="nextElement">
+<target><var-ref name="e"/></target>
+<arguments/>
+</send>
+</cast-expr></local-variable>
+<local-variable name="varset" id="locvar-4357"><type name="Set"/><cast-expr><type name="Set"/><send message="get">
+<target><var-ref name="_columns"/></target>
+<arguments><var-ref name="clv" idref="locvar-4347"/></arguments>
+</send>
+</cast-expr></local-variable>
+<if><test><binary-expr op="!="><var-ref name="varset" idref="locvar-4357"/><literal-null/></binary-expr></test>
+<true-case><statements>
+<if><test><var-ref name="fTraceOn"/></test>
+<true-case><send message="debugprint">
+<arguments><binary-expr op="+"><literal-string length="21">removing from varset </literal-string><var-ref name="var" idref="frmarg-2450"/></binary-expr></arguments>
+</send>
+</true-case>
+</if>
+<send message="remove">
+<target><var-ref name="varset"/></target>
+<arguments><var-ref name="var" idref="frmarg-2450"/></arguments>
+</send>
+</statements>
+</true-case>
+</if>
+</statements>
+</loop>
+<send message="remove">
+<target><var-ref name="_infeasibleRows"/></target>
+<arguments><var-ref name="var" idref="frmarg-2450"/></arguments>
+</send>
+<if><test><send message="isExternal">
+<target><var-ref name="var" idref="frmarg-2450"/></target>
+<arguments/>
+</send>
+</test>
+<true-case><statements>
+<send message="remove">
+<target><var-ref name="_externalRows"/></target>
+<arguments><var-ref name="var" idref="frmarg-2450"/></arguments>
+</send>
+</statements>
+</true-case>
+</if>
+<send message="remove">
+<target><var-ref name="_rows"/></target>
+<arguments><var-ref name="var" idref="frmarg-2450"/></arguments>
+</send>
+<if><test><var-ref name="fTraceOn"/></test>
+<true-case><send message="fnexitprint">
+<arguments><binary-expr op="+"><literal-string length="10">returning </literal-string><var-ref name="expr"/></binary-expr></arguments>
+</send>
+</true-case>
+</if>
+<return><var-ref name="expr" idref="locvar-4320"/></return>
+</statements>
+</method>
+<method name="substituteOut" visibility="protected" final="true" id="meth-2466">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="oldVar" id="frmarg-2460"><type name="ClAbstractVariable"/></formal-argument>
+<formal-argument name="expr" id="frmarg-2464"><type name="ClLinearExpression"/></formal-argument>
+</formal-arguments>
+<statements>
+<if><test><var-ref name="fTraceOn"/></test>
+<true-case><send message="fnenterprint">
+<arguments><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="14">substituteOut:</literal-string><var-ref name="oldVar" idref="frmarg-2460"/></binary-expr><literal-string length="2">, </literal-string></binary-expr><var-ref name="expr" idref="frmarg-2464"/></binary-expr></arguments>
+</send>
+</true-case>
+</if>
+<if><test><var-ref name="fTraceOn"/></test>
+<true-case><send message="traceprint">
+<arguments><send message="toString">
+<target><this/></target>
+<arguments/>
+</send>
+</arguments>
+</send>
+</true-case>
+</if>
+<local-variable name="varset" id="locvar-4443"><type name="Set"/><cast-expr><type name="Set"/><send message="get">
+<target><var-ref name="_columns"/></target>
+<arguments><var-ref name="oldVar" idref="frmarg-2460"/></arguments>
+</send>
+</cast-expr></local-variable>
+<loop kind="for"><init><local-variable name="e" id="locvar-4450"><type name="Enumeration"/><send message="elements">
+<target><var-ref name="varset"/></target>
+<arguments/>
+</send>
+</local-variable>
+</init>
+<test><send message="hasMoreElements">
+<target><var-ref name="e" idref="locvar-4450"/></target>
+<arguments/>
+</send>
+</test>
+<statements>
+<local-variable name="v" id="locvar-4462"><type name="ClAbstractVariable"/><cast-expr><type name="ClAbstractVariable"/><send message="nextElement">
+<target><var-ref name="e"/></target>
+<arguments/>
+</send>
+</cast-expr></local-variable>
+<local-variable name="row" id="locvar-4472"><type name="ClLinearExpression"/><cast-expr><type name="ClLinearExpression"/><send message="get">
+<target><var-ref name="_rows"/></target>
+<arguments><var-ref name="v" idref="locvar-4462"/></arguments>
+</send>
+</cast-expr></local-variable>
+<send message="substituteOut">
+<target><var-ref name="row" idref="locvar-4472"/></target>
+<arguments><var-ref name="oldVar" idref="frmarg-2460"/><var-ref name="expr" idref="frmarg-2464"/><var-ref name="v" idref="locvar-4462"/><this/></arguments>
+</send>
+<if><test><binary-expr op="logand"><send message="isRestricted">
+<target><var-ref name="v" idref="locvar-4462"/></target>
+<arguments/>
+</send>
+<binary-expr op="lt"><send message="constant">
+<target><var-ref name="row" idref="locvar-4472"/></target>
+<arguments/>
+</send>
+<literal-number kind="double" value="0.0"/></binary-expr></binary-expr></test>
+<true-case><statements>
+<send message="insert">
+<target><var-ref name="_infeasibleRows"/></target>
+<arguments><var-ref name="v"/></arguments>
+</send>
+</statements>
+</true-case>
+</if>
+</statements>
+</loop>
+<if><test><send message="isExternal">
+<target><var-ref name="oldVar" idref="frmarg-2460"/></target>
+<arguments/>
+</send>
+</test>
+<true-case><statements>
+<send message="insert">
+<target><var-ref name="_externalRows"/></target>
+<arguments><var-ref name="oldVar" idref="frmarg-2460"/></arguments>
+</send>
+<send message="remove">
+<target><var-ref name="_externalParametricVars"/></target>
+<arguments><var-ref name="oldVar" idref="frmarg-2460"/></arguments>
+</send>
+</statements>
+</true-case>
+</if>
+<send message="remove">
+<target><var-ref name="_columns"/></target>
+<arguments><var-ref name="oldVar" idref="frmarg-2460"/></arguments>
+</send>
+</statements>
+</method>
+<method name="columns" visibility="protected" final="true" id="meth-2473">
+<type name="Hashtable"/>
+<formal-arguments/>
+<statements>
+<return><var-ref name="_columns"/></return>
+</statements>
+</method>
+<method name="rows" visibility="protected" final="true" id="meth-2479">
+<type name="Hashtable"/>
+<formal-arguments/>
+<statements>
+<return><var-ref name="_rows"/></return>
+</statements>
+</method>
+<method name="columnsHasKey" visibility="protected" final="true" id="meth-2489">
+<type name="boolean" primitive="true"/>
+<formal-arguments>
+<formal-argument name="subject" id="frmarg-2487"><type name="ClAbstractVariable"/></formal-argument>
+</formal-arguments>
+<statements>
+<return><send message="containsKey">
+<target><var-ref name="_columns"/></target>
+<arguments><var-ref name="subject" idref="frmarg-2487"/></arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="rowExpression" visibility="protected" final="true" id="meth-2499">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="v" id="frmarg-2497"><type name="ClAbstractVariable"/></formal-argument>
+</formal-arguments>
+<statements>
+<return><cast-expr><type name="ClLinearExpression"/><send message="get">
+<target><var-ref name="_rows"/></target>
+<arguments><var-ref name="v" idref="frmarg-2497"/></arguments>
+</send>
+</cast-expr></return>
+</statements>
+</method>
+<field name="_columns" visibility="protected"><type name="Hashtable"/></field>
+<field name="_rows" visibility="protected"><type name="Hashtable"/></field>
+<field name="_infeasibleRows" visibility="protected"><type name="Set"/></field>
+<field name="_externalRows" visibility="protected"><type name="Set"/></field>
+<field name="_externalParametricVars" visibility="protected"><type name="Set"/></field>
+</class>
+</java-source-program>

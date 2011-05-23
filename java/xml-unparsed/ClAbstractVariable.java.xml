@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="ClAbstractVariable.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<import module="java.lang.*"/>
+<class name="ClAbstractVariable" visibility="public" abstract="true">
+<superclass class="Object"/>
+<constructor name="ClAbstractVariable" visibility="public" id="ctr-279">
+<formal-arguments>
+<formal-argument name="name" id="frmarg-275"><type name="String"/></formal-argument>
+</formal-arguments>
+<assignment-expr><lvalue><var-set name="hash_code"/></lvalue><var-ref name="iVariableNumber"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="_name"/></lvalue><var-ref name="name"/></assignment-expr>
+<unary-expr op="++" post="true"><var-ref name="iVariableNumber"/></unary-expr></constructor>
+<constructor name="ClAbstractVariable" visibility="public" id="ctr-284">
+<formal-arguments/>
+<assignment-expr><lvalue><var-set name="hash_code"/></lvalue><var-ref name="iVariableNumber"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="_name"/></lvalue><binary-expr op="+"><literal-string length="1">v</literal-string><var-ref name="iVariableNumber"/></binary-expr></assignment-expr>
+<unary-expr op="++" post="true"><var-ref name="iVariableNumber"/></unary-expr></constructor>
+<constructor name="ClAbstractVariable" visibility="public" id="ctr-297">
+<formal-arguments>
+<formal-argument name="varnumber" id="frmarg-289"><type name="long" primitive="true"/></formal-argument>
+<formal-argument name="prefix" id="frmarg-293"><type name="String"/></formal-argument>
+</formal-arguments>
+<assignment-expr><lvalue><var-set name="hash_code"/></lvalue><var-ref name="iVariableNumber"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="_name"/></lvalue><binary-expr op="+"><var-ref name="prefix"/><var-ref name="varnumber"/></binary-expr></assignment-expr>
+<unary-expr op="++" post="true"><var-ref name="iVariableNumber"/></unary-expr></constructor>
+<method name="name" visibility="public" id="meth-301">
+<type name="String"/>
+<formal-arguments/>
+<statements>
+<return><var-ref name="_name"/></return>
+</statements>
+</method>
+<method name="setName" visibility="public" id="meth-309">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="name" id="frmarg-307"><type name="String"/></formal-argument>
+</formal-arguments>
+<statements>
+<assignment-expr><lvalue><var-set name="_name"/></lvalue><var-ref name="name" idref="frmarg-307"/></assignment-expr>
+</statements>
+</method>
+<method name="isDummy" visibility="public" id="meth-315">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><literal-false/></return>
+</statements>
+</method>
+<method name="isExternal" visibility="public" abstract="true" id="meth-321">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+</method>
+<method name="isPivotable" visibility="public" abstract="true" id="meth-327">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+</method>
+<method name="isRestricted" visibility="public" abstract="true" id="meth-333">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+</method>
+<method name="toString" visibility="public" abstract="true" id="meth-339">
+<type name="String"/>
+<formal-arguments/>
+</method>
+<method name="numCreated" visibility="public" static="true" id="meth-345">
+<type name="int" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><var-ref name="iVariableNumber"/></return>
+</statements>
+</method>
+<method name="hashCode" visibility="public" final="true" id="meth-351">
+<type name="int" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><var-ref name="hash_code"/></return>
+</statements>
+</method>
+<field name="_name" visibility="private"><type name="String"/></field>
+<field name="hash_code" visibility="private"><type name="int" primitive="true"/></field>
+<field name="iVariableNumber" visibility="private" static="true"><type name="int" primitive="true"/></field>
+</class>
+</java-source-program>

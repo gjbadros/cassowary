@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="ClLinearConstraint.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<class name="ClLinearConstraint">
+<superclass class="ClConstraint"/>
+<constructor name="ClLinearConstraint" visibility="public" id="ctr-8677">
+<formal-arguments>
+<formal-argument name="cle" id="frmarg-8665"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="strength" id="frmarg-8669"><type name="ClStrength"/></formal-argument>
+<formal-argument name="weight" id="frmarg-8673"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<super-call><arguments><var-ref name="strength"/><var-ref name="weight"/></arguments></super-call>
+<assignment-expr><lvalue><var-set name="_expression"/></lvalue><var-ref name="cle"/></assignment-expr>
+</constructor>
+<constructor name="ClLinearConstraint" visibility="public" id="ctr-8690">
+<formal-arguments>
+<formal-argument name="cle" id="frmarg-8682"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="strength" id="frmarg-8686"><type name="ClStrength"/></formal-argument>
+</formal-arguments>
+<super-call><arguments><var-ref name="strength"/><literal-number kind="double" value="1.0"/></arguments></super-call>
+<assignment-expr><lvalue><var-set name="_expression"/></lvalue><var-ref name="cle"/></assignment-expr>
+</constructor>
+<constructor name="ClLinearConstraint" visibility="public" id="ctr-8699">
+<formal-arguments>
+<formal-argument name="cle" id="frmarg-8695"><type name="ClLinearExpression"/></formal-argument>
+</formal-arguments>
+<super-call><arguments><field-access field="required"><var-ref name="ClStrength"/></field-access><literal-number kind="double" value="1.0"/></arguments></super-call>
+<assignment-expr><lvalue><var-set name="_expression"/></lvalue><var-ref name="cle"/></assignment-expr>
+</constructor>
+<method name="expression" visibility="public" id="meth-8703">
+<type name="ClLinearExpression"/>
+<formal-arguments/>
+<statements>
+<return><var-ref name="_expression"/></return>
+</statements>
+</method>
+<method name="setExpression" visibility="protected" id="meth-8711">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="expr" id="frmarg-8709"><type name="ClLinearExpression"/></formal-argument>
+</formal-arguments>
+<statements>
+<assignment-expr><lvalue><var-set name="_expression"/></lvalue><var-ref name="expr" idref="frmarg-8709"/></assignment-expr>
+</statements>
+</method>
+<field name="_expression" visibility="protected"><type name="ClLinearExpression"/></field>
+</class>
+</java-source-program>

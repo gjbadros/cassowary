@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="ClTestColumns.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<import module="java.lang.*"/>
+<import module="java.util.Random"/>
+<class name="ClTestColumns">
+<superclass class="CL"/>
+<method name="addDelete1" visibility="public" final="true" static="true" id="meth-16977">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<throws exception="ExCLInternalError"/>
+<throws exception="ExCLRequiredFailure"/>
+<throws exception="ExCLConstraintNotFound"/>
+<statements>
+<local-variable name="fOkResult" id="locvar-17024"><type name="boolean" primitive="true"/><literal-true/></local-variable>
+<local-variable name="x" id="locvar-17032"><type name="ClVariable"/><new><type name="ClVariable"/><arguments><literal-string length="1">x</literal-string></arguments></new>
+</local-variable>
+<local-variable name="solver" id="locvar-17039"><type name="ClSimplexSolver"/><new><type name="ClSimplexSolver"/><arguments/></new>
+</local-variable>
+<send message="addConstraint">
+<target><var-ref name="solver" idref="locvar-17039"/></target>
+<arguments><new><type name="ClLinearEquation"/><arguments><var-ref name="x" idref="locvar-17032"/><literal-number kind="integer" value="100"/><field-access field="weak"><var-ref name="ClStrength"/></field-access></arguments></new>
+</arguments>
+</send>
+<local-variable name="c10" id="locvar-17061"><type name="ClLinearInequality"/><new><type name="ClLinearInequality"/><arguments><var-ref name="x" idref="locvar-17032"/><field-access field="LEQ"><var-ref name="CL"/></field-access><literal-number kind="double" value="10.0"/></arguments></new>
+</local-variable>
+<local-variable name="c20" id="locvar-17072"><type name="ClLinearInequality"/><new><type name="ClLinearInequality"/><arguments><var-ref name="x" idref="locvar-17032"/><field-access field="LEQ"><var-ref name="CL"/></field-access><literal-number kind="double" value="20.0"/></arguments></new>
+</local-variable>
+<send message="addConstraint">
+<target><send message="addConstraint">
+<target><var-ref name="solver" idref="locvar-17039"/></target>
+<arguments><var-ref name="c10" idref="locvar-17061"/></arguments>
+</send>
+</target>
+<arguments><var-ref name="c20" idref="locvar-17072"/></arguments>
+</send>
+<assignment-expr><lvalue><var-set name="fOkResult"/></lvalue><binary-expr op="logand"><var-ref name="fOkResult" idref="locvar-17024"/><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="x" idref="locvar-17032"/><literal-number kind="double" value="10.0"/></arguments>
+</send>
+</binary-expr></assignment-expr>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="5">x == </literal-string><send message="value">
+<target><var-ref name="x" idref="locvar-17032"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<send message="removeConstraint">
+<target><var-ref name="solver" idref="locvar-17039"/></target>
+<arguments><var-ref name="c10" idref="locvar-17061"/></arguments>
+</send>
+<assignment-expr><lvalue><var-set name="fOkResult"/></lvalue><binary-expr op="logand"><var-ref name="fOkResult" idref="locvar-17024"/><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="x" idref="locvar-17032"/><literal-number kind="double" value="20.0"/></arguments>
+</send>
+</binary-expr></assignment-expr>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="5">x == </literal-string><send message="value">
+<target><var-ref name="x" idref="locvar-17032"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<send message="removeConstraint">
+<target><var-ref name="solver" idref="locvar-17039"/></target>
+<arguments><var-ref name="c20" idref="locvar-17072"/></arguments>
+</send>
+<assignment-expr><lvalue><var-set name="fOkResult"/></lvalue><binary-expr op="logand"><var-ref name="fOkResult" idref="locvar-17024"/><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="x" idref="locvar-17032"/><literal-number kind="double" value="100.0"/></arguments>
+</send>
+</binary-expr></assignment-expr>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="5">x == </literal-string><send message="value">
+<target><var-ref name="x" idref="locvar-17032"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<local-variable name="c10again" id="locvar-17161"><type name="ClLinearInequality"/><new><type name="ClLinearInequality"/><arguments><var-ref name="x" idref="locvar-17032"/><field-access field="LEQ"><var-ref name="CL"/></field-access><literal-number kind="double" value="10.0"/></arguments></new>
+</local-variable>
+<send message="addConstraint">
+<target><send message="addConstraint">
+<target><var-ref name="solver" idref="locvar-17039"/></target>
+<arguments><var-ref name="c10" idref="locvar-17061"/></arguments>
+</send>
+</target>
+<arguments><var-ref name="c10again" idref="locvar-17161"/></arguments>
+</send>
+<assignment-expr><lvalue><var-set name="fOkResult"/></lvalue><binary-expr op="logand"><var-ref name="fOkResult" idref="locvar-17024"/><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="x" idref="locvar-17032"/><literal-number kind="double" value="10.0"/></arguments>
+</send>
+</binary-expr></assignment-expr>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="5">x == </literal-string><send message="value">
+<target><var-ref name="x" idref="locvar-17032"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<send message="removeConstraint">
+<target><var-ref name="solver" idref="locvar-17039"/></target>
+<arguments><var-ref name="c10" idref="locvar-17061"/></arguments>
+</send>
+<assignment-expr><lvalue><var-set name="fOkResult"/></lvalue><binary-expr op="logand"><var-ref name="fOkResult" idref="locvar-17024"/><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="x" idref="locvar-17032"/><literal-number kind="double" value="10.0"/></arguments>
+</send>
+</binary-expr></assignment-expr>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="5">x == </literal-string><send message="value">
+<target><var-ref name="x" idref="locvar-17032"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<send message="removeConstraint">
+<target><var-ref name="solver" idref="locvar-17039"/></target>
+<arguments><var-ref name="c10again" idref="locvar-17161"/></arguments>
+</send>
+<assignment-expr><lvalue><var-set name="fOkResult"/></lvalue><binary-expr op="logand"><var-ref name="fOkResult" idref="locvar-17024"/><send message="approx">
+<target><var-ref name="CL"/></target>
+<arguments><var-ref name="x" idref="locvar-17032"/><literal-number kind="double" value="100.0"/></arguments>
+</send>
+</binary-expr></assignment-expr>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="5">x == </literal-string><send message="value">
+<target><var-ref name="x" idref="locvar-17032"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<send message="println">
+<target><field-access field="err"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="10">Solver == </literal-string><var-ref name="solver" idref="locvar-17039"/></binary-expr></arguments>
+</send>
+<return><paren><var-ref name="fOkResult" idref="locvar-17024"/></paren></return>
+</statements>
+</method>
+<method name="reqFail1" visibility="public" final="true" static="true" id="meth-16987">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<throws exception="ExCLInternalError"/>
+<throws exception="ExCLRequiredFailure"/>
+<throws exception="ExCLConstraintNotFound"/>
+<statements>
+<local-variable name="fOkResult" id="locvar-17256"><type name="boolean" primitive="true"/><literal-true/></local-variable>
+<local-variable name="x" id="locvar-17264"><type name="ClVariable"/><new><type name="ClVariable"/><arguments><literal-string length="1">x</literal-string></arguments></new>
+</local-variable>
+<local-variable name="solver" id="locvar-17271"><type name="ClSimplexSolver"/><new><type name="ClSimplexSolver"/><arguments/></new>
+</local-variable>
+<loop kind="for"><init><local-variable name="i" id="locvar-17276"><type name="int" primitive="true"/><literal-number kind="integer" value="100"/></local-variable>
+</init>
+<test><binary-expr op="lt"><var-ref name="i" idref="locvar-17276"/><literal-number kind="integer" value="900"/></binary-expr></test>
+<update><assignment-expr><lvalue><var-set name="i"/></lvalue><literal-number kind="integer" value="100"/></assignment-expr>
+</update>
+<statements>
+<try><statements>
+<send message="addConstraint">
+<target><var-ref name="solver"/></target>
+<arguments><new><type name="ClLinearEquation"/><arguments><var-ref name="x"/><var-ref name="i"/><field-access field="required"><var-ref name="ClStrength"/></field-access></arguments></new>
+</arguments>
+</send>
+</statements>
+<catch><formal-argument name="e" id="locvar-17300"><type name="Exception"/></formal-argument>
+</catch></try></statements>
+</loop>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="5">x == </literal-string><send message="value">
+<target><var-ref name="x" idref="locvar-17264"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<send message="println">
+<target><field-access field="err"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="10">Solver == </literal-string><var-ref name="solver" idref="locvar-17271"/></binary-expr></arguments>
+</send>
+<return><paren><var-ref name="fOkResult" idref="locvar-17256"/></paren></return>
+</statements>
+</method>
+<method name="main" visibility="public" final="true" static="true" id="meth-17003">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="args" id="frmarg-16997"><type name="String" dimensions="1"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLInternalError"/>
+<throws exception="ExCLNonlinearExpression"/>
+<throws exception="ExCLRequiredFailure"/>
+<throws exception="ExCLConstraintNotFound"/>
+<statements>
+<statements>
+<local-variable name="fAllOkResult" id="locvar-17332"><type name="boolean" primitive="true"/><literal-true/></local-variable>
+<local-variable name="fResult" id="locvar-17336"><type name="boolean" primitive="true"/></local-variable>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="11">addDelete1:</literal-string></arguments>
+</send>
+<assignment-expr><lvalue><var-set name="fResult"/></lvalue><send message="addDelete1">
+<arguments/>
+</send>
+</assignment-expr>
+<assignment-expr><lvalue><var-set name="fAllOkResult"/></lvalue><var-ref name="fResult" idref="locvar-17336"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="fResult"/></lvalue><send message="reqFail1">
+<arguments/>
+</send>
+</assignment-expr>
+<assignment-expr><lvalue><var-set name="fAllOkResult"/></lvalue><var-ref name="fResult" idref="locvar-17336"/></assignment-expr>
+<if><test><unary-expr op="!"><var-ref name="fResult" idref="locvar-17336"/></unary-expr></test>
+<true-case><send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="7">Failed!</literal-string></arguments>
+</send>
+</true-case>
+</if>
+<if><test><field-access field="fGC"><var-ref name="CL"/></field-access></test>
+<true-case><send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="11">Num vars = </literal-string><send message="numCreated">
+<target><var-ref name="ClAbstractVariable"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+</true-case>
+</if>
+</statements>
+</statements>
+</method>
+<field name="RND" visibility="private" static="true"><type name="Random"/></field>
+</class>
+</java-source-program>

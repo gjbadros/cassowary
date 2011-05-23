@@ -1,0 +1,775 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="parser.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<import module="java_cup.runtime.*"/>
+<class name="parser" visibility="public">
+<superclass class="java_cup.runtime.lr_parser"/>
+<constructor name="parser" visibility="public" id="ctr-13270">
+<formal-arguments/>
+<super-call><arguments/></super-call>
+</constructor>
+<constructor name="parser" visibility="public" id="ctr-13281">
+<formal-arguments>
+<formal-argument name="s" id="frmarg-13277"><type name="java_cup.runtime.Scanner"/></formal-argument>
+</formal-arguments>
+<super-call><arguments><var-ref name="s"/></arguments></super-call>
+</constructor>
+<field name="_production_table[][]" visibility="protected" final="true" static="true"><type name="short" primitive="true"/><send message="unpackFromStrings">
+<arguments><new-array dimensions="0"><type name="String" dimensions="1"/><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="52">\000\016\000\002\003\003\000\002\002\004\000\002\003</literal-string><literal-string length="52">\003\000\002\004\005\000\002\005\005\000\002\005\005</literal-string></binary-expr><literal-string length="52">\000\002\006\003\000\002\006\003\000\002\006\005\000</literal-string></binary-expr><literal-string length="52">\002\006\005\000\002\006\005\000\002\006\005\000\002</literal-string></binary-expr><literal-string length="24">\006\004\000\002\006\005</literal-string></binary-expr></new-array></arguments>
+</send>
+</field>
+<method name="production_table" visibility="public" id="meth-13313">
+<type name="short" dimensions="2"/>
+<formal-arguments/>
+<statements>
+<return><var-ref name="_production_table"/></return>
+</statements>
+</method>
+<field name="_action_table" visibility="protected" final="true" static="true"><type name="short" dimensions="2"/><send message="unpackFromStrings">
+<arguments><new-array dimensions="0"><type name="String" dimensions="1"/><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="52">\000\033\000\012\010\007\014\011\016\005\017\013\001</literal-string><literal-string length="46">\002\000\004\002\001\001\002\000\024\002\uFFFB\004\uFFFB</literal-string></binary-expr><literal-string length="34">\005\uFFFB\006\uFFFB\007\uFFFB\010\uFFFB\012\uFFFB\013\uFFFB\015</literal-string></binary-expr><literal-string length="46">\uFFFB\001\002\000\004\002\uFFFF\001\002\000\012\010\007</literal-string></binary-expr><literal-string length="52">\014\011\016\005\017\013\001\002\000\004\002\034\001</literal-string></binary-expr><literal-string length="52">\002\000\012\010\007\014\011\016\005\017\013\001\002</literal-string></binary-expr><literal-string length="52">\000\020\004\015\005\017\006\014\007\016\010\020\012</literal-string></binary-expr><literal-string length="43">\022\013\021\001\002\000\024\002\uFFFA\004\uFFFA\005\uFFFA</literal-string></binary-expr><literal-string length="34">\006\uFFFA\007\uFFFA\010\uFFFA\012\uFFFA\013\uFFFA\015\uFFFA\001</literal-string></binary-expr><literal-string length="52">\002\000\012\010\007\014\011\016\005\017\013\001\002</literal-string></binary-expr><literal-string length="52">\000\012\010\007\014\011\016\005\017\013\001\002\000</literal-string></binary-expr><literal-string length="52">\012\010\007\014\011\016\005\017\013\001\002\000\012</literal-string></binary-expr><literal-string length="52">\010\007\014\011\016\005\017\013\001\002\000\012\010</literal-string></binary-expr><literal-string length="52">\007\014\011\016\005\017\013\001\002\000\012\010\007</literal-string></binary-expr><literal-string length="52">\014\011\016\005\017\013\001\002\000\012\010\007\014</literal-string></binary-expr><literal-string length="46">\011\016\005\017\013\001\002\000\024\002\uFFF7\004\uFFF7</literal-string></binary-expr><literal-string length="34">\005\uFFF7\006\uFFF7\007\uFFF7\010\uFFF7\012\uFFF7\013\uFFF7\015</literal-string></binary-expr><literal-string length="37">\uFFF7\001\002\000\024\002\uFFF6\004\uFFF6\005\uFFF6\006\uFFF6</literal-string></binary-expr><literal-string length="37">\007\uFFF6\010\uFFF6\012\uFFF6\013\uFFF6\015\uFFF6\001\002\000</literal-string></binary-expr><literal-string length="34">\024\002\uFFF8\004\uFFF8\005\uFFF8\006\uFFF8\007\uFFF8\010\uFFF8</literal-string></binary-expr><literal-string length="46">\012\022\013\021\015\uFFF8\001\002\000\014\002\uFFFC\007</literal-string></binary-expr><literal-string length="49">\016\010\020\012\022\013\021\001\002\000\024\002\uFFF9</literal-string></binary-expr><literal-string length="37">\004\uFFF9\005\uFFF9\006\uFFF9\007\uFFF9\010\uFFF9\012\022\013</literal-string></binary-expr><literal-string length="46">\021\015\uFFF9\001\002\000\014\002\uFFFD\007\016\010\020</literal-string></binary-expr><literal-string length="49">\012\022\013\021\001\002\000\014\002\uFFFE\007\016\010</literal-string></binary-expr><literal-string length="52">\020\012\022\013\021\001\002\000\014\007\016\010\020</literal-string></binary-expr><literal-string length="49">\012\022\013\021\015\033\001\002\000\024\002\uFFF4\004</literal-string></binary-expr><literal-string length="31">\uFFF4\005\uFFF4\006\uFFF4\007\uFFF4\010\uFFF4\012\uFFF4\013\uFFF4</literal-string></binary-expr><literal-string length="49">\015\uFFF4\001\002\000\004\002\000\001\002\000\024\002</literal-string></binary-expr><literal-string length="31">\uFFF5\004\uFFF5\005\uFFF5\006\uFFF5\007\uFFF5\010\uFFF5\012\uFFF5</literal-string></binary-expr><literal-string length="18">\013\uFFF5\015\uFFF5\001\002</literal-string></binary-expr></new-array></arguments>
+</send>
+</field>
+<method name="action_table" visibility="public" id="meth-13399">
+<type name="short" dimensions="2"/>
+<formal-arguments/>
+<statements>
+<return><var-ref name="_action_table"/></return>
+</statements>
+</method>
+<field name="_reduce_table" visibility="protected" final="true" static="true"><type name="short" dimensions="2"/><send message="unpackFromStrings">
+<arguments><new-array dimensions="0"><type name="String" dimensions="1"/><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><literal-string length="52">\000\033\000\012\003\007\004\003\005\005\006\011\001</literal-string><literal-string length="52">\001\000\002\001\001\000\002\001\001\000\002\001\001</literal-string></binary-expr><literal-string length="52">\000\004\006\034\001\001\000\002\001\001\000\004\006</literal-string></binary-expr><literal-string length="52">\031\001\001\000\002\001\001\000\002\001\001\000\004</literal-string></binary-expr><literal-string length="52">\006\030\001\001\000\004\006\027\001\001\000\004\006</literal-string></binary-expr><literal-string length="52">\026\001\001\000\004\006\025\001\001\000\004\006\024</literal-string></binary-expr><literal-string length="52">\001\001\000\004\006\023\001\001\000\004\006\022\001</literal-string></binary-expr><literal-string length="52">\001\000\002\001\001\000\002\001\001\000\002\001\001</literal-string></binary-expr><literal-string length="52">\000\002\001\001\000\002\001\001\000\002\001\001\000</literal-string></binary-expr><literal-string length="52">\002\001\001\000\002\001\001\000\002\001\001\000\002</literal-string></binary-expr><literal-string length="24">\001\001\000\002\001\001</literal-string></binary-expr></new-array></arguments>
+</send>
+</field>
+<method name="reduce_table" visibility="public" id="meth-13445">
+<type name="short" dimensions="2"/>
+<formal-arguments/>
+<statements>
+<return><var-ref name="_reduce_table"/></return>
+</statements>
+</method>
+<field name="action_obj" visibility="protected"><type name="CUP$parser$actions"/></field>
+<method name="init_actions" visibility="protected" id="meth-13454">
+<type name="void" primitive="true"/>
+<formal-arguments/>
+<statements>
+<assignment-expr><lvalue><var-set name="action_obj"/></lvalue><new><type name="CUP$parser$actions"/><arguments><this/></arguments></new>
+</assignment-expr>
+</statements>
+</method>
+<method name="do_action" visibility="public" id="meth-13485">
+<type name="java_cup.runtime.Symbol"/>
+<formal-arguments>
+<formal-argument name="act_num" id="frmarg-13464"><type name="int" primitive="true"/></formal-argument>
+<formal-argument name="parser" id="frmarg-13470"><type name="java_cup.runtime.lr_parser"/></formal-argument>
+<formal-argument name="stack" id="frmarg-13476"><type name="java.util.Stack"/></formal-argument>
+<formal-argument name="top" id="frmarg-13480"><type name="int" primitive="true"/></formal-argument>
+</formal-arguments>
+<throws exception="java.lang.Exception"/>
+<statements>
+<return><send message="CUP$parser$do_action">
+<target><var-ref name="action_obj"/></target>
+<arguments><var-ref name="act_num" idref="frmarg-13464"/><var-ref name="parser" idref="frmarg-13470"/><var-ref name="stack" idref="frmarg-13476"/><var-ref name="top" idref="frmarg-13480"/></arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="start_state" visibility="public" id="meth-13490">
+<type name="int" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><literal-number kind="integer" value="0"/></return>
+</statements>
+</method>
+<method name="start_production" visibility="public" id="meth-13495">
+<type name="int" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><literal-number kind="integer" value="1"/></return>
+</statements>
+</method>
+<method name="EOF_sym" visibility="public" id="meth-13500">
+<type name="int" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><literal-number kind="integer" value="0"/></return>
+</statements>
+</method>
+<method name="error_sym" visibility="public" id="meth-13505">
+<type name="int" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><literal-number kind="integer" value="1"/></return>
+</statements>
+</method>
+<field name="m_variable_name_object_hash" visibility="public"><type name="java.util.Hashtable"/></field>
+<field name="m_debug_parse" visibility="public"><type name="boolean" primitive="true"/><literal-false/></field>
+<method name="setVariableNameObjectHash" visibility="public" id="meth-13528">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="variable_name_object_hash" id="frmarg-13526"><type name="java.util.Hashtable"/></formal-argument>
+</formal-arguments>
+<statements>
+<assignment-expr><lvalue><var-set name="m_variable_name_object_hash"/></lvalue><var-ref name="variable_name_object_hash" idref="frmarg-13526"/></assignment-expr>
+</statements>
+</method>
+</class>
+<class name="CUP$parser$actions">
+<superclass class="Object"/>
+<field name="parser" visibility="private" final="true"><type name="parser"/></field>
+<constructor name="CUP$parser$actions" id="ctr-13546">
+<formal-arguments>
+<formal-argument name="parser" id="frmarg-13542"><type name="parser"/></formal-argument>
+</formal-arguments>
+<assignment-expr><lvalue><field-set field="parser"><this/></field-set></lvalue><var-ref name="parser"/></assignment-expr>
+</constructor>
+<method name="CUP$parser$do_action" visibility="public" final="true" id="meth-13576">
+<type name="java_cup.runtime.Symbol"/>
+<formal-arguments>
+<formal-argument name="CUP$parser$act_num" id="frmarg-13555"><type name="int" primitive="true"/></formal-argument>
+<formal-argument name="CUP$parser$parser" id="frmarg-13561"><type name="java_cup.runtime.lr_parser"/></formal-argument>
+<formal-argument name="CUP$parser$stack" id="frmarg-13567"><type name="java.util.Stack"/></formal-argument>
+<formal-argument name="CUP$parser$top" id="frmarg-13571"><type name="int" primitive="true"/></formal-argument>
+</formal-arguments>
+<throws exception="java.lang.Exception"/>
+<statements>
+<local-variable name="CUP$parser$result" id="locvar-14968"><type name="java_cup.runtime.Symbol"/></local-variable>
+switch(CUP$parser$act_num)<statements>
+case <literal-number kind="integer" value="13"/>:
+<statements>
+<local-variable name="RESULT" id="locvar-14976"><type name="Object"/><literal-null/></local-variable>
+<local-variable name="aleft" id="locvar-14992"><type name="int" primitive="true"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="1"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="aright" id="locvar-15008"><type name="int" primitive="true"/><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="1"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="a" id="locvar-15026"><type name="Object"/><cast-expr><type name="Object"/><field-access field="value"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="1"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></cast-expr></local-variable>
+<assignment-expr><lvalue><var-set name="RESULT"/></lvalue><var-ref name="a" idref="locvar-15026"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="CUP$parser$result"/></lvalue><new><type name="java_cup.runtime.Symbol"/><arguments><literal-number kind="integer" value="4"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="2"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access><var-ref name="RESULT" idref="locvar-14976"/></arguments></new>
+</assignment-expr>
+</statements>
+<return><var-ref name="CUP$parser$result"/></return>
+case <literal-number kind="integer" value="12"/>:
+<statements>
+<local-variable name="RESULT" id="locvar-15075"><type name="Object"/><literal-null/></local-variable>
+<local-variable name="aleft" id="locvar-15091"><type name="int" primitive="true"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="aright" id="locvar-15107"><type name="int" primitive="true"/><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="a" id="locvar-15125"><type name="Object"/><cast-expr><type name="Object"/><field-access field="value"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></cast-expr></local-variable>
+<assignment-expr><lvalue><var-set name="RESULT"/></lvalue><paren><send message="Times">
+<target><var-ref name="CL"/></target>
+<arguments><unary-expr op="-"><literal-number kind="integer" value="1"/></unary-expr><cast-expr><type name="ClLinearExpression"/><var-ref name="a" idref="locvar-15125"/></cast-expr></arguments>
+</send>
+</paren></assignment-expr>
+<assignment-expr><lvalue><var-set name="CUP$parser$result"/></lvalue><new><type name="java_cup.runtime.Symbol"/><arguments><literal-number kind="integer" value="4"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="1"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access><var-ref name="RESULT" idref="locvar-15075"/></arguments></new>
+</assignment-expr>
+</statements>
+<return><var-ref name="CUP$parser$result"/></return>
+case <literal-number kind="integer" value="11"/>:
+<statements>
+<local-variable name="RESULT" id="locvar-15182"><type name="Object"/><literal-null/></local-variable>
+<local-variable name="aleft" id="locvar-15198"><type name="int" primitive="true"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="2"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="aright" id="locvar-15214"><type name="int" primitive="true"/><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="2"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="a" id="locvar-15232"><type name="Object"/><cast-expr><type name="Object"/><field-access field="value"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="2"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></cast-expr></local-variable>
+<local-variable name="bleft" id="locvar-15248"><type name="int" primitive="true"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="bright" id="locvar-15264"><type name="int" primitive="true"/><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="b" id="locvar-15282"><type name="Object"/><cast-expr><type name="Object"/><field-access field="value"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></cast-expr></local-variable>
+<assignment-expr><lvalue><var-set name="RESULT"/></lvalue><paren><send message="Divide">
+<target><var-ref name="CL"/></target>
+<arguments><cast-expr><type name="ClLinearExpression"/><var-ref name="a" idref="locvar-15232"/></cast-expr><cast-expr><type name="ClLinearExpression"/><var-ref name="b" idref="locvar-15282"/></cast-expr></arguments>
+</send>
+</paren></assignment-expr>
+<assignment-expr><lvalue><var-set name="CUP$parser$result"/></lvalue><new><type name="java_cup.runtime.Symbol"/><arguments><literal-number kind="integer" value="4"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="2"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access><var-ref name="RESULT" idref="locvar-15182"/></arguments></new>
+</assignment-expr>
+</statements>
+<return><var-ref name="CUP$parser$result"/></return>
+case <literal-number kind="integer" value="10"/>:
+<statements>
+<local-variable name="RESULT" id="locvar-15340"><type name="Object"/><literal-null/></local-variable>
+<local-variable name="aleft" id="locvar-15356"><type name="int" primitive="true"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="2"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="aright" id="locvar-15372"><type name="int" primitive="true"/><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="2"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="a" id="locvar-15390"><type name="Object"/><cast-expr><type name="Object"/><field-access field="value"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="2"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></cast-expr></local-variable>
+<local-variable name="bleft" id="locvar-15406"><type name="int" primitive="true"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="bright" id="locvar-15422"><type name="int" primitive="true"/><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="b" id="locvar-15440"><type name="Object"/><cast-expr><type name="Object"/><field-access field="value"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></cast-expr></local-variable>
+<assignment-expr><lvalue><var-set name="RESULT"/></lvalue><paren><send message="Times">
+<target><var-ref name="CL"/></target>
+<arguments><cast-expr><type name="ClLinearExpression"/><var-ref name="a" idref="locvar-15390"/></cast-expr><cast-expr><type name="ClLinearExpression"/><var-ref name="b" idref="locvar-15440"/></cast-expr></arguments>
+</send>
+</paren></assignment-expr>
+<assignment-expr><lvalue><var-set name="CUP$parser$result"/></lvalue><new><type name="java_cup.runtime.Symbol"/><arguments><literal-number kind="integer" value="4"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="2"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access><var-ref name="RESULT" idref="locvar-15340"/></arguments></new>
+</assignment-expr>
+</statements>
+<return><var-ref name="CUP$parser$result"/></return>
+case <literal-number kind="integer" value="9"/>:
+<statements>
+<local-variable name="RESULT" id="locvar-15498"><type name="Object"/><literal-null/></local-variable>
+<local-variable name="aleft" id="locvar-15514"><type name="int" primitive="true"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="2"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="aright" id="locvar-15530"><type name="int" primitive="true"/><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="2"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="a" id="locvar-15548"><type name="Object"/><cast-expr><type name="Object"/><field-access field="value"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="2"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></cast-expr></local-variable>
+<local-variable name="bleft" id="locvar-15564"><type name="int" primitive="true"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="bright" id="locvar-15580"><type name="int" primitive="true"/><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="b" id="locvar-15598"><type name="Object"/><cast-expr><type name="Object"/><field-access field="value"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></cast-expr></local-variable>
+<assignment-expr><lvalue><var-set name="RESULT"/></lvalue><paren><send message="Minus">
+<target><var-ref name="CL"/></target>
+<arguments><cast-expr><type name="ClLinearExpression"/><var-ref name="a" idref="locvar-15548"/></cast-expr><cast-expr><type name="ClLinearExpression"/><var-ref name="b" idref="locvar-15598"/></cast-expr></arguments>
+</send>
+</paren></assignment-expr>
+<assignment-expr><lvalue><var-set name="CUP$parser$result"/></lvalue><new><type name="java_cup.runtime.Symbol"/><arguments><literal-number kind="integer" value="4"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="2"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access><var-ref name="RESULT" idref="locvar-15498"/></arguments></new>
+</assignment-expr>
+</statements>
+<return><var-ref name="CUP$parser$result"/></return>
+case <literal-number kind="integer" value="8"/>:
+<statements>
+<local-variable name="RESULT" id="locvar-15656"><type name="Object"/><literal-null/></local-variable>
+<local-variable name="aleft" id="locvar-15672"><type name="int" primitive="true"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="2"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="aright" id="locvar-15688"><type name="int" primitive="true"/><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="2"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="a" id="locvar-15706"><type name="Object"/><cast-expr><type name="Object"/><field-access field="value"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="2"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></cast-expr></local-variable>
+<local-variable name="bleft" id="locvar-15722"><type name="int" primitive="true"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="bright" id="locvar-15738"><type name="int" primitive="true"/><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="b" id="locvar-15756"><type name="Object"/><cast-expr><type name="Object"/><field-access field="value"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></cast-expr></local-variable>
+<assignment-expr><lvalue><var-set name="RESULT"/></lvalue><paren><send message="Plus">
+<target><var-ref name="CL"/></target>
+<arguments><cast-expr><type name="ClLinearExpression"/><var-ref name="a" idref="locvar-15706"/></cast-expr><cast-expr><type name="ClLinearExpression"/><var-ref name="b" idref="locvar-15756"/></cast-expr></arguments>
+</send>
+</paren></assignment-expr>
+<assignment-expr><lvalue><var-set name="CUP$parser$result"/></lvalue><new><type name="java_cup.runtime.Symbol"/><arguments><literal-number kind="integer" value="4"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="2"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access><var-ref name="RESULT" idref="locvar-15656"/></arguments></new>
+</assignment-expr>
+</statements>
+<return><var-ref name="CUP$parser$result"/></return>
+case <literal-number kind="integer" value="7"/>:
+<statements>
+<local-variable name="RESULT" id="locvar-15814"><type name="Object"/><literal-null/></local-variable>
+<local-variable name="aleft" id="locvar-15830"><type name="int" primitive="true"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="aright" id="locvar-15846"><type name="int" primitive="true"/><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="a" id="locvar-15864"><type name="String"/><cast-expr><type name="String"/><field-access field="value"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></cast-expr></local-variable>
+<if><test><field-access field="m_debug_parse"><var-ref name="parser"/></field-access></test>
+<true-case><statements>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><binary-expr op="+"><literal-string length="25">Grammar found variable: &lt;</literal-string><var-ref name="a"/></binary-expr><literal-string length="1">&gt;</literal-string></binary-expr></arguments>
+</send>
+</statements>
+</true-case>
+</if>
+<if><test><binary-expr op="=="><field-access field="m_variable_name_object_hash"><var-ref name="parser"/></field-access><literal-null/></binary-expr></test>
+<true-case><statements>
+<send message="println">
+<target><field-access field="err"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="17">	Don't have hash.</literal-string></arguments>
+</send>
+</statements>
+</true-case>
+</if>
+<if><test><field-access field="m_debug_parse"><var-ref name="parser"/></field-access></test>
+<true-case><statements>
+<if><test><unary-expr op="!"><send message="containsKey">
+<target><field-access field="m_variable_name_object_hash"><var-ref name="parser"/></field-access></target>
+<arguments><var-ref name="a"/></arguments>
+</send>
+</unary-expr></test>
+<true-case><statements>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><binary-expr op="+"><literal-string length="32">	Unrecognized variable parsed: &lt;</literal-string><var-ref name="a"/></binary-expr><literal-string length="1">&gt;</literal-string></binary-expr></arguments>
+</send>
+</statements>
+</true-case>
+<false-case><statements>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><binary-expr op="+"><literal-string length="18">	Found variable: &lt;</literal-string><var-ref name="a"/></binary-expr><literal-string length="10">&gt; in hash.</literal-string></binary-expr></arguments>
+</send>
+</statements>
+</false-case>
+</if>
+</statements>
+</true-case>
+</if>
+<local-variable name="variable_object" id="locvar-15934"><type name="ClVariable"/><cast-expr><type name="ClVariable"/><send message="get">
+<target><field-access field="m_variable_name_object_hash"><var-ref name="parser"/></field-access></target>
+<arguments><var-ref name="a" idref="locvar-15864"/></arguments>
+</send>
+</cast-expr></local-variable>
+<if><test><binary-expr op="=="><var-ref name="variable_object" idref="locvar-15934"/><literal-null/></binary-expr></test>
+<true-case><statements>
+<send message="println">
+<target><field-access field="err"><var-ref name="System"/></field-access></target>
+<arguments><literal-string length="31">	Could not get hashed variable.</literal-string></arguments>
+</send>
+</statements>
+</true-case>
+</if>
+<assignment-expr><lvalue><var-set name="RESULT"/></lvalue><paren><new><type name="ClLinearExpression"/><arguments><var-ref name="variable_object" idref="locvar-15934"/></arguments></new>
+</paren></assignment-expr>
+<assignment-expr><lvalue><var-set name="CUP$parser$result"/></lvalue><new><type name="java_cup.runtime.Symbol"/><arguments><literal-number kind="integer" value="4"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access><var-ref name="RESULT" idref="locvar-15814"/></arguments></new>
+</assignment-expr>
+</statements>
+<return><var-ref name="CUP$parser$result"/></return>
+case <literal-number kind="integer" value="6"/>:
+<statements>
+<local-variable name="RESULT" id="locvar-15998"><type name="Object"/><literal-null/></local-variable>
+<local-variable name="aleft" id="locvar-16014"><type name="int" primitive="true"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="aright" id="locvar-16030"><type name="int" primitive="true"/><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="a" id="locvar-16048"><type name="Double"/><cast-expr><type name="Double"/><field-access field="value"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></cast-expr></local-variable>
+<assignment-expr><lvalue><var-set name="RESULT"/></lvalue><paren><new><type name="ClLinearExpression"/><arguments><send message="doubleValue">
+<target><var-ref name="a" idref="locvar-16048"/></target>
+<arguments/>
+</send>
+</arguments></new>
+</paren></assignment-expr>
+<assignment-expr><lvalue><var-set name="CUP$parser$result"/></lvalue><new><type name="java_cup.runtime.Symbol"/><arguments><literal-number kind="integer" value="4"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access><var-ref name="RESULT" idref="locvar-15998"/></arguments></new>
+</assignment-expr>
+</statements>
+<return><var-ref name="CUP$parser$result"/></return>
+case <literal-number kind="integer" value="5"/>:
+<statements>
+<local-variable name="RESULT" id="locvar-16103"><type name="Object"/><literal-null/></local-variable>
+<local-variable name="aleft" id="locvar-16119"><type name="int" primitive="true"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="2"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="aright" id="locvar-16135"><type name="int" primitive="true"/><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="2"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="a" id="locvar-16153"><type name="Object"/><cast-expr><type name="Object"/><field-access field="value"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="2"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></cast-expr></local-variable>
+<local-variable name="bleft" id="locvar-16169"><type name="int" primitive="true"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="bright" id="locvar-16185"><type name="int" primitive="true"/><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="b" id="locvar-16203"><type name="Object"/><cast-expr><type name="Object"/><field-access field="value"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></cast-expr></local-variable>
+<assignment-expr><lvalue><var-set name="RESULT"/></lvalue><paren><new><type name="ClLinearInequality"/><arguments><cast-expr><type name="ClLinearExpression"/><var-ref name="a" idref="locvar-16153"/></cast-expr><field-access field="LEQ"><var-ref name="CL"/></field-access><cast-expr><type name="ClLinearExpression"/><var-ref name="b" idref="locvar-16203"/></cast-expr></arguments></new>
+</paren></assignment-expr>
+<assignment-expr><lvalue><var-set name="CUP$parser$result"/></lvalue><new><type name="java_cup.runtime.Symbol"/><arguments><literal-number kind="integer" value="3"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="2"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access><var-ref name="RESULT" idref="locvar-16103"/></arguments></new>
+</assignment-expr>
+</statements>
+<return><var-ref name="CUP$parser$result"/></return>
+case <literal-number kind="integer" value="4"/>:
+<statements>
+<local-variable name="RESULT" id="locvar-16263"><type name="Object"/><literal-null/></local-variable>
+<local-variable name="aleft" id="locvar-16279"><type name="int" primitive="true"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="2"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="aright" id="locvar-16295"><type name="int" primitive="true"/><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="2"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="a" id="locvar-16313"><type name="Object"/><cast-expr><type name="Object"/><field-access field="value"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="2"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></cast-expr></local-variable>
+<local-variable name="bleft" id="locvar-16329"><type name="int" primitive="true"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="bright" id="locvar-16345"><type name="int" primitive="true"/><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="b" id="locvar-16363"><type name="Object"/><cast-expr><type name="Object"/><field-access field="value"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></cast-expr></local-variable>
+<assignment-expr><lvalue><var-set name="RESULT"/></lvalue><paren><new><type name="ClLinearInequality"/><arguments><cast-expr><type name="ClLinearExpression"/><var-ref name="a" idref="locvar-16313"/></cast-expr><field-access field="GEQ"><var-ref name="CL"/></field-access><cast-expr><type name="ClLinearExpression"/><var-ref name="b" idref="locvar-16363"/></cast-expr></arguments></new>
+</paren></assignment-expr>
+<assignment-expr><lvalue><var-set name="CUP$parser$result"/></lvalue><new><type name="java_cup.runtime.Symbol"/><arguments><literal-number kind="integer" value="3"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="2"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access><var-ref name="RESULT" idref="locvar-16263"/></arguments></new>
+</assignment-expr>
+</statements>
+<return><var-ref name="CUP$parser$result"/></return>
+case <literal-number kind="integer" value="3"/>:
+<statements>
+<local-variable name="RESULT" id="locvar-16423"><type name="Object"/><literal-null/></local-variable>
+<local-variable name="aleft" id="locvar-16439"><type name="int" primitive="true"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="2"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="aright" id="locvar-16455"><type name="int" primitive="true"/><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="2"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="a" id="locvar-16473"><type name="Object"/><cast-expr><type name="Object"/><field-access field="value"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="2"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></cast-expr></local-variable>
+<local-variable name="bleft" id="locvar-16489"><type name="int" primitive="true"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="bright" id="locvar-16505"><type name="int" primitive="true"/><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="b" id="locvar-16523"><type name="Object"/><cast-expr><type name="Object"/><field-access field="value"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></cast-expr></local-variable>
+<assignment-expr><lvalue><var-set name="RESULT"/></lvalue><paren><new><type name="ClLinearEquation"/><arguments><cast-expr><type name="ClLinearExpression"/><var-ref name="a" idref="locvar-16473"/></cast-expr><cast-expr><type name="ClLinearExpression"/><var-ref name="b" idref="locvar-16523"/></cast-expr></arguments></new>
+</paren></assignment-expr>
+<assignment-expr><lvalue><var-set name="CUP$parser$result"/></lvalue><new><type name="java_cup.runtime.Symbol"/><arguments><literal-number kind="integer" value="2"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="2"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access><var-ref name="RESULT" idref="locvar-16423"/></arguments></new>
+</assignment-expr>
+</statements>
+<return><var-ref name="CUP$parser$result"/></return>
+case <literal-number kind="integer" value="2"/>:
+<statements>
+<local-variable name="RESULT" id="locvar-16581"><type name="Object"/><literal-null/></local-variable>
+<local-variable name="aleft" id="locvar-16597"><type name="int" primitive="true"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="aright" id="locvar-16613"><type name="int" primitive="true"/><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="a" id="locvar-16631"><type name="Object"/><cast-expr><type name="Object"/><field-access field="value"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></cast-expr></local-variable>
+<assignment-expr><lvalue><var-set name="RESULT"/></lvalue><var-ref name="a" idref="locvar-16631"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="CUP$parser$result"/></lvalue><new><type name="java_cup.runtime.Symbol"/><arguments><literal-number kind="integer" value="1"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access><var-ref name="RESULT" idref="locvar-16581"/></arguments></new>
+</assignment-expr>
+</statements>
+<return><var-ref name="CUP$parser$result"/></return>
+case <literal-number kind="integer" value="1"/>:
+<statements>
+<local-variable name="RESULT" id="locvar-16680"><type name="Object"/><literal-null/></local-variable>
+<local-variable name="start_valleft" id="locvar-16696"><type name="int" primitive="true"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="1"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="start_valright" id="locvar-16712"><type name="int" primitive="true"/><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="1"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="start_val" id="locvar-16730"><type name="Object"/><cast-expr><type name="Object"/><field-access field="value"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="1"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></cast-expr></local-variable>
+<assignment-expr><lvalue><var-set name="RESULT"/></lvalue><var-ref name="start_val" idref="locvar-16730"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="CUP$parser$result"/></lvalue><new><type name="java_cup.runtime.Symbol"/><arguments><literal-number kind="integer" value="0"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="1"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access><var-ref name="RESULT" idref="locvar-16680"/></arguments></new>
+</assignment-expr>
+</statements>
+<send message="done_parsing">
+<target><var-ref name="CUP$parser$parser" idref="frmarg-13561"/></target>
+<arguments/>
+</send>
+<return><var-ref name="CUP$parser$result"/></return>
+case <literal-number kind="integer" value="0"/>:
+<statements>
+<local-variable name="RESULT" id="locvar-16783"><type name="Object"/><literal-null/></local-variable>
+<local-variable name="aleft" id="locvar-16799"><type name="int" primitive="true"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="aright" id="locvar-16815"><type name="int" primitive="true"/><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></local-variable>
+<local-variable name="a" id="locvar-16833"><type name="Object"/><cast-expr><type name="Object"/><field-access field="value"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access></cast-expr></local-variable>
+<assignment-expr><lvalue><var-set name="RESULT"/></lvalue><var-ref name="a" idref="locvar-16833"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="CUP$parser$result"/></lvalue><new><type name="java_cup.runtime.Symbol"/><arguments><literal-number kind="integer" value="1"/><field-access field="left"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access><field-access field="right"><paren><cast-expr><type name="java_cup.runtime.Symbol"/><send message="elementAt">
+<target><var-ref name="CUP$parser$stack" idref="frmarg-13567"/></target>
+<arguments><binary-expr op="-"><var-ref name="CUP$parser$top" idref="frmarg-13571"/><literal-number kind="integer" value="0"/></binary-expr></arguments>
+</send>
+</cast-expr></paren></field-access><var-ref name="RESULT" idref="locvar-16783"/></arguments></new>
+</assignment-expr>
+</statements>
+<return><var-ref name="CUP$parser$result"/></return>
+default:
+<throw><new><type name="Exception"/><arguments><literal-string length="51">Invalid action number found in internal parse table</literal-string></arguments></new>
+</throw>
+</statements>
+</statements>
+</method>
+</class>
+</java-source-program>

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="ClConstraint.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<import module="java.lang.*"/>
+<class name="ClConstraint" visibility="public" abstract="true">
+<superclass class="Object"/>
+<constructor name="ClConstraint" visibility="public" id="ctr-464">
+<formal-arguments>
+<formal-argument name="strength" id="frmarg-456"><type name="ClStrength"/></formal-argument>
+<formal-argument name="weight" id="frmarg-460"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<assignment-expr><lvalue><var-set name="_strength"/></lvalue><var-ref name="strength"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="_weight"/></lvalue><var-ref name="weight"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="_times_added"/></lvalue><literal-number kind="integer" value="0"/></assignment-expr>
+</constructor>
+<constructor name="ClConstraint" visibility="public" id="ctr-473">
+<formal-arguments>
+<formal-argument name="strength" id="frmarg-469"><type name="ClStrength"/></formal-argument>
+</formal-arguments>
+<assignment-expr><lvalue><var-set name="_strength"/></lvalue><var-ref name="strength"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="_weight"/></lvalue><literal-number kind="double" value="1.0"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="_times_added"/></lvalue><literal-number kind="integer" value="0"/></assignment-expr>
+</constructor>
+<constructor name="ClConstraint" visibility="public" id="ctr-478">
+<formal-arguments/>
+<assignment-expr><lvalue><var-set name="_strength"/></lvalue><field-access field="required"><var-ref name="ClStrength"/></field-access></assignment-expr>
+<assignment-expr><lvalue><var-set name="_weight"/></lvalue><literal-number kind="double" value="1.0"/></assignment-expr>
+<assignment-expr><lvalue><var-set name="_times_added"/></lvalue><literal-number kind="integer" value="0"/></assignment-expr>
+</constructor>
+<method name="expression" visibility="public" abstract="true" id="meth-483">
+<type name="ClLinearExpression"/>
+<formal-arguments/>
+</method>
+<method name="isEditConstraint" visibility="public" id="meth-488">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><literal-false/></return>
+</statements>
+</method>
+<method name="isInequality" visibility="public" id="meth-493">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><literal-false/></return>
+</statements>
+</method>
+<method name="isRequired" visibility="public" id="meth-498">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><send message="isRequired">
+<target><var-ref name="_strength"/></target>
+<arguments/>
+</send>
+</return>
+</statements>
+</method>
+<method name="isStayConstraint" visibility="public" id="meth-503">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><literal-false/></return>
+</statements>
+</method>
+<method name="strength" visibility="public" id="meth-508">
+<type name="ClStrength"/>
+<formal-arguments/>
+<statements>
+<return><var-ref name="_strength"/></return>
+</statements>
+</method>
+<method name="weight" visibility="public" id="meth-513">
+<type name="double" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><var-ref name="_weight"/></return>
+</statements>
+</method>
+<method name="toString" visibility="public" id="meth-518">
+<type name="String"/>
+<formal-arguments/>
+<statements>
+<return><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><binary-expr op="+"><send message="toString">
+<target><var-ref name="_strength"/></target>
+<arguments/>
+</send>
+<literal-string length="2"> {</literal-string></binary-expr><send message="weight">
+<arguments/>
+</send>
+</binary-expr><literal-string length="3">} (</literal-string></binary-expr><send message="expression">
+<arguments/>
+</send>
+</binary-expr></return>
+</statements>
+</method>
+<method name="setAttachedObject" visibility="public" id="meth-526">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="o" id="frmarg-524"><type name="Object"/></formal-argument>
+</formal-arguments>
+<statements>
+<assignment-expr><lvalue><var-set name="_attachedObject"/></lvalue><var-ref name="o" idref="frmarg-524"/></assignment-expr>
+</statements>
+</method>
+<method name="getAttachedObject" visibility="public" id="meth-532">
+<type name="Object"/>
+<formal-arguments/>
+<statements>
+<return><var-ref name="_attachedObject"/></return>
+</statements>
+</method>
+<method name="changeStrength" visibility="public" id="meth-541">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="strength" id="frmarg-538"><type name="ClStrength"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLTooDifficult"/>
+<statements>
+<if><test><binary-expr op="=="><var-ref name="_times_added"/><literal-number kind="integer" value="0"/></binary-expr></test>
+<true-case><statements>
+<send message="setStrength">
+<arguments><var-ref name="strength" idref="frmarg-538"/></arguments>
+</send>
+</statements>
+</true-case>
+<false-case><statements>
+<throw><new><type name="ExCLTooDifficult"/><arguments/></new>
+</throw>
+</statements>
+</false-case>
+</if>
+</statements>
+</method>
+<method name="addedTo" visibility="public" id="meth-550">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="solver" id="frmarg-548"><type name="ClSimplexSolver"/></formal-argument>
+</formal-arguments>
+<statements>
+<unary-expr op="++"><var-ref name="_times_added"/></unary-expr></statements>
+</method>
+<method name="removedFrom" visibility="public" id="meth-559">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="solver" id="frmarg-557"><type name="ClSimplexSolver"/></formal-argument>
+</formal-arguments>
+<statements>
+<unary-expr op="--"><var-ref name="_times_added"/></unary-expr></statements>
+</method>
+<method name="setStrength" visibility="private" id="meth-568">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="strength" id="frmarg-566"><type name="ClStrength"/></formal-argument>
+</formal-arguments>
+<statements>
+<assignment-expr><lvalue><var-set name="_strength"/></lvalue><var-ref name="strength" idref="frmarg-566"/></assignment-expr>
+</statements>
+</method>
+<method name="setWeight" visibility="private" id="meth-577">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="weight" id="frmarg-575"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<statements>
+<assignment-expr><lvalue><var-set name="_weight"/></lvalue><var-ref name="weight" idref="frmarg-575"/></assignment-expr>
+</statements>
+</method>
+<field name="_strength" visibility="private"><type name="ClStrength"/></field>
+<field name="_weight" visibility="private"><type name="double" primitive="true"/></field>
+<field name="_attachedObject" visibility="private"><type name="Object"/></field>
+<field name="_times_added" visibility="private"><type name="int" primitive="true"/></field>
+</class>
+</java-source-program>

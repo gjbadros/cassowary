@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="ExCLRequiredFailure.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<class name="ExCLRequiredFailure" visibility="public">
+<superclass class="ExCLError"/>
+<method name="description" visibility="public" id="meth-2890">
+<type name="String"/>
+<formal-arguments/>
+<statements>
+<return><literal-string length="63">(ExCLRequiredFailure) A required constraint cannot be satisfied</literal-string></return>
+</statements>
+</method>
+</class>
+</java-source-program>

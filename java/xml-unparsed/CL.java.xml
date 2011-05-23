@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="CL.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<class name="CL" visibility="public">
+<superclass class="Object"/>
+<field name="fDebugOn" visibility="protected" final="true" static="true"><type name="boolean" primitive="true"/><literal-false/></field>
+<field name="fTraceOn" visibility="protected" final="true" static="true"><type name="boolean" primitive="true"/><literal-false/></field>
+<field name="fTraceAdded" visibility="protected" final="true" static="true"><type name="boolean" primitive="true"/><literal-false/></field>
+<field name="fGC" visibility="protected" final="true" static="true"><type name="boolean" primitive="true"/><literal-false/></field>
+<method name="debugprint" visibility="protected" static="true" id="meth-1298">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="s" id="frmarg-1296"><type name="String"/></formal-argument>
+</formal-arguments>
+<statements>
+<send message="println">
+<target><field-access field="err"><var-ref name="System"/></field-access></target>
+<arguments><var-ref name="s" idref="frmarg-1296"/></arguments>
+</send>
+</statements>
+</method>
+<method name="traceprint" visibility="protected" static="true" id="meth-1308">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="s" id="frmarg-1306"><type name="String"/></formal-argument>
+</formal-arguments>
+<statements>
+<send message="println">
+<target><field-access field="err"><var-ref name="System"/></field-access></target>
+<arguments><var-ref name="s" idref="frmarg-1306"/></arguments>
+</send>
+</statements>
+</method>
+<method name="fnenterprint" visibility="protected" static="true" id="meth-1318">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="s" id="frmarg-1316"><type name="String"/></formal-argument>
+</formal-arguments>
+<statements>
+<send message="println">
+<target><field-access field="err"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="2">* </literal-string><var-ref name="s" idref="frmarg-1316"/></binary-expr></arguments>
+</send>
+</statements>
+</method>
+<method name="fnexitprint" visibility="protected" static="true" id="meth-1328">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="s" id="frmarg-1326"><type name="String"/></formal-argument>
+</formal-arguments>
+<statements>
+<send message="println">
+<target><field-access field="err"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="2">- </literal-string><var-ref name="s" idref="frmarg-1326"/></binary-expr></arguments>
+</send>
+</statements>
+</method>
+<method name="assert" visibility="protected" id="meth-1342">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="f" id="frmarg-1335"><type name="boolean" primitive="true"/></formal-argument>
+<formal-argument name="description" id="frmarg-1339"><type name="String"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLInternalError"/>
+<statements>
+<if><test><unary-expr op="!"><var-ref name="f" idref="frmarg-1335"/></unary-expr></test>
+<true-case><statements>
+<throw><new><type name="ExCLInternalError"/><arguments><binary-expr op="+"><literal-string length="17">Assertion failed:</literal-string><var-ref name="description" idref="frmarg-1339"/></binary-expr></arguments></new>
+</throw>
+</statements>
+</true-case>
+</if>
+</statements>
+</method>
+<method name="assert" visibility="protected" id="meth-1352">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="f" id="frmarg-1349"><type name="boolean" primitive="true"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLInternalError"/>
+<statements>
+<if><test><unary-expr op="!"><var-ref name="f" idref="frmarg-1349"/></unary-expr></test>
+<true-case><statements>
+<throw><new><type name="ExCLInternalError"/><arguments><literal-string length="16">Assertion failed</literal-string></arguments></new>
+</throw>
+</statements>
+</true-case>
+</if>
+</statements>
+</method>
+<field name="GEQ" visibility="public" final="true" static="true"><type name="byte" primitive="true"/><literal-number kind="integer" value="1"/></field>
+<field name="LEQ" visibility="public" final="true" static="true"><type name="byte" primitive="true"/><literal-number kind="integer" value="2"/></field>
+<method name="Plus" visibility="public" static="true" id="meth-1383">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="e1" id="frmarg-1377"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="e2" id="frmarg-1381"><type name="ClLinearExpression"/></formal-argument>
+</formal-arguments>
+<statements>
+<return><send message="plus">
+<target><var-ref name="e1" idref="frmarg-1377"/></target>
+<arguments><var-ref name="e2" idref="frmarg-1381"/></arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="Plus" visibility="public" static="true" id="meth-1397">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="e1" id="frmarg-1391"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="e2" id="frmarg-1395"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<statements>
+<return><send message="plus">
+<target><var-ref name="e1" idref="frmarg-1391"/></target>
+<arguments><new><type name="ClLinearExpression"/><arguments><var-ref name="e2" idref="frmarg-1395"/></arguments></new>
+</arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="Plus" visibility="public" static="true" id="meth-1411">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="e1" id="frmarg-1405"><type name="double" primitive="true"/></formal-argument>
+<formal-argument name="e2" id="frmarg-1409"><type name="ClLinearExpression"/></formal-argument>
+</formal-arguments>
+<statements>
+<return><send message="plus">
+<target><paren><new><type name="ClLinearExpression"/><arguments><var-ref name="e1" idref="frmarg-1405"/></arguments></new>
+</paren></target>
+<arguments><var-ref name="e2" idref="frmarg-1409"/></arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="Plus" visibility="public" static="true" id="meth-1425">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="e1" id="frmarg-1419"><type name="ClVariable"/></formal-argument>
+<formal-argument name="e2" id="frmarg-1423"><type name="ClLinearExpression"/></formal-argument>
+</formal-arguments>
+<statements>
+<return><send message="plus">
+<target><paren><new><type name="ClLinearExpression"/><arguments><var-ref name="e1" idref="frmarg-1419"/></arguments></new>
+</paren></target>
+<arguments><var-ref name="e2" idref="frmarg-1423"/></arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="Plus" visibility="public" static="true" id="meth-1439">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="e1" id="frmarg-1433"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="e2" id="frmarg-1437"><type name="ClVariable"/></formal-argument>
+</formal-arguments>
+<statements>
+<return><send message="plus">
+<target><var-ref name="e1" idref="frmarg-1433"/></target>
+<arguments><new><type name="ClLinearExpression"/><arguments><var-ref name="e2" idref="frmarg-1437"/></arguments></new>
+</arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="Plus" visibility="public" static="true" id="meth-1453">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="e1" id="frmarg-1447"><type name="ClVariable"/></formal-argument>
+<formal-argument name="e2" id="frmarg-1451"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<statements>
+<return><send message="plus">
+<target><paren><new><type name="ClLinearExpression"/><arguments><var-ref name="e1" idref="frmarg-1447"/></arguments></new>
+</paren></target>
+<arguments><new><type name="ClLinearExpression"/><arguments><var-ref name="e2" idref="frmarg-1451"/></arguments></new>
+</arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="Plus" visibility="public" static="true" id="meth-1467">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="e1" id="frmarg-1461"><type name="double" primitive="true"/></formal-argument>
+<formal-argument name="e2" id="frmarg-1465"><type name="ClVariable"/></formal-argument>
+</formal-arguments>
+<statements>
+<return><send message="plus">
+<target><paren><new><type name="ClLinearExpression"/><arguments><var-ref name="e1" idref="frmarg-1461"/></arguments></new>
+</paren></target>
+<arguments><new><type name="ClLinearExpression"/><arguments><var-ref name="e2" idref="frmarg-1465"/></arguments></new>
+</arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="Minus" visibility="public" static="true" id="meth-1481">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="e1" id="frmarg-1475"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="e2" id="frmarg-1479"><type name="ClLinearExpression"/></formal-argument>
+</formal-arguments>
+<statements>
+<return><send message="minus">
+<target><var-ref name="e1" idref="frmarg-1475"/></target>
+<arguments><var-ref name="e2" idref="frmarg-1479"/></arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="Minus" visibility="public" static="true" id="meth-1495">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="e1" id="frmarg-1489"><type name="double" primitive="true"/></formal-argument>
+<formal-argument name="e2" id="frmarg-1493"><type name="ClLinearExpression"/></formal-argument>
+</formal-arguments>
+<statements>
+<return><send message="minus">
+<target><paren><new><type name="ClLinearExpression"/><arguments><var-ref name="e1" idref="frmarg-1489"/></arguments></new>
+</paren></target>
+<arguments><var-ref name="e2" idref="frmarg-1493"/></arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="Minus" visibility="public" static="true" id="meth-1509">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="e1" id="frmarg-1503"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="e2" id="frmarg-1507"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<statements>
+<return><send message="minus">
+<target><var-ref name="e1" idref="frmarg-1503"/></target>
+<arguments><new><type name="ClLinearExpression"/><arguments><var-ref name="e2" idref="frmarg-1507"/></arguments></new>
+</arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="Times" visibility="public" static="true" id="meth-1524">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="e1" id="frmarg-1517"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="e2" id="frmarg-1521"><type name="ClLinearExpression"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLNonlinearExpression"/>
+<statements>
+<return><send message="times">
+<target><var-ref name="e1" idref="frmarg-1517"/></target>
+<arguments><var-ref name="e2" idref="frmarg-1521"/></arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="Times" visibility="public" static="true" id="meth-1539">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="e1" id="frmarg-1532"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="e2" id="frmarg-1536"><type name="ClVariable"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLNonlinearExpression"/>
+<statements>
+<return><send message="times">
+<target><var-ref name="e1" idref="frmarg-1532"/></target>
+<arguments><new><type name="ClLinearExpression"/><arguments><var-ref name="e2" idref="frmarg-1536"/></arguments></new>
+</arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="Times" visibility="public" static="true" id="meth-1554">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="e1" id="frmarg-1547"><type name="ClVariable"/></formal-argument>
+<formal-argument name="e2" id="frmarg-1551"><type name="ClLinearExpression"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLNonlinearExpression"/>
+<statements>
+<return><send message="times">
+<target><paren><new><type name="ClLinearExpression"/><arguments><var-ref name="e1" idref="frmarg-1547"/></arguments></new>
+</paren></target>
+<arguments><var-ref name="e2" idref="frmarg-1551"/></arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="Times" visibility="public" static="true" id="meth-1569">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="e1" id="frmarg-1562"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="e2" id="frmarg-1566"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLNonlinearExpression"/>
+<statements>
+<return><send message="times">
+<target><var-ref name="e1" idref="frmarg-1562"/></target>
+<arguments><new><type name="ClLinearExpression"/><arguments><var-ref name="e2" idref="frmarg-1566"/></arguments></new>
+</arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="Times" visibility="public" static="true" id="meth-1584">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="e1" id="frmarg-1577"><type name="double" primitive="true"/></formal-argument>
+<formal-argument name="e2" id="frmarg-1581"><type name="ClLinearExpression"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLNonlinearExpression"/>
+<statements>
+<return><send message="times">
+<target><paren><new><type name="ClLinearExpression"/><arguments><var-ref name="e1" idref="frmarg-1577"/></arguments></new>
+</paren></target>
+<arguments><var-ref name="e2" idref="frmarg-1581"/></arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="Times" visibility="public" static="true" id="meth-1599">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="n" id="frmarg-1592"><type name="double" primitive="true"/></formal-argument>
+<formal-argument name="clv" id="frmarg-1596"><type name="ClVariable"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLNonlinearExpression"/>
+<statements>
+<return><paren><new><type name="ClLinearExpression"/><arguments><var-ref name="clv" idref="frmarg-1596"/><var-ref name="n" idref="frmarg-1592"/></arguments></new>
+</paren></return>
+</statements>
+</method>
+<method name="Times" visibility="public" static="true" id="meth-1614">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="clv" id="frmarg-1607"><type name="ClVariable"/></formal-argument>
+<formal-argument name="n" id="frmarg-1611"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLNonlinearExpression"/>
+<statements>
+<return><paren><new><type name="ClLinearExpression"/><arguments><var-ref name="clv" idref="frmarg-1607"/><var-ref name="n" idref="frmarg-1611"/></arguments></new>
+</paren></return>
+</statements>
+</method>
+<method name="Divide" visibility="public" static="true" id="meth-1629">
+<type name="ClLinearExpression"/>
+<formal-arguments>
+<formal-argument name="e1" id="frmarg-1622"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="e2" id="frmarg-1626"><type name="ClLinearExpression"/></formal-argument>
+</formal-arguments>
+<throws exception="ExCLNonlinearExpression"/>
+<statements>
+<return><send message="divide">
+<target><var-ref name="e1" idref="frmarg-1622"/></target>
+<arguments><var-ref name="e2" idref="frmarg-1626"/></arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="approx" visibility="public" static="true" id="meth-1643">
+<type name="boolean" primitive="true"/>
+<formal-arguments>
+<formal-argument name="a" id="frmarg-1637"><type name="double" primitive="true"/></formal-argument>
+<formal-argument name="b" id="frmarg-1641"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<statements>
+<local-variable name="epsilon" id="locvar-3744"><type name="double" primitive="true"/><literal-number kind="double" value="1.0e-8"/></local-variable>
+<if><test><binary-expr op="=="><var-ref name="a" idref="frmarg-1637"/><literal-number kind="double" value="0.0"/></binary-expr></test>
+<true-case><statements>
+<return><paren><binary-expr op="lt"><send message="abs">
+<target><var-ref name="Math"/></target>
+<arguments><var-ref name="b" idref="frmarg-1641"/></arguments>
+</send>
+<var-ref name="epsilon"/></binary-expr></paren></return>
+</statements>
+</true-case>
+<false-case><if><test><binary-expr op="=="><var-ref name="b" idref="frmarg-1641"/><literal-number kind="double" value="0.0"/></binary-expr></test>
+<true-case><statements>
+<return><paren><binary-expr op="lt"><send message="abs">
+<target><var-ref name="Math"/></target>
+<arguments><var-ref name="a" idref="frmarg-1637"/></arguments>
+</send>
+<var-ref name="epsilon"/></binary-expr></paren></return>
+</statements>
+</true-case>
+<false-case><statements>
+<return><paren><binary-expr op="lt"><send message="abs">
+<target><var-ref name="Math"/></target>
+<arguments><binary-expr op="-"><var-ref name="a" idref="frmarg-1637"/><var-ref name="b" idref="frmarg-1641"/></binary-expr></arguments>
+</send>
+<binary-expr op="*"><send message="abs">
+<target><var-ref name="Math"/></target>
+<arguments><var-ref name="a" idref="frmarg-1637"/></arguments>
+</send>
+<var-ref name="epsilon"/></binary-expr></binary-expr></paren></return>
+</statements>
+</false-case>
+</if>
+</false-case>
+</if>
+</statements>
+</method>
+<method name="approx" visibility="public" static="true" id="meth-1657">
+<type name="boolean" primitive="true"/>
+<formal-arguments>
+<formal-argument name="clv" id="frmarg-1651"><type name="ClVariable"/></formal-argument>
+<formal-argument name="b" id="frmarg-1655"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<statements>
+<return><send message="approx">
+<arguments><send message="value">
+<target><var-ref name="clv" idref="frmarg-1651"/></target>
+<arguments/>
+</send>
+<var-ref name="b" idref="frmarg-1655"/></arguments>
+</send>
+</return>
+</statements>
+</method>
+<method name="approx" static="true" id="meth-1670">
+<type name="boolean" primitive="true"/>
+<formal-arguments>
+<formal-argument name="a" id="frmarg-1664"><type name="double" primitive="true"/></formal-argument>
+<formal-argument name="clv" id="frmarg-1668"><type name="ClVariable"/></formal-argument>
+</formal-arguments>
+<statements>
+<return><send message="approx">
+<arguments><var-ref name="a" idref="frmarg-1664"/><send message="value">
+<target><var-ref name="clv" idref="frmarg-1668"/></target>
+<arguments/>
+</send>
+</arguments>
+</send>
+</return>
+</statements>
+</method>
+</class>
+</java-source-program>

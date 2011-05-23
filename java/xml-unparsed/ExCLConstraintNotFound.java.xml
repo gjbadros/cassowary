@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="ExCLConstraintNotFound.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<class name="ExCLConstraintNotFound" visibility="public">
+<superclass class="ExCLError"/>
+<method name="description" visibility="public" id="meth-2906">
+<type name="String"/>
+<formal-arguments/>
+<statements>
+<return><literal-string length="79">(ExCLConstraintNotFound) Tried to remove a constraint never added to the tableu</literal-string></return>
+</statements>
+</method>
+</class>
+</java-source-program>

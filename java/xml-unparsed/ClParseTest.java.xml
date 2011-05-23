@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="ClParseTest.java">
+<import module="EDU.Washington.grad.gjb.cassowary.*"/>
+<import module="java.io.StringReader"/>
+<import module="java_cup.runtime.*"/>
+<import module="java.util.*"/>
+<class name="ClParseTest" visibility="public">
+<superclass class="Object"/>
+<method name="main" visibility="public" final="true" static="true" id="meth-12746">
+<type name="void" primitive="true"/>
+<formal-arguments>
+<formal-argument name="args" id="frmarg-12744"><type name="String" dimensions="1"/></formal-argument>
+</formal-arguments>
+<statements>
+<try><statements>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="9">Parsing: </literal-string><array-ref><base><var-ref name="args" idref="frmarg-12744"/></base><offset><literal-number kind="integer" value="0"/></offset></array-ref></binary-expr></arguments>
+</send>
+<local-variable name="string_reader" id="locvar-12776"><type name="StringReader"/><new><type name="StringReader"/><arguments><array-ref><base><var-ref name="args" idref="frmarg-12744"/></base><offset><literal-number kind="integer" value="0"/></offset></array-ref></arguments></new>
+</local-variable>
+<local-variable name="yylex" id="locvar-12784"><type name="Yylex"/><new><type name="Yylex"/><arguments><var-ref name="string_reader" idref="locvar-12776"/></arguments></new>
+</local-variable>
+<local-variable name="varmap" id="locvar-12791"><type name="Hashtable"/><new><type name="Hashtable"/><arguments/></new>
+</local-variable>
+<send message="setVariableNameObjectHash">
+<target><var-ref name="yylex" idref="locvar-12784"/></target>
+<arguments><var-ref name="varmap" idref="locvar-12791"/></arguments>
+</send>
+<local-variable name="constraint_parser" id="locvar-12804"><type name="parser"/><new><type name="parser"/><arguments><var-ref name="yylex" idref="locvar-12784"/></arguments></new>
+</local-variable>
+<send message="setVariableNameObjectHash">
+<target><var-ref name="constraint_parser" idref="locvar-12804"/></target>
+<arguments><var-ref name="varmap" idref="locvar-12791"/></arguments>
+</send>
+<local-variable name="symbol" id="locvar-12816"><type name="Symbol"/><send message="parse">
+<target><var-ref name="constraint_parser" idref="locvar-12804"/></target>
+<arguments/>
+</send>
+</local-variable>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="11">Parsed as: </literal-string><send message="toString">
+<target><field-access field="value"><var-ref name="symbol" idref="locvar-12816"/></field-access></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+</statements>
+<catch><formal-argument name="exception" id="locvar-12833"><type name="Exception"/></formal-argument>
+<statements>
+<send message="println">
+<target><field-access field="out"><var-ref name="System"/></field-access></target>
+<arguments><binary-expr op="+"><literal-string length="11">Exception: </literal-string><send message="getMessage">
+<target><var-ref name="exception" idref="locvar-12833"/></target>
+<arguments/>
+</send>
+</binary-expr></arguments>
+</send>
+<send message="printStackTrace">
+<target><var-ref name="exception" idref="locvar-12833"/></target>
+<arguments/>
+</send>
+</statements>
+</catch></try></statements>
+</method>
+</class>
+</java-source-program>

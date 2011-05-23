@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="ClLinearEquation.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<class name="ClLinearEquation" visibility="public">
+<superclass class="ClLinearConstraint"/>
+<constructor name="ClLinearEquation" visibility="public" id="ctr-12322">
+<formal-arguments>
+<formal-argument name="cle" id="frmarg-12310"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="strength" id="frmarg-12314"><type name="ClStrength"/></formal-argument>
+<formal-argument name="weight" id="frmarg-12318"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<super-call><arguments><var-ref name="cle"/><var-ref name="strength"/><var-ref name="weight"/></arguments></super-call>
+</constructor>
+<constructor name="ClLinearEquation" visibility="public" id="ctr-12335">
+<formal-arguments>
+<formal-argument name="cle" id="frmarg-12327"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="strength" id="frmarg-12331"><type name="ClStrength"/></formal-argument>
+</formal-arguments>
+<super-call><arguments><var-ref name="cle"/><var-ref name="strength"/></arguments></super-call>
+</constructor>
+<constructor name="ClLinearEquation" visibility="public" id="ctr-12344">
+<formal-arguments>
+<formal-argument name="cle" id="frmarg-12340"><type name="ClLinearExpression"/></formal-argument>
+</formal-arguments>
+<super-call><arguments><var-ref name="cle"/></arguments></super-call>
+</constructor>
+<constructor name="ClLinearEquation" visibility="public" id="ctr-12365">
+<formal-arguments>
+<formal-argument name="clv" id="frmarg-12349"><type name="ClAbstractVariable"/></formal-argument>
+<formal-argument name="cle" id="frmarg-12353"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="strength" id="frmarg-12357"><type name="ClStrength"/></formal-argument>
+<formal-argument name="weight" id="frmarg-12361"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<super-call><arguments><var-ref name="cle"/><var-ref name="strength"/><var-ref name="weight"/></arguments></super-call>
+<send message="addVariable">
+<target><var-ref name="_expression"/></target>
+<arguments><var-ref name="clv"/><unary-expr op="-"><literal-number kind="double" value="1.0"/></unary-expr></arguments>
+</send>
+</constructor>
+<constructor name="ClLinearEquation" visibility="public" id="ctr-12382">
+<formal-arguments>
+<formal-argument name="clv" id="frmarg-12370"><type name="ClAbstractVariable"/></formal-argument>
+<formal-argument name="cle" id="frmarg-12374"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="strength" id="frmarg-12378"><type name="ClStrength"/></formal-argument>
+</formal-arguments>
+<this-call><arguments><var-ref name="clv"/><var-ref name="cle"/><var-ref name="strength"/><literal-number kind="double" value="1.0"/></arguments></this-call></constructor>
+<constructor name="ClLinearEquation" visibility="public" id="ctr-12395">
+<formal-arguments>
+<formal-argument name="clv" id="frmarg-12387"><type name="ClAbstractVariable"/></formal-argument>
+<formal-argument name="cle" id="frmarg-12391"><type name="ClLinearExpression"/></formal-argument>
+</formal-arguments>
+<this-call><arguments><var-ref name="clv"/><var-ref name="cle"/><field-access field="required"><var-ref name="ClStrength"/></field-access><literal-number kind="double" value="1.0"/></arguments></this-call></constructor>
+<constructor name="ClLinearEquation" visibility="public" id="ctr-12416">
+<formal-arguments>
+<formal-argument name="clv" id="frmarg-12400"><type name="ClAbstractVariable"/></formal-argument>
+<formal-argument name="val" id="frmarg-12404"><type name="double" primitive="true"/></formal-argument>
+<formal-argument name="strength" id="frmarg-12408"><type name="ClStrength"/></formal-argument>
+<formal-argument name="weight" id="frmarg-12412"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<super-call><arguments><new><type name="ClLinearExpression"/><arguments><var-ref name="val"/></arguments></new>
+<var-ref name="strength"/><var-ref name="weight"/></arguments></super-call>
+<send message="addVariable">
+<target><var-ref name="_expression"/></target>
+<arguments><var-ref name="clv"/><unary-expr op="-"><literal-number kind="double" value="1.0"/></unary-expr></arguments>
+</send>
+</constructor>
+<constructor name="ClLinearEquation" visibility="public" id="ctr-12433">
+<formal-arguments>
+<formal-argument name="clv" id="frmarg-12421"><type name="ClAbstractVariable"/></formal-argument>
+<formal-argument name="val" id="frmarg-12425"><type name="double" primitive="true"/></formal-argument>
+<formal-argument name="strength" id="frmarg-12429"><type name="ClStrength"/></formal-argument>
+</formal-arguments>
+<this-call><arguments><var-ref name="clv"/><var-ref name="val"/><var-ref name="strength"/><literal-number kind="double" value="1.0"/></arguments></this-call></constructor>
+<constructor name="ClLinearEquation" visibility="public" id="ctr-12446">
+<formal-arguments>
+<formal-argument name="clv" id="frmarg-12438"><type name="ClAbstractVariable"/></formal-argument>
+<formal-argument name="val" id="frmarg-12442"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<this-call><arguments><var-ref name="clv"/><var-ref name="val"/><field-access field="required"><var-ref name="ClStrength"/></field-access><literal-number kind="double" value="1.0"/></arguments></this-call></constructor>
+<constructor name="ClLinearEquation" visibility="public" id="ctr-12467">
+<formal-arguments>
+<formal-argument name="cle" id="frmarg-12451"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="clv" id="frmarg-12455"><type name="ClAbstractVariable"/></formal-argument>
+<formal-argument name="strength" id="frmarg-12459"><type name="ClStrength"/></formal-argument>
+<formal-argument name="weight" id="frmarg-12463"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<super-call><arguments><paren><cast-expr><type name="ClLinearExpression"/><send message="clone">
+<target><var-ref name="cle"/></target>
+<arguments/>
+</send>
+</cast-expr></paren><var-ref name="strength"/><var-ref name="weight"/></arguments></super-call>
+<send message="addVariable">
+<target><var-ref name="_expression"/></target>
+<arguments><var-ref name="clv"/><unary-expr op="-"><literal-number kind="double" value="1.0"/></unary-expr></arguments>
+</send>
+</constructor>
+<constructor name="ClLinearEquation" visibility="public" id="ctr-12484">
+<formal-arguments>
+<formal-argument name="cle" id="frmarg-12472"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="clv" id="frmarg-12476"><type name="ClAbstractVariable"/></formal-argument>
+<formal-argument name="strength" id="frmarg-12480"><type name="ClStrength"/></formal-argument>
+</formal-arguments>
+<this-call><arguments><var-ref name="cle"/><var-ref name="clv"/><var-ref name="strength"/><literal-number kind="double" value="1.0"/></arguments></this-call></constructor>
+<constructor name="ClLinearEquation" visibility="public" id="ctr-12497">
+<formal-arguments>
+<formal-argument name="cle" id="frmarg-12489"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="clv" id="frmarg-12493"><type name="ClAbstractVariable"/></formal-argument>
+</formal-arguments>
+<this-call><arguments><var-ref name="cle"/><var-ref name="clv"/><field-access field="required"><var-ref name="ClStrength"/></field-access><literal-number kind="double" value="1.0"/></arguments></this-call></constructor>
+<constructor name="ClLinearEquation" visibility="public" id="ctr-12518">
+<formal-arguments>
+<formal-argument name="cle1" id="frmarg-12502"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="cle2" id="frmarg-12506"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="strength" id="frmarg-12510"><type name="ClStrength"/></formal-argument>
+<formal-argument name="weight" id="frmarg-12514"><type name="double" primitive="true"/></formal-argument>
+</formal-arguments>
+<super-call><arguments><paren><cast-expr><type name="ClLinearExpression"/><send message="clone">
+<target><var-ref name="cle1"/></target>
+<arguments/>
+</send>
+</cast-expr></paren><var-ref name="strength"/><var-ref name="weight"/></arguments></super-call>
+<send message="addExpression">
+<target><var-ref name="_expression"/></target>
+<arguments><var-ref name="cle2"/><unary-expr op="-"><literal-number kind="double" value="1.0"/></unary-expr></arguments>
+</send>
+</constructor>
+<constructor name="ClLinearEquation" visibility="public" id="ctr-12535">
+<formal-arguments>
+<formal-argument name="cle1" id="frmarg-12523"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="cle2" id="frmarg-12527"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="strength" id="frmarg-12531"><type name="ClStrength"/></formal-argument>
+</formal-arguments>
+<this-call><arguments><var-ref name="cle1"/><var-ref name="cle2"/><var-ref name="strength"/><literal-number kind="double" value="1.0"/></arguments></this-call></constructor>
+<constructor name="ClLinearEquation" visibility="public" id="ctr-12548">
+<formal-arguments>
+<formal-argument name="cle1" id="frmarg-12540"><type name="ClLinearExpression"/></formal-argument>
+<formal-argument name="cle2" id="frmarg-12544"><type name="ClLinearExpression"/></formal-argument>
+</formal-arguments>
+<this-call><arguments><var-ref name="cle1"/><var-ref name="cle2"/><field-access field="required"><var-ref name="ClStrength"/></field-access><literal-number kind="double" value="1.0"/></arguments></this-call></constructor>
+<method name="toString" visibility="public" id="meth-12552">
+<type name="String"/>
+<formal-arguments/>
+<statements>
+<return><binary-expr op="+"><send message="toString">
+<target><super/></target>
+<arguments/>
+</send>
+<literal-string length="6"> = 0 )</literal-string></binary-expr></return>
+</statements>
+</method>
+</class>
+</java-source-program>

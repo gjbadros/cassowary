@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="ClSlackVariable.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<class name="ClSlackVariable">
+<superclass class="ClAbstractVariable"/>
+<constructor name="ClSlackVariable" visibility="public" id="ctr-8879">
+<formal-arguments>
+<formal-argument name="name" id="frmarg-8875"><type name="String"/></formal-argument>
+</formal-arguments>
+<super-call><arguments><var-ref name="name"/></arguments></super-call>
+</constructor>
+<constructor name="ClSlackVariable" visibility="public" id="ctr-8884">
+<formal-arguments/>
+</constructor>
+<constructor name="ClSlackVariable" visibility="public" id="ctr-8897">
+<formal-arguments>
+<formal-argument name="number" id="frmarg-8889"><type name="long" primitive="true"/></formal-argument>
+<formal-argument name="prefix" id="frmarg-8893"><type name="String"/></formal-argument>
+</formal-arguments>
+<super-call><arguments><var-ref name="number"/><var-ref name="prefix"/></arguments></super-call>
+</constructor>
+<method name="toString" visibility="public" id="meth-8901">
+<type name="String"/>
+<formal-arguments/>
+<statements>
+<return><binary-expr op="+"><binary-expr op="+"><literal-string length="1">[</literal-string><send message="name">
+<arguments/>
+</send>
+</binary-expr><literal-string length="7">:slack]</literal-string></binary-expr></return>
+</statements>
+</method>
+<method name="isExternal" visibility="public" id="meth-8906">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><literal-false/></return>
+</statements>
+</method>
+<method name="isPivotable" visibility="public" id="meth-8911">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><literal-true/></return>
+</statements>
+</method>
+<method name="isRestricted" visibility="public" id="meth-8916">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><literal-true/></return>
+</statements>
+</method>
+</class>
+</java-source-program>

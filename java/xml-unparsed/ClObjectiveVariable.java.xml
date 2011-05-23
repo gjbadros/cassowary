@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE java-source-program SYSTEM "java-ml.dtd">
+
+<java-source-program name="ClObjectiveVariable.java">
+<package-decl name="EDU.Washington.grad.gjb.cassowary"/>
+<class name="ClObjectiveVariable">
+<superclass class="ClAbstractVariable"/>
+<constructor name="ClObjectiveVariable" visibility="public" id="ctr-3144">
+<formal-arguments>
+<formal-argument name="name" id="frmarg-3140"><type name="String"/></formal-argument>
+</formal-arguments>
+<super-call><arguments><var-ref name="name"/></arguments></super-call>
+</constructor>
+<constructor name="ClObjectiveVariable" visibility="public" id="ctr-3157">
+<formal-arguments>
+<formal-argument name="number" id="frmarg-3149"><type name="long" primitive="true"/></formal-argument>
+<formal-argument name="prefix" id="frmarg-3153"><type name="String"/></formal-argument>
+</formal-arguments>
+<super-call><arguments><var-ref name="number"/><var-ref name="prefix"/></arguments></super-call>
+</constructor>
+<method name="toString" visibility="public" id="meth-3161">
+<type name="String"/>
+<formal-arguments/>
+<statements>
+<return><binary-expr op="+"><binary-expr op="+"><literal-string length="1">[</literal-string><send message="name">
+<arguments/>
+</send>
+</binary-expr><literal-string length="5">:obj]</literal-string></binary-expr></return>
+</statements>
+</method>
+<method name="isExternal" visibility="public" id="meth-3166">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><literal-false/></return>
+</statements>
+</method>
+<method name="isPivotable" visibility="public" id="meth-3171">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><literal-false/></return>
+</statements>
+</method>
+<method name="isRestricted" visibility="public" id="meth-3176">
+<type name="boolean" primitive="true"/>
+<formal-arguments/>
+<statements>
+<return><literal-false/></return>
+</statements>
+</method>
+</class>
+</java-source-program>
