@@ -16,15 +16,20 @@
       there are also C++, Java, and Smalltalk implementations, and the
       C++ implementation is wrapped for use with Guile Scheme (see
       also <a href="http://scwm.sourceforge.net/">Scwm</a>) and
-      Python.</p>
-
-    <p>Dozens of declarative constraints are used to represent an
-      arbitrary quadrilateral, the midpoints of the four vertices, and
-      the fact that the end points need to stay in the bounding
-      rectangle of the canvas.  Mouse/touch gestures on any of the
-      eight control points allow you to move that control point, and
-      the entire constraint system is incrementally re-solved as you
-      drag the control point.</p>
+      Python. See
+      the <a href="http://www.cs.washington.edu/research/constraints/cassowary/cassowary-tr.pdf">full
+      paper on the Cassowary algorithm by Alan Borning and Greg
+      Badros</a>.</p>
+    
+    <p>In this demo, dozens of declarative constraints are used to
+      represent an arbitrary quadrilateral, the midpoints of the four
+      vertices, and the fact that the end points need to stay in the
+      bounding rectangle of the canvas.  Mouse/touch gestures on any
+      of the eight control points allow you to move that control
+      point, and the entire constraint system is incrementally
+      re-solved as you drag the control point.  You will see real-time
+      evidence that the "interior" quadrilateral is always a
+      parallelogram.</p>
 
     <p>Tested on Chrome 11 on Windows, Firefox 4.0.1 on Windows,
     Safari on an iPad 2.  See the <a href="quaddemo.js">source to the demo</a>.</p>
