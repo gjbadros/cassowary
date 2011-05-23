@@ -216,8 +216,8 @@ var QuadDemo = new Class({
   },
 
   mousedown: function(ev) {
-    var x = ev.offsetX;
-    var y = ev.offsetY;
+    var x = ev.pageX - this.canvas.offsetLeft;
+    var y = ev.pageY - this.canvas.offsetTop;
     console.log('mousedown x,y='+x+','+y);
     for ( var a = 0; a < this.db.length; a++ ) {
       if ( this.db[a].Contains(x, y) ) {
@@ -243,8 +243,8 @@ var QuadDemo = new Class({
 
 
   mouseup: function(ev) {
-    var x = ev.offsetX;
-    var y = ev.offsetY;
+    var x = ev.pageX - this.canvas.offsetLeft;
+    var y = ev.pageY - this.canvas.offsetTop;
     if (this.dbDragging != -1 ) {
       try {
         this.dbDragging = -1;
@@ -258,8 +258,8 @@ var QuadDemo = new Class({
   },
 
   mousemove: function(ev) {
-    var x = ev.offsetX;
-    var y = ev.offsetY;
+    var x = ev.pageX - this.canvas.offsetLeft;
+    var y = ev.pageY - this.canvas.offsetTop;
     if ( this.dbDragging != -1 ) {
       try {
         this.solver
@@ -276,21 +276,33 @@ var QuadDemo = new Class({
 
 
   touchstart: function(ev) {
-    document.write("touchstart ev = " + ev + "  ");
-    document.write(ev.offsetX + "," + ev.offsetY);
-    document.write("<br/>");
+    ev.preventDefault();
+    mousedown(ev);
+    if (false) {
+      document.write("touchstart ev = " + ev + "  ");
+      document.write(ev.pageX + "," + ev.pageY);
+      document.write("<br/>");
+    }
   },
 
   touchend: function(ev) {
-    document.write("touchend ev = " + ev + "  ");
-    document.write(ev.offsetX + "," + ev.offsetY);
-    document.write("<br/>");
+    ev.preventDefault();
+    mouseup(ev);
+    if (false) {
+      document.write("touchend ev = " + ev + "  ");
+      document.write(ev.offsetX + "," + ev.offsetY);
+      document.write("<br/>");
+    }
   },
 
   touchmove: function(ev) {
-    document.write("touchmove ev = " + ev + "  ");
-    document.write(ev.offsetX + "," + ev.offsetY);
-    document.write("<br/>");
+    ev.preventDefault();
+    mousemove(ev);
+    if (false) {
+      document.write("touchmove ev = " + ev + "  ");
+      document.write(ev.offsetX + "," + ev.offsetY);
+      document.write("<br/>");
+    }
   },
 
 
