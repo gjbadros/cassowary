@@ -215,6 +215,33 @@ var QuadDemo = new Class({
     return true;
   },
 
+  mousedown: function(ev) {
+    var x = ev.offsetX;
+    var y = ev.offsetY;
+    console.log('mousedown x,y='+x+','+y);
+    for ( var a = 0; a < this.db.length; a++ ) {
+      if ( this.db[a].Contains(x, y) ) {
+        this.dbDragging = a;
+        console.log('dragging #' + a);
+        break;
+      }
+    }
+    this.draw();
+
+    if ( this.dbDragging != -1 ) {
+      try {
+        this.solver
+          .addEditVar(this.db[this.dbDragging].X())
+          .addEditVar(this.db[this.dbDragging].Y())
+          .beginEdit();
+      } catch (ex) {
+        console.log("mouseDown exception = " + ex);
+      }
+    }
+    return true;
+  },
+
+
   mouseup: function(ev) {
     var x = ev.offsetX;
     var y = ev.offsetY;
@@ -247,6 +274,20 @@ var QuadDemo = new Class({
     return true;
   },
 
+
+  touchstart: function(ev) {
+    document.write("touchstart ev = " + ev + "<br/>");
+  },
+
+  touchend: function(ev) {
+    document.write("touchend ev = " + ev + "<br/>");
+  },
+
+  touchmove: function(ev) {
+    document.write("touchmove ev = " + ev + "<br/>");
+  },
+
+
   initEvents: function() {
     var that = this;
     this.canvas.addEventListener('mousedown', 
@@ -259,13 +300,13 @@ var QuadDemo = new Class({
                                  function(ev) { that.mousemove(ev) },
                                  false);
     this.canvas.addEventListener('touchstart', 
-                                 function(ev) { that.mousedown(ev) },
+                                 function(ev) { that.touchstart(ev) },
                                  false);
     this.canvas.addEventListener('touchend', 
-                                 function(ev) { that.mouseup(ev) },
+                                 function(ev) { that.touchend(ev) },
                                  false);
     this.canvas.addEventListener('touchmove', 
-                                 function(ev) { that.mousemove(ev) },
+                                 function(ev) { that.touchmove(ev) },
                                  false);
   },
   
