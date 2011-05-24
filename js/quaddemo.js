@@ -190,9 +190,12 @@ var QuadDemo = new Class({
   },
 
   mousedown: function(ev) {
-    var x = ev.clientX - this.canvas.offsetLeft;
-    var y = ev.clientY - this.canvas.offsetTop;
+    var x = ev.pageX - this.canvas.offsetLeft;
+    var y = ev.pageY - this.canvas.offsetTop;
     // console.log('mousedown x,y='+x+','+y);
+    // console.log('mousedown canvasoffset='+this.canvas.offsetLeft+','+this.canvas.offsetTop);
+    // console.log('mousedown clientx,y='+ev.clientX+','+ev.clientY);
+    // console.log('mousedown pagex,y='+ev.pageX+','+ev.pageY);
     for ( var a = 0; a < this.db.length; a++ ) {
       if ( this.db[a].Contains(x, y) ) {
         this.dbDragging = a;
@@ -230,8 +233,8 @@ var QuadDemo = new Class({
   },
 
   mousemove: function(ev) {
-    var x = ev.clientX - this.canvas.offsetLeft;
-    var y = ev.clientY - this.canvas.offsetTop;
+    var x = ev.pageX - this.canvas.offsetLeft;
+    var y = ev.pageY - this.canvas.offsetTop;
     if ( this.dbDragging != -1 ) {
 //      try {
         this.solver
@@ -250,7 +253,7 @@ var QuadDemo = new Class({
   touchstart: function(ev) {
     if (false) {
       document.write("touchstart ev = " + ev + "  ");
-      document.write(ev.clientX + "," + ev.clientY);
+      document.write(ev.pageX + "," + ev.pageY);
       document.write("<br/>");
     }
     this.mousedown(ev.touches.item(0));
@@ -262,7 +265,7 @@ var QuadDemo = new Class({
   touchend: function(ev) {
     if (false) {
       document.write("touchend ev = " + ev + "  ");
-      document.write(ev.clientX + "," + ev.clientY);
+      document.write(ev.pageX + "," + ev.pageY);
       document.write("<br/>");
     }
     this.mouseup(ev);
@@ -271,7 +274,7 @@ var QuadDemo = new Class({
   touchmove: function(ev) {
     if (false) {
       document.write("touchmove ev = " + ev + "  ");
-      document.write(ev.clientX + "," + ev.clientY);
+      document.write(ev.pageX + "," + ev.pageY);
       document.write("<br/>");
     }
     this.mousemove(ev.touches.item(0));
